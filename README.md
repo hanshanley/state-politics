@@ -20,7 +20,7 @@ There is no ready-made dataset answering this question for the present day.
 
 The best existing platform corpus — *Select American State Party Platforms, 1846–2017*
 (Harvard Dataverse, `doi:10.7910/DVN/KNOSHL`) — is excellent but **stops at 2017**. We verified this by
-downloading it and enumerating every file: **2,091 platform documents**, 2,084 unique
+downloading it and enumerating every file: **2,091 platform documents**, 2,086 unique
 `(state, party, year)` observations, **49 states plus national platforms**, **maximum year 2017**.
 Coverage is also very uneven (**Maryland is absent entirely**; Kentucky Democrats last appear in
 **1943**; New York Democrats in **1958**; Florida Republicans not at all).
@@ -80,14 +80,46 @@ Greenfield. Work is organized in phases:
 
 | Phase | Description | Status |
 |---|---|---|
-| 0 | Scaffolding + provenance layer | 🚧 in progress |
-| 1 | Ingest historical platform corpus (1846–2017) | ⬜ |
+| 0 | Scaffolding + provenance layer | ✅ done |
+| 1 | Ingest historical platform corpus (1846–2017) | ✅ done |
 | 2 | Build verified registry of all 100 state party organizations | ⬜ |
 | 3 | Collect 2018–present platforms (the hard part) | ⬜ |
 | 4 | Build 50-state bill + sponsor-party pipeline | ⬜ |
 | 5 | Define a shared issue taxonomy for both streams | ⬜ |
 | 6 | Compute emphasis scores and stated-vs-revealed divergence | ⬜ |
 | 7 | Outputs, per-state profiles, reproducible build | ⬜ |
+
+Full roadmap, including the source-verification work behind it, is in [`docs/PLAN.md`](docs/PLAN.md).
+
+---
+
+## Reproduce what exists so far
+
+```bash
+# Download the Dataverse corpus, verify it against its own changelog, and build the
+# document table + per-state coverage matrix. Idempotent; records provenance for every file.
+uv run python -m state_politics.platforms.dataverse
+
+# Render the coverage figure that motivates the project.
+uv run python scripts/plot_platform_coverage.py
+```
+
+The ingest prints a reconciliation line that must read `changelog consistent` before it will
+write anything:
+
+```
+changelog consistent: authoritative=2091 superseded=2063 added 49/49 confirmed, deleted 21/21 confirmed, revised_in_place=47
+documents:            2091
+major-party docs:     1975 (D=1066, R=909)
+year range:           1840-2017
+states with no major-party platform at all: ['MD']
+```
+
+Outputs: `data/processed/platforms_historical.parquet`,
+`data/processed/platforms_historical_coverage.csv`,
+`data/provenance.jsonl`, and `outputs/platform_corpus_recency.png`.
+
+![Most recent state party platform held in the corpus, by state](outputs/platform_corpus_recency.png)
 
 ---
 

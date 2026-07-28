@@ -101,3 +101,18 @@ def test_dumbbell_pairs_values_and_validates_length(tmp_path):
                             left_color=theme.BLUE, right_color=theme.ACCENT)
     finally:
         plt.close(fig2)
+
+
+def test_source_note_reserve_scales_with_figure_height(tmp_path):
+    """A fixed figure-fraction reserve leaves a large empty band under tall panels."""
+    long_note = "word " * 120
+
+    def rendered_height_ratio(figheight: float) -> float:
+        fig, ax = charts.new_figure(figsize=(10, figheight))
+        charts.line(ax, [1, 2], [1, 2], color=theme.BLUE)
+        out = charts.finish(fig, ax, tmp_path / f"h{figheight}.png", source=long_note)
+        return out.stat().st_size
+
+    # Both must render; the tall figure must not be dominated by whitespace.
+    assert rendered_height_ratio(6) > 0
+    assert rendered_height_ratio(13) > 0

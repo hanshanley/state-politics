@@ -34,7 +34,7 @@ Verified by downloading the dataset and enumerating its contents:
   overlapping files were revised in place. Unioning the archives inflates the corpus to a spurious 4,154
   "documents" — resurrecting deleted files and double-counting the rest. **Use the update archive alone.**
 - Parsing the authoritative archive (`STATE-YEAR-PARTY[-flags].txt`):
-  - **2,091** platform documents, **2,084** unique `(state, year, party)` observations
+  - **2,091** platform documents, **2,086** unique `(state, year, party)` observations
   - **49 states** (⚠️ **Maryland is absent entirely**) plus `US` for national platforms
   - **Year range 1840–2017**
   - Party tokens: **D = 1,066**, **R = 909**, plus Prohibition (16), Progressive (13), Socialist,
@@ -209,7 +209,7 @@ state-politics/
 - Handle the 2 `.rtf` files separately.
 - Emit `platforms_historical.parquet` + a **per-state × party × year coverage matrix**.
 
-**Done when:** 2,091 documents / 2,084 unique observations load; the coverage matrix reproduces the §1.1
+**Done when:** 2,091 documents / 2,086 unique observations load; the coverage matrix reproduces the §1.1
 gap table, including Maryland's total absence.
 
 ### Phase 2 — Party registry for all 100 organizations (1.5 days) ⭐ gating step

@@ -13,7 +13,7 @@ or platform that redistributes it. Every source below was fetched and verified o
 > https://doi.org/10.7910/DVN/KNOSHL. Licensed CC0 1.0. Accessed 2026-07-28.
 
 **Verified contents (authoritative archive `platform-update-04212025.zip`):** 2,091 platform documents;
-2,084 unique `(state, party, year)` observations; **49 states** plus `US` national platforms; year range
+2,086 unique `(state, party, year)` observations; **49 states** plus `US` national platforms; year range
 1840–2017; Democratic = 1,066 documents, Republican = 909, remainder third parties (Prohibition,
 Progressive, Socialist, People's, Libertarian, Green, Whig, Greenback, Nonpartisan League and others).
 

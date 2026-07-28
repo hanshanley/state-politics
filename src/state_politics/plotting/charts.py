@@ -100,8 +100,15 @@ def finish(fig, ax, out_path: Path | str, source: str | None = None,
         ax.legend(loc="best", frameon=False, labelcolor=theme.TEXT)
     note_lines = theme.source_note(fig, source) if source else 0
     # Reserve bottom margin for the italic source note, growing with its line count so a
-    # wrapped two-line note is not overlapped by the x-axis label.
-    bottom = 0.0 if not note_lines else min(0.18, 0.03 + 0.035 * (note_lines - 1))
+    # wrapped two-line note is not overlapped by the x-axis label. The reserve is computed
+    # in *inches* and then converted, because a fixed figure fraction that looks right on
+    # the standard 11x6 chart leaves a large empty band under a tall 50-state panel.
+    # The inch values are calibrated to reproduce the previous fractions exactly at 6in.
+    if note_lines:
+        reserve_inches = min(1.08, 0.18 + 0.21 * (note_lines - 1))
+        bottom = reserve_inches / fig.get_figheight()
+    else:
+        bottom = 0.0
     fig.tight_layout(rect=(0, bottom, 1, 1))
     out_path = Path(out_path)
     out_path.parent.mkdir(parents=True, exist_ok=True)
