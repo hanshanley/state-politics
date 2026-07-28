@@ -1,0 +1,45 @@
+[project]
+name = "state-politics"
+version = "0.1.0"
+description = "What are the 50 state Democratic and Republican party organizations emphasizing? Evidence from party platforms and state legislative bills."
+readme = "README.md"
+requires-python = ">=3.11"
+license = { text = "MIT" }
+dependencies = [
+    "requests>=2.32",
+    "pyyaml>=6.0",
+    "pandas>=2.2",
+    "pyarrow>=16.0",
+    "matplotlib>=3.9",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=8.0",
+    "ruff>=0.6",
+]
+# Local-only models. No hosted LLM APIs are used anywhere in this project; these run on
+# the machine's Apple Silicon GPU via MPS. See src/state_politics/compute.py.
+models = [
+    "torch>=2.4",
+    "sentence-transformers>=3.0",
+    "scikit-learn>=1.5",
+]
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/state_politics"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-q"
+
+[tool.ruff]
+line-length = 100
+target-version = "py311"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP", "B", "SIM"]
