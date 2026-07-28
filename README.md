@@ -20,9 +20,15 @@ There is no ready-made dataset answering this question for the present day.
 
 The best existing platform corpus — *Select American State Party Platforms, 1846–2017*
 (Harvard Dataverse, `doi:10.7910/DVN/KNOSHL`) — is excellent but **stops at 2017**. We verified this by
-downloading it and enumerating every file: 4,154 platform documents, 2,105 unique
-`(state, party, year)` observations, all 50 states, **maximum year 2017**. Coverage is also very uneven
-(Kentucky Democrats last appear in **1943**; New York Democrats in **1958**; Florida Republicans not at all).
+downloading it and enumerating every file: **2,091 platform documents**, 2,084 unique
+`(state, party, year)` observations, **49 states plus national platforms**, **maximum year 2017**.
+Coverage is also very uneven (**Maryland is absent entirely**; Kentucky Democrats last appear in
+**1943**; New York Democrats in **1958**; Florida Republicans not at all).
+
+> The dataset ships two archives. `platform-update-04212025.zip` **supersedes** `05 for public.zip`;
+> the included changelog reconciles exactly (49 files added, 21 removed). Naively unioning the two
+> archives inflates the corpus to 4,154 "documents" by resurrecting files the authors deliberately
+> deleted and double-counting the rest. This project uses the update archive as authoritative.
 
 So **the 2018–present platform corpus does not exist and this project builds it**, from official state
 party websites and the Internet Archive.
@@ -60,7 +66,7 @@ collecting organizations credited, are in [`CITATIONS.md`](CITATIONS.md).
 
 | # | Source | Role | Verified |
 |---|---|---|---|
-| 1 | Hopkins, Coffey, Galvin, Gamm, Henderson, Paddock & Schickler — *Select American State Party Platforms, 1846–2017* (Harvard Dataverse, CC0) | Historical platforms | 4,154 files, 50 states, 1840–2017 |
+| 1 | Hopkins, Coffey, Galvin, Gamm, Henderson, Paddock & Schickler — *Select American State Party Platforms, 1846–2017* (Harvard Dataverse, CC0) | Historical platforms | 2,091 docs, 49 states, 1840–2017 |
 | 2 | Open States / Plural Policy — bulk data | State bills, votes, legislators (all 50 states, current) | 2026-07 public dump, 10.7 GB |
 | 3 | Open States API v3 | Targeted bill/sponsorship refresh | `Bill.sponsorships`, `Person.party` |
 | 4 | Internet Archive — Wayback CDX Server API | Discovery of 2018–present platform documents | Returned real platform docs |

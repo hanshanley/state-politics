@@ -12,12 +12,25 @@ or platform that redistributes it. Every source below was fetched and verified o
 > (Version 3.0, released 2025-04-23) [Data set]. Harvard Dataverse.
 > https://doi.org/10.7910/DVN/KNOSHL. Licensed CC0 1.0. Accessed 2026-07-28.
 
-**Verified contents:** 4,154 platform text files; 2,105 unique `(state, party, year)` observations;
-50 state codes plus `US` for national platforms; year range 1840–2017; Democratic = 2,113 files,
-Republican = 1,809 files, remainder third parties (Prohibition, Progressive, Socialist, People's,
-Libertarian, Green, Whig, Greenback).
+**Verified contents (authoritative archive `platform-update-04212025.zip`):** 2,091 platform documents;
+2,084 unique `(state, party, year)` observations; **49 states** plus `US` national platforms; year range
+1840–2017; Democratic = 1,066 documents, Republican = 909, remainder third parties (Prohibition,
+Progressive, Socialist, People's, Libertarian, Green, Whig, Greenback, Nonpartisan League and others).
 
-**Known limitation:** the corpus ends at **2017**. It cannot answer questions about the present day.
+**Archive structure.** The dataset ships two zips. `platform-update-04212025.zip` (2,091 documents) is the
+current archive and **supersedes** `05 for public.zip` (2,063 documents); the bundled
+`file_changes_04232025KG.txt` reconciles them exactly — the 49 listed additions appear only in the update
+and the 21 listed deletions only in the older archive, while 47 further files were revised in place.
+Unioning the two archives would resurrect deleted files and double-count the rest, so this project treats
+the update archive as authoritative.
+
+**Known limitations:**
+
+* The corpus ends at **2017** and cannot speak to the present day.
+* **Maryland is absent entirely** — no document of any party or year.
+* Recency is very uneven. The most recent major-party platform is earlier than 2010 for Kentucky,
+  Louisiana, New Jersey, Ohio and Pennsylvania; Florida has no Republican document and Louisiana no
+  Democratic one.
 
 ---
 

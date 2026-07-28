@@ -28,23 +28,31 @@ Verified by downloading the dataset and enumerating its contents:
 
 - Dataset resolves (Dataverse API `200`), licensed **CC0 1.0**, latest version **3.0** released **2025-04-23**.
 - Contains **3 files**: `05 for public.zip` (21.6 MB), `platform-update-04212025.zip` (22.2 MB), `file_changes_04232025KG.txt`.
-- After extracting and parsing filenames (`STATE-YEAR-PARTY[-flags].txt`):
-  - **4,154** platform text files, **2,105** unique `(state, year, party)` observations
-  - **50 state codes present** (plus `US` for national platforms)
+- ⚠️ **The two zips are not additive.** `platform-update-04212025.zip` (2,091 documents) **supersedes**
+  `05 for public.zip` (2,063 documents). The bundled changelog reconciles them exactly: its 49 listed
+  additions appear only in the update, its 21 listed deletions only in the older archive, and 47 further
+  overlapping files were revised in place. Unioning the archives inflates the corpus to a spurious 4,154
+  "documents" — resurrecting deleted files and double-counting the rest. **Use the update archive alone.**
+- Parsing the authoritative archive (`STATE-YEAR-PARTY[-flags].txt`):
+  - **2,091** platform documents, **2,084** unique `(state, year, party)` observations
+  - **49 states** (⚠️ **Maryland is absent entirely**) plus `US` for national platforms
   - **Year range 1840–2017**
-  - Party tokens: **D = 2,113**, **R = 1,809**, plus Prohibition (32), Progressive (26), Socialist, People's, Libertarian, Green, Whig, Greenback
+  - Party tokens: **D = 1,066**, **R = 909**, plus Prohibition (16), Progressive (13), Socialist,
+    People's, Libertarian, Green, Whig, Greenback, Nonpartisan League
+  - Flag suffixes seen: `-B`, `-GG`, `-JS`, `-JD`, `-BP`, `-EA`, `-MG`, `-SM` (coder/source markers)
 - **Answer to "is this up to the present?" → No.** Max year in the entire corpus is **2017**, and coverage is
   very uneven per state. Verified latest year per state/party includes large gaps:
 
 | State | latest D | latest R | | State | latest D | latest R |
 |---|---|---|---|---|---|---|
-| KY | **1943** | 2010 | | NJ | **1996** | **1991** |
-| NY | **1958** | 2014 | | OH | **1998** | 2000 |
-| PA | **1966** | 2006 | | MO | **1995** | 2016 |
-| IL | **2002** | 2016 | | FL | 2016 | **none** |
-| LA | **none** | 2010 | | TN | 2016 | **none** |
+| **MD** | **none** | **none** | | NJ | **1996** | **1991** |
+| KY | **1943** | 2008 | | OH | **1998** | 2000 |
+| NY | **1958** | 2014 | | MO | **1995** | 2016 |
+| PA | **1966** | 2006 | | FL | 2016 | **none** |
+| IL | **2002** | 2016 | | LA | **none** | 2008 |
 
-  Only 33 state codes have *any* D or R platform at 2016 or later. **Nothing after 2017 anywhere.**
+  Only 33 state codes have *any* D or R platform at 2016 or later, and five states (KY, LA, NJ, OH, PA)
+  have nothing from either major party since before 2010. **Nothing after 2017 anywhere.**
 
 > **Citation (original collectors, not the redistributor):**
 > Hopkins, Daniel J.; Coffey, Daniel J.; Galvin, Daniel J.; Gamm, Gerald; Henderson, John; Paddock, Joel W.;
@@ -193,15 +201,16 @@ state-politics/
 **Done when:** `pytest` passes on a provenance round-trip test.
 
 ### Phase 1 — Historical platform corpus, 1846–2017 (1 day)
-- Ingest the two Dataverse zips by **numeric file id** (verified: `5746322`, `11106328`, changelog `11112198`).
+- Ingest from Dataverse by **numeric file id** (verified: `5746322`, `11106328`, changelog `11112198`).
   ⚠️ The `:persistentId` access pattern **404s** for these files — use `/api/access/datafile/{id}`.
+- Treat **`platform-update-04212025.zip` (id `11106328`) as the authoritative archive**; the older
+  `05 for public.zip` is superseded. Verify against the changelog rather than unioning.
 - Parse `STATE-YEAR-PARTY[-flags].txt`; skip `__MACOSX/` and `._` AppleDouble entries (they are ~50% of names).
 - Handle the 2 `.rtf` files separately.
-- Apply `file_changes_04232025KG.txt` (verified: **49 added, 21 deleted** in V3.0) so those revisions are
-  reflected rather than silently mixing the two zips.
 - Emit `platforms_historical.parquet` + a **per-state × party × year coverage matrix**.
 
-**Done when:** 2,105 unique observations load; coverage matrix reproduces the §1.1 gap table.
+**Done when:** 2,091 documents / 2,084 unique observations load; the coverage matrix reproduces the §1.1
+gap table, including Maryland's total absence.
 
 ### Phase 2 — Party registry for all 100 organizations (1.5 days) ⭐ gating step
 - Pull Democratic entities via the P131 query (50/50 verified).
@@ -303,7 +312,7 @@ run manifest records `describe_hardware()` so the compute environment is reprodu
 
 | # | Source | Verified | Access |
 |---|---|---|---|
-| 1 | Hopkins, Coffey, Galvin, Gamm, Henderson, Paddock & Schickler (2022), *Select American State Party Platforms, 1846–2017*, V3.0 2025-04-23, Harvard Dataverse, doi:10.7910/DVN/KNOSHL, CC0 1.0 | Downloaded; 4,154 files; 1840–2017; 50 states | `/api/access/datafile/{5746322,11106328,11112198}` |
+| 1 | Hopkins, Coffey, Galvin, Gamm, Henderson, Paddock & Schickler (2022), *Select American State Party Platforms, 1846–2017*, V3.0 2025-04-23, Harvard Dataverse, doi:10.7910/DVN/KNOSHL, CC0 1.0 | Downloaded; **2,091 docs** (update archive supersedes the older zip); 1840–2017; **49 states**, Maryland absent | `/api/access/datafile/{5746322,11106328,11112198}` |
 | 2 | Open States / Plural Policy (2026), *Open States Bulk Data*, public domain | `HTTP 200`, 10.7 GB, modified 2026-07-01; 50 public legislator CSVs; all 50 states in session index | `data.openstates.org` |
 | 3 | Open States API v3 | OpenAPI fetched; `Bill.sponsorships`, `Person.party` confirmed | `v3.openstates.org` |
 | 4 | Internet Archive (2026), *Wayback CDX Server API* | Live query returned TX GOP 2024 & 2022 platforms, IA GOP, ID Dems | `web.archive.org/cdx/search/cdx` |
