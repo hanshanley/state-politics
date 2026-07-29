@@ -118,28 +118,71 @@ class Override:
     evidence: str
 
 
-#: Wikidata carries no website for these five Republican state parties. Each domain was
-#: located and checked directly on 2026-07-28. These are *candidates*: whether a row is
-#: trusted is decided empirically by :func:`verify_homepage`, which confirms the live page
-#: actually names the state and the party, so nothing here is asserted on faith.
+#: Corrections applied on top of Wikidata, each established by a direct check on
+#: 2026-07-28. Two kinds appear here:
+#:
+#: * states where Wikidata carries no website at all, and
+#: * states where Wikidata's URL is stale and now resolves somewhere else entirely --
+#:   ``migop.org`` and ``negop.org`` currently redirect to unrelated commercial sites, and
+#:   ``southdakotagop.com`` now serves a law-firm directory. Writing those into the registry
+#:   unchecked would have silently pointed the whole platform crawl at spam.
+#:
+#: These are *candidates*: whether a row is trusted is still decided empirically by
+#: :func:`verify_homepage`, which confirms the live page names the state and the party.
 MANUAL_OVERRIDES: dict[tuple[str, str], Override] = {
     ("MT", "R"): Override(
         "https://mtgop.org/", "Montana Republican Party",
-        "direct check 2026-07-28: HTTP 200, page title 'Home - MTGOP'"),
+        "Wikidata has no website; direct check 2026-07-28: HTTP 200, title 'Home - MTGOP'"),
     ("NH", "R"): Override(
         "https://nh.gop/", "New Hampshire Republican State Committee",
-        "direct check 2026-07-28: nhgop.org redirects to nh.gop, HTTP 200, "
-        "page title 'New Hampshire Republican Party'"),
+        "Wikidata has no website; direct check 2026-07-28: nhgop.org redirects to nh.gop, "
+        "HTTP 200, title 'New Hampshire Republican Party'"),
     ("PA", "R"): Override(
         "https://pagop.org/", "Republican Party of Pennsylvania",
-        "direct check 2026-07-28: HTTP 200, page title "
+        "Wikidata has no website; direct check 2026-07-28: HTTP 200, title "
         "'Home - Republican Party of Pennsylvania'"),
     ("KY", "R"): Override(
         "https://rpk.org/", "Republican Party of Kentucky",
-        "direct check 2026-07-28: host answered but refused a scripted request (HTTP 403)"),
+        "Wikidata has no website; direct check 2026-07-28: host answered but refused a "
+        "scripted request (HTTP 403)"),
     ("OK", "R"): Override(
         "https://okgop.com/", "Oklahoma Republican Party",
-        "direct check 2026-07-28: host answered but refused a scripted request (HTTP 403)"),
+        "Wikidata has no website; direct check 2026-07-28: host answered but refused a "
+        "scripted request (HTTP 403)"),
+    ("AZ", "R"): Override(
+        "https://azgop.com/", "Arizona Republican Party",
+        "corrects Wikidata's az.gop, which on 2026-07-28 redirected to an image file on "
+        "media.kjzz.org; azgop.com returned HTTP 200, title 'Home - AZGOP'"),
+    ("SD", "R"): Override(
+        "https://www.sdgop.com/", "South Dakota Republican Party",
+        "corrects Wikidata's southdakotagop.com, which on 2026-07-28 served a law-firm "
+        "directory ('SD TOP LAW FIRMS'); sdgop.com returned HTTP 200, title "
+        "'South Dakota Republican Party'"),
+    ("MI", "R"): Override(
+        "https://mi.gop/", "Michigan Republican Party",
+        "corrects Wikidata's migop.org, which on 2026-07-28 redirected to the unrelated "
+        "site kiss918menang.com; mi.gop answered but refused a scripted request (HTTP 403)"),
+    ("NE", "R"): Override(
+        "https://ne.gop/", "Nebraska Republican Party",
+        "corrects Wikidata's negop.org, which on 2026-07-28 redirected to the unrelated "
+        "site wildarms4.com; ne.gop answered but refused a scripted request (HTTP 403)"),
+    ("WA", "R"): Override(
+        "https://wagop.org/", "Washington State Republican Party",
+        "corrects Wikidata's wsrp.org, whose host did not resolve on 2026-07-28; "
+        "wagop.org returned HTTP 200, title 'Washington State Republican Party'"),
+    ("CT", "R"): Override(
+        "https://ct.gop/", "Connecticut Republican Party",
+        "corrects Wikidata's www.ctgop.org, whose host did not resolve on 2026-07-28; "
+        "ct.gop answered but refused a scripted request (HTTP 403)"),
+    ("IN", "R"): Override(
+        "https://indiana.gop/", "Indiana Republican Party",
+        "corrects Wikidata's www.indgop.org, which timed out on 2026-07-28 (ingop.com is a "
+        "domain-resale listing); indiana.gop answered but refused a scripted request "
+        "(HTTP 403)"),
+    ("RI", "R"): Override(
+        "https://ri.gop/", "Rhode Island Republican Party",
+        "corrects Wikidata's www.rigop.org, whose host did not resolve on 2026-07-28; "
+        "ri.gop answered but refused a scripted request (HTTP 403)"),
 }
 
 
@@ -348,18 +391,21 @@ def build_registry(*, log: ProvenanceLog | None = None, verify: bool = True,
     for state in sorted(STATE_NAMES.values()):
         for party, found in (("D", democratic), ("R", republican)):
             org = found.get(state)
-            if org is None or not org.website:
-                override = MANUAL_OVERRIDES.get((state, party))
-                if override is not None:
-                    org = PartyOrg(
-                        state=state,
-                        party=party,
-                        name=override.name,
-                        website=override.website,
-                        resolved_by="manual-override",
-                        candidate_evidence=override.evidence,
-                        source_url=override.website,
-                    )
+            # A hand-checked correction always wins over Wikidata: several Wikidata URLs are
+            # stale and now resolve to unrelated sites, so "Wikidata has a value" is not
+            # evidence that the value is right.
+            override = MANUAL_OVERRIDES.get((state, party))
+            if override is not None:
+                org = PartyOrg(
+                    state=state,
+                    party=party,
+                    name=override.name,
+                    website=override.website,
+                    wikidata_id=org.wikidata_id if org else None,
+                    resolved_by="manual-override",
+                    candidate_evidence=override.evidence,
+                    source_url=override.website,
+                )
             if org is None:
                 org = PartyOrg(
                     state=state, party=party, resolved_by=None,

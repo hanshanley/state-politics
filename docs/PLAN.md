@@ -212,15 +212,23 @@ state-politics/
 **Done when:** 2,091 documents / 2,086 unique observations load; the coverage matrix reproduces the §1.1
 gap table, including Maryland's total absence.
 
-### Phase 2 — Party registry for all 100 organizations (1.5 days) ⭐ gating step
+### Phase 2 — Party registry for all 100 organizations (1.5 days) ⭐ gating step — **DONE**
 - Pull Democratic entities via the P131 query (50/50 verified).
 - Pull Republican entities via the label query (81 entities / 54 websites verified), map name→state.
 - Filter out county and auxiliary organizations.
-- **Human-verify all 100 rows**; each gets `source_url` + `verified_on`. Missing/dead domains resolved via
-  Wayback and recorded as such.
+- **Verify all 100 rows**; each gets `source_url` + `verified_on`.
 
-**Done when:** `party_registry.yml` has exactly 100 verified rows (50 states × 2 parties), each with provenance.
-Any state party that genuinely has no web presence is recorded with `domain: null` and a reason.
+**Outcome:** `conf/party_registry.yml`, 100 rows, **100/100 websites resolved, 94/100
+machine-verified**. A row is trusted only when the live page itself names the state and the
+party — a 200 alone is not enough. That check immediately caught stale Wikidata URLs that now
+resolve to unrelated commercial sites (`migop.org` → `kiss918menang.com`, `negop.org` →
+`wildarms4.com`, `southdakotagop.com` → a law-firm directory, `az.gop` → an image file) plus
+four dead hosts (`ctgop.org`, `indgop.org`, `rigop.org`, `wsrp.org`). Nine hand-checked
+corrections are recorded with their evidence. The remaining six rows are bot-protected (403)
+or briefly down (502) and stay flagged for human confirmation.
+
+> **Lesson for Phase 3:** "Wikidata has a value" is not evidence the value is right. Any
+> domain used for crawling must be content-confirmed at fetch time, not trusted from a list.
 
 ### Phase 3 — Close the 2018–2026 platform gap (3–5 days) ⭐ the hard part
 - For each of the 100 domains, discover candidates from **two** channels:

@@ -1,4 +1,4 @@
-generated_at: '2026-07-28T22:15:50Z'
+generated_at: '2026-07-28T22:46:34Z'
 source: 'Wikidata contributors (2026). Wikidata [Knowledge base]. Wikimedia Foundation.
   https://query.wikidata.org/sparql. CC0 1.0. Candidates are machine-resolved and
   then homepage-checked; rows with needs_review: true require human confirmation against
@@ -7,609 +7,668 @@ organizations:
 - state: AK
   party: D
   name: Alaska Democratic Party
-  website: https://alaskademocrats.org
+  website: https://alaskademocrats.org/
   wikidata_id: Q4708523
   resolved_by: wikidata-P131
+  candidate_evidence: null
   homepage_status: 200
   verified_on: '2026-07-28'
   source_url: https://query.wikidata.org/sparql
   needs_review: false
-  note: null
+  note: homepage HTTP 200 and page text names the state and party
 - state: AK
   party: R
   name: Alaska Republican Party
-  website: http://www.alaskagop.org/
+  website: http://www.alaskagop.org/cgi-sys/suspendedpage.cgi
   wikidata_id: Q4708595
   resolved_by: label
+  candidate_evidence: null
   homepage_status: 200
   verified_on: '2026-07-28'
   source_url: https://query.wikidata.org/sparql
   needs_review: false
-  note: null
+  note: homepage HTTP 200 and page text names the state and party
 - state: AL
   party: D
   name: Alabama Democratic Party
   website: https://aldemocrats.org/
   wikidata_id: Q4705236
   resolved_by: wikidata-P131
+  candidate_evidence: null
   homepage_status: 200
   verified_on: '2026-07-28'
   source_url: https://query.wikidata.org/sparql
   needs_review: false
-  note: null
+  note: homepage HTTP 200 and page text names the state and party
 - state: AL
   party: R
   name: Alabama Republican Party
-  website: http://algop.org/
+  website: https://algop.org/
   wikidata_id: Q4705309
   resolved_by: label
+  candidate_evidence: null
   homepage_status: 200
   verified_on: '2026-07-28'
   source_url: https://query.wikidata.org/sparql
   needs_review: false
-  note: null
+  note: homepage HTTP 200 and page text names the state and party
 - state: AR
   party: D
   name: Democratic Party of Arkansas
   website: http://www.arkdems.org
   wikidata_id: Q5255711
   resolved_by: wikidata-P131
+  candidate_evidence: null
   homepage_status: 403
   verified_on: '2026-07-28'
   source_url: https://query.wikidata.org/sparql
   needs_review: true
-  note: reachable but refused a scripted request (HTTP 403)
+  note: host answers but refused a scripted request (HTTP 403); content could not
+    be confirmed
 - state: AR
   party: R
   name: Republican Party of Arkansas
   website: https://www.arkansasgop.org/
   wikidata_id: Q7314640
   resolved_by: wikidata-P131
+  candidate_evidence: null
   homepage_status: 200
   verified_on: '2026-07-28'
   source_url: https://query.wikidata.org/sparql
   needs_review: false
-  note: null
+  note: homepage HTTP 200 and page text names the state and party
 - state: AZ
   party: D
   name: Arizona Democratic Party
   website: https://azdem.org/
   wikidata_id: Q4791288
   resolved_by: wikidata-P131
+  candidate_evidence: null
   homepage_status: 200
   verified_on: '2026-07-28'
   source_url: https://query.wikidata.org/sparql
   needs_review: false
-  note: null
+  note: homepage HTTP 200 and page text names the state and party
 - state: AZ
   party: R
   name: Arizona Republican Party
-  website: http://www.az.gop/
+  website: https://azgop.com/
   wikidata_id: Q4791379
-  resolved_by: label
+  resolved_by: manual-override
+  candidate_evidence: corrects Wikidata's az.gop, which on 2026-07-28 redirected to
+    an image file on media.kjzz.org; azgop.com returned HTTP 200, title 'Home - AZGOP'
   homepage_status: 200
   verified_on: '2026-07-28'
-  source_url: https://query.wikidata.org/sparql
+  source_url: https://azgop.com/
   needs_review: false
-  note: null
+  note: homepage HTTP 200 and page text names the state and party
 - state: CA
   party: D
   name: California Democratic Party
   website: https://cadem.org/
   wikidata_id: Q5020399
   resolved_by: wikidata-P131
+  candidate_evidence: null
   homepage_status: 200
   verified_on: '2026-07-28'
   source_url: https://query.wikidata.org/sparql
   needs_review: false
-  note: null
+  note: homepage HTTP 200 and page text names the state and party
 - state: CA
   party: R
   name: California Republican Party
-  website: http://www.cagop.org
+  website: https://cagop.org/
   wikidata_id: Q5020915
   resolved_by: label
+  candidate_evidence: null
   homepage_status: 200
   verified_on: '2026-07-28'
   source_url: https://query.wikidata.org/sparql
   needs_review: false
-  note: null
+  note: homepage HTTP 200 and page text names the state and party
 - state: CO
   party: D
   name: Colorado Democratic Party
   website: https://www.coloradodems.org/
   wikidata_id: Q5148782
   resolved_by: wikidata-P131
+  candidate_evidence: null
   homepage_status: 200
   verified_on: '2026-07-28'
   source_url: https://query.wikidata.org/sparql
   needs_review: false
-  note: null
+  note: homepage HTTP 200 and page text names the state and party
 - state: CO
   party: R
   name: Colorado Republican Party
-  website: https://cologop.org/
+  website: https://colorado.gop/
   wikidata_id: Q15980736
   resolved_by: label
+  candidate_evidence: null
   homepage_status: 200
   verified_on: '2026-07-28'
   source_url: https://query.wikidata.org/sparql
   needs_review: false
-  note: null
+  note: homepage HTTP 200 and page text names the state and party
 - state: CT
   party: D
   name: Democratic Party of Connecticut
-  website: http://www.ctdems.org
+  website: https://www.ctdems.org/
   wikidata_id: Q5255712
   resolved_by: wikidata-P131
+  candidate_evidence: null
   homepage_status: 200
   verified_on: '2026-07-28'
   source_url: https://query.wikidata.org/sparql
   needs_review: false
-  note: null
+  note: homepage HTTP 200 and page text names the state and party
 - state: CT
   party: R
   name: Connecticut Republican Party
-  website: http://www.ctgop.org
+  website: https://ct.gop/
   wikidata_id: Q5161588
-  resolved_by: label
-  homepage_status: null
+  resolved_by: manual-override
+  candidate_evidence: corrects Wikidata's www.ctgop.org, whose host did not resolve
+    on 2026-07-28; ct.gop answered but refused a scripted request (HTTP 403)
+  homepage_status: 200
   verified_on: '2026-07-28'
-  source_url: https://query.wikidata.org/sparql
-  needs_review: true
-  note: 'unreachable: status=None error=ConnectionError: HTTPConnectionPool(host=''www.ctgop.org'',
-    port=80): Max retries exceeded with url: / (Caused by NameResolutionError("HTTPConnection(host=''www.ctgop.org'',
-    port=80): Failed to resolve ''www.ctgop.org'' ([Errno 8] nodename nor servname
-    provided, or not known)"))'
+  source_url: https://ct.gop/
+  needs_review: false
+  note: homepage HTTP 200 and page text names the state and party
 - state: DE
   party: D
   name: Delaware Democratic Party
   website: https://www.deldems.org/
   wikidata_id: Q5253276
   resolved_by: wikidata-P131
+  candidate_evidence: null
   homepage_status: 200
   verified_on: '2026-07-28'
   source_url: https://query.wikidata.org/sparql
   needs_review: false
-  note: null
+  note: homepage HTTP 200 and page text names the state and party
 - state: DE
   party: R
   name: Republican State Committee of Delaware
-  website: https://delawaregop.com/
+  website: https://degop.gop/
   wikidata_id: Q7314709
   resolved_by: label
+  candidate_evidence: null
   homepage_status: 200
   verified_on: '2026-07-28'
   source_url: https://query.wikidata.org/sparql
   needs_review: false
-  note: null
+  note: homepage HTTP 200 and page text names the state and party
 - state: FL
   party: D
   name: Florida Democratic Party
-  website: https://www.floridadems.org/
+  website: https://floridadems.org/
   wikidata_id: Q5461304
   resolved_by: wikidata-P131
+  candidate_evidence: null
   homepage_status: 200
   verified_on: '2026-07-28'
   source_url: https://query.wikidata.org/sparql
   needs_review: false
-  note: null
+  note: homepage HTTP 200 and page text names the state and party
 - state: FL
   party: R
   name: Republican Party of Florida
   website: https://florida.gop/
   wikidata_id: Q7314642
   resolved_by: label
+  candidate_evidence: null
   homepage_status: 200
   verified_on: '2026-07-28'
   source_url: https://query.wikidata.org/sparql
   needs_review: false
-  note: null
+  note: homepage HTTP 200 and page text names the state and party
 - state: GA
   party: D
   name: Democratic Party of Georgia
-  website: https://www.georgiademocrat.org
+  website: https://georgiademocrat.org/
   wikidata_id: Q5255714
   resolved_by: wikidata-P131
+  candidate_evidence: null
   homepage_status: 200
   verified_on: '2026-07-28'
   source_url: https://query.wikidata.org/sparql
   needs_review: false
-  note: null
+  note: homepage HTTP 200 and page text names the state and party
 - state: GA
   party: R
   name: Georgia Republican Party
-  website: http://www.gagop.org
+  website: https://www.gagop.org/
   wikidata_id: Q5547695
   resolved_by: label
+  candidate_evidence: null
   homepage_status: 200
   verified_on: '2026-07-28'
   source_url: https://query.wikidata.org/sparql
   needs_review: false
-  note: null
+  note: homepage HTTP 200 and page text names the state and party
 - state: HI
   party: D
   name: Democratic Party of Hawaii
-  website: https://hawaiidemocrats.org
+  website: https://www.hawaiidemocrats.org/
   wikidata_id: Q5255715
   resolved_by: wikidata-P131
+  candidate_evidence: null
   homepage_status: 200
   verified_on: '2026-07-28'
   source_url: https://query.wikidata.org/sparql
   needs_review: false
-  note: null
+  note: homepage HTTP 200 and page text names the state and party
 - state: HI
   party: R
   name: Hawaii Republican Party
-  website: https://thehawaiirepublicanparty.com/
+  website: https://www.thehawaiirepublicanparty.com/
   wikidata_id: Q5684363
   resolved_by: wikidata-P131
+  candidate_evidence: null
   homepage_status: 200
   verified_on: '2026-07-28'
   source_url: https://query.wikidata.org/sparql
   needs_review: false
-  note: null
+  note: homepage HTTP 200 and page text names the state and party
 - state: IA
   party: D
   name: Iowa Democratic Party
   website: https://iowademocrats.org/
   wikidata_id: Q6064351
   resolved_by: wikidata-P131
+  candidate_evidence: null
   homepage_status: 200
   verified_on: '2026-07-28'
   source_url: https://query.wikidata.org/sparql
   needs_review: false
-  note: null
+  note: homepage HTTP 200 and page text names the state and party
 - state: IA
   party: R
   name: Republican Party of Iowa
-  website: http://www.iowagop.org/
+  website: https://iowagop.org/
   wikidata_id: Q7314655
   resolved_by: label
+  candidate_evidence: null
   homepage_status: 200
   verified_on: '2026-07-28'
   source_url: https://query.wikidata.org/sparql
   needs_review: false
-  note: null
+  note: homepage HTTP 200 and page text names the state and party
 - state: ID
   party: D
   name: Idaho Democratic Party
   website: https://idahodems.org/
   wikidata_id: Q5987342
   resolved_by: wikidata-P131
+  candidate_evidence: null
   homepage_status: 200
   verified_on: '2026-07-28'
   source_url: https://query.wikidata.org/sparql
   needs_review: false
-  note: null
+  note: homepage HTTP 200 and page text names the state and party
 - state: ID
   party: R
   name: Idaho Republican Party
-  website: http://idgop.org/
+  website: https://idgop.org/
   wikidata_id: Q5987412
   resolved_by: label
+  candidate_evidence: null
   homepage_status: 200
   verified_on: '2026-07-28'
   source_url: https://query.wikidata.org/sparql
   needs_review: false
-  note: null
+  note: homepage HTTP 200 and page text names the state and party
 - state: IL
   party: D
   name: Democratic Party of Illinois
   website: https://ildems.com
   wikidata_id: Q3366421
   resolved_by: wikidata-P131
+  candidate_evidence: null
   homepage_status: 403
   verified_on: '2026-07-28'
   source_url: https://query.wikidata.org/sparql
   needs_review: true
-  note: reachable but refused a scripted request (HTTP 403)
+  note: host answers but refused a scripted request (HTTP 403); content could not
+    be confirmed
 - state: IL
   party: R
   name: Illinois Republican Party
-  website: http://www.ILGOP.org/
+  website: https://illinois.gop/
   wikidata_id: Q3366683
   resolved_by: label
+  candidate_evidence: null
   homepage_status: 200
   verified_on: '2026-07-28'
   source_url: https://query.wikidata.org/sparql
   needs_review: false
-  note: null
+  note: homepage HTTP 200 and page text names the state and party
 - state: IN
   party: D
   name: Indiana Democratic Party
   website: https://indems.org/
   wikidata_id: Q6023135
   resolved_by: wikidata-P131
+  candidate_evidence: null
   homepage_status: 200
   verified_on: '2026-07-28'
   source_url: https://query.wikidata.org/sparql
   needs_review: false
-  note: null
+  note: homepage HTTP 200 and page text names the state and party
 - state: IN
   party: R
   name: Indiana Republican Party
-  website: http://www.indgop.org
+  website: https://indiana.gop/
   wikidata_id: Q6023387
-  resolved_by: label
-  homepage_status: null
+  resolved_by: manual-override
+  candidate_evidence: corrects Wikidata's www.indgop.org, which timed out on 2026-07-28
+    (ingop.com is a domain-resale listing); indiana.gop answered but refused a scripted
+    request (HTTP 403)
+  homepage_status: 200
   verified_on: '2026-07-28'
-  source_url: https://query.wikidata.org/sparql
-  needs_review: true
-  note: 'unreachable: status=None error=ConnectTimeout: HTTPConnectionPool(host=''www.indgop.org'',
-    port=80): Max retries exceeded with url: / (Caused by ConnectTimeoutError(<HTTPConnection(host=''www.indgop.org'',
-    port=80) at 0x10a55f530>, ''Connection to www.indgop.org timed out. (connect timeout=45.0)''))'
+  source_url: https://indiana.gop/
+  needs_review: false
+  note: homepage HTTP 200 and page text names the state and party
 - state: KS
   party: D
   name: Kansas Democratic Party
-  website: https://kansasdems.org
+  website: https://kansasdems.org/
   wikidata_id: Q16988710
   resolved_by: wikidata-P131
+  candidate_evidence: null
   homepage_status: 200
   verified_on: '2026-07-28'
   source_url: https://query.wikidata.org/sparql
   needs_review: false
-  note: null
+  note: homepage HTTP 200 and page text names the state and party
 - state: KS
   party: R
   name: Kansas Republican Party
   website: https://kansas.gop/
   wikidata_id: Q6365037
   resolved_by: label
+  candidate_evidence: null
   homepage_status: 200
   verified_on: '2026-07-28'
   source_url: https://query.wikidata.org/sparql
   needs_review: false
-  note: null
+  note: homepage HTTP 200 and page text names the state and party
 - state: KY
   party: D
   name: Kentucky Democratic Party
-  website: https://kydemocrats.org
+  website: https://www.kydemocrats.org/
   wikidata_id: Q6392220
   resolved_by: wikidata-P131
+  candidate_evidence: null
   homepage_status: 200
   verified_on: '2026-07-28'
   source_url: https://query.wikidata.org/sparql
   needs_review: false
-  note: null
+  note: homepage HTTP 200 and page text names the state and party
 - state: KY
   party: R
   name: Republican Party of Kentucky
   website: https://rpk.org/
   wikidata_id: null
   resolved_by: manual-override
+  candidate_evidence: 'Wikidata has no website; direct check 2026-07-28: host answered
+    but refused a scripted request (HTTP 403)'
   homepage_status: 200
   verified_on: '2026-07-28'
   source_url: https://rpk.org/
-  needs_review: true
-  note: candidate domain; HTTP 403 to a scripted request on 2026-07-28, so its content
-    could not be confirmed
+  needs_review: false
+  note: homepage HTTP 200 and page text names the state and party
 - state: LA
   party: D
   name: Louisiana Democratic Party
   website: https://louisianadems.org/
   wikidata_id: Q6689094
   resolved_by: wikidata-P131
+  candidate_evidence: null
   homepage_status: 200
   verified_on: '2026-07-28'
   source_url: https://query.wikidata.org/sparql
   needs_review: false
-  note: null
+  note: homepage HTTP 200 and page text names the state and party
 - state: LA
   party: R
   name: Republican Party of Louisiana
-  website: http://www.lagop.com
+  website: https://lagop.com/
   wikidata_id: Q7314658
   resolved_by: wikidata-P131
+  candidate_evidence: null
   homepage_status: 200
   verified_on: '2026-07-28'
   source_url: https://query.wikidata.org/sparql
   needs_review: false
-  note: null
+  note: homepage HTTP 200 and page text names the state and party
 - state: MA
   party: D
   name: Massachusetts Democratic Party
-  website: http://www.massdems.org
+  website: https://www.massdems.org/
   wikidata_id: Q6784247
   resolved_by: wikidata-P131
+  candidate_evidence: null
   homepage_status: 200
   verified_on: '2026-07-28'
   source_url: https://query.wikidata.org/sparql
   needs_review: false
-  note: null
+  note: homepage HTTP 200 and page text names the state and party
 - state: MA
   party: R
   name: Massachusetts Republican Party
-  website: http://www.massgop.com
+  website: https://massgop.com/
   wikidata_id: Q6784337
   resolved_by: wikidata-P131
+  candidate_evidence: null
   homepage_status: 200
   verified_on: '2026-07-28'
   source_url: https://query.wikidata.org/sparql
   needs_review: false
-  note: null
+  note: homepage HTTP 200 and page text names the state and party
 - state: MD
   party: D
   name: Maryland Democratic Party
   website: https://mddems.org/
   wikidata_id: Q6781300
   resolved_by: wikidata-P131
+  candidate_evidence: null
   homepage_status: 200
   verified_on: '2026-07-28'
   source_url: https://query.wikidata.org/sparql
   needs_review: false
-  note: null
+  note: homepage HTTP 200 and page text names the state and party
 - state: MD
   party: R
   name: Maryland Republican Party
-  website: http://www.mdgop.org/
+  website: https://mdgop.org/
   wikidata_id: Q6781424
   resolved_by: label
+  candidate_evidence: null
   homepage_status: 200
   verified_on: '2026-07-28'
   source_url: https://query.wikidata.org/sparql
   needs_review: false
-  note: null
+  note: homepage HTTP 200 and page text names the state and party
 - state: ME
   party: D
   name: Maine Democratic Party
-  website: http://www.mainedems.org
+  website: https://mainedems.org/
   wikidata_id: Q6736346
   resolved_by: wikidata-P131
+  candidate_evidence: null
   homepage_status: 200
   verified_on: '2026-07-28'
   source_url: https://query.wikidata.org/sparql
   needs_review: false
-  note: null
+  note: homepage HTTP 200 and page text names the state and party
 - state: ME
   party: R
   name: Maine Republican Party
-  website: https://www.mainegop.com/
+  website: https://mainegop.com/
   wikidata_id: Q6736426
   resolved_by: label
+  candidate_evidence: null
   homepage_status: 200
   verified_on: '2026-07-28'
   source_url: https://query.wikidata.org/sparql
   needs_review: false
-  note: null
+  note: homepage HTTP 200 and page text names the state and party
 - state: MI
   party: D
   name: Michigan Democratic Party
   website: https://michigandems.com/
   wikidata_id: Q6837512
   resolved_by: wikidata-P131
+  candidate_evidence: null
   homepage_status: 200
   verified_on: '2026-07-28'
   source_url: https://query.wikidata.org/sparql
   needs_review: false
-  note: null
+  note: homepage HTTP 200 and page text names the state and party
 - state: MI
   party: R
   name: Michigan Republican Party
-  website: http://www.migop.org/
+  website: https://mi.gop/
   wikidata_id: Q6837658
-  resolved_by: label
+  resolved_by: manual-override
+  candidate_evidence: corrects Wikidata's migop.org, which on 2026-07-28 redirected
+    to the unrelated site kiss918menang.com; mi.gop answered but refused a scripted
+    request (HTTP 403)
   homepage_status: 200
   verified_on: '2026-07-28'
-  source_url: https://query.wikidata.org/sparql
+  source_url: https://mi.gop/
   needs_review: false
-  note: null
+  note: homepage HTTP 200 and page text names the state and party
 - state: MN
   party: D
   name: Minnesota Democratic–Farmer–Labor Party
   website: https://dfl.org/
   wikidata_id: Q1937395
   resolved_by: wikidata-P131
+  candidate_evidence: null
   homepage_status: 200
   verified_on: '2026-07-28'
   source_url: https://query.wikidata.org/sparql
   needs_review: false
-  note: null
+  note: homepage HTTP 200 and page text names the state and party
 - state: MN
   party: R
   name: Republican Party of Minnesota
   website: https://mngop.com/
   wikidata_id: Q7314659
   resolved_by: label
+  candidate_evidence: null
   homepage_status: 200
   verified_on: '2026-07-28'
   source_url: https://query.wikidata.org/sparql
   needs_review: false
-  note: null
+  note: homepage HTTP 200 and page text names the state and party
 - state: MO
   party: D
   name: Missouri Democratic Party
-  website: https://missouridemocrats.org/
+  website: https://www.missouridemocrats.org/
   wikidata_id: Q15980745
   resolved_by: wikidata-P131
+  candidate_evidence: null
   homepage_status: 200
   verified_on: '2026-07-28'
   source_url: https://query.wikidata.org/sparql
   needs_review: false
-  note: null
+  note: homepage HTTP 200 and page text names the state and party
 - state: MO
   party: R
   name: Missouri Republican Party
-  website: http://www.mogop.org/
+  website: https://missouri.gop/
   wikidata_id: Q6879610
   resolved_by: label
+  candidate_evidence: null
   homepage_status: 200
   verified_on: '2026-07-28'
   source_url: https://query.wikidata.org/sparql
   needs_review: false
-  note: null
+  note: homepage HTTP 200 and page text names the state and party
 - state: MS
   party: D
   name: Mississippi Democratic Party
-  website: http://www.mississippidemocrats.org
+  website: https://www.mississippidemocrats.org/
   wikidata_id: Q6879122
   resolved_by: wikidata-P131
+  candidate_evidence: null
   homepage_status: 200
   verified_on: '2026-07-28'
   source_url: https://query.wikidata.org/sparql
   needs_review: false
-  note: null
+  note: homepage HTTP 200 and page text names the state and party
 - state: MS
   party: R
   name: Mississippi Republican Party
-  website: http://msgop.org/
+  website: http://www.msgop.org/
   wikidata_id: Q6879263
   resolved_by: label
+  candidate_evidence: null
   homepage_status: 200
   verified_on: '2026-07-28'
   source_url: https://query.wikidata.org/sparql
   needs_review: false
-  note: null
+  note: homepage HTTP 200 and page text names the state and party
 - state: MT
   party: D
   name: Montana Democratic Party
-  website: http://www.montanademocrats.org
+  website: https://www.montanademocrats.org/
   wikidata_id: Q6904239
   resolved_by: wikidata-P131
+  candidate_evidence: null
   homepage_status: 200
   verified_on: '2026-07-28'
   source_url: https://query.wikidata.org/sparql
   needs_review: false
-  note: null
+  note: homepage HTTP 200 and page text names the state and party
 - state: MT
   party: R
   name: Montana Republican Party
   website: https://mtgop.org/
   wikidata_id: null
   resolved_by: manual-override
+  candidate_evidence: 'Wikidata has no website; direct check 2026-07-28: HTTP 200,
+    title ''Home - MTGOP'''
   homepage_status: 200
   verified_on: '2026-07-28'
   source_url: https://mtgop.org/
   needs_review: false
-  note: null
+  note: homepage HTTP 200 and page text names the state and party
 - state: NC
   party: D
   name: North Carolina Democratic Party
   website: https://www.ncdp.org/
   wikidata_id: Q7054469
   resolved_by: wikidata-P131
+  candidate_evidence: null
   homepage_status: 200
   verified_on: '2026-07-28'
   source_url: https://query.wikidata.org/sparql
   needs_review: false
-  note: null
+  note: homepage HTTP 200 and page text names the state and party
 - state: NC
   party: R
   name: North Carolina Republican Party
   website: https://www.nc.gop/
   wikidata_id: Q7054581
   resolved_by: label
+  candidate_evidence: null
   homepage_status: 200
   verified_on: '2026-07-28'
   source_url: https://query.wikidata.org/sparql
   needs_review: false
-  note: null
+  note: homepage HTTP 200 and page text names the state and party
 - state: ND
   party: D
   name: North Dakota Democratic-Nonpartisan League Party
   website: https://demnpl.com/
   wikidata_id: Q7055001
   resolved_by: wikidata-P131
+  candidate_evidence: null
   homepage_status: 502
   verified_on: '2026-07-28'
   source_url: https://query.wikidata.org/sparql
@@ -621,497 +680,549 @@ organizations:
   website: https://ndgop.org/
   wikidata_id: Q7055038
   resolved_by: label
+  candidate_evidence: null
   homepage_status: 200
   verified_on: '2026-07-28'
   source_url: https://query.wikidata.org/sparql
   needs_review: false
-  note: null
+  note: homepage HTTP 200 and page text names the state and party
 - state: NE
   party: D
   name: Nebraska Democratic Party
   website: https://nebraskademocrats.org/
   wikidata_id: Q6984707
   resolved_by: wikidata-P131
+  candidate_evidence: null
   homepage_status: 200
   verified_on: '2026-07-28'
   source_url: https://query.wikidata.org/sparql
   needs_review: false
-  note: null
+  note: homepage HTTP 200 and page text names the state and party
 - state: NE
   party: R
   name: Nebraska Republican Party
-  website: http://www.negop.org/
+  website: https://ne.gop/
   wikidata_id: Q15980749
-  resolved_by: label
+  resolved_by: manual-override
+  candidate_evidence: corrects Wikidata's negop.org, which on 2026-07-28 redirected
+    to the unrelated site wildarms4.com; ne.gop answered but refused a scripted request
+    (HTTP 403)
   homepage_status: 200
   verified_on: '2026-07-28'
-  source_url: https://query.wikidata.org/sparql
+  source_url: https://ne.gop/
   needs_review: false
-  note: null
+  note: homepage HTTP 200 and page text names the state and party
 - state: NH
   party: D
   name: New Hampshire Democratic Party
-  website: https://www.nhdp.org/
+  website: https://nhdp.org/
   wikidata_id: Q7008134
   resolved_by: wikidata-P131
+  candidate_evidence: null
   homepage_status: 200
   verified_on: '2026-07-28'
   source_url: https://query.wikidata.org/sparql
   needs_review: false
-  note: null
+  note: homepage HTTP 200 and page text names the state and party
 - state: NH
   party: R
   name: New Hampshire Republican State Committee
   website: https://nh.gop/
-  wikidata_id: null
+  wikidata_id: Q7008213
   resolved_by: manual-override
+  candidate_evidence: 'Wikidata has no website; direct check 2026-07-28: nhgop.org
+    redirects to nh.gop, HTTP 200, title ''New Hampshire Republican Party'''
   homepage_status: 200
   verified_on: '2026-07-28'
   source_url: https://nh.gop/
   needs_review: false
-  note: null
+  note: homepage HTTP 200 and page text names the state and party
 - state: NJ
   party: D
   name: New Jersey Democratic State Committee
-  website: http://www.njdems.org
+  website: https://www.njdems.org/
   wikidata_id: Q15980731
   resolved_by: wikidata-P131
+  candidate_evidence: null
   homepage_status: 200
   verified_on: '2026-07-28'
   source_url: https://query.wikidata.org/sparql
   needs_review: false
-  note: null
+  note: homepage HTTP 200 and page text names the state and party
 - state: NJ
   party: R
   name: New Jersey Republican State Committee
-  website: http://www.njgop.org
+  website: https://www.njgop.org/
   wikidata_id: Q15980751
   resolved_by: label
+  candidate_evidence: null
   homepage_status: 200
   verified_on: '2026-07-28'
   source_url: https://query.wikidata.org/sparql
   needs_review: false
-  note: null
+  note: homepage HTTP 200 and page text names the state and party
 - state: NM
   party: D
   name: Democratic Party of New Mexico
-  website: https://nmdemocrats.org
+  website: https://www.nmdemocrats.org/
   wikidata_id: Q5255720
   resolved_by: wikidata-P131
+  candidate_evidence: null
   homepage_status: 200
   verified_on: '2026-07-28'
   source_url: https://query.wikidata.org/sparql
   needs_review: false
-  note: null
+  note: homepage HTTP 200 and page text names the state and party
 - state: NM
   party: R
   name: Republican Party of New Mexico
-  website: https://newmexico.gop
+  website: https://newmexico.gop/
   wikidata_id: Q7314661
   resolved_by: wikidata-P131
+  candidate_evidence: null
   homepage_status: 200
   verified_on: '2026-07-28'
   source_url: https://query.wikidata.org/sparql
   needs_review: false
-  note: null
+  note: homepage HTTP 200 and page text names the state and party
 - state: NV
   party: D
   name: Nevada Democratic Party
-  website: https://nvdems.com
+  website: https://nvdems.com/
   wikidata_id: Q7003402
   resolved_by: wikidata-P131
+  candidate_evidence: null
   homepage_status: 200
   verified_on: '2026-07-28'
   source_url: https://query.wikidata.org/sparql
   needs_review: false
-  note: null
+  note: homepage HTTP 200 and page text names the state and party
 - state: NV
   party: R
   name: Nevada Republican Party
-  website: http://www.nevadagop.org/
+  website: https://nevadagop.org/
   wikidata_id: Q15980750
   resolved_by: label
+  candidate_evidence: null
   homepage_status: 200
   verified_on: '2026-07-28'
   source_url: https://query.wikidata.org/sparql
   needs_review: false
-  note: null
+  note: homepage HTTP 200 and page text names the state and party
 - state: NY
   party: D
   name: New York Democratic Party
-  website: http://nydems.org
+  website: https://www.nydems.org/
   wikidata_id: Q7014067
   resolved_by: wikidata-P131
+  candidate_evidence: null
   homepage_status: 200
   verified_on: '2026-07-28'
   source_url: https://query.wikidata.org/sparql
   needs_review: false
-  note: null
+  note: homepage HTTP 200 and page text names the state and party
 - state: NY
   party: R
   name: New York Republican State Committee
-  website: http://www.nygop.org
+  website: https://nygop.org/
   wikidata_id: Q7013922
   resolved_by: label
+  candidate_evidence: null
   homepage_status: 200
   verified_on: '2026-07-28'
   source_url: https://query.wikidata.org/sparql
   needs_review: false
-  note: null
+  note: homepage HTTP 200 and page text names the state and party
 - state: OH
   party: D
   name: Ohio Democratic Party
   website: https://ohiodems.org/
   wikidata_id: Q7080791
   resolved_by: wikidata-P131
+  candidate_evidence: null
   homepage_status: 200
   verified_on: '2026-07-28'
   source_url: https://query.wikidata.org/sparql
   needs_review: false
-  note: null
+  note: homepage HTTP 200 and page text names the state and party
 - state: OH
   party: R
   name: Ohio Republican Party
-  website: http://www.ohiogop.org
+  website: https://ohiogop.org/
   wikidata_id: Q7080876
   resolved_by: label
+  candidate_evidence: null
   homepage_status: 200
   verified_on: '2026-07-28'
   source_url: https://query.wikidata.org/sparql
   needs_review: false
-  note: null
+  note: homepage HTTP 200 and page text names the state and party
 - state: OK
   party: D
   name: Oklahoma Democratic Party
-  website: http://www.okdemocrats.org/
+  website: https://www.okdemocrats.org/
   wikidata_id: Q15980735
   resolved_by: wikidata-P131
+  candidate_evidence: null
   homepage_status: 200
   verified_on: '2026-07-28'
   source_url: https://query.wikidata.org/sparql
   needs_review: false
-  note: null
+  note: homepage HTTP 200 and page text names the state and party
 - state: OK
   party: R
   name: Oklahoma Republican Party
   website: https://okgop.com/
   wikidata_id: null
   resolved_by: manual-override
+  candidate_evidence: 'Wikidata has no website; direct check 2026-07-28: host answered
+    but refused a scripted request (HTTP 403)'
   homepage_status: 403
   verified_on: '2026-07-28'
   source_url: https://okgop.com/
   needs_review: true
-  note: candidate domain; HTTP 403 to a scripted request on 2026-07-28, so its content
-    could not be confirmed
+  note: host answers but refused a scripted request (HTTP 403); content could not
+    be confirmed
 - state: OR
   party: D
   name: Democratic Party of Oregon
-  website: https://dpo.org
+  website: https://dpo.org/
   wikidata_id: Q5255722
   resolved_by: wikidata-P131
+  candidate_evidence: null
   homepage_status: 200
   verified_on: '2026-07-28'
   source_url: https://query.wikidata.org/sparql
   needs_review: false
-  note: null
+  note: homepage HTTP 200 and page text names the state and party
 - state: OR
   party: R
   name: Oregon Republican Party
   website: https://oregon.gop/
   wikidata_id: Q7101309
   resolved_by: wikidata-P131
+  candidate_evidence: null
   homepage_status: 200
   verified_on: '2026-07-28'
   source_url: https://query.wikidata.org/sparql
   needs_review: false
-  note: null
+  note: homepage HTTP 200 and page text names the state and party
 - state: PA
   party: D
   name: Pennsylvania Democratic Party
   website: https://www.padems.org/
   wikidata_id: Q7163696
   resolved_by: wikidata-P131
+  candidate_evidence: null
   homepage_status: 403
   verified_on: '2026-07-28'
   source_url: https://query.wikidata.org/sparql
   needs_review: true
-  note: reachable but refused a scripted request (HTTP 403)
+  note: host answers but refused a scripted request (HTTP 403); content could not
+    be confirmed
 - state: PA
   party: R
   name: Republican Party of Pennsylvania
   website: https://pagop.org/
   wikidata_id: null
   resolved_by: manual-override
+  candidate_evidence: 'Wikidata has no website; direct check 2026-07-28: HTTP 200,
+    title ''Home - Republican Party of Pennsylvania'''
   homepage_status: 200
   verified_on: '2026-07-28'
   source_url: https://pagop.org/
   needs_review: false
-  note: null
+  note: homepage HTTP 200 and page text names the state and party
 - state: RI
   party: D
   name: Rhode Island Democratic Party
-  website: http://www.ridemocrats.org
+  website: https://www.ridemocrats.org/
   wikidata_id: Q7320908
   resolved_by: wikidata-P131
+  candidate_evidence: null
   homepage_status: 200
   verified_on: '2026-07-28'
   source_url: https://query.wikidata.org/sparql
   needs_review: false
-  note: null
+  note: homepage HTTP 200 and page text names the state and party
 - state: RI
   party: R
   name: Rhode Island Republican Party
-  website: http://www.rigop.org
+  website: https://ri.gop/
   wikidata_id: Q7320953
-  resolved_by: label
-  homepage_status: null
+  resolved_by: manual-override
+  candidate_evidence: corrects Wikidata's www.rigop.org, whose host did not resolve
+    on 2026-07-28; ri.gop answered but refused a scripted request (HTTP 403)
+  homepage_status: 200
   verified_on: '2026-07-28'
-  source_url: https://query.wikidata.org/sparql
-  needs_review: true
-  note: 'unreachable: status=None error=ConnectionError: HTTPConnectionPool(host=''www.rigop.org'',
-    port=80): Max retries exceeded with url: / (Caused by NameResolutionError("HTTPConnection(host=''www.rigop.org'',
-    port=80): Failed to resolve ''www.rigop.org'' ([Errno 8] nodename nor servname
-    provided, or not known)"))'
+  source_url: https://ri.gop/
+  needs_review: false
+  note: homepage HTTP 200 and page text names the state and party
 - state: SC
   party: D
   name: South Carolina Democratic Party
   website: https://scdp.org/
   wikidata_id: Q7566566
   resolved_by: wikidata-P131
+  candidate_evidence: null
   homepage_status: 200
   verified_on: '2026-07-28'
   source_url: https://query.wikidata.org/sparql
   needs_review: false
-  note: null
+  note: homepage HTTP 200 and page text names the state and party
 - state: SC
   party: R
   name: South Carolina Republican Party
-  website: http://www.scgop.com
+  website: https://sc.gop
   wikidata_id: Q7566626
   resolved_by: label
+  candidate_evidence: null
   homepage_status: 200
   verified_on: '2026-07-28'
   source_url: https://query.wikidata.org/sparql
   needs_review: false
-  note: null
+  note: homepage HTTP 200 and page text names the state and party
 - state: SD
   party: D
   name: South Dakota Democratic Party
-  website: http://www.sddp.org
+  website: https://www.sddp.org/
   wikidata_id: Q7566958
   resolved_by: wikidata-P131
+  candidate_evidence: null
   homepage_status: 200
   verified_on: '2026-07-28'
   source_url: https://query.wikidata.org/sparql
   needs_review: false
-  note: null
+  note: homepage HTTP 200 and page text names the state and party
 - state: SD
   party: R
   name: South Dakota Republican Party
-  website: http://southdakotagop.com/
+  website: https://www.sdgop.com/
   wikidata_id: Q7566979
-  resolved_by: wikidata-P131
+  resolved_by: manual-override
+  candidate_evidence: corrects Wikidata's southdakotagop.com, which on 2026-07-28
+    served a law-firm directory ('SD TOP LAW FIRMS'); sdgop.com returned HTTP 200,
+    title 'South Dakota Republican Party'
   homepage_status: 200
   verified_on: '2026-07-28'
-  source_url: https://query.wikidata.org/sparql
+  source_url: https://www.sdgop.com/
   needs_review: false
-  note: null
+  note: homepage HTTP 200 and page text names the state and party
 - state: TN
   party: D
   name: Tennessee Democratic Party
-  website: https://www.tndp.org/
+  website: https://tndp.org/
   wikidata_id: Q7700059
   resolved_by: wikidata-P131
+  candidate_evidence: null
   homepage_status: 200
   verified_on: '2026-07-28'
   source_url: https://query.wikidata.org/sparql
   needs_review: false
-  note: null
+  note: homepage HTTP 200 and page text names the state and party
 - state: TN
   party: R
   name: Tennessee Republican Party
-  website: http://www.tngop.org/
+  website: https://tngop.org/
   wikidata_id: Q7700147
   resolved_by: label
+  candidate_evidence: null
   homepage_status: 200
   verified_on: '2026-07-28'
   source_url: https://query.wikidata.org/sparql
   needs_review: false
-  note: null
+  note: homepage HTTP 200 and page text names the state and party
 - state: TX
   party: D
   name: Texas Democratic Party
   website: https://www.texasdemocrats.org/
   wikidata_id: Q7707623
   resolved_by: wikidata-P131
+  candidate_evidence: null
   homepage_status: 200
   verified_on: '2026-07-28'
   source_url: https://query.wikidata.org/sparql
   needs_review: false
-  note: null
+  note: homepage HTTP 200 and page text names the state and party
 - state: TX
   party: R
   name: Republican Party of Texas
-  website: https://www.texasgop.org/
+  website: https://texasgop.org/
   wikidata_id: Q7314663
   resolved_by: label
+  candidate_evidence: null
   homepage_status: 200
   verified_on: '2026-07-28'
   source_url: https://query.wikidata.org/sparql
   needs_review: false
-  note: null
+  note: homepage HTTP 200 and page text names the state and party
 - state: UT
   party: D
   name: Utah Democratic Party
   website: https://www.utahdemocrats.org/
   wikidata_id: Q7902341
   resolved_by: wikidata-P131
+  candidate_evidence: null
   homepage_status: 200
   verified_on: '2026-07-28'
   source_url: https://query.wikidata.org/sparql
   needs_review: false
-  note: null
+  note: homepage HTTP 200 and page text names the state and party
 - state: UT
   party: R
   name: Utah Republican Party
-  website: http://www.utgop.org/
+  website: https://www.utgop.org/
   wikidata_id: Q7902394
   resolved_by: label
+  candidate_evidence: null
   homepage_status: 200
   verified_on: '2026-07-28'
   source_url: https://query.wikidata.org/sparql
   needs_review: false
-  note: null
+  note: homepage HTTP 200 and page text names the state and party
 - state: VA
   party: D
   name: Democratic Party of Virginia
   website: https://vademocrats.org/
   wikidata_id: Q5255726
   resolved_by: wikidata-P131
+  candidate_evidence: null
   homepage_status: 200
   verified_on: '2026-07-28'
   source_url: https://query.wikidata.org/sparql
   needs_review: false
-  note: null
+  note: homepage HTTP 200 and page text names the state and party
 - state: VA
   party: R
   name: Republican Party of Virginia
-  website: http://www.rpv.org
+  website: https://virginia.gop/
   wikidata_id: Q7314664
   resolved_by: label
+  candidate_evidence: null
   homepage_status: 200
   verified_on: '2026-07-28'
   source_url: https://query.wikidata.org/sparql
   needs_review: false
-  note: null
+  note: homepage HTTP 200 and page text names the state and party
 - state: VT
   party: D
   name: Vermont Democratic Party
   website: https://www.vtdemocrats.org/
   wikidata_id: Q7921703
   resolved_by: wikidata-P131
+  candidate_evidence: null
   homepage_status: 200
   verified_on: '2026-07-28'
   source_url: https://query.wikidata.org/sparql
   needs_review: false
-  note: null
+  note: homepage HTTP 200 and page text names the state and party
 - state: VT
   party: R
   name: Vermont Republican Party
-  website: http://vtgop.org/
+  website: https://vtgop.org/
   wikidata_id: Q3174289
   resolved_by: label
+  candidate_evidence: null
   homepage_status: 200
   verified_on: '2026-07-28'
   source_url: https://query.wikidata.org/sparql
   needs_review: false
-  note: null
+  note: homepage HTTP 200 and page text names the state and party
 - state: WA
   party: D
   name: Washington State Democratic Party
   website: https://wadems.org/
   wikidata_id: Q7972236
   resolved_by: wikidata-P131
+  candidate_evidence: null
   homepage_status: 403
   verified_on: '2026-07-28'
   source_url: https://query.wikidata.org/sparql
   needs_review: true
-  note: reachable but refused a scripted request (HTTP 403)
+  note: host answers but refused a scripted request (HTTP 403); content could not
+    be confirmed
 - state: WA
   party: R
   name: Washington State Republican Party
-  website: http://www.wsrp.org/
+  website: https://wagop.org/
   wikidata_id: Q7972273
-  resolved_by: label
-  homepage_status: null
+  resolved_by: manual-override
+  candidate_evidence: corrects Wikidata's wsrp.org, whose host did not resolve on
+    2026-07-28; wagop.org returned HTTP 200, title 'Washington State Republican Party'
+  homepage_status: 200
   verified_on: '2026-07-28'
-  source_url: https://query.wikidata.org/sparql
-  needs_review: true
-  note: 'unreachable: status=None error=ConnectionError: (''Connection aborted.'',
-    OSError(57, ''Socket is not connected''))'
+  source_url: https://wagop.org/
+  needs_review: false
+  note: homepage HTTP 200 and page text names the state and party
 - state: WI
   party: D
   name: Democratic Party of Wisconsin
   website: https://wisdems.org/
   wikidata_id: Q5255727
   resolved_by: wikidata-P131
+  candidate_evidence: null
   homepage_status: 200
   verified_on: '2026-07-28'
   source_url: https://query.wikidata.org/sparql
   needs_review: false
-  note: null
+  note: homepage HTTP 200 and page text names the state and party
 - state: WI
   party: R
   name: Republican Party of Wisconsin
-  website: http://wisgop.org/
+  website: https://wisgop.org/
   wikidata_id: Q7314666
   resolved_by: label
+  candidate_evidence: null
   homepage_status: 200
   verified_on: '2026-07-28'
   source_url: https://query.wikidata.org/sparql
   needs_review: false
-  note: null
+  note: homepage HTTP 200 and page text names the state and party
 - state: WV
   party: D
   name: West Virginia Democratic Party
-  website: https://www.wvdemocrats.com
+  website: https://www.wvdemocrats.com/
   wikidata_id: Q7986838
   resolved_by: wikidata-P131
+  candidate_evidence: null
   homepage_status: 200
   verified_on: '2026-07-28'
   source_url: https://query.wikidata.org/sparql
   needs_review: false
-  note: null
+  note: homepage HTTP 200 and page text names the state and party
 - state: WV
   party: R
   name: West Virginia Republican Party
-  website: http://www.wvgop.org/
+  website: https://wvgop.org/
   wikidata_id: Q7986890
   resolved_by: label
+  candidate_evidence: null
   homepage_status: 200
   verified_on: '2026-07-28'
   source_url: https://query.wikidata.org/sparql
   needs_review: false
-  note: null
+  note: homepage HTTP 200 and page text names the state and party
 - state: WY
   party: D
   name: Wyoming Democratic Party
   website: https://wyodems.org/
   wikidata_id: Q8040322
   resolved_by: wikidata-P131
+  candidate_evidence: null
   homepage_status: 200
   verified_on: '2026-07-28'
   source_url: https://query.wikidata.org/sparql
   needs_review: false
-  note: null
+  note: homepage HTTP 200 and page text names the state and party
 - state: WY
   party: R
   name: Wyoming Republican Party
-  website: https://www.wyoming.gop/
+  website: https://wyoming.gop/
   wikidata_id: Q8040378
   resolved_by: label
+  candidate_evidence: null
   homepage_status: 200
   verified_on: '2026-07-28'
   source_url: https://query.wikidata.org/sparql
   needs_review: false
-  note: null
+  note: homepage HTTP 200 and page text names the state and party

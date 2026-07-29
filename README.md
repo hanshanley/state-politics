@@ -82,8 +82,8 @@ Greenfield. Work is organized in phases:
 |---|---|---|
 | 0 | Scaffolding + provenance layer | ✅ done |
 | 1 | Ingest historical platform corpus (1846–2017) | ✅ done |
-| 2 | Build verified registry of all 100 state party organizations | ⬜ |
-| 3 | Collect 2018–present platforms (the hard part) | ⬜ |
+| 2 | Build verified registry of all 100 state party organizations | ✅ done |
+| 3 | Collect 2018–present platforms (the hard part) | ⬜ next |
 | 4 | Build 50-state bill + sponsor-party pipeline | ⬜ |
 | 5 | Define a shared issue taxonomy for both streams | ⬜ |
 | 6 | Compute emphasis scores and stated-vs-revealed divergence | ⬜ |
@@ -102,6 +102,10 @@ uv run python -m state_politics.platforms.dataverse
 
 # Render the coverage figure that motivates the project.
 uv run python scripts/plot_platform_coverage.py
+
+# Build the registry of all 100 state party organizations and check every homepage.
+# Takes several minutes: it contacts 100 live sites.
+uv run python -m state_politics.platforms.registry
 ```
 
 The ingest prints a reconciliation line that must read `changelog consistent` before it will
@@ -116,10 +120,30 @@ states with no major-party platform at all: ['MD']
 ```
 
 Outputs: `data/processed/platforms_historical.parquet`,
-`data/processed/platforms_historical_coverage.csv`,
+`data/processed/platforms_historical_coverage.csv`, `conf/party_registry.yml`,
 `data/provenance.jsonl`, and `outputs/platform_corpus_recency.png`.
 
 ![Most recent state party platform held in the corpus, by state](outputs/platform_corpus_recency.png)
+
+### What the registry build found
+
+`conf/party_registry.yml` holds all 100 organizations, each with a `source_url`,
+`verified_on` date, the HTTP status observed for its homepage, and a `needs_review` flag.
+A row is only trusted when the live page **itself names the state and the party** — a 200
+alone is not enough, and that check earned its keep immediately:
+
+* Wikidata's URL for the **Michigan Republican Party** (`migop.org`) now redirects to
+  `kiss918menang.com`, and the **Nebraska Republican Party**'s (`negop.org`) to
+  `wildarms4.com` — both unrelated commercial sites.
+* **South Dakota**'s (`southdakotagop.com`) now serves a law-firm directory, and
+  **Arizona**'s (`az.gop`) redirects to an image file on a public radio station's server.
+* Four more (`ctgop.org`, `indgop.org`, `rigop.org`, `wsrp.org`) no longer resolve at all.
+
+Taking Wikidata at face value would have pointed the entire platform crawl at spam domains.
+Nine hand-checked corrections are recorded in `MANUAL_OVERRIDES`, each carrying the evidence
+that established it. Current state: **100/100 websites resolved, 94/100 machine-verified**;
+the remaining six sit behind bot protection (HTTP 403) or were briefly down (502), so they
+stay flagged for human confirmation rather than being asserted as correct.
 
 ---
 
