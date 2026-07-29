@@ -31,6 +31,7 @@ marker). Verified against all 2,091 filenames in the authoritative archive.
 from __future__ import annotations
 
 import argparse
+import hashlib
 import os
 import re
 import zipfile
@@ -38,14 +39,16 @@ from collections.abc import Iterator
 from dataclasses import dataclass, field
 from pathlib import Path
 
-from ..provenance import ProvenanceLog, fetch, record_local_file, sha256_bytes
+from ..provenance import ProvenanceLog, download_to_file, record_local_file, sha256_bytes
 
 __all__ = [
     "DATASET_DOI",
     "DATASET_FILES",
     "SOURCE_ORG",
+    "US_STATES",
     "PlatformDocument",
     "Reconciliation",
+    "archive_members",
     "coverage_matrix",
     "decode_text",
     "download_dataset",
@@ -75,17 +78,24 @@ class DatasetFile:
     file_id: int
     filename: str
     role: str
+    md5: str
 
     @property
     def url(self) -> str:
         return _ACCESS_URL.format(file_id=self.file_id)
 
 
-#: Verified against the Dataverse dataset metadata on 2026-07-28.
+#: Verified against the Dataverse dataset metadata on 2026-07-28. The MD5s are the
+#: publisher's own digests, taken from the dataset's file metadata; checking downloads
+#: against them means substituted or truncated content fails loudly instead of quietly
+#: becoming "the corpus".
 DATASET_FILES: tuple[DatasetFile, ...] = (
-    DatasetFile(11106328, "platform-update-04212025.zip", "authoritative"),
-    DatasetFile(5746322, "05 for public.zip", "superseded"),
-    DatasetFile(11112198, "file_changes_04232025KG.txt", "changelog"),
+    DatasetFile(11106328, "platform-update-04212025.zip", "authoritative",
+                "bab1654d0a4754b5beeb7f28241a63b3"),
+    DatasetFile(5746322, "05 for public.zip", "superseded",
+                "7c7e05a6c6b6de246c8e5c2f38efb613"),
+    DatasetFile(11112198, "file_changes_04232025KG.txt", "changelog",
+                "6d4aa4ded1b2ac59e3e94f790b45c25c"),
 )
 
 #: Party tokens treated as the two major parties. Historical factions such as ``GoldD``
@@ -93,6 +103,15 @@ DATASET_FILES: tuple[DatasetFile, ...] = (
 #: D/R -- they were rival organizations, and collapsing them would misstate what the
 #: state party of record actually said.
 MAJOR_PARTIES = frozenset({"D", "R"})
+
+#: The 50 states. ``US`` (national platforms) is intentionally excluded.
+US_STATES = (
+    "AL", "AK", "AZ", "AR", "CA", "CO", "CT", "DE", "FL", "GA",
+    "HI", "ID", "IL", "IN", "IA", "KS", "KY", "LA", "ME", "MD",
+    "MA", "MI", "MN", "MS", "MO", "MT", "NE", "NV", "NH", "NJ",
+    "NM", "NY", "NC", "ND", "OH", "OK", "OR", "PA", "RI", "SC",
+    "SD", "TN", "TX", "UT", "VT", "VA", "WA", "WV", "WI", "WY",
+)
 
 _FILENAME_RE = re.compile(r"^(?P<state>[A-Z]{2})-(?P<year>\d{4})-(?P<rest>.+)$")
 
@@ -148,6 +167,30 @@ def normalize_party(party_raw: str) -> str:
     return party_raw if party_raw in MAJOR_PARTIES else "other"
 
 
+_RTF_GROUP_RE = re.compile(r"\{\\\*.*?\}", re.S)
+_RTF_CONTROL_RE = re.compile(r"\\[a-zA-Z]+-?\d* ?")
+_RTF_HEX_RE = re.compile(r"\\'([0-9a-fA-F]{2})")
+
+
+def strip_rtf(text: str) -> str:
+    """Reduce RTF source to its prose.
+
+    Exactly one payload in the corpus is RTF (``US-1916-Socialist-B-EA.rtf``). Stored raw it
+    contributed 3,319 "words" of control words and font/colour tables against a corpus median
+    of 2,569 real ones, silently contaminating any length or term statistic computed over the
+    corpus. This is a deliberately minimal stripper -- enough for one plain document, not a
+    general RTF parser.
+    """
+    if not text.lstrip().startswith("{\\rtf"):
+        return text
+    text = _RTF_GROUP_RE.sub(" ", text)
+    text = _RTF_HEX_RE.sub(lambda m: bytes.fromhex(m.group(1)).decode("cp1252", "replace"), text)
+    text = text.replace("\\par", "\n").replace("\\line", "\n").replace("\\tab", "\t")
+    text = _RTF_CONTROL_RE.sub(" ", text)
+    text = text.replace("{", " ").replace("}", " ")
+    return re.sub(r"[ \t]+", " ", text).strip()
+
+
 def decode_text(raw: bytes) -> str:
     """Decode platform text, tolerating the corpus's mixed encodings.
 
@@ -163,6 +206,14 @@ def decode_text(raw: bytes) -> str:
     return raw.decode("latin-1")
 
 
+def _md5_file(path: Path, *, chunk_size: int = 1 << 20) -> str:
+    digest = hashlib.md5()  # noqa: S324 - integrity check against the publisher's own digest
+    with open(path, "rb") as handle:
+        while chunk := handle.read(chunk_size):
+            digest.update(chunk)
+    return digest.hexdigest()
+
+
 def download_dataset(
     dest_dir: Path | str,
     *,
@@ -171,8 +222,10 @@ def download_dataset(
 ) -> dict[str, Path]:
     """Download the dataset files into ``dest_dir``, recording provenance for each.
 
-    Returns a mapping of role -> local path. Files already present are not re-downloaded.
-    ``only`` restricts the download to a single role (e.g. ``"authoritative"``).
+    Returns a mapping of role -> local path. Every file, whether freshly downloaded or found
+    already on disk, is checked against the publisher's MD5; a mismatch raises rather than
+    letting corrupted or substituted content silently become "the corpus". ``only`` restricts
+    the download to a single role (e.g. ``"authoritative"``).
     """
     dest_dir = Path(dest_dir)
     dest_dir.mkdir(parents=True, exist_ok=True)
@@ -182,8 +235,8 @@ def download_dataset(
             continue
         target = dest_dir / spec.filename
         if target.exists():
-            # Still record provenance for a file that was already on disk, so the log
-            # never has a silent hole where an input came from nowhere.
+            # Still record provenance for a file that was already on disk, so the log never
+            # has a silent hole where an input came from nowhere.
             record_local_file(
                 target,
                 url=spec.url,
@@ -194,20 +247,26 @@ def download_dataset(
                     "already present, not re-downloaded"
                 ),
             )
-            paths[spec.role] = target
-            continue
-        _, record = fetch(
-            spec.url,
-            source_org=SOURCE_ORG,
-            log=log,
-            dest=target,
-            timeout=300.0,
-            note=f"{DATASET_DOI} {spec.filename} ({spec.role})",
-        )
-        if not record.ok:
+        else:
+            record = download_to_file(
+                spec.url,
+                target,
+                source_org=SOURCE_ORG,
+                log=log,
+                timeout=300.0,
+                note=f"{DATASET_DOI} {spec.filename} ({spec.role})",
+            )
+            if not record.ok:
+                raise RuntimeError(
+                    f"failed to download {spec.filename} from {spec.url}: "
+                    f"status={record.http_status} error={record.error}"
+                )
+
+        actual = _md5_file(target)
+        if actual != spec.md5:
             raise RuntimeError(
-                f"failed to download {spec.filename} from {spec.url}: "
-                f"status={record.http_status} error={record.error}"
+                f"{target} failed its integrity check: expected MD5 {spec.md5}, got {actual}. "
+                "Delete the file and re-run to re-download."
             )
         paths[spec.role] = target
     return paths
@@ -229,6 +288,16 @@ def archive_members(zip_path: Path | str) -> list[str]:
         return [m for m in archive.namelist() if _is_payload(m)]
 
 
+def _payload_digests(zip_path: Path | str) -> dict[str, str]:
+    """``{basename: sha256}`` for every payload member of an archive."""
+    with zipfile.ZipFile(zip_path) as archive:
+        return {
+            os.path.basename(member): sha256_bytes(archive.read(member))
+            for member in archive.namelist()
+            if _is_payload(member)
+        }
+
+
 def iter_documents(zip_path: Path | str) -> Iterator[PlatformDocument]:
     """Yield every platform document in ``zip_path``."""
     with zipfile.ZipFile(zip_path) as archive:
@@ -246,7 +315,7 @@ def iter_documents(zip_path: Path | str) -> Iterator[PlatformDocument]:
                 flags=flags,
                 filename=filename,
                 member=member,
-                text=decode_text(raw),
+                text=strip_rtf(decode_text(raw)),
                 sha256=sha256_bytes(raw),
             )
 
@@ -308,29 +377,23 @@ def reconcile(
 
     This exists so the "use the update archive alone" decision is *checked* against the
     authors' own changelog on every run, instead of being a comment someone has to trust.
+
+    Members are reduced to digests rather than retained as bytes: the comparison only needs
+    to know whether content differs, and holding both archives decompressed in memory costs
+    ~118 MB for a result that fits in a few hundred kilobytes.
     """
-    with zipfile.ZipFile(authoritative_zip) as new_archive:
-        new_names = {
-            os.path.basename(m): new_archive.read(m)
-            for m in new_archive.namelist()
-            if _is_payload(m)
-        }
-    with zipfile.ZipFile(superseded_zip) as old_archive:
-        old_names = {
-            os.path.basename(m): old_archive.read(m)
-            for m in old_archive.namelist()
-            if _is_payload(m)
-        }
+    new_digests = _payload_digests(authoritative_zip)
+    old_digests = _payload_digests(superseded_zip)
 
     added, deleted = load_changelog(changelog)
-    only_new = set(new_names) - set(old_names)
-    only_old = set(old_names) - set(new_names)
-    shared = set(new_names) & set(old_names)
-    revised = sum(1 for name in shared if new_names[name] != old_names[name])
+    only_new = set(new_digests) - set(old_digests)
+    only_old = set(old_digests) - set(new_digests)
+    shared = set(new_digests) & set(old_digests)
+    revised = sum(1 for name in shared if new_digests[name] != old_digests[name])
 
     return Reconciliation(
-        authoritative_count=len(new_names),
-        superseded_count=len(old_names),
+        authoritative_count=len(new_digests),
+        superseded_count=len(old_digests),
         added_expected=len(added),
         deleted_expected=len(deleted),
         added_confirmed=frozenset(added & only_new),
@@ -385,26 +448,15 @@ def coverage_matrix(frame):
     index = sorted(set(US_STATES) | set(counts.index))
     out = pd.DataFrame(index=pd.Index(index, name="state"))
     for party in sorted(MAJOR_PARTIES):
-        out[f"n_{party}"] = counts.get(party).reindex(index).fillna(0).astype(int) \
-            if party in counts.columns else 0
-        out[f"latest_{party}"] = (
-            latest.get(party).reindex(index).astype("Int64")
-            if party in latest.columns
-            else pd.Series([pd.NA] * len(index), index=index, dtype="Int64")
-        )
+        if party in counts.columns:
+            out[f"n_{party}"] = counts[party].reindex(index).fillna(0).astype(int)
+            out[f"latest_{party}"] = latest[party].reindex(index).astype("Int64")
+        else:
+            out[f"n_{party}"] = 0
+            out[f"latest_{party}"] = pd.Series(pd.NA, index=index, dtype="Int64")
     out["n_total"] = out[[f"n_{p}" for p in sorted(MAJOR_PARTIES)]].sum(axis=1)
     out["latest_any"] = out[[f"latest_{p}" for p in sorted(MAJOR_PARTIES)]].max(axis=1)
     return out.reset_index()
-
-
-#: The 50 states. ``US`` (national platforms) is intentionally excluded.
-US_STATES = (
-    "AL", "AK", "AZ", "AR", "CA", "CO", "CT", "DE", "FL", "GA",
-    "HI", "ID", "IL", "IN", "IA", "KS", "KY", "LA", "ME", "MD",
-    "MA", "MI", "MN", "MS", "MO", "MT", "NE", "NV", "NH", "NJ",
-    "NM", "NY", "NC", "ND", "OH", "OK", "OR", "PA", "RI", "SC",
-    "SD", "TN", "TX", "UT", "VT", "VA", "WA", "WV", "WI", "WY",
-)
 
 
 def main(argv: list[str] | None = None) -> int:

@@ -14,10 +14,12 @@ from state_politics.platforms.registry import (
     MANUAL_OVERRIDES,
     STATE_NAMES,
     PartyOrg,
+    _collect,
     _content_confirms,
     _url_variants,
     match_state,
     parse_sparql_csv,
+    registrable_domain,
     verify_homepage,
     write_registry,
 )
@@ -79,11 +81,17 @@ def test_url_variants_normalizes_stale_www_urls():
     assert "https://www.ctgop.org" in variants
 
 
+def test_registrable_domain():
+    assert registrable_domain("https://www.mtgop.org/path") == "mtgop.org"
+    assert registrable_domain("http://kiss918menang.com/") == "kiss918menang.com"
+    assert registrable_domain("https://nh.gop") == "nh.gop"
+
+
 def test_content_confirms_requires_both_state_and_party():
-    page = b"<title>Home</title> The Texas Republican Party convention"
+    page = b"<p>The Texas Republican Party convention</p>"
     assert _content_confirms(page, "TX", "R")
     assert not _content_confirms(page, "TX", "D")
-    assert not _content_confirms(b"Republican Party of somewhere", "TX", "R")
+    assert not _content_confirms(b"<p>Republican Party of somewhere</p>", "TX", "R")
 
 
 def test_verify_homepage_rejects_a_hijacked_domain():
@@ -94,11 +102,51 @@ def test_verify_homepage_rejects_a_hijacked_domain():
         org, transport=lambda url, *, timeout, headers: StubResponse(200, spam, url)
     )
     assert verified.needs_review is True
-    assert "did not name" in verified.note
+    assert "did not identify" in verified.note
+
+
+def test_verify_homepage_rejects_a_page_that_only_echoes_its_own_domain():
+    """The regression that motivated this check.
+
+    http://www.alaskagop.org serves an "Account Suspended" page. Matching raw HTML let it
+    prove itself, because "alaska" and "gop" appear only inside webmaster@alaskagop.org, and
+    it was written into the registry as a verified state party homepage.
+    """
+    suspended = (
+        b"<html><head><title>Account Suspended</title></head><body>"
+        b'<a href="mailto:webmaster@alaskagop.org">contact</a></body></html>'
+    )
+    org = PartyOrg(state="AK", party="R", website="http://www.alaskagop.org")
+    verified = verify_homepage(
+        org, transport=lambda url, *, timeout, headers: StubResponse(200, suspended, url)
+    )
+    assert verified.needs_review is True
+
+
+def test_content_confirms_ignores_tokens_that_come_only_from_the_domain():
+    suspended = (
+        b"<title>Account Suspended</title>"
+        b'<a href="mailto:webmaster@alaskagop.org">x</a>'
+    )
+    assert not _content_confirms(suspended, "AK", "R")
+
+
+def test_content_confirms_does_not_accept_the_other_party():
+    """Republican sites mention 'democrat' constantly; that must not confirm a D row."""
+    gop_page = (
+        b"<h1>Texas GOP</h1><p>Texas Republicans oppose the radical democrat agenda. "
+        b"The Republican Party of Texas stands firm.</p>"
+    )
+    assert _content_confirms(gop_page, "TX", "R")
+    assert not _content_confirms(gop_page, "TX", "D")
+
+
+def test_content_confirms_rejects_parked_pages():
+    assert not _content_confirms(b"<title>Domain for sale</title> Montana Republican", "MT", "R")
 
 
 def test_verify_homepage_accepts_a_confirming_page():
-    page = b"<title>Home - MTGOP</title> The Montana Republican Party"
+    page = b"<h1>Montana Republican Party</h1><p>The Montana Republicans convention.</p>"
     org = PartyOrg(state="MT", party="R", website="https://mtgop.org/")
     verified = verify_homepage(
         org, transport=lambda url, *, timeout, headers: StubResponse(200, page, url)
@@ -108,9 +156,25 @@ def test_verify_homepage_accepts_a_confirming_page():
     assert verified.verified_on
 
 
+def test_verify_homepage_never_adopts_an_off_domain_redirect():
+    """A lapsed domain can redirect anywhere; the crawl target must not follow it."""
+    page = b"<h1>Michigan Republican Party</h1> Michigan Republicans"
+    org = PartyOrg(state="MI", party="R", website="https://migop.org/")
+    verified = verify_homepage(
+        org,
+        transport=lambda url, *, timeout, headers: StubResponse(
+            200, page, "https://kiss918menang.com/"
+        ),
+    )
+    assert verified.website == "https://migop.org/"       # configured URL is preserved
+    assert verified.final_url == "https://kiss918menang.com/"
+    assert verified.needs_review is True
+    assert "off-domain" in verified.note
+
+
 def test_verify_homepage_falls_back_to_a_url_variant():
     """A dead http://www. host must not condemn a site that is live at bare https."""
-    page = b"The Connecticut Republican Party"
+    page = b"<h1>Connecticut Republican Party</h1> Connecticut Republicans"
 
     def transport(url, *, timeout, headers):
         if url.startswith("http://www."):
@@ -120,7 +184,26 @@ def test_verify_homepage_falls_back_to_a_url_variant():
     org = PartyOrg(state="CT", party="R", website="http://www.ctgop.org")
     verified = verify_homepage(org, transport=transport)
     assert verified.needs_review is False
-    assert not verified.website.startswith("http://www.")
+    assert verified.final_url is not None
+    assert not verified.final_url.startswith("http://www.")
+
+
+def test_verify_homepage_keeps_the_most_informative_status_across_variants():
+    """A 403 proves the host is alive and must survive a later variant's DNS failure."""
+    def transport(url, *, timeout, headers):
+        if url.startswith("http://www.") or url.startswith("https://www."):
+            return StubResponse(403)
+        raise ConnectionError("NXDOMAIN")
+
+    org = PartyOrg(state="CT", party="R", website="http://www.ctgop.org")
+    verified = verify_homepage(org, transport=transport)
+    assert verified.homepage_status == 403
+    assert "refused a scripted request" in verified.note
+
+
+def test_url_variants_does_not_duplicate_a_trailing_slash_request():
+    variants = _url_variants("https://mtgop.org/")
+    assert variants == ["https://mtgop.org/", "http://mtgop.org"]
 
 
 def test_verify_homepage_flags_bot_protection_without_claiming_success():
@@ -136,7 +219,19 @@ def test_verify_homepage_flags_bot_protection_without_claiming_success():
 def test_verify_homepage_handles_missing_website():
     verified = verify_homepage(PartyOrg(state="MD", party="D"))
     assert verified.needs_review is True
-    assert verified.note == "no website in Wikidata"
+    assert verified.note == "no website configured"
+
+
+def test_collect_marks_a_county_p131_as_label_resolved():
+    """P131 pointing at a county does not resolve the state, so it is not structural."""
+    rows = [{"party": "http://www.wikidata.org/entity/Q1",
+             "partyLabel": "Nevada Republican Party",
+             "website": "https://x.test", "admLabel": "Clark County"}]
+    found = _collect(rows, "R")
+    assert found["NV"].resolved_by == "label"
+
+    rows[0]["admLabel"] = "Nevada"
+    assert _collect(rows, "R")["NV"].resolved_by == "wikidata-P131"
 
 
 def test_overrides_are_well_formed():

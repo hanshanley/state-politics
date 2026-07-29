@@ -41,9 +41,10 @@ SOURCE_NOTE = (
 
 def build_figure(coverage: pd.DataFrame, out_path: Path) -> Path:
     states = coverage[coverage["state"] != "US"].copy()
-    # Sort oldest-first so the most severe gaps sit at the top of the chart.
+    # Matplotlib places index 0 at the bottom, so the axis is inverted below and index 0
+    # renders at the TOP. Sorting oldest-first therefore puts the most severe gaps at the top.
     states["sort_key"] = states["latest_any"].fillna(0)
-    states = states.sort_values(["sort_key", "state"], ascending=[True, False])
+    states = states.sort_values(["sort_key", "state"], ascending=[True, True])
 
     labels = states["state"].tolist()
     positions = range(len(labels))
@@ -55,11 +56,15 @@ def build_figure(coverage: pd.DataFrame, out_path: Path) -> Path:
         if pd.notna(d) and pd.notna(r):
             ax.plot([d, r], [pos, pos], color=theme.GRID, linewidth=1.8, zorder=1,
                     solid_capstyle="round")
+        # Where the two parties' most recent platforms fall in the same year the markers
+        # coincide exactly -- true for 20 of the rows. Drawing them at equal size hid the
+        # Democratic dot completely, so a present observation looked identical to an absent
+        # one. The Democratic marker is therefore drawn larger and above.
         if pd.notna(d):
-            ax.scatter([d], [pos], color=theme.PARTY_COLORS["D"], s=46, zorder=2,
+            ax.scatter([d], [pos], color=theme.PARTY_COLORS["D"], s=86, zorder=3,
                        edgecolor=theme.BG, linewidth=0.8)
         if pd.notna(r):
-            ax.scatter([r], [pos], color=theme.PARTY_COLORS["R"], s=46, zorder=2,
+            ax.scatter([r], [pos], color=theme.PARTY_COLORS["R"], s=40, zorder=4,
                        edgecolor=theme.BG, linewidth=0.8)
         if pd.isna(d) and pd.isna(r):
             ax.text(1948, pos, "no platform of either party in the corpus", va="center",
@@ -68,12 +73,14 @@ def build_figure(coverage: pd.DataFrame, out_path: Path) -> Path:
     ax.set_yticks(list(positions))
     ax.set_yticklabels(labels, fontsize=9)
     ax.set_ylim(-1, len(labels) + 1)
+    ax.invert_yaxis()
     ax.grid(axis="x", linestyle="-", linewidth=0.5)
     ax.grid(axis="y", visible=False)
     ax.set_axisbelow(True)
 
     charts.marker_line(ax, 2017)
-    ax.text(2015, len(labels) - 0.2, "corpus ends 2017  ", ha="right", va="top", fontsize=9,
+    header_y = -0.9  # just above the first row, since the y-axis is inverted
+    ax.text(2015, header_y, "corpus ends 2017  ", ha="right", va="center", fontsize=9,
             style="italic", color=theme.MUTED, path_effects=theme.white_stroke())
 
     charts.style_axes(
@@ -85,14 +92,13 @@ def build_figure(coverage: pd.DataFrame, out_path: Path) -> Path:
     )
 
     # Direct labels instead of a legend box, per the house style.
-    top = len(labels) + 0.1
-    ax.scatter([1946], [top], color=theme.PARTY_COLORS["D"], s=46, edgecolor=theme.BG,
+    ax.scatter([1946], [header_y], color=theme.PARTY_COLORS["D"], s=86, edgecolor=theme.BG,
                linewidth=0.8, clip_on=False)
-    ax.text(1949, top, "Democratic", color=theme.PARTY_COLORS["D"], fontweight="bold",
+    ax.text(1949, header_y, "Democratic", color=theme.PARTY_COLORS["D"], fontweight="bold",
             fontsize=10, va="center")
-    ax.scatter([1978], [top], color=theme.PARTY_COLORS["R"], s=46, edgecolor=theme.BG,
+    ax.scatter([1978], [header_y], color=theme.PARTY_COLORS["R"], s=40, edgecolor=theme.BG,
                linewidth=0.8, clip_on=False)
-    ax.text(1981, top, "Republican", color=theme.PARTY_COLORS["R"], fontweight="bold",
+    ax.text(1981, header_y, "Republican", color=theme.PARTY_COLORS["R"], fontweight="bold",
             fontsize=10, va="center")
 
     return charts.finish(fig, ax, out_path, source=SOURCE_NOTE, legend=False)

@@ -139,11 +139,21 @@ def _sysctl(key: str) -> str | None:
 def _import_patterns() -> list[tuple[re.Pattern[str], str]]:
     patterns = []
     for module in REMOTE_LLM_MODULES:
-        root = re.escape(module.split(".")[0])
+        parts = module.split(".")
+        root = re.escape(parts[0])
         rest = re.escape(module)
+        alternatives = [rf"import\s+{rest}\b", rf"from\s+{rest}\b"]
+        if len(parts) > 1:
+            # `from huggingface_hub import InferenceClient` and `from google import
+            # generativeai` are the idiomatic forms and match none of the dotted patterns,
+            # so a dotted entry needs its leaf matched against a `from <root> import` line.
+            leaf = re.escape(parts[-1])
+            alternatives.append(rf"from\s+{root}\s+import\s+[^#\n]*\b{leaf}\b")
+        else:
+            alternatives.append(rf"import\s+{root}\b(?!\w)")
         patterns.append(
             (
-                re.compile(rf"^\s*(?:import\s+{rest}\b|from\s+{rest}\b|import\s+{root}\b(?!\w))"),
+                re.compile(r"^\s*(?:" + "|".join(alternatives) + r")"),
                 f"hosted LLM module {module!r}",
             )
         )
@@ -188,6 +198,13 @@ def audit_source_tree(
 
 def _python_files(root: Path, skip_dirs: set[str]) -> Iterator[Path]:
     for path in root.rglob("*.py"):
-        if any(part in skip_dirs for part in path.parts):
+        # Compare only the parts *below* root: matching the absolute path would silently
+        # disable the audit for a repo that happens to live under a directory called
+        # "data", "venv" or similar.
+        try:
+            relative_parts = path.relative_to(root).parts
+        except ValueError:  # pragma: no cover - rglob always yields paths under root
+            relative_parts = path.parts
+        if any(part in skip_dirs for part in relative_parts):
             continue
         yield path

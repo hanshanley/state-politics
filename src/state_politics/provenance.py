@@ -22,7 +22,9 @@ from __future__ import annotations
 
 import hashlib
 import json
+import re
 import time
+import urllib.parse
 from collections.abc import Iterator
 from dataclasses import asdict, dataclass, replace
 from datetime import UTC, datetime
@@ -30,13 +32,16 @@ from pathlib import Path
 from typing import Any, Protocol
 
 __all__ = [
+    "DEFAULT_MAX_BYTES",
     "USER_AGENT",
     "FetchRecord",
     "ProvenanceLog",
+    "download_to_file",
     "fetch",
     "record_local_file",
     "sha256_bytes",
     "sha256_file",
+    "url_is_fetchable",
     "utc_now_iso",
 ]
 
@@ -48,6 +53,36 @@ USER_AGENT = (
 
 #: HTTP statuses worth retrying: rate limiting and server-side faults.
 RETRYABLE_STATUSES = frozenset({429, 500, 502, 503, 504})
+
+#: Default ceiling on an in-memory response body. Web pages are small; anything far larger is
+#: either a mistake or a hostile host slow-dripping bytes to exhaust memory (``timeout`` is a
+#: per-read timeout, not a total one). Large files must go through :func:`download_to_file`.
+DEFAULT_MAX_BYTES = 64 * 1024 * 1024
+
+#: Hosts that must never be fetched. A lapsed party domain can point its DNS at loopback or
+#: cloud metadata, turning the crawler into an SSRF gadget.
+_BLOCKED_HOST_RE = re.compile(
+    r"^(localhost|127\.\d+\.\d+\.\d+|0\.0\.0\.0|10\.\d+\.\d+\.\d+|192\.168\.\d+\.\d+"
+    r"|172\.(1[6-9]|2\d|3[01])\.\d+\.\d+|169\.254\.\d+\.\d+|\[?::1\]?)$",
+    re.I,
+)
+
+
+def _host_of(url: str) -> str:
+    return urllib.parse.urlsplit(url).hostname or ""
+
+
+def url_is_fetchable(url: str) -> str | None:
+    """Return a rejection reason for ``url``, or ``None`` if it is safe to fetch."""
+    parts = urllib.parse.urlsplit(url)
+    if parts.scheme not in ("http", "https"):
+        return f"refusing non-http(s) scheme {parts.scheme!r}"
+    host = parts.hostname or ""
+    if not host:
+        return "refusing URL with no host"
+    if _BLOCKED_HOST_RE.match(host):
+        return f"refusing private/loopback host {host!r}"
+    return None
 
 
 def utc_now_iso() -> str:
@@ -143,14 +178,26 @@ class ProvenanceLog:
                     continue
                 try:
                     yield FetchRecord.from_dict(json.loads(line))
-                except (json.JSONDecodeError, ValueError) as exc:
+                except (json.JSONDecodeError, TypeError, ValueError) as exc:
                     raise ValueError(f"{self.path}:{line_number}: corrupt record: {exc}") from exc
 
     def records(self) -> list[FetchRecord]:
         return list(self)
 
+    def index(self) -> dict[str, FetchRecord]:
+        """Single-pass ``{url: latest record}`` index, for resumable crawls.
+
+        :meth:`latest_for` re-parses the whole log per call, which is fine for a one-off
+        lookup but quadratic when used inside a loop. Callers resuming a crawl should build
+        this index once and query it in memory.
+        """
+        return {record.url: record for record in self}
+
     def latest_for(self, url: str) -> FetchRecord | None:
-        """Most recent record for ``url``, or ``None`` if never attempted."""
+        """Most recent record for ``url``, or ``None`` if never attempted.
+
+        Scans the whole log. Use :meth:`index` when checking many URLs.
+        """
         found = None
         for record in self:
             if record.url == url:
@@ -195,6 +242,7 @@ def fetch(
     backoff: float = 2.0,
     headers: dict[str, str] | None = None,
     note: str | None = None,
+    max_bytes: int | None = DEFAULT_MAX_BYTES,
     sleep: Any = time.sleep,
 ) -> tuple[bytes | None, FetchRecord]:
     """GET ``url``, recording provenance; return ``(body_or_None, record)``.
@@ -213,9 +261,28 @@ def fetch(
     max_attempts:
         Total attempts, including the first. Only transport errors and
         :data:`RETRYABLE_STATUSES` are retried.
+    max_bytes:
+        Ceiling on the in-memory body. Pass ``None`` to disable, but prefer
+        :func:`download_to_file` for anything large — this function holds the whole body in
+        RAM and would need a multi-gigabyte dump resident twice.
     """
     if max_attempts < 1:
         raise ValueError("max_attempts must be >= 1")
+
+    rejection = url_is_fetchable(url)
+    if rejection is not None:
+        record = FetchRecord(
+            url=url,
+            source_org=source_org,
+            retrieved_at=utc_now_iso(),
+            ok=False,
+            attempts=0,
+            error=rejection,
+            note=note,
+        )
+        if log is not None:
+            log.append(record)
+        return None, record
 
     transport = transport or _default_transport
     request_headers = {"User-Agent": USER_AGENT, **(headers or {})}
@@ -240,8 +307,11 @@ def fetch(
             break
 
         status = int(response.status_code)
-        body = response.content if 200 <= status < 300 else b""
         ok = 200 <= status < 300
+        body = response.content if ok else b""
+        oversize = ok and max_bytes is not None and len(body) > max_bytes
+        if oversize:
+            ok, body = False, b""
         record = FetchRecord(
             url=url,
             source_org=source_org,
@@ -253,6 +323,7 @@ def fetch(
             content_type=_header(response, "Content-Type"),
             final_url=getattr(response, "url", None) or url,
             attempts=attempt,
+            error=(f"response exceeded max_bytes={max_bytes}" if oversize else None),
             note=note,
         )
         if ok or status not in RETRYABLE_STATUSES or attempt == max_attempts:
@@ -280,6 +351,104 @@ def _header(response: Response, name: str) -> str | None:
         return headers.get(name)
     except AttributeError:
         return None
+
+
+def download_to_file(
+    url: str,
+    dest: Path | str,
+    *,
+    source_org: str,
+    log: ProvenanceLog | None = None,
+    timeout: float = 120.0,
+    chunk_size: int = 1 << 20,
+    max_bytes: int | None = None,
+    note: str | None = None,
+    expected_sha256: str | None = None,
+) -> FetchRecord:
+    """Stream ``url`` to ``dest``, hashing incrementally; never buffers the body in RAM.
+
+    :func:`fetch` materializes the whole response, which cannot work for the multi-gigabyte
+    database dumps this project consumes on a 16 GB machine. This streams to disk while
+    updating the SHA-256 as it goes, so the "hash exactly the bytes stored" property is
+    preserved without the buffer.
+
+    The file is written to a ``.part`` sibling and only moved into place once complete, so an
+    interrupted download can never masquerade as a finished one.
+    """
+    import requests
+
+    rejection = url_is_fetchable(url)
+    if rejection is not None:
+        record = FetchRecord(url=url, source_org=source_org, retrieved_at=utc_now_iso(),
+                             ok=False, attempts=0, error=rejection, note=note)
+        if log is not None:
+            log.append(record)
+        return record
+
+    dest = Path(dest)
+    dest.parent.mkdir(parents=True, exist_ok=True)
+    partial = dest.with_suffix(dest.suffix + ".part")
+    digest = hashlib.sha256()
+    written = 0
+    status: int | None = None
+    content_type: str | None = None
+    final_url: str | None = None
+    error: str | None = None
+
+    try:
+        with requests.get(
+            url, timeout=timeout, headers={"User-Agent": USER_AGENT}, stream=True,
+            allow_redirects=True,
+        ) as response:
+            status = int(response.status_code)
+            content_type = response.headers.get("Content-Type")
+            final_url = response.url
+            if 200 <= status < 300:
+                declared = response.headers.get("Content-Length")
+                if max_bytes is not None and declared and int(declared) > max_bytes:
+                    error = f"Content-Length {declared} exceeds max_bytes={max_bytes}"
+                else:
+                    with open(partial, "wb") as handle:
+                        for chunk in response.iter_content(chunk_size=chunk_size):
+                            if not chunk:
+                                continue
+                            written += len(chunk)
+                            if max_bytes is not None and written > max_bytes:
+                                error = f"stream exceeded max_bytes={max_bytes}"
+                                break
+                            digest.update(chunk)
+                            handle.write(chunk)
+    except Exception as exc:  # noqa: BLE001 - recorded, not raised; see module docstring
+        error = f"{type(exc).__name__}: {exc}"
+
+    ok = error is None and status is not None and 200 <= status < 300
+    actual = digest.hexdigest() if ok else None
+    if ok and expected_sha256 and actual != expected_sha256:
+        ok = False
+        error = f"sha256 mismatch: expected {expected_sha256}, got {actual}"
+
+    if ok:
+        partial.replace(dest)
+    else:
+        partial.unlink(missing_ok=True)
+
+    record = FetchRecord(
+        url=url,
+        source_org=source_org,
+        retrieved_at=utc_now_iso(),
+        ok=ok,
+        http_status=status,
+        content_sha256=actual if ok else None,
+        content_bytes=written if ok else None,
+        content_type=content_type,
+        final_url=final_url or url,
+        stored_path=str(dest) if ok else None,
+        error=error,
+        note=note,
+    )
+    if log is not None:
+        log.append(record)
+    return record
 
 
 def record_local_file(

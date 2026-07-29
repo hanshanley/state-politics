@@ -104,15 +104,22 @@ def test_dumbbell_pairs_values_and_validates_length(tmp_path):
 
 
 def test_source_note_reserve_scales_with_figure_height(tmp_path):
-    """A fixed figure-fraction reserve leaves a large empty band under tall panels."""
+    """A fixed figure-fraction reserve leaves a large empty band under tall panels.
+
+    Asserted on the axes geometry rather than on file size: an earlier version of this test
+    compared PNG byte counts, which passed identically with the reserve logic removed.
+    """
     long_note = "word " * 120
 
-    def rendered_height_ratio(figheight: float) -> float:
+    def bottom_fraction(figheight: float) -> float:
         fig, ax = charts.new_figure(figsize=(10, figheight))
         charts.line(ax, [1, 2], [1, 2], color=theme.BLUE)
-        out = charts.finish(fig, ax, tmp_path / f"h{figheight}.png", source=long_note)
-        return out.stat().st_size
+        charts.finish(fig, ax, tmp_path / f"h{figheight}.png", source=long_note)
+        return ax.get_position().y0
 
-    # Both must render; the tall figure must not be dominated by whitespace.
-    assert rendered_height_ratio(6) > 0
-    assert rendered_height_ratio(13) > 0
+    short, tall = bottom_fraction(6), bottom_fraction(13)
+    # The note occupies a fixed physical height, so as a fraction of a taller figure the
+    # reserved band must shrink.
+    assert tall < short
+    # And in absolute inches the two reserves should be close, not proportional to height.
+    assert abs(tall * 13 - short * 6) < 0.75
