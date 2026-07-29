@@ -103,10 +103,11 @@ def test_wayback_candidates_deduplicates_equivalent_urls():
         ["20240608014532", "https://texasgop.org/2024-platform-and-legislative-priorities/",
          "text/html"],
     ]
-    found = wayback_candidates(
+    found, error = wayback_candidates(
         "texasgop.org", state="TX", party="R",
         transport=lambda url, *, timeout, headers: StubResponse(200, _cdx_body(rows)),
     )
+    assert error is None
     assert len(found) == 2
 
 
@@ -129,25 +130,29 @@ def test_cdx_query_excludes_cloudflare_server_side():
 
 
 def test_wayback_candidates_handles_a_failed_query():
-    found = wayback_candidates(
+    found, error = wayback_candidates(
         "example.org", state="XX", party="D",
         transport=lambda url, *, timeout, headers: StubResponse(503),
+        sleep=lambda _: None,
     )
     assert found == []
+    # A failed query must be reported, not silently look like "nothing published".
+    assert error is not None and "failed" in error
 
 
 def test_wayback_candidates_handles_malformed_json():
-    found = wayback_candidates(
+    found, error = wayback_candidates(
         "example.org", state="XX", party="D",
         transport=lambda url, *, timeout, headers: StubResponse(200, b"not json"),
     )
     assert found == []
+    assert error is not None
 
 
 def test_year_hint_prefers_the_url_over_the_capture_date():
     """A 2022 platform captured in 2023 is still the 2022 platform."""
     rows = [["20230321213140", "https://texasgop.org/2022platform/", "text/html"]]
-    found = wayback_candidates(
+    found, _ = wayback_candidates(
         "texasgop.org", state="TX", party="R",
         transport=lambda url, *, timeout, headers: StubResponse(200, _cdx_body(rows)),
     )
@@ -156,15 +161,42 @@ def test_year_hint_prefers_the_url_over_the_capture_date():
 
 def test_year_hint_falls_back_to_the_capture_date():
     rows = [["20210517044815", "https://dfl.org/about/platform/", "text/html"]]
-    found = wayback_candidates(
+    found, _ = wayback_candidates(
         "dfl.org", state="MN", party="D",
         transport=lambda url, *, timeout, headers: StubResponse(200, _cdx_body(rows)),
     )
     assert found[0].year_hint == 2021
 
 
-def test_discover_for_org_without_a_website_returns_nothing():
-    assert discover_for_org({"state": "MD", "party": "D", "website": None}) == []
+def test_discover_for_org_without_a_website_reports_why():
+    outcome = discover_for_org({"state": "MD", "party": "D", "website": None})
+    assert outcome.candidates == []
+    assert outcome.searched is False
+    assert "no website" in outcome.wayback_error
+
+
+def test_a_failed_search_is_not_reported_as_an_empty_result():
+    """Four organizations were wrongly recorded as platform-less when CDX errored out."""
+    outcome = discover_for_org(
+        {"state": "MN", "party": "D", "website": "https://dfl.org/"},
+        include_live=False,
+        transport=lambda url, *, timeout, headers: StubResponse(504),
+        sleep=lambda _: None,
+    )
+    assert outcome.candidates == []
+    assert outcome.searched is False          # <- the distinction that matters
+    assert outcome.wayback_error is not None
+
+
+def test_a_successful_search_with_no_hits_is_marked_searched():
+    outcome = discover_for_org(
+        {"state": "MD", "party": "R", "website": "https://mdgop.org/"},
+        include_live=False,
+        transport=lambda url, *, timeout, headers: StubResponse(200, _cdx_body([])),
+    )
+    assert outcome.candidates == []
+    assert outcome.searched is True
+    assert outcome.wayback_error is None
 
 
 def test_write_candidates_keeps_rejected_ones(tmp_path):

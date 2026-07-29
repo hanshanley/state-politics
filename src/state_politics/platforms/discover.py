@@ -37,6 +37,7 @@ from __future__ import annotations
 
 import json
 import re
+import time
 import urllib.parse
 from dataclasses import asdict, dataclass, field
 from pathlib import Path
@@ -44,6 +45,7 @@ from pathlib import Path
 from ..provenance import ProvenanceLog, fetch
 
 __all__ = [
+    "DiscoveryOutcome",
     "CDX_URL",
     "Candidate",
     "discover_for_org",
@@ -118,6 +120,45 @@ class Candidate:
 
     def to_dict(self) -> dict:
         return asdict(self)
+
+
+@dataclass
+class DiscoveryOutcome:
+    """What discovery found for one organization, and whether it actually ran.
+
+    The distinction matters more than it looks. An empty candidate list can mean "this party
+    has published nothing" or "the archive refused the query", and those are opposite
+    findings. Collapsing them once already produced a confident, wrong "no platform found"
+    for four organizations whose CDX queries had simply failed, so the outcome carries the
+    query status explicitly and the gap report keys off it.
+    """
+
+    state: str
+    party: str
+    candidates: list[Candidate] = field(default_factory=list)
+    wayback_ok: bool = False
+    wayback_error: str | None = None
+    live_ok: bool = False
+    live_error: str | None = None
+
+    @property
+    def searched(self) -> bool:
+        """True if at least one channel actually returned a result."""
+        return self.wayback_ok or self.live_ok
+
+    def to_status_row(self) -> dict:
+        strong = sum(1 for c in self.candidates if c.score >= STRONG_SCORE)
+        return {
+            "state": self.state,
+            "party": self.party,
+            "searched": self.searched,
+            "wayback_ok": self.wayback_ok,
+            "wayback_error": self.wayback_error,
+            "live_ok": self.live_ok,
+            "live_error": self.live_error,
+            "n_candidates": len(self.candidates),
+            "n_strong": strong,
+        }
 
 
 def is_excluded(url: str) -> bool:
@@ -204,8 +245,13 @@ def wayback_candidates(
     log: ProvenanceLog | None = None,
     transport=None,
     limit: int = 2000,
-) -> list[Candidate]:
+    sleep=time.sleep,
+) -> tuple[list[Candidate], str | None]:
     """Query the Wayback CDX index for platform-like captures of ``domain``.
+
+    Returns ``(candidates, error)``. ``error`` is ``None`` only when the query genuinely
+    succeeded, so callers can tell "nothing published" from "the query did not run" -- an
+    empty list from a failed request would otherwise read as a confident absence.
 
     Two server-side filters are essential, not optimisations:
 
@@ -238,18 +284,20 @@ def wayback_candidates(
         log=log,
         transport=transport,
         timeout=120.0,
-        max_attempts=3,
+        max_attempts=4,
+        backoff=5.0,
+        sleep=sleep,
         note=f"CDX platform discovery for {state}-{party} ({domain})",
     )
     if not record.ok or not body:
-        return []
+        return [], f"CDX query failed: status={record.http_status} error={record.error}"
 
     try:
         rows = json.loads(body.decode("utf-8"))
-    except (json.JSONDecodeError, UnicodeDecodeError):
-        return []
+    except (json.JSONDecodeError, UnicodeDecodeError) as exc:
+        return [], f"CDX response was not valid JSON: {exc}"
     if not rows or len(rows) < 2:
-        return []
+        return [], None  # a genuine, successful "no captures matched"
 
     candidates: list[Candidate] = []
     seen: set[str] = set()
@@ -266,7 +314,7 @@ def wayback_candidates(
             mimetype=mimetype, wayback_timestamp=timestamp,
             score=score, reasons=reasons, year_hint=_year_hint(original, timestamp),
         ))
-    return candidates
+    return candidates, None
 
 
 _HREF_RE = re.compile(r"""<a[^>]+href=["']([^"'#]+)["']""", re.I)
@@ -279,8 +327,12 @@ def homepage_candidates(
     party: str,
     log: ProvenanceLog | None = None,
     transport=None,
-) -> list[Candidate]:
-    """Scan the live homepage's links for platform-like URLs. Exactly one request."""
+    sleep=time.sleep,
+) -> tuple[list[Candidate], str | None]:
+    """Scan the live homepage's links for platform-like URLs. Exactly one request.
+
+    Returns ``(candidates, error)`` for the same reason as :func:`wayback_candidates`.
+    """
     body, record = fetch(
         homepage,
         source_org=f"{state} state party ({party}) homepage",
@@ -288,10 +340,11 @@ def homepage_candidates(
         transport=transport,
         timeout=30.0,
         max_attempts=1,
+        sleep=sleep,
         note=f"live link scan for {state}-{party}",
     )
     if not record.ok or not body:
-        return []
+        return [], f"homepage fetch failed: status={record.http_status} error={record.error}"
 
     html = body.decode("utf-8", errors="replace")
     base = record.final_url or homepage
@@ -312,7 +365,7 @@ def homepage_candidates(
             state=state, party=party, url=absolute, source="live",
             score=score, reasons=reasons, year_hint=_year_hint(absolute, None),
         ))
-    return candidates
+    return candidates, None
 
 
 def _year_hint(url: str, timestamp: str | None) -> int | None:
@@ -336,31 +389,45 @@ def discover_for_org(
     log: ProvenanceLog | None = None,
     transport=None,
     include_live: bool = True,
-) -> list[Candidate]:
+    sleep=time.sleep,
+) -> DiscoveryOutcome:
     """Discover candidates for one registry row, merging both channels.
 
     Where the same URL is found by both channels the Wayback record is kept, because it
     carries a capture timestamp and remains retrievable even if the live page later changes.
     """
+    state, party = org["state"], org["party"]
+    outcome = DiscoveryOutcome(state=state, party=party)
+
     website = org.get("website")
     if not website:
-        return []
-    state, party = org["state"], org["party"]
-    domain = urllib.parse.urlsplit(website).netloc or website
+        outcome.wayback_error = "no website configured"
+        outcome.live_error = "no website configured"
+        return outcome
 
-    candidates = wayback_candidates(
-        domain, state=state, party=party, from_year=from_year, log=log, transport=transport
+    domain = urllib.parse.urlsplit(website).netloc or website
+    candidates, error = wayback_candidates(
+        domain, state=state, party=party, from_year=from_year, log=log,
+        transport=transport, sleep=sleep,
     )
+    outcome.wayback_ok = error is None
+    outcome.wayback_error = error
+
     if include_live:
         seen = {normalize_url(candidate.url) for candidate in candidates}
-        for candidate in homepage_candidates(
-            website, state=state, party=party, log=log, transport=transport
-        ):
+        live, live_error = homepage_candidates(
+            website, state=state, party=party, log=log, transport=transport, sleep=sleep
+        )
+        outcome.live_ok = live_error is None
+        outcome.live_error = live_error
+        for candidate in live:
             key = normalize_url(candidate.url)
             if key not in seen:
                 seen.add(key)
                 candidates.append(candidate)
-    return sorted(candidates, key=lambda c: (-c.score, c.url))
+
+    outcome.candidates = sorted(candidates, key=lambda c: (-c.score, c.url))
+    return outcome
 
 
 def write_candidates(candidates: list[Candidate], path: Path | str) -> Path:
@@ -383,7 +450,6 @@ STRONG_SCORE = 5
 
 def main(argv: list[str] | None = None) -> int:
     import argparse
-    import time
 
     import yaml
 
@@ -407,26 +473,71 @@ def main(argv: list[str] | None = None) -> int:
 
     log = ProvenanceLog(args.provenance)
     all_candidates: list[Candidate] = []
-    found_strong = 0
+    outcomes: list[DiscoveryOutcome] = []
     for index, org in enumerate(orgs, start=1):
-        candidates = discover_for_org(
+        outcome = discover_for_org(
             org, from_year=args.from_year, log=log, include_live=not args.no_live
         )
-        strong = [c for c in candidates if c.score >= STRONG_SCORE]
-        found_strong += bool(strong)
-        all_candidates.extend(candidates)
+        strong = [c for c in outcome.candidates if c.score >= STRONG_SCORE]
+        outcomes.append(outcome)
+        all_candidates.extend(outcome.candidates)
+        flag = "" if outcome.searched else "  <-- SEARCH FAILED"
         print(f"[{index:>3}/{len(orgs)}] {org['state']}-{org['party']:<2} "
-              f"candidates={len(candidates):<4} strong={len(strong)}")
+              f"candidates={len(outcome.candidates):<4} strong={len(strong)}{flag}", flush=True)
         if args.delay:
             time.sleep(args.delay)
 
+    # Retry organizations whose Wayback query failed outright. Leaving them as an empty
+    # result would be indistinguishable from a party that has published nothing.
+    failed = [o for o in outcomes if not o.wayback_ok and o.wayback_error
+              and "no website" not in o.wayback_error]
+    if failed:
+        print(f"\nretrying {len(failed)} failed Wayback queries...", flush=True)
+        by_key = {(o["state"], o["party"]): o for o in orgs}
+        for outcome in failed:
+            time.sleep(max(args.delay, 3.0))
+            org = by_key[(outcome.state, outcome.party)]
+            retried = discover_for_org(org, from_year=args.from_year, log=log, include_live=False)
+            if retried.wayback_ok:
+                seen = {normalize_url(c.url) for c in outcome.candidates}
+                added = [c for c in retried.candidates if normalize_url(c.url) not in seen]
+                outcome.candidates.extend(added)
+                outcome.wayback_ok, outcome.wayback_error = True, None
+                all_candidates.extend(added)
+                print(f"  {outcome.state}-{outcome.party}: recovered "
+                      f"{len(retried.candidates)} candidates", flush=True)
+            else:
+                print(f"  {outcome.state}-{outcome.party}: still failing "
+                      f"({retried.wayback_error})", flush=True)
+
     path = write_candidates(all_candidates, args.out)
+    status_path = Path(args.out).with_name("platform_discovery_status.csv")
+    _write_status(outcomes, status_path)
+
     strong_total = sum(1 for c in all_candidates if c.score >= STRONG_SCORE)
-    print(f"\norganizations:            {len(orgs)}")
-    print(f"with >=1 strong candidate: {found_strong}")
+    searched = sum(1 for o in outcomes if o.searched)
+    with_strong = sum(
+        1 for o in outcomes if any(c.score >= STRONG_SCORE for c in o.candidates)
+    )
+    print(f"\norganizations:             {len(orgs)}")
+    print(f"successfully searched:     {searched}")
+    print(f"with >=1 strong candidate: {with_strong}")
     print(f"candidates written:        {len(all_candidates)} ({strong_total} strong)")
     print(f"wrote {path}")
+    print(f"wrote {status_path}")
     return 0
+
+
+def _write_status(outcomes: list[DiscoveryOutcome], path: Path) -> Path:
+    import csv as _csv
+
+    path.parent.mkdir(parents=True, exist_ok=True)
+    rows = [o.to_status_row() for o in outcomes]
+    with open(path, "w", encoding="utf-8", newline="") as handle:
+        writer = _csv.DictWriter(handle, fieldnames=list(rows[0]) if rows else ["state"])
+        writer.writeheader()
+        writer.writerows(rows)
+    return path
 
 
 if __name__ == "__main__":  # pragma: no cover

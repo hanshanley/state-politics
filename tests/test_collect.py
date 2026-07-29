@@ -196,3 +196,23 @@ def test_gap_report_records_every_organization_even_with_no_documents():
     assert len(report) == 2
     assert (report["n_confirmed"] == 0).all()
     assert report["latest_year"].isna().all()
+
+
+def test_collect_for_org_flags_the_same_document_served_from_two_urls():
+    """Parties serve one platform from several paths; counting each would inflate the corpus."""
+    candidates = [
+        Candidate(state="TX", party="R", url="https://texasgop.org/2024-platform/",
+                  source="live", score=7),
+        Candidate(state="TX", party="R", url="https://archive.texasgop.org/2024-platform/x",
+                  source="live", score=6),
+    ]
+    collected = collect_for_org(
+        candidates,
+        transport=lambda url, *, timeout, headers: StubResponse(200, PLATFORM_PROSE.encode()),
+        sleep=lambda _: None,
+    )
+    assert len(collected) == 2
+    assert sum(d.confirmed for d in collected) == 1
+    duplicate = next(d for d in collected if not d.confirmed)
+    assert duplicate.reason.startswith("duplicate of ")
+    assert duplicate.text == ""

@@ -22,6 +22,7 @@ Output
 from __future__ import annotations
 
 import argparse
+import hashlib
 import io
 import json
 import re
@@ -218,17 +219,43 @@ def collect_for_org(
     delay: float = 0.5,
     sleep=time.sleep,
 ) -> list[CollectedDocument]:
-    """Fetch the credible candidates for one organization, best-scoring first."""
+    """Fetch the credible candidates for one organization, best-scoring first.
+
+    Documents are de-duplicated on their extracted text, not their URL. A party routinely
+    serves the same platform from several paths -- a dated permalink, an ``archive.`` copy, a
+    print view -- and counting each as a separate document would inflate the corpus in exactly
+    the way the two Dataverse archives did. The duplicate is retained as an unconfirmed row so
+    the double-count is visible rather than silently dropped.
+    """
     ranked = sorted(
         (c for c in candidates if c.score >= min_score),
         key=lambda c: (-c.score, -(c.year_hint or 0)),
     )[:max_documents]
-    collected = []
+
+    collected: list[CollectedDocument] = []
+    seen_text: dict[str, str] = {}
     for index, candidate in enumerate(ranked):
-        collected.append(collect_candidate(candidate, log=log, transport=transport))
+        document = collect_candidate(candidate, log=log, transport=transport)
+        if document.confirmed:
+            fingerprint = _text_fingerprint(document.text)
+            first_url = seen_text.get(fingerprint)
+            if first_url is not None:
+                document.confirmed = False
+                document.reason = f"duplicate of {first_url}"
+                document.doc_type = None
+                document.text = ""
+            else:
+                seen_text[fingerprint] = document.url
+        collected.append(document)
         if delay and index < len(ranked) - 1:
             sleep(delay)
     return collected
+
+
+def _text_fingerprint(text: str) -> str:
+    """Hash of the document's normalized text, for duplicate detection."""
+    normalized = re.sub(r"\s+", " ", text).strip().lower()
+    return hashlib.sha256(normalized.encode("utf-8")).hexdigest()
 
 
 def gap_report(
