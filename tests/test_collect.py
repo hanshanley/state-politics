@@ -216,3 +216,32 @@ def test_collect_for_org_flags_the_same_document_served_from_two_urls():
     duplicate = next(d for d in collected if not d.confirmed)
     assert duplicate.reason.startswith("duplicate of ")
     assert duplicate.text == ""
+
+
+def test_confirm_platform_handles_pdfs_that_lost_their_word_spacing():
+    """A real 31,817-char platform extracted as 'SouthDakotaDemocraticParty...' scored 0 hits.
+
+    Some party PDFs embed fonts with no space glyphs, so the spaced patterns never match and
+    a genuine platform was discarded.
+    """
+    mangled = (
+        "SouthDakotaDemocraticPartyPlatformAdoptedbytheConvention"
+        "WebelieveinpubliceducationWesupportfamilyfarmsWeopposecorporateconsolidation"
+        "WeaffirmtherightoworganizeBeitresolvedthatourpartystandsfirm"
+    ) * 30
+    ok, reason, hits = confirm_platform(mangled)
+    assert ok, reason
+    assert hits >= 3
+
+
+def test_confirm_platform_still_rejects_mangled_text_that_is_not_a_platform():
+    noise = "AnnualFundraisingDinnerTicketsAvailableNowContactTheOfficeForDetails" * 60
+    ok, _, _ = confirm_platform(noise)
+    assert not ok
+
+
+def test_space_ratio_detects_lost_spacing():
+    from state_politics.platforms.collect import _space_ratio
+
+    assert _space_ratio("we believe in a fair and open government today") > 0.12
+    assert _space_ratio("webelieveinafairandopengovernmenttoday") < 0.08

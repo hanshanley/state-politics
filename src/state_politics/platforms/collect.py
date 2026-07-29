@@ -59,6 +59,15 @@ _PLATFORM_PHRASES = (
 )
 _PLATFORM_PHRASE_RE = re.compile("|".join(_PLATFORM_PHRASES), re.I)
 
+#: The same declarations with word separators removed, for PDFs whose embedded fonts carry no
+#: usable word spacing. Without this a genuine 31,817-character platform that extracted as
+#: "SouthDakotaDemocraticPartyPlatform..." scores zero declarative phrases and is discarded.
+_DESPACED_PHRASES = (
+    "webelieve", "wesupport", "weoppose", "wecallon", "wecallfor", "weaffirm", "weurge",
+    "beitresolved", "whereas", "plank", "wedemand", "werecognize", "ourparty", "westand",
+)
+_DESPACED_PHRASE_RE = re.compile("|".join(_DESPACED_PHRASES), re.I)
+
 #: A confirmed document must be at least this long. Real platforms run to thousands of words;
 #: this excludes landing pages that merely link to one.
 MIN_CHARS = 2500
@@ -119,14 +128,35 @@ def extract_text(body: bytes, content_type: str | None, url: str) -> str:
 
 
 def _extract_pdf(body: bytes) -> str:
+    """Extract text from a PDF, preferring the layout-aware mode.
+
+    Some party PDFs embed fonts without usable word spacing, and pypdf's default mode then
+    returns runs like ``SouthDakotaDemocraticPartyPlatform``. Layout mode reconstructs spacing
+    from glyph positions and recovers most of them; :func:`confirm_platform` handles whatever
+    is still mangled.
+    """
     try:
         from pypdf import PdfReader
 
         reader = PdfReader(io.BytesIO(body))
+        try:
+            pages = [page.extract_text(extraction_mode="layout") or "" for page in reader.pages]
+            text = "\n".join(pages)
+            if _space_ratio(text) >= 0.08:
+                return re.sub(r"[ \t]+", " ", text).strip()
+        except Exception:  # noqa: BLE001 - layout mode is best-effort; fall back to plain
+            pass
         pages = [page.extract_text() or "" for page in reader.pages]
     except Exception:  # noqa: BLE001 - a malformed PDF is a data condition, not a crash
         return ""
     return re.sub(r"[ \t]+", " ", "\n".join(pages)).strip()
+
+
+def _space_ratio(text: str) -> float:
+    """Fraction of characters that are spaces. Ordinary English prose sits near 0.16."""
+    if not text:
+        return 0.0
+    return text.count(" ") / len(text)
 
 
 def classify_doc_type(url: str, text: str) -> str:
@@ -147,12 +177,21 @@ def confirm_platform(text: str, state_name: str | None = None) -> tuple[bool, st
     """Decide whether extracted text really is a party platform.
 
     Returns ``(confirmed, reason, phrase_hits)``. Length alone is not enough -- a party's news
-    archive page is long too -- so the text must also speak in the declarative voice platforms
-    use ("we believe", "we oppose", "be it resolved").
+    archive is long too -- so the text must also speak in the declarative voice platforms use
+    ("we believe", "we oppose", "be it resolved").
+
+    Phrase counting falls back to a separator-free match when the text has lost its word
+    spacing, which happens with PDFs whose fonts carry no space glyphs. Judging those by the
+    spaced patterns alone rejected real platforms of tens of thousands of characters.
     """
     if not text:
         return False, "no text could be extracted", 0
+
     hits = len(_PLATFORM_PHRASE_RE.findall(text))
+    if _space_ratio(text) < 0.08:
+        despaced = re.sub(r"[^0-9a-z]+", "", text.lower())
+        hits = max(hits, len(_DESPACED_PHRASE_RE.findall(despaced)))
+
     if len(text) < MIN_CHARS:
         return False, f"too short to be a platform ({len(text)} chars < {MIN_CHARS})", hits
     if hits < 3:
@@ -167,8 +206,17 @@ def collect_candidate(
     transport=None,
     prefer_wayback: bool = True,
     timeout: float = 60.0,
+    max_attempts: int = 4,
+    backoff: float = 8.0,
+    sleep=time.sleep,
 ) -> CollectedDocument:
-    """Fetch one candidate and decide whether it is a platform document."""
+    """Fetch one candidate and decide whether it is a platform document.
+
+    Retries are patient by design. Nearly every fetch here goes to a single host --
+    web.archive.org -- and an earlier run at roughly one request per second had 305 of 456
+    fetches refused with connection errors. That is both a politeness failure and a 66% data
+    loss, so this backs off hard rather than treating a refusal as "document not available".
+    """
     if prefer_wayback and candidate.wayback_timestamp:
         target = wayback_snapshot_url(candidate.wayback_timestamp, candidate.url)
         source = "wayback"
@@ -181,7 +229,9 @@ def collect_candidate(
         log=log,
         transport=transport,
         timeout=timeout,
-        max_attempts=2,
+        max_attempts=max_attempts,
+        backoff=backoff,
+        sleep=sleep,
         note=f"platform candidate {candidate.state}-{candidate.party}",
     )
 
@@ -235,7 +285,7 @@ def collect_for_org(
     collected: list[CollectedDocument] = []
     seen_text: dict[str, str] = {}
     for index, candidate in enumerate(ranked):
-        document = collect_candidate(candidate, log=log, transport=transport)
+        document = collect_candidate(candidate, log=log, transport=transport, sleep=sleep)
         if document.confirmed:
             fingerprint = _text_fingerprint(document.text)
             first_url = seen_text.get(fingerprint)
@@ -323,6 +373,30 @@ def _load_candidates(path: Path) -> dict[tuple[str, str], list[Candidate]]:
     return grouped
 
 
+def _load_previous(
+    path: Path,
+) -> tuple[dict[tuple[str, str], list[CollectedDocument]], set[str]]:
+    """Load a previous run's rows, and the set of URLs whose fetch failed.
+
+    Only fetch failures are retried. A document that was retrieved and judged not to be a
+    platform is a settled result; re-requesting it would put load on third-party sites for no
+    new information.
+    """
+    import pandas as pd
+
+    frame = pd.read_parquet(path)
+    grouped: dict[tuple[str, str], list[CollectedDocument]] = {}
+    retry: set[str] = set()
+    fields = set(CollectedDocument.__dataclass_fields__)
+    for row in frame.to_dict("records"):
+        document = CollectedDocument(**{k: v for k, v in row.items() if k in fields})
+        if str(document.reason).startswith("fetch failed"):
+            retry.add(document.url)
+            continue
+        grouped.setdefault((document.state, document.party), []).append(document)
+    return grouped, retry
+
+
 def main(argv: list[str] | None = None) -> int:
     import pandas as pd
     import yaml
@@ -334,8 +408,13 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--provenance", default="data/provenance.jsonl")
     parser.add_argument("--min-score", type=int, default=STRONG_SCORE)
     parser.add_argument("--max-documents", type=int, default=12)
-    parser.add_argument("--delay", type=float, default=0.5)
+    parser.add_argument("--delay", type=float, default=2.5,
+                        help="seconds between fetches; nearly all go to one host "
+                             "(web.archive.org), so this is a politeness setting")
     parser.add_argument("--states", default="")
+    parser.add_argument("--resume", action="store_true",
+                        help="reuse an existing parquet and re-fetch only rows whose fetch "
+                             "failed, rather than re-requesting documents already retrieved")
     args = parser.parse_args(argv)
 
     registry = yaml.safe_load(Path(args.registry).read_text(encoding="utf-8"))["organizations"]
@@ -347,18 +426,31 @@ def main(argv: list[str] | None = None) -> int:
     log = ProvenanceLog(args.provenance)
     out_dir = Path(args.out_dir)
     out_dir.mkdir(parents=True, exist_ok=True)
+    docs_path = out_dir / "platforms_2018_present.parquet"
+
+    previous: dict[tuple[str, str], list[CollectedDocument]] = {}
+    retry_urls: set[str] = set()
+    if args.resume and docs_path.exists():
+        previous, retry_urls = _load_previous(docs_path)
+        print(f"resuming: {sum(len(v) for v in previous.values())} rows kept, "
+              f"{len(retry_urls)} failed fetches to retry", flush=True)
 
     documents: list[CollectedDocument] = []
     for index, org in enumerate(registry, start=1):
         key = (org["state"], org["party"])
+        candidates = grouped.get(key, [])
+        if args.resume and previous:
+            keep = [d for d in previous.get(key, []) if d.url not in retry_urls]
+            candidates = [c for c in candidates if c.url in retry_urls]
+            documents.extend(keep)
         collected = collect_for_org(
-            grouped.get(key, []), min_score=args.min_score,
+            candidates, min_score=args.min_score,
             max_documents=args.max_documents, log=log, delay=args.delay,
         )
         documents.extend(collected)
         confirmed = sum(1 for d in collected if d.confirmed)
         print(f"[{index:>3}/{len(registry)}] {org['state']}-{org['party']:<2} "
-              f"fetched={len(collected):<3} confirmed={confirmed}")
+              f"fetched={len(collected):<3} confirmed={confirmed}", flush=True)
 
     frame = pd.DataFrame([d.to_row() for d in documents])
     docs_path = out_dir / "platforms_2018_present.parquet"
