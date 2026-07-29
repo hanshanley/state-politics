@@ -11,6 +11,7 @@ dependencies = [
     "pandas>=2.2",
     "pyarrow>=16.0",
     "matplotlib>=3.9",
+    "pypdf>=5.0",
 ]
 
 [project.optional-dependencies]

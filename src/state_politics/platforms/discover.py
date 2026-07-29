@@ -49,6 +49,7 @@ __all__ = [
     "discover_for_org",
     "homepage_candidates",
     "is_excluded",
+    "normalize_url",
     "score_candidate",
     "wayback_candidates",
 ]
@@ -76,14 +77,29 @@ _EXCLUDE_RE = re.compile(
 )
 
 #: A path segment that *is* the document, rather than a page that merely mentions one.
+_DOC_WORD = r"(?:platform|platforms|principles|resolutions|planks|creed|manifesto)"
 _STRONG_SEGMENT_RE = re.compile(
-    r"^(?:\d{4}[-_]?)?(?:party[-_])?"
-    r"(?:platform|platforms|principles|resolutions|planks|creed|manifesto)"
-    r"(?:[-_]?\d{4})?$",
-    re.I,
+    rf"^(?:\d{{4}}[-_]?)?(?:party[-_])?{_DOC_WORD}(?:[-_]?\d{{4}})?$", re.I
 )
+#: A descriptive filename that *ends* with the document type, e.g.
+#: ``2024-Idaho-Democratic-Party-Platform`` or ``2023-and-2024-Resolutions``. Real documents
+#: are frequently named this way, so the news-headline penalty must not apply to them.
+_DOC_SUFFIX_RE = re.compile(rf"(?:^|[-_]){_DOC_WORD}$", re.I)
 _YEAR_IN_URL_RE = re.compile(r"(?:^|[^\d])(19[89]\d|20[0-4]\d)(?:[^\d]|$)")
 _PRIORITIES_RE = re.compile(r"legislative[-_ ]?priorities|policy[-_ ]?agenda", re.I)
+
+
+def normalize_url(url: str) -> str:
+    """Canonical form used for de-duplication.
+
+    Collapses the variants the archive is full of -- tracking query strings, ``index.html``,
+    trailing slashes, and the ``archive.`` / ``www.`` host prefixes a party uses when it moves
+    its old site aside -- so the same document is not counted several times.
+    """
+    parts = urllib.parse.urlsplit(url)
+    host = re.sub(r"^(?:www\.|archive\.)", "", parts.netloc.lower())
+    path = re.sub(r"/index\.html?$", "/", parts.path, flags=re.I).rstrip("/")
+    return f"{host}{path.lower()}"
 
 
 @dataclass
@@ -129,37 +145,46 @@ def score_candidate(url: str, mimetype: str | None = None) -> tuple[int, list[st
 
     last = segments[-1]
     stem = re.sub(r"\.(?:pdf|docx?|html?)$", "", last, flags=re.I)
+    is_document = (mimetype or "").lower() == "application/pdf" or stem != last
 
     if any(_STRONG_SEGMENT_RE.match(segment) for segment in segments):
         score += 5
         reasons.append("path segment is the document type")
-    elif _STRONG_SEGMENT_RE.match(stem):
+        strong = True
+    elif _DOC_SUFFIX_RE.search(stem):
+        # e.g. 2024-idaho-democratic-party-platform, 2023-and-2024-Resolutions
         score += 5
-        reasons.append("filename is the document type")
+        reasons.append("name ends with the document type")
+        strong = True
+    else:
+        strong = False
 
     if _PRIORITIES_RE.search(url):
         score += 4
         reasons.append("legislative priorities document")
+        strong = True
 
-    if (mimetype or "").lower() == "application/pdf" or stem != last:
-        if _TERMS_RE.search(stem):
-            score += 3
-            reasons.append("PDF/document filename matches a discovery term")
+    if is_document and _TERMS_RE.search(stem):
+        score += 3
+        reasons.append("PDF/document filename matches a discovery term")
 
     if _YEAR_IN_URL_RE.search(url) and _TERMS_RE.search(url):
         score += 2
         reasons.append("year appears alongside a discovery term")
 
-    # News posts are long hyphenated sentences; documents are short slugs.
-    hyphens = stem.count("-")
-    if hyphens >= 5:
-        score -= 4
-        reasons.append(f"slug reads like a news headline ({hyphens} hyphens)")
-    elif hyphens >= 3:
-        score -= 2
-        reasons.append(f"long slug ({hyphens} hyphens)")
+    # News posts are long hyphenated sentences. This must not fire on a document whose name
+    # merely happens to be descriptive -- "2024-idaho-democratic-party-platform" is exactly
+    # what a real platform is called, and an earlier version of this scored it zero.
+    if not strong:
+        hyphens = stem.count("-") + stem.count("_")
+        if hyphens >= 5:
+            score -= 4
+            reasons.append(f"slug reads like a news headline ({hyphens} words)")
+        elif hyphens >= 3:
+            score -= 2
+            reasons.append(f"long slug ({hyphens} words)")
 
-    if re.search(r"/20\d\d/\d\d/", url):
+    if re.search(r"/20\d\d/\d\d/", url) and not is_document:
         score -= 3
         reasons.append("sits under a dated blog archive path")
 
@@ -182,15 +207,26 @@ def wayback_candidates(
 ) -> list[Candidate]:
     """Query the Wayback CDX index for platform-like captures of ``domain``.
 
-    A server-side regex filter is essential, not an optimisation: an unfiltered query for
-    ``texasgop.org`` returns more than 40,000 captures and silently truncates at the row cap.
+    Two server-side filters are essential, not optimisations:
+
+    * the discovery-term regex, because an unfiltered query for ``texasgop.org`` returns more
+      than 40,000 captures and silently truncates at the row cap; and
+    * a negative filter on ``cdn-cgi``, because Cloudflare's bot-check endpoint lives at
+      ``/cdn-cgi/challenge-platform/`` and therefore *matches the discovery term*. On
+      ``dfl.org`` those junk URLs filled all 2,000 returned rows, pushing the real platform
+      pages out of the window; filtering them only on the client produced a confident and
+      completely wrong "no platform found" for the Minnesota DFL.
     """
     query = {
         "url": domain,
         "matchType": "domain",
         "output": "json",
         "collapse": "urlkey",
-        "filter": ["statuscode:200", f"original:.*(?i)({'|'.join(DISCOVERY_TERMS)}).*"],
+        "filter": [
+            "statuscode:200",
+            f"original:.*(?i)({'|'.join(DISCOVERY_TERMS)}).*",
+            "!original:.*cdn-cgi.*",
+        ],
         "from": str(from_year),
         "limit": str(limit),
         "fl": "timestamp,original,mimetype",
@@ -215,10 +251,15 @@ def wayback_candidates(
     if not rows or len(rows) < 2:
         return []
 
-    candidates = []
+    candidates: list[Candidate] = []
+    seen: set[str] = set()
     for timestamp, original, mimetype in (row[:3] for row in rows[1:]):
         if is_excluded(original):
             continue
+        key = normalize_url(original)
+        if key in seen:
+            continue
+        seen.add(key)
         score, reasons = score_candidate(original, mimetype)
         candidates.append(Candidate(
             state=state, party=party, url=original, source="wayback",
@@ -311,11 +352,13 @@ def discover_for_org(
         domain, state=state, party=party, from_year=from_year, log=log, transport=transport
     )
     if include_live:
-        by_url = {candidate.url: candidate for candidate in candidates}
+        seen = {normalize_url(candidate.url) for candidate in candidates}
         for candidate in homepage_candidates(
             website, state=state, party=party, log=log, transport=transport
         ):
-            if candidate.url not in by_url:
+            key = normalize_url(candidate.url)
+            if key not in seen:
+                seen.add(key)
                 candidates.append(candidate)
     return sorted(candidates, key=lambda c: (-c.score, c.url))
 
@@ -332,3 +375,59 @@ def write_candidates(candidates: list[Candidate], path: Path | str) -> Path:
         for candidate in candidates:
             handle.write(json.dumps(candidate.to_dict(), sort_keys=True) + "\n")
     return path
+
+
+#: Candidates at or above this score are treated as documents worth fetching.
+STRONG_SCORE = 5
+
+
+def main(argv: list[str] | None = None) -> int:
+    import argparse
+    import time
+
+    import yaml
+
+    parser = argparse.ArgumentParser(description=__doc__.splitlines()[0])
+    parser.add_argument("--registry", default="conf/party_registry.yml")
+    parser.add_argument("--out", default="data/processed/platform_candidates.jsonl")
+    parser.add_argument("--provenance", default="data/provenance.jsonl")
+    parser.add_argument("--from-year", type=int, default=2018)
+    parser.add_argument("--no-live", action="store_true",
+                        help="skip the live homepage scan (Wayback only)")
+    parser.add_argument("--delay", type=float, default=1.0,
+                        help="seconds to pause between organizations")
+    parser.add_argument("--states", default="",
+                        help="comma-separated state codes to restrict to")
+    args = parser.parse_args(argv)
+
+    orgs = yaml.safe_load(Path(args.registry).read_text(encoding="utf-8"))["organizations"]
+    if args.states:
+        wanted = {s.strip().upper() for s in args.states.split(",") if s.strip()}
+        orgs = [o for o in orgs if o["state"] in wanted]
+
+    log = ProvenanceLog(args.provenance)
+    all_candidates: list[Candidate] = []
+    found_strong = 0
+    for index, org in enumerate(orgs, start=1):
+        candidates = discover_for_org(
+            org, from_year=args.from_year, log=log, include_live=not args.no_live
+        )
+        strong = [c for c in candidates if c.score >= STRONG_SCORE]
+        found_strong += bool(strong)
+        all_candidates.extend(candidates)
+        print(f"[{index:>3}/{len(orgs)}] {org['state']}-{org['party']:<2} "
+              f"candidates={len(candidates):<4} strong={len(strong)}")
+        if args.delay:
+            time.sleep(args.delay)
+
+    path = write_candidates(all_candidates, args.out)
+    strong_total = sum(1 for c in all_candidates if c.score >= STRONG_SCORE)
+    print(f"\norganizations:            {len(orgs)}")
+    print(f"with >=1 strong candidate: {found_strong}")
+    print(f"candidates written:        {len(all_candidates)} ({strong_total} strong)")
+    print(f"wrote {path}")
+    return 0
+
+
+if __name__ == "__main__":  # pragma: no cover
+    raise SystemExit(main())
