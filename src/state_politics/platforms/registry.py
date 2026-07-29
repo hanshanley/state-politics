@@ -183,6 +183,33 @@ MANUAL_OVERRIDES: dict[tuple[str, str], Override] = {
         "https://ri.gop/", "Rhode Island Republican Party",
         "corrects Wikidata's www.rigop.org, whose host did not resolve on 2026-07-28; "
         "ri.gop answered but refused a scripted request (HTTP 403)"),
+    # Six state Republican parties have rebranded onto .gop domains and their old hosts now
+    # redirect. Recording the destination directly keeps the crawl on a first-party URL
+    # instead of relying on a redirect chain that could later be repointed.
+    ("CO", "R"): Override(
+        "https://colorado.gop/", "Colorado Republican Committee",
+        "cologop.org redirects here; direct check 2026-07-29: HTTP 200, "
+        "title 'Home - Colorado GOP'"),
+    ("DE", "R"): Override(
+        "https://degop.gop/", "Delaware Republican Party",
+        "delawaregop.com redirects here; direct check 2026-07-29: HTTP 200, "
+        "title 'Delaware Republican Party | Official Website'"),
+    ("IL", "R"): Override(
+        "https://illinois.gop/", "Illinois Republican Party",
+        "ILGOP.org redirects here; direct check 2026-07-29: HTTP 200, "
+        "title 'Home - The Illinois Republican Party'"),
+    ("MO", "R"): Override(
+        "https://missouri.gop/", "Missouri Republican Party",
+        "mogop.org redirects here; direct check 2026-07-29: HTTP 200, "
+        "title 'Home - The Republican Party of Missouri'"),
+    ("SC", "R"): Override(
+        "https://sc.gop/", "South Carolina Republican Party",
+        "scgop.com redirects here; direct check 2026-07-29: HTTP 200, "
+        "title 'Home | South Carolina GOP'"),
+    ("VA", "R"): Override(
+        "https://virginia.gop/", "Republican Party of Virginia",
+        "rpv.org redirects here; direct check 2026-07-29: HTTP 200, "
+        "title 'Home - Republican Party of Virginia'"),
 }
 
 
@@ -368,11 +395,32 @@ def _term_hits(text: str, party: str) -> int:
     return sum(len(re.findall(term, text)) for term in _PARTY_TERMS[party])
 
 
+_TITLE_RE = re.compile(r"<title[^>]*>(.*?)</title>", re.S | re.I)
+
+
+def _title_confirms(html: str, state_name: str, party: str) -> bool:
+    """True if the page's own ``<title>`` names this state and only this party.
+
+    A party site names itself in its title ("New York Republican State Committee"), whereas a
+    hijacked or parked page does not. This is a second, stricter route to confirmation: the
+    body-frequency test alone rejects state parties whose homepage attacks the other party as
+    often as it names itself, which on the New York GOP homepage is an exact 5-5 tie.
+    """
+    match = _TITLE_RE.search(html)
+    if not match:
+        return False
+    title = _URLISH_RE.sub(" ", re.sub(r"<[^>]+>", " ", match.group(1)).lower())
+    if not re.search(rf"\b{re.escape(state_name)}\b", title):
+        return False
+    other = "R" if party == "D" else "D"
+    return _term_hits(title, party) > 0 and _term_hits(title, other) == 0
+
+
 def _content_confirms(body: bytes, state_code: str, party: str) -> bool:
     """True if the page's visible text identifies it as *this* state's *this* party.
 
-    Three traps this has to survive, all of which the first version of this function fell
-    into and which are the reason it is written so defensively:
+    Four traps this has to survive, all of which earlier versions fell into and which are the
+    reason it is written so defensively:
 
     1. **The domain name self-confirms.** Matching raw HTML let a page prove itself simply by
        linking to itself: ``http://www.alaskagop.org`` serves an "Account Suspended" page whose
@@ -381,23 +429,29 @@ def _content_confirms(body: bytes, state_code: str, party: str) -> bool:
        therefore stripped before any matching.
     2. **The other party's name is everywhere.** Republican sites talk about "democrats"
        constantly, so a bare substring test for "democrat" confirmed a GOP page as the state
-       Democratic party. Confirmation now requires the page to mention its *own* party more
-       often than the other one.
+       Democratic party. Confirmation requires the page to mention its *own* party more often
+       than the other one.
     3. **Parked and suspended pages still return HTTP 200.** Those are matched explicitly and
        treated as disconfirming rather than merely unconvincing.
+    4. **Some parties attack the other side as often as they name themselves.** A pure
+       frequency test rejects them, so a page whose ``<title>`` names this state and only this
+       party is also accepted.
     """
+    html = body.decode("utf-8", errors="replace")
     text = visible_text(body)
     if any(marker in text for marker in _PARKED_MARKERS):
         return False
 
     text = _URLISH_RE.sub(" ", text)
-    state_name = next((n for n, c in STATE_NAMES.items() if c == state_code), "")
-    if not state_name or not re.search(rf"\b{re.escape(state_name.lower())}\b", text):
+    state_name = next((n for n, c in STATE_NAMES.items() if c == state_code), "").lower()
+    if not state_name or not re.search(rf"\b{re.escape(state_name)}\b", text):
         return False
 
     own = _term_hits(text, party)
+    if own == 0:
+        return False
     other = _term_hits(text, "R" if party == "D" else "D")
-    return own > 0 and own > other
+    return own > other or _title_confirms(html, state_name, party)
 
 
 def verify_homepage(org: PartyOrg, *, log: ProvenanceLog | None = None,

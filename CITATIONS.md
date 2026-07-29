@@ -75,8 +75,11 @@ credited as the archival intermediary.
 > https://query.wikidata.org/sparql. Licensed CC0 1.0. Accessed 2026-07-28.
 
 Used as the starting point for the registry of the 100 state party organizations. Every entry is
-manually verified against the party's own website before use, and each registry row records its own
-`source_url` and `verified_on` date.
+checked against the party's own live homepage before use — a row is trusted only when the visible
+page text identifies that state's party, so a parked, suspended or hijacked domain cannot pass.
+Each registry row records its own `source_url`, `verified_on` date and observed HTTP status. Rows
+that could not be confirmed carry `needs_review: true` and require human confirmation; they are not
+treated as verified.
 
 ---
 

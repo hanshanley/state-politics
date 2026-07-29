@@ -1,8 +1,8 @@
 # Implementation Plan — What Are the 50 State Democratic & Republican Parties Emphasizing?
 
-**Repo:** `hanshanley/state-politics` (currently **empty** — greenfield; no code, no commits on disk)
+**Repo:** `hanshanley/state-politics`
 **Date:** 2026-07-28
-**Status:** plan — not yet implemented
+**Status:** Phases 0–2 implemented; Phase 3 next
 
 ---
 
@@ -37,7 +37,7 @@ Verified by downloading the dataset and enumerating its contents:
   - **2,091** platform documents, **2,086** unique `(state, year, party)` observations
   - **49 states** (⚠️ **Maryland is absent entirely**) plus `US` for national platforms
   - **Year range 1840–2017**
-  - Party tokens: **D = 1,066**, **R = 909**, plus Prohibition (16), Progressive (13), Socialist,
+  - Party tokens: **D = 1,066**, **R = 909**, plus Prohibition (16), Progressive (12), Socialist,
     People's, Libertarian, Green, Whig, Greenback, Nonpartisan League
   - Flag suffixes seen: `-B`, `-GG`, `-JS`, `-JD`, `-BP`, `-EA`, `-MG`, `-SM` (coder/source markers)
 - **Answer to "is this up to the present?" → No.** Max year in the entire corpus is **2017**, and coverage is
@@ -206,7 +206,8 @@ state-politics/
 - Treat **`platform-update-04212025.zip` (id `11106328`) as the authoritative archive**; the older
   `05 for public.zip` is superseded. Verify against the changelog rather than unioning.
 - Parse `STATE-YEAR-PARTY[-flags].txt`; skip `__MACOSX/` and `._` AppleDouble entries (they are ~50% of names).
-- Handle the 2 `.rtf` files separately.
+- Handle the single `.rtf` payload separately (`US-1916-Socialist-B-EA.rtf`); the "2" seen
+  earlier came from counting the same file in both archives.
 - Emit `platforms_historical.parquet` + a **per-state × party × year coverage matrix**.
 
 **Done when:** 2,091 documents / 2,086 unique observations load; the coverage matrix reproduces the §1.1
@@ -218,17 +219,24 @@ gap table, including Maryland's total absence.
 - Filter out county and auxiliary organizations.
 - **Verify all 100 rows**; each gets `source_url` + `verified_on`.
 
-**Outcome:** `conf/party_registry.yml`, 100 rows, **100/100 websites resolved, 94/100
-machine-verified**. A row is trusted only when the live page itself names the state and the
-party — a 200 alone is not enough. That check immediately caught stale Wikidata URLs that now
-resolve to unrelated commercial sites (`migop.org` → `kiss918menang.com`, `negop.org` →
-`wildarms4.com`, `southdakotagop.com` → a law-firm directory, `az.gop` → an image file) plus
-four dead hosts (`ctgop.org`, `indgop.org`, `rigop.org`, `wsrp.org`). Nine hand-checked
-corrections are recorded with their evidence. The remaining six rows are bot-protected (403)
-or briefly down (502) and stay flagged for human confirmation.
+**Outcome:** `conf/party_registry.yml`, 100 rows, **100/100 websites resolved, 92/100
+machine-verified**. A row is trusted only when the live page's **visible text** identifies that
+state's party. That check caught stale Wikidata URLs now resolving to unrelated commercial sites
+(`migop.org` → `kiss918menang.com`, `negop.org` → `wildarms4.com`, `southdakotagop.com` → a
+law-firm directory, `az.gop` → an image file), four dead hosts (`ctgop.org`, `indgop.org`,
+`rigop.org`, `wsrp.org`), and six parties that have rebranded onto `.gop` domains (CO, DE, IL,
+MO, SC, VA). Nineteen hand-checked corrections are recorded with their evidence. The remaining
+eight rows are bot-protected (403), JavaScript-rendered, or — in Alaska's Republican case —
+genuinely serving a suspended-account page.
 
-> **Lesson for Phase 3:** "Wikidata has a value" is not evidence the value is right. Any
-> domain used for crawling must be content-confirmed at fetch time, not trusted from a list.
+> **Lessons carried into Phase 3:**
+> 1. "Wikidata has a value" is not evidence the value is right. Any domain used for crawling must
+>    be content-confirmed at fetch time, not trusted from a list.
+> 2. A content check must run on **visible text with URLs and the site's own domain stripped**.
+>    The first version matched raw HTML, so `alaskagop.org`'s "Account Suspended" page confirmed
+>    itself via `webmaster@alaskagop.org` and was recorded as verified.
+> 3. A redirect must never become the crawl target: keep the configured URL, record the
+>    destination separately, and force review when the registrable domain changes.
 
 ### Phase 3 — Close the 2018–2026 platform gap (3–5 days) ⭐ the hard part
 - For each of the 100 domains, discover candidates from **two** channels:
@@ -311,7 +319,7 @@ run manifest records `describe_hardware()` so the compute environment is reprodu
 - Should **legislative priority agendas** and **convention resolutions** count as platforms, or be a separate
   document class? (Plan currently: separate `doc_type`, jointly analyzable.)
 - Should third parties in the historical corpus (Prohibition, Progressive, Socialist, Green, Libertarian —
-  ~150 documents) be retained? (Plan currently: ingest and retain, analyze D/R.)
+  116 documents) be retained? (Plan currently: ingest and retain, analyze D/R.)
 - Preferred issue taxonomy — Comparative Agendas major topics, or a custom scheme?
 
 ---

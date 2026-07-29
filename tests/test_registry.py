@@ -7,6 +7,8 @@ a row is only trusted when the live page itself names the state and the party.
 
 from __future__ import annotations
 
+import re
+
 import pytest
 import yaml
 
@@ -240,7 +242,7 @@ def test_overrides_are_well_formed():
         assert party in {"D", "R"}
         assert override.website.startswith("https://")
         # Every correction must say how it was established.
-        assert "2026-07-28" in override.evidence
+        assert re.search(r"2026-07-2[89]", override.evidence), override.evidence
 
 
 def test_parse_sparql_csv():
@@ -262,3 +264,35 @@ def test_write_registry_records_source_and_review_flags(tmp_path):
     assert payload["generated_at"].endswith("Z")
     assert len(payload["organizations"]) == 2
     assert payload["organizations"][1]["needs_review"] is True
+
+
+def test_content_confirms_accepts_a_title_that_names_the_state_party():
+    """Some parties attack the other side as often as they name themselves.
+
+    The New York GOP homepage is an exact 5-5 tie on party mentions, so the frequency test
+    alone rejects it; its <title> is unambiguous.
+    """
+    page = (
+        b"<html><head><title>New York Republican State Committee</title></head><body>"
+        b"<p>New York Republicans. Democrats democrats democrats democrats democrat.</p>"
+        b"<p>Republican republicans gop.</p></body></html>"
+    )
+    assert _content_confirms(page, "NY", "R")
+
+
+def test_title_path_does_not_reopen_the_cross_party_hole():
+    """A GOP page must not confirm the Democratic row by either route."""
+    page = (
+        b"<html><head><title>Texas GOP</title></head><body>"
+        b"<p>Texas Republicans oppose the democrat agenda.</p></body></html>"
+    )
+    assert _content_confirms(page, "TX", "R")
+    assert not _content_confirms(page, "TX", "D")
+
+
+def test_content_confirms_still_rejects_a_suspended_page_with_a_matching_domain():
+    suspended = (
+        b"<html><head><title>Account Suspended</title></head><body>"
+        b'<a href="mailto:webmaster@newyorkgop.org">x</a></body></html>'
+    )
+    assert not _content_confirms(suspended, "NY", "R")

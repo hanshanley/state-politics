@@ -129,8 +129,8 @@ Outputs: `data/processed/platforms_historical.parquet`,
 
 `conf/party_registry.yml` holds all 100 organizations, each with a `source_url`,
 `verified_on` date, the HTTP status observed for its homepage, and a `needs_review` flag.
-A row is only trusted when the live page **itself names the state and the party** — a 200
-alone is not enough, and that check earned its keep immediately:
+A row is only trusted when the **visible page text** identifies that state's party. That bar
+is deliberately high, and it had to be raised twice:
 
 * Wikidata's URL for the **Michigan Republican Party** (`migop.org`) now redirects to
   `kiss918menang.com`, and the **Nebraska Republican Party**'s (`negop.org`) to
@@ -138,12 +138,26 @@ alone is not enough, and that check earned its keep immediately:
 * **South Dakota**'s (`southdakotagop.com`) now serves a law-firm directory, and
   **Arizona**'s (`az.gop`) redirects to an image file on a public radio station's server.
 * Four more (`ctgop.org`, `indgop.org`, `rigop.org`, `wsrp.org`) no longer resolve at all.
+* Six state Republican parties have rebranded onto `.gop` domains (Colorado, Delaware,
+  Illinois, Missouri, South Carolina, Virginia); the registry records the destination directly
+  rather than depending on a redirect that could later be repointed.
 
-Taking Wikidata at face value would have pointed the entire platform crawl at spam domains.
-Nine hand-checked corrections are recorded in `MANUAL_OVERRIDES`, each carrying the evidence
-that established it. Current state: **100/100 websites resolved, 94/100 machine-verified**;
-the remaining six sit behind bot protection (HTTP 403) or were briefly down (502), so they
-stay flagged for human confirmation rather than being asserted as correct.
+A first version of the content check matched raw HTML, which let a page confirm itself: the
+Alaska Republican Party's `alaskagop.org` serves an **`Account Suspended`** page whose only
+occurrences of "alaska" and "gop" are inside `webmaster@alaskagop.org`, and it was recorded as
+verified. Matching now runs on visible text with URLs, e-mails and domain tokens stripped,
+rejects parked/suspended pages, and requires a page to name its *own* party more often than the
+other one (Republican sites mention "democrat" constantly).
+
+Nineteen hand-checked corrections are recorded in `MANUAL_OVERRIDES`, each carrying the evidence
+that established it. Current state: **100/100 websites resolved, 92/100 machine-verified**. The
+remaining eight sit behind bot protection (HTTP 403) or render their content in JavaScript — plus
+Alaska's Republican site, which is genuinely suspended. They stay flagged for human confirmation
+rather than being asserted as correct.
+
+A redirect is never allowed to change the crawl target: `website` keeps the configured URL and
+the observed destination is recorded separately in `final_url`, with an off-domain redirect
+forcing human review.
 
 ---
 
@@ -170,8 +184,7 @@ locally. No API keys are required by this project, and none should ever be added
 state-politics/
 ├── CITATIONS.md                 # bibliographic citations, collector-first
 ├── conf/
-│   ├── party_registry.yml       # 100 state party orgs: state, party, domain, source_url, verified_on
-│   └── topics.yml               # issue taxonomy + seed terms
+│   └── party_registry.yml       # 100 state party orgs: state, party, domain, source_url, verified_on
 ├── src/state_politics/
 │   ├── provenance.py            # url, http_status, sha256, retrieved_at, source_org
 │   ├── compute.py               # local device selection + hosted-LLM guard

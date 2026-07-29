@@ -7,11 +7,13 @@ the two shipped zips are *not* additive, and unioning them silently inflates the
 
 from __future__ import annotations
 
+import re
 import zipfile
 
 import pytest
 
 from state_politics.platforms.dataverse import (
+    DATASET_FILES,
     MAJOR_PARTIES,
     US_STATES,
     coverage_matrix,
@@ -21,6 +23,7 @@ from state_politics.platforms.dataverse import (
     normalize_party,
     parse_filename,
     reconcile,
+    strip_rtf,
 )
 
 
@@ -162,3 +165,32 @@ def test_coverage_matrix_shows_absent_states_as_explicit_zeros(tmp_path):
 
 def test_major_parties_are_exactly_d_and_r():
     assert sorted(MAJOR_PARTIES) == ["D", "R"]
+
+
+def test_strip_rtf_removes_metadata_groups_not_just_control_words():
+    """A regex-only strip leaves the font table's payload behind as fake words."""
+    rtf = (
+        r"{\rtf1\ansi\ansicpg1252\cocoartf2513"
+        r"{\fonttbl\f0\fswiss\fcharset0 Helvetica;\f1 HelveticaNeue;}"
+        r"{\colortbl;\red255\green255\blue255;}"
+        r"{\*\expandedcolortbl;;}"
+        r"\deftab560\pard\tx560 Socialist Platform of 1916\par "
+        r"We demand \'93justice\'94 for all.}"
+    )
+    out = strip_rtf(rtf)
+    assert "Socialist Platform of 1916" in out
+    assert "We demand \u201cjustice\u201d for all." in out
+    for junk in ("Helvetica", "fonttbl", "colortbl", "cocoartf", "deftab", "expandedcolortbl"):
+        assert junk not in out
+
+
+def test_strip_rtf_leaves_plain_text_untouched():
+    plain = "We support public education.\nAnd fair wages."
+    assert strip_rtf(plain) == plain
+
+
+def test_dataset_files_carry_publisher_digests():
+    """Downloads are checked against Dataverse's own MD5s, so substituted content fails loudly."""
+    assert len(DATASET_FILES) == 3
+    for spec in DATASET_FILES:
+        assert re.fullmatch(r"[0-9a-f]{32}", spec.md5), spec.filename

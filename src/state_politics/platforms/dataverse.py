@@ -167,8 +167,13 @@ def normalize_party(party_raw: str) -> str:
     return party_raw if party_raw in MAJOR_PARTIES else "other"
 
 
-_RTF_GROUP_RE = re.compile(r"\{\\\*.*?\}", re.S)
-_RTF_CONTROL_RE = re.compile(r"\\[a-zA-Z]+-?\d* ?")
+#: RTF destination groups whose contents are metadata, not prose.
+_RTF_SKIP_DESTINATIONS = frozenset({
+    "fonttbl", "colortbl", "stylesheet", "info", "pict", "object", "header", "footer",
+    "footnote", "themedata", "colorschememapping", "latentstyles", "datastore", "generator",
+    "expandedcolortbl", "listtable", "listoverridetable", "rsidtbl", "filetbl", "revtbl",
+})
+_RTF_CONTROL_WORD_RE = re.compile(r"\\([a-zA-Z]+)(-?\d+)? ?")
 _RTF_HEX_RE = re.compile(r"\\'([0-9a-fA-F]{2})")
 
 
@@ -176,19 +181,65 @@ def strip_rtf(text: str) -> str:
     """Reduce RTF source to its prose.
 
     Exactly one payload in the corpus is RTF (``US-1916-Socialist-B-EA.rtf``). Stored raw it
-    contributed 3,319 "words" of control words and font/colour tables against a corpus median
-    of 2,569 real ones, silently contaminating any length or term statistic computed over the
-    corpus. This is a deliberately minimal stripper -- enough for one plain document, not a
-    general RTF parser.
+    contributed 3,319 "words" of control words, font names and colour tables against a corpus
+    median of 2,569 real ones, silently contaminating any length or term statistic computed
+    over the corpus.
+
+    This tracks group nesting so that destination groups such as ``{\\fonttbl ...}`` are
+    skipped wholesale. A regex-only strip is not enough: it removes the control words but
+    leaves their payload behind, so ``{\\fonttbl\\f0 Helvetica;}`` still contributes the word
+    "Helvetica". Deliberately minimal -- enough for one plain document, not a general parser.
     """
     if not text.lstrip().startswith("{\\rtf"):
         return text
-    text = _RTF_GROUP_RE.sub(" ", text)
-    text = _RTF_HEX_RE.sub(lambda m: bytes.fromhex(m.group(1)).decode("cp1252", "replace"), text)
-    text = text.replace("\\par", "\n").replace("\\line", "\n").replace("\\tab", "\t")
-    text = _RTF_CONTROL_RE.sub(" ", text)
-    text = text.replace("{", " ").replace("}", " ")
-    return re.sub(r"[ \t]+", " ", text).strip()
+
+    out: list[str] = []
+    stack: list[bool] = []
+    ignore = False
+    index, length = 0, len(text)
+
+    while index < length:
+        char = text[index]
+        if char == "{":
+            stack.append(ignore)
+            index += 1
+        elif char == "}":
+            ignore = stack.pop() if stack else False
+            index += 1
+        elif char == "\\":
+            if text.startswith("\\*", index):
+                ignore = True
+                index += 2
+                continue
+            hex_match = _RTF_HEX_RE.match(text, index)
+            if hex_match:
+                if not ignore:
+                    out.append(bytes.fromhex(hex_match.group(1)).decode("cp1252", "replace"))
+                index = hex_match.end()
+                continue
+            word_match = _RTF_CONTROL_WORD_RE.match(text, index)
+            if word_match:
+                word = word_match.group(1)
+                if word in _RTF_SKIP_DESTINATIONS:
+                    ignore = True
+                elif not ignore and word in ("par", "line", "sect"):
+                    out.append("\n")
+                elif not ignore and word == "tab":
+                    out.append("\t")
+                index = word_match.end()
+                continue
+            if index + 1 < length:  # escaped literal such as \\, \{ or \}
+                if not ignore:
+                    out.append(text[index + 1])
+                index += 2
+            else:
+                index += 1
+        else:
+            if not ignore:
+                out.append(char)
+            index += 1
+
+    return re.sub(r"[ \t]+", " ", "".join(out)).strip()
 
 
 def decode_text(raw: bytes) -> str:
