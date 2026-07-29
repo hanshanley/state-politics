@@ -28,6 +28,14 @@ PLATFORM_PROSE = (
 ) * 20
 
 
+def platform_prose(state_name: str) -> bytes:
+    """Platform prose that also names its state, as a real state platform does."""
+    return (
+        PLATFORM_PROSE
+        + f" The {state_name} party adopted this platform in {state_name}. "
+    ).encode()
+
+
 class StubResponse:
     def __init__(self, status_code: int, content: bytes = b"",
                  content_type: str = "text/html", url: str = "https://x.test/"):
@@ -103,7 +111,7 @@ def test_collect_candidate_prefers_the_wayback_snapshot():
 
     def transport(url, *, timeout, headers):
         seen["url"] = url
-        return StubResponse(200, PLATFORM_PROSE.encode())
+        return StubResponse(200, platform_prose("Texas"))
 
     candidate = Candidate(state="TX", party="R", url="https://texasgop.org/2022platform/",
                           source="wayback", wayback_timestamp="20220710092122", score=7,
@@ -144,7 +152,7 @@ def test_collect_for_org_respects_score_threshold_and_cap():
 
     def transport(url, *, timeout, headers):
         calls.append(url)
-        return StubResponse(200, PLATFORM_PROSE.encode())
+        return StubResponse(200, platform_prose("Texas"))
 
     candidates = [
         Candidate(state="TX", party="R", url=f"https://x.org/p{i}", source="live", score=score)
@@ -208,7 +216,7 @@ def test_collect_for_org_flags_the_same_document_served_from_two_urls():
     ]
     collected = collect_for_org(
         candidates,
-        transport=lambda url, *, timeout, headers: StubResponse(200, PLATFORM_PROSE.encode()),
+        transport=lambda url, *, timeout, headers: StubResponse(200, platform_prose("Texas")),
         sleep=lambda _: None,
     )
     assert len(collected) == 2
@@ -245,3 +253,83 @@ def test_space_ratio_detects_lost_spacing():
 
     assert _space_ratio("we believe in a fair and open government today") > 0.12
     assert _space_ratio("webelieveinafairandopengovernmenttoday") < 0.08
+
+
+def test_collect_candidate_falls_back_to_live_when_the_snapshot_is_thin():
+    """The archive's capture of massdems.org/our-platform had 1,743 chars; live had 94,756."""
+    def transport(url, *, timeout, headers):
+        if "web.archive.org" in url:
+            return StubResponse(200, b"<p>short capture</p>")
+        return StubResponse(200, platform_prose("Massachusetts"))
+
+    candidate = Candidate(state="MA", party="D", url="https://massdems.org/our-platform",
+                          source="wayback", wayback_timestamp="20240101000000", score=6)
+    document = collect_candidate(candidate, transport=transport, sleep=lambda _: None)
+    assert document.confirmed
+    assert document.source == "live"
+    assert document.fetched_url == "https://massdems.org/our-platform"
+
+
+def test_collect_candidate_keeps_the_snapshot_when_it_is_adequate():
+    """Ties and adequate captures favour the archive, which is the reproducible copy."""
+    def transport(url, *, timeout, headers):
+        return StubResponse(200, platform_prose("Texas"))
+
+    candidate = Candidate(state="TX", party="R", url="https://texasgop.org/2022platform/",
+                          source="wayback", wayback_timestamp="20220710092122", score=7)
+    document = collect_candidate(candidate, transport=transport, sleep=lambda _: None)
+    assert document.source == "wayback"
+    assert document.fetched_url.startswith("https://web.archive.org/")
+
+
+def test_collect_candidate_uses_live_when_the_snapshot_fetch_fails():
+    def transport(url, *, timeout, headers):
+        if "web.archive.org" in url:
+            raise ConnectionError("refused")
+        return StubResponse(200, platform_prose("Iowa"))
+
+    candidate = Candidate(state="IA", party="R", url="https://iowagop.org/about/platform/",
+                          source="wayback", wayback_timestamp="20180213194308", score=5)
+    document = collect_candidate(candidate, transport=transport, sleep=lambda _: None)
+    assert document.confirmed
+    assert document.source == "live"
+
+
+NATIONAL_PROSE = (
+    "We believe in a fair economy. We support working families. We oppose corporate excess. "
+    "This platform was approved by the Democratic National Convention. The Democratic "
+    "National Committee affirms these principles for our nation. We affirm our commitment. "
+) * 20
+
+
+def test_confirm_platform_rejects_a_national_platform_hosted_by_a_state_party():
+    """State sites host the DNC/RNC document; it is longer and more fluent than most state
+    platforms, so it passes every other test and gets misattributed."""
+    ok, reason, _ = confirm_platform(NATIONAL_PROSE, state_name="Oklahoma")
+    assert not ok
+    assert "national party platform" in reason
+
+
+def test_confirm_platform_rejects_text_that_never_names_its_state():
+    ok, reason, _ = confirm_platform(PLATFORM_PROSE, state_name="Hawaii")
+    assert not ok
+    assert "never names Hawaii" in reason
+
+
+def test_confirm_platform_accepts_a_document_that_names_its_state():
+    text = PLATFORM_PROSE + " The Montana Democratic Party adopted this in Montana. "
+    ok, _, _ = confirm_platform(text, state_name="Montana")
+    assert ok
+
+
+def test_state_attribution_is_skipped_when_no_state_name_is_supplied():
+    """The check is opt-in so the function stays usable for non-state documents."""
+    ok, _, _ = confirm_platform(PLATFORM_PROSE)
+    assert ok
+
+
+def test_a_national_platform_that_also_discusses_the_state_is_kept():
+    """A state platform may cite the national convention; two state mentions is enough."""
+    text = NATIONAL_PROSE + " Texas Democrats adopted this in Texas for Texas voters. "
+    ok, _, _ = confirm_platform(text, state_name="Texas")
+    assert ok

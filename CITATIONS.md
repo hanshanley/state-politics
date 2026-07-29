@@ -87,3 +87,24 @@ treated as verified.
 
 If you use the 2018–present platform corpus produced here, please cite both this repository and the
 individual state party committees that published the underlying documents.
+
+---
+
+## 6. Issue taxonomy
+
+> Comparative Agendas Project (2026). *Master Codebook: major topic codes* [Coding scheme].
+> Comparative Agendas Project. https://www.comparativeagendas.net/pages/master-codebook.
+> Accessed 2026-07-29.
+
+`conf/topics.yml` adapts the CAP major topic codes; the topic descriptions and seed terms were
+written for this project. Anchoring to an existing scheme rather than inventing one keeps the
+results comparable with the wider agenda-setting literature and lets the Open States `subject`
+tags be mapped onto the same taxonomy.
+
+## 7. Plank classification model
+
+> Reimers, Nils & Gurevych, Iryna (2019). *Sentence-BERT: Sentence Embeddings using Siamese
+> BERT-Networks.* Proceedings of EMNLP-IJCNLP 2019. Model weights:
+> `sentence-transformers/all-MiniLM-L6-v2`, Hugging Face. Accessed 2026-07-29.
+
+Run locally on Apple Silicon via MPS. No hosted inference API is used anywhere in this project.

@@ -25,7 +25,8 @@ import json
 import re
 import time
 import urllib.parse
-from collections.abc import Iterator
+from collections.abc import Iterable, Iterator
+from contextlib import contextmanager
 from dataclasses import asdict, dataclass, replace
 from datetime import UTC, datetime
 from pathlib import Path
@@ -154,19 +155,57 @@ class FetchRecord:
 class ProvenanceLog:
     """Append-only JSONL log of :class:`FetchRecord` entries.
 
-    Append-only is deliberate: rewriting history would let a later run quietly erase
-    evidence that an earlier fetch failed, which is exactly the failure mode the log
-    exists to prevent.
+    Append-only is deliberate: rewriting history would let a later run quietly erase evidence
+    that an earlier fetch failed, which is exactly the failure mode the log exists to prevent.
+
+    :meth:`append` reopens the file per record, which costs ~11 ms on this machine. That is
+    irrelevant for a handful of downloads and ruinous for a crawl of hundreds of thousands of
+    URLs, so :meth:`session` holds one handle open for the duration of a crawl while keeping
+    the same append-only, flush-per-record guarantee.
     """
 
     def __init__(self, path: Path | str) -> None:
         self.path = Path(path)
+        self._handle = None
 
     def append(self, record: FetchRecord) -> FetchRecord:
+        if self._handle is not None:
+            self._handle.write(record.to_json() + "\n")
+            self._handle.flush()
+            return record
         self.path.parent.mkdir(parents=True, exist_ok=True)
         with open(self.path, "a", encoding="utf-8") as handle:
             handle.write(record.to_json() + "\n")
         return record
+
+    def extend(self, records: Iterable[FetchRecord]) -> int:
+        """Append many records with a single open/close."""
+        with self.session():
+            count = 0
+            for record in records:
+                self.append(record)
+                count += 1
+        return count
+
+    @contextmanager
+    def session(self):
+        """Hold the log open for the duration of a crawl.
+
+        Records are still flushed individually, so an interrupted crawl keeps everything it
+        had already written.
+        """
+        if self._handle is not None:  # already inside a session; do not reopen or close
+            yield self
+            return
+        self.path.parent.mkdir(parents=True, exist_ok=True)
+        # Not a `with` block: the handle deliberately outlives this statement and is closed
+        # in the finally clause, which is the whole point of holding it open for a crawl.
+        self._handle = open(self.path, "a", encoding="utf-8")  # noqa: SIM115
+        try:
+            yield self
+        finally:
+            self._handle.close()
+            self._handle = None
 
     def __iter__(self) -> Iterator[FetchRecord]:
         if not self.path.exists():

@@ -238,44 +238,101 @@ genuinely serving a suspended-account page.
 > 3. A redirect must never become the crawl target: keep the configured URL, record the
 >    destination separately, and force review when the registrable domain changes.
 
-### Phase 3 — Close the 2018–2026 platform gap (3–5 days) ⭐ the hard part
-- For each of the 100 domains, discover candidates from **two** channels:
-  1. Wayback CDX, `from=2018`, `collapse=urlkey`, `statuscode:200`
-  2. Live-site crawl of the current domain (robots-respecting, rate-limited, identifying UA)
-- **Filter `cdn-cgi` first** (verified necessary), then keep URLs/PDFs matching
-  `platform | principles | resolutions | legislative priorities | agenda`.
-- Fetch → hash → extract text (PDF and HTML) → assign `(state, party, year, doc_type)`.
-- Note that some parties publish **"legislative priorities"** rather than a platform
-  (verified: `texasgop.org/2024-platform-and-legislative-priorities/`). Model `doc_type` explicitly so
-  platforms and priority agendas are distinguishable but jointly analyzable.
-- Produce a **gap report**: for each state × party × cycle, `found` / `confirmed-none` / `unresolved`.
+### Phase 3 — Close the 2018–2026 platform gap (3–5 days) ⭐ the hard part — **DONE**
+- Discovery (`platforms/discover.py`): Wayback CDX per domain + one live homepage scan, with
+  candidates *scored* rather than filtered so rejections stay auditable.
+- Collection (`platforms/collect.py`): fetches the credible candidates (preferring the archived
+  snapshot via the `id_` modifier so the corpus is reproducible), extracts HTML/PDF text, and
+  confirms each document against its own content.
 
-**Done when:** every one of the 100 orgs has an explicit, evidenced status for 2018–2026. Target: recover
-documents for a strong majority; **honestly report the rest as absent** rather than filling them in.
+**Outcome:** 2,975 candidates → **200 confirmed documents across 78/100 organizations and 45
+states**; 105 D / 95 R; 1.25M words. Every organization gets an explicit status in
+`platform_gap_report.csv` (`found` 78 / `candidates_rejected` 9 / `no_strong_candidates` 7 /
+`no_candidates` 6).
 
-### Phase 4 — State bills, all 50 states, to present (2–3 days)
-- Restore the **2026-07 public pgdump** (10.7 GB) locally; extract bills, sponsorships, subjects, versions, actions.
-- Load the 50 public `people/current/{state}.csv` files for sponsor **party**.
-- Join sponsorships → party; compute per-bill party attribution using `primary` and `classification`
-  (lead sponsor vs cosponsor weighting; flag bipartisan bills).
-- **Session parsing must not assume a leading year** (verified: Alaska/Texas/Massachusetts/Illinois naming).
-- Restrict strictly to state legislatures; exclude the `us` jurisdiction (Congress) and, by default, territories
-  (`pr`, `gu`, `vi`, `mp`, `as`, `dc`) — these exist in the source and would otherwise leak in.
+> **Three bugs found and fixed here, all of the same family — a silent absence:**
+> 1. **Cloudflare crowded out the real results.** `/cdn-cgi/challenge-platform/` contains the
+>    word "platform", so on Cloudflare-fronted domains those URLs filled all 2,000 CDX rows and
+>    pushed genuine documents out of the window. Excluding them *server-side* took the Minnesota
+>    DFL from 0 candidates to 69. Filtering client-side is not enough.
+> 2. **A failed query looked like an empty one.** Four organizations had their CDX request fail
+>    with a network error or 504, and the code returned `[]` — indistinguishable from "this party
+>    published nothing". Discovery now returns an explicit outcome carrying `searched` /
+>    `wayback_ok`, and the CLI retries.
+> 3. **Politeness failure destroyed two-thirds of the data.** Fetching at ~1 req/s against the
+>    single host `web.archive.org` had 305 of 456 fetches refused. At 2.5s spacing with patient
+>    backoff the success rate went from 34% to 93%, and confirmed documents from 72 to 197.
+>
+> Plus a data bug: some party PDFs embed fonts with no space glyphs, so a genuine
+> 31,817-character South Dakota platform extracted as `SouthDakotaDemocraticPartyPlatform...`
+> (space ratio 0.044 vs ~0.16) and scored **zero** declarative phrases. Fixed with pypdf layout
+> mode plus a separator-free phrase fallback.
 
-**Done when:** bill counts by state × session × sponsor party reconcile against the Open States API v3
-for a random sample of 10 states.
+**Remaining limitation:** most of the 23 uncovered organizations are JavaScript-rendered sites
+whose text is assembled in the browser and is therefore invisible to static fetching. Recorded
+as such rather than guessed at.
 
-### Phase 5 — Common issue taxonomy (2 days)
-- Define one taxonomy applied to **both** platforms and bills so the two streams are comparable.
-- Anchor it to an existing scheme rather than inventing one (Comparative Agendas / Policy Agendas major
-  topics is the natural anchor); map Open States `subject` tags onto it.
-- Classify plank-level platform text and bill titles/abstracts **using local models only**
-  (`select_device()` → `mps` on the M4): sentence-transformer embeddings + a scikit-learn classifier,
-  or a small local transformer. No hosted inference at any point.
-- Hold out a hand-labeled validation set and report accuracy. No unvalidated classifier output ships.
+### Phase 4 — State bills, all 50 states, to present (2–3 days) — **PARTIALLY DONE**
 
-**Done when:** validation accuracy is reported per topic, the confusion matrix is committed, and the
-run manifest records `describe_hardware()` so the compute environment is reproducible.
+**Done:** `bills/people.py` ingests all 50 states' current legislators from Open States'
+public, no-auth per-state CSVs — **7,359 legislators, 50/50 states** (R 4,000 / D 3,166 /
+other 193; chambers 5,389 lower, 1,921 upper, 49 `legislature` for Nebraska's nonpartisan
+unicameral). Third parties stay `other` rather than being folded into D/R. This is the join
+key that attaches partisanship to sponsorship.
+
+**Blocked — bills themselves.** All three Open States routes were tested on 2026-07-29:
+
+| Route | Status |
+|---|---|
+| Per-session CSV/JSON archives | **login-gated** — every path under `data.openstates.org/csv/` and `/json/` returns HTTP 403 |
+| Public PostgreSQL dump | public but **10.7 GB**; this machine has **32 GB free (93% full)** and **no PostgreSQL installed**, so dump + restore does not fit |
+| API v3 | needs a free key (`OPENSTATES_API_KEY`) |
+
+The API is the practical route and needs only a free key. `provenance.download_to_file()`
+already streams with incremental hashing for the dump route should space and a database
+become available.
+
+Remaining work once unblocked:
+- Join sponsorships → party using `primary` and `classification` (lead vs cosponsor weighting;
+  flag bipartisan bills).
+- **Session parsing must not assume a leading year** (verified: `Alaska 33rd Legislature
+  (2023-2024)`, `Texas 87th Legislature (2021)`, `Illinois 102nd Regular Session`).
+- Exclude the `us` jurisdiction (Congress) and, by default, the territories.
+
+### Phase 5 — Common issue taxonomy (2 days) — **DONE**
+- `conf/topics.yml` holds 21 topics anchored to the Comparative Agendas Project major-topic
+  codes, each with a prose description (what the local model embeds) and seed terms (what the
+  transparent baseline uses). Rare topics — Defense, Foreign trade, International affairs — are
+  retained deliberately: dropping them would push genuine foreign-policy planks into whichever
+  domestic topic was nearest.
+- `analysis/taxonomy.py` segments documents into planks and classifies them with a local
+  sentence-transformer on MPS, plus a keyword baseline for comparison. No hosted inference.
+- `analysis/validate.py` scores both against a hand-labelled gold set.
+
+**Outcome:** embedding classifier **62% top-1 / 78% top-2**, keyword baseline 56% top-1, on 50
+randomly-sampled hand-labelled planks (chance ≈ 5% on a 21-way task). The gold set is committed
+at `data/gold/plank_topics_gold.csv` so a future taxonomy or model change can be re-scored
+against identical labels.
+
+> **Two segmentation bugs caught here, both producing confident nonsense:**
+> 1. PDF **tables of contents** were being segmented into "planks" — each contents row survives
+>    every length test while carrying no position at all, and the classifier assigned them
+>    topics at similarities of 0.10–0.19.
+> 2. A plank resembling **no** topic was pushed into whichever was least far away. Below a
+>    similarity threshold it is now recorded as unclassified and excluded from the denominator.
+
+### Phase 6 — Emphasis measures & comparisons (2–3 days) — **PARTIALLY DONE**
+
+**Done — platform emphasis.** `analysis/emphasis.py` measures share of planks per topic for
+each state party and era over **43,104 planks from 872 documents** (196 modern + 676 historical
+from 1990). Democratic state parties emphasize labour (5.9% vs 1.1%), environment, housing,
+health and social welfare; Republicans emphasize government operations (10.8% vs 7.1%), public
+lands, macroeconomics, culture/family and law and crime. Outputs `emphasis_by_org.csv`,
+`emphasis_by_party.csv` and `outputs/party_emphasis.png`.
+
+**Not done — stated-vs-revealed divergence**, cross-state outlier analysis against the national
+party, and text-reuse diffusion. All three need the bills stream, so they are gated on the
+Phase 4 blocker.
 
 ### Phase 6 — Emphasis measures & comparisons (2–3 days)
 - **Emphasis score** per (state, party, cycle, topic): share of platform text, and share of sponsored bills.

@@ -1,0 +1,128 @@
+"""Tests for the shared issue taxonomy, plank segmentation and classification.
+
+Two of these encode bugs that produced confidently wrong output: a PDF table of contents being
+segmented into "planks" that the classifier then dutifully assigned topics to, and a plank
+resembling no topic being pushed into whichever one was least far away.
+"""
+
+from __future__ import annotations
+
+import pytest
+
+from state_politics.analysis.taxonomy import (
+    DEFAULT_TOPICS_PATH,
+    MIN_PLANK_CHARS,
+    KeywordClassifier,
+    Topic,
+    load_topics,
+    segment_planks,
+)
+
+PLANK = (
+    "We support a living wage for every worker in this state, and we believe collective "
+    "bargaining rights must be protected for public and private sector employees alike."
+)
+
+
+def test_taxonomy_loads_and_is_well_formed():
+    topics = load_topics()
+    assert len(topics) >= 20
+    assert all(t.description and t.seeds for t in topics)
+    assert len({t.code for t in topics}) == len(topics)
+    assert len({t.name for t in topics}) == len(topics)
+
+
+def test_taxonomy_keeps_the_rare_national_topics():
+    """Dropping Defense/Foreign trade/International affairs would push genuine foreign-policy
+    planks into whichever domestic topic was nearest."""
+    codes = {t.code for t in load_topics()}
+    assert {16, 18, 19} <= codes
+
+
+def test_topics_file_is_where_the_code_expects():
+    assert DEFAULT_TOPICS_PATH.exists()
+
+
+def test_duplicate_codes_are_rejected(tmp_path):
+    bad = tmp_path / "topics.yml"
+    bad.write_text(
+        "topics:\n"
+        "  - {code: 1, name: A, description: x, seeds: [a]}\n"
+        "  - {code: 1, name: B, description: y, seeds: [b]}\n",
+        encoding="utf-8",
+    )
+    with pytest.raises(ValueError, match="duplicate topic codes"):
+        load_topics(bad)
+
+
+def test_segment_planks_splits_on_paragraphs_and_drops_fragments():
+    text = f"{PLANK}\n\nHEADING\n\n{PLANK}"
+    planks = segment_planks(text)
+    assert len(planks) == 2
+    assert all(len(p.text) >= MIN_PLANK_CHARS for p in planks)
+
+
+def test_segment_planks_drops_table_of_contents_rows():
+    """A contents row survives every length test while carrying no position at all.
+
+    Left in, these became planks the classifier assigned topics to at similarities of 0.10.
+    """
+    toc = (
+        "Part One - Economy 13 Protecting Workers 14 Raising Wages 15 Health Care 26 "
+        "Education 31 Housing 34 Environment 38 Energy 42 Immigration 47 Justice 51"
+    )
+    assert segment_planks(toc) == []
+
+
+def test_segment_planks_drops_pdf_spaced_capital_artefacts():
+    artefact = (
+        "AND D EMOCRACY ` 6 A CCESS TO THE B ALLOT C OUNTING E VERY L AWFUL V OTE "
+        "P ROTECTING THE R IGHT AND I NTEGRITY 6 R EDISTRICTING 7 C AMPAIGN F INANCE"
+    )
+    assert segment_planks(artefact) == []
+
+
+def test_segment_planks_splits_overlong_blocks():
+    long_block = " ".join([PLANK] * 12)
+    planks = segment_planks(long_block)
+    assert len(planks) > 1
+    assert all(len(p.text) <= 1600 for p in planks)
+
+
+def test_segment_planks_handles_pdf_single_newline_text():
+    text = "\n".join([PLANK, PLANK, PLANK])
+    assert len(segment_planks(text)) == 3
+
+
+def test_keyword_classifier_returns_none_rather_than_guessing():
+    topics = load_topics()
+    classifier = KeywordClassifier(topics)
+    code, score = classifier.predict("The quick brown fox jumped over the lazy dog entirely.")
+    assert code is None
+    assert score == 0.0
+
+
+def test_keyword_classifier_finds_the_obvious_topic():
+    topics = load_topics()
+    classifier = KeywordClassifier(topics)
+    code, score = classifier.predict(PLANK)
+    labour = next(t.code for t in topics if t.name.startswith("Labor"))
+    assert code == labour
+    assert score > 0
+
+
+def test_keyword_scoring_does_not_favour_long_seed_lists():
+    """Normalizing by seed count stops a topic winning purely by having more seeds."""
+    topics = [
+        Topic(code=1, name="Few", description="d", seeds=("alpha",)),
+        Topic(code=2, name="Many", description="d", seeds=tuple(f"w{i}" for i in range(40))),
+    ]
+    classifier = KeywordClassifier(topics)
+    code, _ = classifier.predict("alpha")
+    assert code == 1
+
+
+def test_topic_embedding_text_includes_name_description_and_seeds():
+    topic = Topic(code=1, name="Energy", description="About energy.", seeds=("solar", "wind"))
+    text = topic.embedding_text
+    assert "Energy" in text and "About energy." in text and "solar" in text

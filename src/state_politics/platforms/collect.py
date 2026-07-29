@@ -32,6 +32,10 @@ from pathlib import Path
 
 from ..provenance import ProvenanceLog, fetch
 from .discover import STRONG_SCORE, Candidate
+from .registry import STATE_NAMES
+
+#: Postal code -> state name, for attributing a document to the state party that wrote it.
+STATE_NAMES_BY_CODE = {code: name for name, code in STATE_NAMES.items()}
 
 __all__ = [
     "DOC_TYPES",
@@ -173,21 +177,40 @@ def classify_doc_type(url: str, text: str) -> str:
     return "platform"
 
 
+#: Markers of a *national* party platform. State party sites routinely host the DNC/RNC
+#: document, and it is far longer and more fluent than most state platforms, so it sails
+#: through every other check. Three of the first 200 confirmed documents were national
+#: platforms filed under a state.
+_NATIONAL_MARKERS = (
+    r"\b(?:democratic|republican)\s+national\s+convention\b",
+    r"\bnational\s+platform\b",
+    r"\bdemocratic\s+national\s+committee\b",
+    r"\brepublican\s+national\s+committee\b",
+)
+_NATIONAL_RE = re.compile("|".join(_NATIONAL_MARKERS), re.I)
+
+
 def confirm_platform(text: str, state_name: str | None = None) -> tuple[bool, str, int]:
-    """Decide whether extracted text really is a party platform.
+    """Decide whether extracted text really is *this state's* party platform.
 
-    Returns ``(confirmed, reason, phrase_hits)``. Length alone is not enough -- a party's news
-    archive is long too -- so the text must also speak in the declarative voice platforms use
-    ("we believe", "we oppose", "be it resolved").
+    Returns ``(confirmed, reason, phrase_hits)``. Three things must hold, and each was added
+    because its absence let something wrong into the corpus:
 
-    Phrase counting falls back to a separator-free match when the text has lost its word
-    spacing, which happens with PDFs whose fonts carry no space glyphs. Judging those by the
-    spaced patterns alone rejected real platforms of tens of thousands of characters.
+    1. **Length.** A landing page that links to the platform is not the platform.
+    2. **Declarative voice.** A party's news archive is long too, so the text must speak the
+       way platforms speak ("we believe", "we oppose", "be it resolved"). Phrase counting
+       falls back to a separator-free match for PDFs that lost their word spacing, which
+       otherwise discarded real platforms of tens of thousands of characters.
+    3. **State attribution.** The document must name its own state. Without this, the DNC and
+       RNC national platforms -- which state parties host on their own sites, and which are
+       longer and more fluent than most state platforms -- pass every other test and are
+       silently attributed to a state party that did not write them.
     """
     if not text:
         return False, "no text could be extracted", 0
 
     hits = len(_PLATFORM_PHRASE_RE.findall(text))
+    despaced = None
     if _space_ratio(text) < 0.08:
         despaced = re.sub(r"[^0-9a-z]+", "", text.lower())
         hits = max(hits, len(_DESPACED_PHRASE_RE.findall(despaced)))
@@ -196,7 +219,37 @@ def confirm_platform(text: str, state_name: str | None = None) -> tuple[bool, st
         return False, f"too short to be a platform ({len(text)} chars < {MIN_CHARS})", hits
     if hits < 3:
         return False, f"lacks platform language (only {hits} declarative phrases)", hits
+
+    if state_name:
+        state_hits = len(re.findall(rf"\b{re.escape(state_name)}\b", text, re.I))
+        if state_hits == 0 and despaced is not None:
+            state_hits = despaced.count(re.sub(r"[^a-z]", "", state_name.lower()))
+        national_hits = len(_NATIONAL_RE.findall(text))
+        if state_hits < 2 and national_hits >= 2:
+            return False, (
+                f"reads as a national party platform hosted by a state party "
+                f"({national_hits} national references vs {state_hits} mentions of "
+                f"{state_name})"
+            ), hits
+        if state_hits == 0:
+            return False, f"never names {state_name}; cannot attribute it to this state party", hits
+
     return True, f"platform language confirmed ({hits} declarative phrases)", hits
+
+
+def _fetch_once(candidate: Candidate, target: str, log, transport, timeout: float,
+                max_attempts: int, backoff: float, sleep):
+    return fetch(
+        target,
+        source_org=f"{candidate.state} state party ({candidate.party})",
+        log=log,
+        transport=transport,
+        timeout=timeout,
+        max_attempts=max_attempts,
+        backoff=backoff,
+        sleep=sleep,
+        note=f"platform candidate {candidate.state}-{candidate.party}",
+    )
 
 
 def collect_candidate(
@@ -209,6 +262,7 @@ def collect_candidate(
     max_attempts: int = 4,
     backoff: float = 8.0,
     sleep=time.sleep,
+    live_fallback: bool = True,
 ) -> CollectedDocument:
     """Fetch one candidate and decide whether it is a platform document.
 
@@ -216,24 +270,39 @@ def collect_candidate(
     web.archive.org -- and an earlier run at roughly one request per second had 305 of 456
     fetches refused with connection errors. That is both a politeness failure and a 66% data
     loss, so this backs off hard rather than treating a refusal as "document not available".
+
+    The archived snapshot is preferred for reproducibility, but it is not always the better
+    copy: the Massachusetts Democrats' platform page yields 1,743 characters from the capture
+    the archive happened to take and 94,756 from the live page. So when the snapshot fails or
+    comes back too thin to be a platform, the live URL is tried and whichever copy carries
+    more text is used, with ``source`` recording which one won.
     """
+    attempts: list[tuple[str, str, bytes | None, object]] = []
+
     if prefer_wayback and candidate.wayback_timestamp:
         target = wayback_snapshot_url(candidate.wayback_timestamp, candidate.url)
-        source = "wayback"
+        body, record = _fetch_once(candidate, target, log, transport, timeout, max_attempts,
+                                   backoff, sleep)
+        attempts.append(("wayback", target, body, record))
+        snapshot_text = extract_text(body, record.content_type, candidate.url) if body else ""
+        if live_fallback and len(snapshot_text) < MIN_CHARS:
+            if sleep and record.ok:
+                sleep(1.0)
+            body2, record2 = _fetch_once(candidate, candidate.url, log, transport, timeout,
+                                         max_attempts, backoff, sleep)
+            attempts.append(("live", candidate.url, body2, record2))
     else:
-        target, source = candidate.url, "live"
+        body, record = _fetch_once(candidate, candidate.url, log, transport, timeout,
+                                   max_attempts, backoff, sleep)
+        attempts.append(("live", candidate.url, body, record))
 
-    body, record = fetch(
-        target,
-        source_org=f"{candidate.state} state party ({candidate.party})",
-        log=log,
-        transport=transport,
-        timeout=timeout,
-        max_attempts=max_attempts,
-        backoff=backoff,
-        sleep=sleep,
-        note=f"platform candidate {candidate.state}-{candidate.party}",
+    # Keep whichever copy yielded the most text; ties favour the archived one, which came
+    # first and is the reproducible choice.
+    best = max(
+        attempts,
+        key=lambda a: len(extract_text(a[2], a[3].content_type, candidate.url)) if a[2] else -1,
     )
+    source, target, body, record = best
 
     document = CollectedDocument(
         state=candidate.state, party=candidate.party, url=candidate.url,
@@ -247,7 +316,8 @@ def collect_candidate(
         return document
 
     text = extract_text(body, record.content_type, candidate.url)
-    confirmed, reason, hits = confirm_platform(text)
+    state_name = STATE_NAMES_BY_CODE.get(candidate.state)
+    confirmed, reason, hits = confirm_platform(text, state_name=state_name)
     document.n_chars = len(text)
     document.n_words = len(text.split())
     document.phrase_hits = hits
@@ -436,21 +506,24 @@ def main(argv: list[str] | None = None) -> int:
               f"{len(retry_urls)} failed fetches to retry", flush=True)
 
     documents: list[CollectedDocument] = []
-    for index, org in enumerate(registry, start=1):
-        key = (org["state"], org["party"])
-        candidates = grouped.get(key, [])
-        if args.resume and previous:
-            keep = [d for d in previous.get(key, []) if d.url not in retry_urls]
-            candidates = [c for c in candidates if c.url in retry_urls]
-            documents.extend(keep)
-        collected = collect_for_org(
-            candidates, min_score=args.min_score,
-            max_documents=args.max_documents, log=log, delay=args.delay,
-        )
-        documents.extend(collected)
-        confirmed = sum(1 for d in collected if d.confirmed)
-        print(f"[{index:>3}/{len(registry)}] {org['state']}-{org['party']:<2} "
-              f"fetched={len(collected):<3} confirmed={confirmed}", flush=True)
+    # One open handle for the whole crawl: reopening the log per record costs ~11 ms, which
+    # is irrelevant for a few downloads and ruinous across thousands of fetches.
+    with log.session():
+        for index, org in enumerate(registry, start=1):
+            key = (org["state"], org["party"])
+            candidates = grouped.get(key, [])
+            if args.resume and previous:
+                keep = [d for d in previous.get(key, []) if d.url not in retry_urls]
+                candidates = [c for c in candidates if c.url in retry_urls]
+                documents.extend(keep)
+            collected = collect_for_org(
+                candidates, min_score=args.min_score,
+                max_documents=args.max_documents, log=log, delay=args.delay,
+            )
+            documents.extend(collected)
+            confirmed = sum(1 for d in collected if d.confirmed)
+            print(f"[{index:>3}/{len(registry)}] {org['state']}-{org['party']:<2} "
+                  f"fetched={len(collected):<3} confirmed={confirmed}", flush=True)
 
     frame = pd.DataFrame([d.to_row() for d in documents])
     docs_path = out_dir / "platforms_2018_present.parquet"

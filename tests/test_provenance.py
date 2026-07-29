@@ -185,3 +185,73 @@ def test_latest_for_returns_most_recent_attempt(tmp_path):
     assert latest is not None
     assert latest.http_status == 200
     assert log.latest_for("https://example.org/never") is None
+
+
+def test_session_writes_are_append_only_and_flushed(tmp_path):
+    """Holding the handle open must not weaken the append-only or crash-safety guarantee."""
+    log = ProvenanceLog(tmp_path / "provenance.jsonl")
+    log.append(FetchRecord(url="https://a", source_org="o", retrieved_at=utc_now_iso(), ok=True))
+    with log.session():
+        log.append(
+            FetchRecord(url="https://b", source_org="o", retrieved_at=utc_now_iso(), ok=True)
+        )
+        # Readable from disk before the session closes.
+        assert [r.url for r in log.records()] == ["https://a", "https://b"]
+    log.append(FetchRecord(url="https://c", source_org="o", retrieved_at=utc_now_iso(), ok=True))
+    assert [r.url for r in log.records()] == ["https://a", "https://b", "https://c"]
+
+
+def test_nested_sessions_do_not_close_early(tmp_path):
+    log = ProvenanceLog(tmp_path / "provenance.jsonl")
+    with log.session():
+        with log.session():
+            log.append(
+                FetchRecord(url="https://a", source_org="o", retrieved_at=utc_now_iso(), ok=True)
+            )
+        log.append(
+            FetchRecord(url="https://b", source_org="o", retrieved_at=utc_now_iso(), ok=True)
+        )
+    assert len(log.records()) == 2
+
+
+def test_extend_writes_every_record(tmp_path):
+    log = ProvenanceLog(tmp_path / "provenance.jsonl")
+    written = log.extend(
+        FetchRecord(url=f"https://x/{i}", source_org="o", retrieved_at=utc_now_iso(), ok=True)
+        for i in range(50)
+    )
+    assert written == 50
+    assert len(log.records()) == 50
+
+
+def test_index_gives_the_latest_record_per_url(tmp_path):
+    log = ProvenanceLog(tmp_path / "provenance.jsonl")
+    log.append(FetchRecord(url="https://a", source_org="o", retrieved_at=utc_now_iso(),
+                           ok=False, http_status=503))
+    log.append(FetchRecord(url="https://a", source_org="o", retrieved_at=utc_now_iso(),
+                           ok=True, http_status=200))
+    index = log.index()
+    assert set(index) == {"https://a"}
+    assert index["https://a"].http_status == 200
+
+
+def test_fetch_rejects_private_and_non_http_targets(tmp_path):
+    """A lapsed party domain must not be able to point the crawler at localhost."""
+    log = ProvenanceLog(tmp_path / "provenance.jsonl")
+    for url in ("http://127.0.0.1/admin", "http://169.254.169.254/latest/meta-data/",
+                "file:///etc/passwd", "http://10.0.0.5/"):
+        content, record = fetch(url, source_org="o", log=log,
+                                transport=lambda *a, **k: StubResponse(200, b"secret"))
+        assert content is None
+        assert record.ok is False
+        assert "refusing" in record.error
+
+
+def test_fetch_caps_an_oversized_body():
+    content, record = fetch(
+        "https://example.org/huge", source_org="o", max_bytes=10,
+        transport=lambda url, *, timeout, headers: StubResponse(200, b"x" * 100),
+    )
+    assert content is None
+    assert record.ok is False
+    assert "max_bytes" in record.error

@@ -1,0 +1,195 @@
+# Issue taxonomy for both evidence streams.
+#
+# Anchored to the Comparative Agendas Project / Policy Agendas major topic codes rather than
+# invented here, so results are comparable with the wider literature and with the Open States
+# `subject` tags that Phase 4 will map onto the same scheme.
+#
+# Each topic carries:
+#   description - a natural-language statement of the topic, embedded by the local model and
+#                 compared against each plank. This is what does the classification work.
+#   seeds       - high-precision terms used by the keyword baseline and for diagnostics. They
+#                 are not the classifier; they exist so the embedding model's output can be
+#                 checked against something transparent.
+#
+# CAP codes 16 (Defense), 18 (Foreign Trade) and 19 (International Affairs) are retained even
+# though they are rare in state platforms: dropping them would silently push genuinely
+# foreign-policy planks into whichever domestic topic was nearest.
+
+version: 1
+source: >-
+  Topic scheme adapted from the Comparative Agendas Project major topic codes
+  (https://www.comparativeagendas.net/pages/master-codebook). Descriptions and seed terms
+  written for this project.
+
+topics:
+  - code: 1
+    name: Macroeconomics
+    description: >-
+      Taxation, state budgets and spending, deficits, inflation, interest rates, economic
+      growth, and the overall management of the state economy.
+    seeds: [tax, taxes, taxation, budget, deficit, surplus, revenue, inflation, fiscal,
+            appropriations, spending, economy, economic growth, property tax, income tax,
+            sales tax]
+
+  - code: 2
+    name: Civil rights and liberties
+    description: >-
+      Civil rights, discrimination, voting rights and election access, free speech, privacy,
+      racial and gender equality, disability rights, and LGBTQ rights.
+    seeds: [civil rights, discrimination, voting rights, ballot access, free speech,
+            equal protection, racial justice, gender equality, disability, lgbtq, privacy,
+            religious liberty, first amendment]
+
+  - code: 3
+    name: Health
+    description: >-
+      Health care access and cost, health insurance, Medicaid, public health, mental health,
+      substance abuse treatment, hospitals, and reproductive health care.
+    seeds: [health care, healthcare, medicaid, medicare, insurance, hospital, mental health,
+            public health, opioid, substance abuse, abortion, reproductive, prescription drug]
+
+  - code: 4
+    name: Agriculture
+    description: >-
+      Farming, ranching, agricultural subsidies and markets, food safety, rural development,
+      and agricultural land and water use.
+    seeds: [agriculture, farm, farmer, farming, ranch, livestock, crop, rural, food safety,
+            agricultural, dairy]
+
+  - code: 5
+    name: Labor and employment
+    description: >-
+      Wages, working conditions, collective bargaining and unions, unemployment insurance,
+      workplace safety, worker training, and employment law.
+    seeds: [labor, worker, workers, union, collective bargaining, minimum wage, wages,
+            employment, unemployment, workplace safety, right to work, prevailing wage,
+            paid leave]
+
+  - code: 6
+    name: Education
+    description: >-
+      Public schools, teachers, school funding and curriculum, higher education, tuition,
+      student debt, school choice, vouchers and charter schools.
+    seeds: [education, school, schools, teacher, teachers, student, students, university,
+            college, tuition, curriculum, charter school, voucher, school choice,
+            public education, higher education]
+
+  - code: 7
+    name: Environment
+    description: >-
+      Pollution, clean air and water, waste and recycling, conservation, wildlife, climate
+      change and environmental protection.
+    seeds: [environment, environmental, pollution, clean air, clean water, climate,
+            conservation, recycling, wildlife, emissions, toxic, watershed]
+
+  - code: 8
+    name: Energy
+    description: >-
+      Electricity and utilities, oil, gas and coal, renewable and nuclear energy, energy
+      prices, and energy infrastructure.
+    seeds: [energy, electricity, utility, utilities, oil, natural gas, coal, renewable,
+            solar, wind power, nuclear, pipeline, grid]
+
+  - code: 9
+    name: Immigration
+    description: >-
+      Immigration and border enforcement, refugees and asylum, immigrant benefits and status,
+      and sanctuary policies.
+    seeds: [immigration, immigrant, immigrants, border, undocumented, illegal alien, refugee,
+            asylum, sanctuary city, deportation, e-verify]
+
+  - code: 10
+    name: Transportation
+    description: >-
+      Roads and highways, bridges, public transit, rail, airports, ports, vehicle regulation
+      and transportation funding.
+    seeds: [transportation, highway, highways, road, roads, bridge, transit, rail, railroad,
+            airport, infrastructure, traffic, vehicle]
+
+  - code: 12
+    name: Law, crime and justice
+    description: >-
+      Policing, courts, sentencing, prisons and corrections, criminal justice reform, gun
+      policy, drug enforcement and public safety.
+    seeds: [crime, criminal, police, policing, law enforcement, court, courts, judge,
+            sentencing, prison, incarceration, parole, gun, firearm, second amendment,
+            public safety, death penalty]
+
+  - code: 13
+    name: Social welfare
+    description: >-
+      Poverty and anti-poverty programs, food assistance, child care, family services,
+      services for the elderly and disabled, and social insurance.
+    seeds: [welfare, poverty, food stamps, snap, assistance, child care, childcare,
+            social services, elderly, seniors, safety net, homelessness]
+
+  - code: 14
+    name: Housing and community development
+    description: >-
+      Affordable housing, homeownership, rental markets and tenant protections, zoning, urban
+      and community development.
+    seeds: [housing, affordable housing, homeownership, mortgage, rent, renters, tenant,
+            zoning, homeless, community development, urban]
+
+  - code: 15
+    name: Business, commerce and consumers
+    description: >-
+      Business regulation, small business, banking and finance, insurance markets, consumer
+      protection, bankruptcy, and competition.
+    seeds: [business, small business, commerce, banking, bank, finance, financial, insurance,
+            consumer protection, regulation, entrepreneur, corporation, licensing]
+
+  - code: 16
+    name: Defense and veterans
+    description: >-
+      The armed forces, the National Guard, military installations, veterans' benefits and
+      services, and homeland security.
+    seeds: [defense, military, national guard, armed forces, veteran, veterans, homeland
+            security, troops]
+
+  - code: 17
+    name: Science, technology and communications
+    description: >-
+      Broadband and telecommunications, internet policy, research and development, space, and
+      technology industry policy.
+    seeds: [technology, broadband, internet, telecommunications, research, innovation,
+            science, cybersecurity, data privacy, artificial intelligence]
+
+  - code: 18
+    name: Foreign trade
+    description: >-
+      Trade agreements, tariffs, exports and imports, and international commerce.
+    seeds: [trade, tariff, tariffs, export, exports, import, imports, free trade, nafta]
+
+  - code: 19
+    name: International affairs
+    description: >-
+      Foreign policy, foreign aid, international organizations, treaties, war and diplomacy.
+    seeds: [foreign policy, foreign aid, united nations, treaty, diplomacy, war, israel,
+            ukraine, china, russia]
+
+  - code: 20
+    name: Government operations
+    description: >-
+      The structure and conduct of government itself: elections administration, redistricting,
+      campaign finance, ethics and corruption, public employees, term limits, transparency and
+      intergovernmental relations.
+    seeds: [government, election, elections, redistricting, gerrymander, campaign finance,
+            ethics, corruption, transparency, term limits, civil service, constitution,
+            legislature, governor, referendum, initiative]
+
+  - code: 21
+    name: Public lands and water
+    description: >-
+      Public land management, parks and recreation, water rights and supply, forests, mining
+      on public land, and Native American affairs.
+    seeds: [public land, public lands, park, parks, forest, water rights, mining, grazing,
+            wilderness, tribal, native american, federal land]
+
+  - code: 23
+    name: Culture, family and social issues
+    description: >-
+      Family structure and marriage, religion in public life, arts and culture, sports and
+      recreation, and contested social and moral questions.
+    seeds: [family, families, marriage, traditional values, religion, faith, church, culture,
+            arts, moral, parental rights, life]

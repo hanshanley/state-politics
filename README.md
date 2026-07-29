@@ -83,13 +83,84 @@ Greenfield. Work is organized in phases:
 | 0 | Scaffolding + provenance layer | ✅ done |
 | 1 | Ingest historical platform corpus (1846–2017) | ✅ done |
 | 2 | Build verified registry of all 100 state party organizations | ✅ done |
-| 3 | Collect 2018–present platforms (the hard part) | ⬜ next |
-| 4 | Build 50-state bill + sponsor-party pipeline | ⬜ |
-| 5 | Define a shared issue taxonomy for both streams | ⬜ |
-| 6 | Compute emphasis scores and stated-vs-revealed divergence | ⬜ |
+| 3 | Collect 2018–present platforms (the hard part) | ✅ done |
+| 4 | Build 50-state bill + sponsor-party pipeline | 🚧 legislators done; bills **blocked** |
+| 5 | Define a shared issue taxonomy for both streams | ✅ done |
+| 6 | Compute emphasis scores and stated-vs-revealed divergence | 🚧 platform emphasis done |
 | 7 | Outputs, per-state profiles, reproducible build | ⬜ |
 
 Full roadmap, including the source-verification work behind it, is in [`docs/PLAN.md`](docs/PLAN.md).
+
+### Stream B: legislators and bills
+
+`state_politics.bills.people` ingests the current legislators for all 50 states from Open
+States' **public, no-auth** per-state CSVs. This is the join key for the whole bills stream —
+a bill records who sponsored it, and this records which party that sponsor belongs to.
+
+```bash
+uv run python -m state_politics.bills.people
+```
+
+**Result: 7,359 currently-serving legislators across all 50 states** — 4,000 Republican,
+3,166 Democratic, 193 other. Chambers: 5,389 lower, 1,921 upper, 49 `legislature` (Nebraska's
+nonpartisan unicameral). Third parties and independents are deliberately kept as `other`
+rather than folded into the major two, since misfiling them would misattribute their bills.
+
+> **Bills themselves are currently blocked, and it is worth being precise about why.**
+> Open States offers three routes and none is usable here as-is:
+> * the per-session CSV/JSON archives are **login-gated** (verified: every path under
+>   `data.openstates.org/csv/` and `/json/` returns HTTP 403);
+> * the complete public PostgreSQL dump is **10.7 GB**, and this machine has 32 GB free with
+>   no PostgreSQL installed — the dump plus a restore does not fit;
+> * the API v3 needs a free key (`OPENSTATES_API_KEY`, see `.env.example`).
+>
+> The API route is the practical one. `provenance.download_to_file()` already streams to disk
+> with incremental hashing for the dump route if the space and a database become available.
+
+---
+
+## What the parties actually emphasize
+
+With both platform corpora in hand, `state_politics.analysis` segments every document into
+planks, classifies each against a shared issue taxonomy, and measures **share of planks** —
+share rather than count, because platforms differ by an order of magnitude in length and raw
+counts would measure verbosity rather than priority.
+
+```bash
+uv run python -m state_politics.analysis.validate   # score the classifiers first
+uv run python -m state_politics.analysis.emphasis
+uv run python scripts/plot_party_emphasis.py
+```
+
+The taxonomy (`conf/topics.yml`) is anchored to the **Comparative Agendas Project** major topic
+codes rather than invented here, so results are comparable with the wider literature and so the
+Open States `subject` tags can be mapped onto the same scheme when the bills stream unblocks.
+
+Classification runs **locally on the M4 via MPS** — a pinned sentence-transformer embeds each
+plank and each topic description and assigns the nearest topic. A transparent keyword baseline
+runs alongside it, not as a fallback but so the model's output can be checked against something
+a human can read and argue with.
+
+**Validation, on 43,104 planks from 872 documents:**
+
+| Classifier | Top-1 | Top-2 |
+|---|---|---|
+| Keyword baseline | 56% | — |
+| Embedding (MPS) | **62%** | **78%** |
+
+Scored against `data/gold/plank_topics_gold.csv` — 50 planks drawn at random (seed 20260729)
+and hand-labelled by the author. It is small and single-annotator, so it supports claims about
+broad aggregate emphasis and not about any individual plank; some planks are genuinely ambiguous
+between two defensible topics, which is why top-2 is reported alongside top-1. Chance on this
+21-way task is about 5%.
+
+![What Democratic and Republican state parties talk about](outputs/party_emphasis.png)
+
+Democratic state parties devote more of their platforms to labour, the environment, housing,
+health and social welfare; Republican state parties to government operations, public lands,
+taxation, culture and family questions, and law and crime. Planks below a similarity threshold
+are recorded as **unclassified** and excluded from the denominator rather than pushed into
+whichever topic was least far away — 3,051 of the 43,104 planks fall there.
 
 ---
 
@@ -106,6 +177,21 @@ uv run python scripts/plot_platform_coverage.py
 # Build the registry of all 100 state party organizations and check every homepage.
 # Takes several minutes: it contacts 100 live sites.
 uv run python -m state_politics.platforms.registry
+
+# Find 2018-present platform documents (Wayback CDX + one homepage scan per site), then
+# fetch, extract and confirm them. Both are slow and deliberately polite; --resume re-tries
+# only fetches that failed.
+uv run python -m state_politics.platforms.discover
+uv run python -m state_politics.platforms.collect --resume
+uv run python scripts/plot_platform_gap.py
+
+# Stream B: all 50 states' current legislators (public, no API key needed).
+uv run python -m state_politics.bills.people
+
+# Classify planks and measure emphasis (local model on Apple Silicon; no API key).
+uv run python -m state_politics.analysis.validate
+uv run python -m state_politics.analysis.emphasis
+uv run python scripts/plot_party_emphasis.py
 ```
 
 The ingest prints a reconciliation line that must read `changelog consistent` before it will
@@ -158,6 +244,40 @@ rather than being asserted as correct.
 A redirect is never allowed to change the crawl target: `website` keeps the configured URL and
 the observed destination is recorded separately in `final_url`, with an off-domain redirect
 forcing human review.
+
+### The 2018–present corpus this project built
+
+This is the part that did not previously exist. Discovery queried the Wayback CDX index for
+every party domain and scanned each live homepage once, producing **2,975 candidate URLs**
+(1,474 scoring as likely documents). Collection then fetched them, extracted the text, and
+confirmed each against its own content.
+
+**Result: 200 confirmed documents across 78 of the 100 organizations and 45 states** —
+105 Democratic, 95 Republican, 1.25 million words, median ~3,500 words per document. By type:
+mostly platforms, plus resolution sets, legislative-priority agendas and statements of
+principles. Most are dated 2018 or later; a handful of pre-2018 documents also fill holes in
+the Dataverse corpus.
+
+![2018–present platform coverage by state and party](outputs/platform_coverage_2018_present.png)
+
+`data/processed/platform_gap_report.csv` gives every organization an explicit status, because
+"no platform found" has to be explainable rather than asserted:
+
+| Status | Count | Meaning |
+|---|---|---|
+| `found` | 78 | at least one confirmed document |
+| `candidates_rejected` | 9 | documents were fetched but none read as a platform |
+| `no_strong_candidates` | 7 | only weak URL matches existed |
+| `no_candidates` | 6 | nothing matched in the archive or on the site |
+
+**Known limitation:** most of the 22 remaining gaps are JavaScript-rendered or bot-protected
+sites. Louisiana Republicans' resolution pages yield 322–520 characters of static text because
+the content is assembled in the browser, and several hosts return HTTP 403 to any scripted
+request. Static fetching cannot see those, and the pipeline records that rather than guessing.
+
+When the archived snapshot is thin, collection now falls back to the live URL and keeps
+whichever copy carries more text — the Massachusetts Democrats' platform page yields 1,743
+characters from the capture the archive happened to take and 94,756 live.
 
 ---
 
