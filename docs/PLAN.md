@@ -245,10 +245,11 @@ genuinely serving a suspended-account page.
   snapshot via the `id_` modifier so the corpus is reproducible), extracts HTML/PDF text, and
   confirms each document against its own content.
 
-**Outcome:** 2,975 candidates → **200 confirmed documents across 78/100 organizations and 45
-states**; 105 D / 95 R; 1.25M words. Every organization gets an explicit status in
-`platform_gap_report.csv` (`found` 78 / `candidates_rejected` 9 / `no_strong_candidates` 7 /
-`no_candidates` 6).
+**Outcome:** **201 confirmed documents across 76/100 organizations and 43 states**; 105 D /
+96 R; 1.15M words. Every organization without a document was probed directly on ten likely
+platform paths, so each gap carries an evidenced `gap_finding` and none is unexplained. Every organization gets an explicit status in
+`platform_gap_report.csv` (`found` 76 / `candidates_rejected` 11 / `no_strong_candidates` 12 /
+`no_candidates` 1).
 
 > **Three bugs found and fixed here, all of the same family — a silent absence:**
 > 1. **Cloudflare crowded out the real results.** `/cdn-cgi/challenge-platform/` contains the
@@ -268,36 +269,52 @@ states**; 105 D / 95 R; 1.25M words. Every organization gets an explicit status 
 > (space ratio 0.044 vs ~0.16) and scored **zero** declarative phrases. Fixed with pypdf layout
 > mode plus a separator-free phrase fallback.
 
-**Remaining limitation:** most of the 23 uncovered organizations are JavaScript-rendered sites
-whose text is assembled in the browser and is therefore invisible to static fetching. Recorded
-as such rather than guessed at.
+**Gap-filling pass (2026-07-29).** A second, wider search was run for every organization the
+first pass found nothing for: :data:`SECONDARY_TERMS` (parties file platforms under `/issues` or
+`/about/` as often as `/platform`) and :data:`DOMAIN_ALIASES` (a party that moved to a short
+`.gop` address has all of its archived history under the old name). Then all 24 remaining gaps
+were **probed directly** on ten likely platform paths.
 
-### Phase 4 — State bills, all 50 states, to present (2–3 days) — **PARTIALLY DONE**
+Three more bugs surfaced, all of the same silent-corruption family:
 
-**Done:** `bills/people.py` ingests all 50 states' current legislators from Open States'
-public, no-auth per-state CSVs — **7,359 legislators, 50/50 states** (R 4,000 / D 3,166 /
-other 193; chambers 5,389 lower, 1,921 upper, 49 `legislature` for Nebraska's nonpartisan
-unicameral). Third parties stay `other` rather than being folded into D/R. This is the join
-key that attaches partisanship to sponsorship.
+1. **Wix mints thousands of synthetic sub-paths** under every real page — `/platform/0.45em`,
+   `/platform/09-Icons-/-Social-/-Twitter`, media-hash JSON. Delaware Republicans alone produced
+   **1,883**, swamping the one genuine `/platform` page. Now excluded by asset-pattern rules plus
+   a general one: *a repeated path segment is the signature of a generated URL*, since no real
+   document path repeats a segment.
+2. **Seven Republican state sites soft-404 `/platform` with a 426 KB PNG**, and `extract_text`
+   was decoding those bytes as text and offering the confirmation stage a "426,078-character
+   document". It now rejects binary by signature and content type.
+3. A **purely numeric trailing path segment** (`/platform/-0.88`) is a CSS value, not a document.
 
-**Blocked — bills themselves.** All three Open States routes were tested on 2026-07-29:
+**Outcome of the gap pass:** every one of the 24 remaining gaps now carries a directly-observed
+`gap_finding` in `platform_gap_report.csv` — 7 soft-404 images, 3 JavaScript-rendered, 2
+summary-only pages, 1 suspended site, 11 with no platform page at all. **Zero unexplained
+absences.** Roughly half of these organizations appear simply not to publish a platform; the
+rest publish one only in a form static fetching cannot reach. Rendering JavaScript would likely
+recover several and is the obvious next step — a scope decision, not an unknown.
 
-| Route | Status |
+### Phase 4 — State bills, all 50 states, to present — **DONE**
+
+**Legislators:** `bills/people.py` — 7,359 current legislators, 50/50 states (R 4,000 / D 3,166 /
+other 193) from Open States' public no-auth CSVs.
+
+**Bills:** `bills/openstates_dump.py` + `bills/ingest.py` — **1,044,751 bills filed 2018–2026 in
+all 50 states, 4,770,793 sponsorships**; attribution D 412,984 / R 352,811 / bipartisan 66,300 /
+unknown 212,656.
+
+Three obstacles, and how each was cleared:
+
+| Obstacle | Resolution |
 |---|---|
-| Per-session CSV/JSON archives | **login-gated** — every path under `data.openstates.org/csv/` and `/json/` returns HTTP 403 |
-| Public PostgreSQL dump | public but **10.7 GB**; this machine has **32 GB free (93% full)** and **no PostgreSQL installed**, so dump + restore does not fit |
-| API v3 | needs a free key (`OPENSTATES_API_KEY`) |
+| Session CSV/JSON archives login-gated (403), API v3 needs a key | Used the public PostgreSQL dump, the only complete free route |
+| Dump is 10.7 GB; machine had 32 GB free | Streamed to disk with incremental hashing, extracted selectively, deleted after — URL + SHA-256 remain in the provenance log |
+| Dump is custom-format `PGDMP`, not SQL, and no PostgreSQL installed | `brew install libpq` for `pg_restore`, which streams one table to stdout — **no database restore needed** |
 
-The API is the practical route and needs only a free key. `provenance.download_to_file()`
-already streams with incremental hashing for the dump route should space and a database
-become available.
-
-Remaining work once unblocked:
-- Join sponsorships → party using `primary` and `classification` (lead vs cosponsor weighting;
-  flag bipartisan bills).
-- **Session parsing must not assume a leading year** (verified: `Alaska 33rd Legislature
-  (2023-2024)`, `Texas 87th Legislature (2021)`, `Illinois 102nd Regular Session`).
-- Exclude the `us` jurisdiction (Congress) and, by default, the territories.
+Party attribution uses **primary** sponsors; cosponsor lists are long, cross-party and
+procedural, so letting them vote would blur the distinction the table exists to draw.
+Unresolvable sponsors give `unknown`, never a guess. Congress and the territories are excluded
+by `state_of()`, which admits only the 50 state jurisdiction ids.
 
 ### Phase 5 — Common issue taxonomy (2 days) — **DONE**
 - `conf/topics.yml` holds 21 topics anchored to the Comparative Agendas Project major-topic
@@ -321,33 +338,53 @@ against identical labels.
 > 2. A plank resembling **no** topic was pushed into whichever was least far away. Below a
 >    similarity threshold it is now recorded as unclassified and excluded from the denominator.
 
-### Phase 6 — Emphasis measures & comparisons (2–3 days) — **PARTIALLY DONE**
+### Phase 6 — Emphasis measures & comparisons — **DONE**
 
-**Done — platform emphasis.** `analysis/emphasis.py` measures share of planks per topic for
-each state party and era over **43,104 planks from 872 documents** (196 modern + 676 historical
-from 1990). Democratic state parties emphasize labour (5.9% vs 1.1%), environment, housing,
-health and social welfare; Republicans emphasize government operations (10.8% vs 7.1%), public
-lands, macroeconomics, culture/family and law and crime. Outputs `emphasis_by_org.csv`,
-`emphasis_by_party.csv` and `outputs/party_emphasis.png`.
+**Platform emphasis** (`analysis/emphasis.py`): share of planks per topic over 43,104 planks
+from 872 documents. Democrats emphasize labour (5.9% vs 1.1%), environment, housing, health,
+social welfare; Republicans government operations (10.8% vs 7.1%), public lands, macroeconomics,
+culture/family, law and crime.
 
-**Not done — stated-vs-revealed divergence**, cross-state outlier analysis against the national
-party, and text-reuse diffusion. All three need the bills stream, so they are gated on the
-Phase 4 blocker.
+**Stated vs revealed** (`analysis/revealed.py`): 516,155 party-attributed bills classified into
+the same taxonomy and compared with platform emphasis. The headline finding is symmetric across
+both parties — the topics that dominate *rhetoric* are largely national fights state
+legislatures have limited power over, while the topics that dominate *filing* are the
+bread-and-butter business of state government:
 
-### Phase 6 — Emphasis measures & comparisons (2–3 days)
-- **Emphasis score** per (state, party, cycle, topic): share of platform text, and share of sponsored bills.
-- **Stated vs revealed divergence:** where does a state party's platform emphasis diverge from what its
-  legislators actually file?
-- **Cross-state within party:** which state Democratic/Republican parties are outliers from their national party?
-- **Trend to present:** 2018–2026 movement, and — where the historical corpus permits — the long arc from 1846.
-- **Diffusion:** near-duplicate plank/bill text across states (model legislation signature).
+| Topic | D said | D filed | R said | R filed |
+|---|---|---|---|---|
+| Civil rights and liberties | 8.2% | 3.0% | 9.7% | 2.8% |
+| Immigration | — | — | 4.1% | 0.9% |
+| Culture, family and social issues | — | — | 4.8% | 1.5% |
+| Law, crime and justice | 7.3% | 13.9% | 9.4% | 15.5% |
+| Housing and community development | 3.3% | 9.4% | 1.1% | 6.0% |
 
-### Phase 7 — Outputs (1–2 days)
-- `CITATIONS.md`, coverage matrices, and a reproducible end-to-end `make all`.
-- Per-state two-page profiles; cross-state comparison tables; a written methods note that states the
-  2018–2026 collection method and its limits plainly.
+Outputs: `emphasis_by_party.csv`, `emphasis_by_org.csv`, `bill_emphasis_by_party.csv`,
+`bill_emphasis_by_state.csv`, `stated_vs_revealed.csv`, and figures `party_emphasis.png` and
+`stated_vs_revealed.png`.
 
----
+**Caveats carried with every number:** bills are classified from titles (shorter and noisier
+than planks; the 62%/78% validation was measured on planks), ~20% of bills cannot be resolved to
+a party and are excluded rather than guessed, and filing is not passing — this is agenda, not
+achievement.
+
+**Not done:** cross-state outlier analysis against the national party, and text-reuse diffusion
+(model-legislation detection).
+
+### Phase 7 — Outputs — **DONE**
+
+- `analysis/profiles.py`: per-organization profiles (top platform topics, top filing topics,
+  platform status) plus cross-state outliers measured as cosine distance from the state party's
+  own national party average, within party, with a 30-observation floor.
+- `Makefile`: `make setup / all / analysis / figures / test / lint`, with the network-heavy
+  stages (`registry`, `platforms`, `bills-dump`) kept out of `all` so rebuilding the analysis
+  never re-crawls third-party sites.
+- Four figures in the shared portfolio style: `platform_corpus_recency.png`,
+  `platform_coverage_2018_present.png`, `party_emphasis.png`, `stated_vs_revealed.png`.
+
+> **One more silent-corruption bug caught here.** `emphasis_by_org.csv` is split by era and each
+> era's shares already sum to 1, so pooling them by summing produced topic shares above 100%
+> (Tennessee Democrats "110.8% law and crime"). Shares are now recomputed from raw counts.
 
 ## 5. Risks
 

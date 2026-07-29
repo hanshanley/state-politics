@@ -117,12 +117,43 @@ def wayback_snapshot_url(timestamp: str, url: str) -> str:
     return f"https://web.archive.org/web/{timestamp}id_/{url}"
 
 
+#: Magic numbers for binary formats a soft-404 may serve in place of a page. Connecticut and
+#: Virginia Republicans both return a 426 KB PNG for /platform; without this check that binary
+#: was decoded as "text" and passed to the confirmation stage as a 426,078-character document.
+_BINARY_SIGNATURES = (
+    b"\x89PNG", b"GIF8", b"\xff\xd8\xff", b"RIFF", b"\x00\x00\x01\x00",
+    b"PK\x03\x04", b"\x1f\x8b", b"OggS", b"\x00\x00\x00 ftyp",
+)
+
+
+_BINARY_CONTENT_TYPES = ("image/", "video/", "audio/", "font/", "application/zip",
+                         "application/octet-stream")
+
+
+def _is_binary(body: bytes, content_type: str) -> bool:
+    if content_type.startswith(_BINARY_CONTENT_TYPES):
+        return True
+    if any(body.startswith(signature) for signature in _BINARY_SIGNATURES):
+        return True
+    # A high proportion of NUL bytes in the head is the surest sign of binary content.
+    head = body[:2048]
+    return bool(head) and head.count(b"\x00") / len(head) > 0.05
+
+
 def extract_text(body: bytes, content_type: str | None, url: str) -> str:
-    """Extract plain text from an HTML or PDF response."""
-    is_pdf = (content_type or "").lower().startswith("application/pdf") or \
+    """Extract plain text from an HTML or PDF response.
+
+    Returns an empty string for binary content. A site that soft-404s by serving an image
+    would otherwise have those bytes decoded as text and judged on length, which is how a
+    426 KB PNG came to be treated as a candidate platform document.
+    """
+    normalized = (content_type or "").lower().split(";")[0].strip()
+    is_pdf = normalized.startswith("application/pdf") or \
         url.lower().split("?")[0].endswith(".pdf") or body[:5] == b"%PDF-"
     if is_pdf:
         return _extract_pdf(body)
+    if _is_binary(body, normalized):
+        return ""
     html = body.decode("utf-8", errors="replace")
     html = _SCRIPT_RE.sub(" ", html)
     text = _TAG_RE.sub(" ", html)

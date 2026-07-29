@@ -333,3 +333,31 @@ def test_a_national_platform_that_also_discusses_the_state_is_kept():
     text = NATIONAL_PROSE + " Texas Democrats adopted this in Texas for Texas voters. "
     ok, _, _ = confirm_platform(text, state_name="Texas")
     assert ok
+
+
+def test_extract_text_rejects_binary_served_as_a_page():
+    """Connecticut and Virginia Republicans soft-404 /platform with a 426 KB PNG.
+
+    Without this, those bytes were decoded as text and reached the confirmation stage as a
+    426,078-character 'document'.
+    """
+    png = b"\x89PNG\r\n\x1a\n" + b"\x00" * 4000
+    assert extract_text(png, "image/png", "https://ct.gop/platform") == ""
+    # Also caught when the server lies about the content type.
+    assert extract_text(png, "text/html", "https://ct.gop/platform") == ""
+
+
+def test_extract_text_rejects_other_binary_signatures():
+    for signature in (b"GIF8", b"\xff\xd8\xff", b"PK\x03\x04", b"\x1f\x8b"):
+        assert extract_text(signature + b"\x00" * 3000, "text/html", "https://x/p") == ""
+
+
+def test_extract_text_still_reads_html_and_pdf():
+    assert "We believe" in extract_text(b"<p>We believe in liberty.</p>", "text/html",
+                                        "https://x/p")
+    # A malformed PDF yields empty text rather than raising.
+    assert extract_text(b"%PDF-1.4 truncated", "application/pdf", "https://x/a.pdf") == ""
+
+
+def test_extract_text_handles_content_type_with_charset():
+    assert "plank" in extract_text(b"<p>plank</p>", "text/html; charset=utf-8", "https://x/p")

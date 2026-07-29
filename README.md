@@ -84,10 +84,10 @@ Greenfield. Work is organized in phases:
 | 1 | Ingest historical platform corpus (1846–2017) | ✅ done |
 | 2 | Build verified registry of all 100 state party organizations | ✅ done |
 | 3 | Collect 2018–present platforms (the hard part) | ✅ done |
-| 4 | Build 50-state bill + sponsor-party pipeline | 🚧 legislators done; bills **blocked** |
+| 4 | Build 50-state bill + sponsor-party pipeline | ✅ done |
 | 5 | Define a shared issue taxonomy for both streams | ✅ done |
-| 6 | Compute emphasis scores and stated-vs-revealed divergence | 🚧 platform emphasis done |
-| 7 | Outputs, per-state profiles, reproducible build | ⬜ |
+| 6 | Compute emphasis scores and stated-vs-revealed divergence | ✅ done |
+| 7 | Outputs, per-state profiles, reproducible build | ✅ done |
 
 Full roadmap, including the source-verification work behind it, is in [`docs/PLAN.md`](docs/PLAN.md).
 
@@ -106,16 +106,34 @@ uv run python -m state_politics.bills.people
 nonpartisan unicameral). Third parties and independents are deliberately kept as `other`
 rather than folded into the major two, since misfiling them would misattribute their bills.
 
-> **Bills themselves are currently blocked, and it is worth being precise about why.**
-> Open States offers three routes and none is usable here as-is:
-> * the per-session CSV/JSON archives are **login-gated** (verified: every path under
->   `data.openstates.org/csv/` and `/json/` returns HTTP 403);
-> * the complete public PostgreSQL dump is **10.7 GB**, and this machine has 32 GB free with
->   no PostgreSQL installed — the dump plus a restore does not fit;
-> * the API v3 needs a free key (`OPENSTATES_API_KEY`, see `.env.example`).
->
-> The API route is the practical one. `provenance.download_to_file()` already streams to disk
-> with incremental hashing for the dump route if the space and a database become available.
+`state_politics.bills.openstates_dump` + `bills.ingest` extract the bills themselves from
+Open States' public PostgreSQL dump.
+
+```bash
+# ~8 min to download at 20 MB/s, then ~10 min to extract. Needs pg_restore:
+#   brew install libpq     (Homebrew keeps it out of PATH; the module looks there anyway)
+uv run python -m state_politics.bills.ingest
+```
+
+**Result: 1,044,751 bills filed 2018–2026 across all 50 states, and 4,770,793 sponsorships.**
+Party attribution: 412,984 Democratic, 352,811 Republican, 66,300 bipartisan, 212,656 unknown.
+
+Three notes on how this was done, because each was a real obstacle:
+
+* The per-session CSV/JSON archives are **login-gated** (every path under
+  `data.openstates.org/csv/` and `/json/` returns HTTP 403) and API v3 needs a key, so the
+  public dump is the only complete free route.
+* The dump is 10.7 GB and this machine had 32 GB free, so it is **streamed to disk with
+  incremental hashing** (`provenance.download_to_file`) rather than buffered, extracted
+  selectively, and deleted afterwards — its URL and SHA-256 stay in the provenance log, so it
+  is reproducible without keeping 10.7 GB around.
+* It is a **PostgreSQL custom-format archive**, not SQL, but it does *not* need a running
+  database: `pg_restore` streams one table at a time to stdout, which avoids restoring 10.7 GB
+  into a server that would not fit.
+
+A bill is attributed to a party by its **primary** sponsors. Cosponsor lists are long,
+cross-party and procedural, so letting them vote would blur the very distinction the table
+exists to draw; bills whose sponsors cannot be resolved are `unknown`, not guessed.
 
 ---
 
@@ -156,6 +174,46 @@ between two defensible topics, which is why top-2 is reported alongside top-1. C
 
 ![What Democratic and Republican state parties talk about](outputs/party_emphasis.png)
 
+---
+
+## The headline result: what parties say vs. what they file
+
+With both streams classified into the same taxonomy, the two can finally be compared. This is
+what the project was built to do.
+
+```bash
+uv run python -m state_politics.analysis.revealed
+uv run python scripts/plot_stated_vs_revealed.py
+```
+
+![What state parties say, and what they actually file](outputs/stated_vs_revealed.png)
+
+**Both parties talk far more about rights and identity than they legislate, and legislate far
+more about housing, crime and transportation than they talk about.**
+
+| | Said (platform) | Filed (bills) |
+|---|---|---|
+| **Civil rights and liberties** — D | 8.2% | 3.0% |
+| **Civil rights and liberties** — R | 9.7% | 2.8% |
+| **Culture, family and social issues** — R | 4.8% | 1.5% |
+| **Immigration** — R | 4.1% | 0.9% |
+| **Law, crime and justice** — D | 7.3% | 13.9% |
+| **Law, crime and justice** — R | 9.4% | 15.5% |
+| **Housing and community development** — D | 3.3% | 9.4% |
+| **Housing and community development** — R | 1.1% | 6.0% |
+
+The pattern is symmetric across both parties, which is what makes it interesting: the topics
+that dominate platform rhetoric are largely *national* fights that state legislatures have
+limited power over, while the topics that dominate actual filing are the bread-and-butter
+business of state government. Immigration is the sharpest case — Republican platforms give it
+4.1% of their planks and Republican legislators 0.9% of their bills.
+
+**Read these numbers with their limits.** Bills are classified from *titles*, which are short
+and often procedural — a noisier signal than a platform plank, and the 62%/78% validation
+figures were measured on planks, not titles. Roughly a fifth of bills cannot be resolved to a
+party and are excluded rather than guessed at. And filing a bill is not passing one: this
+measures **agenda, not achievement**.
+
 Democratic state parties devote more of their platforms to labour, the environment, housing,
 health and social welfare; Republican state parties to government operations, public lands,
 taxation, culture and family questions, and law and crime. Planks below a similarity threshold
@@ -164,122 +222,65 @@ whichever topic was least far away — 3,051 of the 43,104 planks fall there.
 
 ---
 
-## Reproduce what exists so far
+## Per-state profiles and cross-state outliers
+
+National averages hide the interesting cases, so `analysis/profiles.py` also asks what *each*
+state party emphasizes and which ones are unlike their own national party.
 
 ```bash
-# Download the Dataverse corpus, verify it against its own changelog, and build the
-# document table + per-state coverage matrix. Idempotent; records provenance for every file.
-uv run python -m state_politics.platforms.dataverse
-
-# Render the coverage figure that motivates the project.
-uv run python scripts/plot_platform_coverage.py
-
-# Build the registry of all 100 state party organizations and check every homepage.
-# Takes several minutes: it contacts 100 live sites.
-uv run python -m state_politics.platforms.registry
-
-# Find 2018-present platform documents (Wayback CDX + one homepage scan per site), then
-# fetch, extract and confirm them. Both are slow and deliberately polite; --resume re-tries
-# only fetches that failed.
-uv run python -m state_politics.platforms.discover
-uv run python -m state_politics.platforms.collect --resume
-uv run python scripts/plot_platform_gap.py
-
-# Stream B: all 50 states' current legislators (public, no API key needed).
-uv run python -m state_politics.bills.people
-
-# Classify planks and measure emphasis (local model on Apple Silicon; no API key).
-uv run python -m state_politics.analysis.validate
-uv run python -m state_politics.analysis.emphasis
-uv run python scripts/plot_party_emphasis.py
+uv run python -m state_politics.analysis.profiles
 ```
 
-The ingest prints a reconciliation line that must read `changelog consistent` before it will
-write anything:
+Distance is cosine over the topic-share vector — cosine because it compares the *shape* of an
+agenda rather than its volume, which varies by an order of magnitude between New York and
+Wyoming. Comparison is **within party**, so the result is "unusual for a Democrat" rather than
+the trivial finding that Democrats differ from Republicans. Organizations with fewer than 30
+classified planks or bills are dropped, since one plank there moves a share by tens of points.
 
-```
-changelog consistent: authoritative=2091 superseded=2063 added 49/49 confirmed, deleted 21/21 confirmed, revised_in_place=47
-documents:            2091
-major-party docs:     1975 (D=1066, R=909)
-year range:           1840-2017
-states with no major-party platform at all: ['MD']
-```
+Most distinctive by platform emphasis:
 
-Outputs: `data/processed/platforms_historical.parquet`,
-`data/processed/platforms_historical_coverage.csv`, `conf/party_registry.yml`,
-`data/provenance.jsonl`, and `outputs/platform_corpus_recency.png`.
+| Org | Distance | Most distinctive topic | vs party average |
+|---|---|---|---|
+| NY-R | 0.382 | Energy | 20.0% vs 2.6% |
+| KY-R | 0.334 | International affairs | 18.3% vs 2.1% |
+| NJ-D | 0.317 | Macroeconomics | 17.0% vs 2.0% |
+| FL-D | 0.290 | Health | 35.3% vs 11.1% |
+| MT-D | 0.226 | Public lands and water | 27.8% vs 8.5% |
 
-![Most recent state party platform held in the corpus, by state](outputs/platform_corpus_recency.png)
+Most distinctive by what their legislators actually file:
 
-### What the registry build found
+| Org | Distance | Most distinctive topic | vs party average |
+|---|---|---|---|
+| ID-D | 0.373 | Civil rights and liberties | 22.5% vs 4.3% |
+| IL-R | 0.170 | Science, technology and communications | 14.3% vs 2.0% |
+| NM-D | 0.161 | Social welfare | 19.7% vs 4.0% |
+| SD-D | 0.159 | Public lands and water | 20.2% vs 8.4% |
+| ND-R | 0.152 | Public lands and water | 28.8% vs 11.2% |
 
-`conf/party_registry.yml` holds all 100 organizations, each with a `source_url`,
-`verified_on` date, the HTTP status observed for its homepage, and a `needs_review` flag.
-A row is only trusted when the **visible page text** identifies that state's party. That bar
-is deliberately high, and it had to be raised twice:
-
-* Wikidata's URL for the **Michigan Republican Party** (`migop.org`) now redirects to
-  `kiss918menang.com`, and the **Nebraska Republican Party**'s (`negop.org`) to
-  `wildarms4.com` — both unrelated commercial sites.
-* **South Dakota**'s (`southdakotagop.com`) now serves a law-firm directory, and
-  **Arizona**'s (`az.gop`) redirects to an image file on a public radio station's server.
-* Four more (`ctgop.org`, `indgop.org`, `rigop.org`, `wsrp.org`) no longer resolve at all.
-* Six state Republican parties have rebranded onto `.gop` domains (Colorado, Delaware,
-  Illinois, Missouri, South Carolina, Virginia); the registry records the destination directly
-  rather than depending on a redirect that could later be repointed.
-
-A first version of the content check matched raw HTML, which let a page confirm itself: the
-Alaska Republican Party's `alaskagop.org` serves an **`Account Suspended`** page whose only
-occurrences of "alaska" and "gop" are inside `webmaster@alaskagop.org`, and it was recorded as
-verified. Matching now runs on visible text with URLs, e-mails and domain tokens stripped,
-rejects parked/suspended pages, and requires a page to name its *own* party more often than the
-other one (Republican sites mention "democrat" constantly).
-
-Nineteen hand-checked corrections are recorded in `MANUAL_OVERRIDES`, each carrying the evidence
-that established it. Current state: **100/100 websites resolved, 92/100 machine-verified**. The
-remaining eight sit behind bot protection (HTTP 403) or render their content in JavaScript — plus
-Alaska's Republican site, which is genuinely suspended. They stay flagged for human confirmation
-rather than being asserted as correct.
-
-A redirect is never allowed to change the crawl target: `website` keeps the configured URL and
-the observed destination is recorded separately in `final_url`, with an off-domain redirect
-forcing human review.
-
-### The 2018–present corpus this project built
-
-This is the part that did not previously exist. Discovery queried the Wayback CDX index for
-every party domain and scanned each live homepage once, producing **2,975 candidate URLs**
-(1,474 scoring as likely documents). Collection then fetched them, extracted the text, and
-confirmed each against its own content.
-
-**Result: 200 confirmed documents across 78 of the 100 organizations and 45 states** —
-105 Democratic, 95 Republican, 1.25 million words, median ~3,500 words per document. By type:
-mostly platforms, plus resolution sets, legislative-priority agendas and statements of
-principles. Most are dated 2018 or later; a handful of pre-2018 documents also fill holes in
-the Dataverse corpus.
-
-![2018–present platform coverage by state and party](outputs/platform_coverage_2018_present.png)
-
-`data/processed/platform_gap_report.csv` gives every organization an explicit status, because
-"no platform found" has to be explainable rather than asserted:
-
-| Status | Count | Meaning |
-|---|---|---|
-| `found` | 78 | at least one confirmed document |
-| `candidates_rejected` | 9 | documents were fetched but none read as a platform |
-| `no_strong_candidates` | 7 | only weak URL matches existed |
-| `no_candidates` | 6 | nothing matched in the archive or on the site |
-
-**Known limitation:** most of the 22 remaining gaps are JavaScript-rendered or bot-protected
-sites. Louisiana Republicans' resolution pages yield 322–520 characters of static text because
-the content is assembled in the browser, and several hosts return HTTP 403 to any scripted
-request. Static fetching cannot see those, and the pipeline records that rather than guessing.
-
-When the archived snapshot is thin, collection now falls back to the live URL and keeps
-whichever copy carries more text — the Massachusetts Democrats' platform page yields 1,743
-characters from the capture the archive happened to take and 94,756 live.
+Outputs: `state_party_profiles.csv` (one row per organization, with its top platform topics,
+top filing topics and platform status), `platform_outliers.csv`, `bill_outliers.csv`.
 
 ---
+
+## Reproduce everything
+
+The whole pipeline is a `make` target away. Everything is idempotent, and anything fetched is
+recorded in `data/provenance.jsonl` with its URL, HTTP status, SHA-256 and retrieval time.
+
+```bash
+make setup      # install dependencies, including the local model stack
+make all        # historical corpus + analysis + figures (no crawling)
+make test lint  # 218 tests, ruff
+```
+
+The network-heavy stages are deliberately **not** part of `make all`, so rebuilding the
+analysis never re-crawls anyone's website:
+
+```bash
+make registry     # verify all 100 state party websites  (~10 min)
+make platforms    # discover + collect 2018-present platforms (~1 h, polite crawl)
+make bills-dump   # download the 10.7 GB dump, extract bills, delete it (~20 min)
+```
 
 ## Setup
 

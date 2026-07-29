@@ -216,3 +216,71 @@ def test_write_candidates_keeps_rejected_ones(tmp_path):
 def test_discovery_terms_are_lowercase_and_nonempty():
     assert DISCOVERY_TERMS
     assert all(term == term.lower() and term.isalpha() for term in DISCOVERY_TERMS)
+
+
+@pytest.mark.parametrize(
+    "url",
+    [
+        "https://www.delawaregop.com/platform/-0.88",
+        "https://www.delawaregop.com/platform/0.45em",
+        "https://www.delawaregop.com/platform/0.23",
+        "https://www.delawaregop.com/_api/wix-laboratory-server/v1/laboratory/platform/run",
+    ],
+)
+def test_wix_synthetic_urls_are_excluded(url):
+    """Wix emits thousands of /platform/<css-value> URLs; Delaware alone produced 1,899."""
+    assert is_excluded(url)
+
+
+def test_the_real_wix_platform_page_survives():
+    assert not is_excluded("https://www.delawaregop.com/platform")
+
+
+def test_secondary_terms_are_a_fallback_not_the_default():
+    """Applied to every organization they bury real documents under news posts."""
+    from state_politics.platforms.discover import DISCOVERY_TERMS, SECONDARY_TERMS
+
+    assert not set(SECONDARY_TERMS) & set(DISCOVERY_TERMS)
+    assert "issues" in SECONDARY_TERMS
+    assert "platform" in DISCOVERY_TERMS
+
+
+def test_domain_aliases_point_at_pre_rebrand_domains():
+    from state_politics.platforms.discover import DOMAIN_ALIASES
+
+    assert "delawaregop.com" in DOMAIN_ALIASES["degop.gop"]
+    assert "rpv.org" in DOMAIN_ALIASES["virginia.gop"]
+    assert all(isinstance(v, tuple) and v for v in DOMAIN_ALIASES.values())
+
+
+def test_repeated_path_segments_are_excluded():
+    """The signature of a generated URL; no genuine document path repeats a segment."""
+    assert is_excluded("https://www.delawaregop.com/platform/10K/black/10K/black/white")
+    assert is_excluded("https://x.org/platform/a/b/a")
+
+
+@pytest.mark.parametrize(
+    "url",
+    [
+        "https://idahodems.org/wp-content/uploads/2024/06/2024-Idaho-Democratic-Party-Platform.pdf",
+        "https://texasgop.org/2022platform/",
+        "https://www.iowagop.org/about/platform/",
+        "https://www.delawaregop.com/platform",
+        "https://www.nydems.org/about/issues",
+    ],
+)
+def test_real_document_urls_survive_every_exclusion(url):
+    assert not is_excluded(url)
+
+
+@pytest.mark.parametrize(
+    "url",
+    [
+        "https://x.org/platform/c17c8a_046660a3ab9f8b540df3b653de779ce2_664.json",
+        "https://x.org/platform/09-Icons-/-Social-/-Twitter",
+        "https://x.org/platform/1.4em",
+        "https://x.org/platform/robots.txt",
+    ],
+)
+def test_wix_asset_paths_are_excluded(url):
+    assert is_excluded(url)

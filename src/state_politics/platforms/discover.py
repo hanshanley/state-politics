@@ -45,6 +45,8 @@ from pathlib import Path
 from ..provenance import ProvenanceLog, fetch
 
 __all__ = [
+    "DOMAIN_ALIASES",
+    "SECONDARY_TERMS",
     "DiscoveryOutcome",
     "CDX_URL",
     "Candidate",
@@ -67,6 +69,42 @@ DISCOVERY_TERMS = (
 
 _TERMS_RE = re.compile("|".join(DISCOVERY_TERMS), re.I)
 
+#: Secondary terms, used only for organizations the primary pass found nothing for. Many state
+#: parties do not use the word "platform" in their URLs at all: the New York Democrats file
+#: theirs under ``/about/issues`` and the Kentucky Democrats under ``/about/``. Searching these
+#: for every organization would bury the real documents in news posts, which is why they are a
+#: fallback rather than part of the main term list.
+SECONDARY_TERMS = (
+    "issues", "beliefs", "values", "where-we-stand", "our-party", "agenda", "goals",
+    "mission", "positions", "what-we-believe", "our-vision", "convention",
+)
+_SECONDARY_RE = re.compile("|".join(SECONDARY_TERMS), re.I)
+
+#: Domains a state party used before rebranding. Several parties moved to short ``.gop``
+#: addresses, and the archive's history -- including their older platforms -- sits under the
+#: old name, so a search of the current domain alone returns nothing at all.
+DOMAIN_ALIASES: dict[str, tuple[str, ...]] = {
+    "degop.gop": ("delawaregop.com",),
+    "florida.gop": ("floridagop.org",),
+    "virginia.gop": ("rpv.org",),
+    "mi.gop": ("migop.org",),
+    "ne.gop": ("negop.org",),
+    "ct.gop": ("ctgop.org",),
+    "indiana.gop": ("indgop.org", "ingop.com"),
+    "ri.gop": ("rigop.org",),
+    "sc.gop": ("scgop.com",),
+    "colorado.gop": ("cologop.org",),
+    "illinois.gop": ("ilgop.org",),
+    "missouri.gop": ("mogop.org",),
+    "nh.gop": ("nhgop.org",),
+    "wagop.org": ("wsrp.org",),
+    "kansas.gop": ("kansasgop.org",),
+    "nc.gop": ("ncgop.org",),
+    "oregon.gop": ("oregonrepublicanparty.org",),
+    "az.gop": ("azgop.com",),
+    "azgop.com": ("az.gop",),
+}
+
 #: URLs that match a discovery term but can never be a platform document.
 _EXCLUDE_RE = re.compile(
     r"cdn-cgi"                      # Cloudflare bot check: /cdn-cgi/challenge-platform/
@@ -74,7 +112,18 @@ _EXCLUDE_RE = re.compile(
     r"|/tag/|/category/|/author/|/page/\d+"           # taxonomy and pagination
     r"|\?(?:replytocom|share|utm_)"                   # tracking and comment permalinks
     r"|/comment|/trackback"
-    r"|\.(?:css|js|jpe?g|png|gif|svg|woff2?|ico|xml)(?:$|\?)",
+    r"|\.(?:css|js|jpe?g|png|gif|svg|woff2?|ico|xml)(?:$|\?)"
+    # Wix sites expose an internal API under a path containing "platform", and mint synthetic
+    # sub-paths under every real page for design-system assets, media hashes and CSS values.
+    # Delaware Republicans alone produced 1,883 of these, swamping the genuine /platform page.
+    r"|/_api/|wix-laboratory"
+    r"|\.json(?:$|\?)"                        # JSON assets are never platform documents
+    r"|/[0-9a-f]{6}_[0-9a-f]{12,}"             # Wix media hashes
+    r"|-Icons-|/-Social-|/-Sitemap-"           # Wix design-system paths
+    r"|/-?[\d.]+(?:em|px|rem|vh|vw|%)(?:$|/)"  # CSS values appended as path segments
+    r"|/\d+K?/(?:month|year)"
+    r"|/robots\.txt|/sitemap|/favicon"
+    r"|(?:/\d+K){2,}",                        # repeated synthetic segments
     re.I,
 )
 
@@ -163,7 +212,16 @@ class DiscoveryOutcome:
 
 def is_excluded(url: str) -> bool:
     """True for URLs that match a discovery term but cannot be a platform document."""
-    return bool(_EXCLUDE_RE.search(url))
+    if _EXCLUDE_RE.search(url):
+        return True
+    # A repeated path segment is the signature of a generated URL, not a document. Wix mints
+    # paths such as /platform/10K/black/10K/black/white beneath every real page; no genuine
+    # document path repeats a segment.
+    segments = [s for s in urllib.parse.urlsplit(url).path.split("/") if s]
+    if len(segments) != len(set(segments)):
+        return True
+    # A purely numeric trailing segment is a CSS value or coordinate, not a document.
+    return bool(segments) and bool(re.fullmatch(r"-?\d+(?:\.\d+)?", segments[-1]))
 
 
 def _path_segments(url: str) -> list[str]:
@@ -246,6 +304,7 @@ def wayback_candidates(
     transport=None,
     limit: int = 2000,
     sleep=time.sleep,
+    terms: tuple[str, ...] = DISCOVERY_TERMS,
 ) -> tuple[list[Candidate], str | None]:
     """Query the Wayback CDX index for platform-like captures of ``domain``.
 
@@ -270,7 +329,7 @@ def wayback_candidates(
         "collapse": "urlkey",
         "filter": [
             "statuscode:200",
-            f"original:.*(?i)({'|'.join(DISCOVERY_TERMS)}).*",
+            f"original:.*(?i)({'|'.join(terms)}).*",
             "!original:.*cdn-cgi.*",
         ],
         "from": str(from_year),
@@ -328,6 +387,7 @@ def homepage_candidates(
     log: ProvenanceLog | None = None,
     transport=None,
     sleep=time.sleep,
+    secondary: bool = False,
 ) -> tuple[list[Candidate], str | None]:
     """Scan the live homepage's links for platform-like URLs. Exactly one request.
 
@@ -354,7 +414,8 @@ def homepage_candidates(
         absolute = urllib.parse.urljoin(base, href)
         if absolute in seen or is_excluded(absolute):
             continue
-        if not _TERMS_RE.search(absolute):
+        matches = _TERMS_RE.search(absolute) or (secondary and _SECONDARY_RE.search(absolute))
+        if not matches:
             continue
         # Stay on the party's own site; an outbound link is somebody else's document.
         if urllib.parse.urlsplit(absolute).netloc != urllib.parse.urlsplit(base).netloc:
@@ -390,11 +451,19 @@ def discover_for_org(
     transport=None,
     include_live: bool = True,
     sleep=time.sleep,
+    deep: bool = False,
 ) -> DiscoveryOutcome:
     """Discover candidates for one registry row, merging both channels.
 
     Where the same URL is found by both channels the Wayback record is kept, because it
     carries a capture timestamp and remains retrievable even if the live page later changes.
+
+    ``deep`` widens the search for organizations the ordinary pass found nothing for. It adds
+    :data:`SECONDARY_TERMS` -- many parties never use the word "platform" in a URL, filing
+    theirs under ``/about/issues`` or ``/issues/`` -- and searches any domain the party used
+    before rebranding, since a party that moved to a short ``.gop`` address has all of its
+    archived history under the old name. Both are off by default because, applied everywhere,
+    they bury real documents under news posts.
     """
     state, party = org["state"], org["party"]
     outcome = DiscoveryOutcome(state=state, party=party)
@@ -406,17 +475,38 @@ def discover_for_org(
         return outcome
 
     domain = urllib.parse.urlsplit(website).netloc or website
-    candidates, error = wayback_candidates(
-        domain, state=state, party=party, from_year=from_year, log=log,
-        transport=transport, sleep=sleep,
-    )
-    outcome.wayback_ok = error is None
-    outcome.wayback_error = error
+    searches: list[tuple[str, tuple[str, ...]]] = [(domain, DISCOVERY_TERMS)]
+    if deep:
+        bare = domain[4:] if domain.startswith("www.") else domain
+        searches.append((domain, SECONDARY_TERMS))
+        for alias in DOMAIN_ALIASES.get(bare, ()):
+            searches.append((alias, DISCOVERY_TERMS))
+            searches.append((alias, SECONDARY_TERMS))
+
+    candidates: list[Candidate] = []
+    seen: set[str] = set()
+    errors: list[str] = []
+    any_ok = False
+    for search_domain, terms in searches:
+        found, error = wayback_candidates(
+            search_domain, state=state, party=party, from_year=from_year, log=log,
+            transport=transport, sleep=sleep, terms=terms,
+        )
+        any_ok = any_ok or error is None
+        if error:
+            errors.append(f"{search_domain}: {error}")
+        for candidate in found:
+            key = normalize_url(candidate.url)
+            if key not in seen:
+                seen.add(key)
+                candidates.append(candidate)
+    outcome.wayback_ok = any_ok
+    outcome.wayback_error = "; ".join(errors) or None
 
     if include_live:
-        seen = {normalize_url(candidate.url) for candidate in candidates}
         live, live_error = homepage_candidates(
-            website, state=state, party=party, log=log, transport=transport, sleep=sleep
+            website, state=state, party=party, log=log, transport=transport, sleep=sleep,
+            secondary=deep,
         )
         outcome.live_ok = live_error is None
         outcome.live_error = live_error
@@ -464,6 +554,9 @@ def main(argv: list[str] | None = None) -> int:
                         help="seconds to pause between organizations")
     parser.add_argument("--states", default="",
                         help="comma-separated state codes to restrict to")
+    parser.add_argument("--deep", action="store_true",
+                        help="widen the search with secondary terms and pre-rebrand domains; "
+                             "for organizations the ordinary pass found nothing for")
     args = parser.parse_args(argv)
 
     orgs = yaml.safe_load(Path(args.registry).read_text(encoding="utf-8"))["organizations"]
@@ -476,7 +569,8 @@ def main(argv: list[str] | None = None) -> int:
     outcomes: list[DiscoveryOutcome] = []
     for index, org in enumerate(orgs, start=1):
         outcome = discover_for_org(
-            org, from_year=args.from_year, log=log, include_live=not args.no_live
+            org, from_year=args.from_year, log=log, include_live=not args.no_live,
+            deep=args.deep,
         )
         strong = [c for c in outcome.candidates if c.score >= STRONG_SCORE]
         outcomes.append(outcome)
