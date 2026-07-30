@@ -100,3 +100,16 @@ def test_download_people_uses_the_public_no_auth_url():
     download_people(states=("tx",), transport=transport, delay=0, sleep=lambda _: None)
     assert seen == [PEOPLE_CSV_URL.format(code="tx")]
     assert "data.openstates.org/people/current" in seen[0]
+
+
+def test_fusion_ballot_lines_resolve_to_the_major_party_on_the_ticket():
+    """New York records cross-endorsed legislators with combined ballot lines."""
+    assert normalize_party("Democratic/Working Families") == "D"
+    assert normalize_party("Republican/Conservative/Independence") == "R"
+    assert normalize_party("Working Families/Democratic") == "D"
+
+
+def test_fusion_line_naming_both_major_parties_is_not_guessed():
+    """A candidate cross-endorsed by both sides gives no basis for picking one."""
+    assert normalize_party("Democratic/Republican") == "other"
+    assert normalize_party("Working Families/Conservative") == "other"

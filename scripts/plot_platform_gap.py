@@ -35,7 +35,10 @@ SOURCE_NOTE = (
     "the Internet Archive Wayback Machine CDX Server API (https://web.archive.org/cdx/search/cdx) "
     "and the parties' own websites, and retrieved 2026-07-29. A document counts only when its own "
     "text is confirmed to be a platform, so a state shown as a gap was searched and nothing "
-    "qualifying was found - the four gap reasons are distinguished rather than merged."
+    "qualifying was found, and the three gap reasons are distinguished rather than merged. A "
+    "confirmed document is a platform, a set of convention resolutions, a legislative-priorities "
+    "agenda or a statement of principles; eight organizations are covered only by a non-platform "
+    "document type."
 )
 
 # Statuses in the order they should read: success first, then progressively weaker evidence.

@@ -29,22 +29,38 @@ from pathlib import Path
 
 from .openstates_dump import state_of, stream_table
 
+# Party normalization lives in `people`, and is imported rather than restated here: the two
+# modules read the same party strings from the same source, and a second copy of the mapping
+# silently drifted out of sync once already.
+from .people import normalize_party
+
 __all__ = ["attribute_party", "build_bills", "party_by_person"]
 
-#: Party organization names in the dump, mapped to the project's canonical codes. Anything
-#: else stays "other": several states seat genuine third parties and Nebraska's legislature is
-#: formally nonpartisan, and folding those into D or R would misattribute their bills.
-_PARTY_MAP = {
-    "democratic": "D",
-    "democrat": "D",
-    "democratic-farmer-labor": "D",
-    "democratic-npl": "D",
-    "republican": "R",
-}
 
 
-def normalize_party(name: str | None) -> str:
-    return _PARTY_MAP.get((name or "").strip().lower(), "other")
+#: How far a bill's first action may precede the year its session convened before the date is
+#: treated as bad source data. New Hampshire genuinely files legislative service requests the
+#: year before a session opens, so a small lead is normal; a first action years earlier is not.
+MAX_FILING_LEAD = 2
+
+
+def _filing_year(session_year: int | None, first_action_year: int | None) -> int | None:
+    """Pick the filing year, refusing first-action dates the session contradicts.
+
+    A handful of source rows carry impossible first-action dates -- a Montana bill dated year
+    ``202``, a 2019 Michigan resolution dated 1959, a 2023 West Virginia bill dated 2003. They
+    are rare enough not to move any share, but ``year`` is what dates a diffusion cluster, and
+    a single 1959 row would report a 2019 model bill as first appearing sixty years early. When
+    the first action precedes its own session by more than `MAX_FILING_LEAD` years the date is
+    not believed and the session year is used instead.
+    """
+    if first_action_year is None:
+        return session_year
+    if session_year is None:
+        return first_action_year
+    if first_action_year < session_year - MAX_FILING_LEAD:
+        return session_year
+    return first_action_year
 
 
 def party_by_person(dump_path: Path | str) -> dict[str, str]:
@@ -118,17 +134,30 @@ def build_bills(dump_path: Path | str, *, min_year: int = 2018):
         session = sessions.get(row.get("legislative_session_id") or "")
         if session is None:
             continue
-        # Session start is the reliable date: many bills have no first_action_date, and
-        # session identifiers are not consistently year-prefixed across states.
-        year = _year_of(session["session_start"]) or _year_of(row.get("first_action_date"))
-        if year is None or year < min_year:
+        # Two dates, and they mean different things. `session_year` is the year the session
+        # convened and is available for every bill; `first_action_year` is when this bill was
+        # actually filed but is often missing. A session is admitted when *either* overlaps the
+        # window, because filtering on session start alone excluded the whole 2017-2018
+        # biennium and left 20 states -- New York, Texas, Massachusetts, Illinois, Ohio and
+        # others -- with no 2018 bills at all while stamping California's 2018-convened session
+        # onto 5,423 bills filed in 2019-2020.
+        session_year = _year_of(session["session_start"])
+        first_action_year = _year_of(row.get("first_action_date"))
+        if session_year is None and first_action_year is None:
+            continue
+        latest = max(y for y in (session_year, first_action_year) if y is not None)
+        if latest < min_year:
             continue
         bills[row["id"]] = {
             "bill_id": row["id"],
             "state": session["state"],
             "session_identifier": session["session_identifier"],
             "session_name": session["session_name"],
-            "year": year,
+            "session_year": session_year,
+            "first_action_year": first_action_year,
+            # The best available filing year: the bill's own first action when recorded and
+            # credible, otherwise the year its session convened. See `_filing_year`.
+            "year": _filing_year(session_year, first_action_year),
             "identifier": row.get("identifier"),
             "title": row.get("title") or "",
             "classification": _pg_array(row.get("classification")),
@@ -175,14 +204,44 @@ def _year_of(value: str | None) -> int | None:
 
 
 def _pg_array(value: str | None) -> str:
-    """Flatten a PostgreSQL array literal such as ``{bill,resolution}`` to ``bill|resolution``."""
+    """Flatten a PostgreSQL array literal such as ``{bill,resolution}`` to ``bill|resolution``.
+
+    Quoted elements are respected. PostgreSQL quotes any element containing a comma, and a
+    naive split shredded them: the single subject "Appointments - Individuals - Pardons and
+    Paroles, Board of" became three fragments, and the debris ("Department of", "PUBLIC")
+    reached the top-25 most frequent "subjects" in the built table.
+    """
     if not value:
         return ""
     inner = value.strip()
     if inner.startswith("{") and inner.endswith("}"):
         inner = inner[1:-1]
-    parts = [p.strip().strip('"') for p in inner.split(",") if p.strip()]
-    return "|".join(parts)
+
+    parts: list[str] = []
+    current: list[str] = []
+    in_quotes = False
+    index = 0
+    while index < len(inner):
+        char = inner[index]
+        if in_quotes:
+            if char == "\\" and index + 1 < len(inner):
+                current.append(inner[index + 1])
+                index += 2
+                continue
+            if char == '"':
+                in_quotes = False
+            else:
+                current.append(char)
+        elif char == '"':
+            in_quotes = True
+        elif char == ",":
+            parts.append("".join(current).strip())
+            current = []
+        else:
+            current.append(char)
+        index += 1
+    parts.append("".join(current).strip())
+    return "|".join(part for part in parts if part)
 
 
 def main(argv: list[str] | None = None) -> int:

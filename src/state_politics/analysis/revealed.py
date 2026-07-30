@@ -12,6 +12,9 @@ raw counts would measure institutional throughput rather than priority.
 
 Caveats that belong next to any number produced here
 ----------------------------------------------------
+* Both sides are restricted to the same window. The platform side uses 2018-present planks
+  only; pooling the full 1990-2026 corpus against a 2018-2026 bill window would compare
+  different eras, and 76% of the plank corpus predates 2018.
 * Bills are classified from their **titles**, which are short and often procedural. That is a
   noisier signal than a platform plank, and the validation figures reported by
   :mod:`state_politics.analysis.validate` are measured on planks, not titles.
@@ -91,7 +94,10 @@ def main(argv: list[str] | None = None) -> int:
 
     parser = argparse.ArgumentParser(description=__doc__.splitlines()[0])
     parser.add_argument("--bills", default="data/processed/bills.parquet")
-    parser.add_argument("--platform-emphasis", default="data/processed/emphasis_by_party.csv")
+    # Default to the era-restricted table: comparing 2018-2026 bills against a platform
+    # average that is 76% pre-2018 would not be a like-for-like comparison.
+    parser.add_argument("--platform-emphasis",
+                        default="data/processed/emphasis_by_party_2018_present.csv")
     parser.add_argument("--topics", default=DEFAULT_TOPICS_PATH)
     parser.add_argument("--out-dir", default="data/processed")
     args = parser.parse_args(argv)

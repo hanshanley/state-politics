@@ -151,15 +151,36 @@ def stream_table(dump_path: Path | str, table: str) -> Iterator[dict[str, str | 
                "-f", "-", str(dump_path)]
     env = {**os.environ, "PATH": os.pathsep.join((*_EXTRA_BIN_DIRS, os.environ.get("PATH", "")))}
     process = subprocess.Popen(  # noqa: S603 - fixed argv, no shell
-        command, stdout=subprocess.PIPE, stderr=subprocess.DEVNULL, text=True,
+        command, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True,
         bufsize=1 << 20, env=env,
     )
+    exhausted = False
     try:
         yield from copy_blocks(process.stdout)
+        exhausted = True
     finally:
         if process.stdout:
             process.stdout.close()
-        process.wait()
+        if not exhausted:
+            # The consumer abandoned the generator; terminate rather than block, and do not
+            # read the resulting non-zero status as a failure of the extraction.
+            process.terminate()
+            process.wait()
+            if process.stderr:
+                process.stderr.close()
+        else:
+            stderr = process.stderr.read() if process.stderr else ""
+            if process.stderr:
+                process.stderr.close()
+            process.wait()
+            if process.returncode:
+                # Without this, a corrupt or unreadable archive yields zero rows and the
+                # pipeline writes empty tables while exiting 0 -- an empty corpus reported as
+                # a successful run.
+                raise RuntimeError(
+                    f"pg_restore failed for table {table!r} (exit {process.returncode}): "
+                    f"{stderr.strip()[:400]}"
+                )
 
 
 def state_of(jurisdiction_id: str | None) -> str | None:

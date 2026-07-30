@@ -148,6 +148,16 @@ def main(argv: list[str] | None = None) -> int:
     by_party = emphasis_by_party(planks, topics)
     by_party.to_csv(out_dir / "emphasis_by_party.csv", index=False)
 
+    # An era-restricted table as well. The stated-vs-revealed comparison must not measure a
+    # 1990-2026 platform average against a 2018-2026 bill window: 76% of planks predate 2018,
+    # and pooling them understates exactly the topics that have risen since (Republican
+    # immigration 4.1% pooled vs 5.9% on 2018-present planks alone).
+    modern = planks[planks["era"] == "2018-present"]
+    if not modern.empty:
+        emphasis_by_party(modern, topics).to_csv(
+            out_dir / "emphasis_by_party_2018_present.csv", index=False
+        )
+
     print("\ntopics where the parties differ most (share of planks):")
     display = by_party[["topic_name", "D", "R", "gap"]].copy()
     for column in ("D", "R", "gap"):

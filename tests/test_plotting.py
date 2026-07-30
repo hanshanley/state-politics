@@ -123,3 +123,50 @@ def test_source_note_reserve_scales_with_figure_height(tmp_path):
     assert tall < short
     # And in absolute inches the two reserves should be close, not proportional to height.
     assert abs(tall * 13 - short * 6) < 0.75
+
+
+def test_stated_vs_revealed_panels_share_one_row_order():
+    """Both panels must plot topics in the same order.
+
+    The right panel's tick labels are hidden, so a reader reads its dots against the *left*
+    panel's labels. Sorting each party independently silently mislabelled 15 of 21 Republican
+    rows -- the Republican government-operations gap was displayed against the label
+    "Agriculture".
+    """
+    import sys
+    from pathlib import Path
+
+    import pandas as pd
+
+    root = Path(__file__).resolve().parents[1]
+    sys.path.insert(0, str(root / "scripts"))
+    import plot_stated_vs_revealed as script
+
+    # Deliberately opposite orderings: sorting each party on its own key reverses the rows.
+    topics = ["Health", "Housing", "Immigration", "Labor"]
+    rows = []
+    for party, gaps in (("D", [0.03, -0.04, 0.01, -0.02]), ("R", [-0.04, 0.03, -0.02, 0.01])):
+        for topic, gap in zip(topics, gaps, strict=True):
+            rows.append({"topic_name": topic, "party": party, "stated_share": 0.1,
+                         "revealed_share": 0.1 - gap, "stated_minus_revealed": gap})
+    table = pd.DataFrame(rows)
+
+    out = script.build_figure(table, root / "outputs" / "_test_stated_vs_revealed.png")
+    figure = plt.gcf()
+    panels = figure.get_axes()[:2]
+
+    # Recover which topic each plotted row is, by matching its (stated, revealed) pair back to
+    # the source table. Tick labels cannot be used: the right panel's are deliberately hidden.
+    plotted = []
+    for ax, party in zip(panels, ("D", "R"), strict=True):
+        stated, revealed = (c.get_offsets() for c in ax.collections[:2])
+        lookup = {(round(r.stated_share * 100, 6), round(r.revealed_share * 100, 6)):
+                  r.topic_name for r in table[table["party"] == party].itertuples()}
+        plotted.append([lookup[(round(float(s[0]), 6), round(float(v[0]), 6))]
+                        for s, v in zip(stated, revealed, strict=True)])
+    plt.close("all")
+    out.unlink(missing_ok=True)
+
+    assert plotted[0] == plotted[1], (
+        f"panels plot different topics per row: {plotted[0]} vs {plotted[1]}"
+    )

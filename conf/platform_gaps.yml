@@ -1,0 +1,145 @@
+# Why a state party has no platform in the corpus.
+#
+# The automated pipeline can say *that* it found nothing; it cannot say *why*. "No platform
+# was collected" covers a party that publishes nothing, a party whose site is broken, and a
+# party whose platform is real but sits behind client-side rendering — three findings a reader
+# should not have to treat as one. Each entry below is the result of directly probing that
+# party's site by hand, and is recorded here rather than in the generated CSV so the
+# explanation survives regeneration and can be reviewed and re-checked like any other input.
+#
+# `finding` is prose shown in the gap report. `cause` is a coarse machine-readable bucket:
+#   no_platform_published  - the site is healthy; it simply has no platform document
+#   broken_site            - the site is down, suspended, or serving errors
+#   client_rendered        - a platform page exists but its text requires a JS runtime
+#   summary_only           - the party publishes a short position blurb, not a platform
+#   not_confirmed          - candidates were fetched but none read as a platform
+#
+# `checked` is the UTC date the probe was run, so a stale explanation is visible as stale.
+
+AK:
+  R:
+    cause: broken_site
+    checked: 2026-07-29
+    finding: >-
+      site is serving an "Account Suspended" page; the party has no live website
+AL:
+  D:
+    cause: not_confirmed
+    checked: 2026-07-29
+    finding: candidates fetched but none read as a platform
+CT:
+  R:
+    cause: no_platform_published
+    checked: 2026-07-29
+    finding: /platform soft-404s with a 426 KB PNG image
+DE:
+  R:
+    cause: no_platform_published
+    checked: 2026-07-29
+    finding: Wix site; no substantial platform page found
+FL:
+  R:
+    cause: no_platform_published
+    checked: 2026-07-29
+    finding: >-
+      /platform soft-404s to the site home page ("Home - Florida GOP", 360 words of
+      navigation); the party's own WordPress index lists 54 pages and no platform among them,
+      and a full-text search of pages, posts and media for "platform", "principles" and
+      "party-platform" returns nothing. The party publishes no platform document.
+HI:
+  D:
+    cause: client_rendered
+    checked: 2026-07-29
+    finding: >-
+      a platform page genuinely exists - the Wix site manifest lists both "platform" and
+      "platform-old" - but the text is fetched client-side and the served HTML carries no
+      prose. All 37 Wayback snapshots (2021-10 to 2026-06) are the same empty shell, so the
+      archive cannot recover it either. Only a headless browser would.
+  R:
+    cause: no_platform_published
+    checked: 2026-07-29
+    finding: no substantial platform page found
+IL:
+  D:
+    cause: no_platform_published
+    checked: 2026-07-29
+    finding: no substantial platform page found
+KY:
+  D:
+    cause: no_platform_published
+    checked: 2026-07-29
+    finding: no substantial platform page found
+  R:
+    cause: no_platform_published
+    checked: 2026-07-29
+    finding: /platform soft-404s with a 426 KB PNG image
+LA:
+  D:
+    cause: no_platform_published
+    checked: 2026-07-29
+    finding: >-
+      /issues is an archive listing, not a platform. The party's own WordPress index lists no
+      platform page, and searching pages, posts and media for "platform" returns only an
+      unrelated hosting-provider page. The party publishes no platform document.
+  R:
+    cause: no_platform_published
+    checked: 2026-07-29
+    finding: /platform soft-404s with a 426 KB PNG image
+MA:
+  R:
+    cause: no_platform_published
+    checked: 2026-07-29
+    finding: /platform soft-404s with a 426 KB PNG image
+MD:
+  D:
+    cause: no_platform_published
+    checked: 2026-07-29
+    finding: no substantial platform page found
+  R:
+    cause: no_platform_published
+    checked: 2026-07-29
+    finding: no substantial platform page found
+MI:
+  R:
+    cause: summary_only
+    checked: 2026-07-29
+    finding: >-
+      /platform soft-404s; /where-we-stand is a 2.5 KB mission statement, not a platform
+NJ:
+  D:
+    cause: summary_only
+    checked: 2026-07-29
+    finding: /platform is a 1.4 KB summary page, not a platform document
+  R:
+    cause: no_platform_published
+    checked: 2026-07-29
+    finding: no substantial platform page found
+NY:
+  D:
+    cause: no_platform_published
+    checked: 2026-07-29
+    finding: no substantial platform page found
+  R:
+    cause: no_platform_published
+    checked: 2026-07-29
+    finding: no substantial platform page found
+PA:
+  D:
+    cause: no_platform_published
+    checked: 2026-07-29
+    finding: no substantial platform page found
+  R:
+    cause: no_platform_published
+    checked: 2026-07-29
+    finding: /platform soft-404s with a 426 KB PNG image
+UT:
+  R:
+    cause: summary_only
+    checked: 2026-07-29
+    finding: >-
+      publishes short legislative-priority landing pages (1.3-1.5 KB), not a platform
+VA:
+  R:
+    cause: no_platform_published
+    checked: 2026-07-29
+    finding: /platform soft-404s with a 426 KB PNG image

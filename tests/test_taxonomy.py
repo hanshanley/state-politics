@@ -90,8 +90,37 @@ def test_segment_planks_splits_overlong_blocks():
 
 
 def test_segment_planks_handles_pdf_single_newline_text():
+    """Hard-wrapped text must survive; how it is grouped matters less than that none is lost."""
     text = "\n".join([PLANK, PLANK, PLANK])
-    assert len(segment_planks(text)) == 3
+    planks = segment_planks(text)
+    assert planks
+    combined = " ".join(p.text for p in planks)
+    assert combined.count("living wage") == 3
+
+
+def test_segment_planks_does_not_discard_a_block_for_its_first_words():
+    """_BOILERPLATE_RE is a prefix test; using it to drop whole blocks deleted a 47,345-word
+    platform because of the four words it opened with."""
+    body = " ".join([PLANK] * 4)
+    planks = segment_planks(f"PAID FOR BY THE DEMOCRATIC PARTY OF SOMEWHERE {body}")
+    assert planks
+    assert "living wage" in " ".join(p.text for p in planks)
+
+
+def test_segment_planks_recovers_a_hard_wrapped_document():
+    """Real platform PDFs extract as short lines with blank lines between them; treating each
+    blank line as a paragraph break left every block under the length floor and lost the lot."""
+    lines = []
+    for _ in range(40):
+        lines.extend(["We support fair wages for every worker in this state,",
+                      "and we believe collective bargaining must be protected.", ""])
+    planks = segment_planks("\n".join(lines))
+    assert len(planks) >= 5
+
+
+def test_segment_planks_never_silently_loses_a_substantial_document():
+    document = " ".join([PLANK] * 30)
+    assert segment_planks(document), "a 30-plank document must not segment to nothing"
 
 
 def test_keyword_classifier_returns_none_rather_than_guessing():

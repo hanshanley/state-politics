@@ -1,0 +1,158 @@
+#!/usr/bin/env python3
+"""Print the canonical figures for this project, computed from the committed artifacts.
+
+Every number quoted in the README or in a figure caption should be reproducible from here.
+The counts in this project have drifted more than once as the pipeline was corrected, so this
+exists to make "check the docs against the data" a single command rather than an archaeology
+exercise.
+
+Usage::
+
+    python scripts/report_figures.py
+"""
+
+from __future__ import annotations
+
+import sys
+from pathlib import Path
+
+import pandas as pd
+import yaml
+
+ROOT = Path(__file__).resolve().parent.parent
+DATA = ROOT / "data" / "processed"
+
+
+def _load(name: str):
+    path = DATA / name
+    if not path.exists():
+        return None
+    return pd.read_parquet(path) if path.suffix == ".parquet" else pd.read_csv(path)
+
+
+def main() -> int:
+    print("=" * 72)
+    print("CANONICAL FIGURES  (recompute before quoting any number in the docs)")
+    print("=" * 72)
+
+    historical = _load("platforms_historical.parquet")
+    if historical is not None:
+        major = historical[historical["is_major_party"]]
+        print("\nHistorical platform corpus (Dataverse)")
+        print(f"  documents            {len(historical):,}")
+        span = f"{int(historical['year'].min())}-{int(historical['year'].max())}"
+        states = historical.loc[historical["state"] != "US", "state"].nunique()
+        print(f"  years                {span}")
+        print(f"  states (excl. US)    {states}")
+        print(f"  D / R                {int((major['party_raw'] == 'D').sum()):,} / "
+              f"{int((major['party_raw'] == 'R').sum()):,}")
+
+    modern = _load("platforms_2018_present.parquet")
+    if modern is not None:
+        ok = modern[modern["confirmed"]]
+        print("\nModern platform corpus (collected by this project)")
+        print(f"  documents            {len(ok):,}")
+        print(f"  organizations        {ok.groupby(['state', 'party']).ngroups}/100")
+        print(f"  states               {ok['state'].nunique()}")
+        dem, rep = int((ok["party"] == "D").sum()), int((ok["party"] == "R").sum())
+        print(f"  D / R                {dem} / {rep}")
+        print(f"  words                {int(ok['n_words'].sum()):,}")
+        print(f"  dated 2018+          {int((ok['year'] >= 2018).sum())} of {len(ok)}")
+
+    gaps = _load("platform_gap_report.csv")
+    if gaps is not None:
+        print("\nGap report")
+        for status, count in gaps["status"].value_counts().items():
+            print(f"  {status:<22} {count}")
+        missing = gaps[gaps["n_confirmed"] == 0]
+        explained = int((missing.get("gap_finding", pd.Series(dtype=str)).fillna("") != "").sum())
+        print(f"  gaps with a finding    {explained}/{len(missing)}")
+        if "gap_cause" in missing:
+            for cause, count in missing["gap_cause"].value_counts().items():
+                print(f"    {cause:<20} {count}")
+
+    planks = _load("planks_classified.parquet")
+    if planks is not None:
+        classified = int(planks["topic"].notna().sum())
+        print("\nPlank classification")
+        print(f"  planks               {len(planks):,}")
+        below = len(planks) - classified
+        print(f"  classified           {classified:,} ({below:,} below threshold)")
+        print(f"  documents            {planks['document_index'].nunique():,}")
+        if "era" in planks:
+            for era, count in planks["era"].value_counts().items():
+                print(f"    {era:<18} {count:,}")
+
+    scores = _load("plank_classifier_scores.csv")
+    if scores is not None and "embedding_topic" in scores:
+        n = len(scores)
+        top1 = int((scores["embedding_topic"] == scores["gold_topic"]).sum())
+        key = int((scores["keyword_topic"] == scores["gold_topic"]).sum())
+        print("\nClassifier validation (hand-labelled gold set)")
+        print(f"  gold planks          {n}")
+        print(f"  embedding top-1      {top1}/{n} ({top1 / n:.0%})")
+        print(f"  keyword top-1        {key}/{n} ({key / n:.0%})")
+
+    legislators = _load("legislators_current.parquet")
+    if legislators is not None:
+        print("\nLegislators")
+        print(f"  legislators          {len(legislators):,}")
+        print(f"  states               {legislators['state'].nunique()}/50")
+        print(f"  by party             {legislators['party'].value_counts().to_dict()}")
+
+    bills = _load("bills.parquet")
+    if bills is not None:
+        print("\nBills")
+        print(f"  bills                {len(bills):,}")
+        print(f"  states               {bills['state'].nunique()}/50")
+        print(f"  years                {int(bills['year'].min())}-{int(bills['year'].max())}")
+        print(f"  attribution          {bills['sponsor_party'].value_counts().to_dict()}")
+
+    bill_emphasis = _load("bill_emphasis_by_party.csv")
+    if bill_emphasis is not None:
+        print(f"  classified into topics {int(bill_emphasis['n_bills'].sum()):,}")
+
+    divergence = _load("stated_vs_revealed.csv")
+    if divergence is not None:
+        print("\nStated vs revealed (headline)")
+        for topic in ("Civil rights and liberties", "Immigration", "Law, crime and justice",
+                      "Housing and community development"):
+            for party in ("D", "R"):
+                row = divergence[(divergence["topic_name"] == topic)
+                                 & (divergence["party"] == party)]
+                if len(row) == 1:
+                    row = row.iloc[0]
+                    print(f"  {party} {topic:<34} said {row['stated_share'] * 100:5.1f}%  "
+                          f"filed {row['revealed_share'] * 100:5.1f}%")
+
+    reuse = _load("text_reuse_near_duplicates.csv")
+    if reuse is not None and not reuse.empty:
+        print("\nText reuse (model legislation)")
+        print(f"  clusters             {len(reuse):,}")
+        print(f"  bills in clusters    {int(reuse['n_bills'].sum()):,}")
+        print(f"  widest cluster       {int(reuse['n_states'].max())} states")
+        if "min_similarity" in reuse:
+            loose = int((reuse["min_similarity"] < 0.8).sum())
+            print(f"  cohesion             {reuse['min_similarity'].min():.2f}-"
+                  f"{reuse['min_similarity'].max():.2f} "
+                  f"(median {reuse['min_similarity'].median():.2f})")
+            print(f"  below threshold      {loose} of {len(reuse)} clusters "
+                  f"contain a sub-threshold pair")
+        if "ceremonial" in reuse:
+            print(f"  ceremonial           {int(reuse['ceremonial'].sum())} "
+                  f"({int((~reuse['ceremonial']).sum())} substantive)")
+
+    registry_path = ROOT / "conf" / "party_registry.yml"
+    if registry_path.exists():
+        orgs = yaml.safe_load(registry_path.read_text(encoding="utf-8"))["organizations"]
+        print("\nParty registry")
+        print(f"  organizations        {len(orgs)}")
+        print(f"  websites resolved    {sum(1 for o in orgs if o['website'])}/{len(orgs)}")
+        print(f"  machine-verified     {sum(1 for o in orgs if not o['needs_review'])}/{len(orgs)}")
+
+    print()
+    return 0
+
+
+if __name__ == "__main__":
+    sys.exit(main())

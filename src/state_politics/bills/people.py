@@ -88,8 +88,23 @@ def normalize_party(value: str | None) -> str:
     Nebraska's unicameral is officially nonpartisan and several states seat independents and
     third parties, so an unrecognised value is kept as "other" rather than forced into one of
     the two major parties.
+
+    New York, Connecticut and a handful of other states permit fusion voting, where one
+    candidate is cross-endorsed by several parties and the source records the combined ballot
+    lines as "Democratic/Working Families". Those legislators caucus with the major party on
+    the ticket, so a slash-delimited label naming exactly one major party resolves to it. A
+    label naming both resolves to "other", since nothing in the string says which one they sit
+    with.
     """
-    return _PARTY_MAP.get((value or "").strip().lower(), "other")
+    cleaned = (value or "").strip().lower()
+    direct = _PARTY_MAP.get(cleaned)
+    if direct is not None:
+        return direct
+    if "/" not in cleaned:
+        return "other"
+    majors = {_PARTY_MAP[part] for part in
+              (segment.strip() for segment in cleaned.split("/")) if part in _PARTY_MAP}
+    return majors.pop() if len(majors) == 1 else "other"
 
 
 def parse_people_csv(text: str, state: str) -> list[Legislator]:

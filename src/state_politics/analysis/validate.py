@@ -113,22 +113,26 @@ def evaluate(
 
     if include_embedding:
         classifier = EmbeddingClassifier(topics)
+        # Score the configuration that actually ships, threshold included. Scoring a bare
+        # argsort would report "unclassified 0" for a classifier that leaves 8% of this sample
+        # unclassified in production.
+        predictions = classifier.predict_many(texts)
         vectors = classifier.model.encode(
             texts, normalize_embeddings=True, convert_to_numpy=True, show_progress_bar=False
         )
-        similarities = vectors @ classifier._topic_vectors.T
+        similarities = vectors @ classifier.topic_vectors.T
         ranking = np.argsort(-similarities, axis=1)
         codes = [topic.code for topic in topics]
-        top1 = [codes[int(r[0])] for r in ranking]
+        top1 = [code for code, _, _ in predictions]
         top2 = [{codes[int(r[0])], codes[int(r[1])]} for r in ranking]
-        for row, first, sim in zip(rows, top1, similarities.max(axis=1), strict=True):
-            row["embedding_topic"] = first
-            row["embedding_similarity"] = round(float(sim), 3)
+        for row, (code, similarity, _) in zip(rows, predictions, strict=True):
+            row["embedding_topic"] = code
+            row["embedding_similarity"] = round(similarity, 3)
         scores.append(Scores(
             name=f"embedding ({classifier.device})",
             n=len(gold),
             correct=sum(p == g.gold_topic for p, g in zip(top1, gold, strict=True)),
-            unclassified=0,
+            unclassified=sum(code is None for code in top1),
             top2_correct=sum(g.gold_topic in pair for pair, g in zip(top2, gold, strict=True)),
         ))
     return scores, rows

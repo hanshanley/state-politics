@@ -2,7 +2,7 @@
 
 **Repo:** `hanshanley/state-politics`
 **Date:** 2026-07-28
-**Status:** Phases 0–2 implemented; Phase 3 next
+**Status:** Phases 0–7 implemented
 
 ---
 
@@ -246,7 +246,8 @@ genuinely serving a suspended-account page.
   confirms each document against its own content.
 
 **Outcome:** **201 confirmed documents across 76/100 organizations and 43 states**; 105 D /
-96 R; 1.15M words. Every organization without a document was probed directly on ten likely
+96 R; 1.15M words. 185 are dated 2018+; 16 predate 2018 (2006-2017) and three covered
+organizations have nothing since 2016 or earlier (CA-D 2016, IN-R 2012, OH-D 2015). Every organization without a document was probed directly on ten likely
 platform paths, so each gap carries an evidenced `gap_finding` and none is unexplained. Every organization gets an explicit status in
 `platform_gap_report.csv` (`found` 76 / `candidates_rejected` 11 / `no_strong_candidates` 12 /
 `no_candidates` 1).
@@ -287,21 +288,42 @@ Three more bugs surfaced, all of the same silent-corruption family:
    document". It now rejects binary by signature and content type.
 3. A **purely numeric trailing path segment** (`/platform/-0.88`) is a CSS value, not a document.
 
-**Outcome of the gap pass:** every one of the 24 remaining gaps now carries a directly-observed
-`gap_finding` in `platform_gap_report.csv` — 7 soft-404 images, 3 JavaScript-rendered, 2
-summary-only pages, 1 suspended site, 11 with no platform page at all. **Zero unexplained
-absences.** Roughly half of these organizations appear simply not to publish a platform; the
-rest publish one only in a form static fetching cannot reach. Rendering JavaScript would likely
-recover several and is the obvious next step — a scope decision, not an unknown.
+**Outcome of the gap pass:** every one of the 24 remaining gaps carries a directly-observed
+finding, and **zero are unexplained**. The findings live in `conf/platform_gaps.yml` and are
+joined into `platform_gap_report.csv` by `gap_report()`; they were previously hand-written into
+the generated CSV, where the next pipeline run would have erased them. `collect --report-only`
+rebuilds the report from cached documents so editing a finding costs no network traffic.
+
+Categorised: **18 publish no platform, 3 publish only a summary blurb, 1 site is suspended, 1
+had candidates that did not confirm, and 1 is genuinely JavaScript-rendered.**
+
+A follow-up re-check cut the JavaScript-rendered count from 3 to 1, which changes the
+conclusion. Florida GOP's `/platform` does not render client-side at all — it soft-404s to the
+site home page, and the party's own WordPress index lists 54 pages with no platform among them,
+while a full-text search over pages, posts and media returns nothing. The Louisiana Democrats'
+`/issues` is likewise an archive listing, and their WordPress index contains no platform page or
+media file. Both are genuine absences. Only Hawaii's Democrats have a platform this pipeline
+cannot reach: their Wix page manifest lists both `platform` and `platform-old`, but the text is
+fetched client-side, and all 37 Wayback snapshots between 2021-10 and 2026-06 are the same empty
+shell, so the archive cannot substitute for a renderer.
+
+> **Lesson:** "static fetching cannot reach it" is a claim about the crawler and needs to be
+> tested as carefully as any claim about the data. Queried directly, a site's own CMS index
+> (`wp-json`, the Wix page manifest) settles whether a document exists far more definitively
+> than guessing from a rendered page. Two of three assumed-blocked cases were actually the
+> party publishing nothing — headless rendering would have recovered nothing and the effort
+> would have been spent on a misdiagnosis.
 
 ### Phase 4 — State bills, all 50 states, to present — **DONE**
 
-**Legislators:** `bills/people.py` — 7,359 current legislators, 50/50 states (R 4,000 / D 3,166 /
-other 193) from Open States' public no-auth CSVs.
+**Legislators:** `bills/people.py` — 7,359 current legislators, 50/50 states (R 4,045 / D 3,240 /
+other 74) from Open States' public no-auth CSVs. Fusion-voting ballot lines
+(`Democratic/Working Families`) resolve to the major party on the ticket; read literally they
+matched nothing and stranded 119 legislators in `other`.
 
-**Bills:** `bills/openstates_dump.py` + `bills/ingest.py` — **1,044,751 bills filed 2018–2026 in
-all 50 states, 4,770,793 sponsorships**; attribution D 412,984 / R 352,811 / bipartisan 66,300 /
-unknown 212,656.
+**Bills:** `bills/openstates_dump.py` + `bills/ingest.py` — **1,087,327 bills filed 2018–2026 in
+all 50 states, 5,000,761 sponsorships**; attribution D 436,641 / R 376,436 / bipartisan 68,529 /
+unknown 205,721.
 
 Three obstacles, and how each was cleared:
 
@@ -340,8 +362,8 @@ against identical labels.
 
 ### Phase 6 — Emphasis measures & comparisons — **DONE**
 
-**Platform emphasis** (`analysis/emphasis.py`): share of planks per topic over 43,104 planks
-from 872 documents. Democrats emphasize labour (5.9% vs 1.1%), environment, housing, health,
+**Platform emphasis** (`analysis/emphasis.py`): share of planks per topic over 36,886 planks
+from 876 documents (34,396 classified). Democrats emphasize labour (5.8% vs 1.1%), environment, housing, health,
 social welfare; Republicans government operations (10.8% vs 7.1%), public lands, macroeconomics,
 culture/family, law and crime.
 
@@ -368,8 +390,7 @@ than planks; the 62%/78% validation was measured on planks), ~20% of bills canno
 a party and are excluded rather than guessed, and filing is not passing — this is agenda, not
 achievement.
 
-**Not done:** cross-state outlier analysis against the national party, and text-reuse diffusion
-(model-legislation detection).
+
 
 ### Phase 7 — Outputs — **DONE**
 

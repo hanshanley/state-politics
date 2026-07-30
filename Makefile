@@ -70,6 +70,7 @@ analysis: historical
 	$(PY) -m state_politics.analysis.emphasis
 	$(PY) -m state_politics.analysis.revealed
 	$(PY) -m state_politics.analysis.profiles
+	$(PY) -m state_politics.analysis.diffusion
 
 figures:
 	$(PY) scripts/plot_platform_coverage.py

@@ -36,14 +36,24 @@ SOURCE_NOTE = (
     "Harvard Dataverse, doi:10.7910/DVN/KNOSHL, CC0 1.0; and 2018-present platforms published by "
     "the individual state party committees, collected for this project via the Internet Archive "
     "Wayback Machine and the parties' own sites. Accessed 2026-07-29. Each point is the share of "
-    "that party's platform planks assigned to the topic (43,104 planks, 872 documents). Topics "
+    "that party's platform planks assigned to the topic ({sample}). Topics "
     "follow the Comparative Agendas Project major-topic scheme. Planks are classified by a local "
     "sentence-transformer scoring 62% top-1 and 78% top-2 against a 50-plank hand-labelled "
     "sample, so these shares describe broad aggregate emphasis, not individual planks."
 )
 
 
-def build_figure(table: pd.DataFrame, out_path: Path) -> Path:
+def sample_description(planks_path: Path) -> str:
+    """Describe the sample from the data itself, so the caption cannot go stale."""
+    if not planks_path.exists():
+        return "see data/processed/planks_classified.parquet"
+    planks = pd.read_parquet(planks_path, columns=["document_index", "topic"])
+    classified = int(planks["topic"].notna().sum())
+    return (f"{classified:,} classified planks of {len(planks):,}, "
+            f"{planks['document_index'].nunique():,} documents")
+
+
+def build_figure(table: pd.DataFrame, out_path: Path, *, sample: str = "") -> Path:
     table = table.sort_values("gap").reset_index(drop=True)
     labels = table["topic_name"].tolist()
     dem = (table["D"] * 100).tolist()
@@ -66,7 +76,8 @@ def build_figure(table: pd.DataFrame, out_path: Path) -> Path:
         subtitle="Topics ordered by how much more one party emphasizes them",
     )
     ax.legend(loc="lower right", frameon=False, labelcolor=theme.TEXT, fontsize=10.5)
-    return charts.finish(fig, ax, out_path, source=SOURCE_NOTE, legend=False)
+    return charts.finish(fig, ax, out_path, source=SOURCE_NOTE.format(sample=sample),
+                         legend=False)
 
 
 def main(argv: list[str] | None = None) -> int:
@@ -81,7 +92,8 @@ def main(argv: list[str] | None = None) -> int:
             f"{table_path} not found - run 'python -m state_politics.analysis.emphasis' first"
         )
 
-    out = build_figure(pd.read_csv(table_path), Path(args.out))
+    sample = sample_description(ROOT / "data/processed/planks_classified.parquet")
+    out = build_figure(pd.read_csv(table_path), Path(args.out), sample=sample)
     print(f"wrote {out}")
     return 0
 

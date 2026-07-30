@@ -131,20 +131,76 @@ def segment_planks(text: str, document_index: int = 0) -> list[Plank]:
     distinct positions and classifying it as one would smear its topics together. Short
     fragments, contents rows and PDF extraction artefacts are dropped.
     """
-    planks: list[Plank] = []
     blocks = [b.strip() for b in re.split(r"\n\s*\n+", text) if b.strip()]
-    if len(blocks) <= 1:
-        # Documents extracted from PDFs often arrive as one run of single newlines.
-        blocks = [b.strip() for b in text.split("\n") if b.strip()]
+    planks = _planks_from_blocks(blocks, document_index)
 
+    # Hard-wrapped documents defeat both splitters: one long run of single newlines yields
+    # line-level fragments, and a blank line after every wrapped line yields thousands of tiny
+    # "paragraphs". Either way the length floor deletes almost everything, and real platforms
+    # of 5,000-11,000 words segmented to *zero* planks. So the fallback triggers on the yield
+    # rather than on the block count: if a substantial document produced implausibly few
+    # planks, re-join its short lines into paragraphs and try again.
+    words = len(text.split())
+    if words > 500 and len(planks) < words / 500:
+        rejoined = _planks_from_blocks(_rejoin_wrapped_lines(text), document_index)
+        if len(rejoined) > len(planks):
+            return rejoined
+    return planks
+
+
+def _planks_from_blocks(blocks: list[str], document_index: int) -> list[Plank]:
+    planks: list[Plank] = []
     for block in blocks:
-        block = re.sub(r"\s+", " ", block).strip()
-        if len(block) < MIN_PLANK_CHARS or _BOILERPLATE_RE.match(block):
+        block = _strip_boilerplate_prefix(re.sub(r"\s+", " ", block).strip())
+        if len(block) < MIN_PLANK_CHARS:
             continue
         for piece in _split_long(block):
             if _looks_like_prose(piece):
                 planks.append(Plank(document_index, len(planks), piece))
     return planks
+
+
+def _rejoin_wrapped_lines(text: str, *, target: int = 400) -> list[str]:
+    """Reassemble hard-wrapped lines into paragraph-sized blocks."""
+    blocks: list[str] = []
+    current: list[str] = []
+    for line in (raw.strip() for raw in text.split("\n")):
+        if not line:
+            # A blank line only ends a paragraph once enough text has accumulated. Several
+            # platform PDFs extract with blank lines between every short line, and treating
+            # each as a boundary left every block below the length floor -- deleting the whole
+            # document.
+            if current and len(" ".join(current)) >= MIN_PLANK_CHARS:
+                blocks.append(" ".join(current))
+                current = []
+            continue
+        current.append(line)
+        length = len(" ".join(current))
+        # Prefer to break at sentence punctuation, but break on length regardless: several
+        # platform PDFs are laid out as short unpunctuated lines ("WHEREAS", "One"), and
+        # waiting for a full stop swallowed the entire document into a single block.
+        ends_sentence = line.endswith((".", "!", "?", ":", ";"))
+        if (length >= target and ends_sentence) or length >= target * 3:
+            blocks.append(" ".join(current))
+            current = []
+    if current:
+        blocks.append(" ".join(current))
+    return blocks
+
+
+def _strip_boilerplate_prefix(block: str) -> str:
+    """Remove a leading boilerplate phrase instead of discarding the block that carries it.
+
+    :data:`_BOILERPLATE_RE` is a *prefix* test, but it was used to drop the whole block. A
+    single 47,345-word platform beginning "PAID FOR BY THE DEMOCRATIC PARTY OF VIRGINIA" was
+    therefore deleted in its entirety, and the loss was party-asymmetric -- 5.9% of Democratic
+    words against 3.4% of Republican -- biasing the very comparison this project publishes.
+    """
+    match = _BOILERPLATE_RE.match(block)
+    if not match:
+        return block
+    remainder = block[match.end():].lstrip(" :.-\u2014")
+    return remainder if len(remainder) >= MIN_PLANK_CHARS else ""
 
 
 def _split_long(block: str) -> list[str]:
@@ -211,7 +267,7 @@ class EmbeddingClassifier:
         self.model_name = model_name
         self.device = device or select_device()
         self.model = SentenceTransformer(model_name, device=self.device)
-        self._topic_vectors = self.model.encode(
+        self.topic_vectors = self.model.encode(
             [topic.embedding_text for topic in topics],
             normalize_embeddings=True,
             convert_to_numpy=True,
@@ -238,7 +294,7 @@ class EmbeddingClassifier:
             texts, batch_size=batch_size, normalize_embeddings=True,
             convert_to_numpy=True, show_progress_bar=False,
         )
-        similarities = vectors @ self._topic_vectors.T
+        similarities = vectors @ self.topic_vectors.T
         order = np.argsort(-similarities, axis=1)
         results = []
         for row, ranking in zip(similarities, order, strict=True):

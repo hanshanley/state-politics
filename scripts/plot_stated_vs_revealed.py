@@ -37,8 +37,9 @@ SOURCE_NOTE = (
     "doi:10.7910/DVN/KNOSHL, CC0 1.0 (1990-2017), plus 2018-present platforms published by the "
     "individual state party committees and collected for this project; bills from Open States / "
     "Plural Policy, '2026-07 public PostgreSQL dump', public domain. Accessed 2026-07-29. "
-    "43,104 planks from 872 documents; 516,155 bills filed 2018-2026 in all 50 states and "
-    "attributed to a party by their primary sponsors. Topics follow the Comparative Agendas "
+    "{sample}. Both sides are restricted to the same 2018-present window. Bills are attributed "
+    "to a party by their primary sponsors, falling back to cosponsors only when no primary "
+    "sponsor resolves. Topics follow the Comparative Agendas "
     "Project major-topic scheme, assigned by a local sentence-transformer scoring 62% top-1 and "
     "78% top-2 on a hand-labelled plank sample. Bills are classified from titles, which are "
     "shorter and noisier than planks. Filing a bill is not passing one: this measures agenda, "
@@ -46,14 +47,40 @@ SOURCE_NOTE = (
 )
 
 
-def build_figure(table: pd.DataFrame, out_path: Path) -> Path:
+def sample_description(root: Path) -> str:
+    """Describe both samples from the data itself, so the caption cannot go stale."""
+    parts = []
+    planks = root / "data/processed/planks_classified.parquet"
+    if planks.exists():
+        frame = pd.read_parquet(planks, columns=["document_index", "topic", "era"])
+        modern = frame[frame["era"] == "2018-present"]
+        parts.append(f"{int(modern['topic'].notna().sum()):,} classified planks from "
+                     f"{modern['document_index'].nunique():,} 2018-present documents")
+    bills = root / "data/processed/bill_emphasis_by_party.csv"
+    if bills.exists():
+        parts.append(f"{int(pd.read_csv(bills)['n_bills'].sum()):,} classified bills "
+                     "filed 2018-2026 in all 50 states")
+    return "; ".join(parts)
+
+
+def build_figure(table: pd.DataFrame, out_path: Path, *, sample: str = "") -> Path:
     fig, axes = charts.new_figure(figsize=(13, 9))
     fig.clf()
     axes = fig.subplots(1, 2, sharex=True)
 
+    # One row order for both panels. The right panel's tick labels are hidden so the two share
+    # the left panel's, which means sorting each party independently silently plots R's values
+    # against D's labels -- it mislabelled 15 of 21 rows, reading R's government-operations gap
+    # as "Agriculture". Order by the two parties' mean gap so the shared axis stays honest and
+    # the figure still reads sorted.
+    order = (table.groupby("topic_name")["stated_minus_revealed"].mean()
+             .sort_values().index.tolist())
+
     for ax, party in zip(axes, ("D", "R"), strict=True):
         subset = table[table["party"] == party].copy()
-        subset = subset.sort_values("stated_minus_revealed")
+        subset = (subset.set_index("topic_name")
+                  .reindex([t for t in order if t in set(subset["topic_name"])])
+                  .reset_index())
         labels = subset["topic_name"].tolist()
         stated = (subset["stated_share"] * 100).tolist()
         revealed = (subset["revealed_share"] * 100).tolist()
@@ -81,7 +108,7 @@ def build_figure(table: pd.DataFrame, out_path: Path) -> Path:
              "The gap is the distance between agenda and action.",
              ha="center", va="top", fontsize=11, color=theme.MUTED)
 
-    lines = theme.source_note(fig, SOURCE_NOTE)
+    lines = theme.source_note(fig, SOURCE_NOTE.format(sample=sample))
     fig.tight_layout(rect=(0, min(0.16, 0.03 + 0.022 * lines), 1, 0.935))
     out_path = Path(out_path)
     out_path.parent.mkdir(parents=True, exist_ok=True)
@@ -101,7 +128,8 @@ def main(argv: list[str] | None = None) -> int:
             f"{table_path} not found - run 'python -m state_politics.analysis.revealed' first"
         )
 
-    out = build_figure(pd.read_csv(table_path), Path(args.out))
+    out = build_figure(pd.read_csv(table_path), Path(args.out),
+                       sample=sample_description(ROOT))
     print(f"wrote {out}")
     return 0
 

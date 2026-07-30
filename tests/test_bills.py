@@ -10,7 +10,12 @@ from __future__ import annotations
 
 import pytest
 
-from state_politics.bills.ingest import attribute_party, normalize_party
+from state_politics.bills.ingest import (
+    MAX_FILING_LEAD,
+    _filing_year,
+    attribute_party,
+    normalize_party,
+)
 from state_politics.bills.openstates_dump import STATE_CODES, copy_blocks, state_of
 
 
@@ -129,3 +134,27 @@ def test_attribute_party_returns_unknown_rather_than_guessing():
 
 def test_third_party_sponsors_do_not_become_major_party_bills():
     assert attribute_party(["other"], ["other"]) == "unknown"
+
+
+def test_filing_year_rejects_dates_the_session_contradicts():
+    """A few source rows carry impossible first-action dates.
+
+    They are too rare to move a topic share but ``year`` dates diffusion clusters, where one
+    bad row reports a modern model bill as first appearing decades early.
+    """
+    assert _filing_year(2021, 202) == 2021        # Montana HB 73, truncated year
+    assert _filing_year(2019, 1959) == 2019       # Michigan HR 290, a 2019 resolution
+    assert _filing_year(2023, 2003) == 2023       # West Virginia SB 746
+
+
+def test_filing_year_keeps_genuine_early_filing():
+    """New Hampshire files service requests the year before a session convenes."""
+    assert _filing_year(2018, 2016) == 2016
+    assert _filing_year(2018, 2017) == 2017
+    assert _filing_year(2018, 2018 - MAX_FILING_LEAD) == 2018 - MAX_FILING_LEAD
+
+
+def test_filing_year_falls_back_when_a_date_is_missing():
+    assert _filing_year(2020, None) == 2020
+    assert _filing_year(None, 2021) == 2021
+    assert _filing_year(None, None) is None

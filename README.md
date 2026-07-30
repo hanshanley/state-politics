@@ -43,8 +43,9 @@ all 50 states.
 1. **No fabricated or interpolated data.** Every platform document and every bill row traces to a fetched
    URL with an HTTP status, retrieval timestamp, and SHA-256 content hash. If a state party published no
    platform in a cycle, that observation is **omitted** — never imputed, never smoothed, never guessed.
-2. **Absence is a finding.** "The Ohio Republican Party has published no platform since 2000" is a
-   legitimate research result, not a pipeline bug. The gap report is a deliverable.
+2. **Absence is a finding.** "No platform page exists on the New York Democratic Party's site"
+   is a legitimate research result, not a pipeline bug — and every such gap in this project
+   carries a directly-probed reason. The gap report is a deliverable.
 3. **No hosted LLM APIs. Models run locally.** Every model this project runs — embeddings, classifiers,
    topic models — runs on this machine's Apple Silicon GPU (M4, 16 GB unified memory) via Metal
    Performance Shaders, falling back to CPU. This is enforced in code, not just documented: a test
@@ -54,8 +55,9 @@ all 50 states.
    cannot be regenerated from pinned local weights is not reproducible research.
 4. **Cite the collector, not the redistributor.** Citations name the organization or authors who
    *collected* the data, not merely the API that served it. See [`CITATIONS.md`](CITATIONS.md).
-5. **Reproducible from source.** Nothing in `data/` is committed. Everything is rebuildable by running
-   the pipeline.
+5. **Reproducible from source.** Nothing in `data/` is committed except the hand-labelled
+   validation set (`data/gold/`), which is authored input rather than a derived artifact and
+   cannot be regenerated. Everything else is rebuilt by running the pipeline.
 
 ---
 
@@ -70,7 +72,7 @@ collecting organizations credited, are in [`CITATIONS.md`](CITATIONS.md).
 | 2 | Open States / Plural Policy — bulk data | State bills, votes, legislators (all 50 states, current) | 2026-07 public dump, 10.7 GB |
 | 3 | Open States API v3 | Targeted bill/sponsorship refresh | `Bill.sponsorships`, `Person.party` |
 | 4 | Internet Archive — Wayback CDX Server API | Discovery of 2018–present platform documents | Returned real platform docs |
-| 5 | Wikidata | Registry of official state party websites | 50/50 Democratic; Republican needs extra work |
+| 5 | Wikidata | Registry of official state party websites | 100/100 resolved, 92 machine-verified, 19 hand-checked corrections |
 
 ---
 
@@ -91,6 +93,36 @@ Greenfield. Work is organized in phases:
 
 Full roadmap, including the source-verification work behind it, is in [`docs/PLAN.md`](docs/PLAN.md).
 
+### The 24 parties with no platform
+
+76 of 100 state party organizations yielded a platform. The remaining 24 are the deliverable
+that a scraper normally throws away: **every one was probed by hand and carries a recorded
+reason**, in [`conf/platform_gaps.yml`](conf/platform_gaps.yml), joined into the gap report by
+`gap_report()`. They live in version-controlled config rather than in the generated CSV,
+because an explanation written into a derived file is erased by the next run.
+
+| Cause | Orgs | Meaning |
+|---|---|---|
+| `no_platform_published` | 18 | Site is healthy and simply has no platform document |
+| `summary_only` | 3 | A short position blurb (1.3–2.5 KB), not a platform |
+| `broken_site` | 1 | Alaska GOP is serving an "Account Suspended" page |
+| `not_confirmed` | 1 | Candidates fetched, none read as a platform |
+| `client_rendered` | 1 | A real platform page whose text needs a JS runtime |
+
+The distinction matters: **a missing platform is mostly a real finding about the party, not a
+failure of the crawler.** Only one org (Hawaii Democrats, a Wix site whose page manifest lists
+both `platform` and `platform-old`) has a platform this pipeline cannot reach — and all 37 of
+its Wayback snapshots from 2021-10 to 2026-06 are the same empty shell, so the archive cannot
+recover it either. Two cases first recorded as JS-rendered turned out on re-checking to be
+genuine absences: Florida GOP's `/platform` soft-404s to its home page, and neither its nor the
+Louisiana Democrats' own CMS index contains a platform page or media file at all.
+
+Regenerate the report after editing the findings, without re-crawling anything:
+
+```bash
+uv run python -m state_politics.platforms.collect --report-only
+```
+
 ### Stream B: legislators and bills
 
 `state_politics.bills.people` ingests the current legislators for all 50 states from Open
@@ -101,10 +133,18 @@ a bill records who sponsored it, and this records which party that sponsor belon
 uv run python -m state_politics.bills.people
 ```
 
-**Result: 7,359 currently-serving legislators across all 50 states** — 4,000 Republican,
-3,166 Democratic, 193 other. Chambers: 5,389 lower, 1,921 upper, 49 `legislature` (Nebraska's
+**Result: 7,359 currently-serving legislators across all 50 states** — 4,045 Republican,
+3,240 Democratic, 74 other. Chambers: 5,389 lower, 1,921 upper, 49 `legislature` (Nebraska's
 nonpartisan unicameral). Third parties and independents are deliberately kept as `other`
 rather than folded into the major two, since misfiling them would misattribute their bills.
+
+One wrinkle worth naming: New York, Connecticut, Vermont and Oregon permit **fusion voting**,
+where one candidate is cross-endorsed by several parties and the source records the combined
+ballot lines — `Democratic/Working Families`, `Republican/Conservative/Independence`. Read
+literally these match no party and fall to `other`, which stranded 119 legislators (most of
+the New York legislature's majority among them). A slash-delimited label naming exactly one
+major party now resolves to it; a label naming both stays `other`, because nothing in the
+string says which side they caucus with.
 
 `state_politics.bills.openstates_dump` + `bills.ingest` extract the bills themselves from
 Open States' public PostgreSQL dump.
@@ -115,8 +155,8 @@ Open States' public PostgreSQL dump.
 uv run python -m state_politics.bills.ingest
 ```
 
-**Result: 1,044,751 bills filed 2018–2026 across all 50 states, and 4,770,793 sponsorships.**
-Party attribution: 412,984 Democratic, 352,811 Republican, 66,300 bipartisan, 212,656 unknown.
+**Result: 1,087,327 bills filed 2018–2026 across all 50 states, and 5,000,761 sponsorships.**
+Party attribution: 436,641 Democratic, 376,436 Republican, 68,529 bipartisan, 205,721 unknown.
 
 Three notes on how this was done, because each was a real obstacle:
 
@@ -131,9 +171,29 @@ Three notes on how this was done, because each was a real obstacle:
   database: `pg_restore` streams one table at a time to stdout, which avoids restoring 10.7 GB
   into a server that would not fit.
 
+**Dating a bill takes two dates, not one.** Open States records when a *session* convened and
+when a *bill* first saw action. Filtering on session start alone excluded the entire 2017–2018
+biennium: 20 states — New York, Texas, Massachusetts, Illinois and Ohio among them — had no
+calendar-2018 bills at all, while California's 2018-convened session stamped "2018" onto bills
+actually filed in 2019–20. A session is now admitted when *either* date overlaps the window,
+and `session_year` and `first_action_year` are both kept alongside the resolved `year`. That
+recovered **42,576 bills** and took the states with 2018 filings from 30 to 49. The fiftieth is
+North Dakota, whose legislature meets only in odd-numbered years — a fact about North Dakota,
+not a gap.
+
+First-action dates are also *sanity-checked against their own session*, because a few are
+corrupt: a Montana bill dated year `202`, a 2019 Michigan resolution dated 1959, a 2023 West
+Virginia bill dated 2003. A first action more than two years before its session is not believed
+and the session year is used instead. Only 39 rows are affected and no topic share moves, but
+`year` is what dates a diffusion cluster, and one 1959 row would report a 2019 model bill as
+first appearing sixty years early. Two years of leeway is deliberate: New Hampshire genuinely
+files legislative service requests the year before a session opens.
+
 A bill is attributed to a party by its **primary** sponsors. Cosponsor lists are long,
-cross-party and procedural, so letting them vote would blur the very distinction the table
-exists to draw; bills whose sponsors cannot be resolved are `unknown`, not guessed.
+cross-party and procedural, so letting them decide would blur the very distinction the table
+exists to draw. Where no primary sponsor resolves to a major party, the attribution falls back
+to all sponsors — this decides 5.7% of party-attributed bills — and bills whose sponsors cannot
+be resolved at all are `unknown`, never guessed.
 
 ---
 
@@ -152,14 +212,15 @@ uv run python scripts/plot_party_emphasis.py
 
 The taxonomy (`conf/topics.yml`) is anchored to the **Comparative Agendas Project** major topic
 codes rather than invented here, so results are comparable with the wider literature and so the
-Open States `subject` tags can be mapped onto the same scheme when the bills stream unblocks.
+Open States `subject` tags could be mapped onto the same scheme; that is not implemented —
+bills are classified from their titles.
 
 Classification runs **locally on the M4 via MPS** — a pinned sentence-transformer embeds each
 plank and each topic description and assigns the nearest topic. A transparent keyword baseline
 runs alongside it, not as a fallback but so the model's output can be checked against something
 a human can read and argue with.
 
-**Validation, on 43,104 planks from 872 documents:**
+**Validation, on 36,886 planks from 876 documents (34,396 classified):**
 
 | Classifier | Top-1 | Top-2 |
 |---|---|---|
@@ -167,7 +228,8 @@ a human can read and argue with.
 | Embedding (MPS) | **62%** | **78%** |
 
 Scored against `data/gold/plank_topics_gold.csv` — 50 planks drawn at random (seed 20260729)
-and hand-labelled by the author. It is small and single-annotator, so it supports claims about
+from the **2018-present** corpus and hand-labelled by the author. Accuracy is therefore measured
+on modern planks; the 1990–2017 era supplies 69% of classified planks and is not sampled. It is small and single-annotator, so it supports claims about
 broad aggregate emphasis and not about any individual plank; some planks are genuinely ambiguous
 between two defensible topics, which is why top-2 is reported alongside top-1. Chance on this
 21-way task is about 5%.
@@ -191,26 +253,29 @@ uv run python scripts/plot_stated_vs_revealed.py
 **Both parties talk far more about rights and identity than they legislate, and legislate far
 more about housing, crime and transportation than they talk about.**
 
-| | Said (platform) | Filed (bills) |
+| Topic | D said → filed | R said → filed |
 |---|---|---|
-| **Civil rights and liberties** — D | 8.2% | 3.0% |
-| **Civil rights and liberties** — R | 9.7% | 2.8% |
-| **Culture, family and social issues** — R | 4.8% | 1.5% |
-| **Immigration** — R | 4.1% | 0.9% |
-| **Law, crime and justice** — D | 7.3% | 13.9% |
-| **Law, crime and justice** — R | 9.4% | 15.5% |
-| **Housing and community development** — D | 3.3% | 9.4% |
-| **Housing and community development** — R | 1.1% | 6.0% |
+| Civil rights and liberties | 10.7% → **3.0%** | 12.1% → **2.8%** |
+| Immigration | 4.9% → **0.9%** | 6.0% → **0.9%** |
+| Culture, family, social issues | 3.0% → **1.8%** | 5.3% → **1.5%** |
+| Law, crime and justice | 8.9% → **13.8%** | 10.0% → **15.5%** |
+| Housing and community development | 3.5% → **9.4%** | 1.7% → **6.0%** |
+| Transportation | 2.3% → **4.7%** | 1.4% → **5.2%** |
+
+Both sides are restricted to the same **2018-present** window. An earlier version compared a
+1990–2026 platform average against 2018–2026 bills; since 69% of the plank corpus predates 2018,
+that understated exactly the topics that have risen since. Matching the windows *widened* every
+gap in this table rather than narrowing it.
 
 The pattern is symmetric across both parties, which is what makes it interesting: the topics
 that dominate platform rhetoric are largely *national* fights that state legislatures have
 limited power over, while the topics that dominate actual filing are the bread-and-butter
 business of state government. Immigration is the sharpest case — Republican platforms give it
-4.1% of their planks and Republican legislators 0.9% of their bills.
+6.0% of their planks and Republican legislators 0.9% of their bills.
 
 **Read these numbers with their limits.** Bills are classified from *titles*, which are short
 and often procedural — a noisier signal than a platform plank, and the 62%/78% validation
-figures were measured on planks, not titles. Roughly a fifth of bills cannot be resolved to a
+figures were measured on planks, not titles. 18.9% of bills cannot be resolved to a
 party and are excluded rather than guessed at. And filing a bill is not passing one: this
 measures **agenda, not achievement**.
 
@@ -218,7 +283,57 @@ Democratic state parties devote more of their platforms to labour, the environme
 health and social welfare; Republican state parties to government operations, public lands,
 taxation, culture and family questions, and law and crime. Planks below a similarity threshold
 are recorded as **unclassified** and excluded from the denominator rather than pushed into
-whichever topic was least far away — 3,051 of the 43,104 planks fall there.
+whichever topic was least far away — 2,490 of the 36,886 planks fall there.
+
+---
+
+## Model legislation: the same bill in a dozen capitols
+
+State legislatures do not draft in isolation. Advocacy groups circulate template bills, and the
+same text surfaces in many capitols in the same session — visible in the data as a title
+appearing near-verbatim in states that share nothing but a sponsor's party.
+
+```bash
+uv run python -m state_politics.analysis.diffusion
+```
+
+Titles are normalised (bill numbers, years and ordinals stripped — exactly what two states
+running one template differ on), reduced to content words, and clustered by Jaccard similarity.
+Comparing a million titles pairwise is impossible, so candidates are blocked by their **rarest**
+content words; blocking on several rather than one matters, because two versions of a template
+often differ in precisely which rare word they keep.
+
+**187 clusters spanning 3+ states, 2,027 bills, the widest reaching 19 states.** Ceremonial
+resolutions ("recognizing National Donate Life Month") circulate just as widely as policy but
+say nothing about an agenda, so they are flagged separately — 65 of the 187.
+
+| States | Bills | Cohesion | Template |
+|---|---|---|---|
+| 19 | 37 | 0.57 | Audiology and speech-language pathology interstate compact |
+| 12 | 81 | 0.54 | Agreement Among the States to Elect the President by National Popular Vote |
+| 12 | 54 | 0.31 | Sales and use tax exemption for feminine hygiene products |
+| 9 | 18 | 0.62 | Uniform Civil Remedies for Unauthorized Disclosure of Intimate Images |
+| 8 | 38 | 0.43 | Health insurance coverage for hearing aids |
+| 7 | 13 | 0.50 | Health insurance coverage for biomarker testing |
+| 6 | 38 | 0.36 | Applying for an Article V convention to amend the U.S. Constitution |
+| 6 | 26 | 0.50 | Forming Open and Robust University Minds (FORUM) Act |
+
+The recovered set is face-valid: interstate professional-licensure compacts, the National
+Popular Vote campaign, Article V convention applications, and the FORUM Act all circulate as
+named model bills.
+
+**Read the state counts as an upper bound.** Clusters are connected components, so membership
+is transitive: if A resembles B and B resembles C, all three land in one cluster even when A
+and C are not themselves similar. Every cluster therefore reports `min_similarity`, the lowest
+pairwise score between any two of its members. Across the 187 clusters that runs 0.31–1.00
+(median 0.71), and **132 of 187 contain at least one pair below the 0.80 pairing threshold** —
+the 19-state compact cluster sits at 0.57, because states retitle the same compact freely
+("enacting the...", "adopting the...", "...licensure compact act"). Treat a cluster as one
+tight template when that value is high, and as a family of related bills when it is not.
+
+**This shows text reuse, not authorship or coordination.** Two states can independently choose
+the same words, which is why generic administrative titles are excluded, a length floor applies,
+and each cluster is evidence worth examining rather than proof of copying.
 
 ---
 
@@ -241,21 +356,21 @@ Most distinctive by platform emphasis:
 
 | Org | Distance | Most distinctive topic | vs party average |
 |---|---|---|---|
-| NY-R | 0.382 | Energy | 20.0% vs 2.6% |
-| KY-R | 0.334 | International affairs | 18.3% vs 2.1% |
-| NJ-D | 0.317 | Macroeconomics | 17.0% vs 2.0% |
-| FL-D | 0.290 | Health | 35.3% vs 11.1% |
-| MT-D | 0.226 | Public lands and water | 27.8% vs 8.5% |
+| NJ-D | 0.393 | Macroeconomics | 18.2% vs 1.9% |
+| KY-R | 0.342 | International affairs | 18.3% vs 2.1% |
+| FL-D | 0.269 | Health | 35.6% vs 11.6% |
+| NJ-R | 0.267 | Macroeconomics | 19.2% vs 4.6% |
+| MT-D | 0.262 | Public lands and water | 33.0% vs 8.9% |
 
 Most distinctive by what their legislators actually file:
 
 | Org | Distance | Most distinctive topic | vs party average |
 |---|---|---|---|
 | ID-D | 0.373 | Civil rights and liberties | 22.5% vs 4.3% |
-| IL-R | 0.170 | Science, technology and communications | 14.3% vs 2.0% |
+| IL-R | 0.167 | Science, technology and communications | 14.0% vs 2.0% |
 | NM-D | 0.161 | Social welfare | 19.7% vs 4.0% |
-| SD-D | 0.159 | Public lands and water | 20.2% vs 8.4% |
-| ND-R | 0.152 | Public lands and water | 28.8% vs 11.2% |
+| SD-D | 0.158 | Public lands and water | 20.2% vs 8.4% |
+| ND-R | 0.151 | Public lands and water | 28.8% vs 11.2% |
 
 Outputs: `state_party_profiles.csv` (one row per organization, with its top platform topics,
 top filing topics and platform status), `platform_outliers.csv`, `bill_outliers.csv`.
@@ -269,8 +384,8 @@ recorded in `data/provenance.jsonl` with its URL, HTTP status, SHA-256 and retri
 
 ```bash
 make setup      # install dependencies, including the local model stack
-make all        # historical corpus + analysis + figures (no crawling)
-make test lint  # 218 tests, ruff
+make all        # analysis + figures (needs `make platforms` and `make bills-dump` first)
+make test lint  # 260 tests, ruff
 ```
 
 The network-heavy stages are deliberately **not** part of `make all`, so rebuilding the

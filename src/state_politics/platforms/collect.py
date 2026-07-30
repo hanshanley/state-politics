@@ -76,6 +76,9 @@ _DESPACED_PHRASE_RE = re.compile("|".join(_DESPACED_PHRASES), re.I)
 #: this excludes landing pages that merely link to one.
 MIN_CHARS = 2500
 
+#: Hand-checked explanations for the parties with no platform, joined into the gap report.
+_GAP_FINDINGS_PATH = Path(__file__).resolve().parents[3] / "conf" / "platform_gaps.yml"
+
 _SCRIPT_RE = re.compile(r"<(script|style|nav|header|footer)\b[^>]*>.*?</\1>", re.S | re.I)
 _TAG_RE = re.compile(r"<[^>]+>")
 
@@ -430,10 +433,12 @@ def gap_report(
         if document.confirmed:
             confirmed_by_org.setdefault(key, []).append(document)
 
+    findings = load_gap_findings()
     rows = []
     for org in registry:
         key = (org["state"], org["party"])
         found = confirmed_by_org.get(key, [])
+        gap = findings.get(key, {}) if not found else {}
         candidates = candidates_by_org.get(key, [])
         strong = [c for c in candidates if c.score >= STRONG_SCORE]
         years = sorted({d.year for d in found if d.year})
@@ -458,8 +463,33 @@ def gap_report(
             "latest_year": years[-1] if years else None,
             "doc_types": ",".join(sorted({d.doc_type for d in found if d.doc_type})),
             "registry_needs_review": org.get("needs_review"),
+            "gap_finding": gap.get("finding", ""),
+            "gap_cause": gap.get("cause", ""),
+            "gap_checked": gap.get("checked", ""),
         })
     return pd.DataFrame(rows)
+
+
+def load_gap_findings(path: Path | str | None = None) -> dict[tuple[str, str], dict]:
+    """Hand-checked explanations for why a party has no platform, keyed by (state, party).
+
+    The pipeline can report that nothing was collected but not why, and the three reasons that
+    matter - publishes nothing, site is broken, platform exists but needs a JS runtime - are
+    not distinguishable from the outside. Those verdicts come from probing each site directly,
+    so they live in version-controlled config and are joined in here. Keeping them in the
+    generated CSV instead would delete them on the next run.
+    """
+    import yaml
+
+    path = Path(path) if path else _GAP_FINDINGS_PATH
+    if not path.exists():
+        return {}
+    raw = yaml.safe_load(path.read_text(encoding="utf-8")) or {}
+    return {
+        (state, party): entry
+        for state, parties in raw.items()
+        for party, entry in (parties or {}).items()
+    }
 
 
 def _load_candidates(path: Path) -> dict[tuple[str, str], list[Candidate]]:
@@ -513,6 +543,10 @@ def main(argv: list[str] | None = None) -> int:
                         help="seconds between fetches; nearly all go to one host "
                              "(web.archive.org), so this is a politeness setting")
     parser.add_argument("--states", default="")
+    parser.add_argument("--report-only", action="store_true",
+                        help="rebuild the gap report from already-collected documents, "
+                             "without fetching anything. Editing conf/platform_gaps.yml "
+                             "should not require re-crawling 100 party websites.")
     parser.add_argument("--resume", action="store_true",
                         help="reuse an existing parquet and re-fetch only rows whose fetch "
                              "failed, rather than re-requesting documents already retrieved")
@@ -528,6 +562,24 @@ def main(argv: list[str] | None = None) -> int:
     out_dir = Path(args.out_dir)
     out_dir.mkdir(parents=True, exist_ok=True)
     docs_path = out_dir / "platforms_2018_present.parquet"
+
+    if args.report_only:
+        if not docs_path.exists():
+            print(f"nothing to report on: {docs_path} does not exist", flush=True)
+            return 1
+        documents = [d for docs in _load_previous(docs_path)[0].values() for d in docs]
+        report = gap_report(registry, grouped, documents)
+        report_path = out_dir / "platform_gap_report.csv"
+        report.to_csv(report_path, index=False)
+        explained = int((report["gap_finding"].fillna("") != "").sum())
+        unexplained = int((report["n_confirmed"].eq(0)
+                           & (report["gap_finding"].fillna("") == "")).sum())
+        print(f"organizations with >=1 document: "
+              f"{report['n_confirmed'].gt(0).sum()}/{len(registry)}")
+        print(f"gaps with a hand-checked finding: {explained} "
+              f"({unexplained} unexplained)")
+        print(f"wrote {report_path}")
+        return 0
 
     previous: dict[tuple[str, str], list[CollectedDocument]] = {}
     retry_urls: set[str] = set()

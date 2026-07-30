@@ -7,6 +7,8 @@ status that says *why*, not simply omitted.
 
 from __future__ import annotations
 
+from pathlib import Path
+
 from state_politics.platforms.collect import (
     DOC_TYPES,
     MIN_CHARS,
@@ -17,9 +19,13 @@ from state_politics.platforms.collect import (
     confirm_platform,
     extract_text,
     gap_report,
+    load_gap_findings,
     wayback_snapshot_url,
 )
 from state_politics.platforms.discover import Candidate
+
+_GAP_CAUSES = {"no_platform_published", "broken_site", "client_rendered",
+               "summary_only", "not_confirmed"}
 
 PLATFORM_PROSE = (
     "We believe in limited government. We support the right of every citizen to vote. "
@@ -361,3 +367,50 @@ def test_extract_text_still_reads_html_and_pdf():
 
 def test_extract_text_handles_content_type_with_charset():
     assert "plank" in extract_text(b"<p>plank</p>", "text/html; charset=utf-8", "https://x/p")
+
+
+def test_gap_findings_are_version_controlled_not_generated():
+    """The explanations must survive regeneration of the report.
+
+    They were previously hand-written into the derived CSV, where the next pipeline run would
+    have silently erased them.
+    """
+    findings = load_gap_findings()
+    assert findings, "conf/platform_gaps.yml should ship the hand-checked explanations"
+    for (state, party), entry in findings.items():
+        assert len(state) == 2 and party in {"D", "R"}, f"bad key {(state, party)}"
+        assert entry.get("finding"), f"{state}-{party} has no prose finding"
+        cause = entry.get("cause")
+        assert cause in _GAP_CAUSES, f"{state}-{party} has cause {cause!r}"
+        assert entry.get("checked"), f"{state}-{party} has no checked date"
+
+
+def test_gap_findings_only_describe_parties_in_the_registry():
+    """A finding for an org that does not exist is a stale entry, not a fact."""
+    import yaml
+
+    registry_path = Path(__file__).resolve().parents[1] / "conf" / "party_registry.yml"
+    if not registry_path.exists():
+        return
+    registry = yaml.safe_load(registry_path.read_text(encoding="utf-8")) or {}
+    known = {(org["state"], org["party"]) for org in registry.get("organizations", [])}
+    unknown = set(load_gap_findings()) - known
+    assert not unknown, f"gap findings for parties absent from the registry: {sorted(unknown)}"
+
+
+def test_gap_report_attaches_findings_only_to_orgs_with_nothing_found():
+    """A party whose platform was collected should carry no gap explanation."""
+    registry = [
+        {"state": "HI", "party": "D", "website": "https://hawaiidemocrats.org"},
+        {"state": "TX", "party": "R", "website": "https://texasgop.org"},
+    ]
+    found = CollectedDocument(
+        state="TX", party="R", url="https://texasgop.org/platform",
+        fetched_url="https://texasgop.org/platform", source="live",
+        doc_type="platform", year=2024, confirmed=True, reason="confirmed",
+        n_chars=MIN_CHARS + 1,
+    )
+    report = gap_report(registry, {}, [found]).set_index(["state", "party"])
+
+    assert report.loc[("HI", "D"), "gap_cause"] == "client_rendered"
+    assert report.loc[("TX", "R"), "gap_finding"] == ""
