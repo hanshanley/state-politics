@@ -27,11 +27,12 @@ Caveats that belong next to any number produced here
 from __future__ import annotations
 
 import argparse
+import gc
 from pathlib import Path
 
 from .taxonomy import DEFAULT_TOPICS_PATH, EmbeddingClassifier, load_topics
 
-__all__ = ["classify_bills", "divergence_table"]
+__all__ = ["classify_bills", "count_topics_by_state", "divergence_table"]
 
 #: Bill titles handed to the classifier per pass. Bounds peak memory on a machine whose RAM is
 #: mostly spoken for; the classifier itself slices again internally.
@@ -71,6 +72,71 @@ def classify_bills(bills, classifier: EmbeddingClassifier, *, batch_size: int = 
         del predictions
 
     return frame.assign(topic=codes, similarity=np.round(scores, 4))
+
+
+def _release_memory() -> None:
+    """Drop freed frames and any cached GPU buffers."""
+    gc.collect()
+    try:
+        import torch
+
+        if torch.backends.mps.is_available():
+            torch.mps.empty_cache()
+    except Exception:  # noqa: BLE001 - releasing memory must never break the run
+        pass
+
+
+def count_topics_by_state(bills_path, classifier, *, states=None, min_similarity: float = 0.20,
+                          batch_size: int = 512, min_title_chars: int = 20, progress=print):
+    """Classify bills **one state at a time**, keeping only the aggregate counts.
+
+    Nothing downstream needs a per-bill topic column: the outputs are counts by
+    (state, party, topic). Holding 880,000 classified rows in order to group them was what kept
+    getting this step OOM-killed on a 16 GB machine with most of its RAM already spoken for.
+
+    Reading is pushed down to the parquet file per state, so peak memory is one state's bills --
+    at most New York's ~105,000 -- rather than the whole corpus. The trade is a few seconds of
+    extra IO per state, which is nothing next to the embedding pass.
+    """
+    import pandas as pd
+
+    if states is None:
+        states = sorted(pd.read_parquet(bills_path, columns=["state"])["state"].unique())
+
+    frames = []
+    seen = attributed = classified_total = 0
+    for position, state in enumerate(states, start=1):
+        frame = pd.read_parquet(
+            bills_path, columns=["state", "title", "sponsor_party"],
+            filters=[("state", "==", state)],
+        )
+        seen += len(frame)
+        frame = frame[frame["sponsor_party"].isin(("D", "R"))].rename(
+            columns={"sponsor_party": "party"}).reset_index(drop=True)
+        attributed += len(frame)
+        if not frame.empty:
+            frame = classify_bills(frame, classifier, batch_size=batch_size,
+                                   min_similarity=min_similarity,
+                                   min_title_chars=min_title_chars)
+            usable = frame[frame["topic"].notna()]
+            classified_total += len(usable)
+            if not usable.empty:
+                frames.append(usable.groupby(["state", "party", "topic"])
+                              .size().rename("n_bills").reset_index())
+        del frame
+        # Release between states. Python's allocator will not return the freed frame to the OS
+        # on its own, and Metal keeps its own cache of buffers from the previous state's
+        # embeddings, so without this the footprint creeps upward across 50 iterations and the
+        # run dies partway through a corpus it can otherwise handle.
+        _release_memory()
+        if progress:
+            progress(f"  [{position:>2}/{len(states)}] {state}  "
+                     f"attributed={attributed:,} classified={classified_total:,}", flush=True)
+
+    counts = (pd.concat(frames, ignore_index=True) if frames
+              else pd.DataFrame(columns=["state", "party", "topic", "n_bills"]))
+    return counts, {"n_bills": seen, "n_attributed": attributed,
+                    "n_classified": classified_total}
 
 
 def divergence_table(platform_emphasis, bill_emphasis):
@@ -119,22 +185,13 @@ def main(argv: list[str] | None = None) -> int:
     classifier = EmbeddingClassifier(topics)
     print(f"model {classifier.model_name} on device {classifier.device}")
 
-    bills = pd.read_parquet(args.bills, columns=["state", "year", "title", "sponsor_party"])
-    total = len(bills)
-    major = bills[bills["sponsor_party"].isin(["D", "R"])].rename(
-        columns={"sponsor_party": "party"}
-    ).reset_index(drop=True)
-    del bills  # the unattributed two-thirds are never used again
-    print(f"bills with a party attribution: {len(major):,} of {total:,}")
-
-    classified = classify_bills(major, classifier)
-    unclassified = int(classified["topic"].isna().sum())
-    print(f"classified: {len(classified) - unclassified:,} "
-          f"({unclassified:,} unclassified or title too short)")
+    by_state, totals = count_topics_by_state(args.bills, classifier)
+    print(f"bills with a party attribution: {totals['n_attributed']:,} "
+          f"of {totals['n_bills']:,}")
+    print(f"classified: {totals['n_classified']:,}")
 
     named = {topic.code: topic.name for topic in topics}
-    usable = classified[classified["topic"].notna()]
-    counts = usable.groupby(["party", "topic"]).size().rename("n_bills").reset_index()
+    counts = by_state.groupby(["party", "topic"])["n_bills"].sum().reset_index()
     counts["share"] = counts["n_bills"] / counts.groupby("party")["n_bills"].transform("sum")
     counts["topic_name"] = counts["topic"].map(named)
 
@@ -142,7 +199,6 @@ def main(argv: list[str] | None = None) -> int:
     out_dir.mkdir(parents=True, exist_ok=True)
     counts.to_csv(out_dir / "bill_emphasis_by_party.csv", index=False)
 
-    by_state = usable.groupby(["state", "party", "topic"]).size().rename("n_bills").reset_index()
     by_state["share"] = by_state["n_bills"] / by_state.groupby(["state", "party"])[
         "n_bills"].transform("sum")
     by_state["topic_name"] = by_state["topic"].map(named)
