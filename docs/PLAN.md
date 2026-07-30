@@ -420,6 +420,50 @@ achievement.
 
 ---
 
+## Phase 8 — validating the bill classifier against statehouse subject tags
+
+**Why:** every claim on the revealed-preference side rested on a classifier that had never been
+measured on bill titles. The gold set validating the model is made entirely of platform planks,
+and `conf/topics.yml` had noted since Phase 4 that the Open States `subject` tags "will map onto
+the same scheme" — the check was always planned and never built.
+
+**What:** `conf/subject_topic_map.yml` maps 181 unambiguous tags (of 88,716 distinct normalised
+strings) onto the CAP topic codes, and `analysis/validate_bills.py` scores the classifier
+against them. The mapping is written from tag names and the CAP codebook only — never from
+classifier output, and deliberately not reusing the keyword seeds in `conf/topics.yml`, which
+would have tested the seeds against themselves. Tags that name a procedure, a funding
+instrument, a unit of government, or a regulated commodity are excluded, and bills whose tags
+map to two topics are dropped rather than scored.
+
+**Result:** 63.2% agreement on 46,659 bills across 35 states, against 62% for the same model on
+planks. The aggregate was reassuring and the breakdown was not.
+
+**The finding that mattered:** reporting *precision* rather than recall exposed one systematic
+failure — **the classifier reads a tax bill by the thing being taxed rather than by the tax.**
+Macroeconomics recall is 18.1%; those bills land in housing (property tax), public lands and
+social welfare. Housing precision is 34.8%, with taxation the single largest contaminant.
+
+Because the tags are model-independent, they re-derive the headline outright over 111,521
+bills. **33 of 40 topic-party rows replicate; the housing row does not** — tag-labelled housing
+is 3.0% (D) and 0.9% (R) against stated shares of 3.5% and 1.7%, erasing the gap and reversing
+its sign for Republicans. The row was withdrawn from the headline table and struck through
+rather than deleted, and the headline claim was rewritten from "housing, crime and
+transportation" to "crime, transportation and education". The other five failures are the same
+tax confusion or its mirror, except two where the gap is a fraction of a point and its sign is
+noise.
+
+> **Lessons:**
+> 1. An aggregate accuracy figure can be reassuring and still conceal a claim-breaking error.
+>    63.2% overall looked fine; one topic at 34.8% precision was carrying a headline row.
+> 2. **Precision, not recall, is what licenses a share.** Every number in this project is a
+>    share of items assigned to a topic, and recall says nothing about what was wrongly swept in.
+> 3. Where a second, independent labelling exists, use it to re-derive the result rather than
+>    merely to score the model. Scoring gives a number; replication gives a verdict per claim.
+> 4. Validate the *thing you ship*. The model was validated on planks and deployed on titles,
+>    and the gap between those two went unmeasured through seven phases.
+
+---
+
 ## 6. Assumptions made (autopilot; flag if wrong)
 
 1. **Python** + pandas/parquet stack, since this is data collection and text analysis.

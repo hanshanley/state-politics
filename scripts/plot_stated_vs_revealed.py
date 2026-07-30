@@ -43,7 +43,10 @@ SOURCE_NOTE = (
     "Project major-topic scheme, assigned by a local sentence-transformer scoring 62% top-1 and "
     "78% top-2 on a hand-labelled plank sample. Bills are classified from titles, which are "
     "shorter and noisier than planks. Filing a bill is not passing one: this measures agenda, "
-    "not achievement."
+    "not achievement. Rows marked † and drawn hollow are contradicted when bill topics are "
+    "re-derived from Open States subject tags assigned by legislative staff rather than by "
+    "this model, and should not be read as findings; the classifier tends to file a tax bill "
+    "under the thing being taxed, which inflates housing in particular."
 )
 
 
@@ -63,7 +66,26 @@ def sample_description(root: Path) -> str:
     return "; ".join(parts)
 
 
-def build_figure(table: pd.DataFrame, out_path: Path, *, sample: str = "") -> Path:
+def unreliable_topics(root: Path, table: pd.DataFrame) -> set[tuple[int, str]]:
+    """(topic, party) pairs an independent labelling contradicts.
+
+    Bill topics are re-derived from Open States `subject` tags, which are assigned by
+    legislative staff and owe nothing to this project's classifier. A row is flagged when the
+    two labellings put the filed share on *opposite* sides of the stated share -- that is, when
+    they disagree about the direction of the gap, which is the only thing the figure claims.
+    """
+    replication = root / "data/processed/bill_emphasis_by_tag.csv"
+    if not replication.exists():
+        return set()
+    tags = pd.read_csv(replication)[["topic", "party", "tag_share"]]
+    merged = table.merge(tags, on=["topic", "party"], how="inner")
+    disagrees = ((merged["revealed_share"] - merged["stated_share"])
+                 * (merged["tag_share"] - merged["stated_share"])) <= 0
+    return {(int(row.topic), row.party) for row in merged[disagrees].itertuples()}
+
+
+def build_figure(table: pd.DataFrame, out_path: Path, *, sample: str = "",
+                 flagged: set[tuple[int, str]] | None = None) -> Path:
     fig, axes = charts.new_figure(figsize=(13, 9))
     fig.clf()
     axes = fig.subplots(1, 2, sharex=True)
@@ -85,12 +107,20 @@ def build_figure(table: pd.DataFrame, out_path: Path, *, sample: str = "") -> Pa
         stated = (subset["stated_share"] * 100).tolist()
         revealed = (subset["revealed_share"] * 100).tolist()
 
+        codes = subset["topic"].fillna(-1).astype(int).tolist()
+        flags = [(code, party) in (flagged or set()) for code in codes]
+        # The dagger goes on the shared label, so it has to mean "flagged for either party" --
+        # marking only this panel's flags would leave the other panel's hollow rows unexplained.
+        labels = [f"{label} †" if any((code, side) in (flagged or set()) for side in ("D", "R"))
+                  else label
+                  for label, code in zip(labels, codes, strict=True)]
+
         color = theme.PARTY_COLORS[party]
         charts.dumbbell(
             ax, labels, stated, revealed,
             left_color=color, right_color=theme.shade(color, 0.55),
             left_label="Said (platform planks)", right_label="Filed (bills)",
-            markersize=7.0,
+            markersize=7.0, unreliable=flags,
         )
         ax.invert_yaxis()
         ax.set_title(theme.PARTY_LABELS[party], fontweight="bold", fontsize=14, pad=12)
@@ -105,11 +135,14 @@ def build_figure(table: pd.DataFrame, out_path: Path, *, sample: str = "") -> Pa
                  fontweight="bold", fontsize=18, y=0.985)
     fig.text(0.5, 0.945,
              "Filled = share of platform planks; darker = share of bills sponsored. "
-             "The gap is the distance between agenda and action.",
+             "The gap is the distance between agenda and action. "
+             "Hollow \u2020 = contradicted by an independent labelling.",
              ha="center", va="top", fontsize=11, color=theme.MUTED)
 
     lines = theme.source_note(fig, SOURCE_NOTE.format(sample=sample))
-    fig.tight_layout(rect=(0, min(0.16, 0.03 + 0.022 * lines), 1, 0.935))
+    # The note runs to a dozen lines once the replication caveat is included; capping the
+    # reserved space too low silently overlaps it with the x-axis label.
+    fig.tight_layout(rect=(0, min(0.32, 0.03 + 0.022 * lines), 1, 0.935))
     out_path = Path(out_path)
     out_path.parent.mkdir(parents=True, exist_ok=True)
     fig.savefig(out_path, dpi=200, bbox_inches="tight")
@@ -128,8 +161,9 @@ def main(argv: list[str] | None = None) -> int:
             f"{table_path} not found - run 'python -m state_politics.analysis.revealed' first"
         )
 
-    out = build_figure(pd.read_csv(table_path), Path(args.out),
-                       sample=sample_description(ROOT))
+    table = pd.read_csv(table_path)
+    out = build_figure(table, Path(args.out), sample=sample_description(ROOT),
+                       flagged=unreliable_topics(ROOT, table))
     print(f"wrote {out}")
     return 0
 

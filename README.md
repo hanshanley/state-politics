@@ -90,6 +90,7 @@ Greenfield. Work is organized in phases:
 | 5 | Define a shared issue taxonomy for both streams | ✅ done |
 | 6 | Compute emphasis scores and stated-vs-revealed divergence | ✅ done |
 | 7 | Outputs, per-state profiles, reproducible build | ✅ done |
+| 8 | Validate the bill classifier against statehouse subject tags | ✅ done |
 
 Full roadmap, including the source-verification work behind it, is in [`docs/PLAN.md`](docs/PLAN.md).
 
@@ -251,16 +252,29 @@ uv run python scripts/plot_stated_vs_revealed.py
 ![What state parties say, and what they actually file](outputs/stated_vs_revealed.png)
 
 **Both parties talk far more about rights and identity than they legislate, and legislate far
-more about housing, crime and transportation than they talk about.**
+more about crime, transportation and education than they talk about.**
 
-| Topic | D said → filed | R said → filed |
-|---|---|---|
-| Civil rights and liberties | 10.7% → **3.0%** | 12.1% → **2.8%** |
-| Immigration | 4.9% → **0.9%** | 6.0% → **0.9%** |
-| Culture, family, social issues | 3.0% → **1.8%** | 5.3% → **1.5%** |
-| Law, crime and justice | 8.9% → **13.8%** | 10.0% → **15.5%** |
-| Housing and community development | 3.5% → **9.4%** | 1.7% → **6.0%** |
-| Transportation | 2.3% → **4.7%** | 1.4% → **5.2%** |
+Every row below was re-derived a second time using topic labels written by legislative staff
+instead of by this project's model (see [the replication](#checking-the-bill-classifier-against-statehouse-subject-tags)).
+The third column is that independent check.
+
+| Topic | D said → filed | R said → filed | Replicates? |
+|---|---|---|---|
+| Civil rights and liberties | 10.7% → **3.0%** | 12.1% → **2.8%** | ✅ gap is *larger* (1.5% / 0.7%) |
+| Immigration | 4.9% → **0.9%** | 6.0% → **0.9%** | ✅ gap is *larger* (0.3% / 0.2%) |
+| Culture, family, social issues | 3.0% → **1.8%** | 5.3% → **1.5%** | ✅ (2.6% / 2.4%) |
+| Law, crime and justice | 8.9% → **13.8%** | 10.0% → **15.5%** | ✅ (13.8% / 13.5%) |
+| Transportation | 2.3% → **4.7%** | 1.4% → **5.2%** | ✅ gap is *larger* (7.0% / 9.7%) |
+| Education | 9.3% → **10.3%** | 9.3% → **12.2%** | ✅ gap is *larger* (14.3% / 19.5%) |
+| ~~Housing and community development~~ | ~~3.5% → 9.4%~~ | ~~1.7% → 6.0%~~ | ❌ **does not replicate** (3.0% / 0.9%) |
+
+**The housing row does not survive the check and should not be believed.** Tag-labelled bills
+put housing at 3.0% for Democrats and 0.9% for Republicans — against stated shares of 3.5% and
+1.7%, which erases the gap and reverses its sign for Republicans. The cause is specific and
+documented below: the classifier reads a property-tax bill by the thing being taxed rather than
+by the tax, so "authorize a property tax freeze for owner-occupied homes" lands in housing.
+It is left in the table struck through rather than quietly deleted, because a corrected claim
+is more useful than a tidy one.
 
 Both sides are restricted to the same **2018-present** window. An earlier version compared a
 1990–2026 platform average against 2018–2026 bills; since 69% of the plank corpus predates 2018,
@@ -274,16 +288,98 @@ business of state government. Immigration is the sharpest case — Republican pl
 6.0% of their planks and Republican legislators 0.9% of their bills.
 
 **Read these numbers with their limits.** Bills are classified from *titles*, which are short
-and often procedural — a noisier signal than a platform plank, and the 62%/78% validation
-figures were measured on planks, not titles. 18.9% of bills cannot be resolved to a
-party and are excluded rather than guessed at. And filing a bill is not passing one: this
-measures **agenda, not achievement**.
+and often procedural — a noisier signal than a platform plank. Title classification agrees with
+statehouse subject tags 63.2% of the time, close to the 62% the same model scores on planks,
+but that agreement is very uneven by topic and the replication above is the reason one row had
+to be withdrawn. 18.9% of bills cannot be resolved to a party and are excluded rather than
+guessed at. And filing a bill is not passing one: this measures **agenda, not achievement**.
 
 Democratic state parties devote more of their platforms to labour, the environment, housing,
 health and social welfare; Republican state parties to government operations, public lands,
 taxation, culture and family questions, and law and crime. Planks below a similarity threshold
 are recorded as **unclassified** and excluded from the denominator rather than pushed into
 whichever topic was least far away — 2,490 of the 36,886 planks fall there.
+
+---
+
+## Checking the bill classifier against statehouse subject tags
+
+The plank classifier is scored against a hand-labelled gold set — but every item in that set is
+a platform plank. Bills are classified from titles, which are shorter, more procedural and
+written for a different purpose, so the plank accuracy figure does not transfer to them. That
+left the *revealed* half of the headline resting on a classifier nobody had measured.
+
+Roughly half of all bills carry `subject` tags applied by the legislature's own staff. Those
+tags are a genuinely independent signal — a different labeller, a different process, recorded
+before this project existed. `conf/subject_topic_map.yml` maps the unambiguous ones onto the
+project's topic scheme, and `analysis/validate_bills.py` compares the two.
+
+```bash
+uv run python -m state_politics.analysis.validate_bills
+```
+
+The mapping covers **181 tags** out of 88,716 distinct normalised tag strings. That sounds
+tiny and is the point: only tags whose policy area is determined by the tag name alone are
+included. Procedural tags (`memorials`, `subject index`, `rules`), money tags that say nothing
+about the policy being funded (`appropriations`, `bonds`, `fees`), unit-of-government tags
+(`counties`, `municipalities`), and genuinely two-topic tags are all excluded — the last group
+including tags that name a regulated *commodity* rather than a policy area, since
+`alcoholic beverages` covers both liquor licensing and prohibition. Bills whose tags map to two
+different topics are dropped rather than scored, because there is no single right answer. The
+mapping is written from tag names and the CAP codebook, never from classifier output, and does
+not reuse the keyword seeds in `conf/topics.yml` — doing so would test the seeds against
+themselves.
+
+**Overall agreement: 63.2% on 46,659 bills across 35 states** — close to the 62% the same model
+scores on hand-labelled planks. But the aggregate hides a lot, and the useful measure is
+**precision** rather than recall, because every headline number is a *share of bills assigned to
+a topic*:
+
+| Topic | Recall | Precision | Chiefly contaminated by |
+|---|---|---|---|
+| Education | 79.0% | **88.1%** | Macroeconomics |
+| Transportation | 61.9% | **79.3%** | Education |
+| Health | 76.4% | **74.2%** | Social welfare |
+| Law, crime and justice | 70.7% | **71.8%** | Government operations |
+| Macroeconomics | **18.1%** | 71.9% | Government operations |
+| Housing and community development | 81.6% | **34.8%** | **Macroeconomics** |
+| Public lands and water | 68.8% | **31.2%** | Environment |
+| Civil rights and liberties | 46.5% | **16.4%** | Law, crime and justice |
+
+One failure mode explains almost all of the damage: **the classifier reads a tax bill by the
+thing being taxed rather than by the tax.** Macroeconomics recall is 18.1% — the model finds
+fewer than one tax bill in five — and those bills do not vanish, they land in housing (property
+tax), public lands (land tax) and social welfare (income-tax credits). That simultaneously
+deflates Macroeconomics and inflates whatever the tax was levied on.
+
+### The replication
+
+Because the tags are independent of the model, they can be used to re-derive the headline
+outright, replacing the classifier entirely. `bill_emphasis_by_tag.csv` does exactly that over
+**111,521 tag-labelled, party-attributed bills**. A row "holds" when both labellings put the
+filed share on the same side of the stated share — which is the claim the headline actually
+makes.
+
+**33 of 40 topic-party rows hold.** The seven that do not are:
+
+| Topic | Party | Said | Model | Tags |
+|---|---|---|---|---|
+| Housing and community development | D | 3.5% | 9.4% | 3.0% |
+| Housing and community development | R | 1.7% | 6.0% | 0.9% |
+| Public lands and water | D | 7.9% | 8.1% | 2.1% |
+| Public lands and water | R | 10.6% | 10.7% | 2.8% |
+| Macroeconomics | R | 2.7% | 2.2% | 9.9% |
+| Government operations | D | 6.3% | 6.1% | 8.3% |
+| Science, technology and communications | D | 1.7% | 2.2% | 1.6% |
+
+Every one is the tax failure or its mirror image, except the last two, where the model and the
+stated share differ by a fraction of a point and the "sign" of a gap that small is noise.
+
+**This is a subsample replication, not a second census.** Only 35 states publish tags, only
+28.2% of tagged bills map unambiguously, and the tags are themselves imperfect — a clerk's tag
+can be coarse or wrong. Levels are therefore not comparable to the full-corpus figures; the
+direction and rough size of each gap is. Neither labelling is ground truth, which is precisely
+why agreement between two independent ones is worth more than either alone.
 
 ---
 
@@ -420,14 +516,19 @@ locally. No API keys are required by this project, and none should ever be added
 state-politics/
 ├── CITATIONS.md                 # bibliographic citations, collector-first
 ├── conf/
-│   └── party_registry.yml       # 100 state party orgs: state, party, domain, source_url, verified_on
+│   ├── party_registry.yml       # 100 state party orgs: state, party, domain, source_url, verified_on
+│   ├── topics.yml               # CAP-anchored issue taxonomy shared by both streams
+│   ├── platform_gaps.yml        # hand-checked reason each of the 24 gaps has no platform
+│   └── subject_topic_map.yml    # Open States subject tags -> topic codes, for validation
+├── data/gold/
+│   └── plank_topics_gold.csv    # 50 hand-labelled planks; authored input, not an artifact
 ├── src/state_politics/
 │   ├── provenance.py            # url, http_status, sha256, retrieved_at, source_org
 │   ├── compute.py               # local device selection + hosted-LLM guard
 │   ├── plotting/                # shared portfolio chart theme
 │   ├── platforms/               # stream A: manifesto collection + extraction
 │   ├── bills/                   # stream B: Open States ingest + sponsor party join
-│   └── analysis/                # topics, emphasis, diffusion
+│   └── analysis/                # topics, emphasis, divergence, diffusion, validation
 ├── data/                        # gitignored; fully reproducible from code
 └── tests/
 ```

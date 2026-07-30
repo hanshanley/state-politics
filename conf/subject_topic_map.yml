@@ -1,0 +1,268 @@
+# Open States `subject` tags mapped onto the project's CAP-anchored topic scheme.
+#
+# WHY THIS EXISTS
+# ---------------
+# Bills are classified from their *titles*, which are short and often procedural. The plank
+# classifier was validated against a hand-labelled gold set, but that set is made of platform
+# planks, so it says nothing about how well the same model reads a bill title. This file
+# supplies an independent check that does not depend on the author's judgement at all: roughly
+# half of all bills carry `subject` tags assigned by the legislature's own staff. Comparing the
+# model's topic against a tag assigned by a statehouse clerk tests two independent signals
+# against each other.
+#
+# WHAT IS AND IS NOT IN HERE
+# --------------------------
+# The tag vocabulary is state-specific and enormous -- 88,716 distinct normalised tags, with the
+# top 600 covering barely half of all tag instances. It is not mappable in full and no attempt
+# is made to. Only tags whose policy area is unambiguous on their own are listed.
+#
+# Deliberately excluded, because mapping them would invent a judgement the tag does not support:
+#   * procedural and housekeeping tags - "subject index", "rules", "reports", "resolutions",
+#     "memorials", "recognition", "studies", "boards", "commissions", "sessions"
+#   * money tags that say nothing about the policy being funded - "appropriations",
+#     "appropriation ($)", "bonds", "fees", "budgeting", "ways and means", "finance"
+#   * unit-of-government tags that cut across every topic - "counties", "municipalities",
+#     "cities and towns-specific", "local government", "state agencies", "public"
+#   * genuinely two-topic tags - "insurance" (health cover vs. an insurance market),
+#     "children"/"minors" (welfare vs. family law), "safety", "property", "death"
+#   * tags naming a regulated *commodity* or a legal *instrument* rather than a policy area,
+#     because bills filed under them span topics: "alcoholic beverages" covers both liquor
+#     licensing (commerce) and prohibition (culture); "food" covers farm policy, food safety
+#     and food stamps; "licensing" covers every regulated profession; "retirement"/"pensions"
+#     covers public-employee schemes and private savings alike
+#
+# Each entry is one normalised tag (lowercased, whitespace collapsed, any trailing state
+# reference code such as "(I0705)" stripped) mapped to a CAP major-topic code from
+# `conf/topics.yml`. A tag maps to a topic only where the tag name alone determines it.
+#
+# This mapping is written from the tag names and the CAP codebook. It is NOT derived from the
+# classifier's output, and it does not reuse the keyword seeds in `conf/topics.yml` -- if it
+# did, agreement would measure the seeds against themselves rather than testing anything.
+
+version: 1
+source: >-
+  Tag strings from the Open States public PostgreSQL dump `subject` field; topic codes from
+  conf/topics.yml (Comparative Agendas Project major topics). Mapping written for this project
+  from the tag names alone.
+
+tags:
+  # 1 Macroeconomics
+  taxation: 1
+  taxes: 1
+  income tax: 1
+  sales tax: 1
+  property tax: 1
+  tax credits: 1
+  taxation and revenue: 1
+  revenue and taxation: 1
+
+  # 2 Civil rights and liberties
+  civil rights: 2
+  civil liberties: 2
+  discrimination: 2
+  human rights: 2
+  voting rights: 2
+
+  # 3 Health
+  health: 3
+  public health: 3
+  health care: 3
+  health and health department: 3
+  mental health: 3
+  medicaid: 3
+  medicare: 3
+  hospitals: 3
+  physicians: 3
+  nurses: 3
+  prescription drugs: 3
+  substance abuse: 3
+  health insurance: 3
+  health and human services: 3
+  immunizations: 3
+  disease: 3
+  nursing homes: 3
+
+  # 4 Agriculture
+  agriculture: 4
+  farming: 4
+  livestock: 4
+  crops: 4
+  agriculture and agriculture department: 4
+
+  # 5 Labor and employment
+  labor: 5
+  employment: 5
+  unemployment: 5
+  wages: 5
+  workers compensation: 5
+  labor and employment: 5
+  workforce development: 5
+  collective bargaining: 5
+  minimum wage: 5
+  unemployment insurance: 5
+
+  # 6 Education
+  education: 6
+  schools: 6
+  teachers: 6
+  students: 6
+  school districts: 6
+  higher education: 6
+  education and education department: 6
+  academic achievement: 6
+  universities: 6
+  community colleges: 6
+  charter schools: 6
+  school boards: 6
+  scholarships: 6
+  curriculum: 6
+  elementary and secondary education: 6
+
+  # 7 Environment
+  environment: 7
+  pollution: 7
+  recycling: 7
+  waste: 7
+  air quality: 7
+  environmental protection: 7
+  climate change: 7
+  solid waste: 7
+  hazardous waste: 7
+
+  # 8 Energy
+  energy: 8
+  electricity: 8
+  renewable energy: 8
+  solar energy: 8
+  natural gas: 8
+  nuclear energy: 8
+  oil and gas: 8
+
+  # 9 Immigration
+  immigration: 9
+  immigrants: 9
+  refugees: 9
+
+  # 10 Transportation
+  transportation: 10
+  motor vehicles: 10
+  highways: 10
+  roads: 10
+  transportation and transportation department: 10
+  aviation: 10
+  railroads: 10
+  traffic: 10
+  drivers licenses: 10
+  bridges: 10
+  public transit: 10
+  motor carriers: 10
+
+  # 12 Law, crime and justice
+  crimes: 12
+  criminal procedure: 12
+  courts: 12
+  law enforcement: 12
+  corrections: 12
+  criminal justice: 12
+  police: 12
+  prisons: 12
+  judiciary: 12
+  sentencing: 12
+  crime: 12
+  criminal law: 12
+  juvenile justice: 12
+  domestic violence: 12
+  probation and parole: 12
+  attorney general: 12
+  district attorneys: 12
+  sheriffs: 12
+
+  # 13 Social welfare
+  social services: 13
+  welfare: 13
+  human services and human services department: 13
+  public assistance: 13
+  food stamps: 13
+  child care: 13
+  poverty: 13
+  social welfare: 13
+  homelessness: 13
+  child support: 13
+
+  # 14 Housing and community development
+  housing: 14
+  community development: 14
+  landlord and tenant: 14
+  affordable housing: 14
+  urban development: 14
+
+  # 15 Business, commerce and consumers
+  commerce: 15
+  corporations: 15
+  consumer protection: 15
+  business: 15
+  banking: 15
+  small business: 15
+  banks and banking: 15
+  business and commerce: 15
+
+  # 16 Defense and veterans
+  veterans: 16
+  military: 16
+  national guard: 16
+  armed forces: 16
+  military affairs: 16
+  veterans affairs: 16
+
+  # 17 Science, technology and communications
+  internet: 17
+  telecommunications: 17
+  technology: 17
+  broadband: 17
+  information technology: 17
+  data privacy: 17
+  science and technology: 17
+
+  # 19 International affairs
+  foreign relations: 19
+  international relations: 19
+
+  # 20 Government operations
+  elections: 20
+  state government: 20
+  state employees: 20
+  secretary of state: 20
+  public records: 20
+  ethics: 20
+  open meetings: 20
+  campaign finance: 20
+  government operations: 20
+  civil service: 20
+  voting: 20
+  redistricting: 20
+  lobbying: 20
+  public officials: 20
+
+  # 21 Public lands and water
+  water: 21
+  parks: 21
+  wildlife: 21
+  natural resources: 21
+  public lands: 21
+  fish and wildlife: 21
+  hunting and fishing: 21
+  forestry: 21
+  water resources: 21
+  land use: 21
+  mining: 21
+  conservation: 21
+  state parks: 21
+
+  # 23 Culture, family and social issues
+  abortion: 23
+  marriage: 23
+  family law: 23
+  adoption: 23
+  religion: 23
+  arts: 23
+  domestic relations: 23

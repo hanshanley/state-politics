@@ -146,9 +146,10 @@ def test_stated_vs_revealed_panels_share_one_row_order():
     topics = ["Health", "Housing", "Immigration", "Labor"]
     rows = []
     for party, gaps in (("D", [0.03, -0.04, 0.01, -0.02]), ("R", [-0.04, 0.03, -0.02, 0.01])):
-        for topic, gap in zip(topics, gaps, strict=True):
-            rows.append({"topic_name": topic, "party": party, "stated_share": 0.1,
-                         "revealed_share": 0.1 - gap, "stated_minus_revealed": gap})
+        for code, (topic, gap) in enumerate(zip(topics, gaps, strict=True), start=1):
+            rows.append({"topic": code, "topic_name": topic, "party": party,
+                         "stated_share": 0.1, "revealed_share": 0.1 - gap,
+                         "stated_minus_revealed": gap})
     table = pd.DataFrame(rows)
 
     out = script.build_figure(table, root / "outputs" / "_test_stated_vs_revealed.png")
@@ -170,3 +171,48 @@ def test_stated_vs_revealed_panels_share_one_row_order():
     assert plotted[0] == plotted[1], (
         f"panels plot different topics per row: {plotted[0]} vs {plotted[1]}"
     )
+
+
+def test_stated_vs_revealed_flags_rows_an_independent_labelling_contradicts():
+    """A withdrawn claim must be visibly withdrawn in the figure, not silently dropped.
+
+    The housing gap survived the model but not the subject-tag replication. Removing the row
+    would leave the figure disagreeing with the prose with no hint why, so it is drawn hollow
+    and daggered instead.
+    """
+    import sys
+    from pathlib import Path
+
+    import pandas as pd
+
+    root = Path(__file__).resolve().parents[1]
+    sys.path.insert(0, str(root / "scripts"))
+    import plot_stated_vs_revealed as script
+
+    # Housing: model says filed > said, tags say filed < said -> the gap does not replicate.
+    table = pd.DataFrame([
+        {"topic": 14, "topic_name": "Housing", "party": "D", "stated_share": 0.035,
+         "revealed_share": 0.094, "stated_minus_revealed": -0.059},
+        {"topic": 12, "topic_name": "Law", "party": "D", "stated_share": 0.089,
+         "revealed_share": 0.138, "stated_minus_revealed": -0.049},
+    ])
+    tags = pd.DataFrame([
+        {"topic": 14, "party": "D", "tag_share": 0.030},
+        {"topic": 12, "party": "D", "tag_share": 0.138},
+    ])
+
+    processed = root / "data" / "processed"
+    processed.mkdir(parents=True, exist_ok=True)
+    path = processed / "bill_emphasis_by_tag.csv"
+    preserved = path.read_bytes() if path.exists() else None
+    try:
+        tags.to_csv(path, index=False)
+        flagged = script.unreliable_topics(root, table)
+    finally:
+        if preserved is not None:
+            path.write_bytes(preserved)
+        else:
+            path.unlink(missing_ok=True)
+
+    assert (14, "D") in flagged, "housing gap does not replicate and must be flagged"
+    assert (12, "D") not in flagged, "law-and-crime gap replicates and must not be flagged"

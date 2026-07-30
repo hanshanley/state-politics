@@ -69,6 +69,7 @@ analysis: historical
 	$(PY) -m state_politics.analysis.validate
 	$(PY) -m state_politics.analysis.emphasis
 	$(PY) -m state_politics.analysis.revealed
+	$(PY) -m state_politics.analysis.validate_bills
 	$(PY) -m state_politics.analysis.profiles
 	$(PY) -m state_politics.analysis.diffusion
 

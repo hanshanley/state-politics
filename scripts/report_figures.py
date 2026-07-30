@@ -142,6 +142,32 @@ def main() -> int:
             print(f"  ceremonial           {int(reuse['ceremonial'].sum())} "
                   f"({int((~reuse['ceremonial']).sum())} substantive)")
 
+    tags = _load("bill_tag_agreement.csv")
+    if tags is not None and not tags.empty:
+        total, agreed = int(tags["n"].sum()), int(tags["agreed"].sum())
+        print("\nBill classifier vs statehouse subject tags")
+        print(f"  scored               {total:,}")
+        print(f"  overall agreement    {100 * agreed / total:.1f}%")
+        worst = tags.nsmallest(3, "precision")
+        for _, row in worst.iterrows():
+            print(f"  lowest precision     {row['topic_name']:<38} "
+                  f"{row['precision'] * 100:.1f}%")
+
+    replication = _load("bill_emphasis_by_tag.csv")
+    divergence = _load("stated_vs_revealed.csv")
+    if replication is not None and divergence is not None:
+        merged = divergence.merge(replication[["topic", "party", "tag_share"]],
+                                  on=["topic", "party"], how="inner")
+        holds = ((merged["revealed_share"] - merged["stated_share"])
+                 * (merged["tag_share"] - merged["stated_share"])) > 0
+        print(f"  headline rows replicated {int(holds.sum())}/{len(merged)} "
+              "using tag labels instead of the model")
+        for _, row in merged[~holds].iterrows():
+            print(f"    does not hold      {row['topic_name']} ({row['party']}): "
+                  f"said {row['stated_share'] * 100:.1f}%, "
+                  f"model {row['revealed_share'] * 100:.1f}%, "
+                  f"tags {row['tag_share'] * 100:.1f}%")
+
     registry_path = ROOT / "conf" / "party_registry.yml"
     if registry_path.exists():
         orgs = yaml.safe_load(registry_path.read_text(encoding="utf-8"))["organizations"]
