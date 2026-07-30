@@ -168,18 +168,42 @@ def apply() -> None:
 
 
 def source_note(fig, text: str, x: float = 0.01, y: float = 0.01, ha: str = "left",
-                width: int = 118) -> int:
+                width: int = 118):
     """Add the standard italic, muted source note, wrapped to ``width`` characters.
 
     Figures are saved with ``bbox_inches="tight"``, so a single long note sets the saved
     width and leaves a band of empty space to the right of the axes. Wrapping keeps the
-    note inside the plot's own width instead. Returns the line count so callers can
-    reserve the right amount of bottom margin.
+    note inside the plot's own width instead.
+
+    Returns the ``Text`` artist, which :func:`layout_with_note` measures to reserve exactly
+    the space the note occupies.
     """
     lines = textwrap.wrap(text, width=width) or [""]
-    fig.text(x, y, "\n".join(lines), ha=ha, va="bottom", fontsize=8, color=MUTED,
-             style="italic", linespacing=1.4)
-    return len(lines)
+    return fig.text(x, y, "\n".join(lines), ha=ha, va="bottom", fontsize=8, color=MUTED,
+                    style="italic", linespacing=1.4)
+
+
+def layout_with_note(fig, note=None, *, top: float = 1.0, pad: float = 0.018,
+                     max_fraction: float = 0.45) -> float:
+    """``tight_layout`` reserving the height the source note *actually* renders at.
+
+    Every caller used to guess this from the note's line count with a hand-tuned constant.
+    The guess is wrong whenever the note, the figure height or the font changes, and the
+    failure is silent and ugly: the note grew past its allowance and the axis label was drawn
+    straight through it. Measuring the rendered text removes the guess.
+
+    Returns the reserved bottom fraction.
+    """
+    if note is None:
+        fig.tight_layout(rect=(0, 0, 1, top))
+        return 0.0
+    # tight_layout only moves the axes; the note is figure-anchored, so its extent is stable
+    # and can be measured before the layout pass.
+    fig.canvas.draw()
+    extent = note.get_window_extent(fig.canvas.get_renderer())
+    bottom = min(max_fraction, extent.height / fig.bbox.height + pad)
+    fig.tight_layout(rect=(0, bottom, 1, top))
+    return bottom
 
 
 def end_label(ax, x, y, text: str, color: str, *, fontsize: float = 10.5,

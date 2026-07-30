@@ -37,10 +37,17 @@ def style_axes(ax, title: str, xlabel: str, ylabel: str, subtitle: str | None = 
     Renders a two-tier header: a bold title with a muted sub-title beneath it, rather than
     a single newline-joined string.
     """
-    ax.set_title(title, fontweight="bold", pad=28 if subtitle else 14)
+    # Offsets are in *points*, not axes fractions: a fraction that clears the axes top on a
+    # short chart is a large gap on a 50-row one, and a chart that also labels its top ticks
+    # (a tall chart repeating its column headers) drew the subtitle straight through them.
+    top_labels = any(tick.label2.get_visible() for tick in ax.xaxis.get_major_ticks())
+    header_pad = 17.0 if top_labels else 0.0
+    ax.set_title(title, fontweight="bold",
+                 pad=(28 if subtitle else 14) + header_pad)
     if subtitle:
-        ax.text(0.5, 1.015, subtitle, transform=ax.transAxes, ha="center", va="bottom",
-                fontsize=11, color=theme.MUTED)
+        ax.annotate(subtitle, xy=(0.5, 1.0), xycoords="axes fraction",
+                    xytext=(0, 2 + header_pad), textcoords="offset points",
+                    ha="center", va="bottom", fontsize=11, color=theme.MUTED)
     ax.set_xlabel(xlabel, labelpad=2)
     ax.set_ylabel(ylabel, labelpad=2)
     ax.grid(axis="y", linestyle="-", linewidth=0.5)
@@ -120,18 +127,8 @@ def finish(fig, ax, out_path: Path | str, source: str | None = None,
     """Add legend + source note, tight-layout, and save. Returns the output path."""
     if legend and ax.get_legend_handles_labels()[0]:
         ax.legend(loc="best", frameon=False, labelcolor=theme.TEXT)
-    note_lines = theme.source_note(fig, source) if source else 0
-    # Reserve bottom margin for the italic source note, growing with its line count so a
-    # wrapped two-line note is not overlapped by the x-axis label. The reserve is computed
-    # in *inches* and then converted, because a fixed figure fraction that looks right on
-    # the standard 11x6 chart leaves a large empty band under a tall 50-state panel.
-    # The inch values are calibrated to reproduce the previous fractions exactly at 6in.
-    if note_lines:
-        reserve_inches = min(1.08, 0.18 + 0.21 * (note_lines - 1))
-        bottom = reserve_inches / fig.get_figheight()
-    else:
-        bottom = 0.0
-    fig.tight_layout(rect=(0, bottom, 1, 1))
+    note = theme.source_note(fig, source) if source else None
+    theme.layout_with_note(fig, note)
     out_path = Path(out_path)
     out_path.parent.mkdir(parents=True, exist_ok=True)
     fig.savefig(out_path, dpi=dpi, bbox_inches="tight")

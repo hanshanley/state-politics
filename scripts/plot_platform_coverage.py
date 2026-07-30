@@ -72,14 +72,16 @@ def build_figure(coverage: pd.DataFrame, out_path: Path) -> Path:
 
     ax.set_yticks(list(positions))
     ax.set_yticklabels(labels, fontsize=9)
-    ax.set_ylim(-1, len(labels) + 1)
+    # Two blank rows of headroom, so the direct labels below sit clear of the subtitle
+    # drawn just above the axes rather than crowding against it.
+    ax.set_ylim(-2.3, len(labels) + 1)
     ax.invert_yaxis()
     ax.grid(axis="x", linestyle="-", linewidth=0.5)
     ax.grid(axis="y", visible=False)
     ax.set_axisbelow(True)
 
     charts.marker_line(ax, 2017)
-    header_y = -0.9  # just above the first row, since the y-axis is inverted
+    header_y = -1.35  # inside the headroom, clear of both the subtitle and row one
     ax.text(2015, header_y, "corpus ends 2017  ", ha="right", va="center", fontsize=9,
             style="italic", color=theme.MUTED, path_effects=theme.white_stroke())
 

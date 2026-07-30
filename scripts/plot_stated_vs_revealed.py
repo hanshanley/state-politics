@@ -129,7 +129,10 @@ def build_figure(table: pd.DataFrame, out_path: Path, *, sample: str = "",
         ax.set_axisbelow(True)
 
     axes[1].tick_params(labelleft=False)
-    axes[0].legend(loc="lower right", frameon=False, labelcolor=theme.TEXT, fontsize=10)
+    # Centre-right of the left panel is the only reliably empty region: the rows sitting there
+    # (environment, social welfare, agriculture, energy) are all low-single-digit shares, while
+    # the corners are occupied by the large civil-rights and law-and-crime gaps.
+    axes[0].legend(loc="center right", frameon=False, labelcolor=theme.TEXT, fontsize=10)
 
     fig.suptitle("What state parties say, and what they actually file",
                  fontweight="bold", fontsize=18, y=0.985)
@@ -139,10 +142,8 @@ def build_figure(table: pd.DataFrame, out_path: Path, *, sample: str = "",
              "Hollow \u2020 = contradicted by an independent labelling.",
              ha="center", va="top", fontsize=11, color=theme.MUTED)
 
-    lines = theme.source_note(fig, SOURCE_NOTE.format(sample=sample))
-    # The note runs to a dozen lines once the replication caveat is included; capping the
-    # reserved space too low silently overlaps it with the x-axis label.
-    fig.tight_layout(rect=(0, min(0.32, 0.03 + 0.022 * lines), 1, 0.935))
+    note = theme.source_note(fig, SOURCE_NOTE.format(sample=sample))
+    theme.layout_with_note(fig, note, top=0.935)
     out_path = Path(out_path)
     out_path.parent.mkdir(parents=True, exist_ok=True)
     fig.savefig(out_path, dpi=200, bbox_inches="tight")

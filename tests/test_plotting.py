@@ -67,11 +67,68 @@ def test_stream_style_covers_both_evidence_streams():
     assert set(theme.STREAM_LABELS) == {"platform", "bills"}
 
 
-def test_source_note_returns_wrapped_line_count():
+def test_source_note_wraps_to_the_requested_width():
     fig = plt.figure()
-    lines = theme.source_note(fig, "word " * 100, width=40)
-    assert lines > 1
+    note = theme.source_note(fig, "word " * 100, width=40)
+    rendered = note.get_text().split("\n")
+    assert len(rendered) > 1
+    assert max(len(line) for line in rendered) <= 40
     plt.close(fig)
+
+
+def test_layout_reserves_enough_room_for_a_long_source_note():
+    """The axes must not be laid out on top of the note.
+
+    Callers used to guess the reserve from the note's line count with a hand-tuned constant.
+    When the note outgrew the guess the axis label was drawn straight through it, which is
+    invisible to every test that only checks the file was written.
+    """
+    fig, ax = charts.new_figure(figsize=(11, 6))
+    charts.line(ax, [2018, 2020], [0.1, 0.2], color=theme.PARTY_COLORS["D"])
+    charts.style_axes(ax, "Title", "A deliberately long x-axis label", "Share")
+    note = theme.source_note(fig, "source detail " * 60)
+    theme.layout_with_note(fig, note)
+
+    fig.canvas.draw()
+    renderer = fig.canvas.get_renderer()
+    note_top = note.get_window_extent(renderer).y1
+    label_bottom = ax.xaxis.get_label().get_window_extent(renderer).y0
+    plt.close(fig)
+
+    assert label_bottom >= note_top, "x-axis label overlaps the source note"
+
+
+def test_layout_reserve_grows_with_the_length_of_the_note():
+    """A one-line note must not reserve the same band as a fifteen-line one."""
+    reserves = []
+    for repeats in (1, 60):
+        fig, ax = charts.new_figure(figsize=(11, 6))
+        charts.line(ax, [2018, 2020], [0.1, 0.2], color=theme.PARTY_COLORS["D"])
+        note = theme.source_note(fig, "source detail " * repeats)
+        reserves.append(theme.layout_with_note(fig, note))
+        plt.close(fig)
+
+    assert reserves[1] > reserves[0]
+
+
+def test_subtitle_clears_top_tick_labels():
+    """A chart that repeats its column headers above the axes must not overprint them."""
+    fig, ax = charts.new_figure(figsize=(8, 10))
+    ax.set_xticks([-1, 1])
+    ax.set_xticklabels(["Democratic", "Republican"])
+    ax.tick_params(axis="x", labeltop=True, labelbottom=True)
+    charts.style_axes(ax, "Title", "", "", subtitle="A subtitle that must sit clear")
+
+    fig.canvas.draw()
+    renderer = fig.canvas.get_renderer()
+    subtitle = next(child for child in ax.texts
+                    if child.get_text() == "A subtitle that must sit clear")
+    subtitle_bottom = subtitle.get_window_extent(renderer).y0
+    header_top = max(tick.label2.get_window_extent(renderer).y1
+                     for tick in ax.xaxis.get_major_ticks() if tick.label2.get_visible())
+    plt.close(fig)
+
+    assert subtitle_bottom >= header_top, "subtitle overlaps the top tick labels"
 
 
 def test_finish_writes_a_png(tmp_path):
