@@ -33,6 +33,10 @@ from .taxonomy import DEFAULT_TOPICS_PATH, EmbeddingClassifier, load_topics
 
 __all__ = ["classify_bills", "divergence_table"]
 
+#: Bill titles handed to the classifier per pass. Bounds peak memory on a machine whose RAM is
+#: mostly spoken for; the classifier itself slices again internally.
+_BILL_SLICE = 100_000
+
 
 def classify_bills(bills, classifier: EmbeddingClassifier, *, batch_size: int = 512,
                    min_similarity: float = 0.20, min_title_chars: int = 20):
@@ -41,24 +45,32 @@ def classify_bills(bills, classifier: EmbeddingClassifier, *, batch_size: int = 
     Very short titles ("Relating to taxation.") carry too little signal to place, and are left
     unclassified rather than assigned on the strength of one word.
     """
-    frame = bills.copy()
-    titles = frame["title"].fillna("").astype(str).tolist()
-    usable = [index for index, title in enumerate(titles) if len(title) >= min_title_chars]
+    import numpy as np
 
-    topics = [None] * len(titles)
-    similarities = [0.0] * len(titles)
-    if usable:
+    # Written to keep peak memory low rather than to read prettily: this runs over ~880k bill
+    # titles, and the obvious version (copy the frame, materialise every title, keep a Python
+    # list of result tuples) was repeatedly OOM-killed. Nothing here holds more than one slice
+    # of embeddings plus two flat arrays.
+    frame = bills
+    titles = frame["title"].fillna("").astype(str).to_numpy()
+    long_enough = np.fromiter((len(t) >= min_title_chars for t in titles),
+                              dtype=bool, count=len(titles))
+    usable = np.flatnonzero(long_enough)
+
+    codes = np.full(len(titles), np.nan, dtype=float)
+    scores = np.zeros(len(titles), dtype=float)
+    for start in range(0, len(usable), _BILL_SLICE):
+        index = usable[start:start + _BILL_SLICE]
         predictions = classifier.predict_many(
-            [titles[index] for index in usable],
-            batch_size=batch_size, min_similarity=min_similarity,
+            [titles[i] for i in index], batch_size=batch_size, min_similarity=min_similarity,
         )
-        for index, (code, similarity, _) in zip(usable, predictions, strict=True):
-            topics[index] = code
-            similarities[index] = round(similarity, 4)
+        for position, (code, similarity, _) in zip(index, predictions, strict=True):
+            if code is not None:
+                codes[position] = code
+            scores[position] = similarity
+        del predictions
 
-    frame["topic"] = topics
-    frame["similarity"] = similarities
-    return frame
+    return frame.assign(topic=codes, similarity=np.round(scores, 4))
 
 
 def divergence_table(platform_emphasis, bill_emphasis):
@@ -108,10 +120,12 @@ def main(argv: list[str] | None = None) -> int:
     print(f"model {classifier.model_name} on device {classifier.device}")
 
     bills = pd.read_parquet(args.bills, columns=["state", "year", "title", "sponsor_party"])
+    total = len(bills)
     major = bills[bills["sponsor_party"].isin(["D", "R"])].rename(
         columns={"sponsor_party": "party"}
-    )
-    print(f"bills with a party attribution: {len(major):,} of {len(bills):,}")
+    ).reset_index(drop=True)
+    del bills  # the unattributed two-thirds are never used again
+    print(f"bills with a party attribution: {len(major):,} of {total:,}")
 
     classified = classify_bills(major, classifier)
     unclassified = int(classified["topic"].isna().sum())

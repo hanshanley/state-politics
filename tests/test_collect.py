@@ -7,6 +7,7 @@ status that says *why*, not simply omitted.
 
 from __future__ import annotations
 
+import json
 import re
 import time
 from pathlib import Path
@@ -16,10 +17,12 @@ from state_politics.platforms.collect import (
     DOC_TYPES,
     MIN_CHARS,
     CollectedDocument,
+    _load_candidates,
     classify_doc_type,
     collect_candidate,
     collect_for_org,
     confirm_platform,
+    dominant_state,
     extract_text,
     fold_for_name_match,
     gap_report,
@@ -28,7 +31,7 @@ from state_politics.platforms.collect import (
     strip_blocks,
     wayback_snapshot_url,
 )
-from state_politics.platforms.discover import Candidate
+from state_politics.platforms.discover import STRONG_SCORE, Candidate
 
 _GAP_CAUSES = {"no_platform_published", "broken_site", "client_rendered",
                "summary_only", "not_confirmed"}
@@ -491,3 +494,52 @@ def test_strip_blocks_does_not_blow_up_on_unclosed_tags():
 def test_strip_blocks_keeps_text_after_an_unclosed_tag():
     """An unclosed block must drop the tag, not the rest of the document."""
     assert "real content" in strip_blocks("<nav>menu<p>real content", _BLOCK_TAGS)
+
+
+def test_rejects_a_national_platform_that_names_another_state_more():
+    """A national platform hosted on a state party's site is not that party's platform.
+
+    The 2016 DNC platform sat on the Hawaii Democrats' server, named Hawaii once and Alaska
+    ten times, and was filed as Hawaii's own platform. Counting national slogans missed it;
+    asking which state the document is about does not.
+    """
+    text = (PLATFORM_PROSE + " We support Alaska. " * 10 + " Hawaii is mentioned once. ")
+    confirmed, reason, _ = confirm_platform(text, "Hawaii")
+    assert not confirmed
+    assert "Alaska" in reason
+
+
+def test_accepts_a_platform_that_names_its_own_state_most():
+    text = PLATFORM_PROSE + " Hawaii " * 12 + " Alaska " * 2
+    confirmed, _, _ = confirm_platform(text, "Hawaii")
+    assert confirmed
+
+
+def test_dominant_state_ignores_names_contained_in_the_target():
+    """"Virginia" inside "West Virginia" must not out-rank the state itself."""
+    text = "West Virginia " * 8
+    own, rival, rival_hits = dominant_state(text, "West Virginia")
+    assert own == 8
+    assert rival_hits <= own, f"{rival} wrongly counted {rival_hits}"
+
+
+def test_candidate_scores_are_recomputed_when_loading(tmp_path):
+    """A stored score is a cache of a pure function and must not bind the fetch set.
+
+    Hawaii's Republican platform PDF kept a stale score of 3 after the scorer was corrected,
+    so it stayed below the strong threshold and was never fetched.
+    """
+    path = tmp_path / "candidates.jsonl"
+    stale = {
+        "state": "HI", "party": "R",
+        "url": "https://example.org/documents/2024-HRP-Platform-Convention-Updates.pdf",
+        "mimetype": "application/pdf", "score": 3, "reasons": ["stale"],
+        "source": "wayback", "wayback_timestamp": "20250728063136", "year_hint": 2024,
+    }
+    path.write_text(json.dumps(stale) + "\n", encoding="utf-8")
+
+    loaded = _load_candidates(path)[("HI", "R")][0]
+    assert loaded.score >= STRONG_SCORE, "a corrected scorer must apply without re-discovery"
+
+    kept = _load_candidates(path, rescore=False)[("HI", "R")][0]
+    assert kept.score == 3

@@ -155,3 +155,43 @@ def test_topic_embedding_text_includes_name_description_and_seeds():
     topic = Topic(code=1, name="Energy", description="About energy.", seeds=("solar", "wind"))
     text = topic.embedding_text
     assert "Energy" in text and "About energy." in text and "solar" in text
+
+
+def test_predict_many_is_unchanged_by_chunking():
+    """Chunking bounds memory; it must not change a single prediction.
+
+    Encoding the whole corpus at once materialised a 1.6 GB embedding array for the 1.1M bill
+    titles and got the step OOM-killed, so predictions are now made in slices.
+    """
+    import numpy as np
+
+    from state_politics.analysis import taxonomy as module
+    from state_politics.analysis.taxonomy import EmbeddingClassifier
+
+    topics = load_topics()
+    classifier = EmbeddingClassifier(topics)
+    texts = [f"An act relating to {word} policy in the state" for word in
+             ("education", "transportation", "health", "taxation", "housing",
+              "agriculture", "energy", "elections", "labor", "veterans")] * 3
+
+    original = module.CHUNK_SIZE
+    try:
+        module.CHUNK_SIZE = 4          # forces several slices
+        chunked = classifier.predict_many(texts, batch_size=8)
+        module.CHUNK_SIZE = 10_000     # single slice
+        single = classifier.predict_many(texts, batch_size=8)
+    finally:
+        module.CHUNK_SIZE = original
+
+    assert len(chunked) == len(texts)
+    for left, right in zip(chunked, single, strict=True):
+        assert left[0] == right[0]
+        assert np.isclose(left[1], right[1])
+        assert np.isclose(left[2], right[2])
+
+
+def test_predict_many_handles_an_empty_corpus():
+    from state_politics.analysis.taxonomy import EmbeddingClassifier
+
+    classifier = EmbeddingClassifier(load_topics())
+    assert classifier.predict_many([]) == []

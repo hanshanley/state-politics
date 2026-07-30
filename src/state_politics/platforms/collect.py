@@ -28,11 +28,11 @@ import json
 import re
 import time
 import unicodedata
-from dataclasses import asdict, dataclass
+from dataclasses import asdict, dataclass, replace
 from pathlib import Path
 
 from ..provenance import ProvenanceLog, fetch
-from .discover import STRONG_SCORE, Candidate
+from .discover import STRONG_SCORE, Candidate, score_candidate
 from .registry import STATE_NAMES
 
 #: Postal code -> state name, for attributing a document to the state party that wrote it.
@@ -326,6 +326,33 @@ def fold_for_name_match(text: str) -> str:
     return "".join(ch for ch in decomposed if not unicodedata.combining(ch))
 
 
+def dominant_state(text: str, state_name: str) -> tuple[int, str, int]:
+    """How often the document names its own state, and the most-named *other* state.
+
+    A state party platform is about one state. A national platform hosted on a state party's
+    site enumerates many states and privileges none, which is exactly how the 2016 DNC platform
+    -- 26,698 words, naming Hawaii once and Alaska ten times -- came to be filed as the Hawaii
+    Democrats' own platform. Counting national slogans was not enough to catch it; comparing
+    which state the document is actually *about* is.
+
+    Returns ``(own_hits, rival_name, rival_hits)``.
+    """
+    folded = fold_for_name_match(text)
+    own = len(re.findall(rf"\b{re.escape(fold_for_name_match(state_name))}\b", folded, re.I))
+    rival_name, rival_hits = "", 0
+    for other in STATE_NAMES:
+        if other == state_name:
+            continue
+        # Skip names contained in the target, so "Virginia" is not counted inside
+        # "West Virginia" and vice versa.
+        if other in state_name or state_name in other:
+            continue
+        hits = len(re.findall(rf"\b{re.escape(fold_for_name_match(other))}\b", folded, re.I))
+        if hits > rival_hits:
+            rival_name, rival_hits = other, hits
+    return own, rival_name, rival_hits
+
+
 def confirm_platform(text: str, state_name: str | None = None) -> tuple[bool, str, int]:
     """Decide whether extracted text really is *this state's* party platform.
 
@@ -373,6 +400,12 @@ def confirm_platform(text: str, state_name: str | None = None) -> tuple[bool, st
             ), hits
         if state_hits == 0:
             return False, f"never names {state_name}; cannot attribute it to this state party", hits
+        own, rival_name, rival_hits = dominant_state(text, state_name)
+        if rival_hits > own:
+            return False, (
+                f"names {rival_name} more often than {state_name} "
+                f"({rival_hits} vs {own}); this is not {state_name}'s own platform"
+            ), hits
 
     return True, f"platform language confirmed ({hits} declarative phrases)", hits
 
@@ -598,7 +631,17 @@ def load_gap_findings(path: Path | str | None = None) -> dict[tuple[str, str], d
     }
 
 
-def _load_candidates(path: Path) -> dict[tuple[str, str], list[Candidate]]:
+def _load_candidates(path: Path, *, rescore: bool = True
+                     ) -> dict[tuple[str, str], list[Candidate]]:
+    """Load discovered candidates, recomputing each score by default.
+
+    The stored score is a cache of a pure function of (url, mimetype), and collection filters
+    on it. Trusting the cached value silently binds the fetch set to whichever scorer ran at
+    discovery time: after the scorer was corrected, Hawaii's Republican platform PDF still
+    carried its old score of 3, stayed below the strong threshold, and was never fetched --
+    even though the very fix that admitted it had already shipped. Recomputing on load means a
+    scorer change takes effect without re-crawling the discovery pass.
+    """
     grouped: dict[tuple[str, str], list[Candidate]] = {}
     with open(path, encoding="utf-8") as handle:
         for line in handle:
@@ -606,6 +649,9 @@ def _load_candidates(path: Path) -> dict[tuple[str, str], list[Candidate]]:
             if not line:
                 continue
             candidate = Candidate(**json.loads(line))
+            if rescore:
+                score, reasons = score_candidate(candidate.url, candidate.mimetype)
+                candidate = replace(candidate, score=score, reasons=reasons)
             grouped.setdefault((candidate.state, candidate.party), []).append(candidate)
     return grouped
 

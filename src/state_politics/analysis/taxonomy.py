@@ -250,6 +250,10 @@ class KeywordClassifier:
         return [self.predict(text) for text in texts]
 
 
+#: Texts embedded per slice. Bounds peak memory independently of corpus size.
+CHUNK_SIZE = 50_000
+
+
 class EmbeddingClassifier:
     """Nearest-topic classifier using a local sentence-transformer.
 
@@ -290,21 +294,31 @@ class EmbeddingClassifier:
 
         if not texts:
             return []
-        vectors = self.model.encode(
-            texts, batch_size=batch_size, normalize_embeddings=True,
-            convert_to_numpy=True, show_progress_bar=False,
-        )
-        similarities = vectors @ self.topic_vectors.T
-        order = np.argsort(-similarities, axis=1)
-        results = []
-        for row, ranking in zip(similarities, order, strict=True):
-            best, second = ranking[0], ranking[1]
-            score = float(row[best])
-            results.append((
-                self.topics[int(best)].code if score >= min_similarity else None,
-                score,
-                float(row[best] - row[second]),
-            ))
+        results: list[tuple[int | None, float, float]] = []
+        # Encode in slices. Embedding the whole corpus at once materialises one array of
+        # len(texts) x 384 float32 -- 1.6 GB for the 1.1M bill titles -- alongside the
+        # similarity matrix and its argsort, which was enough to get this step OOM-killed on a
+        # 16 GB machine. Only one slice is ever resident now, so the classifier scales with the
+        # corpus instead of with available RAM.
+        for start in range(0, len(texts), CHUNK_SIZE):
+            chunk = texts[start:start + CHUNK_SIZE]
+            vectors = self.model.encode(
+                chunk, batch_size=batch_size, normalize_embeddings=True,
+                convert_to_numpy=True, show_progress_bar=False,
+            )
+            similarities = vectors @ self.topic_vectors.T
+            # Only the best and runner-up are needed, so partition rather than fully sorting
+            # every row across all topics.
+            top2 = np.argpartition(-similarities, kth=1, axis=1)[:, :2]
+            for row, pair in zip(similarities, top2, strict=True):
+                first, second = (pair if row[pair[0]] >= row[pair[1]] else pair[::-1])
+                score = float(row[first])
+                results.append((
+                    self.topics[int(first)].code if score >= min_similarity else None,
+                    score,
+                    score - float(row[second]),
+                ))
+            del vectors, similarities, top2
         return results
 
     def predict(self, text: str, min_similarity: float = 0.20) -> tuple[int | None, float, float]:
