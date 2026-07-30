@@ -159,9 +159,14 @@ def coherence(vectors, *, states: list[str] | None = None):
                       for a, b in itertools.combinations(block.index, 2)])
         for party, block in blocks.items()
     }
+    # Same-state pairs are excluded. Within-party pairs are always cross-state (each state
+    # appears once per party), so including the D-R pair *inside* a state would compare unlike
+    # things -- and those pairs are systematically closer (platforms 0.273 vs 0.317
+    # cross-state), which biases the ratio upward, in the direction of this section's own
+    # headline. Dropping them makes the two sides comparable and the claim more conservative.
     left, right = blocks[parties[0]], blocks[parties[1]]
     between = clean([cosine_distance(left.loc[a], right.loc[b])
-                     for a in left.index for b in right.index])
+                     for a in left.index for b in right.index if a != b])
     mean_within = float(np.mean(list(within.values())))
     return pd.DataFrame([{
         "within_" + parties[0]: round(within[parties[0]], 4),

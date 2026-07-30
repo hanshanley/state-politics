@@ -410,7 +410,7 @@ def test_gap_findings_only_describe_parties_in_the_registry():
 def test_gap_report_attaches_findings_only_to_orgs_with_nothing_found():
     """A party whose platform was collected should carry no gap explanation."""
     registry = [
-        {"state": "HI", "party": "D", "website": "https://hawaiidemocrats.org"},
+        {"state": "AK", "party": "R", "website": "http://www.alaskagop.org/"},
         {"state": "TX", "party": "R", "website": "https://texasgop.org"},
     ]
     found = CollectedDocument(
@@ -421,7 +421,7 @@ def test_gap_report_attaches_findings_only_to_orgs_with_nothing_found():
     )
     report = gap_report(registry, {}, [found]).set_index(["state", "party"])
 
-    assert report.loc[("HI", "D"), "gap_cause"] == "client_rendered"
+    assert report.loc[("AK", "R"), "gap_cause"] == "broken_site"
     assert report.loc[("TX", "R"), "gap_finding"] == ""
 
 

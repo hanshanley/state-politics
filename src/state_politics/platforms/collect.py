@@ -307,7 +307,7 @@ _NATIONAL_RE = re.compile("|".join(_NATIONAL_MARKERS), re.I)
 #: name matches "Hawaii". The negative lookahead is what spares possessives -- "Ohio's" keeps
 #: its apostrophe and so still ends the word "Ohio".
 _INTRAWORD_MARK_RE = re.compile(r"(?<=[^\W\d_])['\u2018\u2019\u02bb\u02bc`\u00b4]"
-                                r"(?!s\b)(?=[^\W\d_])")
+                                r"(?![sS]\b)(?=[^\W\d_])")
 _APOSTROPHE_RE = re.compile(r"[\u2018\u2019\u02bb\u02bc`\u00b4]")
 
 
@@ -353,6 +353,67 @@ def dominant_state(text: str, state_name: str) -> tuple[int, str, int]:
     return own, rival_name, rival_hits
 
 
+#: Signatures of document classes that are long, full of party language, name their state
+#: constantly -- and are not platforms. An exhaustive sweep of 791 archived PDFs across the 21
+#: organizations with no platform confirmed 32 of them; hand review found 31 were newsletters,
+#: meeting minutes, annual reports or a town-chairman manual, and exactly one was a real policy
+#: document. Length and declarative voice cannot separate these, but their furniture can.
+_NON_PLATFORM_MARKERS = (
+    r"non-?profit org", r"u\.?s\.? postage", r"postage\s+paid", r"presorted",
+    r"inside this issue", r"in this issue", r"upcoming events",
+    r"volume\s+[ivx\d]+,?\s+issue\s+\d+", r"vol\.?\s*[ivx\d]+,?\s*(?:no|issue)\.?\s*\d+",
+    r"a message from the chair", r"letter from the chair", r"quote of the month",
+    r"minutes of the", r"call to order", r"the meeting was adjourned", r"roll call vote",
+    r"annual report", r"report to shareholders",
+    r"the role of the (?:town|county) chair", r"table of contents\s+welcome",
+)
+_NON_PLATFORM_RE = re.compile("|".join(_NON_PLATFORM_MARKERS), re.I)
+
+#: How many distinct markers force a rejection. One can appear in a genuine platform in
+#: passing; several together mean the document is a newsletter or a set of minutes.
+MAX_NON_PLATFORM_MARKERS = 2
+
+#: Filenames that state outright what the document is. A file called "PADEMS-NEWSLETTER.pdf" or
+#: "2022-Bylaws-State.pdf" is not a platform however much party language it contains, and no
+#: amount of text analysis should be needed to establish that.
+_NON_PLATFORM_NAME_RE = re.compile(
+    r"(newsletter|bylaws|by-laws|minutes|agenda-?packet|annual[-_ ]?report|"
+    r"shareholders?[-_ ]?report|manual|briefing|brochure|call[-_ ]?(?:of|to)[-_ ]?"
+    r"(?:the[-_ ]?)?(?:rscc|convention|meeting)|insider|roster|directory|"
+    r"contribution|invoice|agenda)", re.I)
+
+
+#: Path prefixes that make a page a *report about* party business rather than the business
+#: itself. A press release announcing that a platform was adopted is not the platform, and a
+#: blog category listing resolutions is not a resolution -- both were being confirmed.
+_NON_PLATFORM_PATH_RE = re.compile(
+    r"/(?:news/)?press/|/press-releases?/|/blog/categor|/news/[a-z0-9-]+/?$", re.I)
+
+
+def looks_like_non_platform_filename(url: str) -> str | None:
+    """The document class a URL declares, if it declares one.
+
+    Checks the filename first, then the path. Both were added after documents that announce or
+    index party business were confirmed as if they were the business: a Washington Democrats
+    press release headlined "WA Dems add reparations to party platform" is 547 words *about* a
+    platform, and a Wyoming GOP blog category page merely lists resolutions.
+    """
+    from urllib.parse import unquote, urlsplit
+
+    path = unquote(urlsplit(url).path)
+    name = path.rsplit("/", 1)[-1]
+    match = _NON_PLATFORM_NAME_RE.search(name)
+    if match:
+        return match.group(0).lower()
+    match = _NON_PLATFORM_PATH_RE.search(path)
+    return "press release or index page" if match else None
+
+
+def non_platform_markers(text: str) -> list[str]:
+    """Distinct newsletter/minutes/report signatures present in ``text``."""
+    return sorted({match.group(0).lower() for match in _NON_PLATFORM_RE.finditer(text)})
+
+
 def confirm_platform(text: str, state_name: str | None = None) -> tuple[bool, str, int]:
     """Decide whether extracted text really is *this state's* party platform.
 
@@ -384,6 +445,13 @@ def confirm_platform(text: str, state_name: str | None = None) -> tuple[bool, st
         return False, f"too short to be a platform ({len(text)} chars < {MIN_CHARS})", hits
     if hits < 3:
         return False, f"lacks platform language (only {hits} declarative phrases)", hits
+
+    markers = non_platform_markers(text)
+    if len(markers) >= MAX_NON_PLATFORM_MARKERS:
+        return False, (
+            f"reads as a newsletter, minutes or report rather than a platform "
+            f"({', '.join(markers[:3])})"
+        ), hits
 
     if state_name:
         folded = fold_for_name_match(text)
@@ -490,7 +558,11 @@ def collect_candidate(
 
     text = extract_text(body, record.content_type, candidate.url)
     state_name = STATE_NAMES_BY_CODE.get(candidate.state)
-    confirmed, reason, hits = confirm_platform(text, state_name=state_name)
+    declared = looks_like_non_platform_filename(candidate.url)
+    if declared:
+        confirmed, reason, hits = False, f"filename declares a {declared}, not a platform", 0
+    else:
+        confirmed, reason, hits = confirm_platform(text, state_name=state_name)
     document.n_chars = len(text)
     document.n_words = len(text.split())
     document.phrase_hits = hits
@@ -555,6 +627,8 @@ def gap_report(
     registry: list[dict],
     candidates_by_org: dict[tuple[str, str], list[Candidate]],
     documents: list[CollectedDocument],
+    *,
+    min_score: int = STRONG_SCORE,
 ):
     """One row per (state, party) with an explicit, evidenced status.
 
@@ -579,12 +653,15 @@ def gap_report(
         found = confirmed_by_org.get(key, [])
         gap = findings.get(key, {}) if not found else {}
         candidates = candidates_by_org.get(key, [])
-        strong = [c for c in candidates if c.score >= STRONG_SCORE]
+        strong = [c for c in candidates if c.score >= min_score]
         years = sorted({d.year for d in found if d.year})
         if found:
             status = "found"
         elif attempted_by_org.get(key):
             status = "candidates_rejected"
+        elif strong:
+            # Strong candidates existed but produced no rows: every fetch failed.
+            status = "candidates_unfetched"
         elif candidates:
             status = "no_strong_candidates"
         else:
@@ -720,7 +797,7 @@ def main(argv: list[str] | None = None) -> int:
             print(f"nothing to report on: {docs_path} does not exist", flush=True)
             return 1
         documents = [d for docs in _load_previous(docs_path)[0].values() for d in docs]
-        report = gap_report(registry, grouped, documents)
+        report = gap_report(registry, grouped, documents, min_score=args.min_score)
         report_path = out_dir / "platform_gap_report.csv"
         report.to_csv(report_path, index=False)
         explained = int((report["gap_finding"].fillna("") != "").sum())
@@ -765,7 +842,7 @@ def main(argv: list[str] | None = None) -> int:
     if not frame.empty:
         frame.to_parquet(docs_path, index=False)
 
-    report = gap_report(registry, grouped, documents)
+    report = gap_report(registry, grouped, documents, min_score=args.min_score)
     report_path = out_dir / "platform_gap_report.csv"
     report.to_csv(report_path, index=False)
 

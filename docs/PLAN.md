@@ -294,7 +294,7 @@ joined into `platform_gap_report.csv` by `gap_report()`; they were previously ha
 the generated CSV, where the next pipeline run would have erased them. `collect --report-only`
 rebuilds the report from cached documents so editing a finding costs no network traffic.
 
-Categorised: **18 publish no platform, 3 publish only a summary blurb, 1 site is suspended, 1
+Categorised at the time of that phase: **18 publish no platform, 3 publish only a summary blurb, 1 site is suspended, 1
 had candidates that did not confirm, and 1 is genuinely JavaScript-rendered.**
 
 A follow-up re-check cut the JavaScript-rendered count from 3 to 1, which changes the
@@ -362,12 +362,12 @@ against identical labels.
 
 ### Phase 6 — Emphasis measures & comparisons — **DONE**
 
-**Platform emphasis** (`analysis/emphasis.py`): share of planks per topic over 36,886 planks
-from 876 documents (34,396 classified). Democrats emphasize labour (5.8% vs 1.1%), environment, housing, health,
+**Platform emphasis** (`analysis/emphasis.py`): share of planks per topic over 40,673 planks
+from 898 documents (37,059 classified). Democrats emphasize labour (5.8% vs 1.1%), environment, housing, health,
 social welfare; Republicans government operations (10.8% vs 7.1%), public lands, macroeconomics,
 culture/family, law and crime.
 
-**Stated vs revealed** (`analysis/revealed.py`): 516,155 party-attributed bills classified into
+**Stated vs revealed** (`analysis/revealed.py`): 542,508 party-attributed bills classified into
 the same taxonomy and compared with platform emphasis. The headline finding is symmetric across
 both parties — the topics that dominate *rhetoric* are largely national fights state
 legislatures have limited power over, while the topics that dominate *filing* are the
@@ -464,6 +464,44 @@ noise.
 
 ---
 
+## Phase 8b — exhaustive platform sweep
+
+**Why:** discovery had only ever looked at URLs whose *path* contained a platform-ish keyword.
+That is a guess about where parties put things, and it was wrong at least once: Hawaii's
+Republican platform sat at `/documents/2024-HRP-Platform-Convention-Updates.pdf` and was found
+but scored below threshold.
+
+**What:** for each of the 21 remaining gap organizations, every archived PDF >= 25 KB on the
+registry domain **and every known alias domain** was enumerated from the Wayback CDX API with
+no path filtering at all -- 791 documents -- then fetched and run through `confirm_platform`.
+
+**Result: 32 passed automated confirmation; hand review found 31 were false positives** --
+newsletters ("Pennsylvania Republican", "The Insider", "Elephants Heard"), meeting minutes,
+annual reports, a town-chairman manual, a shareholders' report and a campaign brochure. Exactly
+one was a genuine policy document: the **Delaware Republican Party's "Rescue Delaware Plan"
+(June 2022)**, 6,709 words, which closed the DE-R gap.
+
+**That 1-in-791 rate is itself the finding.** It is the strongest evidence available that the
+remaining gaps are real: these parties do not publish platforms, rather than publishing them
+somewhere the crawler failed to look.
+
+**Second-order fix.** 31 false positives out of 32 meant `confirm_platform` was too permissive,
+so two rejections were added: a set of newsletter/minutes/report *furniture* markers ("Volume
+II, Issue 1", "Non-Profit Org", "US Postage", "Inside this issue", "Minutes of the"), requiring
+two or more before rejecting; and a filename rule, because a file called
+`PADEMS-NEWSLETTER.pdf` or `2022-Bylaws-State.pdf` needs no text analysis. Together they reject
+30 of the 32 sweep hits and **zero of the 250 documents already in the corpus**.
+
+> **Lessons:**
+> 1. A keyword-on-path filter encodes an assumption about other people's URL schemes. Enumerate
+>    first, filter on content second.
+> 2. When a confirmation rule is applied to candidates a *scorer* pre-filtered, the scorer is
+>    silently doing much of the work. Removing the scorer exposed how weak the rule was alone.
+> 3. A near-zero hit rate on an exhaustive search is a positive result, not a wasted afternoon:
+>    it converts "we did not find one" into "there is not one".
+
+---
+
 ## Phase 9 — intra-party comparison
 
 **Why:** every earlier figure treats each party as a single actor. With 50 state organizations
@@ -482,14 +520,21 @@ restriction is what limits the platform comparison to 12 states. And a permutati
 shuffles the party labels across the same vectors, so a dispersion gap is only reported as a
 difference when it survives.
 
-**Result:** the within/between ratio is **0.84 for platforms and 0.86 for bills** -- two
+**Result:** the within/between ratio is **0.86 for platforms and 0.85 for bills** -- two
 co-partisan state organizations are about 85% as far apart as two opposed ones, replicated
 across two independent streams with different authors, sources and years.
 
-**The permutation test earned its place immediately.** Republicans looked more scattered in
-platforms (0.278 vs 0.235) and Democrats in bills (0.121 vs 0.100) -- a tidy reversal that would
-have been very quotable. Shuffling the labels puts both differences inside chance (p = 0.41 and
-p = 0.30), so both are reported as null results.
+**The permutation test earned its place immediately.** On the first pass, with only 12 states
+qualifying, Republicans looked more scattered in platforms and Democrats in bills -- a tidy
+reversal that would have been very quotable, and that shuffling the labels put squarely inside
+chance (p = 0.41 and p = 0.30). Both were reported as null results.
+
+With the corpus enlarged to 18 qualifying states the platform half became real and survives:
+Republican state platforms are more internally varied than Democratic ones (0.324 vs 0.223,
+p = 0.021). The bill half remains null (p = 0.30). So the finding is one-sided --
+**Republican state committees write more varied platforms, while their legislators file
+strikingly similar bills** -- which is a different and better-supported claim than the reversal
+the first pass appeared to show.
 
 Public lands is a top-three source of internal disagreement for **both** parties in **both**
 streams: geography beats party, because a Nevada party of either stripe has a public-lands

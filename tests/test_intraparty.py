@@ -125,3 +125,22 @@ def test_distance_to_centroid_names_the_topic_driving_the_difference():
     frame = distance_to_centroid(vectors).set_index("state")
     assert frame.loc["TX", "most_distinctive_topic"] == 1
     assert frame.loc["TX", "distance_to_centroid"] > frame.loc["OH", "distance_to_centroid"]
+
+
+def test_coherence_excludes_same_state_pairs_from_between():
+    """A state's own D-R pair is not comparable to cross-state within-party pairs.
+
+    Same-state opposite-party pairs are systematically closer than cross-state ones, so
+    including them deflates the between-party distance and inflates the within/between ratio --
+    in the direction of the finding this module reports.
+    """
+    vectors = _vectors([
+        ("TX", "D", [0.50, 0.30, 0.20]), ("OH", "D", [0.45, 0.35, 0.20]),
+        # TX Republicans are deliberately near TX Democrats; OH Republicans are far from both.
+        ("TX", "R", [0.50, 0.30, 0.20]), ("OH", "R", [0.05, 0.05, 0.90]),
+    ])
+    between = coherence(vectors).iloc[0]["between"]
+
+    cross_only = (cosine_distance(vectors.loc[("TX", "D")], vectors.loc[("OH", "R")])
+                  + cosine_distance(vectors.loc[("OH", "D")], vectors.loc[("TX", "R")])) / 2
+    assert abs(between - cross_only) < 1e-3  # coherence() rounds to 4 dp

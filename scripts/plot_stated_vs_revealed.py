@@ -100,9 +100,10 @@ def build_figure(table: pd.DataFrame, out_path: Path, *, sample: str = "",
 
     for ax, party in zip(axes, ("D", "R"), strict=True):
         subset = table[table["party"] == party].copy()
-        subset = (subset.set_index("topic_name")
-                  .reindex([t for t in order if t in set(subset["topic_name"])])
-                  .reset_index())
+        # Reindexed on the *full* shared order, not the intersection: the panels share one set
+        # of tick labels, so unequal row counts would give them different y-limits and slide
+        # the right panel's dots off the labels they are read against.
+        subset = subset.set_index("topic_name").reindex(order).reset_index()
         labels = subset["topic_name"].tolist()
         stated = (subset["stated_share"] * 100).tolist()
         revealed = (subset["revealed_share"] * 100).tolist()

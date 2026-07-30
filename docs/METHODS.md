@@ -41,7 +41,7 @@ success rate from 34% to 93%.
 
 ## The 24 parties with no platform
 
-76 of 100 state party organizations yielded a platform. The remaining 24 are the deliverable
+80 of 100 state party organizations yielded a platform. The remaining 20 are the deliverable
 that a scraper normally throws away: **every one was probed by hand and carries a recorded
 reason**, in [`conf/platform_gaps.yml`](../conf/platform_gaps.yml), joined into the gap report by
 `gap_report()`. They live in version-controlled config rather than in the generated CSV,
@@ -49,19 +49,18 @@ because an explanation written into a derived file is erased by the next run.
 
 | Cause | Orgs | Meaning |
 |---|---|---|
-| `no_platform_published` | 18 | Site is healthy and simply has no platform document |
-| `summary_only` | 3 | A short position blurb (1.3–2.5 KB), not a platform |
+| `no_platform_published` | 16 | Site is healthy and simply has no platform document |
+| `summary_only` | 2 | A short position blurb (1.3–2.5 KB), not a platform |
 | `broken_site` | 1 | Alaska GOP is serving an "Account Suspended" page |
 | `not_confirmed` | 1 | Candidates fetched, none read as a platform |
-| `client_rendered` | 1 | A real platform page whose text needs a JS runtime |
 
 The distinction matters: **a missing platform is mostly a real finding about the party, not a
-failure of the crawler.** Only one org (Hawaii Democrats, a Wix site whose page manifest lists
-both `platform` and `platform-old`) has a platform this pipeline cannot reach — and all 37 of
-its Wayback snapshots from 2021-10 to 2026-06 are the same empty shell, so the archive cannot
-recover it either. Two cases first recorded as JS-rendered turned out on re-checking to be
-genuine absences: Florida GOP's `/platform` soft-404s to its home page, and neither its nor the
-Louisiana Democrats' own CMS index contains a platform page or media file at all.
+failure of the crawler.** That was tested rather than asserted -- see the exhaustive sweep
+below, which enumerated every archived PDF on every gap domain and found exactly one real
+platform in 791 documents. Two cases first recorded as JavaScript-rendered turned out on
+re-checking to be genuine absences, and both Hawaii organizations, once recorded as
+unreachable, are now in the corpus: their platforms were discoverable all along and had been
+suppressed by a scoring bug.
 
 Regenerate the report after editing the findings, without re-crawling anything:
 
@@ -172,7 +171,7 @@ plank and each topic description and assigns the nearest topic. A transparent ke
 runs alongside it, not as a fallback but so the model's output can be checked against something
 a human can read and argue with.
 
-**Validation, on 36,886 planks from 876 documents (34,396 classified):**
+**Validation, on 40,648 planks from 893 documents (37,050 classified):**
 
 | Classifier | Top-1 | Top-2 |
 |---|---|---|
@@ -250,17 +249,16 @@ outright, replacing the classifier entirely. `bill_emphasis_by_tag.csv` does exa
 filed share on the same side of the stated share — which is the claim the headline actually
 makes.
 
-**33 of 40 topic-party rows hold.** The seven that do not are:
+**34 of 40 topic-party rows hold.** The six that do not are:
 
 | Topic | Party | Said | Model | Tags |
 |---|---|---|---|---|
-| Housing and community development | D | 3.5% | 9.4% | 3.0% |
-| Housing and community development | R | 1.7% | 6.0% | 0.9% |
-| Public lands and water | D | 7.9% | 8.1% | 2.1% |
-| Public lands and water | R | 10.6% | 10.7% | 2.8% |
-| Macroeconomics | R | 2.7% | 2.2% | 9.9% |
-| Government operations | D | 6.3% | 6.1% | 8.3% |
-| Science, technology and communications | D | 1.7% | 2.2% | 1.6% |
+| Housing and community development | D | 4.3% | 9.4% | 3.0% |
+| Housing and community development | R | 2.3% | 6.0% | 0.9% |
+| Macroeconomics | R | 2.4% | 2.2% | 9.9% |
+| Government operations | D | 7.0% | 6.1% | 8.3% |
+| Culture, family and social issues | D | 2.4% | 1.8% | 2.6% |
+| Labor and employment | D | 4.8% | 5.2% | 4.7% |
 
 Every one is the tax failure or its mirror image, except the last two, where the model and the
 stated share differ by a fraction of a point and the "sign" of a gap that small is noise.
@@ -296,16 +294,17 @@ that simply publishes more does not register as distant.
 *Composition.* Dispersion is only compared between parties over the same set of states.
 Otherwise a party whose surviving platforms happen to come from more idiosyncratic states looks
 more divided without any of its organizations disagreeing more. This is what restricts the
-platform comparison to the 12 states where both parties clear the 30-observation floor.
+platform comparison to the 18 states where both parties clear the 30-observation floor.
 
 *A null model.* `dispersion_gap_pvalue` shuffles the party labels across the same vectors and
 recomputes the gap. Shuffling labels rather than resampling states holds composition fixed, so
 the test asks exactly the intended question: given these organizations, does it matter which
 party each belongs to?
 
-**What it found.** Within/between = 0.84 (platforms) and 0.86 (bills). The apparent reversal —
-Republicans more scattered in platforms, Democrats in bills — does **not** survive the
-permutation test (p = 0.41, p = 0.30) and is reported as a null result.
+**What it found.** Within/between = 0.85 for both streams. Republican platforms are
+genuinely more scattered than Democratic ones (0.319 vs 0.223, p = 0.026); the same comparison
+on bills runs the other way and does **not** survive the permutation test (0.121 vs 0.100,
+p = 0.30), so that half is reported as a null result.
 
 **The limit that matters.** These vectors are distributions over *topics*, so the measure is
 **agenda overlap, not agreement**. A Democratic and a Republican platform that each devote 10%
@@ -386,11 +385,11 @@ Most distinctive by platform emphasis:
 
 | Org | Distance | Most distinctive topic | vs party average |
 |---|---|---|---|
-| NJ-D | 0.393 | Macroeconomics | 18.2% vs 1.9% |
-| KY-R | 0.342 | International affairs | 18.3% vs 2.1% |
-| FL-D | 0.269 | Health | 35.6% vs 11.6% |
-| NJ-R | 0.267 | Macroeconomics | 19.2% vs 4.6% |
-| MT-D | 0.262 | Public lands and water | 33.0% vs 8.9% |
+| NJ-D | 0.392 | Macroeconomics | 18.2% vs 1.8% |
+| KY-R | 0.336 | International affairs | 18.3% vs 2.1% |
+| FL-D | 0.264 | Health | 34.1% vs 11.5% |
+| NJ-R | 0.263 | Macroeconomics | 19.2% vs 4.6% |
+| MT-D | 0.262 | Public lands and water | 33.0% vs 8.8% |
 
 Most distinctive by what their legislators actually file:
 

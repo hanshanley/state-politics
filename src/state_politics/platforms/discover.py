@@ -606,7 +606,8 @@ def main(argv: list[str] | None = None) -> int:
         for outcome in failed:
             time.sleep(max(args.delay, 3.0))
             org = by_key[(outcome.state, outcome.party)]
-            retried = discover_for_org(org, from_year=args.from_year, log=log, include_live=False)
+            retried = discover_for_org(org, from_year=args.from_year, log=log,
+                                       include_live=False, deep=args.deep)
             if retried.wayback_ok:
                 seen = {normalize_url(c.url) for c in outcome.candidates}
                 added = [c for c in retried.candidates if normalize_url(c.url) not in seen]

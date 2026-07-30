@@ -25,14 +25,30 @@ Maryland is absent entirely, Kentucky Democrats last appear in **1943**, New Yor
 **1958**.
 
 **So the 2018–present platform corpus does not exist, and this project builds it** from official
-state party websites and the Internet Archive — 201 documents covering 76 of 100 organizations.
+state party websites and the Internet Archive — 244 documents covering 80 of 100 organizations
+across 44 states.
 
 ![What the 2018-present platform collection recovered](outputs/platform_coverage_2018_present.png)
 
-The 24 organizations with no platform are a **finding, not a hole**: each was probed by hand and
+The 20 organizations with no platform are a **finding, not a hole**: each was probed by hand and
 carries a recorded reason in [`conf/platform_gaps.yml`](conf/platform_gaps.yml). Most simply
 publish no platform; a few publish only a short blurb, one site is suspended, and one had
 candidates that never confirmed.
+
+That claim was stress-tested rather than assumed, in four independent ways:
+
+| Method | Scope | Real platforms found |
+|---|---|---|
+| Every archived **PDF** ≥25 KB, no path filtering | 791 documents, all 21 gap domains + former domains | **1** (Delaware GOP's *Rescue Delaware Plan*, 2022 — now in the corpus) |
+| Every archived **HTML page** ≥30 KB | ~500 pages, the 6 states with nothing at all | **0** |
+| **Live probing of 36 candidate paths** (`/platform`, `/principles`, `/where-we-stand`, `/resolutions`, …) | 12 organizations | **0** |
+| **Querying each site's own CMS index** (`wp-json`, Wix page manifest) | 12 organizations | **0** |
+
+The near-misses are instructive: Louisiana Republicans' largest "platform" match was their
+**privacy policy**, and Kentucky Republicans' was a 453-word *About* page. **Six states — Kentucky,
+Louisiana, Maryland, New Jersey, New York and Pennsylvania — have no state platform from either
+party.** These are large states, and the absence is the finding: their committees campaign on
+candidates and national platforms rather than publishing a state programme.
 
 ---
 
@@ -41,7 +57,7 @@ candidates that never confirmed.
 Every 2018-present platform, and every major-party platform from 1990 onward, is segmented
 into planks and classified against a
 [Comparative Agendas Project](https://www.comparativeagendas.net/) taxonomy by a
-sentence-transformer running **locally on Apple Silicon** — 36,886 planks from 876 documents.
+sentence-transformer running **locally on Apple Silicon** — 40,648 planks from 893 documents.
 
 ![What Democratic and Republican state parties talk about](outputs/party_emphasis.png)
 
@@ -63,17 +79,17 @@ instead of by this project's model. That independent check is the third column.
 
 | Topic | D said → filed | R said → filed | Replicates? |
 |---|---|---|---|
-| Civil rights and liberties | 10.7% → **3.0%** | 12.1% → **2.8%** | ✅ gap is *larger* (1.5% / 0.7%) |
-| Immigration | 4.9% → **0.9%** | 6.0% → **0.9%** | ✅ gap is *larger* (0.3% / 0.2%) |
-| Culture, family, social issues | 3.0% → **1.8%** | 5.3% → **1.5%** | ✅ (2.6% / 2.4%) |
-| Law, crime and justice | 8.9% → **13.8%** | 10.0% → **15.5%** | ✅ (13.8% / 13.5%) |
-| Transportation | 2.3% → **4.7%** | 1.4% → **5.2%** | ✅ gap is *larger* (7.0% / 9.7%) |
-| Education | 9.3% → **10.3%** | 9.3% → **12.2%** | ✅ gap is *larger* (14.3% / 19.5%) |
-| ~~Housing and community development~~ | ~~3.5% → 9.4%~~ | ~~1.7% → 6.0%~~ | ❌ **does not replicate** (3.0% / 0.9%) |
+| Civil rights and liberties | 10.5% → **3.0%** | 12.0% → **2.8%** | ✅ gap is *larger* (1.5% / 0.7%) |
+| Immigration | 4.7% → **0.9%** | 5.6% → **0.9%** | ✅ gap is *larger* (0.3% / 0.2%) |
+| Culture, family, social issues | 2.4% → **1.8%** | 5.1% → **1.5%** | ✅ R only (2.6% / 2.4%) |
+| Law, crime and justice | 9.5% → **13.8%** | 9.6% → **15.5%** | ✅ (13.8% / 13.5%) |
+| Transportation | 2.2% → **4.7%** | 1.1% → **5.2%** | ✅ gap is *larger* (7.0% / 9.7%) |
+| Education | 9.0% → **10.3%** | 8.5% → **12.2%** | ✅ gap is *larger* (14.3% / 19.5%) |
+| ~~Housing and community development~~ | ~~4.3% → 9.4%~~ | ~~2.3% → 6.0%~~ | ❌ **does not replicate** (3.0% / 0.9%) |
 
 The topics that dominate platform rhetoric are largely *national* fights that state legislatures
 have limited power over; the topics that dominate actual filing are the bread-and-butter business
-of state government. Immigration is the sharpest case — Republican platforms give it 6.0% of
+of state government. Immigration is the sharpest case — Republican platforms give it 5.6% of
 their planks and Republican legislators 0.9% of their bills.
 
 **The housing row does not survive the check and should not be believed.** The classifier reads
@@ -93,7 +109,7 @@ both to score the classifier and to re-derive the headline outright.
 |---|---|
 | Plank classifier vs. hand-labelled gold set | 62% top-1, 78% top-2 |
 | Bill-title classifier vs. statehouse tags | **63.2%** agreement on 46,659 bills, 35 states |
-| Headline re-derived from tags, not the model | **33 of 40 rows hold** (111,521 bills) |
+| Headline re-derived from tags, not the model | **34 of 40 rows hold** (111,521 bills) |
 
 The seven failures share one cause: Macroeconomics recall is 18.1%, so tax bills scatter into
 whatever was being taxed — inflating housing and public lands. Full precision/recall breakdown
@@ -102,7 +118,7 @@ in [the methods](docs/METHODS.md#validating-the-bill-classifier).
 **Other limits.** Bills are classified from *titles*, which are short and often procedural.
 18.9% of bills cannot be resolved to a party and are excluded rather than guessed at. Planks
 below a similarity threshold are recorded as **unclassified** rather than pushed into the nearest
-topic — 2,490 of 36,886. And filing a bill is not passing one: this measures **agenda, not
+topic — 3,598 of 40,648. And filing a bill is not passing one: this measures **agenda, not
 achievement**.
 
 ---
@@ -119,8 +135,8 @@ uv run python scripts/plot_intraparty.py
 
 ![State parties barely cluster by party](outputs/intraparty_coherence.png)
 
-**Two co-partisan state organizations are about 85% as far apart as two opposed ones** — 0.84 in
-what they say, 0.86 in what they file. The two streams are independent (different authors,
+**Two co-partisan state organizations are about 85% as far apart as two opposed ones** — 0.85 in
+what they say, 0.85 in what they file. The two streams are independent (different authors,
 different sources, different years), and they agree. On topic emphasis, the party label carries
 surprisingly little information about how alike two state organizations are.
 
@@ -130,18 +146,21 @@ when they want the same things. A Democratic and a Republican platform that each
 their planks on abortion are adjacent on this measure while advocating opposite policies. The
 finding is about what parties put on the agenda, not about ideology.
 
-**Neither party is measurably more internally divided than the other.** Republicans looked more
-scattered in platforms (0.278 vs 0.235) and Democrats in bills (0.121 vs 0.100), but a
-permutation test that shuffles the party labels across the same states puts both differences
-well inside chance (p = 0.41 and p = 0.30). They are reported as null results rather than as a
-reversal, because with a dozen state parties per side that is what they are.
+**Republican state parties disagree with each other more than Democratic ones do — but only in
+what they say.** Republican platforms are markedly more scattered (mean pairwise distance 0.319
+vs 0.223), and a permutation test that shuffles the party labels across the same 18 states puts
+that outside chance (p = 0.026). The same comparison on bills runs the other way and is *not*
+significant (0.121 vs 0.100, p = 0.30), so it is reported as a null result.
+
+That contrast is the interesting part: Republican state committees write more varied platforms
+than Democratic ones, while their legislators file strikingly similar bills.
 
 What state parties *do* disagree about differs by party:
 
 | | Most divisive topics within the party (cross-state SD of topic share) |
 |---|---|
-| **Democratic platforms** | Public lands and water (8.3pp), Civil rights (5.5pp), Law and crime (5.4pp) |
-| **Republican platforms** | Government operations (9.7pp), Law and crime (7.9pp), Public lands (6.9pp) |
+| **Democratic platforms** | Public lands and water (7.1pp), Agriculture (4.9pp), Law and crime (4.8pp) |
+| **Republican platforms** | Government operations (10.3pp), Public lands (8.1pp), Civil rights (8.1pp) |
 | **Democratic bills** | Law and crime (5.7pp), Public lands (4.0pp), Education (3.8pp) |
 | **Republican bills** | Public lands (4.2pp), Law and crime (4.1pp), Government operations (3.5pp) |
 
@@ -151,7 +170,7 @@ stripe has a public-lands agenda and a Rhode Island one does not.
 
 Dispersion is only ever compared between parties over the **same set of states**, since a party
 whose surviving platforms come from more unusual states would otherwise look more divided for
-purely compositional reasons. That restriction is what limits the platform comparison to 12
+purely compositional reasons. That restriction is what limits the platform comparison to 18
 states.
 
 ---
@@ -184,8 +203,8 @@ All fetched and verified live; full citations, crediting the *collecting* organi
 | Source | Role | Scale |
 |---|---|---|
 | Hopkins, Coffey, Galvin, Gamm, Henderson, Paddock & Schickler — *Select American State Party Platforms* (Harvard Dataverse, CC0) | Historical platforms | 2,091 docs, 49 states, 1840–2017 |
-| Open States / Plural Policy — bulk data | Bills, sponsors, legislators | 1,087,327 bills, 50 states, 2018–2026 |
-| Internet Archive — Wayback CDX API | Discovery of 2018–present platforms | 201 docs recovered |
+| Open States / Plural Policy — bulk data | Bills, sponsors, legislators | 1,087,327 bills, 50 states, sessions overlapping 2018–2026 |
+| Internet Archive — Wayback CDX API | Discovery of 2018–present platforms | 236 of 244 docs recovered |
 | Wikidata + hand verification | Registry of official party websites | 100/100 resolved |
 
 ---
@@ -214,7 +233,7 @@ inference, with a CPU fallback.
 ```bash
 make setup      # install dependencies, including the local model stack
 make all        # analysis + figures
-make test lint  # 285 tests, ruff
+make test lint  # 322 tests, ruff
 ```
 
 Network-heavy stages are deliberately **not** part of `make all`, so rebuilding the analysis never

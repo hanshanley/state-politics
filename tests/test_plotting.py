@@ -273,3 +273,40 @@ def test_stated_vs_revealed_flags_rows_an_independent_labelling_contradicts():
 
     assert (14, "D") in flagged, "housing gap does not replicate and must be flagged"
     assert (12, "D") not in flagged, "law-and-crime gap replicates and must not be flagged"
+
+
+def test_stated_vs_revealed_panels_have_equal_row_counts():
+    """Sharing a row order is not enough; the panels must have the same number of rows.
+
+    The panels share one set of tick labels, so a topic present for one party and absent for
+    the other would give them different y-limits and slide the right panel's dots off the
+    labels they are read against.
+    """
+    import sys
+    from pathlib import Path
+
+    import pandas as pd
+
+    root = Path(__file__).resolve().parents[1]
+    sys.path.insert(0, str(root / "scripts"))
+    import plot_stated_vs_revealed as script
+
+    # Deliberately ragged: "Housing" exists only for the Democrats.
+    table = pd.DataFrame([
+        {"topic": 12, "topic_name": "Law", "party": "D", "stated_share": 0.09,
+         "revealed_share": 0.14, "stated_minus_revealed": -0.05},
+        {"topic": 14, "topic_name": "Housing", "party": "D", "stated_share": 0.04,
+         "revealed_share": 0.09, "stated_minus_revealed": -0.05},
+        {"topic": 12, "topic_name": "Law", "party": "R", "stated_share": 0.10,
+         "revealed_share": 0.15, "stated_minus_revealed": -0.05},
+    ])
+    out = script.build_figure(table, root / "outputs" / "_test_row_counts.png")
+    figure = plt.gcf()
+    left, right = figure.get_axes()[:2]
+    counts = (len(left.get_yticks()), len(right.get_yticks()))
+    limits = (left.get_ylim(), right.get_ylim())
+    plt.close("all")
+    out.unlink(missing_ok=True)
+
+    assert counts[0] == counts[1], f"panels have {counts[0]} and {counts[1]} rows"
+    assert limits[0] == limits[1], "panels must share y-limits to share tick labels"

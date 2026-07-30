@@ -32,11 +32,6 @@ CT:
     cause: no_platform_published
     checked: 2026-07-29
     finding: /platform soft-404s with a 426 KB PNG image
-DE:
-  R:
-    cause: no_platform_published
-    checked: 2026-07-29
-    finding: Wix site; no substantial platform page found
 FL:
   R:
     cause: no_platform_published

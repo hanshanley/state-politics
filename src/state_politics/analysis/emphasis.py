@@ -21,6 +21,7 @@ about broad aggregate emphasis and not about any individual plank.
 from __future__ import annotations
 
 import argparse
+import re
 from pathlib import Path
 
 from .taxonomy import DEFAULT_TOPICS_PATH, EmbeddingClassifier, load_topics, segment_planks
@@ -104,30 +105,55 @@ def emphasis_by_party(planks, topics):
     return wide.merge(counts, on="topic", how="left").sort_values("gap", ascending=False)
 
 
-def _drop_cross_corpus_duplicates(corpus):
+def _content_tokens(text: str) -> set[str]:
+    return set(re.findall(r"[a-z]{4,}", (text or "").lower()))
+
+
+def _drop_cross_corpus_duplicates(corpus, *, min_jaccard: float = 0.85):
     """Drop documents present in both the Dataverse corpus and this project's collection.
 
-    The two corpora overlap: nine (state, party, year) documents appear in both, with
-    content-word Jaccard between 0.90 and 1.00 -- two of them identical. Concatenating without
-    deduplication counts those planks twice, which does not move a national share much but
-    badly distorts the organizations concerned: 27.5% of Nebraska Democrats' planks and 34.9%
-    of Indiana Republicans' were a second copy of one document, giving that document double
-    weight in the per-state profiles and outlier rankings.
+    The two corpora overlap: eleven (state, party, year) documents appear in both, ten of them
+    with content-word Jaccard between 0.90 and 1.00 and two identical. Counting those planks
+    twice does not move a national share much but badly distorts the organizations concerned --
+    28.3% of Indiana Republicans' planks were a second copy of one document.
 
-    The modern copy is kept, because it carries the URL and hash this project fetched itself.
+    Two things this deliberately does *not* do:
+
+    * It does not key off the era label. An earlier version did, and became a silent no-op the
+      moment pre-2018 collected documents started being filed under the historical era: both
+      copies then sat on the same side and nothing ever matched.
+    * It does not treat key equality as proof. Wisconsin Republicans have a 2014 document in
+      each corpus whose content-word Jaccard is 0.31 -- different documents that happen to
+      share a year -- so the texts must actually agree before one is discarded.
+
+    The copy carrying a fetched URL and hash (the collected one) is the one kept.
     """
-    keyed = corpus.dropna(subset=["year"]).assign(
-        _key=lambda frame: list(zip(frame["state"], frame["party"],
-                                    frame["year"].astype("Int64"), strict=True)))
-    modern_keys = set(keyed.loc[keyed["era"] == "2018-present", "_key"])
-    if not modern_keys:
-        return corpus
-    duplicated = keyed.index[(keyed["era"] != "2018-present")
-                             & keyed["_key"].isin(modern_keys)]
-    if len(duplicated):
-        print(f"dropped {len(duplicated)} historical documents already present in the "
-              "collected corpus")
-    return corpus.drop(index=duplicated)
+
+    frame = corpus.reset_index(drop=True)
+    dated = frame[frame["year"].notna()]
+    keys = list(zip(dated["state"], dated["party"],
+                    dated["year"].astype("Int64"), strict=True))
+    by_key: dict[tuple, list[int]] = {}
+    for position, key in zip(dated.index, keys, strict=True):
+        by_key.setdefault(key, []).append(position)
+
+    collected = set(frame.index[frame["source_corpus"] == "collected"])
+    drop: list[int] = []
+    for positions in by_key.values():
+        if len(positions) < 2:
+            continue
+        keep = next((i for i in positions if i in collected), positions[0])
+        keep_tokens = _content_tokens(frame.at[keep, "text"])
+        for other in positions:
+            if other == keep:
+                continue
+            tokens = _content_tokens(frame.at[other, "text"])
+            union = keep_tokens | tokens
+            if union and len(keep_tokens & tokens) / len(union) >= min_jaccard:
+                drop.append(other)
+    if drop:
+        print(f"dropped {len(drop)} documents duplicated across the two corpora")
+    return frame.drop(index=drop)
 
 
 def main(argv: list[str] | None = None) -> int:
@@ -157,8 +183,8 @@ def main(argv: list[str] | None = None) -> int:
     # years, so they are assigned by their own date instead.
     modern_year = pd.to_numeric(modern["year"], errors="coerce")
     in_window = modern_year.isna() | (modern_year >= MODERN_FROM)
-    frames.append(modern[in_window].assign(era="2018-present")[
-        ["state", "party", "year", "era", "text"]])
+    frames.append(modern[in_window].assign(era="2018-present", source_corpus="collected")[
+        ["state", "party", "year", "era", "text", "source_corpus"]])
     print(f"modern documents:     {int(in_window.sum())} "
           f"({int((~in_window).sum())} dated before {MODERN_FROM}, moved to the earlier era)")
 
@@ -169,16 +195,17 @@ def main(argv: list[str] | None = None) -> int:
             historical["is_major_party"]
             & (historical["year"] >= args.historical_from)
             & (historical["state"] != "US")
-        ].assign(era=f"{args.historical_from}-2017")
-        frames.append(historical[["state", "party", "year", "era", "text"]])
+        ].assign(era=f"{args.historical_from}-2017", source_corpus="dataverse")
+        frames.append(historical[["state", "party", "year", "era", "text", "source_corpus"]])
         print(f"historical documents: {len(historical)} (from {args.historical_from})")
 
     # Pre-window modern documents belong with the historical era, not with the years they were
     # collected in.
     early = modern[~in_window]
     if not early.empty:
-        frames.append(early.assign(era=f"{args.historical_from}-2017")[
-            ["state", "party", "year", "era", "text"]])
+        frames.append(early.assign(era=f"{args.historical_from}-2017",
+                                   source_corpus="collected")[
+            ["state", "party", "year", "era", "text", "source_corpus"]])
 
     corpus = _drop_cross_corpus_duplicates(pd.concat(frames, ignore_index=True))
     planks = classify_corpus(corpus, classifier)
