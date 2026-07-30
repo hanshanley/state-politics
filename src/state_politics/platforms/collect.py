@@ -27,6 +27,7 @@ import io
 import json
 import re
 import time
+import unicodedata
 from dataclasses import asdict, dataclass
 from pathlib import Path
 
@@ -79,7 +80,49 @@ MIN_CHARS = 2500
 #: Hand-checked explanations for the parties with no platform, joined into the gap report.
 _GAP_FINDINGS_PATH = Path(__file__).resolve().parents[3] / "conf" / "platform_gaps.yml"
 
-_SCRIPT_RE = re.compile(r"<(script|style|nav|header|footer)\b[^>]*>.*?</\1>", re.S | re.I)
+#: Opening tag of a block whose contents are markup, not prose.
+_BLOCK_TAGS = ("script", "style", "nav", "header", "footer")
+_BLOCK_OPEN_RE = re.compile(r"<(" + "|".join(_BLOCK_TAGS) + r")\b[^>]*>", re.I)
+
+def strip_blocks(html: str, tags: tuple[str, ...]) -> str:
+    """Remove ``<tag>...</tag>`` blocks with a linear scan.
+
+    The obvious regex for this -- ``<(script|nav|...)\b[^>]*>.*?</\1>`` -- backtracks
+    quadratically on hostile input, because every opening tag that never closes rescans to the
+    end of the document. Measured here: 14 KB of unclosed ``<nav>`` took 0.11 s, 112 KB took
+    6.5 s, and a fetch is allowed to be 64 MB. Since every byte scanned comes from a
+    third-party website, that is a denial-of-service vector on the crawler, so the scan is done
+    explicitly with ``str.find`` instead. An unclosed tag drops the tag and keeps the text.
+    """
+    if not html:
+        return html
+    lowered = html.lower()
+    out: list[str] = []
+    position = 0
+    # Once no closing tag for a name exists after some offset, none exists after any later
+    # offset either. Without remembering that, a document full of unclosed tags re-scans to
+    # the end for every one of them, which is the same quadratic blow-up in a different guise:
+    # 1.4 MB of unclosed <nav> took 196 s before this set was added.
+    exhausted: set[str] = set()
+    while True:
+        match = _BLOCK_OPEN_RE.search(html, position)
+        if match is None:
+            out.append(html[position:])
+            return "".join(out)
+        out.append(html[position:match.start()])
+        out.append(" ")
+        tag = match.group(1).lower()
+        if tag in exhausted:
+            position = match.end()
+            continue
+        closing = lowered.find(f"</{tag}", match.end())
+        if closing == -1:
+            exhausted.add(tag)
+            position = match.end()
+            continue
+        end = html.find(">", closing)
+        position = len(html) if end == -1 else end + 1
+
 _TAG_RE = re.compile(r"<[^>]+>")
 
 
@@ -143,6 +186,37 @@ def _is_binary(body: bytes, content_type: str) -> bool:
     return bool(head) and head.count(b"\x00") / len(head) > 0.05
 
 
+#: Ligature glyphs that PDF text extraction returns as single characters, mapped back to the
+#: letters they stand for.
+#:
+#: Two different problems land here. The U+FB0x block is *correct* Unicode -- a real "fi"
+#: ligature -- but leaves "fulfill" spelled "fulﬁll", which no tokenizer, keyword list or
+#: embedding will match. The rest are *wrong*: TeX-derived fonts routinely ship a broken
+#: glyph-to-Unicode map, so a "ti" ligature arrives as U+019F and "Constitutions" reads
+#: "ConsƟtuƟons". One Hawaii platform contained 484 of them, which is why it read as a
+#: foreign-language document and was rejected.
+_LIGATURES = {
+    "\ufb00": "ff", "\ufb01": "fi", "\ufb02": "fl", "\ufb03": "ffi", "\ufb04": "ffl",
+    "\ufb05": "st", "\ufb06": "st",
+    "\u019f": "ti", "\u019e": "tf", "\u01a9": "tt", "\u01ab": "tti",
+}
+_LIGATURE_RE = re.compile("|".join(map(re.escape, _LIGATURES)))
+
+#: Private-use bullets from Symbol/Wingdings fonts, which carry no textual meaning.
+_PRIVATE_USE_RE = re.compile(r"[\uf000-\uf8ff]")
+
+
+def repair_ligatures(text: str) -> str:
+    """Expand ligature glyphs back into their component letters.
+
+    Applied to every extracted document, because a document that reaches the classifier with
+    "ﬁrst" and "ConsƟtuƟons" in it is silently degraded rather than visibly broken.
+    """
+    if not text:
+        return text
+    return _PRIVATE_USE_RE.sub(" ", _LIGATURE_RE.sub(lambda m: _LIGATURES[m.group(0)], text))
+
+
 def extract_text(body: bytes, content_type: str | None, url: str) -> str:
     """Extract plain text from an HTML or PDF response.
 
@@ -154,15 +228,16 @@ def extract_text(body: bytes, content_type: str | None, url: str) -> str:
     is_pdf = normalized.startswith("application/pdf") or \
         url.lower().split("?")[0].endswith(".pdf") or body[:5] == b"%PDF-"
     if is_pdf:
-        return _extract_pdf(body)
+        return repair_ligatures(_extract_pdf(body))
     if _is_binary(body, normalized):
         return ""
     html = body.decode("utf-8", errors="replace")
-    html = _SCRIPT_RE.sub(" ", html)
+    html = strip_blocks(html, _BLOCK_TAGS)
     text = _TAG_RE.sub(" ", html)
     text = re.sub(r"&nbsp;?", " ", text)
     text = re.sub(r"&amp;", "&", text)
-    return re.sub(r"[ \t]+", " ", re.sub(r"\n{3,}", "\n\n", text)).strip()
+    return repair_ligatures(
+        re.sub(r"[ \t]+", " ", re.sub(r"\n{3,}", "\n\n", text)).strip())
 
 
 def _extract_pdf(body: bytes) -> str:
@@ -224,6 +299,33 @@ _NATIONAL_MARKERS = (
 _NATIONAL_RE = re.compile("|".join(_NATIONAL_MARKERS), re.I)
 
 
+#: Apostrophe-like marks need two different treatments, and conflating them breaks one case or
+#: the other. Deleting them all welds a possessive onto the name -- "Ohio's" becomes "Ohios",
+#: so r"\bOhio\b" stops matching, which cost 140 of 201 documents at least one state-name hit.
+#: Keeping them all leaves "Hawai'i" unable to match "Hawaii". Position decides which is which.
+#: A mark *inside* a word that is not a possessive: the okina in "Hawai'i". Deleted, so the
+#: name matches "Hawaii". The negative lookahead is what spares possessives -- "Ohio's" keeps
+#: its apostrophe and so still ends the word "Ohio".
+_INTRAWORD_MARK_RE = re.compile(r"(?<=[^\W\d_])['\u2018\u2019\u02bb\u02bc`\u00b4]"
+                                r"(?!s\b)(?=[^\W\d_])")
+_APOSTROPHE_RE = re.compile(r"[\u2018\u2019\u02bb\u02bc`\u00b4]")
+
+
+def fold_for_name_match(text: str) -> str:
+    """Fold text so a state name matches however the party chooses to spell it.
+
+    Decomposes accents and drops the okina, so "Hawai'i", "Hawaii" and "HAWAI'I" all compare
+    equal. Without this the Hawaii Republican Party's own platform was rejected for "never
+    naming Hawaii" -- it names it on the title page, spelled correctly.
+
+    Typographic apostrophes become a plain apostrophe rather than vanishing, so a possessive
+    still terminates the word it follows.
+    """
+    marks_removed = _INTRAWORD_MARK_RE.sub("", text)
+    decomposed = unicodedata.normalize("NFKD", _APOSTROPHE_RE.sub("'", marks_removed))
+    return "".join(ch for ch in decomposed if not unicodedata.combining(ch))
+
+
 def confirm_platform(text: str, state_name: str | None = None) -> tuple[bool, str, int]:
     """Decide whether extracted text really is *this state's* party platform.
 
@@ -246,7 +348,9 @@ def confirm_platform(text: str, state_name: str | None = None) -> tuple[bool, st
     hits = len(_PLATFORM_PHRASE_RE.findall(text))
     despaced = None
     if _space_ratio(text) < 0.08:
-        despaced = re.sub(r"[^0-9a-z]+", "", text.lower())
+        # Folded first: the despaced form strips every non-ASCII character, so an accented
+        # spelling would otherwise lose the letter entirely rather than being normalised.
+        despaced = re.sub(r"[^0-9a-z]+", "", fold_for_name_match(text).lower())
         hits = max(hits, len(_DESPACED_PHRASE_RE.findall(despaced)))
 
     if len(text) < MIN_CHARS:
@@ -255,9 +359,11 @@ def confirm_platform(text: str, state_name: str | None = None) -> tuple[bool, st
         return False, f"lacks platform language (only {hits} declarative phrases)", hits
 
     if state_name:
-        state_hits = len(re.findall(rf"\b{re.escape(state_name)}\b", text, re.I))
+        folded = fold_for_name_match(text)
+        folded_name = fold_for_name_match(state_name)
+        state_hits = len(re.findall(rf"\b{re.escape(folded_name)}\b", folded, re.I))
         if state_hits == 0 and despaced is not None:
-            state_hits = despaced.count(re.sub(r"[^a-z]", "", state_name.lower()))
+            state_hits = despaced.count(re.sub(r"[^a-z]", "", folded_name.lower()))
         national_hits = len(_NATIONAL_RE.findall(text))
         if state_hits < 2 and national_hits >= 2:
             return False, (

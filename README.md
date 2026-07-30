@@ -24,23 +24,22 @@ The best existing platform corpus — *Select American State Party Platforms, 18
 Maryland is absent entirely, Kentucky Democrats last appear in **1943**, New York Democrats in
 **1958**.
 
-![The state party platform record runs out long before the present](outputs/platform_corpus_recency.png)
-
 **So the 2018–present platform corpus does not exist, and this project builds it** from official
 state party websites and the Internet Archive — 201 documents covering 76 of 100 organizations.
 
 ![What the 2018-present platform collection recovered](outputs/platform_coverage_2018_present.png)
 
 The 24 organizations with no platform are a **finding, not a hole**: each was probed by hand and
-carries a recorded reason in [`conf/platform_gaps.yml`](conf/platform_gaps.yml). Eighteen simply
-publish no platform, three publish only a short blurb, one site is suspended, and exactly one
-(Hawaii Democrats) has a platform this pipeline cannot reach.
+carries a recorded reason in [`conf/platform_gaps.yml`](conf/platform_gaps.yml). Most simply
+publish no platform; a few publish only a short blurb, one site is suspended, and one had
+candidates that never confirmed.
 
 ---
 
 ## What the parties say
 
-Every platform is segmented into planks and classified against a
+Every 2018-present platform, and every major-party platform from 1990 onward, is segmented
+into planks and classified against a
 [Comparative Agendas Project](https://www.comparativeagendas.net/) taxonomy by a
 sentence-transformer running **locally on Apple Silicon** — 36,886 planks from 876 documents.
 
@@ -105,6 +104,55 @@ in [the methods](docs/METHODS.md#validating-the-bill-classifier).
 below a similarity threshold are recorded as **unclassified** rather than pushed into the nearest
 topic — 2,490 of 36,886. And filing a bill is not passing one: this measures **agenda, not
 achievement**.
+
+---
+
+## Do the parties hold together? Intra-party comparison
+
+Every figure above treats each party as one actor. With 50 state organizations per party, that
+assumption can be tested rather than assumed.
+
+```bash
+uv run python -m state_politics.analysis.intraparty
+uv run python scripts/plot_intraparty.py
+```
+
+![State parties barely cluster by party](outputs/intraparty_coherence.png)
+
+**Two co-partisan state organizations are about 85% as far apart as two opposed ones** — 0.84 in
+what they say, 0.86 in what they file. The two streams are independent (different authors,
+different sources, different years), and they agree. On topic emphasis, the party label carries
+surprisingly little information about how alike two state organizations are.
+
+**This measures agenda overlap, not agreement.** Every vector is a distribution over *topics*,
+so two organizations are "close" when they devote similar attention to the same subjects — not
+when they want the same things. A Democratic and a Republican platform that each spend 10% of
+their planks on abortion are adjacent on this measure while advocating opposite policies. The
+finding is about what parties put on the agenda, not about ideology.
+
+**Neither party is measurably more internally divided than the other.** Republicans looked more
+scattered in platforms (0.278 vs 0.235) and Democrats in bills (0.121 vs 0.100), but a
+permutation test that shuffles the party labels across the same states puts both differences
+well inside chance (p = 0.41 and p = 0.30). They are reported as null results rather than as a
+reversal, because with a dozen state parties per side that is what they are.
+
+What state parties *do* disagree about differs by party:
+
+| | Most divisive topics within the party (cross-state SD of topic share) |
+|---|---|
+| **Democratic platforms** | Public lands and water (8.3pp), Civil rights (5.5pp), Law and crime (5.4pp) |
+| **Republican platforms** | Government operations (9.7pp), Law and crime (7.9pp), Public lands (6.9pp) |
+| **Democratic bills** | Law and crime (5.7pp), Public lands (4.0pp), Education (3.8pp) |
+| **Republican bills** | Public lands (4.2pp), Law and crime (4.1pp), Government operations (3.5pp) |
+
+Public lands is the clearest case of geography beating party: it is a top-three source of
+internal disagreement for **both** parties in **both** streams, because a Nevada party of either
+stripe has a public-lands agenda and a Rhode Island one does not.
+
+Dispersion is only ever compared between parties over the **same set of states**, since a party
+whose surviving platforms come from more unusual states would otherwise look more divided for
+purely compositional reasons. That restriction is what limits the platform comparison to 12
+states.
 
 ---
 

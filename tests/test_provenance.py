@@ -18,6 +18,7 @@ from state_politics.provenance import (
     record_local_file,
     sha256_bytes,
     sha256_file,
+    url_is_fetchable,
     utc_now_iso,
 )
 
@@ -255,3 +256,41 @@ def test_fetch_caps_an_oversized_body():
     assert content is None
     assert record.ok is False
     assert "max_bytes" in record.error
+
+
+@pytest.mark.parametrize("url", [
+    "http://2130706433/",              # decimal-encoded 127.0.0.1
+    "http://0177.0.0.1/",              # octal-encoded
+    "http://127.1/",                   # short form
+    "http://[::ffff:127.0.0.1]/",      # IPv4-mapped IPv6
+    "http://169.254.169.254/latest/meta-data/",   # cloud metadata
+    "http://localhost:5432/",
+    "http://[fd00::1]/",               # unique local IPv6
+    "http://10.0.0.5/",
+])
+def test_ssrf_guard_rejects_encoded_private_addresses(url):
+    """A literal-string blocklist misses every one of these.
+
+    This crawler deliberately fetches lapsed party domains, several already documented as
+    repointed to unrelated sites, so a hostile or hijacked host reaching loopback or the cloud
+    metadata endpoint is a live risk rather than a theoretical one.
+    """
+    assert url_is_fetchable(url) is not None, url
+
+
+@pytest.mark.parametrize("url", [
+    "https://web.archive.org/cdx/search/cdx",
+    "https://texasgop.org/platform",
+    "https://data.openstates.org/postgres/monthly/x.pgdump",
+])
+def test_ssrf_guard_allows_the_hosts_the_project_actually_uses(url):
+    assert url_is_fetchable(url) is None, url
+
+
+def test_ssrf_guard_allows_a_domain_that_no_longer_resolves():
+    """A dead domain is a research finding, not a security event.
+
+    The request will fail on its own and be recorded with ok=False; rejecting it here would
+    report the wrong reason for the gap.
+    """
+    assert url_is_fetchable("https://this-domain-does-not-exist-xyzzy-42.example/") is None

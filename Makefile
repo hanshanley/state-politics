@@ -72,12 +72,14 @@ analysis: historical
 	$(PY) -m state_politics.analysis.validate_bills
 	$(PY) -m state_politics.analysis.profiles
 	$(PY) -m state_politics.analysis.diffusion
+	$(PY) -m state_politics.analysis.intraparty
 
 figures:
 	$(PY) scripts/plot_platform_coverage.py
 	$(PY) scripts/plot_platform_gap.py
 	$(PY) scripts/plot_party_emphasis.py
 	$(PY) scripts/plot_stated_vs_revealed.py
+	$(PY) scripts/plot_intraparty.py
 
 all: analysis figures
 

@@ -11,6 +11,7 @@ extend or dispute them.
 - [Stream B: legislators and bills](#stream-b-legislators-and-bills)
 - [Classifying both streams into one taxonomy](#classifying-both-streams-into-one-taxonomy)
 - [Validating the bill classifier](#validating-the-bill-classifier)
+- [Intra-party comparison](#intra-party-comparison)
 - [Model legislation](#model-legislation)
 - [Per-state profiles and outliers](#per-state-profiles-and-outliers)
 - [Repository layout](#repository-layout)
@@ -161,8 +162,10 @@ uv run python scripts/plot_party_emphasis.py
 
 The taxonomy (`conf/topics.yml`) is anchored to the **Comparative Agendas Project** major topic
 codes rather than invented here, so results are comparable with the wider literature and so the
-Open States `subject` tags could be mapped onto the same scheme; that is not implemented —
-bills are classified from their titles.
+Open States `subject` tags are mapped onto the same scheme in
+`conf/subject_topic_map.yml` — not to classify bills, which are classified from their titles,
+but as an independent check on that classifier (see
+[Validating the bill classifier](#validating-the-bill-classifier)).
 
 Classification runs **locally on the M4 via MPS** — a pinned sentence-transformer embeds each
 plank and each topic description and assigns the nearest topic. A transparent keyword baseline
@@ -178,7 +181,7 @@ a human can read and argue with.
 
 Scored against `data/gold/plank_topics_gold.csv` — 50 planks drawn at random (seed 20260729)
 from the **2018-present** corpus and hand-labelled by the author. Accuracy is therefore measured
-on modern planks; the 1990–2017 era supplies 69% of classified planks and is not sampled. It is small and single-annotator, so it supports claims about
+on modern planks; the 1990–2017 era supplies most of the plank corpus and is not sampled. It is small and single-annotator, so it supports claims about
 broad aggregate emphasis and not about any individual plank; some planks are genuinely ambiguous
 between two defensible topics, which is why top-2 is reported alongside top-1. Chance on this
 21-way task is about 5%.
@@ -262,13 +265,53 @@ makes.
 Every one is the tax failure or its mirror image, except the last two, where the model and the
 stated share differ by a fraction of a point and the "sign" of a gap that small is noise.
 
-**This is a subsample replication, not a second census.** Only 35 states publish tags, only
+**This is a subsample replication, not a second census.** 37 states publish tags and only
+35 contribute unambiguously mappable ones; only
 28.2% of tagged bills map unambiguously, and the tags are themselves imperfect — a clerk's tag
 can be coarse or wrong. Levels are therefore not comparable to the full-corpus figures; the
 direction and rough size of each gap is. Neither labelling is ground truth, which is precisely
 why agreement between two independent ones is worth more than either alone.
 
 ---
+
+---
+
+## Intra-party comparison
+
+`analysis/intraparty.py` asks whether each party is a coherent bloc at all. Four measures, each
+computed separately for platforms and for bills:
+
+| Measure | Question |
+|---|---|
+| `dispersion` | How far apart are a party's own state organizations, on average? |
+| `coherence` | Is that distance comparable to the distance *between* the parties? |
+| `divisive_topics` | Which topics do co-partisan state parties weight most differently? |
+| `distance_to_centroid` | Which state parties sit furthest from their own party's average? |
+
+Distance is cosine over topic-share vectors — comparing the *shape* of an agenda, so a state
+that simply publishes more does not register as distant.
+
+**Two guards are in the code rather than left to the reader.**
+
+*Composition.* Dispersion is only compared between parties over the same set of states.
+Otherwise a party whose surviving platforms happen to come from more idiosyncratic states looks
+more divided without any of its organizations disagreeing more. This is what restricts the
+platform comparison to the 12 states where both parties clear the 30-observation floor.
+
+*A null model.* `dispersion_gap_pvalue` shuffles the party labels across the same vectors and
+recomputes the gap. Shuffling labels rather than resampling states holds composition fixed, so
+the test asks exactly the intended question: given these organizations, does it matter which
+party each belongs to?
+
+**What it found.** Within/between = 0.84 (platforms) and 0.86 (bills). The apparent reversal —
+Republicans more scattered in platforms, Democrats in bills — does **not** survive the
+permutation test (p = 0.41, p = 0.30) and is reported as a null result.
+
+**The limit that matters.** These vectors are distributions over *topics*, so the measure is
+**agenda overlap, not agreement**. A Democratic and a Republican platform that each devote 10%
+of their planks to abortion are adjacent here while advocating opposite policies. Nothing in
+this section is evidence that the parties are ideologically similar; it is evidence about what
+they choose to put on the agenda.
 
 ---
 

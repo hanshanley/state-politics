@@ -356,7 +356,49 @@ def registrable_domain(url: str) -> str:
     return ".".join(labels[-2:]) if len(labels) >= 2 else host
 
 
-_SCRIPT_RE = re.compile(r"<(script|style)\b[^>]*>.*?</\1>", re.S | re.I)
+#: Opening tag of a block whose contents are markup, not prose.
+_BLOCK_TAGS = ("script", "style")
+_BLOCK_OPEN_RE = re.compile(r"<(" + "|".join(_BLOCK_TAGS) + r")\b[^>]*>", re.I)
+
+def strip_blocks(html: str, tags: tuple[str, ...]) -> str:
+    """Remove ``<tag>...</tag>`` blocks with a linear scan.
+
+    The obvious regex for this -- ``<(script|nav|...)\b[^>]*>.*?</\1>`` -- backtracks
+    quadratically on hostile input, because every opening tag that never closes rescans to the
+    end of the document. Measured here: 14 KB of unclosed ``<nav>`` took 0.11 s, 112 KB took
+    6.5 s, and a fetch is allowed to be 64 MB. Since every byte scanned comes from a
+    third-party website, that is a denial-of-service vector on the crawler, so the scan is done
+    explicitly with ``str.find`` instead. An unclosed tag drops the tag and keeps the text.
+    """
+    if not html:
+        return html
+    lowered = html.lower()
+    out: list[str] = []
+    position = 0
+    # Once no closing tag for a name exists after some offset, none exists after any later
+    # offset either. Without remembering that, a document full of unclosed tags re-scans to
+    # the end for every one of them, which is the same quadratic blow-up in a different guise:
+    # 1.4 MB of unclosed <nav> took 196 s before this set was added.
+    exhausted: set[str] = set()
+    while True:
+        match = _BLOCK_OPEN_RE.search(html, position)
+        if match is None:
+            out.append(html[position:])
+            return "".join(out)
+        out.append(html[position:match.start()])
+        out.append(" ")
+        tag = match.group(1).lower()
+        if tag in exhausted:
+            position = match.end()
+            continue
+        closing = lowered.find(f"</{tag}", match.end())
+        if closing == -1:
+            exhausted.add(tag)
+            position = match.end()
+            continue
+        end = html.find(">", closing)
+        position = len(html) if end == -1 else end + 1
+
 _TAG_RE = re.compile(r"<[^>]+>")
 #: URLs, e-mail addresses and bare domain tokens. Stripped before matching so that a page's
 #: own domain name cannot supply the very words we are testing for.
@@ -386,7 +428,7 @@ _PARTY_TERMS = {
 def visible_text(body: bytes) -> str:
     """Lowercased visible text of an HTML page, with scripts, tags and URLs removed."""
     html = body.decode("utf-8", errors="replace")
-    html = _SCRIPT_RE.sub(" ", html)
+    html = strip_blocks(html, _BLOCK_TAGS)
     html = _TAG_RE.sub(" ", html)
     return re.sub(r"\s+", " ", html).lower()
 

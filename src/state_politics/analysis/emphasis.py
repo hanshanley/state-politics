@@ -9,7 +9,8 @@ Two comparisons the resulting table supports:
 
 * **Between parties.** For each topic, the Democratic and Republican share of planks, which is
   the headline "what does each side talk about" result.
-* **Across eras.** The same measure computed on the 1846-2017 Dataverse corpus and on the
+* **Across eras.** The same measure computed on the 1990-2017 slice of the Dataverse corpus
+  (see ``--historical-from``) and on the
   2018-present corpus this project collected, showing how emphasis has moved.
 
 Everything here is descriptive. Classification accuracy is 62% top-1 / 78% top-2 on a
@@ -25,6 +26,10 @@ from pathlib import Path
 from .taxonomy import DEFAULT_TOPICS_PATH, EmbeddingClassifier, load_topics, segment_planks
 
 __all__ = ["classify_corpus", "emphasis_by_party", "emphasis_table"]
+
+#: Earliest year counted as "modern". A document the collector found on a party's site today
+#: but which the party dated earlier belongs to the earlier era.
+MODERN_FROM = 2018
 
 
 def classify_corpus(frame, classifier: EmbeddingClassifier, *, text_column: str = "text",
@@ -99,6 +104,32 @@ def emphasis_by_party(planks, topics):
     return wide.merge(counts, on="topic", how="left").sort_values("gap", ascending=False)
 
 
+def _drop_cross_corpus_duplicates(corpus):
+    """Drop documents present in both the Dataverse corpus and this project's collection.
+
+    The two corpora overlap: nine (state, party, year) documents appear in both, with
+    content-word Jaccard between 0.90 and 1.00 -- two of them identical. Concatenating without
+    deduplication counts those planks twice, which does not move a national share much but
+    badly distorts the organizations concerned: 27.5% of Nebraska Democrats' planks and 34.9%
+    of Indiana Republicans' were a second copy of one document, giving that document double
+    weight in the per-state profiles and outlier rankings.
+
+    The modern copy is kept, because it carries the URL and hash this project fetched itself.
+    """
+    keyed = corpus.dropna(subset=["year"]).assign(
+        _key=lambda frame: list(zip(frame["state"], frame["party"],
+                                    frame["year"].astype("Int64"), strict=True)))
+    modern_keys = set(keyed.loc[keyed["era"] == "2018-present", "_key"])
+    if not modern_keys:
+        return corpus
+    duplicated = keyed.index[(keyed["era"] != "2018-present")
+                             & keyed["_key"].isin(modern_keys)]
+    if len(duplicated):
+        print(f"dropped {len(duplicated)} historical documents already present in the "
+              "collected corpus")
+    return corpus.drop(index=duplicated)
+
+
 def main(argv: list[str] | None = None) -> int:
     import pandas as pd
 
@@ -118,9 +149,18 @@ def main(argv: list[str] | None = None) -> int:
 
     frames = []
     modern = pd.read_parquet(args.modern)
-    modern = modern[modern["confirmed"]].assign(era="2018-present")
-    frames.append(modern[["state", "party", "year", "era", "text"]])
-    print(f"modern documents:     {len(modern)}")
+    modern = modern[modern["confirmed"]]
+    # The collector finds whatever a party currently publishes, and some parties still publish
+    # a platform from before the window -- 16 of these documents are dated 2006-2017. Labelling
+    # them "2018-present" because that is when they were *collected* would put pre-2018 planks
+    # on the modern side of a comparison whose entire point is that both sides cover the same
+    # years, so they are assigned by their own date instead.
+    modern_year = pd.to_numeric(modern["year"], errors="coerce")
+    in_window = modern_year.isna() | (modern_year >= MODERN_FROM)
+    frames.append(modern[in_window].assign(era="2018-present")[
+        ["state", "party", "year", "era", "text"]])
+    print(f"modern documents:     {int(in_window.sum())} "
+          f"({int((~in_window).sum())} dated before {MODERN_FROM}, moved to the earlier era)")
 
     historical_path = Path(args.historical)
     if historical_path.exists():
@@ -133,7 +173,14 @@ def main(argv: list[str] | None = None) -> int:
         frames.append(historical[["state", "party", "year", "era", "text"]])
         print(f"historical documents: {len(historical)} (from {args.historical_from})")
 
-    corpus = pd.concat(frames, ignore_index=True)
+    # Pre-window modern documents belong with the historical era, not with the years they were
+    # collected in.
+    early = modern[~in_window]
+    if not early.empty:
+        frames.append(early.assign(era=f"{args.historical_from}-2017")[
+            ["state", "party", "year", "era", "text"]])
+
+    corpus = _drop_cross_corpus_duplicates(pd.concat(frames, ignore_index=True))
     planks = classify_corpus(corpus, classifier)
     print(f"planks classified:    {len(planks)} "
           f"({int(planks['topic'].isna().sum())} below the similarity threshold)")
@@ -149,7 +196,7 @@ def main(argv: list[str] | None = None) -> int:
     by_party.to_csv(out_dir / "emphasis_by_party.csv", index=False)
 
     # An era-restricted table as well. The stated-vs-revealed comparison must not measure a
-    # 1990-2026 platform average against a 2018-2026 bill window: 76% of planks predate 2018,
+    # 1990-2026 platform average against a 2018-2026 bill window: most planks predate 2018,
     # and pooling them understates exactly the topics that have risen since (Republican
     # immigration 4.1% pooled vs 5.9% on 2018-present planks alone).
     modern = planks[planks["era"] == "2018-present"]

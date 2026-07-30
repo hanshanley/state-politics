@@ -464,6 +464,48 @@ noise.
 
 ---
 
+## Phase 9 — intra-party comparison
+
+**Why:** every earlier figure treats each party as a single actor. With 50 state organizations
+per party that assumption is testable rather than necessary, and it is the question a 50-state
+dataset is uniquely able to answer.
+
+**What:** `analysis/intraparty.py` measures, separately for platforms and bills:
+dispersion (mean pairwise cosine distance between a party's own state organizations),
+divisive topics (cross-state SD of each topic's share), distance to the party centroid, and
+**coherence** -- within-party distance against between-party distance.
+
+Two guards are built in rather than left to the reader. Dispersion is only compared between
+parties over the **same set of states**, because a party whose surviving platforms come from
+more unusual states would otherwise look more divided for compositional reasons alone; that
+restriction is what limits the platform comparison to 12 states. And a permutation test
+shuffles the party labels across the same vectors, so a dispersion gap is only reported as a
+difference when it survives.
+
+**Result:** the within/between ratio is **0.84 for platforms and 0.86 for bills** -- two
+co-partisan state organizations are about 85% as far apart as two opposed ones, replicated
+across two independent streams with different authors, sources and years.
+
+**The permutation test earned its place immediately.** Republicans looked more scattered in
+platforms (0.278 vs 0.235) and Democrats in bills (0.121 vs 0.100) -- a tidy reversal that would
+have been very quotable. Shuffling the labels puts both differences inside chance (p = 0.41 and
+p = 0.30), so both are reported as null results.
+
+Public lands is a top-three source of internal disagreement for **both** parties in **both**
+streams: geography beats party, because a Nevada party of either stripe has a public-lands
+agenda and a Rhode Island one does not.
+
+> **Lessons:**
+> 1. A measure of "who differs from whom" needs a null model before it needs a chart. The most
+>    interesting-looking result in this phase was noise, and only the permutation test said so.
+> 2. Comparing dispersion across groups requires holding the group *composition* fixed. Two
+>    parties with platforms in different states are not comparable on how divided they look.
+> 3. Cosine over topic shares measures **agenda overlap, not agreement** -- two parties that
+>    both spend 10% of their planks on abortion are adjacent on it. Stating that limit is the
+>    difference between a finding and a misreading.
+
+---
+
 ## 6. Assumptions made (autopilot; flag if wrong)
 
 1. **Python** + pandas/parquet stack, since this is data collection and text analysis.

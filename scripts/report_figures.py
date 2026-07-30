@@ -168,6 +168,21 @@ def main() -> int:
                   f"model {row['revealed_share'] * 100:.1f}%, "
                   f"tags {row['tag_share'] * 100:.1f}%")
 
+    print("\nIntra-party comparison (within vs between party)")
+    for stream in ("platform", "bill"):
+        blocs = _load(f"intraparty_{stream}_coherence.csv")
+        if blocs is None or blocs.empty:
+            continue
+        row = blocs.iloc[0]
+        print(f"  {stream:<9} within {row['mean_within']:.3f}  between {row['between']:.3f}  "
+              f"ratio {row['within_over_between']:.2f}  ({int(row['n_states'])} states)")
+    tests = _load("intraparty_dispersion_tests.csv")
+    if tests is not None and not tests.empty:
+        for _, row in tests.iterrows():
+            verdict = "significant" if row["p_value"] < 0.05 else "not distinguishable from chance"
+            print(f"  {row['stream']:<9} D-R dispersion gap {row['observed_gap']:+.3f}, "
+                  f"p={row['p_value']:.3f} ({verdict})")
+
     registry_path = ROOT / "conf" / "party_registry.yml"
     if registry_path.exists():
         orgs = yaml.safe_load(registry_path.read_text(encoding="utf-8"))["organizations"]

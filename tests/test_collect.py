@@ -7,9 +7,12 @@ status that says *why*, not simply omitted.
 
 from __future__ import annotations
 
+import re
+import time
 from pathlib import Path
 
 from state_politics.platforms.collect import (
+    _BLOCK_TAGS,
     DOC_TYPES,
     MIN_CHARS,
     CollectedDocument,
@@ -18,8 +21,11 @@ from state_politics.platforms.collect import (
     collect_for_org,
     confirm_platform,
     extract_text,
+    fold_for_name_match,
     gap_report,
     load_gap_findings,
+    repair_ligatures,
+    strip_blocks,
     wayback_snapshot_url,
 )
 from state_politics.platforms.discover import Candidate
@@ -414,3 +420,74 @@ def test_gap_report_attaches_findings_only_to_orgs_with_nothing_found():
 
     assert report.loc[("HI", "D"), "gap_cause"] == "client_rendered"
     assert report.loc[("TX", "R"), "gap_finding"] == ""
+
+
+def test_fold_keeps_possessives_matchable():
+    """Deleting the apostrophe welds the possessive onto the state name.
+
+    "Ohio's future" folded to "Ohios future" stops matching r"\bOhio\b". Measured over the
+    corpus, deleting apostrophes cost 140 of 201 documents at least one state-name hit --
+    weakening the very check the folding exists to strengthen.
+    """
+    folded = fold_for_name_match("Ohio's future and Ohio values")
+    assert len(re.findall(r"\bOhio\b", folded)) == 2
+
+
+def test_fold_removes_the_okina_inside_a_state_name():
+    """Hawaii spells its own name with an okina, in several encodings."""
+    for spelling in ("Hawai\u02bbi", "Hawai\u2018i", "Hawai\u2019i", "Hawai'i"):
+        assert re.search(r"\bHawaii\b", fold_for_name_match(spelling)), spelling
+
+
+def test_fold_distinguishes_okina_from_possessive_in_one_document():
+    text = "The Hawai\u2018i Democrats published Hawai\u2018i's platform."
+    folded = fold_for_name_match(text)
+    assert len(re.findall(r"\bHawaii\b", folded)) == 2
+
+
+def test_ligature_repair_expands_broken_font_encodings():
+    """PDF fonts return ligatures as single characters, some at the wrong codepoint."""
+    assert repair_ligatures("Cons\u019ftu\u019fons") == "Constitutions"
+    assert repair_ligatures("Pla\u019eorm") == "Platform"
+    assert repair_ligatures("mo\u01a9o") == "motto"
+    assert repair_ligatures("cu\u01abng") == "cutting"
+    assert repair_ligatures("ful\ufb01ll o\ufb00er \ufb02ow e\ufb03cient") == (
+        "fulfill offer flow efficient"
+    )
+
+
+def test_ligature_repair_leaves_ordinary_text_alone():
+    assert repair_ligatures("Constitutions and platforms") == "Constitutions and platforms"
+    assert repair_ligatures("") == ""
+
+
+def test_strip_blocks_matches_the_regex_it_replaced():
+    """Behaviour on well-formed markup must be unchanged."""
+    equivalent = re.compile(r"<(script|style|nav|header|footer)\b[^>]*>.*?</\1>", re.S | re.I)
+    for html in ("<p>keep</p><script>drop()</script><p>keep2</p>",
+                 '<NAV class="x">menu</NAV>text',
+                 "<header>h</header><footer>f</footer>body",
+                 "<script>a</script>mid<script>b</script>end",
+                 "<nav>x</nav><nav>y</nav>tail",
+                 "plain text with no tags"):
+        expected = re.sub(r"\s+", " ", equivalent.sub(" ", html)).strip()
+        actual = re.sub(r"\s+", " ", strip_blocks(html, _BLOCK_TAGS)).strip()
+        assert actual == expected, html
+
+
+def test_strip_blocks_does_not_blow_up_on_unclosed_tags():
+    """Hostile pages must not hang the crawler.
+
+    Every byte here comes from a third-party website. The regex this replaced backtracked
+    quadratically on unclosed tags: 112 KB took 6.5 s and a fetch may be 64 MB, so one page
+    of unclosed <nav> tags stalled the crawl indefinitely.
+    """
+    html = "<nav a>" * 200_000
+    start = time.perf_counter()
+    strip_blocks(html, _BLOCK_TAGS)
+    assert time.perf_counter() - start < 5.0
+
+
+def test_strip_blocks_keeps_text_after_an_unclosed_tag():
+    """An unclosed block must drop the tag, not the rest of the document."""
+    assert "real content" in strip_blocks("<nav>menu<p>real content", _BLOCK_TAGS)

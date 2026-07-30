@@ -21,8 +21,10 @@ Design notes
 from __future__ import annotations
 
 import hashlib
+import ipaddress
 import json
 import re
+import socket
 import time
 import urllib.parse
 from collections.abc import Iterable, Iterator
@@ -69,6 +71,11 @@ _BLOCKED_HOST_RE = re.compile(
 )
 
 
+#: Redirect hops followed before giving up. Each hop is re-validated against the SSRF
+#: guard, so this only bounds work, not safety.
+MAX_REDIRECTS = 5
+
+
 def _host_of(url: str) -> str:
     return urllib.parse.urlsplit(url).hostname or ""
 
@@ -83,6 +90,62 @@ def url_is_fetchable(url: str) -> str | None:
         return "refusing URL with no host"
     if _BLOCKED_HOST_RE.match(host):
         return f"refusing private/loopback host {host!r}"
+    return _reject_private_address(host)
+
+
+def _reject_private_address(host: str) -> str | None:
+    """Reject a host that *resolves* to a private, loopback or link-local address.
+
+    Matching the hostname as a string is not enough. The literal blocklist above passes
+    ``2130706433``, ``0177.0.0.1``, ``127.1`` and ``[::ffff:127.0.0.1]`` -- all of which reach
+    loopback -- and it cannot see a DNS name that simply points there. That matters here
+    because this crawler deliberately fetches lapsed party domains, several of which are
+    already documented as repointed to unrelated sites, and the cloud metadata endpoint at
+    169.254.169.254 is one redirect away.
+
+    Resolution failures are *not* treated as rejections: a domain that no longer resolves is a
+    normal research finding, and the request will fail on its own with that recorded.
+    """
+    try:
+        parsed = ipaddress.ip_address(host.strip("[]"))
+    except ValueError:
+        parsed = None
+    if parsed is not None:
+        return _address_rejection(parsed, host)
+
+    # inet_aton accepts the legacy shorthands that getaddrinfo rejects but every HTTP client
+    # still honours: octal ("0177.0.0.1"), and dotted forms with fewer than four parts.
+    try:
+        packed = socket.inet_aton(host)
+    except OSError:
+        pass
+    else:
+        reason = _address_rejection(ipaddress.ip_address(packed), host)
+        if reason:
+            return reason
+
+    try:
+        infos = socket.getaddrinfo(host, None)
+    except (socket.gaierror, UnicodeError, OSError):
+        return None
+    for info in infos:
+        try:
+            address = ipaddress.ip_address(info[4][0])
+        except ValueError:
+            continue
+        reason = _address_rejection(address, host)
+        if reason:
+            return reason
+    return None
+
+
+def _address_rejection(address, host: str) -> str | None:
+    if (address.is_private or address.is_loopback or address.is_link_local
+            or address.is_reserved or address.is_multicast or address.is_unspecified):
+        return f"refusing private/loopback host {host!r} (resolves to {address})"
+    mapped = getattr(address, "ipv4_mapped", None)
+    if mapped is not None:
+        return _address_rejection(mapped, host)
     return None
 
 
@@ -263,10 +326,47 @@ class Transport(Protocol):
     def __call__(self, url: str, *, timeout: float, headers: dict[str, str]) -> Response: ...
 
 
+def _read_capped(response, max_bytes: int | None) -> bytes:
+    """Read a response body, stopping one byte past ``max_bytes``.
+
+    Reading one byte extra is deliberate: it lets the caller still detect that the limit was
+    exceeded, rather than silently truncating a document to exactly the cap.
+    """
+    if max_bytes is None or not hasattr(response, "iter_content"):
+        return response.content
+    chunks: list[bytes] = []
+    total = 0
+    for chunk in response.iter_content(chunk_size=1 << 16):
+        if not chunk:
+            continue
+        chunks.append(chunk)
+        total += len(chunk)
+        if total > max_bytes:
+            break
+    return b"".join(chunks)
+
+
 def _default_transport(url: str, *, timeout: float, headers: dict[str, str]) -> Response:
     import requests  # imported lazily so the pure logic stays importable without requests
 
-    return requests.get(url, timeout=timeout, headers=headers, allow_redirects=True)
+    # Redirects are followed manually so every hop is checked. Letting requests follow them
+    # means only the *first* URL is validated, and any third-party site -- or any page served
+    # through the Wayback Machine -- can then 302 the crawler to the cloud metadata endpoint
+    # or to a database port on localhost, with the body recorded into the corpus.
+    for _ in range(MAX_REDIRECTS):
+        response = requests.get(url, timeout=timeout, headers=headers, allow_redirects=False,
+                                stream=True)
+        if response.status_code not in (301, 302, 303, 307, 308):
+            return response
+        location = response.headers.get("location")
+        response.close()
+        if not location:
+            return response
+        url = urllib.parse.urljoin(url, location)
+        reason = url_is_fetchable(url)
+        if reason:
+            raise PermissionError(f"redirect blocked: {reason}")
+    raise RuntimeError(f"too many redirects (> {MAX_REDIRECTS})")
 
 
 def fetch(
@@ -347,7 +447,10 @@ def fetch(
 
         status = int(response.status_code)
         ok = 200 <= status < 300
-        body = response.content if ok else b""
+        # Read with a hard ceiling rather than touching ``.content``, which buffers the whole
+        # body first: a hostile or misconfigured host serving a multi-gigabyte response would
+        # otherwise exhaust memory before the size check below ever ran.
+        body = _read_capped(response, max_bytes) if ok else b""
         oversize = ok and max_bytes is not None and len(body) > max_bytes
         if oversize:
             ok, body = False, b""

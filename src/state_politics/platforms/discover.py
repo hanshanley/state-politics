@@ -245,6 +245,10 @@ def score_candidate(url: str, mimetype: str | None = None) -> tuple[int, list[st
     last = segments[-1]
     stem = re.sub(r"\.(?:pdf|docx?|html?)$", "", last, flags=re.I)
     is_document = (mimetype or "").lower() == "application/pdf" or stem != last
+    #: A file the browser downloads rather than renders. Unlike `is_document` this excludes
+    #: .htm/.html, which are ordinary web pages and can perfectly well be news posts.
+    is_downloadable = ((mimetype or "").lower() == "application/pdf"
+                       or bool(re.search(r"\.(?:pdf|docx?)$", last, re.I)))
 
     if any(_STRONG_SEGMENT_RE.match(segment) for segment in segments):
         score += 5
@@ -274,7 +278,18 @@ def score_candidate(url: str, mimetype: str | None = None) -> tuple[int, list[st
     # News posts are long hyphenated sentences. This must not fire on a document whose name
     # merely happens to be descriptive -- "2024-idaho-democratic-party-platform" is exactly
     # what a real platform is called, and an earlier version of this scored it zero.
-    if not strong:
+    #
+    # It must also not fire on a *downloadable document*. Parties name platform files
+    # descriptively: "2024-HRP-Platform-Convention-Updates.pdf" was penalised two points for
+    # looking chatty, which dropped Hawaii's Republican platform below the strong-candidate
+    # threshold and left the state recorded as publishing nothing. The guard above only caught
+    # names *ending* in the document type, so "Platform" in the middle slipped through.
+    #
+    # The exemption is deliberately narrower than `is_document`, which is also true for .html:
+    # exempting every HTML page would let dated blog posts such as
+    # "/2009/02/on-reagan-day-his-principles-are-still.html" score as strong candidates, which
+    # is precisely what this penalty exists to prevent.
+    if not strong and not is_downloadable:
         hyphens = stem.count("-") + stem.count("_")
         if hyphens >= 5:
             score -= 4
