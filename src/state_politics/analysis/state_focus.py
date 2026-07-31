@@ -174,7 +174,7 @@ def _format_top(vector, names: dict[int, str], top_n: int = 3) -> str:
     )
 
 
-def focus_metrics(vectors, counts, topic_names, *, min_items: int = 5):
+def focus_metrics(vectors, counts, topic_names, *, min_items: int = MIN_OBSERVATIONS):
     """Leave-one-state-out focus metrics for each state party vector."""
     import numpy as np
     import pandas as pd
@@ -238,12 +238,33 @@ def build_state_focus_atlas(stated, bills, topics):
 
     names = {topic.code: topic.name for topic in topics}
     stated_counts = stated.rename(columns={"n_items": "n_items"})
-    stated_vectors = topic_vectors(
+    stated_all_vectors = topic_vectors(
         stated_counts, count_column="n_items", min_observations=1
     )
-    stated_focus = focus_metrics(stated_vectors, stated_counts, names).add_prefix("stated_")
+    stated_vectors = topic_vectors(
+        stated_counts, count_column="n_items", min_observations=MIN_OBSERVATIONS
+    )
+    stated_focus = focus_metrics(
+        stated_vectors, stated_counts, names, min_items=MIN_OBSERVATIONS
+    ).add_prefix("stated_")
     stated_focus = stated_focus.rename(
         columns={"stated_state": "state", "stated_party": "party"}
+    )
+    stated_top = pd.DataFrame(
+        [
+            {
+                "state": state,
+                "party": party,
+                "stated_n_items_all": int(
+                    stated_counts[
+                        (stated_counts["state"] == state)
+                        & (stated_counts["party"] == party)
+                    ]["n_items"].sum()
+                ),
+                "stated_top_topics_all": _format_top(vector, names),
+            }
+            for (state, party), vector in stated_all_vectors.iterrows()
+        ]
     )
     evidence = (
         stated.groupby(["state", "party"])["evidence_type"].first().rename("stated_source")
@@ -263,6 +284,14 @@ def build_state_focus_atlas(stated, bills, topics):
         columns=["state", "party"],
     )
     grid = grid.merge(stated_focus, on=["state", "party"], how="left")
+    grid = grid.merge(stated_top, on=["state", "party"], how="left")
+    grid["stated_n_items"] = grid["stated_n_items"].fillna(
+        grid["stated_n_items_all"]
+    )
+    grid["stated_top_topics"] = grid["stated_top_topics"].fillna(
+        grid["stated_top_topics_all"]
+    )
+    grid = grid.drop(columns=["stated_n_items_all", "stated_top_topics_all"])
     grid = grid.merge(evidence.reset_index(), on=["state", "party"], how="left")
     grid = grid.merge(bill_focus, on=["state", "party"], how="left")
     grid["stated_source"] = grid["stated_source"].fillna("none")
@@ -282,6 +311,12 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--committee", default=root / "data/processed/emphasis_by_org.csv")
     parser.add_argument("--caucus", default=root / "data/processed/caucus_priorities.parquet")
     parser.add_argument("--bills", default=root / "data/processed/bill_emphasis_by_state.csv")
+    parser.add_argument(
+        "--elections", default=root / "data/processed/election_focus_by_state_party.csv"
+    )
+    parser.add_argument(
+        "--terms", default=root / "data/processed/state_party_term_highlights.csv"
+    )
     parser.add_argument("--topics", default=DEFAULT_TOPICS_PATH)
     parser.add_argument("--out-dir", default=root / "data/processed")
     args = parser.parse_args(argv)
@@ -296,6 +331,36 @@ def main(argv: list[str] | None = None) -> int:
     stated = combine_stated_emphasis(committee, caucus_emphasis)
     bills = pd.read_csv(args.bills)
     atlas = build_state_focus_atlas(stated, bills, topics)
+    election_path = Path(args.elections)
+    if election_path.exists():
+        elections = pd.read_csv(election_path).rename(
+            columns={
+                "n_election_bills": "election_n_bills",
+                "election_share": "election_share",
+                "peer_share": "election_peer_share",
+                "overemphasis": "election_overemphasis",
+                "top_subtype": "election_top_subtype",
+            }
+        )
+        atlas = atlas.merge(
+            elections[
+                [
+                    "state", "party", "election_n_bills", "election_share",
+                    "election_peer_share", "election_overemphasis", "election_top_subtype",
+                ]
+            ],
+            on=["state", "party"],
+            how="left",
+        )
+    term_path = Path(args.terms)
+    if term_path.exists():
+        terms = pd.read_csv(term_path).pivot(
+            index=["state", "party"], columns="stream", values="distinctive_terms"
+        ).reset_index()
+        terms = terms.rename(
+            columns={"bills": "bill_distinctive_terms", "stated": "stated_distinctive_terms"}
+        )
+        atlas = atlas.merge(terms, on=["state", "party"], how="left")
 
     out = Path(args.out_dir)
     out.mkdir(parents=True, exist_ok=True)

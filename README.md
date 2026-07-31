@@ -143,11 +143,12 @@ both to score the classifier and to re-derive the headline outright.
 |---|---|
 | Plank classifier vs. hand-labelled gold set | 62% top-1, 78% top-2 |
 | Bill-title classifier vs. statehouse tags | **63.2%** agreement on 46,659 bills, 35 states |
-| Headline re-derived from tags, not the model | **34 of 40 rows hold** (111,521 bills) |
+| Headline re-derived from tags, not the model | **33 of 40 rows hold** (111,521 bills) |
 
-The seven failures share one cause: Macroeconomics recall is 18.1%, so tax bills scatter into
-whatever was being taxed — inflating housing and public lands. Full precision/recall breakdown
-in [the methods](docs/METHODS.md#validating-the-bill-classifier).
+The consequential failure is taxation: Macroeconomics recall is 18.1%, so tax bills scatter
+into whatever was being taxed — inflating housing and public lands. Several other failed rows
+change sign by only a fraction of a point and should be treated as noise. Full precision/recall
+breakdown is in [the methods](docs/METHODS.md#validating-the-bill-classifier).
 
 **Other limits.** Bills are classified from *titles*, which are short and often procedural.
 18.9% of bills cannot be resolved to a party and are excluded rather than guessed at. Planks
@@ -209,6 +210,68 @@ states.
 
 ---
 
+## Which states stand out within their own party?
+
+The national averages hide large state differences. `state_party_focus.csv` contains one row
+for every state × party pair, comparing each state with **other states of the same party**.
+The bill side covers 98 partisan caucuses across 49 states; Nebraska is explicitly unavailable
+because its legislature is formally nonpartisan.
+
+![Where state parties break from their own party](outputs/state_party_focus.png)
+
+Representative departures:
+
+| State party | Disproportionate bill focus | State share | Same-party peers |
+|---|---|---:|---:|
+| Idaho Democrats | Civil rights and liberties | 22.5% | 3.9% |
+| New Mexico Democrats | Social welfare | 19.7% | 3.7% |
+| North Dakota Democrats | Public lands and water | 23.0% | 8.1% |
+| Illinois Republicans | Science and technology | 14.0% | 1.8% |
+| North Dakota Republicans | Public lands and water | 28.8% | 10.9% |
+| Alaska Republicans | Government operations | 19.3% | 9.3% |
+
+The baseline is leave-one-state-out, so Idaho does not help define the Democratic average it is
+measured against. The full atlas also includes stated-agenda topics, evidence type, sample size,
+cosine distance and distinctive language.
+
+### Elections and voting
+
+Election policy is hidden inside the broad Government Operations taxonomy, so it is measured
+separately from titles covering voting, ballots, election administration, campaign finance,
+redistricting, candidate rules and election security.
+
+![Where elections dominate the legislative agenda](outputs/election_focus.png)
+
+- Republican caucuses devote **3.14%** of bills to elections and voting; Democrats **2.84%**.
+- Idaho Democrats are the strongest Democratic outlier: **12.2%** versus 3.5% among Democratic
+  peers.
+- Nevada Republicans lead their side: **8.4%** versus 3.5% among Republican peers.
+- The title rule scores **83.9% precision and 75.1% recall** against legislature-assigned
+  subject tags.
+- Most detected bills concern voting and election administration; campaign finance,
+  redistricting, candidate rules and election security form smaller subgroups.
+
+### Distinctive language: TF-IDF and log₂ concentration
+
+`state_party_terms.csv` reports both TF-IDF and a same-party concentration score for words and
+two-word phrases. A log₂ score of +1 means a term is twice as concentrated as in peer states;
++2 means four times. Examples:
+
+| State party and stream | Distinctive language |
+|---|---|
+| Alaska Democrats, stated | `subsistence` (+9.8), `salmon` (+6.8), `fisheries` (+4.5) |
+| Kentucky Republicans, stated | `postsecondary education` (+10.9), `research fund` (+8.9), `wildlife resources` (+7.6) |
+| New Jersey Republicans, stated | `school funding` (+6.2), `property taxes` (+2.7) |
+| South Dakota Democrats, stated | `tribal colleges` (+3.9), `high tech` (+6.9) |
+| Alaska Democrats, bills | `permanent fund` (+10.6), `fund dividend` (+12.9) |
+| Arkansas Republicans, bills | `child maltreatment` (+6.8) |
+
+These are exploratory language signals, not topic labels. Legislative drafting conventions and
+proper names can also become state-specific; the public highlights filter common procedural
+boilerplate, while the raw scores remain available for inspection.
+
+---
+
 ## Model legislation
 
 Advocacy groups circulate template bills, and near-identical text surfacing in a dozen capitols
@@ -238,7 +301,8 @@ All fetched and verified live; full citations, crediting the *collecting* organi
 |---|---|---|
 | Hopkins, Coffey, Galvin, Gamm, Henderson, Paddock & Schickler — *Select American State Party Platforms* (Harvard Dataverse, CC0) | Historical platforms | 2,091 docs, 49 states, 1840–2017 |
 | Open States / Plural Policy — bulk data | Bills, sponsors, legislators | 1,087,327 bills, 50 states, sessions overlapping 2018–2026 |
-| Internet Archive — Wayback CDX API | Discovery of 2018–present platforms | 236 of 244 docs recovered |
+| Internet Archive + official document hosts | Discovery of 2018–present platforms/resolutions | 236 Wayback, 8 live, 5 official hosted copies |
+| Official state legislative caucus sites | Separately labelled agenda supplement | 4 sources completing stated state-level coverage to 50/50 |
 | Wikidata + hand verification | Registry of official party websites | 100/100 resolved |
 
 ---
@@ -274,6 +338,7 @@ re-crawls anyone's website:
 ```bash
 make registry     # verify all 100 state party websites          (~10 min)
 make platforms    # discover + collect 2018-present platforms    (~1 h, polite crawl)
+make caucus-priorities  # collect the four separate caucus agenda sources
 make bills-dump   # download the 10.7 GB dump, extract, delete it (~20 min)
 ```
 

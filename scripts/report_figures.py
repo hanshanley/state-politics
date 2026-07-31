@@ -13,6 +13,7 @@ Usage::
 
 from __future__ import annotations
 
+import json
 import sys
 from pathlib import Path
 
@@ -193,6 +194,41 @@ def main() -> int:
             verdict = "significant" if row["p_value"] < 0.05 else "not distinguishable from chance"
             print(f"  {row['stream']:<9} D-R dispersion gap {row['observed_gap']:+.3f}, "
                   f"p={row['p_value']:.3f} ({verdict})")
+
+    focus = _load("state_party_focus.csv")
+    if focus is not None and not focus.empty:
+        print("\nWithin-party state focus atlas")
+        print(f"  profiles             {len(focus)}/100")
+        print(f"  stated evidence      {int((focus['stated_source'] != 'none').sum())}/100")
+        print(f"  bill evidence        {int(focus['bill_n_items'].notna().sum())}/100")
+        for party in ("D", "R"):
+            top = focus[
+                (focus["party"] == party) & focus["bill_focus_reliable"].fillna(False)
+            ].nlargest(3, "bill_cosine_distance")
+            for row in top.itertuples():
+                print(f"    {party} {row.state}: {row.bill_focus_topic} "
+                      f"{row.bill_focus_share:.1%} vs {row.bill_peer_share:.1%} peers")
+
+    elections = _load("election_focus_by_state_party.csv")
+    validation_path = DATA / "election_title_validation.json"
+    if elections is not None and validation_path.exists():
+        validation = json.loads(validation_path.read_text(encoding="utf-8"))
+        print("\nElection and voting bills")
+        print(f"  election bills       {int(elections['n_election_bills'].sum()):,}")
+        print(f"  detector validation  {validation['precision']:.1%} precision, "
+              f"{validation['recall']:.1%} recall")
+        for party in ("D", "R"):
+            block = elections[elections["party"] == party]
+            share = block["n_election_bills"].sum() / block["n_bills"].sum()
+            top = block[block["focus_reliable"]].nlargest(1, "overemphasis").iloc[0]
+            print(f"  {party} pooled share       {share:.2%}; highest {top['state']} "
+                  f"{top['election_share']:.1%} vs {top['peer_share']:.1%} peers")
+
+    terms = _load("state_party_terms.csv")
+    if terms is not None:
+        print("\nTF-IDF and log2 concentration")
+        print(f"  reported term rows   {len(terms):,}")
+        print("  interpretation       +1 log2 = 2x peer concentration; +2 = 4x")
 
     registry_path = ROOT / "conf" / "party_registry.yml"
     if registry_path.exists():

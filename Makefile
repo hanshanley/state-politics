@@ -79,6 +79,9 @@ analysis: historical
 	$(PY) -m state_politics.analysis.profiles
 	$(PY) -m state_politics.analysis.diffusion
 	$(PY) -m state_politics.analysis.intraparty
+	$(PY) -m state_politics.analysis.elections
+	$(PY) -m state_politics.analysis.terms
+	$(PY) -m state_politics.analysis.state_focus
 
 figures:
 	$(PY) scripts/plot_platform_coverage.py
@@ -87,6 +90,8 @@ figures:
 	$(PY) scripts/plot_stated_vs_revealed.py
 	$(PY) scripts/plot_intraparty.py
 	$(PY) scripts/plot_state_agenda_coverage.py
+	$(PY) scripts/plot_state_focus.py
+	$(PY) scripts/plot_election_focus.py
 
 all: analysis figures
 

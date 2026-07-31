@@ -12,6 +12,9 @@ extend or dispute them.
 - [Classifying both streams into one taxonomy](#classifying-both-streams-into-one-taxonomy)
 - [Validating the bill classifier](#validating-the-bill-classifier)
 - [Intra-party comparison](#intra-party-comparison)
+- [State focus atlas](#state-focus-atlas)
+- [Election and voting focus](#election-and-voting-focus)
+- [TF-IDF and log2 concentration](#tf-idf-and-log2-concentration)
 - [Model legislation](#model-legislation)
 - [Per-state profiles and outliers](#per-state-profiles-and-outliers)
 - [Repository layout](#repository-layout)
@@ -318,8 +321,6 @@ why agreement between two independent ones is worth more than either alone.
 
 ---
 
----
-
 ## Intra-party comparison
 
 `analysis/intraparty.py` asks whether each party is a coherent bloc at all. Four measures, each
@@ -357,6 +358,81 @@ p = 0.30), so that half is reported as a null result.
 of their planks to abortion are adjacent here while advocating opposite policies. Nothing in
 this section is evidence that the parties are ideologically similar; it is evidence about what
 they choose to put on the agenda.
+
+---
+
+## State focus atlas
+
+`analysis/state_focus.py` produces `state_party_focus.csv`, one row for every state × party
+pair. It answers a different question from the national comparison: not "what do Democrats
+emphasize?" but "what does this state's Democratic organization emphasize more than Democrats
+in other states?"
+
+The baseline is **leave-one-state-out**. For a state vector \(s\), the comparison vector is the
+mean of every other state in that party:
+
+\[
+\Delta_{s,t} = share_{s,t} - mean_{j \ne s,\ same\ party}(share_{j,t})
+\]
+
+This prevents a very unusual state from pulling its own baseline toward itself. The atlas
+reports the largest positive \(\Delta\), top three topics, cosine distance from same-party peers,
+sample size and evidence type.
+
+The two streams remain separate. The stated side prefers party-committee evidence and uses a
+legislative-caucus supplement only where committee evidence is absent. The filed side covers
+98 partisan caucuses across 49 states. Nebraska has no D/R bill profile because its legislature
+is formally nonpartisan; the output records that explicitly.
+
+The caucus supplement is classified conservatively:
+
+* Kentucky uses only the Senate Republican Caucus's explicitly numbered priority bills, not
+  the page's much longer list of every Senate bill.
+* Maryland uses the verbatim sentence defining the Senate Democratic Caucus agenda, not the
+  surrounding committee-assignment announcement.
+* New Jersey and Pennsylvania use their full official priority pages.
+
+---
+
+## Election and voting focus
+
+Elections sit inside CAP's broad Government Operations topic, so
+`analysis/elections.py` applies a separate high-precision title rule covering:
+
+* voting, voters, ballots, polling places, absentee and mail voting;
+* campaign finance and political committees;
+* redistricting and reapportionment;
+* candidate filing, primaries and political-party rules;
+* election fraud, interference and security.
+
+Cross-state shares use title matches only, keeping coverage comparable where legislatures do
+not publish subject tags. In the 37 states that do publish them, human-assigned tags provide an
+independent check: **83.9% precision and 75.1% recall**. The output reports total election bills,
+share of all bills, top subtype and a leave-one-state-out same-party baseline.
+
+---
+
+## TF-IDF and log2 concentration
+
+`analysis/terms.py` aggregates bill titles and stated-agenda text into one document per
+state-party and computes:
+
+1. **TF-IDF**, distinguishing a state-party document from all others.
+2. **Within-party log2 concentration**:
+
+\[
+\log_2 \frac{smoothed\ feature\ rate\ in\ state\ s}
+                 {smoothed\ feature\ rate\ in\ other\ states\ of\ party\ p}
+\]
+
+A value of +1 means twice the same-party peer concentration; +2 means four times. Features are
+unigrams and bigrams appearing in at least two state-party documents. Additive smoothing avoids
+infinite ratios where peers never use a term.
+
+Raw TF-IDF is sensitive to drafting conventions and OCR/markup remnants. The analysis therefore
+removes state names, common legislative boilerplate, ceremonial language, dates and HTML
+entities from public highlights. The complete raw scores remain in `state_party_terms.csv`, so
+filtering decisions are auditable rather than hidden.
 
 ---
 

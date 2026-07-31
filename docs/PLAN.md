@@ -551,6 +551,45 @@ agenda and a Rhode Island one does not.
 
 ---
 
+## Phase 10 — state focus atlas, election bills, and distinctive language
+
+**Why:** national and intra-party dispersion figures establish that state parties differ, but
+do not answer the practical lookup question: *what does this particular state's Democratic or
+Republican organization focus on?*
+
+**State focus atlas.** `analysis/state_focus.py` writes one row for every state × party pair.
+The baseline is leave-one-state-out: a state is compared with the other states of its own party,
+so it cannot pull its own comparison point toward itself. The atlas combines:
+
+- current party-committee stated evidence where available;
+- the separately labelled caucus supplement only where committee evidence is absent;
+- classified bill-title shares for 98 partisan caucuses in 49 states;
+- an explicit nonpartisan marker for Nebraska rather than invented D/R bill results.
+
+**Election lens.** `analysis/elections.py` separates voting and election bills from the broad
+Government Operations category. The high-precision title rule covers election administration,
+voting access, campaign finance, redistricting, candidate/party rules and election security. It
+scores 83.9% precision and 75.1% recall against legislature-assigned subject tags. Republican
+caucuses devote 3.14% of filings to these bills, Democrats 2.84%; Idaho Democrats (12.2%) and
+Nevada Republicans (8.4%) are the strongest same-party outliers.
+
+**Language concentration.** `analysis/terms.py` computes both TF-IDF and a same-party log2
+concentration score for unigrams and bigrams. +1 means twice the peer-state concentration; +2
+means four times. State names, markup remnants, legislative boilerplate, ceremonial language
+and dates are filtered from public highlights, while the raw scores remain available.
+
+> **Lessons:**
+> 1. A national party average is not a state profile. Use a leave-one-out same-party baseline
+>    for claims about what makes a state distinctive.
+> 2. A broad taxonomy can conceal a politically important subtopic. Elections needed a dedicated
+>    lens rather than another interpretation of Government Operations.
+> 3. Raw TF-IDF is as good at detecting drafting conventions as policy. The raw output should
+>    remain auditable, but public highlights need transparent boilerplate filtering.
+> 4. Missing evidence and zero emphasis are different. The atlas records missing stated sources
+>    and Nebraska's nonpartisan legislature explicitly.
+
+---
+
 ## 6. Assumptions made (autopilot; flag if wrong)
 
 1. **Python** + pandas/parquet stack, since this is data collection and text analysis.
