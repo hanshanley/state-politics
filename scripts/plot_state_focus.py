@@ -23,6 +23,15 @@ sys.path.insert(0, str(ROOT / "src"))
 
 from state_politics.plotting import charts, theme  # noqa: E402
 
+TOPIC_LABELS = {
+    "Civil rights and liberties": "Civil rights & liberties",
+    "Public lands and water": "Public lands & water",
+    "Law, crime and justice": "Law, crime & justice",
+    "Science, technology and communications": "Science & technology",
+    "Business, commerce and consumers": "Business & consumers",
+    "Housing and community development": "Housing & community development",
+}
+
 SOURCE_NOTE = (
     "Source: Open States / Plural Policy, 2026-07 public PostgreSQL dump. Each row is one "
     "state party's classified bill-title distribution. The comparison is leave-one-state-out: "
@@ -52,9 +61,22 @@ def build_figure(atlas: pd.DataFrame, out_path: Path, *, top_n: int = 10) -> Pat
         ax.barh(y, values, color=color, alpha=0.88, height=0.56)
         ax.set_yticks(list(y))
         ax.set_yticklabels(subset["state"], fontsize=10, fontweight="bold")
-        for position, row in enumerate(subset.itertuples()):
+        rows = list(subset.itertuples())
+        # Matplotlib displays the highest y position at the top here, so assign the first full
+        # topic label in reverse iteration (visual top-to-bottom). Otherwise a top row can say
+        # "same focus" before the reader has encountered the original label below it.
+        seen_topics: set[str] = set()
+        display_labels: list[str] = []
+        for row in reversed(rows):
+            topic = TOPIC_LABELS.get(row.bill_focus_topic, row.bill_focus_topic)
+            display_labels.append("↳ same focus" if topic in seen_topics else topic)
+            seen_topics.add(topic)
+        display_labels.reverse()
+        for position, (row, topic_label) in enumerate(
+            zip(rows, display_labels, strict=True)
+        ):
             ax.annotate(
-                f"{row.bill_focus_topic}\n"
+                f"{topic_label}\n"
                 f"{row.bill_focus_share:.1%} vs {row.bill_peer_share:.1%}",
                 xy=(row.bill_overemphasis * 100, position),
                 xytext=(5, 0),

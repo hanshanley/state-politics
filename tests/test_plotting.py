@@ -76,6 +76,18 @@ def test_source_note_wraps_to_the_requested_width():
     plt.close(fig)
 
 
+def test_default_source_note_uses_more_width_on_wider_figures():
+    narrow = plt.figure(figsize=(6, 4))
+    wide = plt.figure(figsize=(13, 4))
+    text = "source detail " * 100
+    narrow_note = theme.source_note(narrow, text)
+    wide_note = theme.source_note(wide, text)
+
+    assert len(wide_note.get_text().split("\n")) < len(narrow_note.get_text().split("\n"))
+    plt.close(narrow)
+    plt.close(wide)
+
+
 def test_layout_reserves_enough_room_for_a_long_source_note():
     """The axes must not be laid out on top of the note.
 

@@ -167,8 +167,14 @@ def apply() -> None:
     plt.rcParams.update(RC_PARAMS)
 
 
-def source_note(fig, text: str, x: float = 0.01, y: float = 0.01, ha: str = "left",
-                width: int = 118):
+def source_note(
+    fig,
+    text: str,
+    x: float = 0.01,
+    y: float = 0.01,
+    ha: str = "left",
+    width: int | None = None,
+):
     """Add the standard italic, muted source note, wrapped to ``width`` characters.
 
     Figures are saved with ``bbox_inches="tight"``, so a single long note sets the saved
@@ -178,7 +184,11 @@ def source_note(fig, text: str, x: float = 0.01, y: float = 0.01, ha: str = "lef
     Returns the ``Text`` artist, which :func:`layout_with_note` measures to reserve exactly
     the space the note occupies.
     """
-    lines = textwrap.wrap(text, width=width) or [""]
+    # A fixed 118-character wrap leaves notes bunched into the bottom-left corner of wide
+    # 13-inch figures. Scale to the actual canvas while keeping a sensible floor for smaller
+    # charts; callers can still request an exact width for tests or narrow layouts.
+    effective_width = width or max(80, round(fig.get_figwidth() * 13))
+    lines = textwrap.wrap(text, width=effective_width) or [""]
     return fig.text(x, y, "\n".join(lines), ha=ha, va="bottom", fontsize=8, color=MUTED,
                     style="italic", linespacing=1.4)
 

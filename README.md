@@ -21,72 +21,19 @@ Congressional bills are **out of scope**. This is about *state* politics.
 
 ---
 
-## Why this project exists
+## Data
 
-The best existing platform corpus — *Select American State Party Platforms, 1846–2017*
-(`doi:10.7910/DVN/KNOSHL`) — is excellent but **stops at 2017**, and its coverage is very uneven:
-Maryland is absent entirely, Kentucky Democrats last appear in **1943**, New York Democrats in
-**1958**.
+- **Stated priorities:** 249 current party platforms and state-committee resolutions, plus a
+  separately labelled four-source legislative-caucus supplement. The platform-vs-bill analysis
+  uses only party-committee evidence.
+- **Revealed priorities:** 1,087,327 state legislative bills and 5,000,761 sponsorship records.
+- **Historical comparison:** 2,091 state party platform documents covering 1840–2017.
+- **State profiles:** 100 state × party rows, with stated evidence where available and partisan
+  bill evidence for every state except Nebraska's formally nonpartisan legislature.
 
-**So the 2018–present platform corpus does not exist, and this project builds it** from official
-state party websites, official third-party document hosts, and the Internet Archive — **249
-documents covering 82 of 100 organizations across 46 states.** This strict corpus includes party
-platforms and state-committee resolutions, but not a caucus document relabelled as a platform.
-
-![What the 2018-present platform collection recovered](outputs/platform_coverage_2018_present.png)
-
-The 18 organizations with no party-committee document are a **finding, not a hole**: each was
-probed by hand and
-carries a recorded reason in [`conf/platform_gaps.yml`](conf/platform_gaps.yml). Most simply
-publish no platform; a few publish only a short blurb, one site is suspended, and one had
-candidates that never confirmed.
-
-That claim was stress-tested rather than assumed, in six independent ways:
-
-| Method | Scope | Real platforms found |
-|---|---|---|
-| Every archived **PDF** ≥25 KB, no path filtering | 791 documents, all 21 gap domains + former domains | **1** (Delaware GOP's *Rescue Delaware Plan*, 2022 — now in the corpus) |
-| Every archived **HTML page** ≥30 KB | ~500 pages, the 6 states with nothing at all | **0** |
-| **Live probing of 36 candidate paths** (`/platform`, `/principles`, `/where-we-stand`, `/resolutions`, …) | 12 organizations | **0** |
-| **Querying each site's own CMS index** (`wp-json`, Wix page manifest) | 12 organizations | **0** |
-| **Alternate and former domains** (`padems.com`, `pademocrats.org`, `nysdemocrats.org`, …) | 7 domains | **0** |
-| **An independent reference source** — Ballotpedia's party pages | 12 organizations | **0** |
-
-The near-misses are instructive: Louisiana Republicans' largest "platform" match was their
-**privacy policy**, and Kentucky Republicans' was a 453-word *About* page.
-
-The independent check is the most telling. [Ballotpedia](https://ballotpedia.org) maintains a
-"Party platform" section for every state party. For **New Jersey Democrats** it reads *"follows
-the platform of the Democratic National Committee"*; for **New Jersey Republicans**, *"as of May
-2024, this information was not publicly available"*; and for both **Pennsylvania** parties the
-"platform" link resolves to a committee roster and a 509-word *Our Party* blurb. A reference
-work that tracks all 50 states independently reaches the same conclusion this pipeline did.
-
-**Four states — Kentucky, Maryland, New Jersey and Pennsylvania — have no platform *or*
-state-committee resolutions from either party.** New York Democrats are represented by their
-official 84-page State Democratic Committee resolutions archive on Issuu; Louisiana Republicans
-by their 2025 State Central Committee resolution packets, which were hidden behind a Wix CDN.
-
-### Completing state-level agenda coverage without faking a platform
-
-The strict party-committee corpus honestly stops at **46/50 states**. Rather than pretend a
-legislative caucus is the party committee, the remaining four states are covered in a **separate
-supplement** of official state legislative caucus agendas. It gives the project at least one
-stated, state-level agenda source in **all 50 states** while preserving the institutional
-distinction:
-
-| Missing party-committee state | Official supplemental source | Year |
-|---|---|---:|
-| Kentucky | Senate Republican Caucus priority bills | 2024 |
-| Maryland | Senate Democratic Caucus agenda statement | 2026 |
-| New Jersey | Assembly Republican Agenda Center | 2025 |
-| Pennsylvania | Senate Democratic Caucus legislative priorities | 2025 |
-
-These four sources live in `caucus_priorities.parquet`, are recorded separately from platforms,
-and are not used in the platform figure or stated-vs-revealed headline. The **bills** stream
-already covers both major parties in every state.
-
-![Every state has a stated state-level agenda source](outputs/state_agenda_coverage.png)
+Collection, missing-source verification, OCR reconstruction and coverage accounting are
+documented in [Methods](docs/METHODS.md) and
+[Reproducibility](docs/REPRODUCIBILITY.md).
 
 ---
 
