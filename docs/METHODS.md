@@ -7,7 +7,7 @@ extend or dispute them.
 **Contents**
 
 - [Stream A: platforms](#stream-a-platforms)
-- [The 24 parties with no platform](#the-24-parties-with-no-platform)
+- [Committee-document gaps](#the-18-parties-with-no-committee-platform-or-resolution)
 - [Stream B: legislators and bills](#stream-b-legislators-and-bills)
 - [Classifying both streams into one taxonomy](#classifying-both-streams-into-one-taxonomy)
 - [Validating the bill classifier](#validating-the-bill-classifier)
