@@ -123,7 +123,10 @@ def build_figure(table: pd.DataFrame, out_path: Path, *, sample: str = "",
             left_label="Said (platform planks)", right_label="Filed (bills)",
             markersize=7.0, unreliable=flags,
         )
-        ax.invert_yaxis()
+        # Pinned rather than autoscaled. A topic missing for one party leaves that row empty,
+        # and matplotlib would then give the two panels different limits -- sliding one panel's
+        # dots off the shared tick labels the other panel supplies.
+        ax.set_ylim(len(order) - 0.5, -0.5)
         ax.set_title(theme.PARTY_LABELS[party], fontweight="bold", fontsize=14, pad=12)
         ax.set_xlabel("Share of that party's planks / bills (%)", labelpad=2)
         ax.grid(axis="x", linestyle="-", linewidth=0.5)

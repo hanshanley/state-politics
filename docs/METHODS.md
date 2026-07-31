@@ -388,7 +388,7 @@ Most distinctive by platform emphasis:
 | NJ-D | 0.392 | Macroeconomics | 18.2% vs 1.8% |
 | KY-R | 0.336 | International affairs | 18.3% vs 2.1% |
 | FL-D | 0.264 | Health | 34.1% vs 11.5% |
-| NJ-R | 0.263 | Macroeconomics | 19.2% vs 4.6% |
+| NJ-R | 0.264 | Macroeconomics | 19.2% vs 4.6% |
 | MT-D | 0.262 | Public lands and water | 33.0% vs 8.8% |
 
 Most distinctive by what their legislators actually file:

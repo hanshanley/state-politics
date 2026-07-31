@@ -97,11 +97,20 @@ def cross_state_outliers(vectors, topics):
     return pd.DataFrame(rows).sort_values(["party", "cosine_distance"], ascending=[True, False])
 
 
-def build_profiles(platform_emphasis, bill_emphasis, gap_report, topics, *, top_n: int = 5):
-    """One row per organization summarizing what it says, what it files, and the gap."""
+def build_profiles(platform_emphasis, bill_emphasis, gap_report, topics, *, top_n: int = 5,
+                   era: str | None = "2018-present"):
+    """One row per organization summarizing what it says, what it files, and the gap.
+
+    ``era`` restricts the platform side to a single era, because the bill side covers 2018-2026
+    only. Pooling every platform era against a 2018-2026 bill window puts a 1990s platform next
+    to a 2020s legislative record in the same row -- the era mismatch that ``revealed.py``
+    deliberately avoids for the headline. Pass ``era=None`` to pool anyway.
+    """
     import pandas as pd
 
     named = {topic.code: topic.name for topic in topics}
+    if era and "era" in platform_emphasis.columns:
+        platform_emphasis = platform_emphasis[platform_emphasis["era"] == era]
 
     def top_topics(table, group, count_column):
         # Re-derive shares from counts: the platform table is split by era and each era's
