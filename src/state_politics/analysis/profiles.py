@@ -110,7 +110,7 @@ def cross_state_outliers(
                 n_observations = int(sample_sizes.get((state, party), 0))
                 if n_observations <= 0:
                     continue
-                probabilities = mean.to_numpy(dtype=float)
+                probabilities = mean.to_numpy(dtype=float).copy()
                 probabilities /= probabilities.sum()
                 seed = OUTLIER_RANDOM_SEED + zlib.crc32(
                     f"{state}-{party}".encode()

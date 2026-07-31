@@ -22,6 +22,7 @@ def build_capability_report(data_dir: Path):
     caucuses = pd.read_parquet(data_dir / "caucus_priorities.parquet")
     atlas = pd.read_csv(data_dir / "state_party_focus.csv")
     elections = pd.read_csv(data_dir / "election_focus_by_state_party.csv")
+    bill_coverage = pd.read_csv(data_dir / "bill_classification_coverage.csv")
     tagged = bills["subject"].fillna("").str.len() > 0
     confirmed = platforms[platforms["confirmed"]]
     years = pd.to_numeric(confirmed["year"], errors="coerce")
@@ -48,10 +49,11 @@ def build_capability_report(data_dir: Path):
         {
             "question": "Introduced-bill agenda by party and state",
             "support": "supported",
-            "coverage": f"{bills['state'].nunique()}/50 states",
+            "coverage": f"{bill_coverage['state'].nunique()}/50 states",
             "evidence": (
-                f"{int(bills['sponsor_party'].isin(('D', 'R')).sum()):,} D/R-attributed "
-                "bills; Nebraska is formally nonpartisan"
+                f"{int(bill_coverage['n_attributed'].sum()):,} D/R-attributed bills; "
+                f"{int(bill_coverage['n_procedural_excluded'].sum()):,} procedural shells "
+                "excluded; Nebraska is formally nonpartisan"
             ),
         },
         {

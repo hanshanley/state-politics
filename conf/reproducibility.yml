@@ -67,6 +67,7 @@ analysis_parameters:
   topic_min_similarity: 0.20
   embedding_chunk_size: 50000
   modern_platform_start_year: 2018
+  minimum_bill_year: 2018
   minimum_profile_observations: 30
   minimum_bill_profile_observations: 500
   profile_null_draws: 2000
@@ -104,6 +105,10 @@ generated_artifacts:
     producer: src/state_politics/bills/ingest.py
   - path: data/processed/planks_classified.parquet
     producer: src/state_politics/analysis/emphasis.py
+  - path: data/processed/emphasis_by_party_2018_present.csv
+    producer: src/state_politics/analysis/emphasis.py
+  - path: data/processed/emphasis_by_party_2018_present_pooled_sensitivity.csv
+    producer: src/state_politics/analysis/emphasis.py
   - path: data/processed/stated_vs_revealed.csv
     producer: src/state_politics/analysis/revealed.py
   - path: data/processed/state_party_focus.csv
@@ -116,6 +121,12 @@ generated_artifacts:
     producer: src/state_politics/analysis/revealed.py
   - path: data/processed/bill_emphasis_by_state_year.csv
     producer: src/state_politics/analysis/revealed.py
+  - path: data/processed/bill_classification_coverage.csv
+    producer: src/state_politics/analysis/revealed.py
+  - path: data/processed/platform_outliers.csv
+    producer: src/state_politics/analysis/profiles.py
+  - path: data/processed/bill_outliers.csv
+    producer: src/state_politics/analysis/profiles.py
   - path: data/processed/bill_topic_trends_by_party.csv
     producer: src/state_politics/analysis/trends.py
   - path: data/processed/bill_topic_trends_by_state.csv

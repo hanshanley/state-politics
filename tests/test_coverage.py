@@ -27,6 +27,14 @@ def test_capability_report_distinguishes_unsupported_questions(tmp_path):
     pd.DataFrame(
         [
             {
+                "state": "TX", "party": "D", "n_attributed": 1,
+                "n_procedural_excluded": 0,
+            }
+        ]
+    ).to_csv(tmp_path / "bill_classification_coverage.csv", index=False)
+    pd.DataFrame(
+        [
+            {
                 "state": "TX", "party": "D", "stated_focus_reliable": True,
             }
         ]
