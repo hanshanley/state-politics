@@ -5,6 +5,14 @@
 
 version: 1
 
+environment:
+  pyproject_sha256: 304e11ca339c9a05f1c6b7a0ee9349b81692734a1e690a0a3fbf8b2ba0d31a01
+  uv_lock_sha256: 7ca29ea21ab918dd33dc049a702bbaa2979af9e10e7859d6153934145e0e8bf6
+  python_requirement: '>=3.11'
+  ocr_runtime:
+    command: tesseract
+    version: 5.5.2
+
 manual_inputs:
   - path: data/gold/plank_topics_gold.csv
     kind: hand_labelled_validation_snapshot
@@ -39,7 +47,7 @@ manual_inputs:
 random_processes:
   - name: gold_plank_sample
     seed: 20260729
-    code: scripts/sample_gold_planks.py
+    code: src/state_politics/analysis/gold_sample.py
     metadata: data/gold/plank_topics_gold.meta.yml
   - name: bill_tag_validation_sample
     seed: 20260729
@@ -93,3 +101,17 @@ external_sources:
     organization: Comparative Agendas Project
     reputable_basis: established academic policy-agendas coding scheme
     citation: CITATIONS.md#6-issue-taxonomy
+
+trusted_source_hosts:
+  official_document_pages:
+    - issuu.com
+    - www.lagop.com
+  official_document_content:
+    - image.isu.pub
+    - static.wixstatic.com
+  caucus_sources:
+    - kysenaterepublicans.com
+    - apps.legislature.ky.gov
+    - www.mdsenate.com
+    - www.njassemblygop.com
+    - pasenate.com

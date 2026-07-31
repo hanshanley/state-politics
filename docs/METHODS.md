@@ -4,6 +4,9 @@ Full methodology for [state-politics](../README.md). The README carries the find
 caveats a reader needs to interpret them; this document carries the detail needed to check,
 extend or dispute them.
 
+The complete input-hash, OCR, random-seed and artifact-producer audit is documented separately
+in [REPRODUCIBILITY.md](REPRODUCIBILITY.md).
+
 **Contents**
 
 - [Stream A: platforms](#stream-a-platforms)

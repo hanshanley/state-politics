@@ -107,4 +107,52 @@ tags be mapped onto the same taxonomy.
 > BERT-Networks.* Proceedings of EMNLP-IJCNLP 2019. Model weights:
 > `sentence-transformers/all-MiniLM-L6-v2`, Hugging Face. Accessed 2026-07-29.
 
-Run locally on Apple Silicon via MPS. No hosted inference API is used anywhere in this project.
+The exact Python dependency versions are pinned in `uv.lock`; validation results are computed
+from the fixed hand-labelled snapshot in `data/gold/plank_topics_gold.csv`.
+
+## 8. Official state-party documents hosted by Issuu and Wix
+
+> New York State Democratic Committee (2023, updated 2025). *NYDems Resolutions Archive*
+> [State committee resolutions]. Official NYDems Issuu account.
+> https://issuu.com/nydems/docs/resolutions. Accessed 2026-07-31.
+
+> Republican Party of Louisiana (2025). *2025 RSCC Resolutions, Q1–Q4*
+> [State Central Committee resolution packets]. Official LAGOP resolutions page:
+> https://www.lagop.com/2025-rscc-resolutions; scanned PDFs served by Wix's official document
+> CDN. Accessed 2026-07-31.
+
+These are primary party-committee sources. Issuu and Wix are delivery intermediaries, not the
+credited authors. The documents require OCR; fixed source identifiers/PDF hashes and the
+deterministic reconstruction code are in `conf/official_document_registry.yml` and
+`src/state_politics/platforms/official_documents.py`.
+
+## 9. Supplemental legislative-caucus priority agendas
+
+The following primary sources complete stated state-level agenda coverage while remaining a
+separate corpus from party-committee platforms:
+
+> Kentucky Senate Republican Caucus Campaign Committee (2024). *Priority Legislation for
+> Regular Session 2024*. https://kysenaterepublicans.com/new-page-34 and linked official
+> Kentucky Legislative Research Commission bill records.
+
+> Maryland Senate Democratic Caucus (2025). *Senate President Bill Ferguson Announces
+> Committee Leadership Changes, Member Assignments for 2026* [agenda statement].
+> https://www.mdsenate.com/news/2025/12/16/senate-president-bill-ferguson-announces-committee-leadership-changes-member-assignments-for-2026/
+
+> New Jersey General Assembly Republican Office (2025). *Priorities / Agenda Center*.
+> https://www.njassemblygop.com/35/Priorities and linked priority pages.
+
+> Pennsylvania Senate Democratic Caucus (2025). *Priorities*.
+> https://pasenate.com/priorities/.
+
+The curated source registry is `conf/caucus_priority_registry.yml`; collection code is
+`src/state_politics/caucuses.py`.
+
+## 10. Authored validation labels
+
+> State Politics Project (2026). *Hand-labelled state-party platform plank validation
+> snapshot* [50 labelled planks]. `data/gold/plank_topics_gold.csv`.
+
+Sampling metadata, seed, source frame, and the labeling protocol are preserved in
+`data/gold/plank_topics_gold.meta.yml` and `data/gold/README.md`. These labels are authored
+evidence—not a generated artifact—and are hashed in `conf/reproducibility.yml`.

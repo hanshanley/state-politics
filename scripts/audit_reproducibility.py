@@ -137,6 +137,26 @@ def audit_manifest(audit: Audit, manifest: dict, *, require_tracked: bool) -> No
                 f"artifact supplement producer is missing: {supplement}",
             )
 
+    environment = manifest["environment"]
+    audit.require(
+        sha256_file(ROOT / "pyproject.toml") == environment["pyproject_sha256"],
+        "pyproject.toml changed without reproducibility-manifest update",
+    )
+    audit.require(
+        sha256_file(ROOT / "uv.lock") == environment["uv_lock_sha256"],
+        "uv.lock changed without reproducibility-manifest update",
+    )
+    version = subprocess.run(
+        [environment["ocr_runtime"]["command"], "--version"],
+        check=True,
+        capture_output=True,
+        text=True,
+    ).stdout.splitlines()[0]
+    audit.require(
+        environment["ocr_runtime"]["version"] in version,
+        f"OCR runtime version differs from manifest: {version}",
+    )
+
 
 def audit_gold(audit: Audit) -> None:
     meta = load_yaml(ROOT / "data/gold/plank_topics_gold.meta.yml")
@@ -153,7 +173,7 @@ def audit_gold(audit: Audit) -> None:
     audit.require(int(meta["sample_seed"]) == 20260729, "gold seed metadata changed")
 
 
-def audit_curated_configs(audit: Audit) -> None:
+def audit_curated_configs(audit: Audit, manifest: dict) -> None:
     topics = load_yaml(ROOT / "conf/topics.yml")["topics"]
     codes = {int(topic["code"]) for topic in topics}
     subject_map = load_yaml(ROOT / "conf/subject_topic_map.yml")["tags"]
@@ -180,13 +200,25 @@ def audit_curated_configs(audit: Audit) -> None:
     official = load_yaml(ROOT / "conf/official_document_registry.yml")["sources"]
     audit.require(all(row.get("primary_source") is True for row in official),
                   "official OCR registry contains a non-primary source")
+    trusted = manifest["trusted_source_hosts"]
+    official_pages = set(trusted["official_document_pages"])
+    official_content = set(trusted["official_document_content"])
     for row in official:
+        audit.require(
+            urlsplit(row["page_url"]).hostname in official_pages,
+            f"official document page host is not approved: {row['page_url']}",
+        )
         for field in ("page_url", "document_url"):
             if row.get(field):
                 audit.require(
                     urlsplit(row[field]).scheme == "https",
                     f"official source is not HTTPS: {row[field]}",
                 )
+        if row.get("document_url"):
+            audit.require(
+                urlsplit(row["document_url"]).hostname in official_content,
+                f"official document content host is not approved: {row['document_url']}",
+            )
         expected = row.get("expected_document_sha256")
         if expected:
             audit.require(
@@ -202,6 +234,15 @@ def audit_curated_configs(audit: Audit) -> None:
     audit.require(
         all(urlsplit(url).scheme == "https" for row in caucuses for url in row["urls"]),
         "caucus source uses a non-HTTPS URL",
+    )
+    caucus_hosts = set(trusted["caucus_sources"])
+    audit.require(
+        all(
+            urlsplit(url).hostname in caucus_hosts
+            for row in caucuses
+            for url in row["urls"]
+        ),
+        "caucus source uses a host not approved in the reproducibility manifest",
     )
 
 
@@ -341,7 +382,7 @@ def main(argv: list[str] | None = None) -> int:
     manifest = load_yaml(MANIFEST)
     audit_manifest(audit, manifest, require_tracked=args.require_tracked)
     audit_gold(audit)
-    audit_curated_configs(audit)
+    audit_curated_configs(audit, manifest)
     computed = audit_artifacts(audit)
     audit_public_docs(audit)
     audit.finish()
@@ -356,6 +397,7 @@ def main(argv: list[str] | None = None) -> int:
         "random_seeds": {
             process["name"]: process["seed"] for process in manifest["random_processes"]
         },
+        "environment": manifest["environment"],
     }
     path = Path(args.report)
     path.parent.mkdir(parents=True, exist_ok=True)

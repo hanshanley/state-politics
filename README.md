@@ -13,7 +13,10 @@ taxonomy so they can be compared directly.
 
 Congressional bills are **out of scope**. This is about *state* politics.
 
-📄 **[Full methodology →](docs/METHODS.md)**  ·  📋 **[Roadmap and lessons →](docs/PLAN.md)**  ·  📚 **[Citations →](CITATIONS.md)**
+📄 **[Full methodology →](docs/METHODS.md)**  ·
+🔍 **[Reproducibility audit →](docs/REPRODUCIBILITY.md)**  ·
+📋 **[Roadmap and lessons →](docs/PLAN.md)**  ·
+📚 **[Citations →](CITATIONS.md)**
 
 ---
 
@@ -332,7 +335,7 @@ Requires Python 3.11+ and [uv](https://docs.astral.sh/uv/).
 ```bash
 make setup      # install dependencies
 make all        # analysis + figures
-make test lint  # test suite and lint
+make test lint audit  # tests, lint, traceability and published-number checks
 ```
 
 Network-heavy stages are deliberately **not** part of `make all`, so rebuilding the analysis never
@@ -341,6 +344,7 @@ re-crawls anyone's website:
 ```bash
 make registry     # verify all 100 state party websites          (~10 min)
 make platforms    # discover + collect 2018-present platforms    (~1 h, polite crawl)
+make official-documents  # deterministically rebuild OCR-only party documents
 make caucus-priorities  # collect the four separate caucus agenda sources
 make bills-dump   # download the 10.7 GB dump, extract, delete it (~20 min)
 ```
@@ -350,6 +354,11 @@ Every canonical number in this README can be reprinted from the artifacts:
 ```bash
 uv run python scripts/report_figures.py
 ```
+
+`make audit` verifies every manual-input hash, source registry, random seed, OCR version,
+generated-artifact producer, 50-state coverage invariant, focus-atlas row, election
+numerator/denominator, and log₂ calculation. It writes
+`data/processed/reproducibility_report.json`.
 
 ---
 
