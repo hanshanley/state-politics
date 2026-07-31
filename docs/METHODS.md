@@ -379,6 +379,11 @@ This prevents a very unusual state from pulling its own baseline toward itself. 
 reports the largest positive \(\Delta\), top three topics, cosine distance from same-party peers,
 sample size and evidence type.
 
+Comparative stated-focus metrics require at least 30 classified units. Smaller sources still
+contribute their top-topic description and source metadata, but do not enter peer baselines or
+receive a "distinctive state" claim. This prevents a one-sentence Maryland agenda statement or
+an eight-bill Kentucky list from carrying the same weight as a full platform.
+
 The two streams remain separate. The stated side prefers party-committee evidence and uses a
 legislative-caucus supplement only where committee evidence is absent. The filed side covers
 98 partisan caucuses across 49 states. Nebraska has no D/R bill profile because its legislature
@@ -406,9 +411,12 @@ Elections sit inside CAP's broad Government Operations topic, so
 * election fraud, interference and security.
 
 Cross-state shares use title matches only, keeping coverage comparable where legislatures do
-not publish subject tags. In the 37 states that do publish them, human-assigned tags provide an
-independent check: **83.9% precision and 75.1% recall**. The output reports total election bills,
-share of all bills, top subtype and a leave-one-state-out same-party baseline.
+not publish subject tags. Both numerator and denominator exclude resolutions, proclamations,
+appointments, nominations and memorials, whose share of a state's records ranges from 0% to
+58%; otherwise the result partly measures chamber procedure. In the 37 states that do publish
+tags, human-assigned tags provide an independent check: **85.6% precision and 75.6% recall**.
+The output reports total election bills, share of substantive bills, top subtype and a
+leave-one-state-out same-party baseline. Public rankings require at least 500 substantive bills.
 
 ---
 
@@ -426,13 +434,19 @@ state-party and computes:
 \]
 
 A value of +1 means twice the same-party peer concentration; +2 means four times. Features are
-unigrams and bigrams appearing in at least two state-party documents. Additive smoothing avoids
-infinite ratios where peers never use a term.
+unigrams and bigrams appearing in at least two state-party documents. Numeric ratios are
+reported only where peers have a nonzero observed count. A phrase absent from every same-party
+peer is labelled `peer_absent` instead of receiving a pseudo-count whose apparent ratio would
+depend on vocabulary size.
 
 Raw TF-IDF is sensitive to drafting conventions and OCR/markup remnants. The analysis therefore
 removes state names, common legislative boilerplate, ceremonial language, dates and HTML
 entities from public highlights. The complete raw scores remain in `state_party_terms.csv`, so
 filtering decisions are auditable rather than hidden.
+
+The same curation used for the focus atlas is applied to supplemental caucus documents:
+Kentucky contributes only its numbered priority-bill summaries and Maryland only its verbatim
+agenda sentence, not the surrounding session bill index or committee-assignment article.
 
 ---
 

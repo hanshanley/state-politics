@@ -176,7 +176,6 @@ def distinctive_terms(
     min_count: int,
     max_features: int = 30_000,
     top_n: int = 12,
-    prior_mass: float = 1.0,
 ):
     """Top TF-IDF and within-party concentration terms for every state party."""
     import numpy as np
@@ -220,18 +219,23 @@ def distinctive_terms(
             continue
         own = counts.getrow(position).toarray().ravel()
         peers = np.asarray(counts[same_party].sum(axis=0)).ravel()
-        # One pseudo-token spread across the vocabulary. The previous alpha=0.5 *per feature*
-        # added 15,000 pseudo-tokens to a 30,000-feature model, swamping short documents and
-        # making "+1 means twice as concentrated" incomparable across states.
-        alpha = prior_mass / feature_count
-        own_rate = (own + alpha) / (own.sum() + prior_mass)
-        peer_rate = (peers + alpha) / (peers.sum() + prior_mass)
-        concentration = np.log2(own_rate / peer_rate)
+        own_rate = own / own.sum()
+        peer_rate = peers / peers.sum()
+        # A feature absent in every same-party peer has no finite observed log ratio. It is
+        # reported categorically instead of assigning a pseudo-count whose score changes with
+        # max_features (the previous prior added ~log2(vocabulary) to every peer-absent term).
+        peer_absent = peers == 0
+        concentration = np.full(feature_count, np.nan)
+        comparable = (~peer_absent) & (own > 0)
+        concentration[comparable] = np.log2(
+            own_rate[comparable] / peer_rate[comparable]
+        )
         tfidf_row = tfidf.getrow(position).toarray().ravel()
 
         eligible = np.array(
             [
-                own[index] >= min_count and concentration[index] > 0
+                own[index] >= min_count
+                and (peer_absent[index] or concentration[index] > 0)
                 and _eligible_feature(term, document.state)
                 for index, term in enumerate(features)
             ]
@@ -240,7 +244,10 @@ def distinctive_terms(
         if not len(positions):
             continue
         tfidf_order = positions[np.argsort(-tfidf_row[positions])]
-        concentration_order = positions[np.argsort(-concentration[positions])]
+        comparable_positions = positions[~peer_absent[positions]]
+        concentration_order = comparable_positions[
+            np.argsort(-concentration[comparable_positions])
+        ]
         selected = list(dict.fromkeys(
             [*tfidf_order[:top_n], *concentration_order[:top_n]]
         ))
@@ -257,10 +264,16 @@ def distinctive_terms(
                     "term": features[feature],
                     "count": int(own[feature]),
                     "peer_count": int(peers[feature]),
+                    "feature_total": int(own.sum()),
+                    "peer_feature_total": int(peers.sum()),
                     "tfidf": round(float(tfidf_row[feature]), 6),
-                    "log2_concentration": round(float(concentration[feature]), 4),
+                    "log2_concentration": (
+                        round(float(concentration[feature]), 4)
+                        if not peer_absent[feature] else None
+                    ),
+                    "peer_absent": bool(peer_absent[feature]),
                     "tfidf_rank": tfidf_rank[feature],
-                    "concentration_rank": concentration_rank[feature],
+                    "concentration_rank": concentration_rank.get(feature),
                 }
             )
     return pd.DataFrame(rows)
@@ -276,9 +289,8 @@ def _highlights(terms, *, top_n: int = 6):
     # state-specific they are. Letting enormous ratios on low-value terms dominate the score
     # is how OCR and procedural fragments surfaced in the first pass.
     ranked = terms[terms["tfidf_rank"] <= top_n].copy()
-    ranked["score"] = ranked["tfidf"] * ranked["log2_concentration"].clip(
-        lower=0, upper=8
-    )
+    numeric = ranked["log2_concentration"].fillna(0).clip(lower=0, upper=8)
+    ranked["score"] = ranked["tfidf"] * numeric.where(~ranked["peer_absent"], 1.0)
     ranked = ranked.sort_values(
         ["state", "party", "stream", "score"], ascending=[True, True, True, False]
     )
@@ -287,7 +299,11 @@ def _highlights(terms, *, top_n: int = 6):
         .groupby(["state", "party", "stream"])
         .apply(
             lambda group: "; ".join(
-                f"{row.term} ({row.log2_concentration:+.1f} log2)"
+                (
+                    f"{row.term} (absent in peers)"
+                    if row.peer_absent
+                    else f"{row.term} ({row.log2_concentration:+.1f} log2)"
+                )
                 for row in group.itertuples()
             ),
             include_groups=False,

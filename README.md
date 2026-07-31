@@ -242,11 +242,12 @@ redistricting, candidate rules and election security.
 
 ![Where elections dominate the legislative agenda](outputs/election_focus.png)
 
-- Republican caucuses devote **3.14%** of bills to elections and voting; Democrats **2.84%**.
-- Idaho Democrats are the strongest Democratic outlier: **12.2%** versus 3.5% among Democratic
-  peers.
-- Nevada Republicans lead their side: **8.4%** versus 3.5% among Republican peers.
-- The title rule scores **83.9% precision and 75.1% recall** against legislature-assigned
+- Republican caucuses devote **3.43%** of substantive bills to elections and voting; Democrats
+  **3.05%**.
+- Tennessee Democrats are the strongest Democratic outlier among caucuses with at least 500
+  substantive bills: **8.0%** versus 4.0% among Democratic peers.
+- Nevada Republicans lead their side: **8.4%** versus 3.8% among Republican peers.
+- The title rule scores **85.6% precision and 75.6% recall** against legislature-assigned
   subject tags.
 - Most detected bills concern voting and election administration; campaign finance,
   redistricting, candidate rules and election security form smaller subgroups.
@@ -259,15 +260,17 @@ two-word phrases. A log₂ score of +1 means a term is twice as concentrated as 
 
 | State party and stream | Distinctive language |
 |---|---|
-| Alaska Democrats, stated | `subsistence` (+9.8), `salmon` (+6.8), `fisheries` (+4.5) |
-| Kentucky Republicans, stated | `postsecondary education` (+10.9), `research fund` (+8.9), `wildlife resources` (+7.6) |
-| New Jersey Republicans, stated | `school funding` (+6.2), `property taxes` (+2.7) |
-| South Dakota Democrats, stated | `tribal colleges` (+3.9), `high tech` (+6.9) |
-| Alaska Democrats, bills | `permanent fund` (+10.6), `fund dividend` (+12.9) |
-| Arkansas Republicans, bills | `child maltreatment` (+6.8) |
+| Alaska Democrats, stated | `salmon` (+7.9), `fisheries` (+5.4) |
+| Kentucky Republicans, stated | `postsecondary` (absent in peers), `sick leave` (+10.5) |
+| New Jersey Republicans, stated | `school funding` (+8.9), `property taxes` (+5.8) |
+| South Dakota Democrats, stated | `tribal colleges` (+5.0), `high tech` (+8.5) |
+| Alaska Democrats, bills | `permanent fund` (+12.0) |
+| Arkansas Republicans, bills | `child maltreatment` (+7.2) |
 
-These are exploratory language signals, not topic labels. Legislative drafting conventions and
-proper names can also become state-specific; the public highlights filter common procedural
+These are exploratory language signals, not topic labels. A numeric value is reported only when
+same-party peers also use the phrase; a phrase used by no peers is labelled `absent in peers`
+rather than assigned an arbitrary pseudo-ratio. Legislative drafting conventions and proper
+names can also become state-specific; the public highlights filter common procedural
 boilerplate, while the raw scores remain available for inspection.
 
 ---

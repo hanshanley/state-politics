@@ -200,6 +200,7 @@ def main() -> int:
         print("\nWithin-party state focus atlas")
         print(f"  profiles             {len(focus)}/100")
         print(f"  stated evidence      {int((focus['stated_source'] != 'none').sum())}/100")
+        print(f"  stated comparisons   {int(focus['stated_focus_reliable'].sum())}/100")
         print(f"  bill evidence        {int(focus['bill_n_items'].notna().sum())}/100")
         for party in ("D", "R"):
             top = focus[

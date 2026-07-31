@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import pandas as pd
+import pytest
 
 from state_politics.analysis.terms import (
     build_bill_documents,
@@ -94,7 +95,33 @@ def test_log2_concentration_is_against_same_party_peers():
         & (terms["term"] == "solar")
     ].iloc[0]
 
-    assert solar["log2_concentration"] > 1
+    assert solar["peer_absent"]
+    assert pd.isna(solar["log2_concentration"])
     assert solar["count"] == 4
     # Republican usage is irrelevant to a Democratic same-party baseline.
     assert solar["peer_count"] == 0
+
+
+def test_numeric_log2_ratio_has_literal_rate_interpretation():
+    documents = pd.DataFrame(
+        [
+            {"state": "TX", "party": "D", "stream": "bills", "text": "solar " * 8 + "school " * 2},
+            {"state": "OH", "party": "D", "stream": "bills", "text": "solar " * 2 + "school " * 8},
+            {"state": "TX", "party": "R", "stream": "bills", "text": "wind school " * 5},
+            {"state": "OH", "party": "R", "stream": "bills", "text": "wind school " * 5},
+        ]
+    )
+    terms = distinctive_terms(documents, min_count=2, max_features=100, top_n=5)
+    solar = terms[
+        (terms["state"] == "TX")
+        & (terms["party"] == "D")
+        & (terms["term"] == "solar")
+    ].iloc[0]
+
+    expected = (
+        solar["count"] / solar["feature_total"]
+    ) / (
+        solar["peer_count"] / solar["peer_feature_total"]
+    )
+    assert not solar["peer_absent"]
+    assert 2 ** solar["log2_concentration"] == pytest.approx(expected, rel=1e-4)

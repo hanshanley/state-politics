@@ -295,6 +295,8 @@ def build_state_focus_atlas(stated, bills, topics):
     grid = grid.merge(evidence.reset_index(), on=["state", "party"], how="left")
     grid = grid.merge(bill_focus, on=["state", "party"], how="left")
     grid["stated_source"] = grid["stated_source"].fillna("none")
+    grid["stated_focus_reliable"] = grid["stated_focus_reliable"].fillna(False).astype(bool)
+    grid["bill_focus_reliable"] = grid["bill_focus_reliable"].fillna(False).astype(bool)
     grid["bill_status"] = "available"
     grid.loc[grid["bill_n_items"].isna(), "bill_status"] = "not_available"
     grid.loc[
@@ -373,6 +375,8 @@ def main(argv: list[str] | None = None) -> int:
 
     print(f"state-party profiles: {len(atlas)}/100")
     print(f"stated evidence:      {(atlas['stated_source'] != 'none').sum()}/100")
+    print(f"stated comparisons:   {atlas['stated_focus_reliable'].sum()}/100 "
+          f"(>= {MIN_OBSERVATIONS} classified units)")
     print(f"bill evidence:        {atlas['bill_n_items'].notna().sum()}/100")
     for party in ("D", "R"):
         top = atlas[
