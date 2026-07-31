@@ -41,6 +41,10 @@ __all__ = ["find_near_duplicates", "find_reuse_clusters", "is_ceremonial",
 #: Titles shorter than this are generic ("Appropriations", "Relating to taxation") and match
 #: across states by coincidence rather than by copying.
 MIN_TITLE_CHARS = 45
+MIN_REUSE_STATES = 3
+MIN_NEAR_DUPLICATE_TOKENS = 5
+NEAR_DUPLICATE_THRESHOLD = 0.8
+MAX_CANDIDATE_BLOCK = 400
 
 #: Boilerplate that varies between states and would otherwise block an exact match.
 _BILL_NUMBER_RE = re.compile(r"\b(?:hb|sb|hf|sf|ab|hr|sr|hjr|sjr|lb|ho|so)\s*\.?\s*\d+\b", re.I)
@@ -84,7 +88,9 @@ def normalize_title(title: str) -> str:
     return re.sub(r"\s+", " ", text).strip()
 
 
-def find_reuse_clusters(bills, *, min_states: int = 3, min_chars: int = MIN_TITLE_CHARS):
+def find_reuse_clusters(
+    bills, *, min_states: int = MIN_REUSE_STATES, min_chars: int = MIN_TITLE_CHARS
+):
     """Group bills whose normalised titles match across several states.
 
     Returns one row per cluster: the shared text, how many states and bills it spans, and the
@@ -146,8 +152,11 @@ def significant_tokens(normalized: str) -> frozenset[str]:
     )
 
 
-def find_near_duplicates(bills, *, min_states: int = 3, min_tokens: int = 5,
-                         threshold: float = 0.8, max_block: int = 400,
+def find_near_duplicates(
+                         bills, *, min_states: int = MIN_REUSE_STATES,
+                         min_tokens: int = MIN_NEAR_DUPLICATE_TOKENS,
+                         threshold: float = NEAR_DUPLICATE_THRESHOLD,
+                         max_block: int = MAX_CANDIDATE_BLOCK,
                          block_keys: int = 3):
     """Cluster bills whose titles are near-identical, allowing for rewording.
 

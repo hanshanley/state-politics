@@ -15,6 +15,7 @@ Congressional bills are **out of scope**. This is about *state* politics.
 
 📄 **[Full methodology →](docs/METHODS.md)**  ·
 🔍 **[Reproducibility audit →](docs/REPRODUCIBILITY.md)**  ·
+🧭 **[Code guide →](docs/CODE_GUIDE.md)**  ·
 📋 **[Roadmap and lessons →](docs/PLAN.md)**  ·
 📚 **[Citations →](CITATIONS.md)**
 
@@ -94,7 +95,7 @@ already covers both major parties in every state.
 Every 2018-present platform, and every major-party platform from 1990 onward, is segmented
 into planks and classified against a
 [Comparative Agendas Project](https://www.comparativeagendas.net/) taxonomy using a validated
-text classifier — 41,033 planks from 898 documents.
+text classifier — 41,030 planks from 898 documents.
 
 ![What Democratic and Republican state parties talk about](outputs/party_emphasis.png)
 
@@ -156,7 +157,7 @@ breakdown is in [the methods](docs/METHODS.md#validating-the-bill-classifier).
 **Other limits.** Bills are classified from *titles*, which are short and often procedural.
 18.9% of bills cannot be resolved to a party and are excluded rather than guessed at. Planks
 below a similarity threshold are recorded as **unclassified** rather than pushed into the nearest
-topic — 3,732 of 41,033. And filing a bill is not passing one: this measures **agenda, not
+topic — 3,733 of 41,030. And filing a bill is not passing one: this measures **agenda, not
 achievement**.
 
 ---

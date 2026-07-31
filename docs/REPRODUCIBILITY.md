@@ -24,6 +24,9 @@ The audit validates:
 - literal reproducibility of every numeric log2 concentration from raw counts;
 - stable source IDs and OCR versions on OCR-derived corpus rows;
 - missing figures and machine-specific prose in the public README.
+- a Markdown code-guide entry for every Python file.
+- equality between named analytical constants in code and `conf/reproducibility.yml`, so
+  thresholds and seeds cannot drift as hidden magic numbers.
 
 It writes `data/processed/reproducibility_report.json` with computed results, input hashes and
 random seeds. In CI or after committing, use:

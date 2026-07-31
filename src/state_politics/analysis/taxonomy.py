@@ -38,6 +38,7 @@ DEFAULT_TOPICS_PATH = Path(__file__).resolve().parents[3] / "conf" / "topics.yml
 #: Sentence-transformer used for plank classification. Small enough to run comfortably in the
 #: machine's 16 GB of unified memory, and pinned so results are reproducible.
 DEFAULT_MODEL = "sentence-transformers/all-MiniLM-L6-v2"
+MIN_TOPIC_SIMILARITY = 0.20
 
 #: A plank shorter than this is a heading or fragment, not a position statement.
 MIN_PLANK_CHARS = 120
@@ -279,7 +280,10 @@ class EmbeddingClassifier:
         )
 
     def predict_many(
-        self, texts: list[str], batch_size: int = 64, min_similarity: float = 0.20
+        self,
+        texts: list[str],
+        batch_size: int = 64,
+        min_similarity: float = MIN_TOPIC_SIMILARITY,
     ) -> list[tuple[int | None, float, float]]:
         """Return ``(topic_code, similarity, margin)`` per text.
 
@@ -321,5 +325,7 @@ class EmbeddingClassifier:
             del vectors, similarities, top2
         return results
 
-    def predict(self, text: str, min_similarity: float = 0.20) -> tuple[int | None, float, float]:
+    def predict(
+        self, text: str, min_similarity: float = MIN_TOPIC_SIMILARITY
+    ) -> tuple[int | None, float, float]:
         return self.predict_many([text], min_similarity=min_similarity)[0]

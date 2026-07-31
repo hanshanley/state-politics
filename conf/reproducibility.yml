@@ -56,6 +56,25 @@ random_processes:
     seed: 20260729
     code: src/state_politics/analysis/intraparty.py
 
+analysis_parameters:
+  model_name: sentence-transformers/all-MiniLM-L6-v2
+  topic_min_similarity: 0.20
+  embedding_chunk_size: 50000
+  modern_platform_start_year: 2018
+  minimum_profile_observations: 30
+  election_minimum_comparable_bills: 500
+  diffusion_minimum_title_characters: 45
+  diffusion_minimum_states: 3
+  diffusion_minimum_tokens: 5
+  diffusion_jaccard_threshold: 0.80
+  diffusion_max_candidate_block: 400
+  intraparty_permutations: 5000
+  term_max_features: 30000
+  term_top_per_method: 12
+  term_bill_min_count: 25
+  term_stated_min_count: 5
+  term_highlight_count: 6
+
 generated_artifacts:
   - path: data/processed/platforms_historical.parquet
     producer: src/state_politics/platforms/dataverse.py

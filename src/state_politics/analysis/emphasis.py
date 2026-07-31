@@ -24,7 +24,13 @@ import argparse
 import re
 from pathlib import Path
 
-from .taxonomy import DEFAULT_TOPICS_PATH, EmbeddingClassifier, load_topics, segment_planks
+from .taxonomy import (
+    DEFAULT_TOPICS_PATH,
+    MIN_TOPIC_SIMILARITY,
+    EmbeddingClassifier,
+    load_topics,
+    segment_planks,
+)
 
 __all__ = ["classify_corpus", "emphasis_by_party", "emphasis_table"]
 
@@ -34,7 +40,8 @@ MODERN_FROM = 2018
 
 
 def classify_corpus(frame, classifier: EmbeddingClassifier, *, text_column: str = "text",
-                    batch_size: int = 256, min_similarity: float = 0.20):
+                    batch_size: int = 256,
+                    min_similarity: float = MIN_TOPIC_SIMILARITY):
     """Segment every document into planks and classify them. Returns a plank-level frame."""
     import pandas as pd
 

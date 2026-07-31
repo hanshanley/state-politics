@@ -78,6 +78,7 @@ def test_merge_official_documents_replaces_by_stable_id_and_url():
                 "state": "NY",
                 "party": "D",
                 "url": "https://issuu.com/nydems/docs/resolutions",
+                "fetched_url": "https://issuu.com/nydems/docs/resolutions",
                 "text": "old manual OCR",
             },
             {
@@ -85,7 +86,16 @@ def test_merge_official_documents_replaces_by_stable_id_and_url():
                 "state": "TX",
                 "party": "R",
                 "url": "https://example.test/platform",
+                "fetched_url": "https://example.test/platform.pdf",
                 "text": "keep",
+            },
+            {
+                "official_source_id": None,
+                "state": "LA",
+                "party": "R",
+                "url": "https://www.lagop.com/2025-rscc-resolutions#q1",
+                "fetched_url": "https://static.wixstatic.com/ugd/q1.pdf",
+                "text": "old fragment URL OCR",
             },
         ]
     )
@@ -95,14 +105,25 @@ def test_merge_official_documents_replaces_by_stable_id_and_url():
             "state": "NY",
             "party": "D",
             "url": "https://issuu.com/nydems/docs/resolutions",
+            "fetched_url": "https://issuu.com/nydems/docs/resolutions",
             "text": "reproducible OCR",
-        }
+        },
+        {
+            "official_source_id": "la-q1",
+            "state": "LA",
+            "party": "R",
+            "url": "https://www.lagop.com/2025-rscc-resolutions",
+            "fetched_url": "https://static.wixstatic.com/ugd/q1.pdf",
+            "text": "reproducible Louisiana OCR",
+        },
     ]
     merged = merge_documents(corpus, incoming)
 
-    assert len(merged) == 2
+    assert len(merged) == 3
     assert "old manual OCR" not in set(merged["text"])
+    assert "old fragment URL OCR" not in set(merged["text"])
     assert "reproducible OCR" in set(merged["text"])
+    assert "reproducible Louisiana OCR" in set(merged["text"])
     assert "keep" in set(merged["text"])
 
 

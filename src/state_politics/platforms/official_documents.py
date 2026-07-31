@@ -241,12 +241,24 @@ def merge_documents(corpus, rows: list[dict]):
     incoming = pd.DataFrame(rows)
     ids = set(incoming["official_source_id"])
     urls = set(incoming["url"])
+    fetched_urls = set(incoming["fetched_url"])
     existing_ids = (
         corpus["official_source_id"]
         if "official_source_id" in corpus
         else pd.Series(index=corpus.index, dtype=object)
     )
-    keep = ~existing_ids.isin(ids) & ~corpus["url"].isin(urls)
+    existing_fetched = (
+        corpus["fetched_url"]
+        if "fetched_url" in corpus
+        else pd.Series(index=corpus.index, dtype=object)
+    )
+    # `fetched_url` catches legacy rows whose display URL used `#q1` fragments while the
+    # actual Wix PDF URL was stable. Source IDs are authoritative after the first rebuild.
+    keep = (
+        ~existing_ids.isin(ids)
+        & ~corpus["url"].isin(urls)
+        & ~existing_fetched.isin(fetched_urls)
+    )
     base = corpus.loc[keep].copy()
     for column in incoming.columns:
         if column not in base:

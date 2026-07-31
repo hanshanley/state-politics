@@ -30,7 +30,7 @@ import argparse
 import gc
 from pathlib import Path
 
-from .taxonomy import DEFAULT_TOPICS_PATH, EmbeddingClassifier, load_topics
+from .taxonomy import DEFAULT_TOPICS_PATH, MIN_TOPIC_SIMILARITY, EmbeddingClassifier, load_topics
 
 __all__ = ["classify_bills", "count_topics_by_state", "divergence_table"]
 
@@ -40,7 +40,7 @@ _BILL_SLICE = 100_000
 
 
 def classify_bills(bills, classifier: EmbeddingClassifier, *, batch_size: int = 512,
-                   min_similarity: float = 0.20, min_title_chars: int = 20):
+                   min_similarity: float = MIN_TOPIC_SIMILARITY, min_title_chars: int = 20):
     """Classify bills by title. Returns the frame with ``topic`` and ``similarity`` columns.
 
     Very short titles ("Relating to taxation.") carry too little signal to place, and are left
@@ -86,7 +86,9 @@ def _release_memory() -> None:
         pass
 
 
-def count_topics_by_state(bills_path, classifier, *, states=None, min_similarity: float = 0.20,
+def count_topics_by_state(
+        bills_path, classifier, *, states=None,
+        min_similarity: float = MIN_TOPIC_SIMILARITY,
                           batch_size: int = 512, min_title_chars: int = 20, progress=print):
     """Classify bills **one state at a time**, keeping only the aggregate counts.
 

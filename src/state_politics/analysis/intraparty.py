@@ -56,6 +56,9 @@ __all__ = [
     "coherence",
 ]
 
+DEFAULT_PERMUTATIONS = 5000
+RANDOM_SEED = 20260729
+
 
 def cosine_distance(left, right) -> float:
     """Cosine distance between two topic-share vectors.
@@ -179,7 +182,8 @@ def coherence(vectors, *, states: list[str] | None = None):
 
 
 def dispersion_gap_pvalue(vectors, *, states: list[str] | None = None,
-                          n_permutations: int = 5000, seed: int = 20260729) -> dict:
+                          n_permutations: int = DEFAULT_PERMUTATIONS,
+                          seed: int = RANDOM_SEED) -> dict:
     """Is one party really more internally varied than the other, or is that noise?
 
     With a dozen state parties per side, a difference in mean pairwise distance is easy to
@@ -312,7 +316,7 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--topics", default=DEFAULT_TOPICS_PATH)
     parser.add_argument("--out-dir", default=root / "data/processed")
     parser.add_argument("--min-observations", type=int, default=MIN_OBSERVATIONS)
-    parser.add_argument("--permutations", type=int, default=5000)
+    parser.add_argument("--permutations", type=int, default=DEFAULT_PERMUTATIONS)
     parser.add_argument("--era", default="2018-present",
                         help="platform era to restrict to; '' pools all eras")
     args = parser.parse_args(argv)

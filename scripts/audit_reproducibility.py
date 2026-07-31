@@ -137,6 +137,24 @@ def audit_manifest(audit: Audit, manifest: dict, *, require_tracked: bool) -> No
                 f"artifact supplement producer is missing: {supplement}",
             )
 
+    citations = (ROOT / "CITATIONS.md").read_text(encoding="utf-8")
+    citation_anchors = {
+        re.sub(r"[^a-z0-9 -]", "", heading.lower()).replace(" ", "-")
+        for heading in re.findall(r"^##\s+(.+)$", citations, re.M)
+    }
+    for source in manifest["external_sources"]:
+        audit.require(
+            bool(source.get("organization") and source.get("reputable_basis")),
+            f"external source lacks organization/reputation basis: {source.get('name')}",
+        )
+        citation = source.get("citation", "")
+        path, _, anchor = citation.partition("#")
+        audit.require(path == "CITATIONS.md", f"source citation is not in CITATIONS.md: {citation}")
+        audit.require(
+            anchor in citation_anchors,
+            f"source citation anchor does not exist: {citation}",
+        )
+
     environment = manifest["environment"]
     audit.require(
         sha256_file(ROOT / "pyproject.toml") == environment["pyproject_sha256"],
@@ -171,6 +189,46 @@ def audit_gold(audit: Audit) -> None:
         "gold labels contain codes outside conf/topics.yml",
     )
     audit.require(int(meta["sample_seed"]) == 20260729, "gold seed metadata changed")
+
+
+def audit_analysis_parameters(audit: Audit, manifest: dict) -> None:
+    """Ensure analytical thresholds are named, manifested, and equal to code."""
+    from state_politics.analysis import (
+        diffusion,
+        elections,
+        emphasis,
+        intraparty,
+        taxonomy,
+        terms,
+    )
+    from state_politics.analysis.profiles import MIN_OBSERVATIONS
+
+    parameters = manifest["analysis_parameters"]
+    actual = {
+        "model_name": taxonomy.DEFAULT_MODEL,
+        "topic_min_similarity": taxonomy.MIN_TOPIC_SIMILARITY,
+        "embedding_chunk_size": taxonomy.CHUNK_SIZE,
+        "modern_platform_start_year": emphasis.MODERN_FROM,
+        "minimum_profile_observations": MIN_OBSERVATIONS,
+        "election_minimum_comparable_bills": elections.MIN_COMPARABLE_BILLS,
+        "diffusion_minimum_title_characters": diffusion.MIN_TITLE_CHARS,
+        "diffusion_minimum_states": diffusion.MIN_REUSE_STATES,
+        "diffusion_minimum_tokens": diffusion.MIN_NEAR_DUPLICATE_TOKENS,
+        "diffusion_jaccard_threshold": diffusion.NEAR_DUPLICATE_THRESHOLD,
+        "diffusion_max_candidate_block": diffusion.MAX_CANDIDATE_BLOCK,
+        "intraparty_permutations": intraparty.DEFAULT_PERMUTATIONS,
+        "term_max_features": terms.MAX_TERM_FEATURES,
+        "term_top_per_method": terms.TOP_TERMS_PER_METHOD,
+        "term_bill_min_count": terms.BILL_MIN_TERM_COUNT,
+        "term_stated_min_count": terms.STATED_MIN_TERM_COUNT,
+        "term_highlight_count": terms.HIGHLIGHT_TERMS,
+    }
+    audit.require(
+        set(parameters) == set(actual),
+        "analysis parameter manifest keys differ from code audit keys",
+    )
+    for name, value in actual.items():
+        audit.require(parameters.get(name) == value, f"analysis parameter drift: {name}")
 
 
 def audit_curated_configs(audit: Audit, manifest: dict) -> None:
@@ -342,6 +400,10 @@ def audit_artifacts(audit: Audit) -> dict:
             official_rows["ocr_version"].notna().all(),
             "OCR-derived row lacks OCR version",
         )
+    audit.require(
+        not confirmed["source"].isin(("issuu", "wix_cdn")).any(),
+        "legacy one-off OCR rows remain in the platform corpus",
+    )
 
     return {
         "confirmed_documents": int(len(confirmed)),
@@ -369,6 +431,18 @@ def audit_public_docs(audit: Audit) -> None:
         for image in re.findall(r"!\[[^\]]*\]\(([^)]+)\)", text):
             audit.require((base / image).exists(), f"{relative} references missing image {image}")
 
+    guide = (ROOT / "docs/CODE_GUIDE.md").read_text(encoding="utf-8")
+    python_files = sorted(
+        path.relative_to(ROOT).as_posix()
+        for base in ("src", "scripts", "tests")
+        for path in (ROOT / base).rglob("*.py")
+    )
+    for relative in python_files:
+        audit.require(
+            f"`{relative}`" in guide,
+            f"Python file lacks a CODE_GUIDE.md entry: {relative}",
+        )
+
 
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description=__doc__.splitlines()[0])
@@ -382,9 +456,26 @@ def main(argv: list[str] | None = None) -> int:
     manifest = load_yaml(MANIFEST)
     audit_manifest(audit, manifest, require_tracked=args.require_tracked)
     audit_gold(audit)
+    audit_analysis_parameters(audit, manifest)
     audit_curated_configs(audit, manifest)
     computed = audit_artifacts(audit)
     audit_public_docs(audit)
+    if args.require_tracked:
+        tracked = git_files(["ls-files"])
+        audit.require(
+            "docs/CODE_GUIDE.md" in tracked,
+            "CODE_GUIDE.md is not tracked",
+        )
+        for artifact in manifest["generated_artifacts"]:
+            audit.require(
+                artifact["producer"] in tracked,
+                f"artifact producer is not tracked: {artifact['producer']}",
+            )
+            for supplement in artifact.get("supplements", []):
+                audit.require(
+                    supplement in tracked,
+                    f"artifact supplement producer is not tracked: {supplement}",
+                )
     audit.finish()
 
     report = {
@@ -398,6 +489,7 @@ def main(argv: list[str] | None = None) -> int:
             process["name"]: process["seed"] for process in manifest["random_processes"]
         },
         "environment": manifest["environment"],
+        "analysis_parameters": manifest["analysis_parameters"],
     }
     path = Path(args.report)
     path.parent.mkdir(parents=True, exist_ok=True)

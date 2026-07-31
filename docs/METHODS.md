@@ -222,7 +222,7 @@ plank and each topic description and assigns the nearest topic. A transparent ke
 runs alongside it, not as a fallback but so the model's output can be checked against something
 a human can read and argue with.
 
-**Validation, on 41,033 planks from 898 documents (37,301 classified):**
+**Validation, on 41,030 planks from 898 documents (37,297 classified):**
 
 | Classifier | Top-1 | Top-2 |
 |---|---|---|
