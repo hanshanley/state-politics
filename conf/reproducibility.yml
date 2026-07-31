@@ -55,6 +55,12 @@ random_processes:
   - name: intraparty_permutation_test
     seed: 20260729
     code: src/state_politics/analysis/intraparty.py
+  - name: bill_trend_sign_flip_test
+    seed: 20260731
+    code: src/state_politics/analysis/trends.py
+  - name: profile_multinomial_null
+    seed: 20260731
+    code: src/state_politics/analysis/profiles.py
 
 analysis_parameters:
   model_name: sentence-transformers/all-MiniLM-L6-v2
@@ -62,18 +68,28 @@ analysis_parameters:
   embedding_chunk_size: 50000
   modern_platform_start_year: 2018
   minimum_profile_observations: 30
+  minimum_bill_profile_observations: 500
+  profile_null_draws: 2000
+  profile_null_seed: 20260731
   election_minimum_comparable_bills: 500
   diffusion_minimum_title_characters: 45
   diffusion_minimum_states: 3
   diffusion_minimum_tokens: 5
   diffusion_jaccard_threshold: 0.80
-  diffusion_max_candidate_block: 400
+  diffusion_max_candidate_block: 3500
   intraparty_permutations: 5000
   term_max_features: 30000
   term_top_per_method: 12
   term_bill_min_count: 25
   term_stated_min_count: 5
   term_highlight_count: 6
+  trend_early_years: [2018, 2019]
+  trend_late_years: [2024, 2025]
+  trend_minimum_state_year_bills: 50
+  trend_minimum_state_years: 5
+  trend_minimum_state_period_bills: 100
+  trend_permutations: 10000
+  trend_random_seed: 20260731
 
 generated_artifacts:
   - path: data/processed/platforms_historical.parquet
@@ -96,6 +112,18 @@ generated_artifacts:
     producer: src/state_politics/analysis/elections.py
   - path: data/processed/state_party_terms.csv
     producer: src/state_politics/analysis/terms.py
+  - path: data/processed/bill_emphasis_by_year.csv
+    producer: src/state_politics/analysis/revealed.py
+  - path: data/processed/bill_emphasis_by_state_year.csv
+    producer: src/state_politics/analysis/revealed.py
+  - path: data/processed/bill_topic_trends_by_party.csv
+    producer: src/state_politics/analysis/trends.py
+  - path: data/processed/bill_topic_trends_by_state.csv
+    producer: src/state_politics/analysis/trends.py
+  - path: data/processed/analysis_capabilities.json
+    producer: src/state_politics/analysis/coverage.py
+  - path: data/processed/analysis_capabilities.csv
+    producer: src/state_politics/analysis/coverage.py
   - path: outputs/state_agenda_coverage.png
     producer: scripts/plot_state_agenda_coverage.py
   - path: outputs/state_party_focus.png

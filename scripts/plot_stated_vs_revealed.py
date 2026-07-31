@@ -43,7 +43,7 @@ SOURCE_NOTE = (
     "Project major-topic scheme, assigned by a local sentence-transformer scoring 62% top-1 and "
     "78% top-2 on a hand-labelled plank sample. Bills are classified from titles, which are "
     "shorter and noisier than planks. Filing a bill is not passing one: this measures agenda, "
-    "not achievement. Rows marked † and drawn hollow are contradicted when bill topics are "
+    "not achievement. Rows marked † are contradicted when bill topics are "
     "re-derived from Open States subject tags assigned by legislative staff rather than by "
     "this model, and should not be read as findings; the classifier tends to file a tax bill "
     "under the thing being taxed, which inflates housing in particular."
@@ -109,9 +109,8 @@ def build_figure(table: pd.DataFrame, out_path: Path, *, sample: str = "",
         revealed = (subset["revealed_share"] * 100).tolist()
 
         codes = subset["topic"].fillna(-1).astype(int).tolist()
-        flags = [(code, party) in (flagged or set()) for code in codes]
         # The dagger goes on the shared label, so it has to mean "flagged for either party" --
-        # marking only this panel's flags would leave the other panel's hollow rows unexplained.
+        # marking only this panel would leave the other panel's contradiction unexplained.
         labels = [f"{label} †" if any((code, side) in (flagged or set()) for side in ("D", "R"))
                   else label
                   for label, code in zip(labels, codes, strict=True)]
@@ -119,9 +118,11 @@ def build_figure(table: pd.DataFrame, out_path: Path, *, sample: str = "",
         color = theme.PARTY_COLORS[party]
         charts.dumbbell(
             ax, labels, stated, revealed,
-            left_color=color, right_color=theme.shade(color, 0.55),
-            left_label="Said (platform planks)", right_label="Filed (bills)",
-            markersize=7.0, unreliable=flags,
+            left_color=color, right_color=color,
+            left_label="Platform share", right_label="Bill share",
+            left_marker="o", right_marker="s",
+            left_filled=False, right_filled=True,
+            markersize=7.5,
         )
         # Pinned rather than autoscaled. A topic missing for one party leaves that row empty,
         # and matplotlib would then give the two panels different limits -- sliding one panel's
@@ -141,9 +142,9 @@ def build_figure(table: pd.DataFrame, out_path: Path, *, sample: str = "",
     fig.suptitle("What state parties say, and what they actually file",
                  fontweight="bold", fontsize=18, y=0.985)
     fig.text(0.5, 0.945,
-             "Filled = share of platform planks; darker = share of bills sponsored. "
-             "The gap is the distance between agenda and action. "
-             "Hollow \u2020 = contradicted by an independent labelling.",
+             "Open circle = platform share; solid square = bill share; "
+             "the line joins the same topic. "
+             "\u2020 = either party's direction fails to replicate under legislative subject tags.",
              ha="center", va="top", fontsize=11, color=theme.MUTED)
 
     note = theme.source_note(fig, SOURCE_NOTE.format(sample=sample))

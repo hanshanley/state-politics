@@ -44,7 +44,9 @@ MIN_TITLE_CHARS = 45
 MIN_REUSE_STATES = 3
 MIN_NEAR_DUPLICATE_TOKENS = 5
 NEAR_DUPLICATE_THRESHOLD = 0.8
-MAX_CANDIDATE_BLOCK = 400
+# The largest observed rare-token block has 3,333 members. A 400-row cap excluded 17% of
+# otherwise eligible bills from every candidate block and suppressed 115 detected clusters.
+MAX_CANDIDATE_BLOCK = 3_500
 
 #: Boilerplate that varies between states and would otherwise block an exact match.
 _BILL_NUMBER_RE = re.compile(r"\b(?:hb|sb|hf|sf|ab|hr|sr|hjr|sjr|lb|ho|so)\s*\.?\s*\d+\b", re.I)

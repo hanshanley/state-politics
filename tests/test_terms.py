@@ -24,6 +24,7 @@ def test_bill_documents_group_titles_by_state_party():
     documents = build_bill_documents(bills).set_index(["state", "party"])
 
     assert documents.loc[("TX", "D"), "n_source_items"] == 2
+    assert documents.loc[("TX", "D"), "evidence_type"] == "legislative_bills"
     assert "Voting rights" in documents.loc[("TX", "D"), "text"]
     assert ("TX", "unknown") not in documents.index
 
@@ -125,3 +126,39 @@ def test_numeric_log2_ratio_has_literal_rate_interpretation():
     )
     assert not solar["peer_absent"]
     assert 2 ** solar["log2_concentration"] == pytest.approx(expected, rel=1e-4)
+
+
+def test_stated_term_peers_use_the_same_evidence_genre():
+    documents = pd.DataFrame(
+        [
+            {
+                "state": "KY", "party": "R", "stream": "stated",
+                "evidence_type": "legislative_caucus",
+                "text": "solar " * 8 + "school " * 2,
+            },
+            {
+                "state": "NJ", "party": "R", "stream": "stated",
+                "evidence_type": "legislative_caucus",
+                "text": "solar " * 2 + "school " * 8,
+            },
+            {
+                "state": "TX", "party": "R", "stream": "stated",
+                "evidence_type": "party_committee",
+                "text": "solar " * 100 + "school " * 100,
+            },
+            {
+                "state": "CA", "party": "R", "stream": "stated",
+                "evidence_type": "party_committee",
+                "text": "budget " * 100 + "school " * 100,
+            },
+        ]
+    )
+
+    terms = distinctive_terms(documents, min_count=2, max_features=100, top_n=5)
+    solar = terms[
+        (terms["state"] == "KY")
+        & (terms["term"] == "solar solar")
+    ].iloc[0]
+
+    assert solar["evidence_type"] == "legislative_caucus"
+    assert solar["peer_feature_total"] == 4

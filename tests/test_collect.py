@@ -12,12 +12,16 @@ import re
 import time
 from pathlib import Path
 
+import pandas as pd
+
 from state_politics.platforms.collect import (
     _BLOCK_TAGS,
     DOC_TYPES,
     MIN_CHARS,
     CollectedDocument,
     _load_candidates,
+    _load_previous,
+    _merge_state_update,
     classify_doc_type,
     collect_candidate,
     collect_for_org,
@@ -180,12 +184,64 @@ def test_collect_for_org_respects_score_threshold_and_cap():
     assert len(calls) == 2
 
 
+def test_collect_for_org_exhausts_ranked_candidates_by_default():
+    candidates = [
+        Candidate(
+            state="TX", party="R", url=f"https://x.org/p{i}",
+            source="live", score=7,
+        )
+        for i in range(15)
+    ]
+    collected = collect_for_org(
+        candidates,
+        transport=lambda url, *, timeout, headers: StubResponse(
+            200, platform_prose("Texas") + url.encode()
+        ),
+        sleep=lambda _: None,
+    )
+
+    assert len(collected) == 15
+
+
 def _doc(state, party, confirmed, year=2024, doc_type="platform"):
     return CollectedDocument(
         state=state, party=party, url="https://x.org/p", fetched_url="https://x.org/p",
         source="wayback", doc_type=doc_type if confirmed else None, year=year,
         confirmed=confirmed, reason="",
     )
+
+
+def test_resume_preserves_ocr_provenance_columns(tmp_path):
+    document = _doc("NY", "D", True)
+    document.official_source_id = "issuu-123"
+    document.source_hashes = ["abc", "def"]
+    document.ocr_version = "tesseract 5.5"
+    path = tmp_path / "platforms.parquet"
+    pd.DataFrame([document.to_row()]).to_parquet(path, index=False)
+
+    previous, retry = _load_previous(path)
+    loaded = previous[("NY", "D")][0]
+
+    assert not retry
+    assert loaded.official_source_id == "issuu-123"
+    assert list(loaded.source_hashes) == ["abc", "def"]
+    assert loaded.ocr_version == "tesseract 5.5"
+
+
+def test_state_update_preserves_unselected_corpus_rows():
+    existing = pd.DataFrame(
+        [
+            {"state": "NY", "party": "D", "url": "old-ny"},
+            {"state": "TX", "party": "R", "url": "old-tx"},
+        ]
+    )
+    update = pd.DataFrame(
+        [{"state": "NY", "party": "D", "url": "new-ny"}]
+    )
+
+    merged = _merge_state_update(existing, update, {"NY"})
+
+    assert set(merged["url"]) == {"new-ny", "old-tx"}
 
 
 def test_gap_report_distinguishes_the_four_absence_reasons():

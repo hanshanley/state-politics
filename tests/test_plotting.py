@@ -12,6 +12,7 @@ import matplotlib
 matplotlib.use("Agg")  # headless: no display required
 
 import matplotlib.pyplot as plt  # noqa: E402
+import pytest  # noqa: E402
 
 from state_politics.plotting import charts, theme  # noqa: E402
 
@@ -172,6 +173,31 @@ def test_dumbbell_pairs_values_and_validates_length(tmp_path):
         plt.close(fig2)
 
 
+def test_dumbbell_can_use_shape_and_fill_instead_of_shading():
+    fig, ax = charts.new_figure(figsize=(6, 4))
+    charts.dumbbell(
+        ax,
+        ["Health"],
+        [0.1],
+        [0.2],
+        left_color=theme.BLUE,
+        right_color=theme.BLUE,
+        left_marker="o",
+        right_marker="s",
+        left_filled=False,
+        right_filled=True,
+    )
+    platform, bills = ax.collections[:2]
+    assert platform.get_facecolors()[0][:3].tolist() == pytest.approx(
+        matplotlib.colors.to_rgb(theme.BG)
+    )
+    assert bills.get_facecolors()[0][:3].tolist() == pytest.approx(
+        matplotlib.colors.to_rgb(theme.BLUE)
+    )
+    assert platform.get_paths()[0].vertices.shape != bills.get_paths()[0].vertices.shape
+    plt.close(fig)
+
+
 def test_source_note_reserve_scales_with_figure_height(tmp_path):
     """A fixed figure-fraction reserve leaves a large empty band under tall panels.
 
@@ -246,8 +272,7 @@ def test_stated_vs_revealed_flags_rows_an_independent_labelling_contradicts():
     """A withdrawn claim must be visibly withdrawn in the figure, not silently dropped.
 
     The housing gap survived the model but not the subject-tag replication. Removing the row
-    would leave the figure disagreeing with the prose with no hint why, so it is drawn hollow
-    and daggered instead.
+    would leave the figure disagreeing with the prose with no hint why, so it is daggered.
     """
     import sys
     from pathlib import Path

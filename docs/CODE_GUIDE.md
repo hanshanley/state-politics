@@ -49,6 +49,8 @@ repository audit fails when a Python file is added without an entry here.
 | `src/state_politics/analysis/state_focus.py` | Builds the 100-row state × party atlas using leave-one-state-out same-party baselines and curated caucus units. |
 | `src/state_politics/analysis/elections.py` | Detects election/voting bills, validates the title rule against subject tags, and measures same-party state concentration. |
 | `src/state_politics/analysis/terms.py` | Computes TF-IDF and literal same-party log2 term concentration; peer-absent terms are categorical rather than assigned pseudo-ratios. |
+| `src/state_politics/analysis/trends.py` | Computes early-vs-late bill-topic change, uncertainty, FDR-adjusted significance, yearly slopes, and sufficiently supported state trends. |
+| `src/state_politics/analysis/coverage.py` | Produces a machine-readable account of supported, partial, limited, and unsupported analytical questions from current artifact schemas. |
 | `src/state_politics/analysis/diffusion.py` | Detects exact/near-duplicate bill-title clusters and reports connected-component cohesion and ceremonial status. |
 
 ## Plotting library
@@ -94,6 +96,8 @@ repository audit fails when a Python file is added without an entry here.
 | `tests/test_state_focus.py` | Curated caucus units, committee precedence, leave-one-out baselines, all 100 rows and Nebraska's nonpartisan status. |
 | `tests/test_elections.py` | Election subtypes, false-positive terms, leave-one-out shares and subject-tag validation. |
 | `tests/test_terms.py` | State-party document construction, committee precedence, peer-absent handling and literal numeric log2 ratios. |
+| `tests/test_trends.py` | Early/late shares, slope direction, BH correction and state-year observation floors. |
+| `tests/test_coverage.py` | Capability report distinguishes supported analysis from unavailable enactment/vote/chamber questions. |
 | `tests/test_caucuses.py` | Curated source collection, failure recording, institutional separation and 50-state coverage plot invariants. |
 | `tests/test_plotting.py` | Portfolio palette, measured source-note layout, top-label spacing, shared panel order/count, and contradicted-row styling. |
 | `tests/test_reproducibility.py` | Manifest hashes, trusted hosts, source-hash failure paths, deterministic sampling, OCR row replacement and full audit success. |

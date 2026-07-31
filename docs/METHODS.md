@@ -555,7 +555,7 @@ state-politics/
 ├── conf/
 │   ├── party_registry.yml       # 100 state party orgs: state, party, domain, source_url, verified_on
 │   ├── topics.yml               # CAP-anchored issue taxonomy shared by both streams
-│   ├── platform_gaps.yml        # hand-checked reason each of the 24 gaps has no platform
+│   ├── platform_gaps.yml        # hand-checked reason each of the 18 gaps has no platform
 │   └── subject_topic_map.yml    # Open States subject tags -> topic codes, for validation
 ├── data/gold/
 │   └── plank_topics_gold.csv    # 50 hand-labelled planks; authored input, not an artifact

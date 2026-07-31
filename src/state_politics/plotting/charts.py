@@ -75,7 +75,8 @@ def marker_line(ax, x: float, color: str | None = None, style: str = ":") -> Non
 def dumbbell(ax, labels, left_values, right_values, *, left_color: str, right_color: str,
              left_label: str | None = None, right_label: str | None = None,
              connector_color: str | None = None, markersize: float = 7.0,
-             unreliable: list[bool] | None = None) -> None:
+             left_marker: str = "o", right_marker: str = "o",
+             left_filled: bool = True, right_filled: bool = True) -> None:
     """Horizontal dumbbell chart: two paired values per category.
 
     This is the project's signature comparison -- platform emphasis (what a state party
@@ -83,38 +84,32 @@ def dumbbell(ax, labels, left_values, right_values, *, left_color: str, right_co
     so the gap between the two dots *is* the finding, and the connector is drawn muted so
     the dots carry the colour.
 
-    ``unreliable`` marks rows that an independent check contradicts. They are drawn hollow
-    with a dashed connector rather than dropped, because a reader who has seen the claim
-    elsewhere needs to see that it was withdrawn -- silently removing a row would leave the
-    figure disagreeing with the prose and give no hint why.
+    Marker shape and fill can encode the two evidence streams without relying on subtle color
+    shades. The connector always has one meaning: it joins the two values for the same row.
     """
     if not (len(labels) == len(left_values) == len(right_values)):
         raise ValueError("labels, left_values and right_values must be the same length")
-    flags = list(unreliable) if unreliable is not None else [False] * len(labels)
-    if len(flags) != len(labels):
-        raise ValueError("unreliable must be the same length as labels")
 
     positions = range(len(labels))
-    for pos, left, right, flag in zip(positions, left_values, right_values, flags, strict=True):
+    for pos, left, right in zip(positions, left_values, right_values, strict=True):
         ax.plot([left, right], [pos, pos], color=connector_color or theme.GRID,
-                linewidth=2.0, zorder=1, solid_capstyle="round",
-                linestyle=":" if flag else "-", alpha=0.55 if flag else 1.0)
+                linewidth=1.6, zorder=1, solid_capstyle="round")
 
-    def _split(values, keep_flagged):
-        return ([value for value, flag in zip(values, flags, strict=True)
-                 if flag == keep_flagged],
-                [pos for pos, flag in zip(positions, flags, strict=True)
-                 if flag == keep_flagged])
+    def _scatter(values, color, label, marker, filled):
+        ax.scatter(
+            values,
+            list(positions),
+            marker=marker,
+            facecolor=color if filled else theme.BG,
+            edgecolor=color,
+            s=markersize**2,
+            zorder=2,
+            linewidth=1.3,
+            label=label,
+        )
 
-    for values, color, label in ((left_values, left_color, left_label),
-                                 (right_values, right_color, right_label)):
-        solid, solid_pos = _split(values, False)
-        ax.scatter(solid, solid_pos, color=color, s=markersize**2, zorder=2,
-                   edgecolor=theme.BG, linewidth=0.8, label=label)
-        hollow, hollow_pos = _split(values, True)
-        if hollow:
-            ax.scatter(hollow, hollow_pos, facecolor=theme.BG, s=markersize**2, zorder=2,
-                       edgecolor=color, linewidth=1.4)
+    _scatter(left_values, left_color, left_label, left_marker, left_filled)
+    _scatter(right_values, right_color, right_label, right_marker, right_filled)
     ax.set_yticks(list(positions))
     ax.set_yticklabels(list(labels))
     ax.grid(axis="x", linestyle="-", linewidth=0.5)

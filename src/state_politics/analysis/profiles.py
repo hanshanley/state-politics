@@ -19,6 +19,7 @@ magnitude between New York and Wyoming.
 from __future__ import annotations
 
 import argparse
+import zlib
 from pathlib import Path
 
 __all__ = ["build_profiles", "cross_state_outliers", "topic_vectors"]
@@ -26,6 +27,9 @@ __all__ = ["build_profiles", "cross_state_outliers", "topic_vectors"]
 #: A state party needs at least this many classified planks (or bills) before its emphasis
 #: vector means anything. Below it, one plank moves a share by tens of percentage points.
 MIN_OBSERVATIONS = 30
+MIN_BILL_OBSERVATIONS = 500
+OUTLIER_NULL_DRAWS = 2_000
+OUTLIER_RANDOM_SEED = 20_260_731
 
 
 def topic_vectors(table, *, count_column: str = "n_planks",
@@ -53,7 +57,13 @@ def topic_vectors(table, *, count_column: str = "n_planks",
     ).fillna(0.0)
 
 
-def cross_state_outliers(vectors, topics):
+def cross_state_outliers(
+    vectors,
+    topics,
+    *,
+    sample_sizes=None,
+    null_draws: int = OUTLIER_NULL_DRAWS,
+):
     """Distance from each state party to its own national party average.
 
     The comparison is within party: a Democratic state party is measured against the pooled
@@ -72,11 +82,13 @@ def cross_state_outliers(vectors, topics):
         subset = vectors[vectors.index.get_level_values("party") == party]
         if len(subset) < 2:
             continue
-        mean = subset.mean(axis=0)
-        mean_norm = np.linalg.norm(mean)
         for (state, _), vector in subset.iterrows():
+            peers = subset.drop(index=(state, party))
+            mean = peers.mean(axis=0)
+            mean_norm = np.linalg.norm(mean)
             norm = np.linalg.norm(vector)
             similarity = float(vector @ mean / (norm * mean_norm)) if norm and mean_norm else 0.0
+            distance = 1 - similarity
             difference = vector - mean
             # Largest absolute departure, breaking ties toward the topic the state emphasizes
             # *more* than its party: "Montana Democrats talk about public lands far more" is a
@@ -85,16 +97,54 @@ def cross_state_outliers(vectors, topics):
             largest = difference.abs().max()
             candidates = difference[difference.abs() >= largest - 1e-12]
             most = candidates.idxmax() if (candidates > 0).any() else candidates.idxmin()
-            rows.append({
+            record = {
                 "state": state,
                 "party": party,
-                "cosine_distance": round(1 - similarity, 4),
+                "cosine_distance": round(distance, 4),
                 "most_distinctive_topic": named.get(most, most),
                 "topic_share": round(float(vector[most]), 4),
                 "party_average_share": round(float(mean[most]), 4),
                 "difference": round(float(difference[most]), 4),
-            })
-    return pd.DataFrame(rows).sort_values(["party", "cosine_distance"], ascending=[True, False])
+            }
+            if sample_sizes is not None:
+                n_observations = int(sample_sizes.get((state, party), 0))
+                if n_observations <= 0:
+                    continue
+                probabilities = mean.to_numpy(dtype=float)
+                probabilities /= probabilities.sum()
+                seed = OUTLIER_RANDOM_SEED + zlib.crc32(
+                    f"{state}-{party}".encode()
+                )
+                rng = np.random.default_rng(seed)
+                draws = rng.multinomial(
+                    n_observations, probabilities, size=null_draws
+                ) / n_observations
+                draw_norms = np.linalg.norm(draws, axis=1)
+                null_distances = 1 - (
+                    draws @ probabilities
+                    / (draw_norms * np.linalg.norm(probabilities))
+                )
+                null_p95 = float(np.quantile(null_distances, 0.95))
+                if distance <= null_p95:
+                    continue
+                record.update(
+                    {
+                        "n_observations": n_observations,
+                        "null_distance_p95": round(null_p95, 4),
+                        "null_p_value": round(
+                            float(
+                                (1 + np.count_nonzero(null_distances >= distance))
+                                / (null_draws + 1)
+                            ),
+                            4,
+                        ),
+                    }
+                )
+            rows.append(record)
+    result = pd.DataFrame(rows)
+    if result.empty:
+        return result
+    return result.sort_values(["party", "cosine_distance"], ascending=[True, False])
 
 
 def build_profiles(platform_emphasis, bill_emphasis, gap_report, topics, *, top_n: int = 5,
@@ -173,13 +223,28 @@ def main(argv: list[str] | None = None) -> int:
     profiles = build_profiles(platform, bills, gaps, topics)
     profiles.to_csv(out_dir / "state_party_profiles.csv", index=False)
 
+    current_platform = (
+        platform[platform["era"] == "2018-present"]
+        if "era" in platform.columns
+        else platform
+    )
+    platform_sizes = current_platform.groupby(["state", "party"])["n_planks"].sum()
     platform_outliers = cross_state_outliers(
-        topic_vectors(platform, count_column="n_planks"), topics
+        topic_vectors(current_platform, count_column="n_planks"),
+        topics,
+        sample_sizes=platform_sizes,
     )
     platform_outliers.to_csv(out_dir / "platform_outliers.csv", index=False)
 
+    bill_sizes = bills.groupby(["state", "party"])["n_bills"].sum()
     bill_outliers = cross_state_outliers(
-        topic_vectors(bills, count_column="n_bills"), topics
+        topic_vectors(
+            bills,
+            count_column="n_bills",
+            min_observations=MIN_BILL_OBSERVATIONS,
+        ),
+        topics,
+        sample_sizes=bill_sizes,
     )
     bill_outliers.to_csv(out_dir / "bill_outliers.csv", index=False)
 

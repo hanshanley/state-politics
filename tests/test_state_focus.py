@@ -80,6 +80,22 @@ def test_caucus_supplement_never_overrides_party_committee_evidence():
     ]
 
 
+def test_empty_caucus_emphasis_falls_back_to_committee_only():
+    committee = pd.DataFrame(
+        [
+            {
+                "state": "PA", "party": "D", "era": "2018-present", "topic": 6,
+                "topic_name": "Education", "n_planks": 9, "share": 1.0,
+            }
+        ]
+    )
+
+    combined = combine_stated_emphasis(committee, pd.DataFrame())
+
+    assert len(combined) == 1
+    assert combined.iloc[0]["evidence_type"] == "party_committee"
+
+
 def test_focus_metrics_uses_a_leave_one_state_out_baseline():
     vectors = pd.DataFrame(
         [[0.8, 0.2], [0.2, 0.8], [0.2, 0.8]],

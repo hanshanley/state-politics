@@ -88,6 +88,8 @@ analysis: historical
 	$(PY) -m state_politics.analysis.elections
 	$(PY) -m state_politics.analysis.terms
 	$(PY) -m state_politics.analysis.state_focus
+	$(PY) -m state_politics.analysis.trends
+	$(PY) -m state_politics.analysis.coverage
 
 figures:
 	$(PY) scripts/plot_platform_coverage.py

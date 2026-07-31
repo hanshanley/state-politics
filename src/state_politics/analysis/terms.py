@@ -107,6 +107,7 @@ def build_bill_documents(bills):
         source_counts, on=["state", "party"], how="left", validate="one_to_one"
     )
     documents["stream"] = "bills"
+    documents["evidence_type"] = "legislative_bills"
     return documents
 
 
@@ -217,16 +218,26 @@ def distinctive_terms(
     rows = []
 
     for position, document in enumerate(documents.itertuples(index=False)):
-        same_party = np.flatnonzero(
+        evidence_type = getattr(document, "evidence_type", document.stream)
+        peer_mask = (
             (documents["party"].to_numpy() == document.party)
             & (np.arange(len(documents)) != position)
         )
+        if "evidence_type" in documents.columns:
+            peer_mask &= (
+                documents["evidence_type"].to_numpy() == evidence_type
+            )
+        same_party = np.flatnonzero(peer_mask)
         if not len(same_party):
             continue
         own = counts.getrow(position).toarray().ravel()
         peers = np.asarray(counts[same_party].sum(axis=0)).ravel()
-        own_rate = own / own.sum()
-        peer_rate = peers / peers.sum()
+        own_total = own.sum()
+        peer_total = peers.sum()
+        if not own_total or not peer_total:
+            continue
+        own_rate = own / own_total
+        peer_rate = peers / peer_total
         # A feature absent in every same-party peer has no finite observed log ratio. It is
         # reported categorically instead of assigning a pseudo-count whose score changes with
         # max_features (the previous prior added ~log2(vocabulary) to every peer-absent term).
@@ -267,6 +278,7 @@ def distinctive_terms(
                     "state": document.state,
                     "party": document.party,
                     "stream": document.stream,
+                    "evidence_type": evidence_type,
                     "term": features[feature],
                     "count": int(own[feature]),
                     "peer_count": int(peers[feature]),

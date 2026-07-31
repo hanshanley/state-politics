@@ -8,7 +8,11 @@ from __future__ import annotations
 
 import pandas as pd
 
-from state_politics.analysis.emphasis import emphasis_by_party, emphasis_table
+from state_politics.analysis.emphasis import (
+    _drop_duplicate_documents,
+    emphasis_by_party,
+    emphasis_table,
+)
 from state_politics.analysis.taxonomy import Topic
 from state_politics.analysis.validate import DEFAULT_GOLD_PATH, Scores, load_gold
 
@@ -92,10 +96,59 @@ def test_emphasis_by_party_reports_the_gap_between_the_two():
 
 
 def test_emphasis_by_party_ignores_third_parties():
-    planks = _planks([("TX", "D", "e", 5)] * 10 + [("TX", "other", "e", 5)] * 100)
+    planks = _planks(
+        [("TX", "D", "e", 5)] * 10
+        + [("TX", "R", "e", 1)] * 10
+        + [("TX", "other", "e", 5)] * 100
+    )
     table = emphasis_by_party(planks, TOPICS)
     assert table[table.topic == 5].iloc[0]["n_D"] == 10
     assert "other" not in table.columns
+
+
+def test_party_emphasis_weights_matched_states_equally():
+    planks = _planks(
+        [("TX", "D", "e", 5)] * 100
+        + [("TX", "R", "e", 1)] * 100
+        + [("VT", "D", "e", 1)]
+        + [("VT", "R", "e", 1)]
+    )
+
+    matched = emphasis_by_party(planks, TOPICS)
+    pooled = emphasis_by_party(planks, TOPICS, matched_states=False)
+
+    matched_labor = matched[matched["topic"] == 5].iloc[0]
+    pooled_labor = pooled[pooled["topic"] == 5].iloc[0]
+    assert matched_labor["D"] == 0.5
+    assert pooled_labor["D"] == 100 / 101
+    assert matched_labor["n_states"] == 2
+
+
+def test_collected_near_duplicate_documents_are_clustered_across_adjacent_years():
+    corpus = pd.DataFrame(
+        [
+            {
+                "state": "CO", "party": "D", "year": 2020,
+                "source_corpus": "collected",
+                "text": "education healthcare environment workers rights " * 20,
+            },
+            {
+                "state": "CO", "party": "D", "year": 2021,
+                "source_corpus": "collected",
+                "text": "education healthcare environment workers rights " * 21,
+            },
+            {
+                "state": "CO", "party": "D", "year": 2024,
+                "source_corpus": "collected",
+                "text": "education healthcare environment workers rights " * 20,
+            },
+        ]
+    )
+
+    deduplicated = _drop_duplicate_documents(corpus)
+
+    assert len(deduplicated) == 2
+    assert 2024 in set(deduplicated["year"])
 
 
 def test_emphasis_table_on_empty_input_returns_empty_frame():

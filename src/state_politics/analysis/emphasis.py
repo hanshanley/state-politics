@@ -21,6 +21,7 @@ about broad aggregate emphasis and not about any individual plank.
 from __future__ import annotations
 
 import argparse
+import itertools
 import re
 from pathlib import Path
 
@@ -95,13 +96,42 @@ def emphasis_table(planks, topics, *, by: tuple[str, ...] = ("state", "party")):
     return counts.sort_values([*by, "share"], ascending=[*[True] * len(by), False])
 
 
-def emphasis_by_party(planks, topics):
-    """Topic shares for each major party, side by side, with the gap between them."""
+def emphasis_by_party(planks, topics, *, matched_states: bool = True):
+    """Equal-state topic shares for each party, restricted to states with both parties."""
+    import pandas as pd
 
-    major = planks[planks["party"].isin(["D", "R"])]
-    table = emphasis_table(major, topics, by=("party",))
-    wide = table.pivot(index=["topic", "topic_name"], columns="party", values="share")
-    wide = wide.reindex(columns=["D", "R"]).fillna(0.0).reset_index()
+    major = planks[
+        planks["party"].isin(["D", "R"]) & planks["topic"].notna()
+    ].copy()
+    if matched_states:
+        party_states = {
+            party: set(major.loc[major["party"] == party, "state"])
+            for party in ("D", "R")
+        }
+        states = party_states["D"] & party_states["R"]
+        major = major[major["state"].isin(states)]
+    if major.empty:
+        return pd.DataFrame(
+            columns=["topic", "topic_name", "D", "R", "gap", "n_D", "n_R", "n_states"]
+        )
+
+    if matched_states:
+        by_org = emphasis_table(major, topics, by=("state", "party"))
+        vectors = by_org.pivot_table(
+            index=["state", "party"], columns="topic", values="share", fill_value=0.0
+        )
+        party_means = vectors.groupby(level="party").mean().reindex(["D", "R"])
+        wide = party_means.T.reindex(columns=["D", "R"]).fillna(0.0).reset_index()
+        n_states = vectors.index.get_level_values("state").nunique()
+        weighting = "equal_state_matched"
+    else:
+        table = emphasis_table(major, topics, by=("party",))
+        wide = table.pivot(index="topic", columns="party", values="share")
+        wide = wide.reindex(columns=["D", "R"]).fillna(0.0).reset_index()
+        n_states = major["state"].nunique()
+        weighting = "pooled_planks"
+    names = {topic.code: topic.name for topic in topics}
+    wide["topic_name"] = wide["topic"].map(names)
     wide["gap"] = wide["D"] - wide["R"]
     counts = (
         major[major["topic"].notna()]
@@ -109,6 +139,8 @@ def emphasis_by_party(planks, topics):
         .fillna(0).astype(int)
         .rename(columns={"D": "n_D", "R": "n_R"}).reset_index()
     )
+    wide["n_states"] = n_states
+    wide["weighting"] = weighting
     return wide.merge(counts, on="topic", how="left").sort_values("gap", ascending=False)
 
 
@@ -116,8 +148,8 @@ def _content_tokens(text: str) -> set[str]:
     return set(re.findall(r"[a-z]{4,}", (text or "").lower()))
 
 
-def _drop_cross_corpus_duplicates(corpus, *, min_jaccard: float = 0.85):
-    """Drop documents present in both the Dataverse corpus and this project's collection.
+def _drop_duplicate_documents(corpus, *, min_jaccard: float = 0.85):
+    """Cluster redundant collected documents and cross-corpus copies.
 
     The two corpora overlap: eleven (state, party, year) documents appear in both, ten of them
     with content-word Jaccard between 0.90 and 1.00 and two identical. Counting those planks
@@ -136,30 +168,62 @@ def _drop_cross_corpus_duplicates(corpus, *, min_jaccard: float = 0.85):
     The copy carrying a fetched URL and hash (the collected one) is the one kept.
     """
 
-    frame = corpus.reset_index(drop=True)
-    dated = frame[frame["year"].notna()]
-    keys = list(zip(dated["state"], dated["party"],
-                    dated["year"].astype("Int64"), strict=True))
-    by_key: dict[tuple, list[int]] = {}
-    for position, key in zip(dated.index, keys, strict=True):
-        by_key.setdefault(key, []).append(position)
+    import pandas as pd
 
-    collected = set(frame.index[frame["source_corpus"] == "collected"])
+    frame = corpus.reset_index(drop=True)
+    tokens = [_content_tokens(text) for text in frame["text"]]
+    parent = list(range(len(frame)))
+
+    def find(position):
+        while parent[position] != position:
+            parent[position] = parent[parent[position]]
+            position = parent[position]
+        return position
+
+    def union(left, right):
+        left_root, right_root = find(left), find(right)
+        if left_root != right_root:
+            parent[right_root] = left_root
+
+    for _, group in frame.groupby(["state", "party"]):
+        for left, right in itertools.combinations(group.index, 2):
+            if (
+                frame.at[left, "source_corpus"] != "collected"
+                and frame.at[right, "source_corpus"] != "collected"
+            ):
+                continue
+            left_year, right_year = frame.at[left, "year"], frame.at[right, "year"]
+            if (
+                pd.notna(left_year)
+                and pd.notna(right_year)
+                and abs(int(left_year) - int(right_year)) > 1
+            ):
+                continue
+            union_tokens = tokens[left] | tokens[right]
+            if (
+                union_tokens
+                and len(tokens[left] & tokens[right]) / len(union_tokens) >= min_jaccard
+            ):
+                union(left, right)
+
+    components: dict[int, list[int]] = {}
+    for position in range(len(frame)):
+        components.setdefault(find(position), []).append(position)
     drop: list[int] = []
-    for positions in by_key.values():
+    for positions in components.values():
         if len(positions) < 2:
             continue
-        keep = next((i for i in positions if i in collected), positions[0])
-        keep_tokens = _content_tokens(frame.at[keep, "text"])
-        for other in positions:
-            if other == keep:
-                continue
-            tokens = _content_tokens(frame.at[other, "text"])
-            union = keep_tokens | tokens
-            if union and len(keep_tokens & tokens) / len(union) >= min_jaccard:
-                drop.append(other)
+        keep = max(
+            positions,
+            key=lambda position: (
+                frame.at[position, "source_corpus"] == "collected",
+                len(str(frame.at[position, "text"])),
+                frame.at[position, "year"] if pd.notna(frame.at[position, "year"]) else -1,
+            ),
+        )
+        drop.extend(position for position in positions if position != keep)
     if drop:
-        print(f"dropped {len(drop)} documents duplicated across the two corpora")
+        print(f"dropped {len(drop)} redundant collected/cross-corpus documents")
     return frame.drop(index=drop)
 
 
@@ -214,7 +278,7 @@ def main(argv: list[str] | None = None) -> int:
                                    source_corpus="collected")[
             ["state", "party", "year", "era", "text", "source_corpus"]])
 
-    corpus = _drop_cross_corpus_duplicates(pd.concat(frames, ignore_index=True))
+    corpus = _drop_duplicate_documents(pd.concat(frames, ignore_index=True))
     planks = classify_corpus(corpus, classifier)
     print(f"planks classified:    {len(planks)} "
           f"({int(planks['topic'].isna().sum())} below the similarity threshold)")
@@ -228,6 +292,9 @@ def main(argv: list[str] | None = None) -> int:
 
     by_party = emphasis_by_party(planks, topics)
     by_party.to_csv(out_dir / "emphasis_by_party.csv", index=False)
+    emphasis_by_party(planks, topics, matched_states=False).to_csv(
+        out_dir / "emphasis_by_party_pooled_sensitivity.csv", index=False
+    )
 
     # An era-restricted table as well. The stated-vs-revealed comparison must not measure a
     # 1990-2026 platform average against a 2018-2026 bill window: most planks predate 2018,
@@ -237,6 +304,10 @@ def main(argv: list[str] | None = None) -> int:
     if not modern.empty:
         emphasis_by_party(modern, topics).to_csv(
             out_dir / "emphasis_by_party_2018_present.csv", index=False
+        )
+        emphasis_by_party(modern, topics, matched_states=False).to_csv(
+            out_dir / "emphasis_by_party_2018_present_pooled_sensitivity.csv",
+            index=False,
         )
 
     print("\ntopics where the parties differ most (share of planks):")

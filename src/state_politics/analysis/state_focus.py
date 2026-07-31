@@ -23,7 +23,7 @@ import argparse
 import re
 from pathlib import Path
 
-from .profiles import MIN_OBSERVATIONS, topic_vectors
+from .profiles import MIN_BILL_OBSERVATIONS, MIN_OBSERVATIONS, topic_vectors
 from .taxonomy import (
     DEFAULT_TOPICS_PATH,
     EmbeddingClassifier,
@@ -164,7 +164,10 @@ def combine_stated_emphasis(committee, caucus):
     columns = [
         "state", "party", "topic", "topic_name", "n_items", "share", "evidence_type"
     ]
-    return pd.concat([committee[columns], caucus[columns]], ignore_index=True)
+    frames = [committee[columns]]
+    if not caucus.empty:
+        frames.append(caucus[columns])
+    return pd.concat(frames, ignore_index=True)
 
 
 def _format_top(vector, names: dict[int, str], top_n: int = 3) -> str:
@@ -271,13 +274,51 @@ def build_state_focus_atlas(stated, bills, topics):
     )
 
     bill_counts = bills.rename(columns={"n_bills": "n_items"})
+    bill_all_vectors = topic_vectors(
+        bill_counts, count_column="n_items", min_observations=1
+    )
     bill_vectors = topic_vectors(
-        bill_counts, count_column="n_items", min_observations=MIN_OBSERVATIONS
+        bill_counts,
+        count_column="n_items",
+        min_observations=MIN_BILL_OBSERVATIONS,
     )
     bill_focus = focus_metrics(
-        bill_vectors, bill_counts, names, min_items=MIN_OBSERVATIONS
+        bill_vectors,
+        bill_counts,
+        names,
+        min_items=MIN_BILL_OBSERVATIONS,
     ).add_prefix("bill_")
     bill_focus = bill_focus.rename(columns={"bill_state": "state", "bill_party": "party"})
+    bill_top = pd.DataFrame(
+        [
+            {
+                "state": state,
+                "party": party,
+                "bill_n_items_all": int(
+                    bill_counts[
+                        (bill_counts["state"] == state)
+                        & (bill_counts["party"] == party)
+                    ]["n_items"].sum()
+                ),
+                "bill_top_topics_all": _format_top(vector, names),
+            }
+            for (state, party), vector in bill_all_vectors.iterrows()
+        ],
+        columns=["state", "party", "bill_n_items_all", "bill_top_topics_all"],
+    )
+    coverage_columns = [
+        "n_attributed",
+        "n_procedural_excluded",
+        "n_substantive_attributed",
+        "n_classified_total",
+        "classification_rate",
+    ]
+    available_coverage = [column for column in coverage_columns if column in bills.columns]
+    bill_coverage = (
+        bills[["state", "party", *available_coverage]]
+        .drop_duplicates(["state", "party"])
+        .rename(columns={column: f"bill_{column}" for column in available_coverage})
+    )
 
     grid = pd.DataFrame(
         [(state, party) for state in STATE_CODES for party in ("D", "R")],
@@ -294,6 +335,13 @@ def build_state_focus_atlas(stated, bills, topics):
     grid = grid.drop(columns=["stated_n_items_all", "stated_top_topics_all"])
     grid = grid.merge(evidence.reset_index(), on=["state", "party"], how="left")
     grid = grid.merge(bill_focus, on=["state", "party"], how="left")
+    grid = grid.merge(bill_top, on=["state", "party"], how="left")
+    grid["bill_n_items"] = grid["bill_n_items"].fillna(grid["bill_n_items_all"])
+    grid["bill_top_topics"] = grid["bill_top_topics"].fillna(
+        grid["bill_top_topics_all"]
+    )
+    grid = grid.drop(columns=["bill_n_items_all", "bill_top_topics_all"])
+    grid = grid.merge(bill_coverage, on=["state", "party"], how="left")
     grid["stated_source"] = grid["stated_source"].fillna("none")
     grid["stated_focus_reliable"] = grid["stated_focus_reliable"].fillna(False).astype(bool)
     grid["bill_focus_reliable"] = grid["bill_focus_reliable"].fillna(False).astype(bool)

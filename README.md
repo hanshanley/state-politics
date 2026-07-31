@@ -14,6 +14,7 @@ taxonomy so they can be compared directly.
 Congressional bills are **out of scope**. This is about *state* politics.
 
 📄 **[Full methodology →](docs/METHODS.md)**  ·
+📐 **[Analytical scope →](docs/ANALYSIS_DEPTH.md)**  ·
 🔍 **[Reproducibility audit →](docs/REPRODUCIBILITY.md)**  ·
 🧭 **[Code guide →](docs/CODE_GUIDE.md)**  ·
 📋 **[Roadmap and lessons →](docs/PLAN.md)**  ·
@@ -23,9 +24,10 @@ Congressional bills are **out of scope**. This is about *state* politics.
 
 ## Data
 
-- **Stated priorities:** 249 current party platforms and state-committee resolutions, plus a
-  separately labelled four-source legislative-caucus supplement. The platform-vs-bill analysis
-  uses only party-committee evidence.
+- **Stated priorities:** 249 confirmed party-committee documents in the modern collection:
+  233 dated 2018+ across 80 organizations and 16 older fallback documents. A separately labelled
+  four-source legislative-caucus supplement fills four otherwise missing state-party rows. The
+  platform-vs-bill analysis uses only 2018+ party-committee evidence.
 - **Revealed priorities:** 1,087,327 state legislative bills and 5,000,761 sponsorship records.
 - **Historical comparison:** 2,091 state party platform documents covering 1840–2017.
 - **State profiles:** 100 state × party rows, with stated evidence where available and partisan
@@ -119,12 +121,11 @@ uv run python -m state_politics.analysis.intraparty
 uv run python scripts/plot_intraparty.py
 ```
 
-![State parties barely cluster by party](outputs/intraparty_coherence.png)
+![Same-party and opposite-party topic similarity](outputs/intraparty_coherence.png)
 
-**Two co-partisan state organizations are about 85% as far apart as two opposed ones** — 0.85 in
-what they say, 0.85 in what they file. The two streams are independent (different authors,
-different sources, different years), and they agree. On topic emphasis, the party label carries
-surprisingly little information about how alike two state organizations are.
+The party label provides only a modest similarity advantage. For platforms, same-party state
+organizations are **72.9% similar** in topic mix versus **68.2%** for opposite-party pairs—a
+4.7-point difference. For bills, the comparison is **88.9% versus 87.0%**, only 2.0 points.
 
 **This measures agenda overlap, not agreement.** Every vector is a distribution over *topics*,
 so two organizations are "close" when they devote similar attention to the same subjects — not
@@ -146,18 +147,25 @@ What state parties *do* disagree about differs by party:
 | | Most divisive topics within the party (cross-state SD of topic share) |
 |---|---|
 | **Democratic platforms** | Public lands and water (7.1pp), Agriculture (4.9pp), Law and crime (4.8pp) |
-| **Republican platforms** | Government operations (10.3pp), Public lands (8.1pp), Civil rights (8.1pp) |
+| **Republican platforms** | Government operations (10.4pp), Civil rights (8.2pp), Law and crime (7.6pp) |
 | **Democratic bills** | Law and crime (5.7pp), Public lands (4.0pp), Education (3.8pp) |
 | **Republican bills** | Public lands (4.2pp), Law and crime (4.1pp), Government operations (3.5pp) |
 
 Public lands is the clearest case of geography beating party: it is a top-three source of
-internal disagreement for **both** parties in **both** streams, because a Nevada party of either
-stripe has a public-lands agenda and a Rhode Island one does not.
+internal disagreement in three of the four party-stream comparisons, and ranks fourth for
+Republican platforms. A Nevada party of either stripe has a public-lands agenda and a Rhode
+Island one does not.
 
 Dispersion is only ever compared between parties over the **same set of states**, since a party
 whose surviving platforms come from more unusual states would otherwise look more divided for
 purely compositional reasons. That restriction is what limits the platform comparison to 18
 states.
+
+These are comparison samples, not data-coverage counts. The project has stated state-level
+evidence for all 50 states, but this matched platform comparison requires **both parties in the
+same state** to have at least 30 classified current planks, leaving 18 states. Bills cover all
+50 states, but Nebraska has no D/R caucus comparison because its legislature is formally
+nonpartisan, leaving 49.
 
 ---
 
@@ -212,8 +220,8 @@ two-word phrases. A log₂ score of +1 means a term is twice as concentrated as 
 | State party and stream | Distinctive language |
 |---|---|
 | Alaska Democrats, stated | `salmon` (+7.9), `fisheries` (+5.4) |
-| Kentucky Republicans, stated | `postsecondary` (absent in peers), `sick leave` (+10.5) |
-| New Jersey Republicans, stated | `school funding` (+8.9), `property taxes` (+5.8) |
+| Kentucky Republican caucus supplement (8 items; descriptive) | `postsecondary` (absent in peers), `sick leave` (+10.5) |
+| New Jersey Republican caucus supplement (21 items; descriptive) | `school funding` (+8.9), `property taxes` (+5.8) |
 | South Dakota Democrats, stated | `tribal colleges` (+5.0), `high tech` (+8.5) |
 | Alaska Democrats, bills | `permanent fund` (+12.0) |
 | Arkansas Republicans, bills | `child maltreatment` (+7.2) |

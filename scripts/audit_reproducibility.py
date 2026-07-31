@@ -128,6 +128,10 @@ def audit_manifest(audit: Audit, manifest: dict, *, require_tracked: bool) -> No
 
     for artifact in manifest["generated_artifacts"]:
         audit.require(
+            (ROOT / artifact["path"]).exists(),
+            f"declared generated artifact is missing: {artifact['path']}",
+        )
+        audit.require(
             (ROOT / artifact["producer"]).exists(),
             f"artifact producer is missing: {artifact['producer']}",
         )
@@ -200,8 +204,14 @@ def audit_analysis_parameters(audit: Audit, manifest: dict) -> None:
         intraparty,
         taxonomy,
         terms,
+        trends,
     )
-    from state_politics.analysis.profiles import MIN_OBSERVATIONS
+    from state_politics.analysis.profiles import (
+        MIN_BILL_OBSERVATIONS,
+        MIN_OBSERVATIONS,
+        OUTLIER_NULL_DRAWS,
+        OUTLIER_RANDOM_SEED,
+    )
 
     parameters = manifest["analysis_parameters"]
     actual = {
@@ -210,6 +220,9 @@ def audit_analysis_parameters(audit: Audit, manifest: dict) -> None:
         "embedding_chunk_size": taxonomy.CHUNK_SIZE,
         "modern_platform_start_year": emphasis.MODERN_FROM,
         "minimum_profile_observations": MIN_OBSERVATIONS,
+        "minimum_bill_profile_observations": MIN_BILL_OBSERVATIONS,
+        "profile_null_draws": OUTLIER_NULL_DRAWS,
+        "profile_null_seed": OUTLIER_RANDOM_SEED,
         "election_minimum_comparable_bills": elections.MIN_COMPARABLE_BILLS,
         "diffusion_minimum_title_characters": diffusion.MIN_TITLE_CHARS,
         "diffusion_minimum_states": diffusion.MIN_REUSE_STATES,
@@ -222,6 +235,13 @@ def audit_analysis_parameters(audit: Audit, manifest: dict) -> None:
         "term_bill_min_count": terms.BILL_MIN_TERM_COUNT,
         "term_stated_min_count": terms.STATED_MIN_TERM_COUNT,
         "term_highlight_count": terms.HIGHLIGHT_TERMS,
+        "trend_early_years": list(trends.EARLY_YEARS),
+        "trend_late_years": list(trends.LATE_YEARS),
+        "trend_minimum_state_year_bills": trends.MIN_STATE_YEAR_BILLS,
+        "trend_minimum_state_years": trends.MIN_STATE_YEARS,
+        "trend_minimum_state_period_bills": trends.MIN_STATE_PERIOD_BILLS,
+        "trend_permutations": trends.TREND_PERMUTATIONS,
+        "trend_random_seed": trends.TREND_RANDOM_SEED,
     }
     audit.require(
         set(parameters) == set(actual),
@@ -338,6 +358,25 @@ def audit_artifacts(audit: Audit) -> dict:
         map(tuple, gaps.loc[gaps["n_confirmed"] == 0, ["state", "party"]].values)
     )
     audit.require(len(platform_keys | gap_keys) == 100, "platform + gap rows do not cover 100 orgs")
+    current_years = pd.to_numeric(confirmed["year"], errors="coerce")
+    current_platform_keys = set(
+        map(
+            tuple,
+            confirmed.loc[current_years >= 2018, ["state", "party"]]
+            .drop_duplicates()
+            .values,
+        )
+    )
+    atlas_committee_keys = set(
+        map(
+            tuple,
+            atlas.loc[atlas["stated_source"] == "party_committee", ["state", "party"]].values,
+        )
+    )
+    audit.require(
+        current_platform_keys == atlas_committee_keys,
+        "current committee coverage disagrees with the state focus atlas",
+    )
     audit.require(not platform_keys & gap_keys, "an organization is both found and a gap")
     audit.require(
         gaps.loc[gaps["n_confirmed"] == 0, "gap_finding"].fillna("").str.len().gt(0).all(),
@@ -392,14 +431,18 @@ def audit_artifacts(audit: Audit) -> dict:
         "OCR-derived corpus rows do not match official registry",
     )
     if not official_rows.empty:
-        audit.require(
-            official_rows["official_source_id"].notna().all(),
-            "OCR-derived row lacks stable official_source_id",
-        )
-        audit.require(
-            official_rows["ocr_version"].notna().all(),
-            "OCR-derived row lacks OCR version",
-        )
+        required_ocr_columns = {"official_source_id", "ocr_version", "source_hashes"}
+        has_ocr_columns = required_ocr_columns <= set(official_rows.columns)
+        audit.require(has_ocr_columns, "OCR-derived provenance columns are missing")
+        if has_ocr_columns:
+            audit.require(
+                official_rows["official_source_id"].notna().all(),
+                "OCR-derived row lacks stable official_source_id",
+            )
+            audit.require(
+                official_rows["ocr_version"].notna().all(),
+                "OCR-derived row lacks OCR version",
+            )
     audit.require(
         not confirmed["source"].isin(("issuu", "wix_cdn")).any(),
         "legacy one-off OCR rows remain in the platform corpus",

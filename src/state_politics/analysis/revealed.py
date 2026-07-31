@@ -28,15 +28,33 @@ from __future__ import annotations
 
 import argparse
 import gc
+import re
 from pathlib import Path
 
 from .taxonomy import DEFAULT_TOPICS_PATH, MIN_TOPIC_SIMILARITY, EmbeddingClassifier, load_topics
 
-__all__ = ["classify_bills", "count_topics_by_state", "divergence_table"]
+__all__ = [
+    "classify_bills", "count_topics_by_state", "divergence_table",
+    "is_procedural_shell_title",
+]
 
 #: Bill titles handed to the classifier per pass. Bounds peak memory on a machine whose RAM is
 #: mostly spoken for; the classifier itself slices again internally.
 _BILL_SLICE = 100_000
+MIN_BILL_YEAR = 2018
+_NM_EMERGENCY_CLAUSE_RE = re.compile(
+    r"^PUBLIC,?\s+PEACE,\s+HEALTH,\s+SAFETY\s+&\s+WELFARE$",
+    re.I,
+)
+
+
+def is_procedural_shell_title(title: str, state: str) -> bool:
+    """Known state drafting placeholders that do not describe a bill's subject."""
+    title = (title or "").strip()
+    return (
+        (state == "IL" and title.upper().endswith("-TECH"))
+        or (state == "NM" and bool(_NM_EMERGENCY_CLAUSE_RE.fullmatch(title)))
+    )
 
 
 def classify_bills(bills, classifier: EmbeddingClassifier, *, batch_size: int = 512,
@@ -54,9 +72,22 @@ def classify_bills(bills, classifier: EmbeddingClassifier, *, batch_size: int = 
     # of embeddings plus two flat arrays.
     frame = bills
     titles = frame["title"].fillna("").astype(str).to_numpy()
+    states = (
+        frame["state"].fillna("").astype(str).to_numpy()
+        if "state" in frame.columns
+        else [""] * len(frame)
+    )
+    procedural = np.fromiter(
+        (
+            is_procedural_shell_title(title, state)
+            for title, state in zip(titles, states, strict=True)
+        ),
+        dtype=bool,
+        count=len(titles),
+    )
     long_enough = np.fromiter((len(t) >= min_title_chars for t in titles),
                               dtype=bool, count=len(titles))
-    usable = np.flatnonzero(long_enough)
+    usable = np.flatnonzero(long_enough & ~procedural)
 
     codes = np.full(len(titles), np.nan, dtype=float)
     scores = np.zeros(len(titles), dtype=float)
@@ -71,7 +102,11 @@ def classify_bills(bills, classifier: EmbeddingClassifier, *, batch_size: int = 
             scores[position] = similarity
         del predictions
 
-    return frame.assign(topic=codes, similarity=np.round(scores, 4))
+    return frame.assign(
+        topic=codes,
+        similarity=np.round(scores, 4),
+        procedural_shell=procedural,
+    )
 
 
 def _release_memory() -> None:
@@ -93,8 +128,8 @@ def count_topics_by_state(
     """Classify bills **one state at a time**, keeping only the aggregate counts.
 
     Nothing downstream needs a per-bill topic column: the outputs are counts by
-    (state, party, topic). Holding 880,000 classified rows in order to group them was what kept
-    getting this step OOM-killed on a 16 GB machine with most of its RAM already spoken for.
+    (state, party, year, topic). Holding 880,000 classified rows in order to group them was
+    what kept getting this step OOM-killed on a 16 GB machine.
 
     Reading is pushed down to the parquet file per state, so peak memory is one state's bills --
     at most New York's ~105,000 -- rather than the whole corpus. The trade is a few seconds of
@@ -106,15 +141,17 @@ def count_topics_by_state(
         states = sorted(pd.read_parquet(bills_path, columns=["state"])["state"].unique())
 
     frames = []
+    coverage_rows = []
     seen = attributed = classified_total = 0
     for position, state in enumerate(states, start=1):
         frame = pd.read_parquet(
-            bills_path, columns=["state", "title", "sponsor_party"],
+            bills_path, columns=["state", "year", "title", "sponsor_party"],
             filters=[("state", "==", state)],
         )
         seen += len(frame)
         frame = frame[frame["sponsor_party"].isin(("D", "R"))].rename(
             columns={"sponsor_party": "party"}).reset_index(drop=True)
+        frame = frame[pd.to_numeric(frame["year"], errors="coerce") >= MIN_BILL_YEAR]
         attributed += len(frame)
         if not frame.empty:
             frame = classify_bills(frame, classifier, batch_size=batch_size,
@@ -122,8 +159,26 @@ def count_topics_by_state(
                                    min_title_chars=min_title_chars)
             usable = frame[frame["topic"].notna()]
             classified_total += len(usable)
+            for party, party_frame in frame.groupby("party"):
+                substantive = party_frame[~party_frame["procedural_shell"]]
+                n_classified = int(substantive["topic"].notna().sum())
+                coverage_rows.append(
+                    {
+                        "state": state,
+                        "party": party,
+                        "n_attributed": len(party_frame),
+                        "n_procedural_excluded": int(
+                            party_frame["procedural_shell"].sum()
+                        ),
+                        "n_substantive_attributed": len(substantive),
+                        "n_classified_total": n_classified,
+                        "classification_rate": (
+                            n_classified / len(substantive) if len(substantive) else 0.0
+                        ),
+                    }
+                )
             if not usable.empty:
-                frames.append(usable.groupby(["state", "party", "topic"])
+                frames.append(usable.groupby(["state", "party", "year", "topic"])
                               .size().rename("n_bills").reset_index())
         del frame
         # Release between states. Python's allocator will not return the freed frame to the OS
@@ -136,9 +191,15 @@ def count_topics_by_state(
                      f"attributed={attributed:,} classified={classified_total:,}", flush=True)
 
     counts = (pd.concat(frames, ignore_index=True) if frames
-              else pd.DataFrame(columns=["state", "party", "topic", "n_bills"]))
-    return counts, {"n_bills": seen, "n_attributed": attributed,
-                    "n_classified": classified_total}
+              else pd.DataFrame(
+                  columns=["state", "party", "year", "topic", "n_bills"]
+              ))
+    coverage = pd.DataFrame(coverage_rows)
+    return counts, {
+        "n_bills": seen,
+        "n_attributed": attributed,
+        "n_classified": classified_total,
+    }, coverage
 
 
 def divergence_table(platform_emphasis, bill_emphasis):
@@ -187,7 +248,7 @@ def main(argv: list[str] | None = None) -> int:
     classifier = EmbeddingClassifier(topics)
     print(f"model {classifier.model_name} on device {classifier.device}")
 
-    by_state, totals = count_topics_by_state(args.bills, classifier)
+    by_state, totals, coverage = count_topics_by_state(args.bills, classifier)
     print(f"bills with a party attribution: {totals['n_attributed']:,} "
           f"of {totals['n_bills']:,}")
     print(f"classified: {totals['n_classified']:,}")
@@ -201,10 +262,35 @@ def main(argv: list[str] | None = None) -> int:
     out_dir.mkdir(parents=True, exist_ok=True)
     counts.to_csv(out_dir / "bill_emphasis_by_party.csv", index=False)
 
-    by_state["share"] = by_state["n_bills"] / by_state.groupby(["state", "party"])[
-        "n_bills"].transform("sum")
-    by_state["topic_name"] = by_state["topic"].map(named)
-    by_state.to_csv(out_dir / "bill_emphasis_by_state.csv", index=False)
+    state_counts = (
+        by_state.groupby(["state", "party", "topic"])["n_bills"].sum().reset_index()
+    )
+    state_counts["share"] = state_counts["n_bills"] / state_counts.groupby(
+        ["state", "party"]
+    )["n_bills"].transform("sum")
+    state_counts["topic_name"] = state_counts["topic"].map(named)
+    state_counts = state_counts.merge(
+        coverage, on=["state", "party"], how="left", validate="many_to_one"
+    )
+    state_counts.to_csv(out_dir / "bill_emphasis_by_state.csv", index=False)
+    coverage.to_csv(out_dir / "bill_classification_coverage.csv", index=False)
+
+    year_counts = (
+        by_state.groupby(["year", "party", "topic"])["n_bills"].sum().reset_index()
+    )
+    year_counts["share"] = year_counts["n_bills"] / year_counts.groupby(
+        ["year", "party"]
+    )["n_bills"].transform("sum")
+    year_counts["topic_name"] = year_counts["topic"].map(named)
+    year_counts.to_csv(out_dir / "bill_emphasis_by_year.csv", index=False)
+
+    state_year_counts = by_state.copy()
+    state_year_counts["share"] = (
+        state_year_counts["n_bills"]
+        / state_year_counts.groupby(["state", "party", "year"])["n_bills"].transform("sum")
+    )
+    state_year_counts["topic_name"] = state_year_counts["topic"].map(named)
+    state_year_counts.to_csv(out_dir / "bill_emphasis_by_state_year.csv", index=False)
 
     platform = pd.read_csv(args.platform_emphasis)
     divergence = divergence_table(platform, counts)
@@ -225,6 +311,7 @@ def main(argv: list[str] | None = None) -> int:
 
     print(f"\nwrote {out_dir / 'bill_emphasis_by_party.csv'}")
     print(f"wrote {out_dir / 'bill_emphasis_by_state.csv'}")
+    print(f"wrote {out_dir / 'bill_classification_coverage.csv'}")
     print(f"wrote {out_dir / 'stated_vs_revealed.csv'}")
     return 0
 

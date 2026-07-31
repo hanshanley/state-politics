@@ -1,9 +1,9 @@
 #!/usr/bin/env python3
-"""Plot how far state parties sit from their *own* party, against the other party.
+"""Plot average topic similarity within and across parties.
 
-The project's other figures treat each party as one actor. This one tests that assumption: if
-two co-partisan state organizations are nearly as far apart as two opposed ones, then "the
-Republican agenda" is an average over genuinely different actors rather than a single object.
+The analysis artifact stores cosine distance. This figure converts it to similarity because a
+direct comparison such as "73% versus 68% similar" is easier to interpret than a ratio of two
+abstract distances.
 
 Reads the artifacts written by ``python -m state_politics.analysis.intraparty``.
 
@@ -23,6 +23,7 @@ import matplotlib
 matplotlib.use("Agg")  # headless: no display required
 
 import pandas as pd  # noqa: E402
+from matplotlib.ticker import PercentFormatter  # noqa: E402
 
 ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(ROOT / "src"))
@@ -34,10 +35,11 @@ SOURCE_NOTE = (
     "Schickler (2022), 'Select American State Party Platforms, 1846-2017', V3.0, Harvard "
     "Dataverse, doi:10.7910/DVN/KNOSHL, CC0 1.0, plus 2018-present platforms collected for "
     "this project; bills from Open States / Plural Policy, '2026-07 public PostgreSQL dump', "
-    "public domain. {sample} Each bar is a mean cosine distance between topic-share vectors, "
-    "over the states where both parties clear the 30-observation floor. Distance measures "
-    "*agenda overlap, not agreement*: two organizations devoting equal attention to a topic "
-    "are close here even when they advocate opposite policies."
+    "public domain. {sample} Platform comparison uses 18 states where both parties have at "
+    "least 30 classified current planks; other states have one-sided or smaller stated samples. "
+    "Bill comparison uses 49 states because Nebraska's legislature is formally nonpartisan. "
+    "Similarity measures *topic mix, not policy agreement*: organizations can discuss the same "
+    "topic while taking opposing positions."
 )
 
 
@@ -47,45 +49,78 @@ def load(root: Path, name: str) -> pd.DataFrame | None:
 
 
 def build_figure(rows: list[dict], out_path: Path, *, sample: str = "") -> Path:
-    # Two rows only: a tall canvas would leave a large empty band between them and push
-    # the tick labels onto the axis.
-    fig, ax = charts.new_figure(figsize=(11, 3.9))
+    fig, ax = charts.new_figure(figsize=(11, 4.6))
 
     labels = [row["label"] for row in rows]
     positions = list(range(len(rows)))
-    for position, row in zip(positions, rows, strict=True):
-        ax.plot([row["within"], row["between"]], [position, position],
-                color=theme.GRID, linewidth=2.0, zorder=1, solid_capstyle="round")
-    ax.scatter([r["within"] for r in rows], positions, s=90, zorder=2,
-               color=theme.MUTED, edgecolor=theme.BG, linewidth=0.8,
-               label="Between two state parties of the SAME party")
-    ax.scatter([r["between"] for r in rows], positions, s=90, zorder=2,
-               color=theme.ACCENT, edgecolor=theme.BG, linewidth=0.8,
-               label="Between opposing state parties")
+    bar_height = 0.28
+    same = [row["same_similarity"] for row in rows]
+    opposite = [row["opposite_similarity"] for row in rows]
+    ax.barh(
+        [position - bar_height / 2 for position in positions],
+        same,
+        height=bar_height,
+        color=theme.BLUE,
+    )
+    ax.barh(
+        [position + bar_height / 2 for position in positions],
+        opposite,
+        height=bar_height,
+        color=theme.ACCENT,
+    )
 
     for position, row in zip(positions, rows, strict=True):
-        ax.annotate(f"{row['ratio']:.0%} as far apart",
-                    xy=(max(row["within"], row["between"]), position),
-                    xytext=(10, 0), textcoords="offset points",
-                    va="center", fontsize=10, color=theme.TEXT, fontweight="bold")
+        advantage = row["same_similarity"] - row["opposite_similarity"]
+        ax.text(
+            row["same_similarity"] - 0.012,
+            position - bar_height / 2,
+            f"Same-party  {row['same_similarity']:.1%}",
+            ha="right",
+            va="center",
+            fontsize=9,
+            color="white",
+            fontweight="bold",
+        )
+        ax.text(
+            row["opposite_similarity"] - 0.012,
+            position + bar_height / 2,
+            f"Opposite-party  {row['opposite_similarity']:.1%}",
+            ha="right",
+            va="center",
+            fontsize=9,
+            color="white",
+            fontweight="bold",
+        )
+        ax.annotate(
+            f"same-party advantage: {advantage:.1%}",
+            xy=(max(row["same_similarity"], row["opposite_similarity"]), position),
+            xytext=(8, 0),
+            textcoords="offset points",
+            va="center",
+            fontsize=9.5,
+            color=theme.TEXT,
+            fontweight="bold",
+        )
 
     ax.set_yticks(positions)
     ax.set_yticklabels(labels, fontsize=11)
-    ax.set_ylim(len(rows) - 0.45, -0.55)  # padding, so rows never sit on the frame
-    ax.set_xlim(0, max(r["between"] for r in rows) * 1.42)
+    ax.set_ylim(len(rows) - 0.6, -0.6)
+    ax.set_xlim(0, 1)
+    ax.xaxis.set_major_formatter(PercentFormatter(xmax=1))
     ax.grid(axis="x", linestyle="-", linewidth=0.5)
     ax.grid(axis="y", visible=False)
     ax.set_axisbelow(True)
 
     charts.style_axes(
         ax,
-        "State parties barely cluster by party",
-        "Mean cosine distance between topic-share vectors",
+        "Party label only modestly predicts topic emphasis",
+        "Average topic-profile similarity",
         "",
-        subtitle="Two co-partisan state organizations are almost as far apart as two opposed ones",
+        subtitle=(
+            "Higher values mean two state organizations devote similar shares "
+            "to the same topics"
+        ),
     )
-    ax.legend(loc="center right", frameon=False, labelcolor=theme.TEXT, fontsize=9.5)
-
     return charts.finish(fig, ax, out_path, source=SOURCE_NOTE.format(sample=sample),
                          legend=False)
 
@@ -96,17 +131,16 @@ def main(argv: list[str] | None = None) -> int:
     args = parser.parse_args(argv)
 
     rows = []
-    for stream, label in (("platform", "What they say"),
-                          ("bill", "What they file")):
+    for stream, label in (("platform", "Platforms"),
+                          ("bill", "Bills")):
         frame = load(ROOT, f"intraparty_{stream}_coherence.csv")
         if frame is None or frame.empty:
             continue
         record = frame.iloc[0]
         rows.append({
             "label": f"{label}  ({int(record['n_states'])} states)",
-            "within": float(record["mean_within"]),
-            "between": float(record["between"]),
-            "ratio": float(record["within_over_between"]),
+            "same_similarity": 1 - float(record["mean_within"]),
+            "opposite_similarity": 1 - float(record["between"]),
         })
     if not rows:
         parser.error("no intraparty coherence artifacts found - run "

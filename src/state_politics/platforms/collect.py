@@ -148,6 +148,9 @@ class CollectedDocument:
     candidate_score: int = 0
     wayback_timestamp: str | None = None
     text: str = ""
+    official_source_id: str | None = None
+    source_hashes: object | None = None
+    ocr_version: str | None = None
 
     def to_row(self) -> dict:
         row = asdict(self)
@@ -578,7 +581,7 @@ def collect_for_org(
     candidates: list[Candidate],
     *,
     min_score: int = STRONG_SCORE,
-    max_documents: int = 12,
+    max_documents: int = 0,
     log: ProvenanceLog | None = None,
     transport=None,
     delay: float = 0.5,
@@ -595,7 +598,9 @@ def collect_for_org(
     ranked = sorted(
         (c for c in candidates if c.score >= min_score),
         key=lambda c: (-c.score, -(c.year_hint or 0)),
-    )[:max_documents]
+    )
+    if max_documents > 0:
+        ranked = ranked[:max_documents]
 
     collected: list[CollectedDocument] = []
     seen_text: dict[str, str] = {}
@@ -757,6 +762,14 @@ def _load_previous(
     return grouped, retry
 
 
+def _merge_state_update(existing, update, states):
+    """Replace only selected states while preserving every other corpus row."""
+    import pandas as pd
+
+    selected = existing["state"].isin(states)
+    return pd.concat([existing[~selected], update], ignore_index=True)
+
+
 def main(argv: list[str] | None = None) -> int:
     import pandas as pd
     import yaml
@@ -767,7 +780,12 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--out-dir", default="data/processed")
     parser.add_argument("--provenance", default="data/provenance.jsonl")
     parser.add_argument("--min-score", type=int, default=STRONG_SCORE)
-    parser.add_argument("--max-documents", type=int, default=12)
+    parser.add_argument(
+        "--max-documents",
+        type=int,
+        default=0,
+        help="maximum credible candidates fetched per organization; 0 exhausts the ranking",
+    )
     parser.add_argument("--delay", type=float, default=2.5,
                         help="seconds between fetches; nearly all go to one host "
                              "(web.archive.org), so this is a politeness setting")
@@ -781,7 +799,11 @@ def main(argv: list[str] | None = None) -> int:
                              "failed, rather than re-requesting documents already retrieved")
     args = parser.parse_args(argv)
 
-    registry = yaml.safe_load(Path(args.registry).read_text(encoding="utf-8"))["organizations"]
+    all_registry = yaml.safe_load(
+        Path(args.registry).read_text(encoding="utf-8")
+    )["organizations"]
+    registry = all_registry
+    wanted: set[str] = set()
     if args.states:
         wanted = {s.strip().upper() for s in args.states.split(",") if s.strip()}
         registry = [o for o in registry if o["state"] in wanted]
@@ -791,20 +813,27 @@ def main(argv: list[str] | None = None) -> int:
     out_dir = Path(args.out_dir)
     out_dir.mkdir(parents=True, exist_ok=True)
     docs_path = out_dir / "platforms_2018_present.parquet"
+    if wanted and not docs_path.exists() and not args.report_only:
+        print(
+            f"--states updates the shared corpus and requires an existing {docs_path}; "
+            "run the full collector first",
+            flush=True,
+        )
+        return 1
 
     if args.report_only:
         if not docs_path.exists():
             print(f"nothing to report on: {docs_path} does not exist", flush=True)
             return 1
         documents = [d for docs in _load_previous(docs_path)[0].values() for d in docs]
-        report = gap_report(registry, grouped, documents, min_score=args.min_score)
+        report = gap_report(all_registry, grouped, documents, min_score=args.min_score)
         report_path = out_dir / "platform_gap_report.csv"
         report.to_csv(report_path, index=False)
         explained = int((report["gap_finding"].fillna("") != "").sum())
         unexplained = int((report["n_confirmed"].eq(0)
                            & (report["gap_finding"].fillna("") == "")).sum())
         print(f"organizations with >=1 document: "
-              f"{report['n_confirmed'].gt(0).sum()}/{len(registry)}")
+              f"{report['n_confirmed'].gt(0).sum()}/{len(all_registry)}")
         print(f"gaps with a hand-checked finding: {explained} "
               f"({unexplained} unexplained)")
         print(f"wrote {report_path}")
@@ -838,11 +867,19 @@ def main(argv: list[str] | None = None) -> int:
                   f"fetched={len(collected):<3} confirmed={confirmed}", flush=True)
 
     frame = pd.DataFrame([d.to_row() for d in documents])
+    if wanted:
+        existing = pd.read_parquet(docs_path)
+        frame = _merge_state_update(existing, frame, wanted)
+        fields = set(CollectedDocument.__dataclass_fields__)
+        documents = [
+            CollectedDocument(**{key: value for key, value in row.items() if key in fields})
+            for row in frame.to_dict("records")
+        ]
     docs_path = out_dir / "platforms_2018_present.parquet"
     if not frame.empty:
         frame.to_parquet(docs_path, index=False)
 
-    report = gap_report(registry, grouped, documents, min_score=args.min_score)
+    report = gap_report(all_registry, grouped, documents, min_score=args.min_score)
     report_path = out_dir / "platform_gap_report.csv"
     report.to_csv(report_path, index=False)
 
@@ -850,7 +887,7 @@ def main(argv: list[str] | None = None) -> int:
     print(f"\ndocuments fetched:   {len(documents)}")
     print(f"documents confirmed: {len(confirmed)}")
     print(f"organizations with >=1 document: "
-          f"{report['n_confirmed'].gt(0).sum()}/{len(registry)}")
+          f"{report['n_confirmed'].gt(0).sum()}/{len(all_registry)}")
     print(report["status"].value_counts().to_string())
     print(f"wrote {docs_path}")
     print(f"wrote {report_path}")

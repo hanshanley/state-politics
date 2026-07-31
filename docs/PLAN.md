@@ -245,9 +245,9 @@ genuinely serving a suspended-account page.
   snapshot via the `id_` modifier so the corpus is reproducible), extracts HTML/PDF text, and
   confirms each document against its own content.
 
-**Outcome:** **201 confirmed documents across 76/100 organizations and 43 states**; 105 D /
-96 R; 1.15M words. 185 are dated 2018+; 16 predate 2018 (2006-2017) and three covered
-organizations have nothing since 2016 or earlier (CA-D 2016, IN-R 2012, OH-D 2015). Every organization without a document was probed directly on ten likely
+**Current outcome:** **249 confirmed documents across 82/100 organizations and 46 states**:
+233 are dated 2018+ across 80 organizations; 16 are older fallbacks excluded from current
+comparisons. Every organization without any confirmed document was probed directly on ten likely
 platform paths, so each gap carries an evidenced `gap_finding` and none is unexplained. Every organization gets an explicit status in
 `platform_gap_report.csv` (`found` 76 / `candidates_rejected` 11 / `no_strong_candidates` 12 /
 `no_candidates` 1).
@@ -362,8 +362,8 @@ against identical labels.
 
 ### Phase 6 — Emphasis measures & comparisons — **DONE**
 
-**Platform emphasis** (`analysis/emphasis.py`): share of planks per topic over 40,673 planks
-from 898 documents (37,059 classified). Democrats emphasize labour (5.8% vs 1.1%), environment, housing, health,
+**Platform emphasis** (`analysis/emphasis.py`): share of planks per topic over 41,030 planks
+from 898 documents (37,297 classified). Democrats emphasize labour, environment, housing, health,
 social welfare; Republicans government operations (10.8% vs 7.1%), public lands, macroeconomics,
 culture/family, law and crime.
 
@@ -375,10 +375,9 @@ bread-and-butter business of state government:
 
 | Topic | D said | D filed | R said | R filed |
 |---|---|---|---|---|
-| Civil rights and liberties | 8.2% | 3.0% | 9.7% | 2.8% |
-| Immigration | — | — | 4.1% | 0.9% |
-| Culture, family and social issues | — | — | 4.8% | 1.5% |
-| Law, crime and justice | 7.3% | 13.9% | 9.4% | 15.5% |
+| Civil rights and liberties | 10.9% | 3.0% | 11.9% | 2.8% |
+| Immigration | 4.6% | 0.9% | 5.6% | 0.9% |
+| Law, crime and justice | 9.4% | 13.8% | 9.6% | 15.5% |
 | Housing and community development | 3.3% | 9.4% | 1.1% | 6.0% |
 
 Outputs: `emphasis_by_party.csv`, `emphasis_by_org.csv`, `bill_emphasis_by_party.csv`,
@@ -516,11 +515,11 @@ divisive topics (cross-state SD of each topic's share), distance to the party ce
 Two guards are built in rather than left to the reader. Dispersion is only compared between
 parties over the **same set of states**, because a party whose surviving platforms come from
 more unusual states would otherwise look more divided for compositional reasons alone; that
-restriction is what limits the platform comparison to 12 states. And a permutation test
+restriction is what limits the current platform comparison to 18 states. And a permutation test
 shuffles the party labels across the same vectors, so a dispersion gap is only reported as a
 difference when it survives.
 
-**Result:** the within/between ratio is **0.86 for platforms and 0.85 for bills** -- two
+**Result:** the within/between ratio is **0.852 for platforms and 0.849 for bills** -- two
 co-partisan state organizations are about 85% as far apart as two opposed ones, replicated
 across two independent streams with different authors, sources and years.
 
@@ -530,15 +529,15 @@ reversal that would have been very quotable, and that shuffling the labels put s
 chance (p = 0.41 and p = 0.30). Both were reported as null results.
 
 With the corpus enlarged to 18 qualifying states the platform half became real and survives:
-Republican state platforms are more internally varied than Democratic ones (0.324 vs 0.223,
-p = 0.021). The bill half remains null (p = 0.30). So the finding is one-sided --
+Republican state platforms are more internally varied than Democratic ones (0.319 vs 0.223,
+p = 0.026). The bill half remains null (p = 0.30). So the finding is one-sided --
 **Republican state committees write more varied platforms, while their legislators file
 strikingly similar bills** -- which is a different and better-supported claim than the reversal
 the first pass appeared to show.
 
-Public lands is a top-three source of internal disagreement for **both** parties in **both**
-streams: geography beats party, because a Nevada party of either stripe has a public-lands
-agenda and a Rhode Island one does not.
+Public lands is a top-three source of internal disagreement in three of four party-stream
+comparisons and fourth for Republican platforms: geography still matters, because a Nevada
+party of either stripe has a public-lands agenda and a Rhode Island one does not.
 
 > **Lessons:**
 > 1. A measure of "who differs from whom" needs a null model before it needs a chart. The most
@@ -569,9 +568,9 @@ so it cannot pull its own comparison point toward itself. The atlas combines:
 **Election lens.** `analysis/elections.py` separates voting and election bills from the broad
 Government Operations category. The high-precision title rule covers election administration,
 voting access, campaign finance, redistricting, candidate/party rules and election security. It
-scores 83.9% precision and 75.1% recall against legislature-assigned subject tags. Republican
-caucuses devote 3.14% of filings to these bills, Democrats 2.84%; Idaho Democrats (12.2%) and
-Nevada Republicans (8.4%) are the strongest same-party outliers.
+scores 85.6% precision and 75.6% recall against legislature-assigned subject tags. Republican
+caucuses devote 3.43% of filings to these bills, Democrats 3.05%; Tennessee Democrats (8.0%)
+and Nevada Republicans (8.4%) are the strongest reliable same-party outliers.
 
 **Language concentration.** `analysis/terms.py` computes both TF-IDF and a same-party log2
 concentration score for unigrams and bigrams. +1 means twice the peer-state concentration; +2
