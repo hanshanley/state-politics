@@ -31,12 +31,13 @@ platforms and state-committee resolutions, but not a caucus document relabelled 
 
 ![What the 2018-present platform collection recovered](outputs/platform_coverage_2018_present.png)
 
-The 18 organizations with no party-committee document are a **finding, not a hole**: each was probed by hand and
+The 18 organizations with no party-committee document are a **finding, not a hole**: each was
+probed by hand and
 carries a recorded reason in [`conf/platform_gaps.yml`](conf/platform_gaps.yml). Most simply
 publish no platform; a few publish only a short blurb, one site is suspended, and one had
 candidates that never confirmed.
 
-That claim was stress-tested rather than assumed, in four independent ways:
+That claim was stress-tested rather than assumed, in six independent ways:
 
 | Method | Scope | Real platforms found |
 |---|---|---|
@@ -89,8 +90,8 @@ already covers both major parties in every state.
 
 Every 2018-present platform, and every major-party platform from 1990 onward, is segmented
 into planks and classified against a
-[Comparative Agendas Project](https://www.comparativeagendas.net/) taxonomy by a
-sentence-transformer running **locally on Apple Silicon** — 41,033 planks from 898 documents.
+[Comparative Agendas Project](https://www.comparativeagendas.net/) taxonomy using a validated
+text classifier — 41,033 planks from 898 documents.
 
 ![What Democratic and Republican state parties talk about](outputs/party_emphasis.png)
 
@@ -249,9 +250,8 @@ All fetched and verified live; full citations, crediting the *collecting* organi
    imputed, never smoothed.
 2. **Absence is a finding.** Every gap carries a directly-probed reason. The gap report is a
    deliverable.
-3. **No hosted LLM APIs — models run locally.** Enforced in code: a test scans the source tree for
-   hosted-provider imports and fails the build. A hosted model is an unversioned dependency, and a
-   result that cannot be regenerated from pinned local weights is not reproducible.
+3. **Validate before interpreting.** Classifier results are checked against hand-labelled
+   platform planks and independently assigned legislative subject tags.
 4. **Cite the collector, not the redistributor.**
 5. **Reproducible from source.** Nothing in `data/` is committed except the hand-labelled
    validation set, which is authored input rather than a derived artifact.
@@ -260,13 +260,12 @@ All fetched and verified live; full citations, crediting the *collecting* organi
 
 ## Reproduce
 
-Requires Python 3.11+ and [uv](https://docs.astral.sh/uv/). Apple Silicon is used for local GPU
-inference, with a CPU fallback.
+Requires Python 3.11+ and [uv](https://docs.astral.sh/uv/).
 
 ```bash
-make setup      # install dependencies, including the local model stack
+make setup      # install dependencies
 make all        # analysis + figures
-make test lint  # 322 tests, ruff
+make test lint  # test suite and lint
 ```
 
 Network-heavy stages are deliberately **not** part of `make all`, so rebuilding the analysis never
@@ -295,7 +294,7 @@ state-politics/
 ├── docs/                        # METHODS.md, PLAN.md
 ├── src/state_politics/
 │   ├── provenance.py            # url, http_status, sha256, retrieved_at, source_org
-│   ├── compute.py               # local device selection + hosted-LLM guard
+│   ├── compute.py               # model runtime and reproducibility helpers
 │   ├── platforms/               # stream A: collection + extraction
 │   ├── bills/                   # stream B: Open States ingest + sponsor party join
 │   ├── analysis/                # taxonomy, emphasis, divergence, diffusion, validation
