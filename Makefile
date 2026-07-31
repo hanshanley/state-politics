@@ -13,7 +13,7 @@ OUT := outputs
 
 .DEFAULT_GOAL := help
 .PHONY: help setup all analysis figures test lint clean-derived \
-        historical registry platforms legislators bills-dump
+        historical registry platforms caucus-priorities legislators bills-dump
 
 help:
 	@echo "Targets:"
@@ -26,6 +26,7 @@ help:
 	@echo "Slow, network-heavy (run explicitly):"
 	@echo "  registry     verify all 100 state party websites (~10 min)"
 	@echo "  platforms    discover + collect 2018-present platforms (~1 h, polite crawl)"
+	@echo "  caucus-priorities  collect separately labelled state caucus agenda sources"
 	@echo "  bills-dump   download the 10.7 GB Open States dump and extract bills (~20 min)"
 
 setup:
@@ -43,6 +44,11 @@ registry:
 platforms:
 	$(PY) -m state_politics.platforms.discover
 	$(PY) -m state_politics.platforms.collect --resume
+
+# Supplemental stated-agenda evidence for states whose party committees publish no platform.
+# Intentionally separate from `platforms`: caucus priorities are not party committee platforms.
+caucus-priorities:
+	$(PY) -m state_politics.caucuses
 
 # ---- Stream B: bills --------------------------------------------------------------------
 
@@ -80,6 +86,7 @@ figures:
 	$(PY) scripts/plot_party_emphasis.py
 	$(PY) scripts/plot_stated_vs_revealed.py
 	$(PY) scripts/plot_intraparty.py
+	$(PY) scripts/plot_state_agenda_coverage.py
 
 all: analysis figures
 

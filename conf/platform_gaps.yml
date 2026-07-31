@@ -30,8 +30,8 @@ AL:
 CT:
   R:
     cause: no_platform_published
-    checked: 2026-07-29
-    finding: /platform soft-404s with a 426 KB PNG image
+    checked: 2026-07-30
+    finding: /platform soft-404s with a 426 KB PNG image; no state platform document found.
 FL:
   R:
     cause: no_platform_published
@@ -52,9 +52,11 @@ KY:
     checked: 2026-07-29
     finding: no substantial platform page found
   R:
-    cause: no_platform_published
-    checked: 2026-07-29
-    finding: /platform soft-404s with a 426 KB PNG image
+    cause: summary_only
+    checked: 2026-07-31
+    finding: >-
+      publishes a 453-word "Our Party" statement, but no platform document. Every archived PDF
+      and HTML page on rpk.org and known former domains was enumerated and tested.
 LA:
   D:
     cause: no_platform_published
@@ -63,15 +65,11 @@ LA:
       /issues is an archive listing, not a platform. The party's own WordPress index lists no
       platform page, and searching pages, posts and media for "platform" returns only an
       unrelated hosting-provider page. The party publishes no platform document.
-  R:
-    cause: no_platform_published
-    checked: 2026-07-29
-    finding: /platform soft-404s with a 426 KB PNG image
 MA:
   R:
     cause: no_platform_published
-    checked: 2026-07-29
-    finding: /platform soft-404s with a 426 KB PNG image
+    checked: 2026-07-30
+    finding: /platform soft-404s with a 426 KB PNG image; no state platform document found.
 MD:
   D:
     cause: no_platform_published
@@ -97,10 +95,6 @@ NJ:
     checked: 2026-07-29
     finding: no substantial platform page found
 NY:
-  D:
-    cause: no_platform_published
-    checked: 2026-07-29
-    finding: no substantial platform page found
   R:
     cause: no_platform_published
     checked: 2026-07-29
@@ -111,11 +105,14 @@ PA:
     checked: 2026-07-29
     finding: no substantial platform page found
   R:
-    cause: no_platform_published
-    checked: 2026-07-29
-    finding: /platform soft-404s with a 426 KB PNG image
+    cause: summary_only
+    checked: 2026-07-30
+    finding: >-
+      publishes a 509-word "Our Party" statement at /home/about -- which is what Ballotpedia
+      links to as this party's platform -- but no platform document. Every archived PDF and
+      HTML page on pagop.org was enumerated and tested; none is a platform.
 VA:
   R:
     cause: no_platform_published
-    checked: 2026-07-29
-    finding: /platform soft-404s with a 426 KB PNG image
+    checked: 2026-07-30
+    finding: /platform soft-404s with a 426 KB PNG image; no state platform document found.

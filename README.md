@@ -25,12 +25,13 @@ Maryland is absent entirely, Kentucky Democrats last appear in **1943**, New Yor
 **1958**.
 
 **So the 2018–present platform corpus does not exist, and this project builds it** from official
-state party websites and the Internet Archive — 244 documents covering 80 of 100 organizations
-across 44 states.
+state party websites, official third-party document hosts, and the Internet Archive — **249
+documents covering 82 of 100 organizations across 46 states.** This strict corpus includes party
+platforms and state-committee resolutions, but not a caucus document relabelled as a platform.
 
 ![What the 2018-present platform collection recovered](outputs/platform_coverage_2018_present.png)
 
-The 20 organizations with no platform are a **finding, not a hole**: each was probed by hand and
+The 18 organizations with no party-committee document are a **finding, not a hole**: each was probed by hand and
 carries a recorded reason in [`conf/platform_gaps.yml`](conf/platform_gaps.yml). Most simply
 publish no platform; a few publish only a short blurb, one site is suspended, and one had
 candidates that never confirmed.
@@ -43,12 +44,44 @@ That claim was stress-tested rather than assumed, in four independent ways:
 | Every archived **HTML page** ≥30 KB | ~500 pages, the 6 states with nothing at all | **0** |
 | **Live probing of 36 candidate paths** (`/platform`, `/principles`, `/where-we-stand`, `/resolutions`, …) | 12 organizations | **0** |
 | **Querying each site's own CMS index** (`wp-json`, Wix page manifest) | 12 organizations | **0** |
+| **Alternate and former domains** (`padems.com`, `pademocrats.org`, `nysdemocrats.org`, …) | 7 domains | **0** |
+| **An independent reference source** — Ballotpedia's party pages | 12 organizations | **0** |
 
 The near-misses are instructive: Louisiana Republicans' largest "platform" match was their
-**privacy policy**, and Kentucky Republicans' was a 453-word *About* page. **Six states — Kentucky,
-Louisiana, Maryland, New Jersey, New York and Pennsylvania — have no state platform from either
-party.** These are large states, and the absence is the finding: their committees campaign on
-candidates and national platforms rather than publishing a state programme.
+**privacy policy**, and Kentucky Republicans' was a 453-word *About* page.
+
+The independent check is the most telling. [Ballotpedia](https://ballotpedia.org) maintains a
+"Party platform" section for every state party. For **New Jersey Democrats** it reads *"follows
+the platform of the Democratic National Committee"*; for **New Jersey Republicans**, *"as of May
+2024, this information was not publicly available"*; and for both **Pennsylvania** parties the
+"platform" link resolves to a committee roster and a 509-word *Our Party* blurb. A reference
+work that tracks all 50 states independently reaches the same conclusion this pipeline did.
+
+**Four states — Kentucky, Maryland, New Jersey and Pennsylvania — have no platform *or*
+state-committee resolutions from either party.** New York Democrats are represented by their
+official 84-page State Democratic Committee resolutions archive on Issuu; Louisiana Republicans
+by their 2025 State Central Committee resolution packets, which were hidden behind a Wix CDN.
+
+### Completing state-level agenda coverage without faking a platform
+
+The strict party-committee corpus honestly stops at **46/50 states**. Rather than pretend a
+legislative caucus is the party committee, the remaining four states are covered in a **separate
+supplement** of official state legislative caucus agendas. It gives the project at least one
+stated, state-level agenda source in **all 50 states** while preserving the institutional
+distinction:
+
+| Missing party-committee state | Official supplemental source | Year |
+|---|---|---:|
+| Kentucky | Senate Republican Caucus priority bills | 2024 |
+| Maryland | Senate Democratic Caucus agenda statement | 2026 |
+| New Jersey | Assembly Republican Agenda Center | 2025 |
+| Pennsylvania | Senate Democratic Caucus legislative priorities | 2025 |
+
+These four sources live in `caucus_priorities.parquet`, are recorded separately from platforms,
+and are not used in the platform figure or stated-vs-revealed headline. The **bills** stream
+already covers both major parties in every state.
+
+![Every state has a stated state-level agenda source](outputs/state_agenda_coverage.png)
 
 ---
 
@@ -57,7 +90,7 @@ candidates and national platforms rather than publishing a state programme.
 Every 2018-present platform, and every major-party platform from 1990 onward, is segmented
 into planks and classified against a
 [Comparative Agendas Project](https://www.comparativeagendas.net/) taxonomy by a
-sentence-transformer running **locally on Apple Silicon** — 40,648 planks from 893 documents.
+sentence-transformer running **locally on Apple Silicon** — 41,033 planks from 898 documents.
 
 ![What Democratic and Republican state parties talk about](outputs/party_emphasis.png)
 
@@ -79,13 +112,13 @@ instead of by this project's model. That independent check is the third column.
 
 | Topic | D said → filed | R said → filed | Replicates? |
 |---|---|---|---|
-| Civil rights and liberties | 10.5% → **3.0%** | 12.0% → **2.8%** | ✅ gap is *larger* (1.5% / 0.7%) |
-| Immigration | 4.7% → **0.9%** | 5.6% → **0.9%** | ✅ gap is *larger* (0.3% / 0.2%) |
+| Civil rights and liberties | 10.9% → **3.0%** | 11.9% → **2.8%** | ✅ gap is *larger* (1.5% / 0.7%) |
+| Immigration | 4.6% → **0.9%** | 5.6% → **0.9%** | ✅ gap is *larger* (0.3% / 0.2%) |
 | Culture, family, social issues | 2.4% → **1.8%** | 5.1% → **1.5%** | ✅ R only (2.6% / 2.4%) |
-| Law, crime and justice | 9.5% → **13.8%** | 9.6% → **15.5%** | ✅ (13.8% / 13.5%) |
+| Law, crime and justice | 9.4% → **13.8%** | 9.6% → **15.5%** | ✅ (13.8% / 13.5%) |
 | Transportation | 2.2% → **4.7%** | 1.1% → **5.2%** | ✅ gap is *larger* (7.0% / 9.7%) |
-| Education | 9.0% → **10.3%** | 8.5% → **12.2%** | ✅ gap is *larger* (14.3% / 19.5%) |
-| ~~Housing and community development~~ | ~~4.3% → 9.4%~~ | ~~2.3% → 6.0%~~ | ❌ **does not replicate** (3.0% / 0.9%) |
+| Education | 8.9% → **10.3%** | 8.4% → **12.2%** | ✅ gap is *larger* (14.3% / 19.5%) |
+| ~~Housing and community development~~ | ~~4.4% → 9.4%~~ | ~~2.3% → 6.0%~~ | ❌ **does not replicate** (3.0% / 0.9%) |
 
 The topics that dominate platform rhetoric are largely *national* fights that state legislatures
 have limited power over; the topics that dominate actual filing are the bread-and-butter business
@@ -118,7 +151,7 @@ in [the methods](docs/METHODS.md#validating-the-bill-classifier).
 **Other limits.** Bills are classified from *titles*, which are short and often procedural.
 18.9% of bills cannot be resolved to a party and are excluded rather than guessed at. Planks
 below a similarity threshold are recorded as **unclassified** rather than pushed into the nearest
-topic — 3,598 of 40,648. And filing a bill is not passing one: this measures **agenda, not
+topic — 3,732 of 41,033. And filing a bill is not passing one: this measures **agenda, not
 achievement**.
 
 ---

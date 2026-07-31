@@ -1,0 +1,71 @@
+# Supplemental stated-agenda evidence for states whose party committees publish no platform.
+#
+# These are NOT state party platforms and are never merged into
+# platforms_2018_present.parquet. They are official state legislative caucus documents,
+# clearly labelled here so a reader can see the institutional distinction. Together with the
+# party-platform/resolution corpus, they ensure every state has at least one state-level stated
+# agenda source; the Open States bills stream already covers both major parties in all 50.
+#
+# Each source is a public primary document. URLs are deliberately listed individually rather
+# than discovered from a keyword search, so the supplement is auditable and stable.
+
+version: 1
+sources:
+  - state: KY
+    party: R
+    year: 2024
+    institution: Kentucky Senate Republican Caucus Campaign Committee
+    document_type: caucus_priority_bills
+    description: >-
+      The caucus's official legislation page says Senate Bills 1 through 10 are traditionally
+      priority legislation and links the selected priority bills to the Kentucky Legislature's
+      official bill records.
+    urls:
+      - https://kysenaterepublicans.com/new-page-34
+      - https://apps.legislature.ky.gov/record/24rs/sb1.html
+      - https://apps.legislature.ky.gov/record/24rs/sb2.html
+      - https://apps.legislature.ky.gov/record/24rs/sb4.html
+      - https://apps.legislature.ky.gov/record/24rs/sb5.html
+      - https://apps.legislature.ky.gov/record/24rs/sb6.html
+      - https://apps.legislature.ky.gov/record/24rs/sb7.html
+      - https://apps.legislature.ky.gov/record/24rs/sb8.html
+      - https://apps.legislature.ky.gov/record/24rs/sb10.html
+
+  - state: MD
+    party: D
+    year: 2026
+    institution: Maryland Senate Democratic Caucus
+    document_type: caucus_priority_statement
+    description: >-
+      Senate President Bill Ferguson states the caucus agenda will focus on growth,
+      affordability, and protecting Marylanders against federal attacks in the 2026 session.
+    urls:
+      - https://www.mdsenate.com/news/2025/12/16/senate-president-bill-ferguson-announces-committee-leadership-changes-member-assignments-for-2026/
+
+  - state: NJ
+    party: R
+    year: 2025
+    institution: New Jersey General Assembly Republican Office
+    document_type: caucus_priority_agenda
+    description: >-
+      Official Assembly Republican Agenda Center with six current state policy priorities:
+      good government, affordability, school funding, public safety, energy, and equal treatment.
+    urls:
+      - https://www.njassemblygop.com/35/Priorities
+      - https://www.njassemblygop.com/200/Fixing-What-Democrats-Wont
+      - https://www.njassemblygop.com/201/Affordable-Living
+      - https://www.njassemblygop.com/202/Smarter-School-Funding
+      - https://www.njassemblygop.com/203/Safer-Communities
+      - https://www.njassemblygop.com/204/A-Realistic-Energy-Plan
+      - https://www.njassemblygop.com/250/Equal-Treatment-for-All
+
+  - state: PA
+    party: D
+    year: 2025
+    institution: Pennsylvania Senate Democratic Caucus
+    document_type: caucus_priority_agenda
+    description: >-
+      Official Senate Democratic Caucus legislative-priorities page, covering jobs, health,
+      education, safe communities, clean energy, and voting rights.
+    urls:
+      - https://pasenate.com/priorities/

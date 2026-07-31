@@ -71,6 +71,17 @@ def main() -> int:
             for cause, count in missing["gap_cause"].value_counts().items():
                 print(f"    {cause:<20} {count}")
 
+    caucus = _load("caucus_priorities.parquet")
+    if caucus is not None and not caucus.empty:
+        platform_states = set(ok["state"]) if modern is not None else set()
+        caucus_states = set(caucus["state"])
+        print("\nSupplemental caucus priority sources")
+        print(f"  sources              {len(caucus)}")
+        print(f"  states               {', '.join(sorted(caucus_states))}")
+        print(f"  words                {int(caucus['n_words'].sum()):,}")
+        print(f"  stated agenda coverage {len(platform_states | caucus_states)}/50 states")
+        print("  note                 caucus sources are separate from party platforms")
+
     planks = _load("planks_classified.parquet")
     if planks is not None:
         classified = int(planks["topic"].notna().sum())

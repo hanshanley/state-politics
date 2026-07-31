@@ -39,9 +39,10 @@ a misleading content type. Discovery is Wayback-first with a live-site fallback,
 per request -- at ~1 req/s the archive refused 305 of 456 fetches, and backing off took the
 success rate from 34% to 93%.
 
-## The 24 parties with no platform
+## The 18 parties with no committee platform or resolution
 
-80 of 100 state party organizations yielded a platform. The remaining 20 are the deliverable
+82 of 100 state party organizations yielded a party-committee platform or state-committee
+resolution. The remaining 18 are the deliverable
 that a scraper normally throws away: **every one was probed by hand and carries a recorded
 reason**, in [`conf/platform_gaps.yml`](../conf/platform_gaps.yml), joined into the gap report by
 `gap_report()`. They live in version-controlled config rather than in the generated CSV,
@@ -49,10 +50,37 @@ because an explanation written into a derived file is erased by the next run.
 
 | Cause | Orgs | Meaning |
 |---|---|---|
-| `no_platform_published` | 16 | Site is healthy and simply has no platform document |
-| `summary_only` | 2 | A short position blurb (1.3–2.5 KB), not a platform |
+| `no_platform_published` | 12 | Site is healthy and simply has no platform or state-committee resolution |
+| `summary_only` | 4 | A short position blurb, not a platform |
 | `broken_site` | 1 | Alaska GOP is serving an "Account Suspended" page |
 | `not_confirmed` | 1 | Candidates fetched, none read as a platform |
+
+### Establishing that a gap is real
+
+"We did not find one" and "there is not one" are different claims, and the second needs
+evidence. For the 18 remaining gaps, and especially the four states with no party-committee
+document from either party (Kentucky, Maryland, New Jersey, Pennsylvania), six independent
+methods were run:
+
+| Method | Scope | Real platforms |
+|---|---|---|
+| Every archived **PDF** >= 25 KB, no path filtering | 791 documents | **1** (Delaware GOP) |
+| Every archived **HTML page** >= 30 KB | ~500 pages | **0** |
+| **Live probing of 36 candidate paths** | 12 organizations | **0** |
+| **Each site's own CMS index** (`wp-json`, Wix manifest) | 12 organizations | **0** |
+| **Alternate and former domains** | 7 domains | **0** |
+| **Ballotpedia**, an independent reference | 12 organizations | **0** |
+
+Ballotpedia is the strongest of these because it owes nothing to this pipeline. Its "Party
+platform" section says New Jersey Democrats *"follow the platform of the Democratic National
+Committee"*, records New Jersey Republicans' platform as *"not publicly available"*, and links
+both Pennsylvania parties' "platform" to a committee roster and a 509-word *Our Party* blurb.
+
+The near-misses show the depth of the search rather than its limits: Louisiana Republicans'
+largest "platform" match was their **privacy policy** (5,777 words) and Kentucky Republicans'
+was a 453-word *About* page. The Louisiana GOP's 2025 State Central Committee resolutions were
+then recovered from Wix's public CDN after the party domain served 403; New York Democrats'
+official Issuu account supplied an 84-page State Committee resolutions archive.
 
 The distinction matters: **a missing platform is mostly a real finding about the party, not a
 failure of the crawler.** That was tested rather than asserted -- see the exhaustive sweep
@@ -61,6 +89,23 @@ platform in 791 documents. Two cases first recorded as JavaScript-rendered turne
 re-checking to be genuine absences, and both Hawaii organizations, once recorded as
 unreachable, are now in the corpus: their platforms were discoverable all along and had been
 suppressed by a scoring bug.
+
+### Supplementing state coverage without relabelling a caucus
+
+The party-committee corpus honestly reaches **46/50 states**. To cover the remaining four
+states with stated, state-level agenda evidence, `caucus_priorities.parquet` collects four
+official legislative-caucus sources in its own corpus:
+
+| State | Caucus source | Year |
+|---|---|---:|
+| KY | Senate Republican Caucus priority bills | 2024 |
+| MD | Senate Democratic Caucus agenda statement | 2026 |
+| NJ | Assembly Republican Agenda Center | 2025 |
+| PA | Senate Democratic Caucus priorities | 2025 |
+
+This brings stated state-level agenda coverage to **50/50**, but the files are never merged
+with party platforms or used in the platform figure or stated-vs-revealed comparison. A caucus
+agenda is useful evidence and a different institution.
 
 Regenerate the report after editing the findings, without re-crawling anything:
 
@@ -171,7 +216,7 @@ plank and each topic description and assigns the nearest topic. A transparent ke
 runs alongside it, not as a fallback but so the model's output can be checked against something
 a human can read and argue with.
 
-**Validation, on 40,648 planks from 893 documents (37,050 classified):**
+**Validation, on 41,033 planks from 898 documents (37,301 classified):**
 
 | Classifier | Top-1 | Top-2 |
 |---|---|---|
@@ -249,16 +294,17 @@ outright, replacing the classifier entirely. `bill_emphasis_by_tag.csv` does exa
 filed share on the same side of the stated share — which is the claim the headline actually
 makes.
 
-**34 of 40 topic-party rows hold.** The six that do not are:
+**33 of 40 topic-party rows hold.** The seven that do not are:
 
 | Topic | Party | Said | Model | Tags |
 |---|---|---|---|---|
-| Housing and community development | D | 4.3% | 9.4% | 3.0% |
+| Housing and community development | D | 4.4% | 9.4% | 3.0% |
 | Housing and community development | R | 2.3% | 6.0% | 0.9% |
 | Macroeconomics | R | 2.4% | 2.2% | 9.9% |
-| Government operations | D | 7.0% | 6.1% | 8.3% |
+| Government operations | D | 7.5% | 6.1% | 8.3% |
 | Culture, family and social issues | D | 2.4% | 1.8% | 2.6% |
 | Labor and employment | D | 4.8% | 5.2% | 4.7% |
+| Social welfare | D | 4.1% | 4.1% | 4.1% |
 
 Every one is the tax failure or its mirror image, except the last two, where the model and the
 stated share differ by a fraction of a point and the "sign" of a gap that small is noise.
