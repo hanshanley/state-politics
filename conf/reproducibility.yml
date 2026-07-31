@@ -1,0 +1,95 @@
+# Reproducibility manifest.
+#
+# `scripts/audit_reproducibility.py` validates this file. SHA-256 values make every manually
+# curated analytical input an explicit, reviewable dependency instead of invisible state.
+
+version: 1
+
+manual_inputs:
+  - path: data/gold/plank_topics_gold.csv
+    kind: hand_labelled_validation_snapshot
+    sha256: dfe48bf9785f5ed901e959d6d1a959d0224f1e44737a544c73c6be91165a6bca
+    methodology: data/gold/README.md
+    source: confirmed 2018-present state party platform planks
+  - path: conf/topics.yml
+    kind: curated_taxonomy
+    sha256: 95afebeff23abc0bdd58a70e30078cfb4b364764326580fc0f5a64fefad6c597
+    source: Comparative Agendas Project major-topic codebook
+  - path: conf/subject_topic_map.yml
+    kind: curated_validation_crosswalk
+    sha256: 3922a79989f4107c3f7e16f50b6df3e54e7c22512b3c00cc82b35c61ec87fe16
+    source: Open States subject strings + CAP major-topic codebook
+  - path: conf/platform_gaps.yml
+    kind: hand_verified_absence_findings
+    sha256: 453fb1f4b0544859ea483aa3ef57dc93c2cfd703ee8af3cf7cd577d7c96b871f
+    source: official party sites, archives, CMS indexes, alternate domains, Ballotpedia
+  - path: conf/caucus_priority_registry.yml
+    kind: curated_primary_source_registry
+    sha256: 148e01f87db25e29864c91a4ab5af8cc0546222c722f4ea5372ff2cffee7629f
+    source: official state legislative caucus sites
+  - path: conf/party_registry.yml
+    kind: hand_verified_organization_registry
+    sha256: 9c7b185b4bed3fc087066c037fd9a07195be62c21a2252da1e757ee90697ae45
+    source: Wikidata candidates verified against official party homepages
+  - path: conf/official_document_registry.yml
+    kind: curated_primary_source_registry
+    sha256: d62f5d9abfea2e8933dd9b9f0ab33abf063adc7db01d4ec79b5d278737f78b8a
+    source: official NY Democrats Issuu account and official LAGOP Wix document links
+
+random_processes:
+  - name: gold_plank_sample
+    seed: 20260729
+    code: scripts/sample_gold_planks.py
+    metadata: data/gold/plank_topics_gold.meta.yml
+  - name: bill_tag_validation_sample
+    seed: 20260729
+    code: src/state_politics/analysis/validate_bills.py
+  - name: intraparty_permutation_test
+    seed: 20260729
+    code: src/state_politics/analysis/intraparty.py
+
+generated_artifacts:
+  - path: data/processed/platforms_historical.parquet
+    producer: src/state_politics/platforms/dataverse.py
+  - path: data/processed/platforms_2018_present.parquet
+    producer: src/state_politics/platforms/collect.py
+    supplements:
+      - src/state_politics/platforms/official_documents.py
+  - path: data/processed/caucus_priorities.parquet
+    producer: src/state_politics/caucuses.py
+  - path: data/processed/bills.parquet
+    producer: src/state_politics/bills/ingest.py
+  - path: data/processed/planks_classified.parquet
+    producer: src/state_politics/analysis/emphasis.py
+  - path: data/processed/stated_vs_revealed.csv
+    producer: src/state_politics/analysis/revealed.py
+  - path: data/processed/state_party_focus.csv
+    producer: src/state_politics/analysis/state_focus.py
+  - path: data/processed/election_focus_by_state_party.csv
+    producer: src/state_politics/analysis/elections.py
+  - path: data/processed/state_party_terms.csv
+    producer: src/state_politics/analysis/terms.py
+  - path: outputs/state_agenda_coverage.png
+    producer: scripts/plot_state_agenda_coverage.py
+  - path: outputs/state_party_focus.png
+    producer: scripts/plot_state_focus.py
+  - path: outputs/election_focus.png
+    producer: scripts/plot_election_focus.py
+
+external_sources:
+  - name: Harvard Dataverse state party platform corpus
+    organization: Hopkins et al.
+    reputable_basis: peer-reviewed scholarly dataset, Harvard Dataverse, CC0
+    citation: CITATIONS.md#1-historical-state-party-platforms-18462017
+  - name: Open States bulk legislative data
+    organization: Plural Policy
+    reputable_basis: established public legislative-data collector sourcing official legislatures
+    citation: CITATIONS.md#2-state-legislative-bills-votes-and-legislators
+  - name: Internet Archive
+    organization: Internet Archive
+    reputable_basis: established nonprofit web archive
+    citation: CITATIONS.md#4-web-archive-captures-of-state-party-platform-documents
+  - name: Comparative Agendas Project
+    organization: Comparative Agendas Project
+    reputable_basis: established academic policy-agendas coding scheme
+    citation: CITATIONS.md#6-issue-taxonomy

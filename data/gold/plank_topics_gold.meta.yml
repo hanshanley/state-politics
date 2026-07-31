@@ -1,0 +1,14 @@
+version: 1
+sample_size: 50
+sample_seed: 20260729
+sample_date: '2026-07-29'
+sampling_frame: confirmed 2018-present state party platform planks
+sampling_method: random sample from the then-current segmented corpus
+annotators: 1
+label_schema: conf/topics.yml
+label_column: gold_topic
+text_column: text
+notes: >-
+  Immutable authored validation snapshot. The source corpus changes as documents are recovered
+  or extraction improves, so reproducibility means preserving and re-scoring this exact
+  labelled text, not claiming a later live corpus will yield the same random rows.

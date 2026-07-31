@@ -26,6 +26,11 @@ models = [
     "sentence-transformers>=3.0",
     "scikit-learn>=1.5",
 ]
+ocr = [
+    "pymupdf>=1.24",
+    "pytesseract>=0.3.13",
+    "pillow>=10.0",
+]
 
 [build-system]
 requires = ["hatchling"]

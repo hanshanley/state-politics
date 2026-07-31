@@ -13,7 +13,8 @@ OUT := outputs
 
 .DEFAULT_GOAL := help
 .PHONY: help setup all analysis figures test lint clean-derived \
-        historical registry platforms caucus-priorities legislators bills-dump
+        historical registry platforms official-documents caucus-priorities \
+        legislators bills-dump audit
 
 help:
 	@echo "Targets:"
@@ -21,16 +22,17 @@ help:
 	@echo "  all          historical corpus + analysis + figures (no crawling)"
 	@echo "  analysis     classify planks and bills, compute emphasis and divergence"
 	@echo "  figures      regenerate every figure in $(OUT)/"
-	@echo "  test lint    run the test suite / ruff"
+	@echo "  test lint audit  run tests / lint / traceability audit"
 	@echo ""
 	@echo "Slow, network-heavy (run explicitly):"
 	@echo "  registry     verify all 100 state party websites (~10 min)"
 	@echo "  platforms    discover + collect 2018-present platforms (~1 h, polite crawl)"
+	@echo "  official-documents  rebuild OCR-only official party documents"
 	@echo "  caucus-priorities  collect separately labelled state caucus agenda sources"
 	@echo "  bills-dump   download the 10.7 GB Open States dump and extract bills (~20 min)"
 
 setup:
-	uv sync --extra dev --extra models
+	uv sync --extra dev --extra models --extra ocr
 
 # ---- Stream A: platforms ----------------------------------------------------------------
 
@@ -44,6 +46,10 @@ registry:
 platforms:
 	$(PY) -m state_politics.platforms.discover
 	$(PY) -m state_politics.platforms.collect --resume
+	$(MAKE) official-documents
+
+official-documents:
+	uv run --extra ocr python -m state_politics.platforms.official_documents
 
 # Supplemental stated-agenda evidence for states whose party committees publish no platform.
 # Intentionally separate from `platforms`: caucus priorities are not party committee platforms.
@@ -102,6 +108,10 @@ test:
 
 lint:
 	uv run ruff check .
+
+audit:
+	$(PY) scripts/audit_reproducibility.py
+	$(PY) scripts/report_figures.py
 
 # Derived tables and figures only. Raw downloads and the hand-labelled gold set are kept:
 # one is expensive to re-fetch, the other is authored input that cannot be regenerated.

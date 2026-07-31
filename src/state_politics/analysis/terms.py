@@ -27,6 +27,12 @@ __all__ = [
     "distinctive_terms",
 ]
 
+MAX_TERM_FEATURES = 30_000
+TOP_TERMS_PER_METHOD = 12
+BILL_MIN_TERM_COUNT = 25
+STATED_MIN_TERM_COUNT = 5
+HIGHLIGHT_TERMS = 6
+
 _EXTRA_STOP_WORDS = {
     "act", "acts", "amend", "amending", "bill", "bills", "chapter", "code", "concerning",
     "create", "creates", "establish", "establishing", "law", "laws", "provide", "provides",
@@ -174,8 +180,8 @@ def distinctive_terms(
     documents,
     *,
     min_count: int,
-    max_features: int = 30_000,
-    top_n: int = 12,
+    max_features: int = MAX_TERM_FEATURES,
+    top_n: int = TOP_TERMS_PER_METHOD,
 ):
     """Top TF-IDF and within-party concentration terms for every state party."""
     import numpy as np
@@ -279,7 +285,7 @@ def distinctive_terms(
     return pd.DataFrame(rows)
 
 
-def _highlights(terms, *, top_n: int = 6):
+def _highlights(terms, *, top_n: int = HIGHLIGHT_TERMS):
     """One compact term string per state party and stream."""
     import pandas as pd
 
@@ -332,8 +338,8 @@ def main(argv: list[str] | None = None) -> int:
     caucuses = pd.read_parquet(args.caucuses)
     bill_documents = build_bill_documents(bills)
     stated_documents = build_stated_documents(platforms, caucuses)
-    bill_terms = distinctive_terms(bill_documents, min_count=25)
-    stated_terms = distinctive_terms(stated_documents, min_count=5)
+    bill_terms = distinctive_terms(bill_documents, min_count=BILL_MIN_TERM_COUNT)
+    stated_terms = distinctive_terms(stated_documents, min_count=STATED_MIN_TERM_COUNT)
     terms = pd.concat([bill_terms, stated_terms], ignore_index=True)
     highlights = _highlights(terms)
 

@@ -1,0 +1,81 @@
+# Primary party-committee documents requiring OCR rather than normal HTML/PDF extraction.
+#
+# NY Democrats publish page images through their official Issuu account. Louisiana
+# Republicans publish scanned PDFs linked by their official Wix page and served by Wix's CDN.
+# The collector in `state_politics.platforms.official_documents` rebuilds both sources and
+# records every fetched object in data/provenance.jsonl.
+
+version: 1
+sources:
+  - id: ny-dem-state-committee-resolutions-2019-2024
+    state: NY
+    party: D
+    year: 2023
+    institution: New York State Democratic Committee
+    document_type: resolutions
+    extraction: issuu_images
+    primary_source: true
+    page_url: https://issuu.com/nydems/docs/resolutions
+    issuu_revision_id: '250602134436'
+    issuu_publication_id: a6acce6e2e02459b780be611dfe7a113
+    page_count: 84
+    expected_title: NYDems Resolutions
+    note: >-
+      Official NYDems Issuu account. The cover identifies the New York State Democratic
+      Committee; pages contain state committee business-meeting resolutions from 2019-2024.
+
+  - id: la-gop-rscc-resolutions-2025-q1
+    state: LA
+    party: R
+    year: 2025
+    institution: Republican Party of Louisiana
+    document_type: resolutions
+    extraction: scanned_pdf
+    primary_source: true
+    page_url: https://www.lagop.com/2025-rscc-resolutions
+    evidence_url: https://web.archive.org/web/20251117194809id_/https://www.lagop.com/2025-rscc-resolutions
+    document_url: https://static.wixstatic.com/ugd/17f8aa_8296f6640bec49b9a00fd731020035ca.pdf
+    expected_document_sha256: 5a42345a550e6e74209981f2d0de699d722f3571d7fc44a2775f335ae94670d3
+    period: Q1
+
+  - id: la-gop-rscc-resolutions-2025-q2
+    state: LA
+    party: R
+    year: 2025
+    institution: Republican Party of Louisiana
+    document_type: resolutions
+    extraction: scanned_pdf
+    primary_source: true
+    page_url: https://www.lagop.com/2025-rscc-resolutions
+    evidence_url: https://web.archive.org/web/20251117194809id_/https://www.lagop.com/2025-rscc-resolutions
+    document_url: https://static.wixstatic.com/ugd/53a1b8_624c1f4439a54e1f9c8d20759f0541ee.pdf
+    expected_document_sha256: 66d6051587a15528d683a8f177b38dea7ebaca1aade2e43ff9c65143cf0bbbe5
+    period: Q2
+
+  - id: la-gop-rscc-resolutions-2025-q3
+    state: LA
+    party: R
+    year: 2025
+    institution: Republican Party of Louisiana
+    document_type: resolutions
+    extraction: scanned_pdf
+    primary_source: true
+    page_url: https://www.lagop.com/2025-rscc-resolutions
+    evidence_url: https://web.archive.org/web/20251117194809id_/https://www.lagop.com/2025-rscc-resolutions
+    document_url: https://static.wixstatic.com/ugd/53a1b8_012158760b384bdc809dc02a8922bd22.pdf
+    expected_document_sha256: b36c8ac77208ae495e98724da47e6719dd6d5d992aef8c10b30b7258c564f95b
+    period: Q3
+
+  - id: la-gop-rscc-resolutions-2025-q4
+    state: LA
+    party: R
+    year: 2025
+    institution: Republican Party of Louisiana
+    document_type: resolutions
+    extraction: scanned_pdf
+    primary_source: true
+    page_url: https://www.lagop.com/2025-rscc-resolutions
+    evidence_url: https://web.archive.org/web/20251117194809id_/https://www.lagop.com/2025-rscc-resolutions
+    document_url: https://static.wixstatic.com/ugd/53a1b8_0fd7b6258974438fbe85b34c87894bc2.pdf
+    expected_document_sha256: dc536ac6b6d0f16f654810f1fc751ea50ef99f011cdcc41de6ac3ed23544b799
+    period: Q4
