@@ -521,32 +521,45 @@ def collect_candidate(
     comes back too thin to be a platform, the live URL is tried and whichever copy carries
     more text is used, with ``source`` recording which one won.
     """
-    attempts: list[tuple[str, str, bytes | None, object]] = []
+    attempts: list[tuple[str, str, bytes | None, object, str]] = []
 
     if prefer_wayback and candidate.wayback_timestamp:
         target = wayback_snapshot_url(candidate.wayback_timestamp, candidate.url)
         body, record = _fetch_once(candidate, target, log, transport, timeout, max_attempts,
                                    backoff, sleep)
-        attempts.append(("wayback", target, body, record))
         snapshot_text = extract_text(body, record.content_type, candidate.url) if body else ""
+        attempts.append(("wayback", target, body, record, snapshot_text))
         if live_fallback and len(snapshot_text) < MIN_CHARS:
             if sleep and record.ok:
                 sleep(1.0)
             body2, record2 = _fetch_once(candidate, candidate.url, log, transport, timeout,
                                          max_attempts, backoff, sleep)
-            attempts.append(("live", candidate.url, body2, record2))
+            live_text = (
+                extract_text(body2, record2.content_type, candidate.url) if body2 else ""
+            )
+            attempts.append(("live", candidate.url, body2, record2, live_text))
     else:
         body, record = _fetch_once(candidate, candidate.url, log, transport, timeout,
                                    max_attempts, backoff, sleep)
-        attempts.append(("live", candidate.url, body, record))
+        live_text = extract_text(body, record.content_type, candidate.url) if body else ""
+        attempts.append(("live", candidate.url, body, record, live_text))
+        if candidate.wayback_timestamp and len(live_text) < MIN_CHARS:
+            target = wayback_snapshot_url(candidate.wayback_timestamp, candidate.url)
+            body2, record2 = _fetch_once(
+                candidate, target, log, transport, timeout, max_attempts, backoff, sleep
+            )
+            archive_text = (
+                extract_text(body2, record2.content_type, candidate.url) if body2 else ""
+            )
+            attempts.append(("wayback", target, body2, record2, archive_text))
 
     # Keep whichever copy yielded the most text; ties favour the archived one, which came
     # first and is the reproducible choice.
     best = max(
         attempts,
-        key=lambda a: len(extract_text(a[2], a[3].content_type, candidate.url)) if a[2] else -1,
+        key=lambda attempt: len(attempt[4]) if attempt[2] else -1,
     )
-    source, target, body, record = best
+    source, target, body, record, text = best
 
     document = CollectedDocument(
         state=candidate.state, party=candidate.party, url=candidate.url,
@@ -559,7 +572,6 @@ def collect_candidate(
         document.reason = f"fetch failed: status={record.http_status} error={record.error}"
         return document
 
-    text = extract_text(body, record.content_type, candidate.url)
     state_name = STATE_NAMES_BY_CODE.get(candidate.state)
     declared = looks_like_non_platform_filename(candidate.url)
     if declared:
@@ -585,6 +597,10 @@ def collect_for_org(
     log: ProvenanceLog | None = None,
     transport=None,
     delay: float = 0.5,
+    prefer_wayback: bool = True,
+    timeout: float = 60.0,
+    max_attempts: int = 4,
+    existing_documents: list[CollectedDocument] | None = None,
     sleep=time.sleep,
 ) -> list[CollectedDocument]:
     """Fetch the credible candidates for one organization, best-scoring first.
@@ -603,9 +619,21 @@ def collect_for_org(
         ranked = ranked[:max_documents]
 
     collected: list[CollectedDocument] = []
-    seen_text: dict[str, str] = {}
+    seen_text = {
+        _text_fingerprint(document.text): document.url
+        for document in (existing_documents or [])
+        if document.confirmed and document.text
+    }
     for index, candidate in enumerate(ranked):
-        document = collect_candidate(candidate, log=log, transport=transport, sleep=sleep)
+        document = collect_candidate(
+            candidate,
+            log=log,
+            transport=transport,
+            prefer_wayback=prefer_wayback,
+            timeout=timeout,
+            max_attempts=max_attempts,
+            sleep=sleep,
+        )
         if document.confirmed:
             fingerprint = _text_fingerprint(document.text)
             first_url = seen_text.get(fingerprint)
@@ -789,6 +817,13 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--delay", type=float, default=2.5,
                         help="seconds between fetches; nearly all go to one host "
                              "(web.archive.org), so this is a politeness setting")
+    parser.add_argument(
+        "--live-first",
+        action="store_true",
+        help="try the official live URL before its archived snapshot",
+    )
+    parser.add_argument("--timeout", type=float, default=60.0)
+    parser.add_argument("--max-attempts", type=int, default=4)
     parser.add_argument("--states", default="")
     parser.add_argument("--report-only", action="store_true",
                         help="rebuild the gap report from already-collected documents, "
@@ -853,13 +888,23 @@ def main(argv: list[str] | None = None) -> int:
         for index, org in enumerate(registry, start=1):
             key = (org["state"], org["party"])
             candidates = grouped.get(key, [])
-            if args.resume and previous:
+            keep: list[CollectedDocument] = []
+            if args.resume:
                 keep = [d for d in previous.get(key, []) if d.url not in retry_urls]
-                candidates = [c for c in candidates if c.url in retry_urls]
+                known_urls = {d.url for d in previous.get(key, [])} | retry_urls
+                candidates = [
+                    candidate
+                    for candidate in candidates
+                    if candidate.url not in known_urls or candidate.url in retry_urls
+                ]
                 documents.extend(keep)
             collected = collect_for_org(
                 candidates, min_score=args.min_score,
                 max_documents=args.max_documents, log=log, delay=args.delay,
+                prefer_wayback=not args.live_first,
+                timeout=args.timeout,
+                max_attempts=args.max_attempts,
+                existing_documents=keep,
             )
             documents.extend(collected)
             confirmed = sum(1 for d in collected if d.confirmed)

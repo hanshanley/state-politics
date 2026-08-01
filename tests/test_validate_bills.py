@@ -15,6 +15,7 @@ from state_politics.analysis.validate_bills import (
     load_subject_map,
     normalize_tag,
     tag_replication,
+    tag_replication_by_state,
     tag_topic,
 )
 
@@ -99,6 +100,21 @@ def test_tag_replication_excludes_third_party_sponsors():
 
     assert set(table["party"]) == {"D"}
     assert table["tag_share"].iloc[0] == 1.0
+
+
+def test_tag_replication_by_state_preserves_equal_state_inputs():
+    frame = pd.DataFrame(
+        [
+            {"state": "TX", "subject": "Education", "sponsor_party": "D"},
+            {"state": "TX", "subject": "Education", "sponsor_party": "D"},
+            {"state": "VT", "subject": "Taxation", "sponsor_party": "D"},
+        ]
+    )
+
+    table = tag_replication_by_state(frame, SUBJECT_MAP, TOPIC_NAMES)
+
+    assert table.groupby(["state", "party"])["share"].sum().eq(1.0).all()
+    assert set(table["state"]) == {"TX", "VT"}
 
 
 def test_shipped_map_only_uses_codes_from_the_taxonomy():

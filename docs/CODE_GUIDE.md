@@ -41,17 +41,17 @@ repository audit fails when a Python file is added without an entry here.
 | `src/state_politics/analysis/taxonomy.py` | Defines the CAP topic schema, segments platforms into planks, and implements keyword/embedding classifiers with bounded-memory inference. |
 | `src/state_politics/analysis/gold_sample.py` | Creates the deterministic sampling frame and seeded unlabeled template used for new human-labeling rounds. |
 | `src/state_politics/analysis/validate.py` | Scores keyword and embedding classifiers against the fixed 50-plank human-labelled gold snapshot. |
-| `src/state_politics/analysis/emphasis.py` | Classifies platform planks, assigns eras from document dates, removes cross-corpus duplicates, and computes topic shares. |
-| `src/state_politics/analysis/revealed.py` | Classifies bills state-by-state to bound memory, aggregates bill-topic emphasis, and joins stated vs revealed priorities. |
+| `src/state_politics/analysis/emphasis.py` | Classifies platform planks, clusters redundant collected/cross-corpus documents, and computes equal-state matched-party topic shares plus pooled sensitivity outputs. |
+| `src/state_politics/analysis/revealed.py` | Classifies bills state-by-state, excludes drafting placeholders/pre-2018 leakage, reports coverage, and computes equal-state matched headline shares plus pooled sensitivity. |
 | `src/state_politics/analysis/validate_bills.py` | Validates bill-title topics against legislative-staff subject tags and independently replicates headline shares from tags. |
-| `src/state_politics/analysis/profiles.py` | Produces per-state organization summaries and same-party outlier rankings, with matched platform/bill eras. |
+| `src/state_politics/analysis/profiles.py` | Produces era-matched state summaries and leave-one-out outlier rankings gated by sample floors and multinomial null simulations. |
 | `src/state_politics/analysis/intraparty.py` | Measures within-party dispersion, within-vs-between coherence, divisive topics, centroid distance, and permutation significance. |
-| `src/state_politics/analysis/state_focus.py` | Builds the 100-row state × party atlas using leave-one-state-out same-party baselines and curated caucus units. |
+| `src/state_politics/analysis/state_focus.py` | Builds the 100-row state × party atlas with leave-one-out baselines, 500-bill reliability floors, classification coverage and curated caucus units. |
 | `src/state_politics/analysis/elections.py` | Detects election/voting bills, validates the title rule against subject tags, and measures same-party state concentration. |
-| `src/state_politics/analysis/terms.py` | Computes TF-IDF and literal same-party log2 term concentration; peer-absent terms are categorical rather than assigned pseudo-ratios. |
-| `src/state_politics/analysis/trends.py` | Computes early-vs-late bill-topic change, uncertainty, FDR-adjusted significance, yearly slopes, and sufficiently supported state trends. |
+| `src/state_politics/analysis/terms.py` | Computes TF-IDF and literal same-party log2 term concentration against peers of the same party and evidence genre; peer-absent terms are categorical. |
+| `src/state_politics/analysis/trends.py` | Computes equal-state 2018–2019 vs 2024–2025 bill-topic change, paired sign-flip inference, FDR correction and supported state slopes. |
 | `src/state_politics/analysis/coverage.py` | Produces a machine-readable account of supported, partial, limited, and unsupported analytical questions from current artifact schemas. |
-| `src/state_politics/analysis/diffusion.py` | Detects exact/near-duplicate bill-title clusters and reports connected-component cohesion and ceremonial status. |
+| `src/state_politics/analysis/diffusion.py` | Detects exact/near-duplicate bill-title clusters without dropping observed candidate blocks and reports cohesion and ceremonial status. |
 
 ## Plotting library
 
@@ -76,6 +76,7 @@ repository audit fails when a Python file is added without an entry here.
 | `scripts/plot_state_agenda_coverage.py` | Shows 46 party-committee states plus four separately labelled caucus-supplement states. |
 | `scripts/plot_state_focus.py` | Plots state bill agendas most unlike same-party peers. |
 | `scripts/plot_election_focus.py` | Plots election/voting bill concentration among sufficiently large state caucuses. |
+| `scripts/plot_bill_trends.py` | Plots FDR-significant filing changes with explicit staff-tag agreement or reversal labels. |
 
 ## Tests and what they assert
 

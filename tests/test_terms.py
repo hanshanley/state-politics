@@ -35,7 +35,11 @@ def test_stated_documents_prefer_committee_over_caucus_supplement():
             {
                 "state": "PA", "party": "D", "year": 2024, "confirmed": True,
                 "text": "Committee platform",
-            }
+            },
+            {
+                "state": "DE", "party": "D", "year": None, "confirmed": True,
+                "text": "Currently published undated committee platform",
+            },
         ]
     )
     caucuses = pd.DataFrame(
@@ -63,6 +67,7 @@ def test_stated_documents_prefer_committee_over_caucus_supplement():
 
     assert documents.loc[("PA", "D"), "evidence_type"] == "party_committee"
     assert documents.loc[("PA", "D"), "text"] == "Committee platform"
+    assert documents.loc[("DE", "D"), "evidence_type"] == "party_committee"
     assert documents.loc[("MD", "D"), "evidence_type"] == "legislative_caucus"
 
 

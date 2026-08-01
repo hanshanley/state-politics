@@ -139,3 +139,29 @@ def test_atlas_contains_all_100_state_party_rows_and_marks_nebraska():
     nebraska = atlas[atlas["state"] == "NE"]
     assert set(nebraska["stated_source"]) == {"party_committee"}
     assert set(nebraska["bill_status"]) == {"formally_nonpartisan_legislature"}
+
+
+def test_small_bill_sample_is_descriptive_but_not_a_focus_claim():
+    topics = load_topics()
+    stated = pd.DataFrame(
+        columns=[
+            "state", "party", "topic", "topic_name",
+            "n_items", "share", "evidence_type",
+        ]
+    )
+    bills = pd.DataFrame(
+        [
+            {
+                "state": "ID", "party": "D", "topic": 2,
+                "topic_name": "Civil rights and liberties",
+                "n_bills": 40, "share": 1.0,
+            }
+        ]
+    )
+
+    atlas = build_state_focus_atlas(stated, bills, topics)
+    idaho = atlas[(atlas["state"] == "ID") & (atlas["party"] == "D")].iloc[0]
+
+    assert idaho["bill_n_items"] == 40
+    assert not idaho["bill_focus_reliable"]
+    assert idaho["bill_status"] == "available"

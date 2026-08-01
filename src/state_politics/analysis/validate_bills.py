@@ -47,6 +47,7 @@ __all__ = [
     "tag_topic",
     "agreement_report",
     "tag_replication",
+    "tag_replication_by_state",
 ]
 
 DEFAULT_MAP_PATH = Path(__file__).resolve().parents[3] / "conf" / "subject_topic_map.yml"
@@ -146,10 +147,10 @@ def tag_replication(bills, subject_map: dict[str, int], topic_names: dict[int, s
     classifier entirely: the topic labels come from legislative staff, so a finding that
     survives it does not depend on this project's model at all.
 
-    It is a replication on a *subsample* -- only the 35 states that publish tags, and only
-    bills whose tags map unambiguously -- so the shares are not directly comparable in level
-    to the full-corpus figures. What is comparable is the direction and rough size of each
-    party's gap between what it says and what it files.
+    It is a replication on a *subsample* -- only the 35 states with unambiguously mappable
+    published tags, and only bills whose tags map to one topic -- so the shares are not directly
+    comparable in level to the full-corpus figures. What is comparable is the direction and
+    rough size of each party's gap between what it says and what it files.
     """
     import pandas as pd
 
@@ -170,10 +171,36 @@ def tag_replication(bills, subject_map: dict[str, int], topic_names: dict[int, s
     return table[["topic", "topic_name", "party", "tag_share", "n_bills"]]
 
 
+def tag_replication_by_state(bills, subject_map: dict[str, int], topic_names: dict[int, str]):
+    """State-party topic shares derived solely from legislative-staff tags."""
+    import pandas as pd
+
+    frame = bills[bills["sponsor_party"].isin(("D", "R"))].copy()
+    frame["topic"] = frame["subject"].map(lambda value: tag_topic(value, subject_map))
+    frame = frame[frame["topic"].notna()]
+    if frame.empty:
+        return pd.DataFrame(
+            columns=["state", "party", "topic", "topic_name", "n_bills", "share"]
+        )
+    counts = (
+        frame.groupby(["state", "sponsor_party", "topic"])
+        .size()
+        .rename("n_bills")
+        .reset_index()
+        .rename(columns={"sponsor_party": "party"})
+    )
+    counts["share"] = counts["n_bills"] / counts.groupby(["state", "party"])[
+        "n_bills"
+    ].transform("sum")
+    counts["topic"] = counts["topic"].astype(int)
+    counts["topic_name"] = counts["topic"].map(topic_names)
+    return counts
+
+
 def main(argv: list[str] | None = None) -> int:
     import pandas as pd
 
-    from .revealed import classify_bills
+    from .revealed import classify_bills, party_emphasis_from_states
 
     root = Path(__file__).resolve().parents[3]
     parser = argparse.ArgumentParser(description=__doc__.splitlines()[0])
@@ -187,6 +214,14 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--seed", type=int, default=20260729)
     parser.add_argument("--stated-vs-revealed",
                         default=root / "data/processed/stated_vs_revealed.csv")
+    parser.add_argument(
+        "--platform-by-org",
+        default=root / "data/processed/emphasis_by_org.csv",
+    )
+    parser.add_argument(
+        "--bill-by-state",
+        default=root / "data/processed/bill_emphasis_by_state.csv",
+    )
     args = parser.parse_args(argv)
 
     bills_path = Path(args.bills)
@@ -231,33 +266,97 @@ def main(argv: list[str] | None = None) -> int:
 
     # The replication uses every tagged bill, not the scoring sample: it needs no embedding
     # pass, so there is no reason to subsample it.
-    full = pd.read_parquet(bills_path, columns=["title", "subject", "sponsor_party"])
-    full = full[full["subject"].astype(str).str.len() > 0]
-    replication = tag_replication(full, subject_map, topic_names)
+    full = pd.read_parquet(
+        bills_path,
+        columns=["state", "year", "subject", "sponsor_party"],
+    )
+    full = full[
+        (full["year"] >= 2018)
+        & full["subject"].astype(str).str.len().gt(0)
+    ]
+    tag_state = tag_replication_by_state(full, subject_map, topic_names)
+    platform_by_org = pd.read_csv(args.platform_by_org)
+    current_platform = platform_by_org[
+        platform_by_org["era"] == "2018-present"
+    ]
+    platform_states = {
+        party: set(current_platform.loc[current_platform["party"] == party, "state"])
+        for party in ("D", "R")
+    }
+    tag_states = {
+        party: set(tag_state.loc[tag_state["party"] == party, "state"])
+        for party in ("D", "R")
+    }
+    comparison_states = (
+        platform_states["D"]
+        & platform_states["R"]
+        & tag_states["D"]
+        & tag_states["R"]
+    )
+    replication = party_emphasis_from_states(
+        tag_state,
+        states=comparison_states,
+    ).rename(columns={"share": "tag_share"})
     replication_path = out.with_name("bill_emphasis_by_tag.csv")
     replication.to_csv(replication_path, index=False)
 
-    divergence = Path(args.stated_vs_revealed)
-    if divergence.exists():
-        merged = pd.read_csv(divergence).merge(
-            replication[["topic", "party", "tag_share"]], on=["topic", "party"], how="left")
-        merged["model_minus_tag"] = merged["revealed_share"] - merged["tag_share"]
+    model_state = pd.read_csv(args.bill_by_state)
+    model = party_emphasis_from_states(
+        model_state,
+        states=comparison_states,
+    ).rename(columns={"share": "model_share"})
+    stated_vectors = current_platform[
+        current_platform["state"].isin(comparison_states)
+    ].pivot_table(
+        index=["state", "party"],
+        columns="topic",
+        values="share",
+        fill_value=0.0,
+    )
+    stated = (
+        stated_vectors.groupby(level="party")
+        .mean()
+        .stack(future_stack=True)
+        .rename("stated_share")
+        .reset_index()
+    )
+    comparison = (
+        stated.merge(
+            model[["party", "topic", "model_share"]],
+            on=["party", "topic"],
+            how="outer",
+        )
+        .merge(
+            replication[["party", "topic", "tag_share"]],
+            on=["party", "topic"],
+            how="outer",
+        )
+        .fillna(0.0)
+    )
+    comparison["holds"] = (
+        (comparison["model_share"] - comparison["stated_share"])
+        * (comparison["tag_share"] - comparison["stated_share"])
+        > 0
+    )
+    comparison["n_states"] = len(comparison_states)
+    comparison["topic_name"] = comparison["topic"].map(topic_names)
+    comparison_path = out.with_name("headline_tag_replication.csv")
+    comparison.to_csv(comparison_path, index=False)
+    if not comparison.empty:
         print("\nheadline replicated with tag labels instead of the model "
-              f"({int(replication['n_bills'].sum()):,} bills):")
+              f"({len(comparison_states)} matched states):")
         print(f"  {'topic':<34}{'party':>6}{'said':>8}{'model':>8}{'tags':>8}  verdict")
-        for _, row in merged.reindex(
-                merged["model_minus_tag"].abs().sort_values(ascending=False).index).iterrows():
-            if pd.isna(row["tag_share"]):
-                continue
-            said, model, tag = row["stated_share"], row["revealed_share"], row["tag_share"]
-            # A gap "holds" when both labellings put the filed share on the same side of the
-            # stated share. That is the claim the headline actually makes.
-            holds = (model - said) * (tag - said) > 0
-            print(f"  {row['topic_name'][:33]:<34}{row['party']:>6}{said * 100:7.1f}%"
-                  f"{model * 100:7.1f}%{tag * 100:7.1f}%  "
-                  f"{'holds' if holds else 'DOES NOT HOLD'}")
+        order = (
+            comparison["model_share"] - comparison["tag_share"]
+        ).abs().sort_values(ascending=False).index
+        for _, row in comparison.reindex(order).iterrows():
+            print(f"  {row['topic_name'][:33]:<34}{row['party']:>6}"
+                  f"{row['stated_share'] * 100:7.1f}%"
+                  f"{row['model_share'] * 100:7.1f}%{row['tag_share'] * 100:7.1f}%  "
+                  f"{'holds' if row['holds'] else 'DOES NOT HOLD'}")
     print(f"\nwrote {out}")
     print(f"wrote {replication_path}")
+    print(f"wrote {comparison_path}")
     return 0
 
 

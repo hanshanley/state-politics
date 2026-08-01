@@ -93,6 +93,13 @@ This target:
 System dependency: `tesseract`. Python OCR dependencies are pinned in the `ocr` optional extra
 and in `uv.lock`.
 
+The platform collector evaluates every candidate clearing the strong-score threshold. Resumed
+runs preserve all existing provenance fields, fetch both previously failed and newly discovered
+URLs, and de-duplicate new text against documents already in the corpus. Network read failures
+after HTTP headers are recorded and retried rather than terminating the crawl.
+The checked artifact contains a row for all 1,948 strong candidate URLs, including explicit
+failure rows where a source returned 404/403 or could not be retrieved.
+
 ## Clean-room rebuild order
 
 ```bash

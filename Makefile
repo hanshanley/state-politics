@@ -100,6 +100,7 @@ figures:
 	$(PY) scripts/plot_state_agenda_coverage.py
 	$(PY) scripts/plot_state_focus.py
 	$(PY) scripts/plot_election_focus.py
+	$(PY) scripts/plot_bill_trends.py
 
 all: analysis figures
 

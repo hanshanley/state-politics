@@ -450,7 +450,27 @@ def fetch(
         # Read with a hard ceiling rather than touching ``.content``, which buffers the whole
         # body first: a hostile or misconfigured host serving a multi-gigabyte response would
         # otherwise exhaust memory before the size check below ever ran.
-        body = _read_capped(response, max_bytes) if ok else b""
+        try:
+            body = _read_capped(response, max_bytes) if ok else b""
+        except Exception as exc:  # noqa: BLE001 - streamed reads can fail after headers arrive
+            record = FetchRecord(
+                url=url,
+                source_org=source_org,
+                retrieved_at=utc_now_iso(),
+                ok=False,
+                http_status=status,
+                final_url=getattr(response, "url", None) or url,
+                attempts=attempt,
+                error=f"{type(exc).__name__}: {exc}",
+                note=note,
+            )
+            close = getattr(response, "close", None)
+            if close is not None:
+                close()
+            if attempt < max_attempts:
+                sleep(backoff * attempt)
+                continue
+            break
         oversize = ok and max_bytes is not None and len(body) > max_bytes
         if oversize:
             ok, body = False, b""

@@ -156,6 +156,30 @@ def test_fetch_records_transport_error_after_exhausting_attempts():
     assert "TimeoutError" in record.error
 
 
+def test_fetch_records_stream_read_error_after_headers():
+    class FailingStreamResponse(StubResponse):
+        def iter_content(self, chunk_size):
+            yield b"partial"
+            raise ConnectionError("read timed out")
+
+        def close(self):
+            pass
+
+    content, record = fetch(
+        "https://example.org/x",
+        source_org="org",
+        transport=lambda url, *, timeout, headers: FailingStreamResponse(200),
+        max_attempts=2,
+        sleep=lambda _: None,
+    )
+
+    assert content is None
+    assert record.ok is False
+    assert record.http_status == 200
+    assert record.attempts == 2
+    assert "ConnectionError" in record.error
+
+
 def test_record_local_file_hashes_out_of_band_download(tmp_path):
     """Large dumps fetched by curl must meet the same evidentiary standard."""
     payload = b"pgdump bytes"

@@ -267,7 +267,8 @@ def build_state_focus_atlas(stated, bills, topics):
                 "stated_top_topics_all": _format_top(vector, names),
             }
             for (state, party), vector in stated_all_vectors.iterrows()
-        ]
+        ],
+        columns=["state", "party", "stated_n_items_all", "stated_top_topics_all"],
     )
     evidence = (
         stated.groupby(["state", "party"])["evidence_type"].first().rename("stated_source")

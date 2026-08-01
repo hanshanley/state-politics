@@ -245,11 +245,12 @@ genuinely serving a suspended-account page.
   snapshot via the `id_` modifier so the corpus is reproducible), extracts HTML/PDF text, and
   confirms each document against its own content.
 
-**Current outcome:** **249 confirmed documents across 82/100 organizations and 46 states**:
-233 are dated 2018+ across 80 organizations; 16 are older fallbacks excluded from current
-comparisons. Every organization without any confirmed document was probed directly on ten likely
+**Current outcome:** **687 confirmed documents across 82/100 organizations and 46 states**:
+502 are current (500 dated 2018+ plus two currently published undated pages) across 81
+organizations; 185 are older fallbacks excluded from current comparisons. Every organization
+without any confirmed document was probed directly on ten likely
 platform paths, so each gap carries an evidenced `gap_finding` and none is unexplained. Every organization gets an explicit status in
-`platform_gap_report.csv` (`found` 76 / `candidates_rejected` 11 / `no_strong_candidates` 12 /
+`platform_gap_report.csv` (`found` 82 / `candidates_rejected` 8 / `no_strong_candidates` 9 /
 `no_candidates` 1).
 
 > **Three bugs found and fixed here, all of the same family — a silent absence:**
@@ -271,9 +272,9 @@ platform paths, so each gap carries an evidenced `gap_finding` and none is unexp
 > mode plus a separator-free phrase fallback.
 
 **Gap-filling pass (2026-07-29).** A second, wider search was run for every organization the
-first pass found nothing for: :data:`SECONDARY_TERMS` (parties file platforms under `/issues` or
+first pass found nothing for: `SECONDARY_TERMS` (parties file platforms under `/issues` or
 `/about/` as often as `/platform`) and :data:`DOMAIN_ALIASES` (a party that moved to a short
-`.gop` address has all of its archived history under the old name). Then all 24 remaining gaps
+`.gop` address has all of its archived history under the old name). Then all 18 remaining gaps
 were **probed directly** on ten likely platform paths.
 
 Three more bugs surfaced, all of the same silent-corruption family:
@@ -288,14 +289,14 @@ Three more bugs surfaced, all of the same silent-corruption family:
    document". It now rejects binary by signature and content type.
 3. A **purely numeric trailing path segment** (`/platform/-0.88`) is a CSS value, not a document.
 
-**Outcome of the gap pass:** every one of the 24 remaining gaps carries a directly-observed
+**Outcome of the gap pass:** every one of the 18 remaining gaps carries a directly-observed
 finding, and **zero are unexplained**. The findings live in `conf/platform_gaps.yml` and are
 joined into `platform_gap_report.csv` by `gap_report()`; they were previously hand-written into
 the generated CSV, where the next pipeline run would have erased them. `collect --report-only`
 rebuilds the report from cached documents so editing a finding costs no network traffic.
 
-Categorised at the time of that phase: **18 publish no platform, 3 publish only a summary blurb, 1 site is suspended, 1
-had candidates that did not confirm, and 1 is genuinely JavaScript-rendered.**
+Current categories: **12 publish no platform, 4 publish only a summary blurb, 1 site is
+suspended, and 1 had candidates that did not confirm.**
 
 A follow-up re-check cut the JavaScript-rendered count from 3 to 1, which changes the
 conclusion. Florida GOP's `/platform` does not render client-side at all — it soft-404s to the
@@ -362,12 +363,13 @@ against identical labels.
 
 ### Phase 6 — Emphasis measures & comparisons — **DONE**
 
-**Platform emphasis** (`analysis/emphasis.py`): share of planks per topic over 41,030 planks
-from 898 documents (37,297 classified). Democrats emphasize labour, environment, housing, health,
+**Platform emphasis** (`analysis/emphasis.py`): equal-state topic shares over 49,575 planks
+from 1,221 documents (43,971 classified). Democrats emphasize labour, environment, housing, health,
 social welfare; Republicans government operations (10.8% vs 7.1%), public lands, macroeconomics,
 culture/family, law and crime.
 
-**Stated vs revealed** (`analysis/revealed.py`): 542,508 party-attributed bills classified into
+**Stated vs revealed** (`analysis/revealed.py`): 537,356 party-attributed substantive bills
+classified into
 the same taxonomy and compared with platform emphasis. The headline finding is symmetric across
 both parties — the topics that dominate *rhetoric* are largely national fights state
 legislatures have limited power over, while the topics that dominate *filing* are the
@@ -375,19 +377,18 @@ bread-and-butter business of state government:
 
 | Topic | D said | D filed | R said | R filed |
 |---|---|---|---|---|
-| Civil rights and liberties | 10.9% | 3.0% | 11.9% | 2.8% |
-| Immigration | 4.6% | 0.9% | 5.6% | 0.9% |
-| Law, crime and justice | 9.4% | 13.8% | 9.6% | 15.5% |
-| Housing and community development | 3.3% | 9.4% | 1.1% | 6.0% |
+| Civil rights and liberties | 11.1% | 4.4% | 15.7% | 3.4% |
+| Immigration | 6.6% | 0.9% | 4.9% | 1.2% |
+| Law, crime and justice | 10.2% | 14.6% | 8.9% | 13.9% |
+| Housing and community development | 3.6% | 7.6% | 0.8% | 6.9% |
 
 Outputs: `emphasis_by_party.csv`, `emphasis_by_org.csv`, `bill_emphasis_by_party.csv`,
 `bill_emphasis_by_state.csv`, `stated_vs_revealed.csv`, and figures `party_emphasis.png` and
 `stated_vs_revealed.png`.
 
 **Caveats carried with every number:** bills are classified from titles (shorter and noisier
-than planks; the 62%/78% validation was measured on planks), ~20% of bills cannot be resolved to
-a party and are excluded rather than guessed, and filing is not passing — this is agenda, not
-achievement.
+than planks; the 62%/78% validation was measured on planks), 18.9% have unknown sponsorship and
+6.3% are bipartisan, and filing is not passing — this is agenda, not achievement.
 
 
 
@@ -434,7 +435,7 @@ would have tested the seeds against themselves. Tags that name a procedure, a fu
 instrument, a unit of government, or a regulated commodity are excluded, and bills whose tags
 map to two topics are dropped rather than scored.
 
-**Result:** 63.2% agreement on 46,659 bills across 35 states, against 62% for the same model on
+**Result:** 63.2% agreement on 46,657 bills across 35 states, against 62% for the same model on
 planks. The aggregate was reassuring and the breakdown was not.
 
 **The finding that mattered:** reporting *precision* rather than recall exposed one systematic
@@ -442,14 +443,12 @@ failure — **the classifier reads a tax bill by the thing being taxed rather th
 Macroeconomics recall is 18.1%; those bills land in housing (property tax), public lands and
 social welfare. Housing precision is 34.8%, with taxation the single largest contaminant.
 
-Because the tags are model-independent, they re-derive the headline outright over 111,521
-bills. **33 of 40 topic-party rows replicate; the housing row does not** — tag-labelled housing
-is 3.0% (D) and 0.9% (R) against stated shares of 3.5% and 1.7%, erasing the gap and reversing
-its sign for Republicans. The row was withdrawn from the headline table and struck through
-rather than deleted, and the headline claim was rewritten from "housing, crime and
-transportation" to "crime, transportation and education". The other five failures are the same
-tax confusion or its mirror, except two where the gap is a fraction of a point and its sign is
-noise.
+Because the tags are model-independent, they re-derive the headline over 84,330 bills in the
+same 24-state comparison sample. **34 of 42 topic-party rows replicate.** Democratic housing
+reverses (3.9% stated, 7.8% model, 2.9% tags); the Republican direction holds, but tags show
+only 1.4% rather than the model's 6.9%. The Democratic housing claim remains withdrawn rather
+than deleted. The other seven failures are the same tax confusion, public-lands confusion, or
+small gaps whose sign is noise.
 
 > **Lessons:**
 > 1. An aggregate accuracy figure can be reassuring and still conceal a claim-breaking error.
@@ -515,11 +514,11 @@ divisive topics (cross-state SD of each topic's share), distance to the party ce
 Two guards are built in rather than left to the reader. Dispersion is only compared between
 parties over the **same set of states**, because a party whose surviving platforms come from
 more unusual states would otherwise look more divided for compositional reasons alone; that
-restriction is what limits the current platform comparison to 18 states. And a permutation test
+restriction is what limits the current platform comparison to 24 states. And a permutation test
 shuffles the party labels across the same vectors, so a dispersion gap is only reported as a
 difference when it survives.
 
-**Result:** the within/between ratio is **0.852 for platforms and 0.849 for bills** -- two
+**Result:** the within/between ratio is **0.85 for platforms and 0.84 for bills** -- two
 co-partisan state organizations are about 85% as far apart as two opposed ones, replicated
 across two independent streams with different authors, sources and years.
 
@@ -528,16 +527,14 @@ qualifying, Republicans looked more scattered in platforms and Democrats in bill
 reversal that would have been very quotable, and that shuffling the labels put squarely inside
 chance (p = 0.41 and p = 0.30). Both were reported as null results.
 
-With the corpus enlarged to 18 qualifying states the platform half became real and survives:
-Republican state platforms are more internally varied than Democratic ones (0.319 vs 0.223,
-p = 0.026). The bill half remains null (p = 0.30). So the finding is one-sided --
-**Republican state committees write more varied platforms, while their legislators file
-strikingly similar bills** -- which is a different and better-supported claim than the reversal
-the first pass appeared to show.
+With the exhaustive corpus enlarged to 24 qualifying states, neither apparent difference
+survives: platforms are 0.209 for Democrats vs 0.260 for Republicans (p = 0.114), and bills are
+0.113 vs 0.093 (p = 0.317). Both are retained as null results rather than turned into a party
+division headline.
 
-Public lands is a top-three source of internal disagreement in three of four party-stream
-comparisons and fourth for Republican platforms: geography still matters, because a Nevada
-party of either stripe has a public-lands agenda and a Rhode Island one does not.
+Public lands is a top-three source of internal disagreement in all four party-stream
+comparisons: geography still matters, because a Nevada party of either stripe has a
+public-lands agenda and a Rhode Island one does not.
 
 > **Lessons:**
 > 1. A measure of "who differs from whom" needs a null model before it needs a chart. The most

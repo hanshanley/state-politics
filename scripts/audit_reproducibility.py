@@ -364,7 +364,10 @@ def audit_artifacts(audit: Audit) -> dict:
     current_platform_keys = set(
         map(
             tuple,
-            confirmed.loc[current_years >= 2018, ["state", "party"]]
+            confirmed.loc[
+                current_years.isna() | (current_years >= 2018),
+                ["state", "party"],
+            ]
             .drop_duplicates()
             .values,
         )

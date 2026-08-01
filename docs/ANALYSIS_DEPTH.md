@@ -16,8 +16,8 @@ The machine-readable outputs are:
 
 ### Stated and revealed agenda
 
-- 233 party-committee platforms/resolutions dated 2018+ across 80 organizations
-- 16 older fallback documents, kept for provenance but excluded from current comparisons
+- 502 current party-committee platforms/resolutions across 81 organizations
+- 185 older fallback documents, kept for provenance but excluded from current comparisons
 - four separately labelled caucus priority sources completing state-level stated coverage
 - 1,087,327 bills and 5,000,761 sponsorship records
 - topic shares with validation, thresholded unclassified rows, and independent tag replication
@@ -27,6 +27,8 @@ The machine-readable outputs are:
 - 100 state × party atlas rows
 - leave-one-state-out same-party baselines
 - reliable stated comparisons only at 30+ classified units
+- reliable filed-focus comparisons only at 500+ classified bills and above a
+  sample-size-specific multinomial null threshold
 - 98 partisan bill profiles; Nebraska explicitly marked formally nonpartisan
 - same-party and opposite-party topic-profile similarity
 - permutation test for party dispersion differences
@@ -52,6 +54,8 @@ The machine-readable outputs are:
 - Benjamini-Hochberg q-values across party-topic tests
 - yearly linear slope
 - state-party topic slopes only when at least five years meet a 50-classified-bill floor
+- a second trend calculation using legislative-staff subject tags, with failed directional
+  replications retained rather than hidden
 
 ## Partially supported
 

@@ -35,7 +35,7 @@ from .taxonomy import DEFAULT_TOPICS_PATH, MIN_TOPIC_SIMILARITY, EmbeddingClassi
 
 __all__ = [
     "classify_bills", "count_topics_by_state", "divergence_table",
-    "is_procedural_shell_title",
+    "is_procedural_shell_title", "party_emphasis_from_states",
 ]
 
 #: Bill titles handed to the classifier per pass. Bounds peak memory on a machine whose RAM is
@@ -231,6 +231,57 @@ def divergence_table(platform_emphasis, bill_emphasis):
     return merged.sort_values(["party", "stated_minus_revealed"], ascending=[True, False])
 
 
+def party_emphasis_from_states(state_counts, *, states=None, equal_state=True):
+    """Party topic shares, optionally giving every included state equal weight."""
+    import pandas as pd
+
+    frame = state_counts.copy()
+    if states is not None:
+        frame = frame[frame["state"].isin(states)]
+    if frame.empty:
+        return pd.DataFrame(
+            columns=["party", "topic", "n_bills", "share", "topic_name", "n_states"]
+        )
+    if equal_state:
+        vectors = frame.pivot_table(
+            index=["state", "party"],
+            columns="topic",
+            values="share",
+            fill_value=0.0,
+        )
+        means = (
+            vectors.groupby(level="party")
+            .mean()
+            .stack(future_stack=True)
+            .rename("share")
+            .reset_index()
+        )
+        counts = (
+            frame.groupby(["party", "topic"])["n_bills"]
+            .sum()
+            .rename("n_bills")
+            .reset_index()
+        )
+        result = means.merge(counts, on=["party", "topic"], how="left")
+        result["n_states"] = vectors.index.get_level_values("state").nunique()
+    else:
+        result = (
+            frame.groupby(["party", "topic"])["n_bills"]
+            .sum()
+            .rename("n_bills")
+            .reset_index()
+        )
+        result["share"] = result["n_bills"] / result.groupby("party")[
+            "n_bills"
+        ].transform("sum")
+        result["n_states"] = frame["state"].nunique()
+    names = frame[["topic", "topic_name"]].drop_duplicates().set_index("topic")[
+        "topic_name"
+    ]
+    result["topic_name"] = result["topic"].map(names)
+    return result
+
+
 def main(argv: list[str] | None = None) -> int:
     import pandas as pd
 
@@ -240,6 +291,10 @@ def main(argv: list[str] | None = None) -> int:
     # average that is mostly pre-2018 would not be a like-for-like comparison.
     parser.add_argument("--platform-emphasis",
                         default="data/processed/emphasis_by_party_2018_present.csv")
+    parser.add_argument(
+        "--platform-by-org",
+        default="data/processed/emphasis_by_org.csv",
+    )
     parser.add_argument("--topics", default=DEFAULT_TOPICS_PATH)
     parser.add_argument("--out-dir", default="data/processed")
     args = parser.parse_args(argv)
@@ -254,13 +309,8 @@ def main(argv: list[str] | None = None) -> int:
     print(f"classified: {totals['n_classified']:,}")
 
     named = {topic.code: topic.name for topic in topics}
-    counts = by_state.groupby(["party", "topic"])["n_bills"].sum().reset_index()
-    counts["share"] = counts["n_bills"] / counts.groupby("party")["n_bills"].transform("sum")
-    counts["topic_name"] = counts["topic"].map(named)
-
     out_dir = Path(args.out_dir)
     out_dir.mkdir(parents=True, exist_ok=True)
-    counts.to_csv(out_dir / "bill_emphasis_by_party.csv", index=False)
 
     state_counts = (
         by_state.groupby(["state", "party", "topic"])["n_bills"].sum().reset_index()
@@ -274,6 +324,29 @@ def main(argv: list[str] | None = None) -> int:
     )
     state_counts.to_csv(out_dir / "bill_emphasis_by_state.csv", index=False)
     coverage.to_csv(out_dir / "bill_classification_coverage.csv", index=False)
+
+    platform_by_org = pd.read_csv(args.platform_by_org)
+    current = platform_by_org[platform_by_org["era"] == "2018-present"]
+    platform_states = {
+        party: set(current.loc[current["party"] == party, "state"])
+        for party in ("D", "R")
+    }
+    bill_states = {
+        party: set(state_counts.loc[state_counts["party"] == party, "state"])
+        for party in ("D", "R")
+    }
+    matched_states = (
+        platform_states["D"]
+        & platform_states["R"]
+        & bill_states["D"]
+        & bill_states["R"]
+    )
+    counts = party_emphasis_from_states(state_counts, states=matched_states)
+    counts.to_csv(out_dir / "bill_emphasis_by_party.csv", index=False)
+    party_emphasis_from_states(state_counts, equal_state=False).to_csv(
+        out_dir / "bill_emphasis_by_party_pooled_sensitivity.csv",
+        index=False,
+    )
 
     year_counts = (
         by_state.groupby(["year", "party", "topic"])["n_bills"].sum().reset_index()
@@ -292,7 +365,23 @@ def main(argv: list[str] | None = None) -> int:
     state_year_counts["topic_name"] = state_year_counts["topic"].map(named)
     state_year_counts.to_csv(out_dir / "bill_emphasis_by_state_year.csv", index=False)
 
-    platform = pd.read_csv(args.platform_emphasis)
+    platform_vectors = (
+        current[current["state"].isin(matched_states)]
+        .pivot_table(
+            index=["state", "party"],
+            columns="topic",
+            values="share",
+            fill_value=0.0,
+        )
+    )
+    platform = (
+        platform_vectors.groupby(level="party")
+        .mean()
+        .T.reindex(columns=["D", "R"])
+        .fillna(0.0)
+        .reset_index()
+    )
+    platform["topic_name"] = platform["topic"].map(named)
     divergence = divergence_table(platform, counts)
     divergence.to_csv(out_dir / "stated_vs_revealed.csv", index=False)
 

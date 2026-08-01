@@ -24,12 +24,14 @@ Congressional bills are **out of scope**. This is about *state* politics.
 
 ## Data
 
-- **Stated priorities:** 249 confirmed party-committee documents in the modern collection:
-  233 dated 2018+ across 80 organizations and 16 older fallback documents. A separately labelled
-  four-source legislative-caucus supplement fills four otherwise missing state-party rows. The
-  platform-vs-bill analysis uses only 2018+ party-committee evidence.
+- **Stated priorities:** 687 confirmed party-committee documents in the modern collection:
+  502 current documents (500 dated 2018+ and two currently published but undated) across 81
+  organizations, plus 185 older fallback documents. A separately labelled four-source
+  legislative-caucus supplement fills four otherwise missing state-party rows; it does not enter
+  the platform-vs-bill headline.
 - **Revealed priorities:** 1,087,327 state legislative bills and 5,000,761 sponsorship records.
-- **Historical comparison:** 2,091 state party platform documents covering 1840–2017.
+- **Historical comparison:** 2,091 documents: state platforms from 49 states (1846–2017)
+  plus U.S. national platforms beginning in 1840.
 - **State profiles:** 100 state × party rows, with stated evidence where available and partisan
   bill evidence for every state except Nebraska's formally nonpartisan legislature.
 
@@ -44,7 +46,7 @@ documented in [Methods](docs/METHODS.md) and
 Every 2018-present platform, and every major-party platform from 1990 onward, is segmented
 into planks and classified against a
 [Comparative Agendas Project](https://www.comparativeagendas.net/) taxonomy using a validated
-text classifier — 41,030 planks from 898 documents.
+text classifier — 49,575 planks from 1,221 documents, with 43,971 classified.
 
 ![What Democratic and Republican state parties talk about](outputs/party_emphasis.png)
 
@@ -61,29 +63,35 @@ questions, and law and crime.
 **Both parties talk far more about rights and identity than they legislate, and legislate far
 more about crime, transportation and education than they talk about.**
 
+The national values are equal-state means over the same states represented for both parties in
+both streams. Raw pooled-plank and pooled-bill results are retained as sensitivity artifacts, so
+long platforms and high-volume legislatures cannot define a party average by themselves.
+
 Every row was re-derived a second time using topic labels written by **legislative staff**
-instead of by this project's model. That independent check is the third column.
+instead of by this project's model. That independent check uses the 24 states with both party
+streams and mappable tags; its direction, not its level, is the comparison shown in the third
+column.
 
 | Topic | D said → filed | R said → filed | Replicates? |
 |---|---|---|---|
-| Civil rights and liberties | 10.9% → **3.0%** | 11.9% → **2.8%** | ✅ gap is *larger* (1.5% / 0.7%) |
-| Immigration | 4.6% → **0.9%** | 5.6% → **0.9%** | ✅ gap is *larger* (0.3% / 0.2%) |
-| Culture, family, social issues | 2.4% → **1.8%** | 5.1% → **1.5%** | ✅ R only (2.6% / 2.4%) |
-| Law, crime and justice | 9.4% → **13.8%** | 9.6% → **15.5%** | ✅ (13.8% / 13.5%) |
-| Transportation | 2.2% → **4.7%** | 1.1% → **5.2%** | ✅ gap is *larger* (7.0% / 9.7%) |
-| Education | 8.9% → **10.3%** | 8.4% → **12.2%** | ✅ gap is *larger* (14.3% / 19.5%) |
-| ~~Housing and community development~~ | ~~4.4% → 9.4%~~ | ~~2.3% → 6.0%~~ | ❌ **does not replicate** (3.0% / 0.9%) |
+| Civil rights and liberties | 11.1% → **4.4%** | 15.7% → **3.4%** | ✅ tags: 2.2% / 0.8% |
+| Immigration | 6.6% → **0.9%** | 4.9% → **1.2%** | ✅ tags: 0.3% / 0.1% |
+| Culture, family, social issues | 2.5% → **1.9%** | 4.9% → **1.9%** | ⚠ D reverses; R holds |
+| Law, crime and justice | 10.2% → **14.6%** | 8.9% → **13.9%** | ✅ tags: 13.1% / 13.0% |
+| Transportation | 2.0% → **3.6%** | 0.8% → **4.5%** | ✅ tags: 5.6% / 8.4% |
+| Education | 8.3% → **11.9%** | 9.9% → **12.0%** | ✅ tags: 14.7% / 15.8% |
+| Housing and community development | ~~3.6% → 7.6%~~ | 0.8% → **6.9%** | ❌ D reverses; R direction holds but tags show only 1.4% |
 
 The topics that dominate platform rhetoric are largely *national* fights that state legislatures
 have limited power over; the topics that dominate actual filing are the bread-and-butter business
-of state government. Immigration is the sharpest case — Republican platforms give it 5.6% of
-their planks and Republican legislators 0.9% of their bills.
+of state government. Civil rights is the sharpest case: Republican state parties average 15.7%
+of current platform attention there, versus 3.4% of classified filings.
 
-**The housing row does not survive the check and should not be believed.** The classifier reads
+**The Democratic housing row does not survive the check and should not be believed.** The classifier reads
 a property-tax bill by the thing being taxed rather than by the tax, so "authorize a property tax
-freeze for owner-occupied homes" lands in housing. It is struck through rather than quietly
-deleted, because a corrected claim is more useful than a tidy one. Rows marked † in the figure
-are flagged for the same reason.
+freeze for owner-occupied homes" lands in housing. The Republican direction holds under tags,
+but its tag-based increase is far smaller than the model result. Rows marked † in the figure
+fail for at least one party and should not be read as findings.
 
 ### How the claims were checked
 
@@ -95,8 +103,8 @@ both to score the classifier and to re-derive the headline outright.
 | Check | Result |
 |---|---|
 | Plank classifier vs. hand-labelled gold set | 62% top-1, 78% top-2 |
-| Bill-title classifier vs. statehouse tags | **63.2%** agreement on 46,659 bills, 35 states |
-| Headline re-derived from tags, not the model | **33 of 40 rows hold** (111,521 bills) |
+| Bill-title classifier vs. statehouse tags | **63.2%** agreement on 46,657 bills, 35 states |
+| Headline re-derived over one matched sample | **34 of 42 rows hold** across 24 states |
 
 The consequential failure is taxation: Macroeconomics recall is 18.1%, so tax bills scatter
 into whatever was being taxed — inflating housing and public lands. Several other failed rows
@@ -104,9 +112,10 @@ change sign by only a fraction of a point and should be treated as noise. Full p
 breakdown is in [the methods](docs/METHODS.md#validating-the-bill-classifier).
 
 **Other limits.** Bills are classified from *titles*, which are short and often procedural.
-18.9% of bills cannot be resolved to a party and are excluded rather than guessed at. Planks
+18.9% of bills have unknown sponsorship and another 6.3% are bipartisan; both are excluded
+rather than forced into D or R. Planks
 below a similarity threshold are recorded as **unclassified** rather than pushed into the nearest
-topic — 3,733 of 41,030. And filing a bill is not passing one: this measures **agenda, not
+topic — 5,604 of 49,575. And filing a bill is not passing one: this measures **agenda, not
 achievement**.
 
 ---
@@ -124,8 +133,8 @@ uv run python scripts/plot_intraparty.py
 ![Same-party and opposite-party topic similarity](outputs/intraparty_coherence.png)
 
 The party label provides only a modest similarity advantage. For platforms, same-party state
-organizations are **72.9% similar** in topic mix versus **68.2%** for opposite-party pairs—a
-4.7-point difference. For bills, the comparison is **88.9% versus 87.0%**, only 2.0 points.
+organizations are **76.6% similar** in topic mix versus **72.6%** for opposite-party pairs—a
+4.0-point difference. For bills, the comparison is **89.7% versus 87.7%**, only 2.0 points.
 
 **This measures agenda overlap, not agreement.** Every vector is a distribution over *topics*,
 so two organizations are "close" when they devote similar attention to the same subjects — not
@@ -133,37 +142,32 @@ when they want the same things. A Democratic and a Republican platform that each
 their planks on abortion are adjacent on this measure while advocating opposite policies. The
 finding is about what parties put on the agenda, not about ideology.
 
-**Republican state parties disagree with each other more than Democratic ones do — but only in
-what they say.** Republican platforms are markedly more scattered (mean pairwise distance 0.319
-vs 0.223), and a permutation test that shuffles the party labels across the same 18 states puts
-that outside chance (p = 0.026). The same comparison on bills runs the other way and is *not*
-significant (0.121 vs 0.100, p = 0.30), so it is reported as a null result.
-
-That contrast is the interesting part: Republican state committees write more varied platforms
-than Democratic ones, while their legislators file strikingly similar bills.
+Neither apparent party dispersion difference survives permutation testing. Republican platforms
+are somewhat more scattered (0.260 vs 0.209, p = 0.114), while Democratic bill agendas are
+somewhat more scattered (0.113 vs 0.093, p = 0.317). Both are null results rather than evidence
+that one party is inherently more internally divided.
 
 What state parties *do* disagree about differs by party:
 
 | | Most divisive topics within the party (cross-state SD of topic share) |
 |---|---|
-| **Democratic platforms** | Public lands and water (7.1pp), Agriculture (4.9pp), Law and crime (4.8pp) |
-| **Republican platforms** | Government operations (10.4pp), Civil rights (8.2pp), Law and crime (7.6pp) |
-| **Democratic bills** | Law and crime (5.7pp), Public lands (4.0pp), Education (3.8pp) |
-| **Republican bills** | Public lands (4.2pp), Law and crime (4.1pp), Government operations (3.5pp) |
+| **Democratic platforms** | Public lands and water (6.2pp), Civil rights (4.8pp), Law and crime (4.8pp) |
+| **Republican platforms** | Government operations (7.6pp), Civil rights (7.5pp), Public lands (7.5pp) |
+| **Democratic bills** | Law and crime (5.7pp), Public lands (3.9pp), Education (3.7pp) |
+| **Republican bills** | Law and crime (4.2pp), Public lands (4.1pp), Government operations (3.4pp) |
 
 Public lands is the clearest case of geography beating party: it is a top-three source of
-internal disagreement in three of the four party-stream comparisons, and ranks fourth for
-Republican platforms. A Nevada party of either stripe has a public-lands agenda and a Rhode
-Island one does not.
+internal disagreement for both parties in both streams. A Nevada party of either stripe has a
+public-lands agenda and a Rhode Island one does not.
 
 Dispersion is only ever compared between parties over the **same set of states**, since a party
 whose surviving platforms come from more unusual states would otherwise look more divided for
-purely compositional reasons. That restriction is what limits the platform comparison to 18
+purely compositional reasons. That restriction is what limits the platform comparison to 24
 states.
 
 These are comparison samples, not data-coverage counts. The project has stated state-level
 evidence for all 50 states, but this matched platform comparison requires **both parties in the
-same state** to have at least 30 classified current planks, leaving 18 states. Bills cover all
+same state** to have at least 30 classified current planks, leaving 24 states. Bills cover all
 50 states, but Nebraska has no D/R caucus comparison because its legislature is formally
 nonpartisan, leaving 49.
 
@@ -180,18 +184,40 @@ because its legislature is formally nonpartisan.
 
 Representative departures:
 
-| State party | Disproportionate bill focus | State share | Same-party peers |
-|---|---|---:|---:|
-| Idaho Democrats | Civil rights and liberties | 22.5% | 3.9% |
-| New Mexico Democrats | Social welfare | 19.7% | 3.7% |
-| North Dakota Democrats | Public lands and water | 23.0% | 8.1% |
-| Illinois Republicans | Science and technology | 14.0% | 1.8% |
-| North Dakota Republicans | Public lands and water | 28.8% | 10.9% |
-| Alaska Republicans | Government operations | 19.3% | 9.3% |
+| State party | Disproportionate bill focus | State share | Same-party peers | Titles classified |
+|---|---|---:|---:|---:|
+| Hawaii Democrats | Environment | 6.4% | 2.4% | 81.2% |
+| Minnesota Democrats | Public lands and water | 14.6% | 7.8% | 76.0% |
+| Alaska Democrats | Public lands and water | 17.4% | 7.7% | 85.4% |
+| North Dakota Republicans | Public lands and water | 28.8% | 11.0% | 86.5% |
+| Alaska Republicans | Government operations | 19.3% | 8.8% | 81.2% |
+| Hawaii Republicans | Housing and community development | 15.4% | 6.3% | 78.6% |
 
-The baseline is leave-one-state-out, so Idaho does not help define the Democratic average it is
-measured against. The full atlas also includes stated-agenda topics, evidence type, sample size,
-cosine distance and distinctive language.
+The baseline is leave-one-state-out, so a state never helps define the party average it is
+measured against. Filed-focus rankings require 500 classified bills. The full atlas also includes
+stated-agenda topics, evidence type, sample size, classification coverage, cosine distance and
+distinctive language. Illinois `-TECH` shells and New Mexico's standard emergency-clause title
+are excluded because they do not describe policy.
+
+### How filing agendas changed
+
+The longitudinal analysis gives each state equal weight, compares complete two-year windows
+(2018–2019 versus 2024–2025), and uses paired state sign-flip tests with FDR correction. Three
+model-detected increases also move in the same direction when topics are assigned independently
+from legislative-staff tags:
+
+![Bill-topic changes checked against legislative staff tags](outputs/bill_topic_trends.png)
+
+| Party/topic | 2018–2019 | 2024–2025 | Change | Model q | Staff-tag change |
+|---|---:|---:|---:|---:|---:|
+| Democratic housing/community development | 6.4% | 9.3% | +2.9pp | .002 | +2.4pp |
+| Republican civil rights/liberties | 2.5% | 3.2% | +0.7pp | .002 | +0.2pp |
+| Republican immigration | 0.9% | 1.4% | +0.5pp | .018 | +0.2pp |
+
+The tag check covers only ten states clearing the period floor, so it confirms direction rather
+than statistical significance. Two other model-significant changes — Democratic social welfare
+and Republican environment — reverse under staff tags and are not treated as findings. The
+partial 2026 year is excluded from inference.
 
 ### Elections and voting
 
@@ -219,10 +245,10 @@ two-word phrases. A log₂ score of +1 means a term is twice as concentrated as 
 
 | State party and stream | Distinctive language |
 |---|---|
-| Alaska Democrats, stated | `salmon` (+7.9), `fisheries` (+5.4) |
-| Kentucky Republican caucus supplement (8 items; descriptive) | `postsecondary` (absent in peers), `sick leave` (+10.5) |
-| New Jersey Republican caucus supplement (21 items; descriptive) | `school funding` (+8.9), `property taxes` (+5.8) |
-| South Dakota Democrats, stated | `tribal colleges` (+5.0), `high tech` (+8.5) |
+| Alaska Democrats, stated | `subsistence` (+10.9), `salmon` (+7.5) |
+| Kentucky Republican caucus supplement (8 items; descriptive) | `postsecondary`, `sick leave` (absent in caucus peers) |
+| New Jersey Republican caucus supplement (21 items; descriptive) | `school funding`, `property taxes` (absent in caucus peers) |
+| South Dakota Democrats, stated | `initiated measure` (+9.2), `native language` (+7.7) |
 | Alaska Democrats, bills | `permanent fund` (+12.0) |
 | Arkansas Republicans, bills | `child maltreatment` (+7.2) |
 
@@ -237,7 +263,7 @@ boilerplate, while the raw scores remain available for inspection.
 ## Model legislation
 
 Advocacy groups circulate template bills, and near-identical text surfacing in a dozen capitols
-is visible in the data: **187 clusters spanning 3+ states, 2,027 bills, the widest reaching 19.**
+is visible in the data: **302 clusters spanning 3+ states, 3,480 bills, the widest reaching 19.**
 
 | States | Bills | Cohesion | Template |
 |---|---|---|---|
@@ -250,7 +276,7 @@ is visible in the data: **187 clusters spanning 3+ states, 2,027 bills, the wide
 This shows **text reuse, not coordination**, and the state counts are an upper bound — clusters
 are connected components, so `cohesion` (the lowest pairwise similarity inside a cluster) is
 reported alongside. Ceremonial resolutions circulate just as widely and are flagged separately
-(65 of 187).
+(98 of 302).
 
 ---
 

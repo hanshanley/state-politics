@@ -151,6 +151,31 @@ def test_collected_near_duplicate_documents_are_clustered_across_adjacent_years(
     assert 2024 in set(deduplicated["year"])
 
 
+def test_platform_section_is_dropped_when_full_same_year_platform_exists():
+    corpus = pd.DataFrame(
+        [
+            {
+                "state": "CA", "party": "D", "year": 2020,
+                "source_corpus": "collected",
+                "text": (
+                    "education healthcare environment labor housing immigration "
+                    "transportation voting agriculture"
+                ),
+            },
+            {
+                "state": "CA", "party": "D", "year": 2020,
+                "source_corpus": "collected",
+                "text": "education healthcare environment",
+            },
+        ]
+    )
+
+    deduplicated = _drop_duplicate_documents(corpus)
+
+    assert len(deduplicated) == 1
+    assert "immigration" in deduplicated.iloc[0]["text"]
+
+
 def test_emphasis_table_on_empty_input_returns_empty_frame():
     empty = pd.DataFrame(columns=["state", "party", "era", "topic", "similarity"])
     assert emphasis_table(empty, TOPICS).empty
@@ -186,6 +211,29 @@ def test_divergence_table_treats_a_missing_side_as_zero_not_as_missing():
     rep = table[table.party == "R"].iloc[0]
     assert rep["revealed_share"] == 0.0
     assert rep["stated_minus_revealed"] == 0.02
+
+
+def test_bill_party_emphasis_weights_states_equally():
+    from state_politics.analysis.revealed import party_emphasis_from_states
+
+    state_counts = pd.DataFrame(
+        [
+            {
+                "state": "TX", "party": "D", "topic": 5,
+                "topic_name": "Labor", "n_bills": 100, "share": 1.0,
+            },
+            {
+                "state": "VT", "party": "D", "topic": 1,
+                "topic_name": "Macroeconomics", "n_bills": 1, "share": 1.0,
+            },
+        ]
+    )
+
+    equal = party_emphasis_from_states(state_counts)
+    pooled = party_emphasis_from_states(state_counts, equal_state=False)
+
+    assert equal.loc[equal["topic"] == 5, "share"].iloc[0] == 0.5
+    assert pooled.loc[pooled["topic"] == 5, "share"].iloc[0] == 100 / 101
 
 
 def test_classify_bills_leaves_very_short_titles_unclassified():
@@ -262,3 +310,33 @@ def test_cross_state_outliers_on_empty_input():
     from state_politics.analysis.profiles import cross_state_outliers
 
     assert cross_state_outliers(pd.DataFrame(), []).empty
+
+
+def test_cross_state_outliers_report_sample_noise_threshold():
+    from state_politics.analysis.profiles import cross_state_outliers
+    from state_politics.analysis.taxonomy import Topic
+
+    topics = [
+        Topic(code=5, name="Labor", description="d", seeds=("union",)),
+        Topic(code=21, name="Public lands", description="d", seeds=("land",)),
+    ]
+    vectors = pd.DataFrame(
+        [[0.99, 0.01], [0.5, 0.5], [0.5, 0.5]],
+        index=pd.MultiIndex.from_tuples(
+            [("TX", "D"), ("OH", "D"), ("VT", "D")],
+            names=["state", "party"],
+        ),
+        columns=[5, 21],
+    )
+    sizes = pd.Series(
+        [1_000, 1_000, 1_000],
+        index=vectors.index,
+    )
+
+    outliers = cross_state_outliers(
+        vectors, topics, sample_sizes=sizes, null_draws=200
+    )
+
+    texas = outliers[outliers["state"] == "TX"].iloc[0]
+    assert texas["cosine_distance"] > texas["null_distance_p95"]
+    assert texas["n_observations"] == 1_000

@@ -45,10 +45,20 @@ a misleading content type. Discovery is Wayback-first with a live-site fallback,
 per request -- at ~1 req/s the archive refused 305 of 456 fetches, and backing off took the
 success rate from 34% to 93%.
 
+The collector exhausts every candidate at or above the documented strong-score threshold; it
+does not stop after an arbitrary per-organization count. `--resume` preserves successful and
+OCR-derived rows, retries failures, and also fetches newly discovered URLs. Partial `--states`
+runs merge into the existing corpus rather than replacing unrelated states.
+
+The final corpus accounts for **1,948/1,948 strong candidate URLs**. It confirms 687 documents;
+424 candidate rows record failed retrievals, overwhelmingly explicit live-site 404 responses,
+rather than disappearing from the audit trail.
+
 ## The 18 parties with no committee platform or resolution
 
 82 of 100 state party organizations yielded a party-committee platform or state-committee
-resolution. The remaining 18 are the deliverable
+resolution: 687 confirmed documents total, of which 502 are current across 81 organizations and
+185 are older fallbacks. The remaining 18 organizations are the deliverable
 that a scraper normally throws away: **every one was probed by hand and carries a recorded
 reason**, in [`conf/platform_gaps.yml`](../conf/platform_gaps.yml), joined into the gap report by
 `gap_report()`. They live in version-controlled config rather than in the generated CSV,
@@ -204,6 +214,17 @@ planks, classifies each against a shared issue taxonomy, and measures **share of
 share rather than count, because platforms differ by an order of magnitude in length and raw
 counts would measure verbosity rather than priority.
 
+The national D-vs-R table does not pool every plank. It first computes a topic distribution
+for each state-party organization, restricts to states with both parties represented, and then
+gives every state equal weight. This prevents a very long platform from defining a national
+party average and holds the state composition fixed across parties. Raw pooled-plank shares are
+retained as `emphasis_by_party_2018_present_pooled_sensitivity.csv`, not used as the headline.
+
+The bill side of the stated-vs-filed comparison uses the identical matched state set and also
+averages state-party topic shares rather than raw bills. New York therefore cannot define the
+national filing agenda merely by filing more bills. Raw pooled-bill shares are retained as
+`bill_emphasis_by_party_pooled_sensitivity.csv`.
+
 ```bash
 uv run python -m state_politics.analysis.validate   # score the classifiers first
 uv run python -m state_politics.analysis.emphasis
@@ -222,7 +243,8 @@ plank and each topic description and assigns the nearest topic. A transparent ke
 runs alongside it, not as a fallback but so the model's output can be checked against something
 a human can read and argue with.
 
-**Validation, on 41,030 planks from 898 documents (37,297 classified):**
+**Validation configuration, applied to 49,575 planks from 1,221 documents
+(43,971 classified):**
 
 | Classifier | Top-1 | Top-2 |
 |---|---|---|
@@ -249,6 +271,13 @@ a platform plank. Bills are classified from titles, which are shorter, more proc
 written for a different purpose, so the plank accuracy figure does not transfer to them. That
 left the *revealed* half of the headline resting on a classifier nobody had measured.
 
+Two known state drafting placeholders are excluded before classification because they contain no
+policy description: Illinois titles ending in `-TECH` and New Mexico's standard `PUBLIC PEACE,
+HEALTH, SAFETY & WELFARE` emergency-clause title. They accounted for 13,490 party-attributed
+records and previously created false Illinois technology and New Mexico welfare outliers.
+`bill_classification_coverage.csv` reports attributed, procedural-excluded, classified and
+classification-rate counts for every state-party; those fields are also carried into the atlas.
+
 Roughly half of all bills carry `subject` tags applied by the legislature's own staff. Those
 tags are a genuinely independent signal — a different labeller, a different process, recorded
 before this project existed. `conf/subject_topic_map.yml` maps the unambiguous ones onto the
@@ -270,7 +299,7 @@ mapping is written from tag names and the CAP codebook, never from classifier ou
 not reuse the keyword seeds in `conf/topics.yml` — doing so would test the seeds against
 themselves.
 
-**Overall agreement: 63.2% on 46,659 bills across 35 states** — close to the 62% the same model
+**Overall agreement: 63.2% on 46,657 bills across 35 states** — close to the 62% the same model
 scores on hand-labelled planks. But the aggregate hides a lot, and the useful measure is
 **precision** rather than recall, because every headline number is a *share of bills assigned to
 a topic*:
@@ -295,25 +324,26 @@ deflates Macroeconomics and inflates whatever the tax was levied on.
 ### The replication
 
 Because the tags are independent of the model, they can be used to re-derive the headline
-outright, replacing the classifier entirely. `bill_emphasis_by_tag.csv` does exactly that over
-**111,521 tag-labelled, party-attributed bills**. A row "holds" when both labellings put the
+outright, replacing the classifier entirely. The headline comparison uses **84,330
+tag-labelled bills across the same 24-state comparison sample**. A row "holds" when both labellings put the
 filed share on the same side of the stated share — which is the claim the headline actually
 makes.
 
-**33 of 40 topic-party rows hold.** The seven that do not are:
+**34 of 42 topic-party rows hold.** The eight that do not are:
 
 | Topic | Party | Said | Model | Tags |
 |---|---|---|---|---|
-| Housing and community development | D | 4.4% | 9.4% | 3.0% |
-| Housing and community development | R | 2.3% | 6.0% | 0.9% |
-| Macroeconomics | R | 2.4% | 2.2% | 9.9% |
-| Government operations | D | 7.5% | 6.1% | 8.3% |
-| Culture, family and social issues | D | 2.4% | 1.8% | 2.6% |
-| Labor and employment | D | 4.8% | 5.2% | 4.7% |
-| Social welfare | D | 4.1% | 4.1% | 4.1% |
+| Environment | D | 3.5% | 2.5% | 5.1% |
+| Housing and community development | D | 3.9% | 7.8% | 2.9% |
+| Government operations | D | 7.3% | 6.6% | 11.1% |
+| Public lands and water | D | 9.2% | 9.8% | 3.1% |
+| Culture, family and social issues | D | 2.1% | 1.8% | 2.1% |
+| Macroeconomics | R | 2.9% | 2.2% | 8.6% |
+| Foreign trade | R | 0.4% | 0.4% | 0.0% |
+| Public lands and water | R | 10.1% | 12.0% | 3.7% |
 
-Every one is the tax failure or its mirror image, except the last two, where the model and the
-stated share differ by a fraction of a point and the "sign" of a gap that small is noise.
+The housing and macroeconomics reversals expose the known tax-classification failure. Several
+others are very small model gaps whose direction is not stable enough to headline.
 
 **This is a subsample replication, not a second census.** 37 states publish tags and only
 35 contribute unambiguously mappable ones; only
@@ -344,17 +374,17 @@ that simply publishes more does not register as distant.
 *Composition.* Dispersion is only compared between parties over the same set of states.
 Otherwise a party whose surviving platforms happen to come from more idiosyncratic states looks
 more divided without any of its organizations disagreeing more. This is what restricts the
-platform comparison to the 18 states where both parties clear the 30-observation floor.
+platform comparison to the 24 states where both parties clear the 30-observation floor.
 
 *A null model.* `dispersion_gap_pvalue` shuffles the party labels across the same vectors and
 recomputes the gap. Shuffling labels rather than resampling states holds composition fixed, so
 the test asks exactly the intended question: given these organizations, does it matter which
 party each belongs to?
 
-**What it found.** Within/between = 0.85 for both streams. Republican platforms are
-genuinely more scattered than Democratic ones (0.319 vs 0.223, p = 0.026); the same comparison
-on bills runs the other way and does **not** survive the permutation test (0.121 vs 0.100,
-p = 0.30), so that half is reported as a null result.
+**What it found.** Within/between = 0.85 for platforms and 0.84 for bills. Neither party
+dispersion gap survives permutation testing: platforms are 0.209 for Democrats versus 0.260 for
+Republicans (p = 0.114), while bills are 0.113 versus 0.093 (p = 0.317). Both are reported as
+null results.
 
 **The limit that matters.** These vectors are distributions over *topics*, so the measure is
 **agenda overlap, not agreement**. A Democratic and a Republican platform that each devote 10%
@@ -387,6 +417,11 @@ contribute their top-topic description and source metadata, but do not enter pee
 receive a "distinctive state" claim. This prevents a one-sentence Maryland agenda statement or
 an eight-bill Kentucky list from carrying the same weight as a full platform.
 
+Filed-focus comparisons require at least 500 classified bills. The atlas still reports top
+topics for smaller caucuses, but suppresses their peer-distance claim. Per-state classification
+coverage is reported alongside the share because title conventions make the usable fraction vary
+substantially by state.
+
 The two streams remain separate. The stated side prefers party-committee evidence and uses a
 legislative-caucus supplement only where committee evidence is absent. The filed side covers
 98 partisan caucuses across 49 states. Nebraska has no D/R bill profile because its legislature
@@ -399,6 +434,31 @@ The caucus supplement is classified conservatively:
 * Maryland uses the verbatim sentence defining the Senate Democratic Caucus agenda, not the
   surrounding committee-assignment announcement.
 * New Jersey and Pennsylvania use their full official priority pages.
+
+---
+
+## Bill-topic change over time
+
+`analysis/trends.py` avoids treating bills as independent observations. It computes each
+state-party's topic share in 2018–2019 and 2024–2025, retains states with at least 100 classified
+bills in both periods, and tests the mean paired state change with 10,000 deterministic sign
+flips. Benjamini-Hochberg q-values cover all 42 party-topic tests. One odd and one even year in
+each period reduces session-cycle confounding; incomplete 2026 data are excluded.
+
+The same calculation is repeated after replacing model topics with unambiguous
+legislative-staff subject tags. Only ten states clear the tag-based period floor, so this is a
+directional replication rather than an equally powered second test. Three FDR-significant model
+increases keep their direction under tags: Democratic housing/community development (+2.9pp;
+tags +2.4pp), Republican civil rights/liberties (+0.7pp; tags +0.2pp), and Republican
+immigration (+0.5pp; tags +0.2pp). Democratic social welfare and Republican environment reverse
+under tags and are explicitly rejected.
+
+Outputs:
+
+- `bill_topic_trends_by_party.csv`
+- `bill_topic_trends_by_state.csv`
+- `bill_topic_trends_by_party_tags.csv`
+- `bill_topic_trend_replication.csv`
 
 ---
 
@@ -442,6 +502,11 @@ reported only where peers have a nonzero observed count. A phrase absent from ev
 peer is labelled `peer_absent` instead of receiving a pseudo-count whose apparent ratio would
 depend on vocabulary size.
 
+Stated-language peers are also matched on evidence genre: party-committee prose is compared with
+other party committees, while the four legislative-caucus supplements are compared only with
+same-party caucus supplements. This prevents bill-drafting vocabulary from being labelled
+distinctive merely because its peers are platforms.
+
 Raw TF-IDF is sensitive to drafting conventions and OCR/markup remnants. The analysis therefore
 removes state names, common legislative boilerplate, ceremonial language, dates and HTML
 entities from public highlights. The complete raw scores remain in `state_party_terms.csv`, so
@@ -469,9 +534,12 @@ Comparing a million titles pairwise is impossible, so candidates are blocked by 
 content words; blocking on several rather than one matters, because two versions of a template
 often differ in precisely which rare word they keep.
 
-**187 clusters spanning 3+ states, 2,027 bills, the widest reaching 19 states.** Ceremonial
+The candidate-block ceiling is 3,500, above the largest observed block (3,333). The earlier
+400-row ceiling left 17.2% of eligible bills in no searched block and is no longer used.
+
+**302 clusters spanning 3+ states, 3,480 bills, the widest reaching 19 states.** Ceremonial
 resolutions ("recognizing National Donate Life Month") circulate just as widely as policy but
-say nothing about an agenda, so they are flagged separately — 65 of the 187.
+say nothing about an agenda, so they are flagged separately — 98 of the 302.
 
 | States | Bills | Cohesion | Template |
 |---|---|---|---|
@@ -491,8 +559,8 @@ named model bills.
 **Read the state counts as an upper bound.** Clusters are connected components, so membership
 is transitive: if A resembles B and B resembles C, all three land in one cluster even when A
 and C are not themselves similar. Every cluster therefore reports `min_similarity`, the lowest
-pairwise score between any two of its members. Across the 187 clusters that runs 0.31–1.00
-(median 0.71), and **132 of 187 contain at least one pair below the 0.80 pairing threshold** —
+pairwise score between any two of its members. Across the 302 clusters that runs 0.31–1.00
+(median 0.71), and **228 of 302 contain at least one pair below the 0.80 pairing threshold** —
 the 19-state compact cluster sits at 0.57, because states retitle the same compact freely
 ("enacting the...", "adopting the...", "...licensure compact act"). Treat a cluster as one
 tight template when that value is high, and as a family of related bills when it is not.
@@ -517,28 +585,30 @@ uv run python -m state_politics.analysis.profiles
 Distance is cosine over the topic-share vector — cosine because it compares the *shape* of an
 agenda rather than its volume, which varies by an order of magnitude between New York and
 Wyoming. Comparison is **within party**, so the result is "unusual for a Democrat" rather than
-the trivial finding that Democrats differ from Republicans. Organizations with fewer than 30
-classified planks or bills are dropped, since one plank there moves a share by tens of points.
+the trivial finding that Democrats differ from Republicans. Platform organizations with fewer than 30 classified planks and bill caucuses with fewer than
+500 classified bills are dropped. Each surviving distance must also exceed the 95th percentile
+of a multinomial null distribution at that organization's actual sample size; this prevents
+small-sample noise from becoming an outlier headline.
 
 Most distinctive by platform emphasis:
 
 | Org | Distance | Most distinctive topic | vs party average |
 |---|---|---|---|
-| NJ-D | 0.392 | Macroeconomics | 18.2% vs 1.8% |
-| KY-R | 0.336 | International affairs | 18.3% vs 2.1% |
-| FL-D | 0.264 | Health | 34.1% vs 11.5% |
-| NJ-R | 0.264 | Macroeconomics | 19.2% vs 4.6% |
-| MT-D | 0.262 | Public lands and water | 33.0% vs 8.8% |
+| NY-D | 0.260 | Government operations | 24.1% vs 6.6% |
+| MT-D | 0.257 | Public lands and water | 30.3% vs 8.4% |
+| GA-D | 0.230 | Agriculture | 17.6% vs 4.2% |
+| AR-R | 0.306 | Civil rights and liberties | 36.1% vs 12.4% |
+| LA-R | 0.293 | Government operations | 28.6% vs 13.2% |
 
 Most distinctive by what their legislators actually file:
 
 | Org | Distance | Most distinctive topic | vs party average |
 |---|---|---|---|
-| ID-D | 0.373 | Civil rights and liberties | 22.5% vs 4.3% |
-| IL-R | 0.167 | Science, technology and communications | 14.0% vs 2.0% |
-| NM-D | 0.161 | Social welfare | 19.7% vs 4.0% |
-| SD-D | 0.158 | Public lands and water | 20.2% vs 8.4% |
-| ND-R | 0.151 | Public lands and water | 28.8% vs 11.2% |
+| HI-D | 0.110 | Law, crime and justice | 7.7% vs 16.0% |
+| MN-D | 0.107 | Law, crime and justice | 7.0% vs 16.0% |
+| AK-D | 0.106 | Public lands and water | 17.4% vs 7.7% |
+| ND-R | 0.158 | Public lands and water | 28.8% vs 11.0% |
+| AK-R | 0.126 | Government operations | 19.3% vs 8.8% |
 
 Outputs: `state_party_profiles.csv` (one row per organization, with its top platform topics,
 top filing topics and platform status), `platform_outliers.csv`, `bill_outliers.csv`.

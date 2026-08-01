@@ -297,6 +297,30 @@ def test_collect_for_org_flags_the_same_document_served_from_two_urls():
     assert duplicate.text == ""
 
 
+def test_resume_deduplicates_against_previously_collected_documents():
+    existing = _doc("TX", "R", True)
+    existing.text = platform_prose("Texas").decode()
+    candidate = Candidate(
+        state="TX",
+        party="R",
+        url="https://texasgop.org/alternate-platform/",
+        source="live",
+        score=7,
+    )
+
+    collected = collect_for_org(
+        [candidate],
+        existing_documents=[existing],
+        transport=lambda url, *, timeout, headers: StubResponse(
+            200, platform_prose("Texas")
+        ),
+        sleep=lambda _: None,
+    )
+
+    assert not collected[0].confirmed
+    assert collected[0].reason == f"duplicate of {existing.url}"
+
+
 def test_confirm_platform_handles_pdfs_that_lost_their_word_spacing():
     """A real 31,817-char platform extracted as 'SouthDakotaDemocraticParty...' scored 0 hits.
 
@@ -364,6 +388,30 @@ def test_collect_candidate_uses_live_when_the_snapshot_fetch_fails():
     document = collect_candidate(candidate, transport=transport, sleep=lambda _: None)
     assert document.confirmed
     assert document.source == "live"
+
+
+def test_collect_candidate_live_first_falls_back_to_archive():
+    def transport(url, *, timeout, headers):
+        if "web.archive.org" in url:
+            return StubResponse(200, platform_prose("Iowa"))
+        return StubResponse(404)
+
+    candidate = Candidate(
+        state="IA",
+        party="R",
+        url="https://iowagop.org/about/platform/",
+        source="wayback",
+        wayback_timestamp="20180213194308",
+        score=5,
+    )
+    document = collect_candidate(
+        candidate,
+        prefer_wayback=False,
+        transport=transport,
+        sleep=lambda _: None,
+    )
+    assert document.confirmed
+    assert document.source == "wayback"
 
 
 NATIONAL_PROSE = (

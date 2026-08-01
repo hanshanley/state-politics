@@ -37,7 +37,8 @@ SOURCE_NOTE = (
     "doi:10.7910/DVN/KNOSHL, CC0 1.0 (1990-2017), plus 2018-present platforms published by the "
     "individual state party committees and collected for this project; bills from Open States / "
     "Plural Policy, '2026-07 public PostgreSQL dump', public domain. Accessed 2026-07-29. "
-    "{sample}. Both sides are restricted to the same 2018-present window. Bills are attributed "
+    "{sample}. Both sides use equal-state means over the same matched state set and are "
+    "restricted to the same 2018-present window. Bills are attributed "
     "to a party by their primary sponsors, falling back to cosponsors only when no primary "
     "sponsor resolves. Topics follow the Comparative Agendas "
     "Project major-topic scheme, assigned by a local sentence-transformer scoring 62% top-1 and "
@@ -61,8 +62,11 @@ def sample_description(root: Path) -> str:
                      f"{modern['document_index'].nunique():,} 2018-present documents")
     bills = root / "data/processed/bill_emphasis_by_party.csv"
     if bills.exists():
-        parts.append(f"{int(pd.read_csv(bills)['n_bills'].sum()):,} classified bills "
-                     "filed 2018-2026 in all 50 states")
+        bill_frame = pd.read_csv(bills)
+        parts.append(
+            f"{int(bill_frame['n_bills'].sum()):,} classified bills "
+            f"from {int(bill_frame['n_states'].max())} matched states"
+        )
     return "; ".join(parts)
 
 
@@ -74,14 +78,14 @@ def unreliable_topics(root: Path, table: pd.DataFrame) -> set[tuple[int, str]]:
     two labellings put the filed share on *opposite* sides of the stated share -- that is, when
     they disagree about the direction of the gap, which is the only thing the figure claims.
     """
-    replication = root / "data/processed/bill_emphasis_by_tag.csv"
+    replication = root / "data/processed/headline_tag_replication.csv"
     if not replication.exists():
         return set()
-    tags = pd.read_csv(replication)[["topic", "party", "tag_share"]]
-    merged = table.merge(tags, on=["topic", "party"], how="inner")
-    disagrees = ((merged["revealed_share"] - merged["stated_share"])
-                 * (merged["tag_share"] - merged["stated_share"])) <= 0
-    return {(int(row.topic), row.party) for row in merged[disagrees].itertuples()}
+    comparison = pd.read_csv(replication)
+    return {
+        (int(row.topic), row.party)
+        for row in comparison[~comparison["holds"].fillna(False)].itertuples()
+    }
 
 
 def build_figure(table: pd.DataFrame, out_path: Path, *, sample: str = "",

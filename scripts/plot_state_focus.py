@@ -35,11 +35,11 @@ TOPIC_LABELS = {
 SOURCE_NOTE = (
     "Source: Open States / Plural Policy, 2026-07 public PostgreSQL dump. Each row is one "
     "state party's classified bill-title distribution. The comparison is leave-one-state-out: "
-    "Idaho Democrats are measured against Democrats in the other states, not against an average "
-    "that includes Idaho itself. Bars show the percentage-point excess in the labelled topic. "
-    "States are selected by total cosine distance from same-party peers. Nebraska is absent "
-    "because its legislature is formally nonpartisan. Bill titles are a noisy agenda signal; "
-    "this measures filing priorities, not enactment or ideology."
+    "each state is measured against same-party peers that do not include itself. Bars show the "
+    "percentage-point excess in the labelled topic. Rankings require 500 classified bills. "
+    "Illinois -TECH placeholders and New Mexico emergency-clause shells are excluded. Nebraska "
+    "is absent because its legislature is formally nonpartisan. Bill titles are a noisy agenda "
+    "signal; this measures filing priorities, not enactment or ideology."
 )
 
 
@@ -62,19 +62,8 @@ def build_figure(atlas: pd.DataFrame, out_path: Path, *, top_n: int = 10) -> Pat
         ax.set_yticks(list(y))
         ax.set_yticklabels(subset["state"], fontsize=10, fontweight="bold")
         rows = list(subset.itertuples())
-        # Matplotlib displays the highest y position at the top here, so assign the first full
-        # topic label in reverse iteration (visual top-to-bottom). Otherwise a top row can say
-        # "same focus" before the reader has encountered the original label below it.
-        seen_topics: set[str] = set()
-        display_labels: list[str] = []
-        for row in reversed(rows):
-            topic = TOPIC_LABELS.get(row.bill_focus_topic, row.bill_focus_topic)
-            display_labels.append("↳ same focus" if topic in seen_topics else topic)
-            seen_topics.add(topic)
-        display_labels.reverse()
-        for position, (row, topic_label) in enumerate(
-            zip(rows, display_labels, strict=True)
-        ):
+        for position, row in enumerate(rows):
+            topic_label = TOPIC_LABELS.get(row.bill_focus_topic, row.bill_focus_topic)
             ax.annotate(
                 f"{topic_label}\n"
                 f"{row.bill_focus_share:.1%} vs {row.bill_peer_share:.1%}",

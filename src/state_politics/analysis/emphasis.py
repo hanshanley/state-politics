@@ -148,7 +148,12 @@ def _content_tokens(text: str) -> set[str]:
     return set(re.findall(r"[a-z]{4,}", (text or "").lower()))
 
 
-def _drop_duplicate_documents(corpus, *, min_jaccard: float = 0.85):
+def _drop_duplicate_documents(
+    corpus,
+    *,
+    min_jaccard: float = 0.85,
+    min_containment: float = 0.90,
+):
     """Cluster redundant collected documents and cross-corpus copies.
 
     The two corpora overlap: eleven (state, party, year) documents appear in both, ten of them
@@ -200,9 +205,14 @@ def _drop_duplicate_documents(corpus, *, min_jaccard: float = 0.85):
             ):
                 continue
             union_tokens = tokens[left] | tokens[right]
+            smaller = min(len(tokens[left]), len(tokens[right]))
+            intersection = len(tokens[left] & tokens[right])
             if (
                 union_tokens
-                and len(tokens[left] & tokens[right]) / len(union_tokens) >= min_jaccard
+                and (
+                    intersection / len(union_tokens) >= min_jaccard
+                    or (smaller and intersection / smaller >= min_containment)
+                )
             ):
                 union(left, right)
 

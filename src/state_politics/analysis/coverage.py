@@ -17,16 +17,25 @@ def build_capability_report(data_dir: Path):
     """Return one row per analytical question with support level and evidence."""
     import pandas as pd
 
-    bills = pd.read_parquet(data_dir / "bills.parquet")
-    platforms = pd.read_parquet(data_dir / "platforms_2018_present.parquet")
-    caucuses = pd.read_parquet(data_dir / "caucus_priorities.parquet")
+    bills = pd.read_parquet(
+        data_dir / "bills.parquet",
+        columns=["state", "sponsor_party", "subject"],
+    )
+    platforms = pd.read_parquet(
+        data_dir / "platforms_2018_present.parquet",
+        columns=["state", "party", "confirmed", "year"],
+    )
+    caucuses = pd.read_parquet(
+        data_dir / "caucus_priorities.parquet",
+        columns=["state", "party"],
+    )
     atlas = pd.read_csv(data_dir / "state_party_focus.csv")
     elections = pd.read_csv(data_dir / "election_focus_by_state_party.csv")
     bill_coverage = pd.read_csv(data_dir / "bill_classification_coverage.csv")
     tagged = bills["subject"].fillna("").str.len() > 0
     confirmed = platforms[platforms["confirmed"]]
     years = pd.to_numeric(confirmed["year"], errors="coerce")
-    current = confirmed[years >= 2018]
+    current = confirmed[years.isna() | (years >= 2018)]
     stated_states = set(current["state"]) | set(caucuses["state"])
     current_orgs = current.groupby(["state", "party"]).ngroups
     all_date_orgs = confirmed.groupby(["state", "party"]).ngroups
@@ -36,7 +45,7 @@ def build_capability_report(data_dir: Path):
             "support": "supported",
             "coverage": f"{len(stated_states)}/50 states",
             "evidence": (
-                f"{len(current)} party-committee documents dated 2018+ plus "
+                f"{len(current)} current party-committee documents plus "
                 f"{len(caucuses)} separately labelled caucus sources"
             ),
         },
@@ -111,7 +120,7 @@ def build_capability_report(data_dir: Path):
             "coverage": f"{current['state'].nunique()}/50 states; "
                         f"{current_orgs}/100 organizations",
             "evidence": (
-                f"{100 - current_orgs} lack a 2018+ source: "
+                f"{100 - current_orgs} lack a current source: "
                 f"{100 - all_date_orgs} have no confirmed source at any date and "
                 f"{all_date_orgs - current_orgs} are legacy-only"
             ),

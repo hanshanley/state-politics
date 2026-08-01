@@ -291,13 +291,13 @@ def test_stated_vs_revealed_flags_rows_an_independent_labelling_contradicts():
          "revealed_share": 0.138, "stated_minus_revealed": -0.049},
     ])
     tags = pd.DataFrame([
-        {"topic": 14, "party": "D", "tag_share": 0.030},
-        {"topic": 12, "party": "D", "tag_share": 0.138},
+        {"topic": 14, "party": "D", "holds": False},
+        {"topic": 12, "party": "D", "holds": True},
     ])
 
     processed = root / "data" / "processed"
     processed.mkdir(parents=True, exist_ok=True)
-    path = processed / "bill_emphasis_by_tag.csv"
+    path = processed / "headline_tag_replication.csv"
     preserved = path.read_bytes() if path.exists() else None
     try:
         tags.to_csv(path, index=False)

@@ -121,8 +121,14 @@ generated_artifacts:
     producer: src/state_politics/analysis/revealed.py
   - path: data/processed/bill_emphasis_by_state_year.csv
     producer: src/state_politics/analysis/revealed.py
+  - path: data/processed/bill_emphasis_by_party_pooled_sensitivity.csv
+    producer: src/state_politics/analysis/revealed.py
   - path: data/processed/bill_classification_coverage.csv
     producer: src/state_politics/analysis/revealed.py
+  - path: data/processed/bill_emphasis_by_tag.csv
+    producer: src/state_politics/analysis/validate_bills.py
+  - path: data/processed/headline_tag_replication.csv
+    producer: src/state_politics/analysis/validate_bills.py
   - path: data/processed/platform_outliers.csv
     producer: src/state_politics/analysis/profiles.py
   - path: data/processed/bill_outliers.csv
@@ -130,6 +136,10 @@ generated_artifacts:
   - path: data/processed/bill_topic_trends_by_party.csv
     producer: src/state_politics/analysis/trends.py
   - path: data/processed/bill_topic_trends_by_state.csv
+    producer: src/state_politics/analysis/trends.py
+  - path: data/processed/bill_topic_trends_by_party_tags.csv
+    producer: src/state_politics/analysis/trends.py
+  - path: data/processed/bill_topic_trend_replication.csv
     producer: src/state_politics/analysis/trends.py
   - path: data/processed/analysis_capabilities.json
     producer: src/state_politics/analysis/coverage.py
@@ -141,6 +151,8 @@ generated_artifacts:
     producer: scripts/plot_state_focus.py
   - path: outputs/election_focus.png
     producer: scripts/plot_election_focus.py
+  - path: outputs/bill_topic_trends.png
+    producer: scripts/plot_bill_trends.py
 
 external_sources:
   - name: Harvard Dataverse state party platform corpus

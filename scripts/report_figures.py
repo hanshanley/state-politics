@@ -99,10 +99,17 @@ def main() -> int:
     if scores is not None and "embedding_topic" in scores:
         n = len(scores)
         top1 = int((scores["embedding_topic"] == scores["gold_topic"]).sum())
+        top2 = (
+            int(scores["embedding_top2_correct"].sum())
+            if "embedding_top2_correct" in scores
+            else None
+        )
         key = int((scores["keyword_topic"] == scores["gold_topic"]).sum())
         print("\nClassifier validation (hand-labelled gold set)")
         print(f"  gold planks          {n}")
         print(f"  embedding top-1      {top1}/{n} ({top1 / n:.0%})")
+        if top2 is not None:
+            print(f"  embedding top-2      {top2}/{n} ({top2 / n:.0%})")
         print(f"  keyword top-1        {key}/{n} ({key / n:.0%})")
 
     legislators = _load("legislators_current.parquet")
@@ -120,9 +127,12 @@ def main() -> int:
         print(f"  years                {int(bills['year'].min())}-{int(bills['year'].max())}")
         print(f"  attribution          {bills['sponsor_party'].value_counts().to_dict()}")
 
-    bill_emphasis = _load("bill_emphasis_by_party.csv")
-    if bill_emphasis is not None:
-        print(f"  classified into topics {int(bill_emphasis['n_bills'].sum()):,}")
+    bill_coverage = _load("bill_classification_coverage.csv")
+    if bill_coverage is not None:
+        print(
+            f"  classified into topics "
+            f"{int(bill_coverage['n_classified_total'].sum()):,}"
+        )
 
     divergence = _load("stated_vs_revealed.csv")
     if divergence is not None:
@@ -165,19 +175,15 @@ def main() -> int:
             print(f"  lowest precision     {row['topic_name']:<38} "
                   f"{row['precision'] * 100:.1f}%")
 
-    replication = _load("bill_emphasis_by_tag.csv")
-    divergence = _load("stated_vs_revealed.csv")
-    if replication is not None and divergence is not None:
-        merged = divergence.merge(replication[["topic", "party", "tag_share"]],
-                                  on=["topic", "party"], how="inner")
-        holds = ((merged["revealed_share"] - merged["stated_share"])
-                 * (merged["tag_share"] - merged["stated_share"])) > 0
-        print(f"  headline rows replicated {int(holds.sum())}/{len(merged)} "
+    replication = _load("headline_tag_replication.csv")
+    if replication is not None:
+        holds = replication["holds"].fillna(False).astype(bool)
+        print(f"  headline rows replicated {int(holds.sum())}/{len(replication)} "
               "using tag labels instead of the model")
-        for _, row in merged[~holds].iterrows():
+        for _, row in replication[~holds].iterrows():
             print(f"    does not hold      {row['topic_name']} ({row['party']}): "
                   f"said {row['stated_share'] * 100:.1f}%, "
-                  f"model {row['revealed_share'] * 100:.1f}%, "
+                  f"model {row['model_share'] * 100:.1f}%, "
                   f"tags {row['tag_share'] * 100:.1f}%")
 
     print("\nIntra-party comparison (within vs between party)")

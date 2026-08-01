@@ -129,8 +129,9 @@ def build_stated_documents(platforms, caucuses):
 
     from .state_focus import caucus_units
 
+    years = pd.to_numeric(platforms["year"], errors="coerce")
     current = platforms[
-        platforms["confirmed"] & (pd.to_numeric(platforms["year"], errors="coerce") >= 2018)
+        platforms["confirmed"] & (years.isna() | (years >= 2018))
     ].copy()
     committee = (
         current.groupby(["state", "party"])["text"]

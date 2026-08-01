@@ -253,12 +253,16 @@ def state_topic_trends(frame):
 def main(argv: list[str] | None = None) -> int:
     import pandas as pd
 
+    from .validate_bills import DEFAULT_MAP_PATH, load_subject_map, tag_topic
+
     root = Path(__file__).resolve().parents[3]
     parser = argparse.ArgumentParser(description=__doc__.splitlines()[0])
     parser.add_argument(
         "--by-state-year",
         default=root / "data/processed/bill_emphasis_by_state_year.csv",
     )
+    parser.add_argument("--bills", default=root / "data/processed/bills.parquet")
+    parser.add_argument("--subject-map", default=DEFAULT_MAP_PATH)
     parser.add_argument("--out-dir", default=root / "data/processed")
     args = parser.parse_args(argv)
 
@@ -266,10 +270,53 @@ def main(argv: list[str] | None = None) -> int:
     named = frame[["topic", "topic_name"]].drop_duplicates()
     party = party_topic_trends(frame).merge(named, on="topic", how="left")
     state = state_topic_trends(frame).merge(named, on="topic", how="left")
+    bills = pd.read_parquet(
+        args.bills,
+        columns=["state", "year", "subject", "sponsor_party"],
+    )
+    bills = bills[
+        bills["sponsor_party"].isin(("D", "R"))
+        & bills["year"].between(min(EARLY_YEARS), max(LATE_YEARS))
+        & bills["subject"].fillna("").ne("")
+    ].copy()
+    subject_map = load_subject_map(args.subject_map)
+    bills["topic"] = bills["subject"].map(lambda value: tag_topic(value, subject_map))
+    tagged_counts = (
+        bills[bills["topic"].notna()]
+        .rename(columns={"sponsor_party": "party"})
+        .groupby(["state", "party", "year", "topic"])
+        .size()
+        .rename("n_bills")
+        .reset_index()
+    )
+    tag_party = party_topic_trends(tagged_counts).merge(
+        named, on="topic", how="left"
+    )
+    comparison = party.merge(
+        tag_party[
+            [
+                "party",
+                "topic",
+                "early_share",
+                "late_share",
+                "change",
+                "paired_state_count",
+                "q_value",
+            ]
+        ],
+        on=["party", "topic"],
+        how="left",
+        suffixes=("_model", "_tags"),
+    )
+    comparison["direction_replicates_with_tags"] = (
+        comparison["change_model"].mul(comparison["change_tags"]) > 0
+    )
     out = Path(args.out_dir)
     out.mkdir(parents=True, exist_ok=True)
     party.to_csv(out / "bill_topic_trends_by_party.csv", index=False)
     state.to_csv(out / "bill_topic_trends_by_state.csv", index=False)
+    tag_party.to_csv(out / "bill_topic_trends_by_party_tags.csv", index=False)
+    comparison.to_csv(out / "bill_topic_trend_replication.csv", index=False)
 
     print("largest early-to-late changes (FDR-adjusted):")
     for party_code in ("D", "R"):
@@ -285,6 +332,16 @@ def main(argv: list[str] | None = None) -> int:
             )
     print(f"\nwrote {out / 'bill_topic_trends_by_party.csv'}")
     print(f"wrote {out / 'bill_topic_trends_by_state.csv'}")
+    significant = comparison[comparison["q_value_model"] < 0.05]
+    if not significant.empty:
+        print("\nFDR-significant model changes checked against staff tags:")
+        for row in significant.itertuples():
+            verdict = "replicates" if row.direction_replicates_with_tags else "does not replicate"
+            print(
+                f"  {row.party} {row.topic_name}: model {row.change_model:+.1%}, "
+                f"tags {row.change_tags:+.1%} ({verdict})"
+            )
+    print(f"\nwrote {out / 'bill_topic_trend_replication.csv'}")
     return 0
 
 

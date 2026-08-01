@@ -35,9 +35,9 @@ SOURCE_NOTE = (
     "Schickler (2022), 'Select American State Party Platforms, 1846-2017', V3.0, Harvard "
     "Dataverse, doi:10.7910/DVN/KNOSHL, CC0 1.0, plus 2018-present platforms collected for "
     "this project; bills from Open States / Plural Policy, '2026-07 public PostgreSQL dump', "
-    "public domain. {sample} Platform comparison uses 18 states where both parties have at "
-    "least 30 classified current planks; other states have one-sided or smaller stated samples. "
-    "Bill comparison uses 49 states because Nebraska's legislature is formally nonpartisan. "
+    "public domain. {sample} Platforms require at least 30 classified current planks per "
+    "organization. Nebraska is excluded from bills because its legislature is formally "
+    "nonpartisan. "
     "Similarity measures *topic mix, not policy agreement*: organizations can discuss the same "
     "topic while taking opposing positions."
 )
@@ -131,12 +131,14 @@ def main(argv: list[str] | None = None) -> int:
     args = parser.parse_args(argv)
 
     rows = []
+    state_counts = {}
     for stream, label in (("platform", "Platforms"),
                           ("bill", "Bills")):
         frame = load(ROOT, f"intraparty_{stream}_coherence.csv")
         if frame is None or frame.empty:
             continue
         record = frame.iloc[0]
+        state_counts[stream] = int(record["n_states"])
         rows.append({
             "label": f"{label}  ({int(record['n_states'])} states)",
             "same_similarity": 1 - float(record["mean_within"]),
@@ -146,7 +148,11 @@ def main(argv: list[str] | None = None) -> int:
         parser.error("no intraparty coherence artifacts found - run "
                      "'python -m state_politics.analysis.intraparty' first")
 
-    sample = "Restricted to the 2018-present platform era."
+    sample = (
+        "Restricted to the 2018-present platform era. "
+        f"Matched samples: {state_counts.get('platform', 0)} platform states and "
+        f"{state_counts.get('bill', 0)} bill states."
+    )
     out = build_figure(rows, Path(args.out), sample=sample)
     print(f"wrote {out}")
     return 0

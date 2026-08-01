@@ -125,9 +125,13 @@ def evaluate(
         codes = [topic.code for topic in topics]
         top1 = [code for code, _, _ in predictions]
         top2 = [{codes[int(r[0])], codes[int(r[1])]} for r in ranking]
-        for row, (code, similarity, _) in zip(rows, predictions, strict=True):
+        for row, plank, (code, similarity, _), pair in zip(
+            rows, gold, predictions, top2, strict=True
+        ):
             row["embedding_topic"] = code
             row["embedding_similarity"] = round(similarity, 3)
+            row["embedding_top2_topics"] = "|".join(map(str, sorted(pair)))
+            row["embedding_top2_correct"] = plank.gold_topic in pair
         scores.append(Scores(
             name=f"embedding ({classifier.device})",
             n=len(gold),
