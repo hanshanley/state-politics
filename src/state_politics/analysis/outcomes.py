@@ -198,6 +198,26 @@ def party_rollcall_support(vote_events, party_counts):
         .reset_index()
     )
     per_vote = per_vote[per_vote["n_person_votes"] >= MIN_ROLLCALL_VOTERS]
+    expected_pairs = {("D", "D"), ("D", "R"), ("R", "D"), ("R", "R")}
+    observed_pairs = set(
+        map(
+            tuple,
+            per_vote[["sponsor_party", "voter_party"]].drop_duplicates().values,
+        )
+    )
+    if expected_pairs <= observed_pairs:
+        state_sets = [
+            set(
+                per_vote.loc[
+                    per_vote["sponsor_party"].eq(sponsor)
+                    & per_vote["voter_party"].eq(voter),
+                    "state",
+                ]
+            )
+            for sponsor, voter in sorted(expected_pairs)
+        ]
+        common_states = set.intersection(*state_sets)
+        per_vote = per_vote[per_vote["state"].isin(common_states)]
     return (
         per_vote.groupby(["sponsor_party", "voter_party"])
         .agg(

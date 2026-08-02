@@ -51,7 +51,7 @@ def build_figure(
             left.text(
                 bar.get_x() + bar.get_width() / 2,
                 value + 0.7,
-                f"{value:.1f}%",
+                f"{party} {value:.1f}%",
                 ha="center",
                 va="bottom",
                 fontsize=10,
@@ -79,8 +79,6 @@ def build_figure(
         fontsize=9.5,
         color=theme.MUTED,
     )
-    left.legend(frameon=False, loc="lower right")
-
     vote_labels = []
     vote_values = []
     vote_colors = []
@@ -89,7 +87,7 @@ def build_figure(
         row = indexed.loc[(sponsor, voter)]
         vote_labels.append(f"{sponsor}-sponsored\n{voter} voters")
         vote_values.append(row["mean_yes_share"] * 100)
-        vote_colors.append(theme.PARTY_COLORS[voter])
+        vote_colors.append(theme.PARTY_COLORS[sponsor])
     bars = right.bar(range(4), vote_values, color=vote_colors, width=0.62)
     for bar, value in zip(bars, vote_values, strict=True):
         right.text(
@@ -129,10 +127,13 @@ def build_figure(
         "Source: Open States / Plural Policy, 2026-07 public PostgreSQL dump. Outcomes cover "
         "ordinary bills sponsored by D/R legislators in the 41 states where both parties have "
         "at least 500 filings and 80% action coverage; party bars are equal-state means. "
+        "'Advanced' means passage in a chamber or any later recorded executive stage, including "
+        "a veto. "
         "'Recorded enacted' requires "
         "became-law, executive-signature, or veto-override-passage action classifications. "
-        "Roll-call bars average passage-vote yes shares after resolving voter party on the vote "
-        "date; each party-vote cell requires at least 10 resolved D/R voters. These are "
+        "Roll-call bars use the same 40 states across all four cells and average vote events "
+        "rather than states; voter party is resolved on the vote date and each party-vote cell "
+        "requires at least 10 resolved D/R voters. These are "
         "descriptive associations, not causal party-performance estimates."
     )
     note = theme.source_note(fig, source)
