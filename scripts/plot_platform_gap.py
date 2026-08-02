@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Plot 2018-present platform coverage for all 100 state party organizations.
+"""Plot current-collection coverage for all 100 state party organizations.
 
 This is the counterpart to ``plot_platform_coverage.py``. That figure shows where the
 historical corpus runs out; this one shows what the project's own collection recovered for
@@ -33,12 +33,14 @@ from state_politics.plotting import charts, theme  # noqa: E402
 SOURCE_NOTE = (
     "Source: platform documents published by the individual state party committees, located via "
     "the Internet Archive Wayback Machine CDX Server API (https://web.archive.org/cdx/search/cdx) "
-    "and the parties' own websites, and retrieved 2026-07-29. A document counts only when its own "
+    "and the parties' own websites, and retrieved through 2026-08-01. A document counts only "
+    "when its own "
     "text is confirmed to be a platform, so a state shown as a gap was searched and nothing "
     "qualifying was found, and the three gap reasons are distinguished rather than merged. A "
     "confirmed document is a platform, a set of convention resolutions, a legislative-priorities "
-    "agenda or a statement of principles; eight organizations are covered only by a non-platform "
-    "document type."
+    "agenda or a statement of principles; {non_platform_count} organizations are covered only "
+    "by a non-platform document type. A pre-2018 year is an older fallback source still found "
+    "by the current collection, not a newly published document."
 )
 
 # Statuses in the order they should read: success first, then progressively weaker evidence.
@@ -46,7 +48,7 @@ STATUS_STYLE = {
     "found": ("Document confirmed", None),
     "candidates_rejected": ("Candidates found, none were platforms", theme.GOLD),
     "no_strong_candidates": ("Only weak candidates found", theme.MUTED),
-    "no_candidates": ("Nothing found in archive or site", theme.GRID),
+    "no_candidates": ("Nothing found in archive or site", theme.TEXT),
 }
 
 
@@ -88,17 +90,21 @@ def build_figure(report: pd.DataFrame, out_path: Path) -> Path:
 
     charts.style_axes(
         ax,
-        "What the 2018-present platform collection recovered",
+        "What the current party-document collection recovered",
         "",
         "",
-        subtitle="One marker per state party; filled = platform document confirmed, "
+        subtitle="One marker per state party; filled = qualifying agenda document confirmed, "
                  "with its most recent year",
     )
 
     handles = [
-        mpatches.Patch(facecolor=theme.BLUE, edgecolor=theme.BG, label="Democratic platform found"),
+        mpatches.Patch(
+            facecolor=theme.BLUE,
+            edgecolor=theme.BG,
+            label="Democratic qualifying source found",
+        ),
         mpatches.Patch(facecolor=theme.ACCENT, edgecolor=theme.BG,
-                       label="Republican platform found"),
+                       label="Republican qualifying source found"),
     ]
     for status, (label, color) in STATUS_STYLE.items():
         if status == "found":
@@ -107,7 +113,19 @@ def build_figure(report: pd.DataFrame, out_path: Path) -> Path:
     ax.legend(handles=handles, loc="upper center", bbox_to_anchor=(0.5, -0.035),
               ncol=2, frameon=False, fontsize=10)
 
-    return charts.finish(fig, ax, out_path, source=SOURCE_NOTE, legend=False)
+    found = report[report["status"] == "found"]
+    non_platform_count = int(
+        found["doc_types"].fillna("").str.split(",").map(
+            lambda values: "platform" not in values
+        ).sum()
+    )
+    return charts.finish(
+        fig,
+        ax,
+        out_path,
+        source=SOURCE_NOTE.format(non_platform_count=non_platform_count),
+        legend=False,
+    )
 
 
 def main(argv: list[str] | None = None) -> int:

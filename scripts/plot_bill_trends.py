@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Plot FDR-significant bill-topic changes and their staff-tag replication direction."""
+"""Plot robust bill-topic changes that survive model and staff-tag direction checks."""
 
 from __future__ import annotations
 
@@ -21,15 +21,17 @@ from state_politics.plotting import charts, theme  # noqa: E402
 
 
 def build_figure(trends: pd.DataFrame, out_path: Path):
-    """Render significant model trends, explicitly retaining failed tag replications."""
-    subset = trends[trends["q_value_model"] < 0.05].copy()
-    subset = subset.sort_values(["direction_replicates_with_tags", "change_model"])
+    """Render only FDR-significant changes whose direction replicates with staff tags."""
+    subset = trends[
+        trends["q_value_model"].lt(0.05)
+        & trends["direction_replicates_with_tags"].fillna(False)
+    ].copy()
+    subset = subset.sort_values("change_model")
     fig, ax = charts.new_figure(figsize=(12.8, 6.8))
     y_positions = range(len(subset))
 
     for y, row in zip(y_positions, subset.itertuples(), strict=True):
-        replicated = bool(row.direction_replicates_with_tags)
-        color = theme.PARTY_COLORS[row.party] if replicated else theme.MUTED
+        color = theme.PARTY_COLORS[row.party]
         early, late = row.early_share_model * 100, row.late_share_model * 100
         ax.plot([early, late], [y, y], color=color, linewidth=2.2, zorder=1)
         ax.scatter(
@@ -42,13 +44,8 @@ def build_figure(trends: pd.DataFrame, out_path: Path):
             zorder=2,
         )
         ax.scatter([late], [y], color=color, s=64, zorder=3)
-        verdict = (
-            f"staff tags agree ({row.change_tags:+.1%})"
-            if replicated
-            else f"staff tags reverse ({row.change_tags:+.1%})"
-        )
         ax.annotate(
-            verdict,
+            f"{row.change_model * 100:+.1f} percentage points",
             xy=(max(early, late), y),
             xytext=(8, 0),
             textcoords="offset points",
@@ -58,7 +55,7 @@ def build_figure(trends: pd.DataFrame, out_path: Path):
         )
 
     labels = [
-        f"{row.party} · {row.topic_name}"
+        f"{'Democratic' if row.party == 'D' else 'Republican'} · {row.topic_name}"
         for row in subset.itertuples()
     ]
     ax.set_yticks(list(y_positions))
@@ -82,7 +79,7 @@ def build_figure(trends: pd.DataFrame, out_path: Path):
         frameon=False,
     )
     fig.suptitle(
-        "Which filing-agenda changes survive statistical and source checks?",
+        "How state-party filing priorities changed",
         fontweight="bold",
         fontsize=18,
         y=0.985,
@@ -90,7 +87,7 @@ def build_figure(trends: pd.DataFrame, out_path: Path):
     fig.text(
         0.5,
         0.94,
-        "All rows pass model-based FDR correction; gray rows reverse under staff-assigned tags",
+        "Equal-state bill shares, 2018–2019 versus 2024–2025",
         ha="center",
         va="top",
         fontsize=11,
@@ -99,9 +96,10 @@ def build_figure(trends: pd.DataFrame, out_path: Path):
     source = (
         "Source: Open States / Plural Policy, 2026-07 public PostgreSQL dump. Shares are "
         "equal-state means over states with at least 100 classified bills in both periods. "
-        "P-values use 10,000 paired sign flips and Benjamini-Hochberg correction. Staff-tag "
-        "direction uses the ten states clearing the same floor with unambiguously mapped "
-        "legislative subject tags. Incomplete 2026 data are excluded."
+        "Only changes passing model-based FDR correction and moving in the same direction under "
+        "independently assigned legislative-staff tags are shown. Staff-tag direction uses the "
+        "ten states clearing the same floor with unambiguously mapped tags. Incomplete 2026 data "
+        "are excluded."
     )
     note = theme.source_note(fig, source)
     theme.layout_with_note(fig, note, top=0.92)
@@ -116,7 +114,7 @@ def main(argv: list[str] | None = None) -> int:
         "--trends",
         default=ROOT / "data/processed/bill_topic_trend_replication.csv",
     )
-    parser.add_argument("--out", default=ROOT / "outputs/bill_topic_trends.png")
+    parser.add_argument("--out", default=ROOT / "outputs/robust_bill_topic_trends.png")
     args = parser.parse_args(argv)
 
     trends = pd.read_csv(args.trends)

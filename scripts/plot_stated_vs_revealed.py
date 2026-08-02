@@ -29,6 +29,7 @@ import pandas as pd  # noqa: E402
 ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(ROOT / "src"))
 
+from state_politics.analysis.validate_bills import load_subject_map  # noqa: E402
 from state_politics.plotting import charts, theme  # noqa: E402
 
 SOURCE_NOTE = (
@@ -36,7 +37,8 @@ SOURCE_NOTE = (
     "(2022), 'Select American State Party Platforms, 1846-2017', V3.0, Harvard Dataverse, "
     "doi:10.7910/DVN/KNOSHL, CC0 1.0 (1990-2017), plus 2018-present platforms published by the "
     "individual state party committees and collected for this project; bills from Open States / "
-    "Plural Policy, '2026-07 public PostgreSQL dump', public domain. Accessed 2026-07-29. "
+    "Plural Policy, '2026-07 public PostgreSQL dump', public domain. Accessed through "
+    "2026-08-01. "
     "{sample}. Both sides use equal-state means over the same matched state set and are "
     "restricted to the same 2018-present window. Bills are attributed "
     "to a party by their primary sponsors, falling back to cosponsors only when no primary "
@@ -46,7 +48,8 @@ SOURCE_NOTE = (
     "shorter and noisier than planks. Filing a bill is not passing one: this measures agenda, "
     "not achievement. Rows marked † are contradicted when bill topics are "
     "re-derived from Open States subject tags assigned by legislative staff rather than by "
-    "this model, and should not be read as findings; the classifier tends to file a tax bill "
+    "this model, and should not be read as findings; topics with no mapped staff tag are not "
+    "flagged. The classifier tends to file a tax bill "
     "under the thing being taxed, which inflates housing in particular."
 )
 
@@ -56,10 +59,34 @@ def sample_description(root: Path) -> str:
     parts = []
     planks = root / "data/processed/planks_classified.parquet"
     if planks.exists():
-        frame = pd.read_parquet(planks, columns=["document_index", "topic", "era"])
+        frame = pd.read_parquet(
+            planks,
+            columns=["document_index", "state", "topic", "era"],
+        )
         modern = frame[frame["era"] == "2018-present"]
-        parts.append(f"{int(modern['topic'].notna().sum()):,} classified planks from "
-                     f"{modern['document_index'].nunique():,} 2018-present documents")
+        org = pd.read_csv(root / "data/processed/emphasis_by_org.csv")
+        current = org[org["era"] == "2018-present"]
+        platform_states = {
+            party: set(current.loc[current["party"] == party, "state"])
+            for party in ("D", "R")
+        }
+        bill_state = pd.read_csv(root / "data/processed/bill_emphasis_by_state.csv")
+        bill_states = {
+            party: set(bill_state.loc[bill_state["party"] == party, "state"])
+            for party in ("D", "R")
+        }
+        matched_states = (
+            platform_states["D"]
+            & platform_states["R"]
+            & bill_states["D"]
+            & bill_states["R"]
+        )
+        modern = modern[modern["state"].isin(matched_states)]
+        parts.append(
+            f"{int(modern['topic'].notna().sum()):,} classified planks from "
+            f"{modern['document_index'].nunique():,} documents in "
+            f"{len(matched_states)} matched states"
+        )
     bills = root / "data/processed/bill_emphasis_by_party.csv"
     if bills.exists():
         bill_frame = pd.read_csv(bills)
@@ -82,9 +109,13 @@ def unreliable_topics(root: Path, table: pd.DataFrame) -> set[tuple[int, str]]:
     if not replication.exists():
         return set()
     comparison = pd.read_csv(replication)
+    mapped_topics = set(load_subject_map().values())
     return {
         (int(row.topic), row.party)
-        for row in comparison[~comparison["holds"].fillna(False)].itertuples()
+        for row in comparison[
+            ~comparison["holds"].fillna(False)
+            & comparison["topic"].isin(mapped_topics)
+        ].itertuples()
     }
 
 

@@ -354,7 +354,7 @@ why agreement between two independent ones is worth more than either alone.
 
 ---
 
-## Recorded advancement, enactment and roll calls
+## Recorded passage, enactment and roll calls
 
 `bills/outcomes.py` streams the action and vote tables from the same checksum-verified Open
 States dump used for bills. The processed data now retain 8,954,085 bill actions, 869,001
@@ -365,7 +365,7 @@ No status is inferred from a title or from elapsed time. A law-eligible filing i
 `bill` classification, excluding resolutions and constitutional amendments. Its highest
 recorded stage comes only from Open States action classifications:
 
-- advanced: passage in a chamber or any later executive stage;
+- passed a chamber or later: passage in at least one chamber or any later executive stage;
 - recorded enacted: `became-law`, `executive-signature`, or
   `veto-override-passage`;
 - vetoed, sent to executive, passed one/both chambers, recorded failure/withdrawal, or
@@ -374,8 +374,9 @@ recorded stage comes only from Open States action classifications:
 The state-party outcome table requires at least 500 law-eligible filings and action rows for at
 least 80% of them. Party summaries are equal-state means. The D−R enactment comparison uses the
 41 states where both parties clear those floors and a deterministic 10,000-draw paired sign-flip
-test. Democratic-sponsored bills average 24.5% advancement and 14.6% recorded enactment;
-Republican-sponsored bills average 28.7% and 17.1%. The paired enactment gap is −2.5 percentage
+test. Democratic-sponsored bills average 24.5% reaching chamber passage or a later stage and
+14.6% recorded enactment; Republican-sponsored bills average 28.7% and 17.1%. The paired
+enactment gap is −2.5 percentage
 points (p = 0.353), a null result.
 
 Historical chamber is resolved through each bill/action/vote organization's parent hierarchy,
@@ -384,8 +385,9 @@ composition, majority control and chamber rules are not held fixed.
 
 For roll calls, voter party is resolved on the vote date from dated party memberships. Public
 passage-vote summaries require at least ten resolved Democratic/Republican voters in each
-party-vote cell. Same-party yes shares are 95.0% for Democratic-sponsored bills and 94.1% for
-Republican-sponsored bills; opposite-party yes shares are 74.7% and 81.7%, respectively.
+party-vote cell. The published comparison uses the same 40 states for all four cells.
+Same-party yes shares are 94.7% for Democratic-sponsored bills and 94.3% for
+Republican-sponsored bills; opposite-party yes shares are 74.7% and 82.0%, respectively.
 Missouri has vote-event records but no resolved person-vote rows. These figures describe motions
 that received recorded roll calls, not all bills and not a one-dimensional ideology score.
 
@@ -472,12 +474,11 @@ legislative-caucus supplement only where committee evidence is absent. The filed
 98 partisan caucuses across 49 states. Nebraska has no D/R bill profile because its legislature
 is formally nonpartisan; the output records that explicitly.
 
-`democratic_all_state_focus.png` and `republican_all_state_focus.png` provide the complete
-lookup view: 50 state rows × 21 topic columns, with the top three bill shares labelled in each
-available row. A dagger marks fewer than 500 classified bills, and Nebraska remains an explicit
-unavailable row. The color scale measures attention only. It is not presented as a values
-quadrant because a topic share cannot identify whether legislators support or oppose policy
-within that topic.
+`democratic_50_state_focus_cards.png` and `republican_50_state_focus_cards.png` provide the
+complete lookup view: one card per state, listing its three largest bill-topic shares. A dagger
+marks fewer than 500 classified bills, and Nebraska remains an explicit unavailable card. The
+cards measure attention only. They are not presented as a values quadrant because a topic share
+cannot identify whether legislators support or oppose policy within that topic.
 
 The caucus supplement is classified conservatively:
 

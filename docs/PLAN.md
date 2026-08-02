@@ -590,17 +590,19 @@ and dates are filtered from public highlights, while the raw scores remain avail
 
 The Open States ingest now retains 8,954,085 bill actions, 869,001 bill-linked vote events,
 official vote counts, historical chamber relationships and date-aware voter-party aggregates.
-This closes the earlier data gap between "filed" and "advanced/enacted" without inferring success
+This closes the earlier data gap between filing, chamber passage/later stages and enactment
+without inferring success
 from titles.
 
 Law-eligible outcome estimates require 500 filings and 80% action coverage per state-party.
-Equal-state means are 24.5% advanced / 14.6% recorded enacted for Democratic-sponsored bills
-and 28.7% / 17.1% for Republican-sponsored bills. Across 41 paired states, the D−R enactment
+Equal-state means are 24.5% reaching chamber passage or a later stage / 14.6% recorded enacted
+for Democratic-sponsored bills and 28.7% / 17.1% for Republican-sponsored bills. Across 41
+paired states, the D−R enactment
 gap is not distinguishable from chance (−2.5pp, p = 0.353).
 
-Passage-roll-call support is strongly co-partisan but not exclusively so: same-party yes shares
-are 95.0% for Democrats and 94.1% for Republicans; opposite-party support averages 74.7% on
-Democratic-sponsored bills and 81.7% on Republican-sponsored bills. These are descriptive
+Passage-roll-call support is strongly co-partisan but not exclusively so: across the same 40
+states, same-party yes shares are 94.7% for Democrats and 94.3% for Republicans; opposite-party
+support averages 74.7% on Democratic-sponsored bills and 82.0% on Republican-sponsored bills. These are descriptive
 associations, not causal party-performance estimates.
 
 > **Lessons:**

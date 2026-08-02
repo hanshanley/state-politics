@@ -175,15 +175,17 @@ generated_artifacts:
     producer: scripts/plot_state_agenda_coverage.py
   - path: outputs/state_party_focus.png
     producer: scripts/plot_state_focus.py
-  - path: outputs/democratic_all_state_focus.png
+  - path: outputs/democratic_50_state_focus_cards.png
     producer: scripts/plot_all_state_focus.py
-  - path: outputs/republican_all_state_focus.png
+  - path: outputs/republican_50_state_focus_cards.png
     producer: scripts/plot_all_state_focus.py
   - path: outputs/election_focus.png
     producer: scripts/plot_election_focus.py
-  - path: outputs/bill_topic_trends.png
+  - path: outputs/robust_bill_topic_trends.png
     producer: scripts/plot_bill_trends.py
-  - path: outputs/bill_outcomes.png
+  - path: outputs/bill_recorded_stages.png
+    producer: scripts/plot_outcomes.py
+  - path: outputs/passage_vote_support_matrix.png
     producer: scripts/plot_outcomes.py
 
 external_sources:

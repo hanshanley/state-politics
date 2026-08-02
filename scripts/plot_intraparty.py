@@ -60,13 +60,13 @@ def build_figure(rows: list[dict], out_path: Path, *, sample: str = "") -> Path:
         [position - bar_height / 2 for position in positions],
         same,
         height=bar_height,
-        color=theme.BLUE,
+        color=theme.GREEN,
     )
     ax.barh(
         [position + bar_height / 2 for position in positions],
         opposite,
         height=bar_height,
-        color=theme.ACCENT,
+        color=theme.MUTED,
     )
 
     for position, row in zip(positions, rows, strict=True):

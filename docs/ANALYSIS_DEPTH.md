@@ -61,7 +61,7 @@ The machine-readable outputs are:
 
 - 8,954,085 explicit bill actions and 869,001 bill-linked vote events
 - historical originating/action/vote chamber resolved from organization hierarchies
-- action-based advancement and enactment definitions, never inferred from titles
+- action-based chamber-passage/later-stage and enactment definitions, never inferred from titles
 - state-party estimates gated at 500 law-eligible bills and 80% action coverage
 - equal-state party summaries and paired-state sign-flip inference
 - date-aware voter-party resolution for passage-roll-call support
@@ -80,7 +80,8 @@ The machine-readable outputs are:
 
 ## Not supported as causal claims
 
-The project can now describe recorded advancement, enactment, chambers and roll calls. It still
+The project can now describe recorded passage/later stages, enactment, chambers and roll calls.
+It still
 cannot attribute those differences causally to party. Majority control, agenda access, bill mix,
 institutional rules and selection into roll-call votes are not randomized or fully modeled.
 Topic attention also does not identify support/opposition within the topic.

@@ -11,7 +11,6 @@ import matplotlib
 
 matplotlib.use("Agg")
 
-import matplotlib.colors as mcolors  # noqa: E402
 import matplotlib.pyplot as plt  # noqa: E402
 import numpy as np  # noqa: E402
 import pandas as pd  # noqa: E402
@@ -75,100 +74,112 @@ def build_figure(
     party: str,
     out_path: Path,
 ):
-    """Render one party's 50-state topic-share matrix with top-three cells labelled."""
-    matrix, topic_order = focus_matrix(emphasis, party)
-    values = matrix.to_numpy(dtype=float) * 100
+    """Render a 4-column card atlas listing each state's top three bill topics."""
+    matrix, _topic_order = focus_matrix(emphasis, party)
     party_color = theme.PARTY_COLORS[party]
-    cmap = mcolors.LinearSegmentedColormap.from_list(
-        f"{party}-focus",
-        [theme.BG, theme.tint(party_color, 0.65), party_color, theme.shade(party_color, 0.35)],
-    )
-    cmap.set_bad(theme.CARD)
-    vmax = max(30.0, float(np.nanmax(values)))
-
-    fig, ax = plt.subplots(figsize=(17, 17.5))
     theme.apply()
-    image = ax.imshow(values, aspect="auto", cmap=cmap, vmin=0, vmax=vmax)
-    ax.set_xticks(range(len(topic_order)))
-    ax.set_xticklabels(
-        [TOPIC_LABELS.get(topic, topic) for topic in topic_order],
-        rotation=42,
-        ha="right",
-        fontsize=9,
-    )
+    rows, columns = 13, 4
+    fig, axes = plt.subplots(rows, columns, figsize=(16, 20))
     coverage_index = coverage[coverage["party"] == party].set_index("state")
-    state_labels = []
-    for state in STATE_CODES:
+    bar_colors = [
+        party_color,
+        theme.tint(party_color, 0.35),
+        theme.tint(party_color, 0.62),
+    ]
+    for index, state in enumerate(STATE_CODES):
+        ax = axes[index // columns, index % columns]
+        ax.set_facecolor(theme.CARD)
         n_classified = (
             coverage_index.loc[state, "n_classified_total"]
             if state in coverage_index.index
             else 0
         )
-        state_labels.append(f"{state}†" if 0 < n_classified < 500 else state)
-    ax.set_yticks(range(len(STATE_CODES)))
-    ax.set_yticklabels(state_labels, fontsize=9.5, fontweight="bold")
-    ax.set_xticks(np.arange(-0.5, len(topic_order), 1), minor=True)
-    ax.set_yticks(np.arange(-0.5, len(STATE_CODES), 1), minor=True)
-    ax.grid(which="minor", color=theme.BG, linewidth=1.1)
-    ax.tick_params(which="minor", bottom=False, left=False)
-    ax.tick_params(axis="both", length=0)
-
-    for row_index, _state in enumerate(STATE_CODES):
-        row = values[row_index]
-        if np.isnan(row).all():
+        state_label = f"{state}†" if 0 < n_classified < 500 else state
+        ax.set_title(
+            state_label,
+            loc="left",
+            fontsize=12,
+            fontweight="bold",
+            color=party_color,
+            pad=4,
+        )
+        state_row = matrix.loc[state]
+        if state_row.isna().all():
+            ax.axis("off")
             ax.text(
-                len(topic_order) / 2,
-                row_index,
-                "Formally nonpartisan legislature — no D/R bill caucus",
+                0.5,
+                0.5,
+                "NE\nFormally nonpartisan\nlegislature",
+                transform=ax.transAxes,
                 ha="center",
                 va="center",
-                fontsize=8.5,
+                fontsize=11,
                 color=theme.MUTED,
                 fontstyle="italic",
             )
             continue
-        top_positions = np.argsort(np.nan_to_num(row, nan=-1))[-3:]
-        for column_index in top_positions:
-            value = row[column_index]
+        top = state_row.nlargest(3)
+        labels = [
+            TOPIC_LABELS.get(topic, topic).replace("\n", " ")
+            for topic in top.index
+        ]
+        values = top.to_numpy(dtype=float) * 100
+        y = np.arange(3)[::-1]
+        ax.barh(y, values, color=bar_colors, height=0.54)
+        ax.set_xlim(0, 33)
+        ax.set_yticks(y)
+        ax.set_yticklabels(labels, fontsize=8.4)
+        ax.set_xticks([10, 20, 30])
+        ax.set_xticklabels([])
+        ax.grid(axis="x", linestyle="-", linewidth=0.45)
+        ax.grid(axis="y", visible=False)
+        ax.set_axisbelow(True)
+        ax.tick_params(axis="both", length=0)
+        for position, value in zip(y, values, strict=True):
             ax.text(
-                column_index,
-                row_index,
+                value + 0.5,
+                position,
                 f"{value:.0f}%",
-                ha="center",
+                ha="left",
                 va="center",
-                fontsize=7.5,
+                fontsize=8.4,
                 fontweight="bold",
-                color="white" if value >= vmax * 0.35 else theme.TEXT,
+                color=theme.TEXT,
             )
+        for spine in ax.spines.values():
+            spine.set_color(theme.GRID)
+            spine.set_linewidth(0.7)
+
+    for index in range(len(STATE_CODES), rows * columns):
+        axes[index // columns, index % columns].axis("off")
 
     label = "Democratic" if party == "D" else "Republican"
     fig.suptitle(
-        f"What {label} state legislators focus on, state by state",
+        f"Top three bill topics in every {label} state caucus",
         fontsize=20,
         fontweight="bold",
         y=0.985,
     )
-    ax.set_title(
-        "Share of each state party caucus's classified bills; "
-        "each state's top three cells are labelled",
+    fig.text(
+        0.5,
+        0.955,
+        "Bars show each topic's share of that state caucus's classified bills",
+        ha="center",
+        va="top",
         fontsize=11,
         color=theme.MUTED,
-        pad=18,
     )
-    colorbar = fig.colorbar(image, ax=ax, fraction=0.025, pad=0.015)
-    colorbar.set_label("Share of classified bills (%)", fontsize=10)
-    colorbar.outline.set_visible(False)
     source = (
-        "Source: Open States / Plural Policy, 2026-07 public PostgreSQL dump. Rows cover every "
+        "Source: Open States / Plural Policy, 2026-07 public PostgreSQL dump. Cards cover every "
         "state; Nebraska is explicitly unavailable because its legislature is formally "
         "nonpartisan. Shares use bill titles classified into the Comparative Agendas Project "
         "major-topic scheme after excluding Illinois -TECH placeholders and New Mexico's "
-        "emergency-clause shell. † = fewer than 500 classified bills, so the row is descriptive "
-        "rather than a reliable outlier comparison. Color encodes attention, not support or "
-        "opposition within a topic."
+        "emergency-clause shell. † = fewer than 500 classified bills, so the card is descriptive "
+        "rather than a reliable outlier comparison. Topic attention does not establish support "
+        "or opposition."
     )
     note = theme.source_note(fig, source)
-    theme.layout_with_note(fig, note, top=0.94, max_fraction=0.20)
+    theme.layout_with_note(fig, note, top=0.94, max_fraction=0.14)
     out_path.parent.mkdir(parents=True, exist_ok=True)
     fig.savefig(out_path, dpi=200, bbox_inches="tight")
     plt.close(fig)
@@ -194,7 +205,7 @@ def main(argv: list[str] | None = None) -> int:
     parties = (args.party,) if args.party else ("D", "R")
     names = {"D": "democratic", "R": "republican"}
     for party in parties:
-        out = Path(args.out_dir) / f"{names[party]}_all_state_focus.png"
+        out = Path(args.out_dir) / f"{names[party]}_50_state_focus_cards.png"
         build_figure(emphasis, coverage, party, out)
         print(f"wrote {out}")
     return 0

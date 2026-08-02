@@ -293,6 +293,7 @@ def test_stated_vs_revealed_flags_rows_an_independent_labelling_contradicts():
     tags = pd.DataFrame([
         {"topic": 14, "party": "D", "holds": False},
         {"topic": 12, "party": "D", "holds": True},
+        {"topic": 18, "party": "R", "holds": False},
     ])
 
     processed = root / "data" / "processed"
@@ -310,6 +311,7 @@ def test_stated_vs_revealed_flags_rows_an_independent_labelling_contradicts():
 
     assert (14, "D") in flagged, "housing gap does not replicate and must be flagged"
     assert (12, "D") not in flagged, "law-and-crime gap replicates and must not be flagged"
+    assert (18, "R") not in flagged, "unmapped tag topics cannot be replication failures"
 
 
 def test_all_state_focus_matrix_has_every_state_and_explicit_nebraska_gap():
@@ -345,6 +347,47 @@ def test_all_state_focus_matrix_has_every_state_and_explicit_nebraska_gap():
     assert matrix.loc["NE"].isna().all()
     assert matrix.loc["TX", "Health"] == 0.6
     assert set(topics) == {"Health", "Education"}
+
+
+def test_election_focus_axis_ignores_unreliable_outlier(tmp_path):
+    import sys
+    from pathlib import Path
+
+    import pandas as pd
+
+    root = Path(__file__).resolve().parents[1]
+    sys.path.insert(0, str(root / "scripts"))
+    import plot_election_focus as script
+
+    focus = pd.DataFrame(
+        [
+            {
+                "state": "TX", "party": "D", "focus_reliable": True,
+                "overemphasis": 0.04, "top_subtype": "voting_and_administration",
+                "election_share": 0.08, "peer_share": 0.04,
+            },
+            {
+                "state": "FL", "party": "R", "focus_reliable": True,
+                "overemphasis": 0.03, "top_subtype": "voting_and_administration",
+                "election_share": 0.07, "peer_share": 0.04,
+            },
+            {
+                "state": "ID", "party": "D", "focus_reliable": False,
+                "overemphasis": 0.20, "top_subtype": "voting_and_administration",
+                "election_share": 0.24, "peer_share": 0.04,
+            },
+        ]
+    )
+    out = script.build_figure(
+        focus,
+        {"precision": 0.9, "recall": 0.8},
+        tmp_path / "elections.png",
+        top_n=10,
+    )
+    figure = plt.gcf()
+    assert figure.get_axes()[0].get_xlim()[1] < 10
+    plt.close("all")
+    assert out.exists()
 
 
 def test_stated_vs_revealed_panels_have_equal_row_counts():

@@ -35,7 +35,7 @@ SOURCE_NOTE = (
     "Paddock & Schickler (2022), 'Select American State Party Platforms, 1846-2017', V3.0, "
     "Harvard Dataverse, doi:10.7910/DVN/KNOSHL, CC0 1.0; and 2018-present platforms published by "
     "the individual state party committees, collected for this project via the Internet Archive "
-    "Wayback Machine and the parties' own sites. Accessed 2026-07-29. Each point is the "
+    "Wayback Machine and the parties' own sites. Accessed through 2026-08-01. Each point is the "
     "equal-weight mean of state-party topic shares over states represented for both parties "
     "({sample}); pooled-plank sensitivity results are retained separately. Topics "
     "follow the Comparative Agendas Project major-topic scheme. Planks are classified by a local "
@@ -48,10 +48,23 @@ def sample_description(planks_path: Path) -> str:
     """Describe the sample from the data itself, so the caption cannot go stale."""
     if not planks_path.exists():
         return "see data/processed/planks_classified.parquet"
-    planks = pd.read_parquet(planks_path, columns=["document_index", "topic"])
-    classified = int(planks["topic"].notna().sum())
-    return (f"{classified:,} classified planks of {len(planks):,}, "
-            f"{planks['document_index'].nunique():,} documents")
+    planks = pd.read_parquet(
+        planks_path,
+        columns=["document_index", "state", "party", "topic"],
+    )
+    major = planks[planks["party"].isin(("D", "R"))]
+    major_classified = major[major["topic"].notna()]
+    state_sets = {
+        party: set(major_classified.loc[major_classified["party"] == party, "state"])
+        for party in ("D", "R")
+    }
+    matched_states = state_sets["D"] & state_sets["R"]
+    matched = major[major["state"].isin(matched_states)]
+    classified = int(matched["topic"].notna().sum())
+    return (
+        f"{classified:,} classified planks of {len(matched):,} from "
+        f"{matched['document_index'].nunique():,} documents in {len(matched_states)} states"
+    )
 
 
 def build_figure(table: pd.DataFrame, out_path: Path, *, sample: str = "") -> Path:
@@ -67,7 +80,7 @@ def build_figure(table: pd.DataFrame, out_path: Path, *, sample: str = "") -> Pa
         left_label="Democratic state parties", right_label="Republican state parties",
         markersize=8.0,
     )
-    ax.invert_yaxis()  # largest Democratic lead at the top
+    ax.invert_yaxis()  # largest Republican lead at the top
 
     charts.style_axes(
         ax,

@@ -127,18 +127,22 @@ achievement**.
 The filing agenda is now linked to explicit Open States actions and roll calls rather than
 assuming that introduction means success.
 
-![Recorded bill outcomes and roll-call support](outputs/bill_outcomes.png)
+![Recorded passage and enactment stages](outputs/bill_recorded_stages.png)
 
-- Across the same 41 reliable states, equal-state mean advancement is **24.5% for
-  Democratic-sponsored bills** and **28.7% for Republican-sponsored bills**.
+- Across the same 41 reliable states, **24.5% of Democratic-sponsored bills** and **28.7% of
+  Republican-sponsored bills** reached passage in at least one chamber or a later recorded
+  executive stage.
 - Recorded enactment—`became-law`, executive signature, or successful veto override—is
   **14.6% for Democratic-sponsored bills** and **17.1% for Republican-sponsored bills**.
 - Across 41 states where both parties clear the same 500-bill/80%-action-coverage floor, the
   D−R enactment gap is −2.5 percentage points and **not distinguishable from chance**
   (paired sign-flip p = .353).
-- On recorded passage roll calls, same-party yes shares average **95.0% for Democrats** and
-  **94.1% for Republicans**. Cross-party support is still substantial: Republican legislators
-  average 74.7% yes on Democratic-sponsored bills, and Democrats 81.7% on
+
+![Who votes yes on whose bills](outputs/passage_vote_support_matrix.png)
+
+- Across the same 40 roll-call states, same-party yes shares average **94.7% for Democrats**
+  and **94.3% for Republicans**. Cross-party support is still substantial: Republican
+  legislators average 74.7% yes on Democratic-sponsored bills, and Democrats 82.0% on
   Republican-sponsored bills.
 
 These are descriptive sponsor-party associations, not causal party-performance estimates.
@@ -210,19 +214,22 @@ because its legislature is formally nonpartisan.
 
 ### All-state focus lookup
 
-These two heatmaps show **absolute topic attention** for every state, not just the largest
-outliers. Each row is a state, each column a topic, and the three largest shares in every row
-are labelled.
+These two card atlases show **absolute topic attention** for every state, not just the largest
+outliers. Each state card lists its three largest bill-topic shares.
 
-![Democratic state-by-state bill focus](outputs/democratic_all_state_focus.png)
+![Democratic state-by-state bill focus](outputs/democratic_50_state_focus_cards.png)
 
-![Republican state-by-state bill focus](outputs/republican_all_state_focus.png)
+[Open the full-resolution Democratic atlas](outputs/democratic_50_state_focus_cards.png)
+
+![Republican state-by-state bill focus](outputs/republican_50_state_focus_cards.png)
+
+[Open the full-resolution Republican atlas](outputs/republican_50_state_focus_cards.png)
 
 A values-quadrant chart would imply ideological position—support versus opposition—that bill
-topics alone do not contain. The heatmaps therefore show what receives attention; the next chart
+topics alone do not contain. The cards therefore show what receives attention; the next chart
 shows what is unusually emphasized relative to same-party peers.
 
-![Where state parties break from their own party](outputs/state_party_focus.png)
+![State bill share compared with same-party peers](outputs/state_party_focus.png)
 
 Representative departures:
 
@@ -243,23 +250,19 @@ are excluded because they do not describe policy.
 
 ### How filing agendas changed
 
-The longitudinal analysis gives each state equal weight, compares complete two-year windows
-(2018–2019 versus 2024–2025), and uses paired state sign-flip tests with FDR correction. Three
-model-detected increases also move in the same direction when topics are assigned independently
-from legislative-staff tags:
+The longitudinal analysis gives each state equal weight and compares complete two-year windows
+(2018–2019 versus 2024–2025).
 
-![Bill-topic changes checked against legislative staff tags](outputs/bill_topic_trends.png)
+![Robust changes in state-party filing priorities](outputs/robust_bill_topic_trends.png)
 
-| Party/topic | 2018–2019 | 2024–2025 | Change | Model q | Staff-tag change |
-|---|---:|---:|---:|---:|---:|
-| Democratic housing/community development | 6.4% | 9.3% | +2.9pp | .002 | +2.4pp |
-| Republican civil rights/liberties | 2.5% | 3.2% | +0.7pp | .002 | +0.2pp |
-| Republican immigration | 0.9% | 1.4% | +0.5pp | .018 | +0.2pp |
+- Democratic housing/community-development attention rose from **6.4% to 9.3%**, the largest
+  robust shift (+2.9 percentage points).
+- Republican civil-rights/liberties attention rose from **2.5% to 3.2%**.
+- Republican immigration attention rose from **0.9% to 1.4%**.
 
-The tag check covers only ten states clearing the period floor, so it confirms direction rather
-than statistical significance. Two other model-significant changes — Democratic social welfare
-and Republican environment — reverse under staff tags and are not treated as findings. The
-partial 2026 year is excluded from inference.
+Only changes that pass the paired-state/FDR test and move in the same direction under independent
+legislative-staff tags are shown. Validation details and discarded model-only movements are in
+[Methods](docs/METHODS.md#bill-topic-change-over-time). The partial 2026 year is excluded.
 
 ### Elections and voting
 
@@ -267,7 +270,7 @@ Election policy is hidden inside the broad Government Operations taxonomy, so it
 separately from titles covering voting, ballots, election administration, campaign finance,
 redistricting, candidate rules and election security.
 
-![Where elections dominate the legislative agenda](outputs/election_focus.png)
+![Where elections take an unusual share of legislative attention](outputs/election_focus.png)
 
 - Republican caucuses devote **3.43%** of substantive bills to elections and voting; Democrats
   **3.05%**.

@@ -34,6 +34,7 @@ def build_figure(focus: pd.DataFrame, validation: dict, out_path: Path, *, top_n
     fig, axes = charts.new_figure(figsize=(13, 8.2))
     fig.clf()
     axes = fig.subplots(1, 2, sharex=True)
+    plotted_max = 0.0
     for ax, party in zip(axes, ("D", "R"), strict=True):
         subset = (
             focus[
@@ -41,6 +42,7 @@ def build_figure(focus: pd.DataFrame, validation: dict, out_path: Path, *, top_n
             ].nlargest(top_n, "overemphasis")
             .sort_values("overemphasis")
         )
+        plotted_max = max(plotted_max, float(subset["overemphasis"].max()))
         y = range(len(subset))
         values = subset["overemphasis"] * 100
         ax.barh(y, values, color=theme.PARTY_COLORS[party], alpha=0.88, height=0.56)
@@ -62,10 +64,13 @@ def build_figure(focus: pd.DataFrame, validation: dict, out_path: Path, *, top_n
         ax.grid(axis="y", visible=False)
         ax.set_axisbelow(True)
 
-    max_value = focus["overemphasis"].max() * 100
-    axes[0].set_xlim(0, max_value * 1.75)
-    fig.suptitle("Where elections dominate the legislative agenda", fontweight="bold",
-                 fontsize=18, y=0.985)
+    axes[0].set_xlim(0, plotted_max * 100 * 1.75)
+    fig.suptitle(
+        "Where elections take an unusual share of legislative attention",
+        fontweight="bold",
+        fontsize=18,
+        y=0.985,
+    )
     fig.text(
         0.5,
         0.945,
@@ -81,8 +86,8 @@ def build_figure(focus: pd.DataFrame, validation: dict, out_path: Path, *, top_n
         "administration, campaign finance, redistricting, candidate rules and election "
         f"security. Against legislature-assigned subject tags: {validation['precision']:.1%} "
         f"precision, {validation['recall']:.1%} recall. Peer values are leave-one-state-out "
-        "means within the same party. Nebraska is absent because its legislature is formally "
-        "nonpartisan."
+        "means within the same party. Rankings require at least 500 substantive bills. "
+        "Nebraska is absent because its legislature is formally nonpartisan."
     )
     note = theme.source_note(fig, source)
     theme.layout_with_note(fig, note, top=0.925)

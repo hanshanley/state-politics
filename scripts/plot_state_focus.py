@@ -2,8 +2,9 @@
 """Plot the state legislative agendas most unlike their same-party peers.
 
 The full 100-row atlas is written by ``analysis.state_focus``. This figure highlights the most
-distinctive *filed* agendas because that stream supports robust within-party comparisons in 49
-states; Nebraska is omitted because its legislature is formally nonpartisan.
+distinctive *filed* agendas among the 43 Democratic and 44 Republican state-party samples that
+clear the 500-bill floor; Nebraska is unavailable because its legislature is formally
+nonpartisan.
 """
 
 from __future__ import annotations
@@ -48,42 +49,55 @@ def build_figure(atlas: pd.DataFrame, out_path: Path, *, top_n: int = 10) -> Pat
     fig, axes = charts.new_figure(figsize=(13, 8.5))
     fig.clf()
     axes = fig.subplots(1, 2, sharex=True)
+    plotted_max = 0.0
 
     for ax, party in zip(axes, ("D", "R"), strict=True):
         subset = atlas[
             (atlas["party"] == party)
             & atlas["bill_focus_reliable"].fillna(False)
         ].nlargest(top_n, "bill_cosine_distance").copy()
-        subset = subset.sort_values("bill_overemphasis")
-        y = range(len(subset))
-        values = subset["bill_overemphasis"] * 100
+        subset = subset.sort_values("bill_focus_share")
+        labels = subset["state"].tolist()
+        peers = (subset["bill_peer_share"] * 100).tolist()
+        states = (subset["bill_focus_share"] * 100).tolist()
+        plotted_max = max(plotted_max, max(states))
         color = theme.PARTY_COLORS[party]
-        ax.barh(y, values, color=color, alpha=0.88, height=0.56)
-        ax.set_yticks(list(y))
-        ax.set_yticklabels(subset["state"], fontsize=10, fontweight="bold")
-        rows = list(subset.itertuples())
-        for position, row in enumerate(rows):
+        charts.dumbbell(
+            ax,
+            labels,
+            peers,
+            states,
+            left_color=theme.MUTED,
+            right_color=color,
+            left_label="Same-party peers",
+            right_label="State share",
+            left_marker="o",
+            right_marker="s",
+            left_filled=False,
+            right_filled=True,
+            markersize=7.5,
+        )
+        for position, row in enumerate(subset.itertuples()):
             topic_label = TOPIC_LABELS.get(row.bill_focus_topic, row.bill_focus_topic)
             ax.annotate(
-                f"{topic_label}\n"
-                f"{row.bill_focus_share:.1%} vs {row.bill_peer_share:.1%}",
-                xy=(row.bill_overemphasis * 100, position),
-                xytext=(5, 0),
+                topic_label,
+                xy=(row.bill_focus_share * 100, position),
+                xytext=(7, 0),
                 textcoords="offset points",
                 va="center",
                 fontsize=8.4,
                 color=theme.TEXT,
             )
         ax.set_title(theme.PARTY_LABELS[party], fontweight="bold", fontsize=14, pad=10)
-        ax.set_xlabel("Over-emphasis relative to same-party peers (percentage points)")
+        ax.set_xlabel("Share of classified bills (%)")
         ax.grid(axis="x", linestyle="-", linewidth=0.5)
         ax.grid(axis="y", visible=False)
         ax.set_axisbelow(True)
 
-    max_value = float(atlas["bill_overemphasis"].max() * 100)
-    axes[0].set_xlim(0, max_value * 1.75)
+    axes[0].set_xlim(0, plotted_max * 1.60)
+    axes[0].legend(loc="lower right", frameon=False, fontsize=9.5)
     fig.suptitle(
-        "Where state parties break from their own party",
+        "Where a state's filing agenda differs most from its own party",
         fontweight="bold",
         fontsize=18,
         y=0.985,
@@ -91,7 +105,8 @@ def build_figure(atlas: pd.DataFrame, out_path: Path, *, top_n: int = 10) -> Pat
     fig.text(
         0.5,
         0.945,
-        "Most distinctive state legislative agendas, compared with same-party peers",
+        "Open circle = same-party peer share; solid square = state share "
+        "in its largest positive gap",
         ha="center",
         va="top",
         fontsize=11,
