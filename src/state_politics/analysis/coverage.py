@@ -16,10 +16,18 @@ __all__ = ["build_capability_report"]
 def build_capability_report(data_dir: Path):
     """Return one row per analytical question with support level and evidence."""
     import pandas as pd
+    import pyarrow.parquet as pq
 
+    bill_path = data_dir / "bills.parquet"
+    bill_columns = set(pq.read_schema(bill_path).names)
+    optional_bill_columns = [
+        column
+        for column in ("recorded_outcome", "recorded_enacted", "originating_chamber")
+        if column in bill_columns
+    ]
     bills = pd.read_parquet(
-        data_dir / "bills.parquet",
-        columns=["state", "sponsor_party", "subject"],
+        bill_path,
+        columns=["state", "sponsor_party", "subject", *optional_bill_columns],
     )
     platforms = pd.read_parquet(
         data_dir / "platforms_2018_present.parquet",
@@ -39,6 +47,13 @@ def build_capability_report(data_dir: Path):
     stated_states = set(current["state"]) | set(caucuses["state"])
     current_orgs = current.groupby(["state", "party"]).ngroups
     all_date_orgs = confirmed.groupby(["state", "party"]).ngroups
+    outcomes_path = data_dir / "bill_outcomes_by_state_party.csv"
+    outcomes = pd.read_csv(outcomes_path) if outcomes_path.exists() else pd.DataFrame()
+    votes_path = data_dir / "vote_events.parquet"
+    vote_parties_path = data_dir / "vote_party_counts.parquet"
+    has_outcomes = "recorded_outcome" in bills
+    has_chambers = "originating_chamber" in bills
+    has_votes = votes_path.exists() and vote_parties_path.exists()
     rows = [
         {
             "question": "Current stated state-level agenda",
@@ -92,27 +107,58 @@ def build_capability_report(data_dir: Path):
         },
         {
             "question": "Bill enactment/pass rates",
-            "support": "unsupported",
-            "coverage": "0 states in processed artifact",
-            "evidence": "bills.parquet has no actions, status, result or enacted fields",
+            "support": "supported" if has_outcomes else "unsupported",
+            "coverage": (
+                f"{outcomes.loc[outcomes['reliable'], 'state'].nunique()}/50 states"
+                if has_outcomes and not outcomes.empty
+                else "0 states in processed artifact"
+            ),
+            "evidence": (
+                f"{pq.ParquetFile(data_dir / 'bill_actions.parquet').metadata.num_rows:,} "
+                "explicit actions; state-party estimates require 500 bills and 80% coverage"
+                if has_outcomes
+                else "bills.parquet has no actions, status, result or enacted fields"
+            ),
         },
         {
             "question": "Roll-call voting behavior",
-            "support": "unsupported",
-            "coverage": "0 states in processed artifact",
-            "evidence": "No votes table is retained by the current ingest",
+            "support": "partial" if has_votes else "unsupported",
+            "coverage": (
+                f"{pd.read_parquet(vote_parties_path, columns=['state'])['state'].nunique()}"
+                "/50 states"
+                if has_votes
+                else "0 states in processed artifact"
+            ),
+            "evidence": (
+                f"{pq.ParquetFile(votes_path).metadata.num_rows:,} vote events; "
+                "Missouri has no resolved person-vote rows"
+                if has_votes
+                else "No votes table is retained by the current ingest"
+            ),
         },
         {
             "question": "Chamber-specific historical agenda",
-            "support": "unsupported",
-            "coverage": "0 states in processed bill artifact",
-            "evidence": "Bills are not linked to a historical chamber field",
+            "support": "supported" if has_chambers else "unsupported",
+            "coverage": (
+                f"{bills.loc[bills['originating_chamber'] != 'unknown', 'state'].nunique()}"
+                "/50 states"
+                if has_chambers
+                else "0 states in processed bill artifact"
+            ),
+            "evidence": (
+                "Originating chamber is resolved through historical Open States organizations"
+                if has_chambers
+                else "Bills are not linked to a historical chamber field"
+            ),
         },
         {
             "question": "Policy stance or ideological direction",
             "support": "limited",
-            "coverage": "topic attention only",
-            "evidence": "Topic shares measure attention, not support/opposition within a topic",
+            "coverage": "attention plus recorded yes/no votes",
+            "evidence": (
+                "Votes measure support for specific motions, not a one-dimensional ideology "
+                "score or the policy direction encoded by every bill"
+            ),
         },
         {
             "question": "Current party-committee platform coverage",

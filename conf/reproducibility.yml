@@ -61,6 +61,9 @@ random_processes:
   - name: profile_multinomial_null
     seed: 20260731
     code: src/state_politics/analysis/profiles.py
+  - name: bill_outcome_sign_flip_test
+    seed: 20260801
+    code: src/state_politics/analysis/outcomes.py
 
 analysis_parameters:
   model_name: sentence-transformers/all-MiniLM-L6-v2
@@ -72,6 +75,11 @@ analysis_parameters:
   minimum_bill_profile_observations: 500
   profile_null_draws: 2000
   profile_null_seed: 20260731
+  outcome_minimum_bills: 500
+  outcome_minimum_action_coverage: 0.80
+  outcome_minimum_rollcall_voters: 10
+  outcome_permutations: 10000
+  outcome_random_seed: 20260801
   election_minimum_comparable_bills: 500
   diffusion_minimum_title_characters: 45
   diffusion_minimum_states: 3
@@ -103,6 +111,14 @@ generated_artifacts:
     producer: src/state_politics/caucuses.py
   - path: data/processed/bills.parquet
     producer: src/state_politics/bills/ingest.py
+  - path: data/processed/bill_actions.parquet
+    producer: src/state_politics/bills/outcomes.py
+  - path: data/processed/vote_events.parquet
+    producer: src/state_politics/bills/outcomes.py
+  - path: data/processed/vote_counts.parquet
+    producer: src/state_politics/bills/outcomes.py
+  - path: data/processed/vote_party_counts.parquet
+    producer: src/state_politics/bills/outcomes.py
   - path: data/processed/planks_classified.parquet
     producer: src/state_politics/analysis/emphasis.py
   - path: data/processed/emphasis_by_party_2018_present.csv
@@ -141,6 +157,16 @@ generated_artifacts:
     producer: src/state_politics/analysis/trends.py
   - path: data/processed/bill_topic_trend_replication.csv
     producer: src/state_politics/analysis/trends.py
+  - path: data/processed/bill_outcomes_by_state_party.csv
+    producer: src/state_politics/analysis/outcomes.py
+  - path: data/processed/bill_outcomes_by_party.csv
+    producer: src/state_politics/analysis/outcomes.py
+  - path: data/processed/bill_outcomes_by_chamber_party.csv
+    producer: src/state_politics/analysis/outcomes.py
+  - path: data/processed/rollcall_party_support.csv
+    producer: src/state_politics/analysis/outcomes.py
+  - path: data/processed/bill_outcome_comparison.json
+    producer: src/state_politics/analysis/outcomes.py
   - path: data/processed/analysis_capabilities.json
     producer: src/state_politics/analysis/coverage.py
   - path: data/processed/analysis_capabilities.csv
@@ -149,10 +175,16 @@ generated_artifacts:
     producer: scripts/plot_state_agenda_coverage.py
   - path: outputs/state_party_focus.png
     producer: scripts/plot_state_focus.py
+  - path: outputs/democratic_all_state_focus.png
+    producer: scripts/plot_all_state_focus.py
+  - path: outputs/republican_all_state_focus.png
+    producer: scripts/plot_all_state_focus.py
   - path: outputs/election_focus.png
     producer: scripts/plot_election_focus.py
   - path: outputs/bill_topic_trends.png
     producer: scripts/plot_bill_trends.py
+  - path: outputs/bill_outcomes.png
+    producer: scripts/plot_outcomes.py
 
 external_sources:
   - name: Harvard Dataverse state party platform corpus

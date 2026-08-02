@@ -38,13 +38,16 @@ the update archive as authoritative.
 
 > Open States / Plural Policy (2026). *Open States Bulk Data: 2026-07 public PostgreSQL dump and
 > current legislator CSV files* [Data set]. Plural Policy. https://open.pluralpolicy.com/data/.
-> Released under a public domain dedication. Accessed 2026-07-28.
+> Released under a public domain dedication. Accessed 2026-08-01.
 
 Open States collects this data by scraping official state legislative websites; those legislatures are
 the ultimate originating source, and Open States is the collecting and standardizing organization.
 
 **Verified:** public PostgreSQL dump `2026-07-public.pgdump`, 10,711,908,617 bytes, last modified
-2026-07-01, no authentication required. Per-state current legislator CSVs public for all 50 states.
+2026-07-01, SHA-256
+`e4b8eb6d40d2da768074dab29bbf0d6949b8f24a50d75c5807669edcee5af78c`, no authentication
+required. The extracted outcome corpus includes 8,954,085 bill actions and 869,001 bill-linked
+vote events. Per-state current legislator CSVs are public for all 50 states.
 
 ---
 

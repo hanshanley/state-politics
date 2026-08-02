@@ -202,6 +202,7 @@ def audit_analysis_parameters(audit: Audit, manifest: dict) -> None:
         elections,
         emphasis,
         intraparty,
+        outcomes,
         revealed,
         taxonomy,
         terms,
@@ -225,6 +226,11 @@ def audit_analysis_parameters(audit: Audit, manifest: dict) -> None:
         "minimum_bill_profile_observations": MIN_BILL_OBSERVATIONS,
         "profile_null_draws": OUTLIER_NULL_DRAWS,
         "profile_null_seed": OUTLIER_RANDOM_SEED,
+        "outcome_minimum_bills": outcomes.MIN_OUTCOME_BILLS,
+        "outcome_minimum_action_coverage": outcomes.MIN_ACTION_COVERAGE,
+        "outcome_minimum_rollcall_voters": outcomes.MIN_ROLLCALL_VOTERS,
+        "outcome_permutations": outcomes.OUTCOME_PERMUTATIONS,
+        "outcome_random_seed": outcomes.OUTCOME_RANDOM_SEED,
         "election_minimum_comparable_bills": elections.MIN_COMPARABLE_BILLS,
         "diffusion_minimum_title_characters": diffusion.MIN_TITLE_CHARS,
         "diffusion_minimum_states": diffusion.MIN_REUSE_STATES,
@@ -348,7 +354,18 @@ def audit_artifacts(audit: Audit) -> dict:
     confirmed = platforms[platforms["confirmed"]]
     gaps = pd.read_csv(data / "platform_gap_report.csv")
     caucuses = pd.read_parquet(data / "caucus_priorities.parquet")
-    bills = pd.read_parquet(data / "bills.parquet", columns=["state", "sponsor_party"])
+    bills = pd.read_parquet(
+        data / "bills.parquet",
+        columns=[
+            "state",
+            "sponsor_party",
+            "originating_chamber",
+            "recorded_outcome",
+            "recorded_enacted",
+            "n_actions",
+            "n_vote_events",
+        ],
+    )
     planks = pd.read_parquet(data / "planks_classified.parquet")
     atlas = pd.read_csv(data / "state_party_focus.csv")
     elections = pd.read_csv(data / "election_focus_by_state_party.csv")
@@ -392,6 +409,47 @@ def audit_artifacts(audit: Audit) -> dict:
         "committee corpus + caucus supplement does not cover all 50 states",
     )
     audit.require(set(bills["state"]) == STATE_CODES, "bill corpus does not cover all 50 states")
+    audit.require(
+        set(bills["originating_chamber"]) <= {"upper", "lower", "legislature"},
+        "bill corpus contains unresolved or unknown historical chambers",
+    )
+    audit.require(
+        bills["recorded_enacted"].fillna(False).le(bills["n_actions"].gt(0)).all(),
+        "a bill is recorded enacted without any source action",
+    )
+    import pyarrow.parquet as pq
+
+    audit.require(
+        pq.ParquetFile(data / "bill_actions.parquet").metadata.num_rows > 8_000_000,
+        "bill-action artifact is unexpectedly small",
+    )
+    audit.require(
+        pq.ParquetFile(data / "vote_events.parquet").metadata.num_rows > 800_000,
+        "vote-event artifact is unexpectedly small",
+    )
+    outcomes = pd.read_csv(data / "bill_outcomes_by_state_party.csv")
+    rollcalls = pd.read_csv(data / "rollcall_party_support.csv")
+    comparison = json.loads((data / "bill_outcome_comparison.json").read_text())
+    audit.require(
+        outcomes[["action_coverage", "advancement_rate", "enactment_rate", "vote_coverage"]]
+        .apply(lambda column: column.between(0, 1).all())
+        .all(),
+        "outcome summary contains a value outside [0, 1]",
+    )
+    audit.require(
+        outcomes.loc[outcomes["reliable"], "action_coverage"]
+        .ge(0.80)
+        .all(),
+        "reliable outcome row falls below the action-coverage floor",
+    )
+    audit.require(
+        rollcalls["mean_yes_share"].between(0, 1).all(),
+        "roll-call yes share is not a proportion",
+    )
+    audit.require(
+        0 <= comparison["sign_flip_p_value"] <= 1,
+        "outcome sign-flip p-value is not a probability",
+    )
     audit.require(len(atlas) == 100, "state focus atlas is not 100 rows")
     audit.require(
         len(atlas[["state", "party"]].drop_duplicates()) == 100,

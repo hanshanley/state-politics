@@ -312,6 +312,41 @@ def test_stated_vs_revealed_flags_rows_an_independent_labelling_contradicts():
     assert (12, "D") not in flagged, "law-and-crime gap replicates and must not be flagged"
 
 
+def test_all_state_focus_matrix_has_every_state_and_explicit_nebraska_gap():
+    import sys
+    from pathlib import Path
+
+    import pandas as pd
+
+    root = Path(__file__).resolve().parents[1]
+    sys.path.insert(0, str(root / "scripts"))
+    import plot_all_state_focus as script
+
+    emphasis = pd.DataFrame(
+        [
+            {
+                "state": "TX", "party": "D", "topic_name": "Health",
+                "share": 0.6,
+            },
+            {
+                "state": "TX", "party": "D", "topic_name": "Education",
+                "share": 0.4,
+            },
+            {
+                "state": "TX", "party": "R", "topic_name": "Education",
+                "share": 1.0,
+            },
+        ]
+    )
+
+    matrix, topics = script.focus_matrix(emphasis, "D")
+
+    assert len(matrix) == 50
+    assert matrix.loc["NE"].isna().all()
+    assert matrix.loc["TX", "Health"] == 0.6
+    assert set(topics) == {"Health", "Education"}
+
+
 def test_stated_vs_revealed_panels_have_equal_row_counts():
     """Sharing a row order is not enough; the panels must have the same number of rows.
 

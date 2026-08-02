@@ -29,7 +29,7 @@ help:
 	@echo "  platforms    discover + collect 2018-present platforms (~1 h, polite crawl)"
 	@echo "  official-documents  rebuild OCR-only official party documents"
 	@echo "  caucus-priorities  collect separately labelled state caucus agenda sources"
-	@echo "  bills-dump   download the 10.7 GB Open States dump and extract bills (~20 min)"
+	@echo "  bills-dump   download the 10.7 GB dump; extract bills/actions/votes (~25 min)"
 
 setup:
 	uv sync --extra dev --extra models --extra ocr
@@ -81,6 +81,7 @@ analysis: historical
 	$(PY) -m state_politics.analysis.validate
 	$(PY) -m state_politics.analysis.emphasis
 	$(PY) -m state_politics.analysis.revealed
+	$(PY) -m state_politics.analysis.outcomes
 	$(PY) -m state_politics.analysis.validate_bills
 	$(PY) -m state_politics.analysis.profiles
 	$(PY) -m state_politics.analysis.diffusion
@@ -99,8 +100,10 @@ figures:
 	$(PY) scripts/plot_intraparty.py
 	$(PY) scripts/plot_state_agenda_coverage.py
 	$(PY) scripts/plot_state_focus.py
+	$(PY) scripts/plot_all_state_focus.py
 	$(PY) scripts/plot_election_focus.py
 	$(PY) scripts/plot_bill_trends.py
+	$(PY) scripts/plot_outcomes.py
 
 all: analysis figures
 

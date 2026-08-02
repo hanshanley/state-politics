@@ -21,6 +21,8 @@ The audit validates:
 - one row per state × party in the focus atlas;
 - Nebraska's explicit nonpartisan status;
 - election numerator/denominator consistency;
+- action/vote artifact scale, historical chamber completeness, outcome-rate bounds, and
+  roll-call probability bounds;
 - literal reproducibility of every numeric log2 concentration from raw counts;
 - stable source IDs and OCR versions on OCR-derived corpus rows;
 - missing figures and machine-specific prose in the public README.
@@ -54,12 +56,9 @@ update and review; otherwise `make audit` fails.
 
 ## Random processes
 
-All random processes use the declared seed `20260729`, recorded in
-`conf/reproducibility.yml`:
-
-- gold-sample template generation;
-- bill-tag validation sample;
-- intra-party permutation test.
+Every random process and seed is listed in `conf/reproducibility.yml`: `20260729` for gold
+sampling, bill-tag validation and intra-party permutations; `20260731` for trend/profile
+inference; and `20260801` for the outcome paired-state test.
 
 Generate a new unlabeled gold template with:
 
@@ -99,6 +98,20 @@ URLs, and de-duplicate new text against documents already in the corpus. Network
 after HTTP headers are recorded and retried rather than terminating the crawl.
 The checked artifact contains a row for all 1,948 strong candidate URLs, including explicit
 failure rows where a source returned 404/403 or could not be retrieved.
+
+## Open States actions and votes
+
+The 2026-07 public PostgreSQL dump is the source for bills, actions, chambers and roll calls.
+The 10,711,908,617-byte object has SHA-256
+`e4b8eb6d40d2da768074dab29bbf0d6949b8f24a50d75c5807669edcee5af78c`, recorded repeatedly in
+`data/provenance.jsonl`. During the outcome expansion, a throttled download was reconstructed
+from independently size-checked HTTP ranges and accepted only after matching that prior full-file
+hash exactly.
+
+`bills/outcomes.py` streams large action/vote tables directly into compressed Parquet. Historical
+chamber comes from organization ancestry; voter party comes from the membership interval active
+on the vote date. The 10.7 GB source dump is deleted after extraction, while its URL, size and
+hash remain in provenance.
 
 ## Clean-room rebuild order
 

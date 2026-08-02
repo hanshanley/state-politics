@@ -30,6 +30,8 @@ Congressional bills are **out of scope**. This is about *state* politics.
   legislative-caucus supplement fills four otherwise missing state-party rows; it does not enter
   the platform-vs-bill headline.
 - **Revealed priorities:** 1,087,327 state legislative bills and 5,000,761 sponsorship records.
+- **Recorded outcomes:** 8,954,085 bill actions and 869,001 bill-linked vote events, with
+  historical originating/action/vote chamber metadata.
 - **Historical comparison:** 2,091 documents: state platforms from 49 states (1846–2017)
   plus U.S. national platforms beginning in 1840.
 - **State profiles:** 100 state × party rows, with stated evidence where available and partisan
@@ -120,6 +122,32 @@ achievement**.
 
 ---
 
+## What happens after bills are filed?
+
+The filing agenda is now linked to explicit Open States actions and roll calls rather than
+assuming that introduction means success.
+
+![Recorded bill outcomes and roll-call support](outputs/bill_outcomes.png)
+
+- Across the same 41 reliable states, equal-state mean advancement is **24.5% for
+  Democratic-sponsored bills** and **28.7% for Republican-sponsored bills**.
+- Recorded enactment—`became-law`, executive signature, or successful veto override—is
+  **14.6% for Democratic-sponsored bills** and **17.1% for Republican-sponsored bills**.
+- Across 41 states where both parties clear the same 500-bill/80%-action-coverage floor, the
+  D−R enactment gap is −2.5 percentage points and **not distinguishable from chance**
+  (paired sign-flip p = .353).
+- On recorded passage roll calls, same-party yes shares average **95.0% for Democrats** and
+  **94.1% for Republicans**. Cross-party support is still substantial: Republican legislators
+  average 74.7% yes on Democratic-sponsored bills, and Democrats 81.7% on
+  Republican-sponsored bills.
+
+These are descriptive sponsor-party associations, not causal party-performance estimates.
+Majority control, bill mix, institutional rules and which motions receive roll calls all differ
+by state. Person-level roll-call coverage reaches 49 states; Missouri has vote events but no
+resolved person-vote rows in this dump.
+
+---
+
 ## Do the parties hold together? Intra-party comparison
 
 Every figure above treats each party as one actor. With 50 state organizations per party, that
@@ -179,6 +207,20 @@ The national averages hide large state differences. `state_party_focus.csv` cont
 for every state × party pair, comparing each state with **other states of the same party**.
 The bill side covers 98 partisan caucuses across 49 states; Nebraska is explicitly unavailable
 because its legislature is formally nonpartisan.
+
+### All-state focus lookup
+
+These two heatmaps show **absolute topic attention** for every state, not just the largest
+outliers. Each row is a state, each column a topic, and the three largest shares in every row
+are labelled.
+
+![Democratic state-by-state bill focus](outputs/democratic_all_state_focus.png)
+
+![Republican state-by-state bill focus](outputs/republican_all_state_focus.png)
+
+A values-quadrant chart would imply ideological position—support versus opposition—that bill
+topics alone do not contain. The heatmaps therefore show what receives attention; the next chart
+shows what is unusually emphasized relative to same-party peers.
 
 ![Where state parties break from their own party](outputs/state_party_focus.png)
 
@@ -288,8 +330,8 @@ All fetched and verified live; full citations, crediting the *collecting* organi
 | Source | Role | Scale |
 |---|---|---|
 | Hopkins, Coffey, Galvin, Gamm, Henderson, Paddock & Schickler — *Select American State Party Platforms* (Harvard Dataverse, CC0) | Historical platforms | 2,091 docs, 49 states, 1840–2017 |
-| Open States / Plural Policy — bulk data | Bills, sponsors, legislators | 1,087,327 bills, 50 states, sessions overlapping 2018–2026 |
-| Internet Archive + official document hosts | Discovery of 2018–present platforms/resolutions | 236 Wayback, 8 live, 5 official hosted copies |
+| Open States / Plural Policy — bulk data | Bills, sponsors, actions, chambers and roll calls | 1,087,327 bills; 8,954,085 actions; 869,001 vote events; 50 states |
+| Internet Archive + official document hosts | Discovery of current platforms/resolutions | 408 Wayback, 274 live, 5 official OCR-hosted copies |
 | Official state legislative caucus sites | Separately labelled agenda supplement | 4 sources completing stated state-level coverage to 50/50 |
 | Wikidata + hand verification | Registry of official party websites | 100/100 resolved |
 
@@ -328,7 +370,7 @@ make registry     # verify all 100 state party websites          (~10 min)
 make platforms    # discover + collect 2018-present platforms    (~1 h, polite crawl)
 make official-documents  # deterministically rebuild OCR-only party documents
 make caucus-priorities  # collect the four separate caucus agenda sources
-make bills-dump   # download the 10.7 GB dump, extract, delete it (~20 min)
+make bills-dump   # download dump; extract bills/actions/votes; delete it (~25 min)
 ```
 
 Every canonical number in this README can be reprinted from the artifacts:

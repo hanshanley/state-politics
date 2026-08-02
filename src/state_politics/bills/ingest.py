@@ -4,9 +4,11 @@ This is stream B of the project -- what state legislators actually *file*, as ag
 their party's platform *says*. It reads the Open States public dump via
 :mod:`state_politics.bills.openstates_dump` and produces two tables:
 
-* ``bills.parquet`` -- one row per bill, with its state, session, title, subjects, and a
-  party attribution derived from who sponsored it.
+* ``bills.parquet`` -- one row per bill, with state/session/title/subjects, sponsor party,
+  originating chamber, and recorded action/vote outcome fields.
 * ``bill_sponsorships.parquet`` -- one row per sponsorship, with the sponsor's party.
+* ``bill_actions.parquet`` and vote artifacts -- source action and roll-call records used for
+  outcome analysis rather than inferred from titles.
 
 Party attribution
 -----------------
@@ -160,8 +162,12 @@ def build_bills(dump_path: Path | str, *, min_year: int = 2018):
             "year": _filing_year(session_year, first_action_year),
             "identifier": row.get("identifier"),
             "title": row.get("title") or "",
+            "from_organization_id": row.get("from_organization_id"),
             "classification": _pg_array(row.get("classification")),
             "subject": _pg_array(row.get("subject")),
+            "latest_action_date": row.get("latest_action_date"),
+            "latest_action_description": row.get("latest_action_description") or "",
+            "latest_passage_date": row.get("latest_passage_date"),
         }
 
     sponsor_rows = []
@@ -245,6 +251,8 @@ def _pg_array(value: str | None) -> str:
 
 
 def main(argv: list[str] | None = None) -> int:
+    from .outcomes import extract_outcomes
+
     parser = argparse.ArgumentParser(description=__doc__.splitlines()[0])
     parser.add_argument("--dump", default="data/raw/openstates/2026-07-public.pgdump")
     parser.add_argument("--out-dir", default="data/processed")
@@ -258,6 +266,7 @@ def main(argv: list[str] | None = None) -> int:
     bills, sponsorships = build_bills(dump, min_year=args.min_year)
     out_dir = Path(args.out_dir)
     out_dir.mkdir(parents=True, exist_ok=True)
+    bills = extract_outcomes(dump, bills, out_dir)
     bills.to_parquet(out_dir / "bills.parquet", index=False)
     sponsorships.to_parquet(out_dir / "bill_sponsorships.parquet", index=False)
 
@@ -265,6 +274,7 @@ def main(argv: list[str] | None = None) -> int:
     print(f"states:         {bills['state'].nunique()}/50")
     print(f"sponsorships:   {len(sponsorships):,}")
     print(f"by attribution: {bills['sponsor_party'].value_counts().to_dict()}")
+    print(f"recorded outcomes: {bills['recorded_outcome'].value_counts().to_dict()}")
     print(f"wrote {out_dir / 'bills.parquet'}")
     print(f"wrote {out_dir / 'bill_sponsorships.parquet'}")
     return 0

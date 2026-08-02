@@ -31,6 +31,13 @@ def _load(name: str):
     return pd.read_parquet(path) if path.suffix == ".parquet" else pd.read_csv(path)
 
 
+def _parquet_rows(name: str) -> int | None:
+    import pyarrow.parquet as pq
+
+    path = DATA / name
+    return pq.ParquetFile(path).metadata.num_rows if path.exists() else None
+
+
 def main() -> int:
     print("=" * 72)
     print("CANONICAL FIGURES  (recompute before quoting any number in the docs)")
@@ -133,6 +140,34 @@ def main() -> int:
             f"  classified into topics "
             f"{int(bill_coverage['n_classified_total'].sum()):,}"
         )
+
+    outcomes = _load("bill_outcomes_by_party.csv")
+    comparison_path = DATA / "bill_outcome_comparison.json"
+    rollcalls = _load("rollcall_party_support.csv")
+    if outcomes is not None and comparison_path.exists():
+        comparison = json.loads(comparison_path.read_text(encoding="utf-8"))
+        print("\nRecorded bill outcomes")
+        print(f"  explicit actions     {_parquet_rows('bill_actions.parquet'):,}")
+        print(f"  vote events          {_parquet_rows('vote_events.parquet'):,}")
+        for row in outcomes.itertuples():
+            print(
+                f"  {row.party} equal-state      advanced {row.mean_advancement_rate:.1%}; "
+                f"enacted {row.mean_enactment_rate:.1%} "
+                f"({int(row.n_states)} reliable states)"
+            )
+        print(
+            f"  D-R enactment gap    "
+            f"{comparison['mean_d_minus_r_enactment_rate']:+.1%}, "
+            f"p={comparison['sign_flip_p_value']:.3f} "
+            f"({comparison['n_paired_states']} paired states)"
+        )
+        if rollcalls is not None:
+            for row in rollcalls.itertuples():
+                print(
+                    f"  {row.sponsor_party}-sponsored / {row.voter_party} voters "
+                    f"yes {row.mean_yes_share:.1%} "
+                    f"({int(row.n_vote_events):,} votes)"
+                )
 
     divergence = _load("stated_vs_revealed.csv")
     if divergence is not None:

@@ -586,6 +586,35 @@ and dates are filtered from public highlights, while the raw scores remain avail
 
 ---
 
+## Phase 11 — recorded outcomes, chambers and roll calls — **DONE**
+
+The Open States ingest now retains 8,954,085 bill actions, 869,001 bill-linked vote events,
+official vote counts, historical chamber relationships and date-aware voter-party aggregates.
+This closes the earlier data gap between "filed" and "advanced/enacted" without inferring success
+from titles.
+
+Law-eligible outcome estimates require 500 filings and 80% action coverage per state-party.
+Equal-state means are 24.5% advanced / 14.6% recorded enacted for Democratic-sponsored bills
+and 28.7% / 17.1% for Republican-sponsored bills. Across 41 paired states, the D−R enactment
+gap is not distinguishable from chance (−2.5pp, p = 0.353).
+
+Passage-roll-call support is strongly co-partisan but not exclusively so: same-party yes shares
+are 95.0% for Democrats and 94.1% for Republicans; opposite-party support averages 74.7% on
+Democratic-sponsored bills and 81.7% on Republican-sponsored bills. These are descriptive
+associations, not causal party-performance estimates.
+
+> **Lessons:**
+> 1. Executive signature and `became-law` are state-specific recording conventions; both must
+>    count as recorded enactment.
+> 2. Current legislator chamber/party cannot safely reconstruct historical votes. Resolve
+>    organization ancestry and dated party memberships from the dump.
+> 3. Outcome missingness needs a coverage floor just as classifier output needs a confidence
+>    floor.
+> 4. Majority control, bill mix and selection into roll calls remain confounders even after the
+>    underlying outcome data are present.
+
+---
+
 ## 6. Assumptions made (autopilot; flag if wrong)
 
 1. **Python** + pandas/parquet stack, since this is data collection and text analysis.

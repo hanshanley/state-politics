@@ -57,6 +57,15 @@ The machine-readable outputs are:
 - a second trend calculation using legislative-staff subject tags, with failed directional
   replications retained rather than hidden
 
+### Recorded outcomes and roll calls
+
+- 8,954,085 explicit bill actions and 869,001 bill-linked vote events
+- historical originating/action/vote chamber resolved from organization hierarchies
+- action-based advancement and enactment definitions, never inferred from titles
+- state-party estimates gated at 500 law-eligible bills and 80% action coverage
+- equal-state party summaries and paired-state sign-flip inference
+- date-aware voter-party resolution for passage-roll-call support
+
 ## Partially supported
 
 - Party-committee stated comparisons are reliable for the rows clearing the 30-unit floor; small
@@ -64,25 +73,14 @@ The machine-readable outputs are:
 - Legislative-staff subject-tag validation covers 37 states because 13 publish no source tags.
 - Platform history is uneven across organizations and years, so current cross-state comparisons
   are stronger than platform time-series claims.
-- Topic attention does not identify whether an organization supports or opposes policy within
-  that topic.
+- Person-level roll-call data cover 49 states; Missouri has vote events but no resolved
+  person-vote rows.
+- Vote results identify support for particular motions, not the policy direction or ideological
+  meaning of every bill.
 
-## Not supported by current processed data
+## Not supported as causal claims
 
-### Enactment or success rates
-
-`bills.parquet` does not retain actions, status, result, or enactment fields. The project measures
-what legislators file, not what passes.
-
-### Roll-call voting behavior
-
-No votes table is retained by the current ingest.
-
-### Chamber-specific historical agenda
-
-Bills are not linked to a historical chamber field in the processed artifact. Current
-legislator chamber data cannot reconstruct the chamber of every historical sponsor safely.
-
-These are explicit data requirements, not analyses inferred from titles. Supporting them would
-require extending the Open States dump ingest to retain actions/results, votes, and chamber
-relationships, followed by separate validation.
+The project can now describe recorded advancement, enactment, chambers and roll calls. It still
+cannot attribute those differences causally to party. Majority control, agenda access, bill mix,
+institutional rules and selection into roll-call votes are not randomized or fully modeled.
+Topic attention also does not identify support/opposition within the topic.
