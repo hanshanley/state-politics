@@ -11,14 +11,12 @@ taxonomy so they can be compared directly.
 | **A. Platforms** | *Stated* priorities — what the party organization says it wants | State party committee | Harvard Dataverse (1846–2017) + original collection (2018–present) |
 | **B. State bills** | *Revealed* priorities — what the party's legislators actually file | Party caucus in the legislature | Open States / Plural Policy |
 
-Congressional bills are **out of scope**. This is about *state* politics.
 
-📄 **[Full methodology →](docs/METHODS.md)**  ·
-📐 **[Analytical scope →](docs/ANALYSIS_DEPTH.md)**  ·
-🔍 **[Reproducibility audit →](docs/REPRODUCIBILITY.md)**  ·
-🧭 **[Code guide →](docs/CODE_GUIDE.md)**  ·
-📋 **[Roadmap and lessons →](docs/PLAN.md)**  ·
-📚 **[Citations →](CITATIONS.md)**
+**[Full methodology →](docs/METHODS.md)**  ·
+**[Analytical scope →](docs/ANALYSIS_DEPTH.md)**  ·
+**[Reproducibility audit →](docs/REPRODUCIBILITY.md)**  ·
+**[Code guide →](docs/CODE_GUIDE.md)**  ·
+**[Citations →](CITATIONS.md)**
 
 ---
 
