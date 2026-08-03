@@ -104,7 +104,10 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument(
         "--validation", default=ROOT / "data/processed/election_title_validation.json"
     )
-    parser.add_argument("--out", default=ROOT / "outputs/election_focus.png")
+    parser.add_argument(
+        "--out",
+        default=ROOT / "outputs/election_focus_by_state_party.png",
+    )
     parser.add_argument("--top", type=int, default=10)
     args = parser.parse_args(argv)
 

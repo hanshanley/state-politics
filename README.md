@@ -264,13 +264,13 @@ Only changes that pass the paired-state/FDR test and move in the same direction 
 legislative-staff tags are shown. Validation details and discarded model-only movements are in
 [Methods](docs/METHODS.md#bill-topic-change-over-time). The partial 2026 year is excluded.
 
-### Elections and voting
+## Elections and voting
 
 Election policy is hidden inside the broad Government Operations taxonomy, so it is measured
 separately from titles covering voting, ballots, election administration, campaign finance,
 redistricting, candidate rules and election security.
 
-![Where elections take an unusual share of legislative attention](outputs/election_focus.png)
+![Where elections take an unusual share of legislative attention](outputs/election_focus_by_state_party.png)
 
 - Republican caucuses devote **3.43%** of substantive bills to elections and voting; Democrats
   **3.05%**.

@@ -179,7 +179,7 @@ generated_artifacts:
     producer: scripts/plot_all_state_focus.py
   - path: outputs/republican_50_state_focus_cards.png
     producer: scripts/plot_all_state_focus.py
-  - path: outputs/election_focus.png
+  - path: outputs/election_focus_by_state_party.png
     producer: scripts/plot_election_focus.py
   - path: outputs/robust_bill_topic_trends.png
     producer: scripts/plot_bill_trends.py
