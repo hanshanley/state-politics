@@ -61,6 +61,10 @@ Generated research files remain ignored under `data/`:
   meeting/bylaws/media and linked-host captures, with exact request attempts and response bytes.
 - `processed/source-gap-followup-v2/`: nine explicit limited source dispositions, the
   byte-identical resolution comparison and an updated unresolved 100-organization ledger.
+- `processed/platform-unit-audit-v1/` and `platform-unit-audit-v2/`: immutable before/after
+  source-unit packets, exact offsets, full text, uncovered spans and code/source hashes.
+- `processed/platform-unit-boundary-review-v1/`: nine limited assistant boundary/version
+  findings with complete selected evidence; not topic labels or training admission.
 - `raw/openstates/2026-10-public.pgdump`: retained source; SHA-256
   `6aa8341edc9ec251f4fb1eafb134b3415e72296e5391e05b39aded5e1ae2580c`.
 - `processed/preview_browser_validation.json`: checks bound to the local build manifest.
@@ -446,7 +450,7 @@ unauthorized for these diagnostic judgments. The unchanged original comparison r
 
 Three separately retained official-source PDFs now support broader extraction review:
 
-| Organization and document | Extracted characters | Parser units | Largest unit, characters |
+| Organization and document | Extracted characters | Baseline parser units | Largest unit, characters |
 |---|---:|---:|---:|
 | California Democratic, 2026 | 156,442 | 167 | 9,555 |
 | Texas Democratic, 2026-2028 | 186,814 | 235 | 5,402 |
@@ -471,6 +475,65 @@ with the original source-page hash. The result is retained as
 The ongoing full crawl started before this repair and does not acquire the new behavior
 mid-run. These supplemental documents have not been silently merged into the main corpus,
 and a failed search still does not establish absence of a platform.
+
+### Source-unit coverage is not coherent segmentation
+
+The three-source baseline freezes **701 complete parser units** with exact source offsets
+and all uncovered spans. No non-whitespace extracted characters are uncovered in any of
+the three documents. This demonstrates extracted-text retention, **not** complete PDF
+extraction, coherent commitments, valid topic labels or verified adoption.
+
+Direct review found a structural bug: `policy_units` selected only the single longest
+consecutive numbered run beginning at one. California contains eleven syntactically
+qualifying runs of at least twenty items, but only its 41-item run was split. The repair
+preserves **all** qualifying runs without lowering the existing threshold or treating
+short/nested lists as independent commitments. A regression case reproduces the old
+failure with two long sections and verifies exact, non-overlapping source spans and
+retention of intervening short conditions.
+
+The separately frozen post-repair packet contains **938 units**, not 938 certified planks:
+
+| Source | Baseline units | After structural repair | Uncovered non-whitespace characters |
+|---|---:|---:|---:|
+| California Democratic | 167 | 404 | 0 |
+| Texas Democratic | 235 | 235 | 0 |
+| Texas Republican | 299 | 299 | 0 |
+
+Both Texas documents retain exactly identical unit records, not merely unchanged counts.
+Nine limited assistant findings bind thirteen selected before/after units to their full
+text, stable IDs, exact spans and hashes. They distinguish front matter/indexes,
+parser-created bundles, sentence fragmentation and unresolved version evidence:
+
+- California's Small Business and Banking lists still bundle nine and five numbered
+  commitments. Its children/families sentence remains split between “regardless of”
+  and, after a page marker, “financial or social status”.
+- Texas Democrats have 156 units with multiple literal bullet lines. A reviewed foreign
+  policy unit combines thirty bullets in 5,402 characters across pages 60-61.
+- California's 9,555-character staff/contents block and Texas Republicans'
+  12,840-character alphabetical index are not substantive policy commitments.
+- Texas Democrats' attestation has a blank June day and blank amendment/section fields.
+  This leaves version/adoption unresolved; it does not prove that the whole PDF is a draft.
+
+Post-repair inspection also exposed **trailing-boundary contamination**: workers item 35
+absorbs the next Children and Families heading and introduction. The multiple-run repair
+does not solve that problem. Cutting at the first blank line was rejected because a valid
+final commitment can contain multiple paragraphs. Source-page/heading provenance or
+explicitly reviewed spans are needed before claiming coherent units. These failures
+remain visible rather than being converted into training examples for “genuinely mixed”
+policy rejection.
+
+All three packets withhold training and analytical admission. Only the identified selected
+units have received these limited boundary reviews; the full 938-unit packet is not
+semantically reviewed. No original training/development input, reference, prediction or
+threshold was rewritten, and the original 27/50 model comparisons remain unchanged.
+No further training or certification is justified merely by the larger unit count.
+
+| Boundary artifact | SHA-256 |
+|---|---|
+| Baseline 701-unit JSONL | `c743d20297d375f3cba55f918336454d67bb1449ca69b735983c33a84666c869` |
+| Post-repair 938-unit JSONL | `d468412c979e58e289c25fe91745775e840d18fcca778c28931bf452eeb13685` |
+| Nine reviewed findings | `de8a9e154ac1bd2c23c2189bbaff9a5b5f9d7c9f42202300c1b36adee695f4fb` |
+| Repaired unitizer module | `33c76b9ca1488163b4e723624e35c426a731e77aa1a9b7babb3851f874c865db` |
 
 ### Recoverable discovery runs
 

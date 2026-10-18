@@ -56,27 +56,37 @@ def model_input_ids(tokenizer, token_ids: list[int]) -> list[int]:
 
 
 def policy_units(text: str) -> list[tuple[int, int, str]]:
-    """Respect long consecutive numbered planks, retaining all surrounding source text."""
+    """Respect every long numbered section, retaining all surrounding source text."""
     matches = list(re.finditer(r"(?m)^[ \t]*(\d{1,4})\.[ \t]+", text))
-    best = (0, 0)
+    runs = []
     first = 0
     for end in range(1, len(matches) + 1):
         if end < len(matches) and int(matches[end][1]) == int(matches[end - 1][1]) + 1:
             continue
-        if int(matches[first][1]) == 1 and end - first > best[1] - best[0]:
-            best = (first, end)
+        if int(matches[first][1]) == 1 and end - first >= 20:
+            runs.append((first, end))
         first = end
-    if best[1] - best[0] < 20:
+    if not runs:
         return _paragraph_units(text)
-    first, last = best
-    starts = [match.start() for match in matches[first:last]]
-    end = matches[last].start() if last < len(matches) else len(text)
-    boundaries = starts[1:] + [end]
-    return (
-        _paragraph_units(text[:starts[0]])
-        + [(start, stop, text[start:stop]) for start, stop in zip(starts, boundaries, strict=True)]
-        + [(end + start, end + stop, unit) for start, stop, unit in _paragraph_units(text[end:])]
+    units = []
+    cursor = 0
+    for first, last in runs:
+        starts = [match.start() for match in matches[first:last]]
+        end = matches[last].start() if last < len(matches) else len(text)
+        units.extend(
+            (cursor + start, cursor + stop, unit)
+            for start, stop, unit in _paragraph_units(text[cursor:starts[0]])
+        )
+        units.extend(
+            (start, stop, text[start:stop])
+            for start, stop in zip(starts, starts[1:] + [end], strict=True)
+        )
+        cursor = end
+    units.extend(
+        (cursor + start, cursor + stop, unit)
+        for start, stop, unit in _paragraph_units(text[cursor:])
     )
+    return units
 
 
 def _paragraph_units(text: str) -> list[tuple[int, int, str]]:

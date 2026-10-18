@@ -104,6 +104,34 @@ def test_short_or_nonconsecutive_numbering_does_not_imply_independent_planks():
     assert len(policy_units(text)) == 1
 
 
+def test_all_long_numbered_sections_are_split_not_only_the_longest():
+    first = "".join(
+        f"{number}. First-section policy: " + "A complete commitment. " * 7 + "\n"
+        for number in range(1, 25)
+    )
+    interlude = "\n1. An appendix condition.\n2. Another condition.\n\n"
+    second = "".join(
+        f"{number}. Second-section policy: " + "Another complete commitment. " * 7 + "\n"
+        for number in range(1, 27)
+    )
+    text = "Opening context.\n\n" + first + interlude + second + "\nClosing context."
+    units = policy_units(text)
+    first_units = [unit for _, _, unit in units if re.match(r"\d+\. First-section ", unit)]
+    second_units = [unit for _, _, unit in units if re.match(r"\d+\. Second-section ", unit)]
+    assert len(first_units) == 24
+    assert len(second_units) == 26
+    assert any("1. An appendix condition.\n2. Another condition." in unit
+               for _, _, unit in units)
+    covered = set()
+    previous_end = 0
+    for start, end, unit in units:
+        assert previous_end <= start < end
+        assert text[start:end] == unit
+        covered.update(range(start, end))
+        previous_end = end
+    assert all(i in covered for i, character in enumerate(text) if not character.isspace())
+
+
 def _cap_row(**updates):
     return {
         "id": "one", "bill_id": "115-HR-1", "year": "2016",
