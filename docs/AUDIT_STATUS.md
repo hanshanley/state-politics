@@ -65,6 +65,13 @@ Generated research files remain ignored under `data/`:
   source-unit packets, exact offsets, full text, uncovered spans and code/source hashes.
 - `processed/platform-unit-boundary-review-v1/`: nine limited assistant boundary/version
   findings with complete selected evidence; not topic labels or training admission.
+- `processed/platform-page-provenance-v1/`: newly retained hash-matching original PDFs,
+  exact physical-page/source offsets and page joins for both frozen unit packets.
+- `processed/platform-page-visual-review-v1/`: five locally rendered, hash-bound source
+  pages for the California boundaries and Texas attestation/bullet review.
+- `processed/reviewed-platform-boundaries-v1/` and `reviewed-platform-boundaries-v2/`:
+  nine California, then 39 combined California/Texas boundary inputs with explicit
+  multi-span context, footer exclusions and duplicate-location evidence; no topic labels.
 - `raw/openstates/2026-10-public.pgdump`: retained source; SHA-256
   `6aa8341edc9ec251f4fb1eafb134b3415e72296e5391e05b39aded5e1ae2580c`.
 - `processed/preview_browser_validation.json`: checks bound to the local build manifest.
@@ -508,7 +515,8 @@ parser-created bundles, sentence fragmentation and unresolved version evidence:
   commitments. Its children/families sentence remains split between “regardless of”
   and, after a page marker, “financial or social status”.
 - Texas Democrats have 156 units with multiple literal bullet lines. A reviewed foreign
-  policy unit combines thirty bullets in 5,402 characters across pages 60-61.
+  policy unit combines thirty bullets in 5,402 characters. Physical-page tracing below
+  corrects its initial folio-based location.
 - California's 9,555-character staff/contents block and Texas Republicans'
   12,840-character alphabetical index are not substantive policy commitments.
 - Texas Democrats' attestation has a blank June day and blank amendment/section fields.
@@ -534,6 +542,64 @@ No further training or certification is justified merely by the larger unit coun
 | Post-repair 938-unit JSONL | `d468412c979e58e289c25fe91745775e840d18fcca778c28931bf452eeb13685` |
 | Nine reviewed findings | `de8a9e154ac1bd2c23c2189bbaff9a5b5f9d7c9f42202300c1b36adee695f4fb` |
 | Repaired unitizer module | `33c76b9ca1488163b4e723624e35c426a731e77aa1a9b7babb3851f874c865db` |
+
+### Physical-page recovery and reviewed multi-span inputs
+
+The original three pilot fetch records had **no stored raw-body paths**. Bounded new
+requests now retain all three PDFs, and every saved file matches its original recorded
+byte hash. These are new recovery captures, not retrospectively invented original storage
+records. All three layout extractions reproduce the complete canonical text exactly:
+
+| Source | Physical PDF pages | Recovered original PDF SHA-256 |
+|---|---:|---|
+| California Democratic | 51 | `bf724caa3afb7be40d2427e312b36ee3fd0f17baaea419d7fa42d7852e737ba5` |
+| Texas Democratic | 68 | `8b373fedd51f3849238c405cf9c209abe10dbbb475a3ffaa06e823b70948afcc` |
+| Texas Republican | 59 | `dc0532e5372efc95abefbb4031b8ad2a6d8928e84995e2be1396a487f96709aa` |
+
+The resulting **178-page** trace maps all 701 baseline and 938 post-repair unit records
+to physical pages, with no uncovered non-whitespace source characters. PDF object-recovery
+warnings are retained in `extraction.stderr.log`; exact reproduction does not establish
+faithful extraction of every visible element. Physical page numbers remain distinct from
+printed folios.
+
+Five local page renders were inspected: California physical pages 8-9 and Texas Democratic
+physical pages 1, 63 and 64. They confirm the California sentence continuation and the
+separate children/families heading, and visibly preserve Texas's blank attestation fields.
+The Texas foreign-policy unit begins with a preceding footer and intersects physical pages
+62-64; its thirty bullet bodies occupy printed folios **61-62**, not the initially described
+60-61. The original finding packet remains immutable; the correction is explicit.
+
+Separate boundary packets reconstruct **39 source inputs**, not 39 certified topic labels:
+nine California inputs, followed by thirty Texas bullets. The California examples isolate
+workers item 35, retain the substantive children/families introduction, and separate all
+seven native list items. The split first item now retains its complete sentence across
+pages; only the visually verified footer digit is excluded. Exact heading and governing
+preface spans provide shared context without copying earlier unrelated commitments.
+
+The Texas examples likewise retain their actual parent heading, National Defense
+subheading and governing clause as separately traced context. Thirty bullet locations
+contain **29 distinct primary texts after whitespace normalization**: bullets 1 and 24
+repeat the same commitment. Both locations remain, with an explicit duplicate group;
+neither deletion nor independent-example counting is authorized. Their preceding and
+intervening footer digits are explicitly accounted for.
+
+Every rendered input reconstructs from exact primary/context source slices and a declared
+whitespace joiner. No non-whitespace character in either reviewed region is unaccounted
+for after the recorded footer exclusions. This is a bounded, assistant-reviewed
+multi-span prototype, **not a production parser replacement**, an independently reviewed
+topic set or permission to train. A native bullet may itself still contain multiple policy
+areas. No new inference/training run or original-reference change accompanies these inputs.
+
+| Recovered boundary artifact | SHA-256 |
+|---|---|
+| Full page/source text JSONL | `7c51b71028d79f8b073c254b8dbb177d2c5e6f15c2258cfdff5cb1450b428bdc` |
+| Both unit-packet/page joins | `1055d1f9ea782f7738f42a9d13b1b401cdd801df237f92f0b329049481cd3900` |
+| Nine California source inputs | `500c529dc4276197c64c550b1604b00861ed67dc56d81d783980ef89e8f51908` |
+| Combined 39 source inputs | `0db2d03fc71b45e9b346f87497a9a11cdbb02fdbde1f16227e566337deee05fc` |
+
+These PDFs, renders and research packets persist locally under ignored `data/` paths.
+The Git checkpoint records the findings and hashes, not a remote backup of those files.
+The full scientific artifact gate and independent-review requirements remain unresolved.
 
 ### Recoverable discovery runs
 
