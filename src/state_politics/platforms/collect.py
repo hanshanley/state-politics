@@ -32,7 +32,7 @@ from dataclasses import asdict, dataclass, replace
 from pathlib import Path
 from uuid import uuid4
 
-from ..provenance import ProvenanceLog, fetch
+from ..provenance import ProvenanceLog, fetch, sha256_file, utc_now_iso
 from .discover import STRONG_SCORE, Candidate, score_candidate
 from .registry import STATE_NAMES
 
@@ -150,7 +150,7 @@ class CollectedDocument:
     wayback_timestamp: str | None = None
     text: str = ""
     official_source_id: str | None = None
-    source_hashes: object | None = None
+    source_hashes: list[str] | None = None
     ocr_version: str | None = None
     stored_path: str | None = None
 
@@ -675,21 +675,22 @@ def gap_report(
     *,
     min_score: int = STRONG_SCORE,
 ):
-    """One row per (state, party) with an explicit, evidenced status.
-
-    The four statuses are deliberately distinct: "no candidate URLs existed at all" is a very
-    different finding from "candidates existed but none of them turned out to be a platform",
-    and collapsing them would hide why a state is missing.
-    """
+    """Separate unattempted candidates, retrieval failures and content-filter rejections."""
     import pandas as pd
 
     confirmed_by_org: dict[tuple[str, str], list[CollectedDocument]] = {}
     attempted_by_org: dict[tuple[str, str], int] = {}
+    failed_by_org: dict[tuple[str, str], int] = {}
+    rejected_by_org: dict[tuple[str, str], int] = {}
     for document in documents:
         key = (document.state, document.party)
         attempted_by_org[key] = attempted_by_org.get(key, 0) + 1
         if document.confirmed:
             confirmed_by_org.setdefault(key, []).append(document)
+        elif str(document.reason).startswith("fetch failed"):
+            failed_by_org[key] = failed_by_org.get(key, 0) + 1
+        else:
+            rejected_by_org[key] = rejected_by_org.get(key, 0) + 1
 
     findings = load_gap_findings()
     rows = []
@@ -702,10 +703,14 @@ def gap_report(
         years = sorted({d.year for d in found if d.year})
         if found:
             status = "found"
+        elif failed_by_org.get(key):
+            status = (
+                "candidates_partially_unresolved" if rejected_by_org.get(key)
+                else "fetch_failed"
+            )
         elif attempted_by_org.get(key):
             status = "candidates_rejected"
         elif strong:
-            # Strong candidates existed but produced no rows: every fetch failed.
             status = "candidates_unfetched"
         elif candidates:
             status = "no_strong_candidates"
@@ -720,6 +725,8 @@ def gap_report(
             "n_candidates": len(candidates),
             "n_strong_candidates": len(strong),
             "n_fetched": attempted_by_org.get(key, 0),
+            "n_fetch_failed": failed_by_org.get(key, 0),
+            "n_rejected": rejected_by_org.get(key, 0),
             "years": ",".join(str(y) for y in years),
             "latest_year": years[-1] if years else None,
             "doc_types": ",".join(sorted({d.doc_type for d in found if d.doc_type})),
@@ -784,12 +791,14 @@ def _load_candidates(path: Path, *, rescore: bool = True
 def _load_previous(
     path: Path,
 ) -> tuple[dict[tuple[str, str], list[CollectedDocument]], set[str]]:
-    """Load a previous run's rows, and the set of URLs whose fetch failed.
+    """Load all previous rows, including failures, and identify URLs needing a retry.
 
     Only fetch failures are retried. A document that was retrieved and judged not to be a
     platform is a settled result; re-requesting it would put load on third-party sites for no
-    new information.
+    new information. Keep failed rows for report-only reconstruction; resume excludes them
+    from its retained documents before fetching their URLs again.
     """
+    import numpy as np
     import pandas as pd
 
     frame = pd.read_parquet(path)
@@ -797,10 +806,12 @@ def _load_previous(
     retry: set[str] = set()
     fields = set(CollectedDocument.__dataclass_fields__)
     for row in frame.to_dict("records"):
-        document = CollectedDocument(**{k: v for k, v in row.items() if k in fields})
+        values = {k: v for k, v in row.items() if k in fields}
+        if isinstance(values.get("source_hashes"), np.ndarray):
+            values["source_hashes"] = values["source_hashes"].tolist()
+        document = CollectedDocument(**values)
         if str(document.reason).startswith("fetch failed"):
             retry.add(document.url)
-            continue
         grouped.setdefault((document.state, document.party), []).append(document)
     return grouped, retry
 
@@ -843,6 +854,10 @@ def main(argv: list[str] | None = None) -> int:
     )
     parser.add_argument("--timeout", type=float, default=60.0)
     parser.add_argument("--max-attempts", type=int, default=4)
+    parser.add_argument(
+        "--checkpoint-dir", type=Path,
+        help="new per-organization recovery directory; default is a unique run under --out-dir",
+    )
     parser.add_argument("--states", default="")
     parser.add_argument("--report-only", action="store_true",
                         help="rebuild the gap report from already-collected documents, "
@@ -897,9 +912,28 @@ def main(argv: list[str] | None = None) -> int:
     retry_urls: set[str] = set()
     if args.resume and docs_path.exists():
         previous, retry_urls = _load_previous(docs_path)
-        print(f"resuming: {sum(len(v) for v in previous.values())} rows kept, "
+        n_kept = sum(
+            document.url not in retry_urls
+            for docs in previous.values() for document in docs
+        )
+        print(f"resuming: {n_kept} rows kept, "
               f"{len(retry_urls)} failed fetches to retry", flush=True)
 
+    checkpoint_dir = args.checkpoint_dir or out_dir / f"collection-checkpoints-{uuid4().hex}"
+    if checkpoint_dir.exists():
+        parser.error(f"checkpoint directory exists: {checkpoint_dir}; choose a new run")
+    checkpoint_dir.mkdir(parents=True)
+    checkpoint_context = {
+        "schema_version": 1,
+        "created_at": utc_now_iso(),
+        "candidates_sha256": sha256_file(args.candidates),
+        "registry_sha256": sha256_file(args.registry),
+        "collection_code_sha256": sha256_file(__file__),
+        "arguments": {
+            key: str(value) if isinstance(value, Path) else value
+            for key, value in vars(args).items()
+        },
+    }
     documents: list[CollectedDocument] = []
     # One open handle for the whole crawl: reopening the log per record costs ~11 ms, which
     # is irrelevant for a few downloads and ruinous across thousands of fetches.
@@ -927,6 +961,21 @@ def main(argv: list[str] | None = None) -> int:
                 raw_dir=args.raw_dir,
             )
             documents.extend(collected)
+            checkpoint_path = checkpoint_dir / f"{org['state']}-{org['party']}.json"
+            temporary = checkpoint_path.with_suffix(".json.part")
+            with temporary.open("x", encoding="utf-8") as handle:
+                json.dump({
+                    **checkpoint_context,
+                    "completed_at": utc_now_iso(),
+                    "state": org["state"], "party": org["party"],
+                    "candidates": [
+                        candidate.to_dict() for candidate in grouped.get(key, [])
+                    ],
+                    "documents": [document.to_row() for document in keep + collected],
+                    "operative_platform_status": "unresolved",
+                }, handle, ensure_ascii=False)
+                handle.write("\n")
+            temporary.replace(checkpoint_path)
             confirmed = sum(1 for d in collected if d.confirmed)
             print(f"[{index:>3}/{len(registry)}] {org['state']}-{org['party']:<2} "
                   f"fetched={len(collected):<3} confirmed={confirmed}", flush=True)

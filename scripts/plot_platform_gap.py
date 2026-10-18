@@ -24,6 +24,7 @@ matplotlib.use("Agg")  # headless: no display required
 
 import matplotlib.patches as mpatches  # noqa: E402
 import pandas as pd  # noqa: E402
+from matplotlib.lines import Line2D  # noqa: E402
 
 ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(ROOT / "src"))
@@ -33,11 +34,11 @@ from state_politics.plotting import charts, theme  # noqa: E402
 SOURCE_NOTE = (
     "Source: platform documents published by the individual state party committees, located via "
     "the Internet Archive Wayback Machine CDX Server API (https://web.archive.org/cdx/search/cdx) "
-    "and the parties' own websites, and retrieved through 2026-08-01. A document counts only "
-    "when its own "
-    "text is confirmed to be a platform, so a state shown as a gap was searched and nothing "
-    "qualifying was found, and the three gap reasons are distinguished rather than merged. A "
-    "confirmed document is a platform, a set of convention resolutions, a legislative-priorities "
+    "and the parties' own websites. Collection dates belong to the saved retrieval provenance. "
+    "Filled markers indicate documents passing the automated content filter, not verified "
+    "adoption or operative status. Retrieval failures, unattempted candidates and filter "
+    "rejections remain distinct; zero candidates does not establish publication absence. A "
+    "qualifying document is a platform, a set of convention resolutions, a legislative-priorities "
     "agenda or a statement of principles; {non_platform_count} organizations are covered only "
     "by a non-platform document type. A pre-2018 year is an older fallback source still found "
     "by the current collection, not a newly published document."
@@ -45,14 +46,22 @@ SOURCE_NOTE = (
 
 # Statuses in the order they should read: success first, then progressively weaker evidence.
 STATUS_STYLE = {
-    "found": ("Document confirmed", None),
-    "candidates_rejected": ("Candidates found, none were platforms", theme.GOLD),
-    "no_strong_candidates": ("Only weak candidates found", theme.MUTED),
-    "no_candidates": ("Nothing found in archive or site", theme.TEXT),
+    "found": ("Document passed content filter", None, "o"),
+    "fetch_failed": ("Candidate retrieval failed", theme.TEXT, "X"),
+    "candidates_partially_unresolved": (
+        "Filter rejections and retrieval failures", theme.GOLD, "D",
+    ),
+    "candidates_rejected": ("Retrieved candidates failed content filter", theme.GOLD, "o"),
+    "candidates_unfetched": ("Strong candidates not yet fetched", theme.MUTED, "s"),
+    "no_strong_candidates": ("Only weak candidates found", theme.MUTED, "^"),
+    "no_candidates": ("No candidate recorded; absence unverified", theme.TEXT, "v"),
 }
 
 
 def build_figure(report: pd.DataFrame, out_path: Path) -> Path:
+    unknown = set(report["status"]) - STATUS_STYLE.keys()
+    if unknown:
+        raise ValueError(f"unsupported collection statuses: {sorted(unknown)}")
     states = sorted(report["state"].unique())
     positions = {state: index for index, state in enumerate(states)}
 
@@ -72,9 +81,9 @@ def build_figure(report: pd.DataFrame, out_path: Path) -> Path:
                         ha="left" if x > 0 else "right", va="center", fontsize=8.5,
                         color=theme.TEXT)
         else:
-            color = STATUS_STYLE.get(status, ("", theme.GRID))[1] or theme.GRID
+            color = STATUS_STYLE[status][1] or theme.GRID
             ax.scatter([x], [y], s=110, facecolor=theme.BG, edgecolor=color, linewidth=1.8,
-                       zorder=3, marker="o")
+                       zorder=3, marker=STATUS_STYLE[status][2])
 
     ax.set_yticks(list(positions.values()))
     ax.set_yticklabels(list(positions.keys()), fontsize=9)
@@ -93,7 +102,7 @@ def build_figure(report: pd.DataFrame, out_path: Path) -> Path:
         "What the current party-document collection recovered",
         "",
         "",
-        subtitle="One marker per state party; filled = qualifying agenda document confirmed, "
+        subtitle="One marker per state party; filled = document passed content filter, "
                  "with its most recent year",
     )
 
@@ -106,10 +115,13 @@ def build_figure(report: pd.DataFrame, out_path: Path) -> Path:
         mpatches.Patch(facecolor=theme.ACCENT, edgecolor=theme.BG,
                        label="Republican qualifying source found"),
     ]
-    for status, (label, color) in STATUS_STYLE.items():
-        if status == "found":
+    for status, (label, color, marker) in STATUS_STYLE.items():
+        if status == "found" or status not in set(report["status"]):
             continue
-        handles.append(mpatches.Patch(facecolor=theme.BG, edgecolor=color, label=label))
+        handles.append(Line2D(
+            [], [], linestyle="none", marker=marker, markerfacecolor=theme.BG,
+            markeredgecolor=color, markeredgewidth=1.8, markersize=8, label=label,
+        ))
     ax.legend(handles=handles, loc="upper center", bbox_to_anchor=(0.5, -0.035),
               ncol=2, frameon=False, fontsize=10)
 

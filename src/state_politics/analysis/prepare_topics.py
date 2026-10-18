@@ -36,6 +36,14 @@ SOURCES = (
 LABEL_VERSION = "cap_major_initialization_v1_not_project_gold"
 SOURCE_USE_URL = "https://www.comparativeagendas.net/pages/Copyright-and-Legal"
 REVIEWED_CODE_MIGRATIONS = {("23", "2300", "6", "609")}
+ADAPTED_SUBTOPIC_BOUNDARIES = {
+    "1208": "adapted_family_boundary",
+    "1308": "adapted_child_care_leave_boundary",
+    "1405": "adapted_rural_development_boundary",
+    "1526": "adapted_sports_boundary",
+    "2030": "adapted_holiday_boundary",
+    "2101": "adapted_historic_site_boundary",
+}
 
 
 def normalized_text(text: str) -> str:
@@ -77,6 +85,8 @@ def compatibility_flags(row: dict, codes: set[int], min_year: int) -> list[str]:
         flags.append("adapted_tax_boundary")
     if major == "20" and subtopic == "2011":
         flags.append("voting_rights_administration_boundary")
+    if subtopic in ADAPTED_SUBTOPIC_BOUNDARIES:
+        flags.append(ADAPTED_SUBTOPIC_BOUNDARIES[subtopic])
     return sorted(set(flags))
 
 
@@ -221,6 +231,8 @@ def prepare(
             "Quarantine rules detect known conflicts; they do not prove remaining compatibility.",
             "National/historical descriptions and quasi-sentences differ from state policy units.",
             "Culture initialization covers arts, not the full adapted family/moral category.",
+            "Family, child-care/leave, rural-development, sports, holiday and historic-site "
+            "subtopics require adapted-scope review; quarantine is not a corrected topic label.",
             "Exact/close textual copies excluded; paraphrased legislative families need review.",
             "Assistant review is not independent human gold; no certification or publication.",
             "Source-use constraints retained; source/weight redistribution is not authorized.",

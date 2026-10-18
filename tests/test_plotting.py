@@ -425,3 +425,44 @@ def test_stated_vs_revealed_panels_have_equal_row_counts():
 
     assert counts[0] == counts[1], f"panels have {counts[0]} and {counts[1]} rows"
     assert limits[0] == limits[1], "panels must share y-limits to share tick labels"
+
+
+def test_platform_gap_plot_distinguishes_unresolved_retrievals(tmp_path, monkeypatch):
+    import sys
+    from pathlib import Path
+
+    import pandas as pd
+
+    root = Path(__file__).resolve().parents[1]
+    sys.path.insert(0, str(root / "scripts"))
+    import plot_platform_gap as script
+
+    statuses = [
+        "fetch_failed", "candidates_partially_unresolved", "candidates_rejected",
+        "candidates_unfetched", "no_strong_candidates", "no_candidates",
+    ]
+    report = pd.DataFrame([
+        {"state": f"S{index}", "party": "D", "status": status,
+         "latest_year": None, "doc_types": ""}
+        for index, status in enumerate(statuses)
+    ])
+    figures = []
+    finish = script.charts.finish
+
+    def capture_figure(figure, *args, **kwargs):
+        figures.append(figure)
+        return finish(figure, *args, **kwargs)
+
+    monkeypatch.setattr(script.charts, "finish", capture_figure)
+    try:
+        output = script.build_figure(report, tmp_path / "gaps.png")
+        ax = figures[-1].get_axes()[0]
+        marker_paths = [
+            collection.get_paths()[0].vertices.tobytes() for collection in ax.collections
+        ]
+        assert len(set(marker_paths)) == len(report)
+        assert output.exists()
+        with pytest.raises(ValueError, match="unsupported collection statuses"):
+            script.build_figure(report.assign(status="unknown"), tmp_path / "unknown.png")
+    finally:
+        plt.close("all")

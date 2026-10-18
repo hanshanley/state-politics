@@ -36,8 +36,11 @@ from state_politics.platforms.collect import (
     strip_blocks,
     wayback_snapshot_url,
 )
+from state_politics.platforms.collect import (
+    main as collect_main,
+)
 from state_politics.platforms.discover import STRONG_SCORE, Candidate
-from state_politics.provenance import ProvenanceLog, sha256_bytes
+from state_politics.provenance import ProvenanceLog, sha256_bytes, sha256_file
 
 _GAP_CAUSES = {"no_platform_published", "broken_site", "client_rendered",
                "summary_only", "not_confirmed"}
@@ -272,6 +275,7 @@ def test_resume_preserves_ocr_provenance_columns(tmp_path):
     assert loaded.official_source_id == "issuu-123"
     assert list(loaded.source_hashes) == ["abc", "def"]
     assert loaded.ocr_version == "tesseract 5.5"
+    assert json.loads(json.dumps(loaded.to_row()))["source_hashes"] == ["abc", "def"]
 
 
 def test_state_update_preserves_unselected_corpus_rows():
@@ -321,6 +325,142 @@ def test_gap_report_records_every_organization_even_with_no_documents():
     assert len(report) == 2
     assert (report["n_confirmed"] == 0).all()
     assert report["latest_year"].isna().all()
+
+
+@pytest.mark.parametrize(("confirmed", "rejected", "failed", "expected"), [
+    (0, 0, 2, "fetch_failed"),
+    (0, 1, 1, "candidates_partially_unresolved"),
+    (0, 2, 0, "candidates_rejected"),
+    (1, 0, 1, "found"),
+])
+def test_gap_report_does_not_turn_retrieval_failures_into_content_rejections(
+    confirmed, rejected, failed, expected,
+):
+    registry = [{"state": "TX", "party": "R", "website": "https://x.org/"}]
+    documents = [_doc("TX", "R", True) for _ in range(confirmed)]
+    documents += [_doc("TX", "R", False) for _ in range(rejected)]
+    for number in range(failed):
+        document = _doc("TX", "R", False)
+        document.url = f"https://x.org/failed-{number}"
+        document.reason = "fetch failed: status=503 error=None"
+        documents.append(document)
+    row = gap_report(registry, {}, documents).iloc[0]
+    assert row["status"] == expected
+    assert row["n_fetched"] == confirmed + rejected + failed
+    assert row["n_confirmed"] == confirmed
+    assert row["n_rejected"] == rejected
+    assert row["n_fetch_failed"] == failed
+
+
+def test_report_only_preserves_failed_fetches_without_network(tmp_path, monkeypatch):
+    registry = tmp_path / "registry.json"
+    registry.write_text(json.dumps({
+        "organizations": [{"state": "TX", "party": "R", "website": "https://x.org/"}],
+    }))
+    candidates = tmp_path / "candidates.jsonl"
+    candidates.write_text(json.dumps({
+        "state": "TX", "party": "R", "url": "https://x.org/platform",
+        "source": "live", "score": 7,
+    }) + "\n")
+    document = _doc("TX", "R", False)
+    document.url = "https://x.org/platform"
+    document.reason = "fetch failed: status=503 error=None"
+    pd.DataFrame([document.to_row()]).to_parquet(
+        tmp_path / "platforms_2018_present.parquet", index=False,
+    )
+    previous, retry = _load_previous(tmp_path / "platforms_2018_present.parquet")
+    assert previous[("TX", "R")][0].reason == document.reason
+    assert retry == {document.url}
+
+    def unexpected_fetch(*args, **kwargs):
+        pytest.fail("report-only must not fetch any source")
+
+    monkeypatch.setattr("state_politics.platforms.collect.fetch", unexpected_fetch)
+    assert collect_main([
+        "--registry", str(registry), "--candidates", str(candidates),
+        "--out-dir", str(tmp_path), "--report-only",
+    ]) == 0
+    row = pd.read_csv(tmp_path / "platform_gap_report.csv").iloc[0]
+    assert row["status"] == "fetch_failed"
+    assert row["n_fetch_failed"] == 1 and row["n_rejected"] == 0
+
+
+def test_collection_checkpoints_survive_a_later_organization_failure(tmp_path, monkeypatch):
+    registry = tmp_path / "registry.json"
+    registry.write_text(json.dumps({
+        "organizations": [
+            {"state": "TX", "party": party, "website": "https://x.org/"}
+            for party in ("R", "D")
+        ],
+    }))
+    candidates = tmp_path / "candidates.jsonl"
+    candidates.write_text("".join(json.dumps({
+        "state": "TX", "party": party, "url": f"https://x.org/{party}/platform",
+        "source": "live", "score": 7,
+    }) + "\n" for party in ("R", "D")))
+    checkpoints = tmp_path / "checkpoints"
+    output = tmp_path / "output"
+
+    def collect(candidates, **kwargs):
+        if candidates[0].party == "D":
+            raise RuntimeError("later organization interrupted")
+        return [_doc("TX", "R", True)]
+
+    monkeypatch.setattr("state_politics.platforms.collect.collect_for_org", collect)
+    with pytest.raises(RuntimeError, match="later organization interrupted"):
+        collect_main([
+            "--registry", str(registry), "--candidates", str(candidates),
+            "--out-dir", str(output), "--checkpoint-dir", str(checkpoints),
+            "--provenance", str(tmp_path / "provenance.jsonl"),
+        ])
+    checkpoint = json.loads((checkpoints / "TX-R.json").read_text())
+    assert checkpoint["documents"][0]["confirmed"] is True
+    assert checkpoint["candidates"][0]["party"] == "R"
+    assert checkpoint["candidates_sha256"] == sha256_file(candidates)
+    assert checkpoint["registry_sha256"] == sha256_file(registry)
+    assert checkpoint["operative_platform_status"] == "unresolved"
+    assert not (checkpoints / "TX-D.json").exists()
+    assert not list(checkpoints.glob("*.part"))
+    assert not (output / "platforms_2018_present.parquet").exists()
+
+
+def test_resume_retries_failed_rows_and_checkpoints_retained_ocr_metadata(tmp_path, monkeypatch):
+    registry = tmp_path / "registry.json"
+    registry.write_text(json.dumps({
+        "organizations": [{"state": "NY", "party": "D", "website": "https://x.org/"}],
+    }))
+    kept, failed = _doc("NY", "D", True), _doc("NY", "D", False)
+    kept.source_hashes = ["original-image", "official-page"]
+    failed.url = "https://x.org/platform-failed"
+    failed.reason = "fetch failed: status=503 error=None"
+    corpus = tmp_path / "platforms_2018_present.parquet"
+    pd.DataFrame([kept.to_row(), failed.to_row()]).to_parquet(corpus, index=False)
+    candidates = tmp_path / "candidates.jsonl"
+    candidates.write_text("".join(json.dumps({
+        "state": "NY", "party": "D", "url": document.url,
+        "source": "live", "score": 7,
+    }) + "\n" for document in (kept, failed)))
+    retried = _doc("NY", "D", True)
+    retried.url = failed.url
+
+    def collect(candidates, **kwargs):
+        assert [candidate.url for candidate in candidates] == [failed.url]
+        assert [document.url for document in kwargs["existing_documents"]] == [kept.url]
+        return [retried]
+
+    monkeypatch.setattr("state_politics.platforms.collect.collect_for_org", collect)
+    checkpoints = tmp_path / "checkpoints"
+    assert collect_main([
+        "--registry", str(registry), "--candidates", str(candidates),
+        "--out-dir", str(tmp_path), "--checkpoint-dir", str(checkpoints),
+        "--provenance", str(tmp_path / "provenance.jsonl"), "--resume",
+    ]) == 0
+    checkpoint = json.loads((checkpoints / "NY-D.json").read_text())
+    assert len(checkpoint["documents"]) == 2
+    assert checkpoint["documents"][0]["source_hashes"] == kept.source_hashes
+    assert all(document["confirmed"] for document in checkpoint["documents"])
+    restored = pd.read_parquet(corpus)
+    assert len(restored) == 2 and restored["confirmed"].all()
 
 
 def test_collect_for_org_flags_the_same_document_served_from_two_urls():

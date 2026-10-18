@@ -241,6 +241,16 @@ preferred input format. Do not automatically prepend context or assign family-re
 policy to the broad culture category without resolving the substantive rubric. The saved
 category-23 positives cover arts rather than the full adapted family/religion scope.
 
+Numeric agreement between external CAP/PAP codes does not establish compatibility with
+the adapted taxonomy or semantic correctness of the supplied description. Future
+preparation quarantines family (1208), childcare/leave (1308), rural development (1405),
+sports (1526), holidays (2030) and parks/historic sites (2101) before sampling, alongside
+the existing reproductive-health, tax and election boundaries. These are conservative
+review gates, not corrected labels. The audit retains all 155 affected original training
+rows and five selected concerns reproduced from the original CSV; existing corpora,
+checkpoints and development references remain unchanged. Neither affected-row counts nor
+assistant source review constitute an independent label-error estimate or finalized rubric.
+
 ### Legacy analytical pipeline (not revalidated)
 
 With both platform corpora in hand, `state_politics.analysis` segments every document into

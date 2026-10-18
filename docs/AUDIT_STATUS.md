@@ -7,7 +7,7 @@ replacement classifier or establish complete contemporary coverage.
 | Area | Verified progress | Remaining gate |
 |---|---|---|
 | Historical platforms | Recovered 2,091 authoritative archive documents, with publisher checksums and old/new archive reconciliation. | Historical availability must not be substituted for operative modern platforms. |
-| Contemporary platforms | A 100-organization source ledger separates historical recovery, discovery and unresolved current evidence. Retrieval provenance is retained. | Finish discovery, collection/extraction, institutional/version review and dated gap dispositions. |
+| Contemporary platforms | Completed the 54-link discovery inventory's collection in a separate run: 52 retained bodies, two retrieval failures and 100 organization checkpoints. Complete rejected extractions remain available. | Follow substantive linked documents, resolve failed/empty discovery, and complete institutional/version review and dated gap dispositions. Automated acceptance is not operative coverage. |
 | Sponsorship | Party attribution uses validated historical memberships and a first-action date proxy; unresolved primary sponsors block D/R assignment. | Rebuild source bills and quantify attribution changes; the proxy is not an exact filing/sponsorship date. |
 | Bills | October snapshot extracted: 1,090,369 source-context measures across all 50 states, 5,028,893 sponsorships, 9,002,451 actions and 873,980 vote events. All eleven tables have recorded hashes/counts. | Official-source reconciliation, historical affiliations and filing-time text review. Full extraction is not a certified source universe or analytical denominator. |
 | Classification | Two actual official English ModernBERT-base fine-tuning runs saved and reloaded: external-only policy training, then 6,001-unit joint target/rejection training with 21 policy outputs plus null. | Both candidates still make 27 correct decisions in the same 50 development records. Learned rejection reduces false acceptance but loses correct policy decisions; neither candidate is approved for production. |
@@ -76,6 +76,14 @@ Generated research files remain ignored under `data/`:
   input pairs, all 78 predictions/logits and an unlabelled sensitivity report; not accuracy.
 - `processed/topic-family-boundary-review-v1/`: source-hashed training support by
   topic/domain/origin, all ten culture-training texts and thirteen unlabelled rubric cases.
+- `processed/reviewed-texas-family-boundaries-v1/`: thirteen separately reviewed source
+  inputs with four explicit footer/heading exclusions, backed by nine visual page renders.
+- `processed/adapted-topic-compatibility-review-v1/`: all 155 unchanged training rows
+  affected by six conservative adapted-subtopic review gates, plus the retained CAP codebook.
+- `processed/cap-source-semantic-concerns-v1/`: five original CSV records matched exactly
+  to frozen training inputs, with provisional text/code concerns and physical/logical locations.
+- `processed/completed-discovery-collection-v1/`: all 54 candidate dispositions, 52 raw
+  bodies, full extractions including rejections, provenance and 100 atomic checkpoints.
 - `raw/openstates/2026-10-public.pgdump`: retained source; SHA-256
   `6aa8341edc9ec251f4fb1eafb134b3415e72296e5391e05b39aded5e1ae2580c`.
 - `processed/preview_browser_validation.json`: checks bound to the local build manifest.
@@ -654,14 +662,23 @@ These supplied labels therefore do not establish supervised coverage of the adap
 marriage/family/religion scope. This does not prove a model can never generalize; it means
 the broad category name and existing training count do not validate that generalization.
 
-A separate packet retains thirteen complete Texas Republican rubric candidates with their
+A separate original packet retains thirteen complete Texas Republican rubric candidates with their
 original unit IDs, exact source slices and physical-page locations. They contrast school
 religion, medical conscience, parental authority, child healthcare, disability services,
 marriage officiation/definition, historic preservation, religious holidays, divorce, foster
 care and adoption. No topic labels or training permission have been assigned. Extracted
-page markers and an absorbed Mental Health heading remain explicit boundary problems,
-not silently cleaned text. In particular, a family-related word does not by itself make
+page markers and an absorbed Mental Health heading remain in that unchanged original packet.
+In particular, a family-related word does not by itself make
 healthcare, rights or social-service policy a category-23 example.
+
+Subsequent direct inspection of nine physical PDF pages supports a **separate**, assistant
+boundary-only packet for all thirteen inputs. Four inputs change: planks 127 and 204 exclude
+printed footer/navigation text, plank 144 excludes the following Mental Health heading,
+and plank 212 excludes an intervening footer while retaining all four foster-care subitems.
+Explicit source/exclusion spans account for every non-whitespace character exactly once.
+The excluded heading remains evidence, not silently appended context. No topics, independent
+gold, training admission or analytical admission were assigned. Whole native substantive
+units may still cross policy topics.
 
 | Diagnostic/support artifact | SHA-256 |
 |---|---|
@@ -670,10 +687,58 @@ healthcare, rights or social-service policy a category-23 example.
 | Context-sensitivity report | `3109377effafc31a33dbcff3c30a9f1a7a895dca1ecb8946a76c670d99fd8695` |
 | All 21 topics' training support | `704cb7084e03c85f3ceda4ff6d86d2063644b4c10180b95cb38248d81736868d` |
 | Thirteen unresolved rubric candidates | `b59427ef4c8dae6467d6e2b64f4059beca8cd7adf5ecd3b62db33b045b623ffe` |
+| Thirteen boundary-reviewed, still unlabelled inputs | `98c642d91e2569a799c0b75f452c13694c244845eedc80731063f6ea17483f6a` |
 
 The original 27/50 development results and model weights remain unchanged. Neither the
 source-context diagnostic nor the support audit admits any new analytical classifications
 or justifies another training run before the source/rubric gaps are addressed.
+
+### Adapted taxonomy compatibility is not numeric-code agreement
+
+Future external-label preparation now quarantines six source subtopics before sampling:
+
+| Source subtopic | Adapted-scope boundary requiring review | Affected original training rows |
+|---|---|---:|
+| 1208 | Family | 63 |
+| 1308 | Childcare/leave | 8 |
+| 1405 | Rural development | 27 |
+| 1526 | Sports | 9 |
+| 2030 | Holidays | 1 |
+| 2101 | Parks/historic sites | 47 |
+
+The immutable compatibility packet retains all **155 original rows**: 75 bills and
+80 platform units. All complete texts were read. An independent reconstruction exactly
+matches these wrappers to the original frozen training file. The gates mean **review
+required**, not 155 proven errors or automatic reassignment to Culture. Many crime,
+land-management and business-regulation examples may retain defensible original topics.
+Paid leave, rural broadband, ceremonial observances, heritage material and context-dependent
+fragments expose distinct scope or rejection questions.
+
+The official CAP master-codebook HTML is retained with retrieval provenance. Its displayed
+version is 1.1, dated August 9, 2022; its displayed citation year is 2025. The project taxonomy,
+original labels, both model checkpoints and original 27/50 results remain unchanged.
+These are conservative preparation gates, not a finalized crosswalk or a certified rubric.
+
+Five selected bill concerns were also checked against the **original CSV**, not merely the
+training export. Records 390333, 390336, 390341, 399161 and 454830 reproduce the exact supplied
+descriptions and all four original/PAP codes: major 12, subtopic 1208. They concern Internet
+firearms, police discipline, firefighter hiring, Medicare mammography reimbursement and
+VA therapist qualifications. Some major-12 assignments may be defensible even when the
+family subtopic is doubtful; the mammography description presents a more fundamental
+text/major-code concern. Code-version agreement therefore does not establish semantic
+correctness. No corrected labels or independent reference judgments were invented.
+
+The source-concern packet retains full original rows, exact frozen training rows, source
+hashes, provisional rationales and both physical-line ranges and logical CSV record indices.
+The training field named `source_csv_line` is a logical record index including the header,
+not a guaranteed physical file line. These five selected concerns do not estimate a
+source-wide error rate, and the underlying external bill texts were not independently verified.
+
+| Compatibility evidence | SHA-256 |
+|---|---|
+| All 155 affected original training rows | `532e73f41abf1f8e9f31d993576a4dabb65ef410a5a0afc5d299d77d61349e70` |
+| Retained official codebook HTML | `76e9e2424353c5814d9aed330113c80de63f3b868c328c22cae1d672b05c7fbd` |
+| Five exact original-CSV concerns | `fab755e140dc0ad6666765b6ea807d1e28ade9c5673a3de71bd2d4d52e3b2e37` |
 
 ### Preserve repeated units' actual source locations
 
@@ -723,6 +788,51 @@ recovery evidence, not an automatic resume implementation or completeness certif
 An explicit `--no-wayback` supports bounded live-only supplements without repeated failed
 archive requests. Skipped archive searches remain distinguishable from successful searches;
 disabling both channels is rejected.
+
+### Completed discovery inventory collection and honest retrieval failures
+
+A separately frozen collection attempted **all 54 saved candidate URLs**, including weak
+and negative-scoring links. It retained 52 successful response bodies, with complete
+extractions even for rejected candidates. Two retrievals failed: AZ-D's resolutions page
+and DE-D's `/our-platform`; another Delaware page was retrieved. The automated content
+filter accepted 25 rows across 22 organizations and rejected 27 retrieved rows. These are
+filter outcomes, not verified platform identities, complete commitments, adoption or
+operative status. All 100 organizations remain unresolved on operative-platform coverage.
+Original production/frozen source corpora were not replaced.
+
+The packet binds the original inventory, registry, legacy gap annotations, executable source
+copies, exact arguments, raw responses and provenance. All 100 organizations have atomic
+JSON checkpoints; the 54 candidate dispositions and failure totals reconcile exactly.
+Complete extracted text and a separate automated-acceptance flag are preserved in
+`extracted_candidates.jsonl`, so short statements and landing pages are not lost merely
+because they fail the full-platform filter. Following their substantive links remains work
+to do. The packet's per-file hashes were independently checked after completion.
+
+Two reporting defects were repaired before this run: failed retrieval rows previously
+counted as `candidates_rejected`, and `--report-only` dropped failed rows entirely.
+Reports now distinguish all-fetch-failed, mixed failed/rejected, unattempted strong
+candidates and actual filter rejections. `n_fetch_failed` and `n_rejected` expose their
+counts, including failures in organizations with some accepted evidence. The legacy
+`n_fetched` field still counts candidate attempts, not successful downloads. Resume excludes
+old failed rows before retrying; report-only retains them without issuing network requests.
+The coverage figure uses distinct unresolved-status markers and no longer claims that
+rejection proves absence, or that an old hardcoded date is the collection cutoff.
+
+New collector CLI runs checkpoint each organization before starting the next. Checkpoints
+bind candidate/registry/code hashes, exact arguments and all retained/retried outcomes;
+operative status remains explicitly unresolved. The default directory is unique under
+`--out-dir`, or `--checkpoint-dir` selects a fresh explicit directory. Existing checkpoint
+directories are refused. These files support manual recovery, not automatic checkpoint
+resume or scientific certification.
+
+| Completed collection artifact | SHA-256 |
+|---|---|
+| Full extractions and all candidate dispositions | `c718824f5940a919fadda961cf21afb8a67e65c4bfa3d70f6d40bb96d799c892` |
+| Separate collection Parquet | `b617a99a88c409158c12e7364e7a51782af9561040d4b513b79fe06a18815ff0` |
+| 100-organization gap report | `fb50a97293212e96c989362822435b9a29ad5cb657f329fbe27f0c724d435263` |
+| Completed run manifest | `f4bff6da8332576c5eeed4f718aa1d794bc5ceb95a782743856de752cca09a02` |
+
+These ignored local artifacts are not backed up by pushing the repository.
 
 ### Short resolutions and corrected gap findings
 

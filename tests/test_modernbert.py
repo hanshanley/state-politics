@@ -161,6 +161,48 @@ def test_external_initialization_quarantines_incompatible_codes_and_preserves_mi
     ) == []
 
 
+@pytest.mark.parametrize(("major", "subtopic", "flag"), [
+    ("12", "1208", "adapted_family_boundary"),
+    ("13", "1308", "adapted_child_care_leave_boundary"),
+    ("14", "1405", "adapted_rural_development_boundary"),
+    ("15", "1526", "adapted_sports_boundary"),
+    ("20", "2030", "adapted_holiday_boundary"),
+    ("21", "2101", "adapted_historic_site_boundary"),
+])
+def test_external_subtopics_with_adapted_scope_need_review(major, subtopic, flag):
+    row = _cap_row(
+        majortopic=major, subtopic=subtopic,
+        pap_majortopic=major, pap_subtopic=subtopic,
+    )
+    assert compatibility_flags(row, {int(major)}, 2000) == [flag]
+
+
+def test_external_family_boundary_is_quarantined_before_sampling(tmp_path):
+    path = tmp_path / "source.csv"
+    rows = [
+        _cap_row(
+            id="family", majortopic="12", subtopic="1208",
+            pap_majortopic="12", pap_subtopic="1208",
+            description="A bill to change family law and provide new procedures "
+            "for divorce and child custody.",
+        ),
+        _cap_row(),
+    ]
+    with path.open("w", newline="") as handle:
+        writer = csv.DictWriter(handle, fieldnames=rows[0])
+        writer.writeheader()
+        writer.writerows(rows)
+    source = (path.name, "bill", "https://example.test/frozen.csv", sha256_file(path))
+    prepared, report = prepare(
+        tmp_path, [6, 12, 23], per_source_topic=1, min_year=2000, seed=1,
+        reviewed=[], sources=[source],
+    )
+    assert [row["source_record_id"] for row in prepared] == ["one"]
+    summary = report["sources"][0]
+    assert summary["dispositions"]["quarantined"] == 1
+    assert summary["quarantine_flags_overlapping"] == {"adapted_family_boundary": 1}
+
+
 def test_external_corpus_is_checksum_bound_and_reserves_target_text_families(tmp_path):
     path = tmp_path / "source.csv"
     rows = [
