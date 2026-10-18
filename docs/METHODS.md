@@ -251,6 +251,14 @@ rows and five selected concerns reproduced from the original CSV; existing corpo
 checkpoints and development references remain unchanged. Neither affected-row counts nor
 assistant source review constitute an independent label-error estimate or finalized rubric.
 
+The separate thirteen-case family/religion draft review proposes seven conditional
+single-topic dispositions, three mixed-native dispositions and three unresolved precedence
+decisions. These are not canonical labels or approved rubric rules. All thirteen cases
+come from the same Texas Republican source document already used by ten development rows,
+although none exactly or normalization-matches an existing input. They cannot be counted
+as a fresh independent test or admitted to training merely because the selected spans
+differ. No taxonomy bytes, frozen references, model weights or thresholds changed.
+
 ### Legacy analytical pipeline (not revalidated)
 
 With both platform corpora in hand, `state_politics.analysis` segments every document into

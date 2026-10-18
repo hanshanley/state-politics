@@ -469,21 +469,28 @@ def test_checkpoint_rejects_incompatible_input_contract_before_loading_weights(
         ModernBertClassifier(topics, tmp_path, allow_provisional=True)
 
 
-def test_split_export_calibration_and_frozen_evaluation_handoff(tmp_path, monkeypatch):
+@pytest.mark.parametrize("separator", ["\u2028", "\u2029", "\u0085"])
+def test_split_export_calibration_and_frozen_evaluation_handoff(tmp_path, monkeypatch, separator):
     import hashlib
 
     codes = [topic.code for topic in load_topics()]
     taxonomy_hash = sha256_file(DEFAULT_TOPICS_PATH)
     evidence = [
-        _label(f"dev-{i}", f"Synthetic development evidence number {i}", "dev")
+        _label(f"dev-{i}", f"Synthetic development evidence{separator}number {i}", "dev")
         for i in range(40)
     ] + [
-        _label(f"test-{i}", f"Synthetic heldout evidence number {i}", "test")
+        _label(f"test-{i}", f"Synthetic heldout evidence{separator}number {i}", "test")
         for i in range(4)
     ]
     labels = tmp_path / "labels.jsonl"
-    labels.write_text("".join(json.dumps(row) + "\n" for row in evidence))
+    labels.write_text("".join(json.dumps(row, ensure_ascii=False) + "\n" for row in evidence))
     called = []
+
+    def retain_literal_unicode(path):
+        predictions = [json.loads(line) for line in path.read_text().split("\n") if line]
+        path.write_text("".join(
+            json.dumps(row, ensure_ascii=False) + "\n" for row in predictions
+        ))
 
     class SyntheticModel:
         def predict_records(self, texts, *, domain):
@@ -491,7 +498,8 @@ def test_split_export_calibration_and_frozen_evaluation_handoff(tmp_path, monkey
             return [{
                 "input_sha256": hashlib.sha256(text.encode()).hexdigest(),
                 "input_domain": domain, "taxonomy_sha256": taxonomy_hash,
-                "model_run": "synthetic-run", "base_model_run": "synthetic-run",
+                "model_run": f"synthetic{separator}run",
+                "base_model_run": f"synthetic{separator}run",
                 "logits": [[12 if code == 6 else 0 for code in codes]],
             } for text in texts]
 
@@ -502,6 +510,7 @@ def test_split_export_calibration_and_frozen_evaluation_handoff(tmp_path, monkey
     ]) == 0
     assert called == [row["text"] for row in evidence if row["split"] == "dev"]
     assert not dev_predictions.with_suffix(".jsonl.part").exists()
+    retain_literal_unicode(dev_predictions)
     calibration = tmp_path / "calibration.json"
     assert evaluate_main([
         "--labels", str(labels), "--predictions", str(dev_predictions), "--split", "dev",
@@ -512,6 +521,7 @@ def test_split_export_calibration_and_frozen_evaluation_handoff(tmp_path, monkey
     assert modernbert_module.main([
         "--inputs", str(labels), "--split", "test", "--out", str(test_predictions),
     ]) == 0
+    retain_literal_unicode(test_predictions)
     report = tmp_path / "evaluation.json"
     arguments = [
         "--labels", str(labels), "--predictions", str(test_predictions), "--split", "test",
@@ -524,7 +534,7 @@ def test_split_export_calibration_and_frozen_evaluation_handoff(tmp_path, monkey
     assert result["scientific_certification"] == "not_performed"
     original = test_predictions.read_text()
     for field in ("taxonomy_sha256", "base_model_run"):
-        predictions = [json.loads(line) for line in original.splitlines()]
+        predictions = [json.loads(line) for line in original.split("\n") if line]
         predictions[0][field] = "different"
         test_predictions.write_text("".join(json.dumps(row) + "\n" for row in predictions))
         with pytest.raises(SystemExit):

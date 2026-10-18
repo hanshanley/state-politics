@@ -207,7 +207,7 @@ def main(argv=None):
     labels = [row for row in load_examples(args.labels, codes) if row["split"] == args.split]
     if not labels:
         parser.error("selected evaluation split has no labels")
-    predictions = [json.loads(line) for line in args.predictions.read_text().splitlines() if line]
+    predictions = [json.loads(line) for line in args.predictions.read_text().split("\n") if line]
     runs = {row.get("model_run") for row in predictions}
     if len(runs) != 1 or not all(isinstance(run, str) and run for run in runs):
         parser.error("predictions must identify exactly one nonempty model run")

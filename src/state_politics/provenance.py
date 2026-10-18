@@ -11,8 +11,8 @@ observation with no such record is simply absent rather than guessed at.
 
 Design notes
 ------------
-* :func:`fetch` **never raises on an HTTP error status**. A 404 is a legitimate research
-  finding ("this state party published no platform"), so it is recorded with ``ok=False``
+* :func:`fetch` **never raises on an HTTP error status**. A 404 establishes a failed URL
+  retrieval, not that a party published no platform. It is recorded with ``ok=False``
   and returned to the caller, not thrown away as an exception.
 * Network transport is injected, so the retry/record logic is testable without a network.
 * Retries cover transport errors plus 429/5xx, which are transient. A 404 is not retried.

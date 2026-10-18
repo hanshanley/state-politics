@@ -27,7 +27,7 @@ def build_preview(ledger_path: Path, historical_path: Path, out: Path) -> dict:
     if len(rows) != 100 or keys != expected:
         raise ValueError("preview requires all 100 unique expected organization rows")
     archive = [
-        json.loads(line) for line in historical_path.read_text().splitlines() if line.strip()
+        json.loads(line) for line in historical_path.read_text().split("\n") if line.strip()
     ]
     partitions = defaultdict(list)
     for row in archive:

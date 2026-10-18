@@ -35,7 +35,7 @@ def load_examples(path: Path | str, codes: list[int]) -> list[dict]:
     rows = []
     seen_ids = set()
     owners: dict[tuple[str, str], str] = {}
-    for number, line in enumerate(Path(path).read_text().splitlines(), 1):
+    for number, line in enumerate(Path(path).read_text().split("\n"), 1):
         if not line.strip():
             continue
         row = json.loads(line)

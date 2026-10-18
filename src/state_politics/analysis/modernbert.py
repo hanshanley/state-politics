@@ -442,7 +442,7 @@ def main(argv=None):
     add_model_arguments(parser)
     args = parser.parse_args(argv)
     rows = [
-        json.loads(line) for line in args.inputs.read_text().splitlines() if line.strip()
+        json.loads(line) for line in args.inputs.read_text().split("\n") if line.strip()
     ]
     rows = [row for row in rows if row.get("split") == args.split]
     if not rows:

@@ -953,6 +953,137 @@ follow-up directory; neither is represented as a pass.
 | Limited source reviews | `8a249db7bbc95a23c6fe24e864e0fb205b0cad9ec634154917838e17d15f64b4` |
 | Derived 100-organization ledger | `70ec5a09f1ef0b6ac5b3e6ea5ac65164fb8317cb69e4c5f50ac6e62f286caad4` |
 
+### Completed linked-source recovery and Unicode-safe evidence ingestion
+
+The separate `data/processed/linked-platform-source-recovery-v1/` packet completed
+**148 selected URLs across 30 organizations**, preserving 4,723 parent-bound link
+occurrences, 146 response bodies and two retrieval failures. The collector accepted
+82 responses heuristically across 23 organizations and rejected 64 retrieved responses;
+all extracted text, including rejected content, remains retained. Exactly 100 organization
+checkpoints and report rows reconcile. Independent verification matched all 260 manifest
+file hashes, every selected URL/disposition and every retained body/text hash.
+
+The two failures are a Georgia Republican convention-report URL and a Nevada Republican
+resolution PDF, both HTTP 404. These establish failed URLs, not publication absence.
+An upload-directory year is not an adoption date. Short substantive resolutions, national
+platform copies, institutional rules, ceremonial material and loading/permission pages
+remain distinguishable; automated acceptance does not establish document identity,
+adoption or operative coverage. Oregon's annual resolution indexes still need further
+link follow-through.
+
+Real retained text exposed a separate ingestion defect: ten literal U+2028 characters
+inside valid JSON strings were incorrectly treated as record boundaries by Python's
+`splitlines()`. The fix uses physical LF boundaries in five JSONL consumers: training
+labels, inference inputs, evaluation predictions, historical source-ledger ingestion
+and local-preview ingestion. Focused regressions exercise literal U+2028, U+2029 and
+U+0085 through inference/calibration/frozen evaluation and complete preview downloads.
+Malformed JSON still raises; no broad exception handling or source rewriting was added.
+The immutable extraction packet, input hashes, labels and model behavior remain unchanged.
+The retrieval module's documentation now likewise distinguishes a 404 from evidence of
+publication absence.
+
+### Failed-homepage supplement and external-host platforms
+
+Separate bounded retrievals now retain the following packets. These are per-packet
+request counts, **not a deduplicated union or verified platform-coverage count**:
+
+| Packet | Requested sources | Retained response bodies | Retrieval failures |
+|---|---:|---:|---:|
+| Failed-homepage supplement, eight organizations | 17 | 13 | 4 |
+| External-host follow-up, Nevada and Washington | 8 | 6 | 2 |
+
+`failed-homepage-source-recovery-v1/` preserves fifteen selected seeds, 443 seed-page
+link occurrences and two exact linked child PDFs. It recovers New Mexico Republican's
+2026-labelled platform PDF, New Mexico Democratic's amended 2024 platform and explicitly
+draft 2026 core-values PDF, Arkansas Democratic's explicit draft, and Oklahoma Democratic's
+2025 state addendum through two URLs. The Oklahoma PDFs are byte-identical
+(`5180c453ebf1975cf5d0c64ccbcd793dbbf763a9b536baf16908143feb583282`):
+one document, not independent evidence. The New Mexico index reports approval of the
+2024 platform and a prospective vote on the 2026 draft; it does not establish that the
+draft passed or which version is operative at the still-unset analytical cutoff.
+
+The Arkansas landing page, Illinois homepage and both Washington party pages returned
+403. New Jersey Republican's homepage did not establish a platform. Oklahoma's supposed
+documents endpoint returned homepage-like content, not the intended page; its adoption
+article is not itself platform text. The supplement preserves these distinctions rather
+than counting HTTP 200 as successful document recovery. Selection was bounded and search
+result responses were not archived; no exhaustive-search claim is made.
+
+`external-platform-source-followup-v1/` retrieves a three-page Nevada Democratic PDF
+whose contents identify a 2026 state platform despite an agenda-labelled filename. This
+exposes a reason to review content rather than accept or exclude solely by filename.
+It also retains Washington Democratic's linked 2020 and 2022 PDFs. Washington's party
+pages still returned 403 with explicitly recorded alternative request headers.
+The 2024 and 2026 Google document URLs and 2026 Drive PDF viewer initially returned
+JavaScript/loading shells, not recovered policy text. Exact observed hyperlinks were
+used; no alternative export URL was guessed and no permission restriction bypassed.
+
+A fresh anonymous Chromium probe established that the 2026 Google document is publicly
+viewable without signing in. A separate `washington-public-document-download-v1/`
+packet then used the normally enabled **File > Download > Plain Text** menus for both
+public documents. It retains browser-generated downloads, original navigation responses,
+menu/accessibility evidence, screenshots, exact code and browser version. The 2024 export
+contains 136,680 decoded characters and the 2026 export 203,531, excluding their UTF-8
+BOMs. These are retained viewer exports, not a claim of independent version/adoption
+verification, complete Google-document/tab/attachment coverage or visual PDF fidelity.
+The official Drive PDF itself remains unrecovered. No authentication or owner-disabled
+download was circumvented; the earlier shell-only captures remain unchanged.
+
+### Scanned resolutions retained with page-level OCR provenance
+
+`linked-resolution-ocr-v1/` preserves separate OCR for all five zero-text North Carolina
+Republican/North Dakota Democratic PDFs selected from the linked packet. Original PDF
+hashes match; all fourteen physical-page renders and ordered page texts are retained.
+Every document now has nonempty OCR. North Carolina includes a county financial-
+transparency submission explicitly seeking state-convention consideration, an AI-rights
+resolution, an early-voting resolution and a ceremonial memorial resolution. A county
+submission and a memorial are not interchangeable with an adopted state policy platform.
+The unrelated Ohio staff directory was deliberately not OCRed as policy evidence.
+
+All five OCR texts were read. Limited visual checks inspected North Dakota physical
+page 9 and the North Carolina financial submission's signature page, not all fourteen
+pages. North Dakota page 9 contains only the printed folio; OCR missed that numeral.
+The complete original render remains evidence, not a silently corrected transcription.
+The financial submission's second page has substantial scan/OCR artifacts. Nonempty text
+and page/hash reconciliation do not certify transcription quality or state adoption.
+The actual Tesseract version is **5.5.3**, still mismatching the declared **5.5.2**.
+That reproducibility gate remains open; no canonical corpus, labels or model changed.
+
+### Conditional family/religion rubric proposals are not new gold
+
+`family-rubric-draft-review-v1/` freezes all thirteen complete boundary-reviewed inputs,
+the unchanged taxonomy, draft decision rules, individualized rationales and prior-use
+disclosures. Seven cases receive conditional single-topic proposals, three are treated
+as genuinely mixed-native candidates, and three still require a rubric-precedence
+decision. No canonical labels, rubric approval, training admission, model-selection
+admission or analytical admission were assigned.
+
+None exactly or normalization-matches an existing input and none comes from a training
+document. Crucially, **all thirteen share the source document used by ten existing
+development rows**. Different spans do not make that document independent. Do not turn
+these selected cases into fresh-test evidence or quietly admit the development document
+to training. No new model run or threshold change occurred; the original 27/50 results
+remain unchanged.
+
+| New recovery/review artifact | SHA-256 |
+|---|---|
+| Linked 148-source packet manifest | `363213800c765970a759962d8dfa0667b1e58f78d0853c9d4343fecad55a6b44` |
+| Complete linked-source extraction JSONL | `067816836fbef23d6644bbb9537fe28aef3523444ae10bdc80ba85cca2b9681a` |
+| Failed-homepage supplement manifest | `31bb80e33b1b37cb8236a01d8e2eb6d7cf6a9a5b40baada6a5aeb0d002403afa` |
+| External-host follow-up manifest | `5482c7e9e6fb82ca9c86e151b1bf82f95be467e884c512aabe2fcd32d2cf2a2f` |
+| Anonymous browser probe manifest | `73fccb37c1be95b9688cc52e9c02ed0a92bceb873234be70d354b1138b441d02` |
+| Public viewer-download manifest | `2877b0b28dc91732a139a34a5f887d136bca2ec408abab54c7fb602a8479135d` |
+| Washington 2024 exported bytes | `a6f300d0ac34e46b29103dfb5a5bb8e7d231491ec46514565ad0c798179a59c5` |
+| Washington 2026 exported bytes | `73e1f9edc8cffd4b1debf7a517e7e91f2cc907a9fccf1a65dde427ab81bdf221` |
+| Fourteen-page OCR packet manifest | `866ea456d23f4627490b54c56b103bf7ff65f7aad2727a732af055efab9417f4` |
+| Thirteen conditional rubric reviews | `162204412c51518be6a5a32362dd77d847777975e454526525a5602255be8119` |
+| Unapproved draft rubric rules | `2d2d55aef2ee69d8c7ac894f13a2c5c6d921d6b8837a515f33149e24687ca59d` |
+
+Every operative-platform status remains unresolved and no source is newly admitted to
+analytical counts or training. These ignored `data/` packets are persistent local
+research artifacts; committing their hashes and documentation does **not** back up their
+bytes to GitHub. No production publication files, routes or assets changed.
+
 ## Blocking decisions
 
 The reviewer arrangement remains unresolved. Do not assume a human-review commitment or

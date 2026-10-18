@@ -9,26 +9,36 @@ import pytest
 import yaml
 
 from state_politics.analysis.coverage import build_source_ledger
+from state_politics.analysis.coverage import main as coverage_main
 
 ROOT = Path(__file__).resolve().parents[1]
 build_preview = runpy.run_path(str(ROOT / "scripts/build_site.py"))["build_preview"]
 
 
-def test_preview_downloads_full_text_and_reconciles_all_organization_rows(tmp_path):
+@pytest.mark.parametrize("separator", ["\u2028", "\u2029", "\u0085"])
+def test_preview_downloads_full_text_and_reconciles_all_organization_rows(tmp_path, separator):
     organizations = yaml.safe_load((ROOT / "conf/party_registry.yml").read_text())[
         "organizations"
     ]
     documents = [
         {"state": "TX", "party": "D", "year": 2010, "filename": "TX-2010-D.txt",
-         "text": "Complete historical policy text, not metadata only."},
+         "text": f"Complete historical policy text{separator}not metadata only."},
         {"state": "US", "party": "R", "year": 2008, "filename": "US-2008-R.txt",
          "text": "National evidence remains in the full archive download."},
     ]
     ledger = build_source_ledger(organizations, documents)
     coverage = tmp_path / "source_coverage.json"
     coverage.write_text(json.dumps(ledger))
-    history = tmp_path / "historical.jsonl"
-    history.write_text("".join(json.dumps(row) + "\n" for row in documents))
+    history = tmp_path / "platforms_historical.jsonl"
+    history.write_text("".join(
+        json.dumps(row, ensure_ascii=False) + "\n" for row in documents
+    ))
+    assert coverage_main([
+        "--sources-only", "--data-dir", str(tmp_path),
+        "--registry", str(ROOT / "conf/party_registry.yml"), "--out", str(coverage),
+    ]) == 0
+    generated = json.loads(coverage.read_text())
+    assert generated["rows"] == ledger["rows"]
     out = tmp_path / "preview"
     result = build_preview(coverage, history, out)
     assert result["archive_documents"] == 2

@@ -248,7 +248,7 @@ def main(argv: list[str] | None = None) -> int:
         data = Path(args.data_dir)
         historical_path = data / "platforms_historical.jsonl"
         historical = [
-            json.loads(line) for line in historical_path.read_text().splitlines() if line
+            json.loads(line) for line in historical_path.read_text().split("\n") if line
         ]
         discovery_path = data / "platform_discovery_status.csv"
         discovery = []
