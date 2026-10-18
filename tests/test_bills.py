@@ -8,6 +8,10 @@ outvoting primary sponsors in party attribution.
 
 from __future__ import annotations
 
+import json
+
+import pandas as pd
+import pyarrow.parquet as pq
 import pytest
 
 from state_politics.bills import openstates_dump as dump_module
@@ -118,16 +122,31 @@ def test_copy_blocks_unescapes_tabs_and_newlines():
     assert list(copy_blocks(lines))[0]["title"] == "An Act\nrelating to\ttaxes"
 
 
-def test_copy_blocks_skips_rows_with_the_wrong_column_count():
+def test_copy_blocks_rejects_rows_with_the_wrong_column_count():
     lines = iter([
         'COPY public.t (id, title) FROM stdin;',
         "only-one-field",
         "ocd-bill/2\tgood row",
         "\\.",
     ])
-    rows = list(copy_blocks(lines))
-    assert len(rows) == 1
-    assert rows[0]["id"] == "ocd-bill/2"
+    with pytest.raises(ValueError, match="expected 2 columns, found 1"):
+        list(copy_blocks(lines))
+
+
+def test_copy_blocks_requires_terminator_and_requested_source_table():
+    with pytest.raises(ValueError, match="unterminated COPY"):
+        list(copy_blocks(iter(["COPY public.t (id) FROM stdin;", "1"])))
+    with pytest.raises(ValueError, match="no COPY block"):
+        list(copy_blocks(iter(["-- requested table absent"]), require_copy=True))
+
+
+def test_copy_blocks_preserves_control_escapes_and_encoded_unicode():
+    rows = list(copy_blocks(iter([
+        "COPY public.t (id, text) FROM stdin;",
+        r"one" + "\t" + r"\b\f\v\303\251\xC3\xA9\\n",
+        "\\.",
+    ])))
+    assert rows[0]["text"] == "\b\f\véé\\n"
 
 
 def test_copy_blocks_handles_several_sections():
@@ -274,3 +293,116 @@ def test_build_bills_uses_historical_memberships_and_preserves_unresolved_primar
     assert indexed.at["early", "party_attribution_date_basis"] == "first_action_proxy"
     assert indexed.at["early", "party_attribution_date"] == "2019-02-01"
     assert len(sponsors) == 4
+
+
+def test_evidence_retains_source_versions_and_reconciles_exact_bill_joins(tmp_path, monkeypatch):
+    from state_politics.bills import ingest
+
+    bills = pd.DataFrame({"bill_id": ["included", "no-evidence"], "state": ["TX", "AK"]})
+    abstract = {
+        "id": "a", "abstract": "Original introduced summary\nincluding its second line.",
+        "note": "as introduced", "bill_id": "included",
+    }
+    version = {
+        "id": "v", "note": "Signed act", "date": None, "bill_id": "included",
+        "extras": "{}", "classification": "{}",
+    }
+    tables = {
+        "opencivicdata_billabstract": [
+            abstract, {**abstract, "id": "excluded", "bill_id": "outside-window"},
+        ],
+        "opencivicdata_billsource": [
+            {"id": "s", "note": "", "url": "", "bill_id": "included"},
+        ],
+        "opencivicdata_billversion": [
+            version, {**version, "id": "excluded-version", "bill_id": "outside-window"},
+        ],
+        "opencivicdata_billversionlink": [
+            {"id": "l", "media_type": "text/html",
+             "url": "https://legislature.example/act", "version_id": "v"},
+            {"id": "excluded-link", "media_type": "text/html",
+             "url": "https://legislature.example/other", "version_id": "excluded-version"},
+        ],
+    }
+    monkeypatch.setattr(ingest, "stream_table", lambda path, table: iter(tables[table]))
+    report = ingest.extract_bill_evidence("fixture", bills, tmp_path)
+    assert pd.read_parquet(tmp_path / "bill_abstracts.parquet").to_dict("records") == [abstract]
+    assert pq.read_table(tmp_path / "bill_versions.parquet").to_pylist() == [version]
+    links = pd.read_parquet(tmp_path / "bill_version_links.parquet")
+    assert links["bill_id"].tolist() == ["included"]
+    assert links["version_id"].tolist() == ["v"]
+    coverage = pd.read_parquet(tmp_path / "bill_evidence_coverage.parquet").set_index("bill_id")
+    assert coverage.at["included", "n_nonempty_abstracts"] == 1
+    assert coverage.at["no-evidence", "n_abstracts"] == 0
+    assert report["source_rows"]["billabstract"] == 2
+    assert report["retained_rows"]["billabstract"] == 1
+    assert report["bills_with_source_urls"] == 0
+    assert report["bills_with_version_references"] == 1
+    assert report["rich_text_automatically_used_for_filing_classification"] is False
+
+
+def test_extraction_failure_preserves_incomplete_manifest(tmp_path, monkeypatch):
+    from state_politics.bills import ingest
+
+    dump = tmp_path / "fixture.pgdump"
+    dump.write_bytes(b"synthetic source")
+    out = tmp_path / "output"
+    monkeypatch.setattr(ingest, "find_pg_restore", lambda: "/verified/pg_restore")
+
+    def fail(*args, **kwargs):
+        raise RuntimeError("source extraction failed")
+
+    monkeypatch.setattr(ingest, "build_bills", fail)
+    with pytest.raises(RuntimeError, match="source extraction failed"):
+        ingest.main(["--dump", str(dump), "--out-dir", str(out),
+                     "--provenance", str(tmp_path / "provenance.jsonl")])
+    manifest = json.loads((out / "bill_extraction_manifest.json").read_text())
+    assert manifest["status"] == "incomplete"
+    assert manifest["source_sha256"] == sha256_file(dump)
+    assert not (out / "bills.parquet").exists()
+    with pytest.raises(FileExistsError, match="never overwrite"):
+        ingest.main(["--dump", str(dump), "--out-dir", str(out)])
+
+
+def test_ingest_promotes_complete_reconciled_artifact_bundle(tmp_path, monkeypatch):
+    from state_politics.bills import ingest
+
+    jurisdiction = "ocd-jurisdiction/country:us/state:tx/government"
+    tables = {
+        "opencivicdata_jurisdiction": [{"id": jurisdiction}],
+        "opencivicdata_legislativesession": [{
+            "id": "session", "jurisdiction_id": jurisdiction,
+            "identifier": "2025", "start_date": "2025-01-01",
+        }],
+        "opencivicdata_bill": [{
+            "id": "bill", "legislative_session_id": "session",
+            "title": "Fund public schools", "first_action_date": "2025-02-01",
+        }],
+        "opencivicdata_billabstract": [{
+            "id": "abstract", "abstract": "Provide school funding.",
+            "note": "As introduced", "bill_id": "bill",
+        }],
+    }
+    monkeypatch.setattr(
+        ingest, "stream_table", lambda path, table: iter(tables.get(table, [])),
+    )
+    monkeypatch.setattr(dump_module, "stream_table", ingest.stream_table)
+    monkeypatch.setattr(ingest, "find_pg_restore", lambda: "/verified/pg_restore")
+    dump = tmp_path / "fixture.pgdump"
+    dump.write_bytes(b"synthetic source")
+    out = tmp_path / "output"
+    assert ingest.main([
+        "--dump", str(dump), "--out-dir", str(out),
+        "--provenance", str(tmp_path / "provenance.jsonl"),
+    ]) == 0
+    manifest = json.loads((out / "bill_extraction_manifest.json").read_text())
+    assert manifest["status"] == "complete_extraction_not_source_certification"
+    assert manifest["scientific_certification"] == "not_performed"
+    assert manifest["source_row_counts"]["opencivicdata_bill"] == 1
+    assert manifest["bill_admission_counts"]["retained_source_context"] == 1
+    for name, artifact in manifest["artifacts"].items():
+        assert artifact["sha256"] == sha256_file(out / name)
+        assert artifact["rows"] == pq.read_metadata(out / name).num_rows
+    assert manifest["artifacts"]["bills.parquet"]["rows"] == 1
+    assert manifest["evidence"]["bills_with_nonempty_abstracts"] == 1
+    assert not list(out.glob(".bill-extraction-*"))

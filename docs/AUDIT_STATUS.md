@@ -59,6 +59,26 @@ manifest and remains an explicit audit failure, not a silently updated requireme
 The full test run still fails its real-artifact audit because declared datasets/results
 are missing. Other code checks must not be substituted for that missing research evidence.
 
+## Legislative extraction contract
+
+The extractor now stages all eleven bill, sponsorship, action, vote and richer-evidence
+tables before promotion. Its source-hashed manifest starts incomplete, existing artifacts
+cannot be overwritten, and successful extraction is explicitly **not source completeness
+or scientific certification**. An interrupted run retains its staging directory and the
+original dump; select a new output directory rather than overwriting its evidence.
+
+PostgreSQL COPY parsing now fails on malformed rows, missing source-table blocks and
+unterminated blocks instead of silently dropping evidence. Control escapes and encoded
+UTF-8 are preserved. Abstracts, source URLs, versions and version links retain original IDs,
+notes and dates with exact bill joins and per-bill availability counts. Empty URL fields
+do not count as available references. Snapshot abstracts and signed-act references are
+**not automatically filing-time-safe**, and version text has not yet been downloaded.
+
+The extraction manifest intentionally leaves the analytical cutoff unset. Retaining source
+context from sessions overlapping 2018 does not mean every retained row belongs in a
+2018-onward analytical denominator. Actual dates, missingness and session completeness must
+be measured after extraction.
+
 ## Blocking decisions
 
 The reviewer arrangement remains unresolved. Do not assume a human-review commitment or

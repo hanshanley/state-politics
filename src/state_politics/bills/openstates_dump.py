@@ -137,7 +137,9 @@ def list_tables(dump_path: Path | str) -> list[str]:
     return sorted(set(tables))
 
 
-def copy_blocks(lines: Iterator[str]) -> Iterator[dict[str, str | None]]:
+def copy_blocks(
+    lines: Iterator[str], *, require_copy: bool = False,
+) -> Iterator[dict[str, str | None]]:
     """Parse ``COPY ... FROM stdin;`` blocks into dicts.
 
     ``pg_restore --data-only`` emits PostgreSQL's text COPY format: a header naming the
@@ -146,11 +148,13 @@ def copy_blocks(lines: Iterator[str]) -> Iterator[dict[str, str | None]]:
     every missing value into data.
     """
     columns: list[str] | None = None
-    for line in lines:
+    found = False
+    for number, line in enumerate(lines, 1):
         line = line.rstrip("\n")
         if columns is None:
             match = re.match(r"COPY [^(]+\(([^)]*)\) FROM stdin;", line)
             if match:
+                found = True
                 columns = [c.strip().strip('"') for c in match.group(1).split(",")]
             continue
         if line == "\\.":
@@ -158,29 +162,39 @@ def copy_blocks(lines: Iterator[str]) -> Iterator[dict[str, str | None]]:
             continue
         values = line.split("\t")
         if len(values) != len(columns):
-            continue
+            raise ValueError(
+                f"malformed COPY row at line {number}: expected {len(columns)} columns, "
+                f"found {len(values)}"
+            )
         yield {
             column: None if value == "\\N" else _unescape(value)
             for column, value in zip(columns, values, strict=True)
         }
+    if columns is not None:
+        raise ValueError("unterminated COPY block")
+    if require_copy and not found:
+        raise ValueError("pg_restore emitted no COPY block for the requested table")
 
 
-_ESCAPES = {"\\n": "\n", "\\t": "\t", "\\r": "\r", "\\\\": "\\"}
+_ESCAPES = {
+    b"b": b"\b", b"f": b"\f", b"n": b"\n", b"r": b"\r",
+    b"t": b"\t", b"v": b"\v", b"\\": b"\\",
+}
+_COPY_ESCAPE = re.compile(rb"\\([0-7]{1,3}|x[0-9a-fA-F]{1,2}|.)", re.DOTALL)
 
 
 def _unescape(value: str) -> str:
     if "\\" not in value:
         return value
-    out, index = [], 0
-    while index < len(value):
-        pair = value[index:index + 2]
-        if pair in _ESCAPES:
-            out.append(_ESCAPES[pair])
-            index += 2
-        else:
-            out.append(value[index])
-            index += 1
-    return "".join(out)
+    def decode(match):
+        escaped = match.group(1)
+        if escaped[:1] in b"01234567":
+            return bytes([int(escaped, 8)])
+        if escaped.startswith(b"x") and len(escaped) > 1:
+            return bytes([int(escaped[1:], 16)])
+        return _ESCAPES.get(escaped, escaped)
+
+    return _COPY_ESCAPE.sub(decode, value.encode("utf-8")).decode("utf-8")
 
 
 def stream_table(dump_path: Path | str, table: str) -> Iterator[dict[str, str | None]]:
@@ -196,7 +210,7 @@ def stream_table(dump_path: Path | str, table: str) -> Iterator[dict[str, str | 
     )
     exhausted = False
     try:
-        yield from copy_blocks(process.stdout)
+        yield from copy_blocks(process.stdout, require_copy=True)
         exhausted = True
     finally:
         if process.stdout:

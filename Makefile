@@ -1,7 +1,8 @@
 # Reproducible build for the state-politics project.
 #
-# Ordered by dependency. Every target is idempotent and records provenance for anything it
-# fetches, so a rebuild can be interrupted and resumed without re-requesting work already done.
+# Ordered by dependency. Fetches record provenance. Resume support is target-specific:
+# retained dumps require matching checksums; incomplete downloads restart, and extraction
+# refuses existing outputs rather than overwriting an interrupted run.
 #
 # The two crawl targets (`platforms`, `bills-dump`) hit third-party servers and take a while;
 # they are deliberately not part of `all` so that `make all` on an existing checkout does the
