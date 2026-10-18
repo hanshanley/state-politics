@@ -183,6 +183,25 @@ heading prevent silent mismatches. Pagination/layout material can remain in span
 need cleaning and substantive topic review. They are **not gold labels, admitted training
 examples or an independent test set**; sibling items share one document family.
 
+After pushing the discovery repair, an actual follow-up of the three previously uncaptured
+institutional indexes retained ten more responses: three indexes and seven PDFs, with
+263 preserved reference observations and no failed requests. All bodies, standard texts,
+hashes, parent references and the exact seven-target selection were independently checked.
+A membership roster was explicitly excluded from this policy-index follow-up. Across these
+three retrieval packets the bounded totals are now **101 capture records, 93 retained
+responses, eight failed records and 61 PDF responses**, not 93 distinct policy documents.
+
+Crucially, Iowa Republicans' newly followed About Us page links a **2026-labelled state
+platform** that was absent from the earlier recovery; both it and the retained 2024 version
+have seven physical pages but distinct bodies and text. Limited version review retains both
+complete standard texts and a raw diff, not a count of substantive policy changes. The 2024
+source ends with a separately headed four-item junior-delegate report. The 2026 source
+instead includes a domestic-production statement with junior-delegate attribution inside
+its Commerce priorities. Five exact role-evidence spans and the two relevant page renders
+were checked. Do not flatten the older report into adopted party policy or blanket-reject
+all junior-attributed language in the newer source. Neither the link nor a `FINAL` filename
+establishes an exact adoption event or operative interval.
+
 | Local packet | Manifest SHA-256 |
 |---|---|
 | `data/processed/four-state-primary-source-followup-v1/` | `698c7f263cd12682774403313587ed7592ea035007f3178a924048b6c68ecd41` |
@@ -190,6 +209,8 @@ examples or an independent test set**; sibling items share one document family.
 | `data/processed/four-state-recovery-verification-v2/` | `2959619ea59e5a4337b113d00f18640a2bda6153d74fd776595341243ec9dedb` |
 | `data/processed/four-state-scan-ocr-v1/` | `4960b7c5df95d2da537277991c7f510d90f22740bfbd9fdef50bba5239da1785` |
 | `data/processed/mn-action-agenda-role-review-v1/` | `541222bddad1c6acc68d0b79df02b71a0acd82b7d30e39f7835f7d70087f798d` |
+| `data/processed/institutional-index-followup-v1/` | `e5b6f6e2bb90e1f255b86eeac327755a1f2792beba81c256d2907b1fc6b3c687` |
+| `data/processed/ia-republican-platform-version-review-v1/` | `1662791b918e800b4958317576475268003aede91a1d6daaa26c4b0f18e8c707` |
 
 These Git-ignored evidence packets remain local-only and separate from inventory v2 and the
 309-record preview. Code/documentation pushes do not back up their bodies. No classifier,
