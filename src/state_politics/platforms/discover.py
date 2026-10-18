@@ -67,7 +67,7 @@ WAYBACK_SOURCE_ORG = "Internet Archive (Wayback Machine CDX Server API)"
 #: Terms that a platform-like document's URL tends to contain. Used both as the server-side
 #: CDX regex and as the client-side link filter.
 DISCOVERY_TERMS = (
-    "platform", "principles", "resolutions", "priorities", "manifesto", "creed", "planks",
+    "platform", "principles", "resolution", "priorities", "manifesto", "creed", "planks",
 )
 
 _TERMS_RE = re.compile("|".join(DISCOVERY_TERMS), re.I)
@@ -130,7 +130,7 @@ _EXCLUDE_RE = re.compile(
 )
 
 #: A path segment that *is* the document, rather than a page that merely mentions one.
-_DOC_WORD = r"(?:platform|platforms|principles|resolutions|planks|creed|manifesto)"
+_DOC_WORD = r"(?:platform|platforms|principles|resolutions?|planks|creed|manifesto)"
 _STRONG_SEGMENT_RE = re.compile(
     rf"^(?:\d{{4}}[-_]?)?(?:party[-_])?{_DOC_WORD}(?:[-_]?\d{{4}})?$", re.I
 )

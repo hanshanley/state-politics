@@ -61,6 +61,62 @@ These new packets are not yet incorporated into the existing 309-record recovery
 its inventory and browser-verification counts remain unchanged. All `data/` evidence stays
 local and Git-ignored; a code/documentation push does not back it up.
 
+## Singular-resolution discovery and bounded follow-up
+
+The follow-up also exposed a separate omission: discovery matched **resolutions** but
+not **resolution** in a PDF filename or official link label. The shared discovery terms
+and document-name scoring now recognize both. This corrects collection eligibility,
+not substantive-policy classification, adoption or analytical admission.
+
+Two frozen offline comparisons preserve the exact old/new discovery producers and every
+candidate record. The first isolates the embedding repair. The second compares both
+repairs against commit `127af74`: 208 identified HTML captures across 45 organizations,
+within 339 selected source records, retain every previous candidate without any live HTTP
+requests. It finds 119 additional reference observations at 83 distinct URLs across eight
+organizations. Five observations are embedded references; the rest are ordinary links
+newly exposed by singular-resolution matching. Thirty-five of the 83 URLs already have
+retained responses in the selected inputs: these are not 83 newly discovered documents.
+The replay uses captured requested URLs as bases, does not reconstruct historical redirects
+or execute JavaScript, and is not a full-campaign or all-organization completeness test.
+
+All **48 previously unretained URLs**, regardless of candidate score, were then requested
+in a separate bounded run: 47 responses retained, one HTTP 404, across six organizations.
+Forty-five responses have nonempty standard extraction; two retained DOCX files initially
+have empty standard extraction. A separate standard-library ZIP/XML derivative recovers
+both main-document texts without overwriting the originals. These are a submission face
+sheet and a blank resolution template, not adopted policy merely because they contain
+policy vocabulary or an unfilled adoption line. The alternate extraction preserves its
+XML-member/source/text hashes and explicitly excludes layout, images and other XML parts.
+The unresolved request is Nevada Republicans' `Nevada-Republican-Party-resolution-I-1142.pdf`;
+its 404 is not evidence that the document never existed. Retained responses are unreviewed
+candidates, not certified documents, dates or denominator members.
+
+The three Florida PDFs exposed by the first comparison were also retained separately.
+The official index reports July 19, 2026 adoption for the commemorative and economic-rights
+resolutions and March 15, 2026 for the education resolution; upload-path months are not
+adoption dates, and these remain source-reported events. Limited assistant role review
+keeps the commemoration's concluding policy language visible rather than assigning a
+blanket no-policy label. Its biographical issue mentions are not automatically party policy.
+Fourteen economic-rights bullets and four education bullets are frozen with exact native
+boundaries and controlling-resolution context. These **18 unlabeled candidate units**
+must not collapse into one economics label, be called human gold, or be randomly split
+across training and evaluation as if sibling bullets were independent documents.
+
+| Local packet | Manifest SHA-256 |
+|---|---|
+| `data/processed/embedded-reference-offline-audit-v1/` | `0411eb37c6468dc4e3b294b723b64bca2bd4ad2ddb94f0951c7704a1b0f6ad06` |
+| `data/processed/platform-reference-offline-audit-v2/` | `d5ae86687066b8c891a613c3f176c5e7e8d090a5ad1b189d374199167dc9f210` |
+| `data/processed/fl-embedded-resolution-recovery-v1/` | `be3412d2ecb47c35d1696a71788ebe65101b88337ea369fb9363a22443fefaf1` |
+| `data/processed/fl-resolution-role-and-unit-review-v1/` | `d18f706860455bee4f7ce7c976f09fdcf783026832fc888307c47242b97a8fb3` |
+| `data/processed/discovery-reference-followup-v1/` | `bacc4ca86ed7f24f096f24284fbf68f252ee5e8d8f5aaf6450c3fe74c43b2eab` |
+| `data/processed/recovered-docx-alternate-extraction-v1/` | `cc649dcb593a02b4f5e492658a9cd090af8f256045224e8f2e170a3d40955eee` |
+
+Complete downloaded bodies, extraction dispositions and parent bindings are retained,
+including the failed request. Source/derivative hashes, native spans and contexts were
+independently checked. Neither comparison nor follow-up admits training examples or
+analytical evidence, changes the cutoff or certifies the classifier. These packets remain
+separate from inventory v2 and the 309-record preview; neither has been silently amended.
+
 ## Remaining capability claims repaired
 
 All eleven capability-report questions now remain **unsupported**; an explicit

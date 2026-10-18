@@ -143,6 +143,20 @@ def test_drive_file_normalization_preserves_case_sensitive_document_identity():
     )
 
 
+@pytest.mark.parametrize("label", ["Education Resolution", "Education Resolutions"])
+def test_official_singular_or_plural_resolution_label_preserves_opaque_pdf(label):
+    homepage = "https://example.org/"
+    body = f'<a href="/opaque.pdf">{label}</a>'.encode()
+    candidates, error = homepage_candidates(
+        homepage, state="FL", party="D",
+        transport=lambda url, **kwargs: StubResponse(200, body, homepage),
+    )
+    assert error is None
+    assert len(candidates) == 1
+    assert candidates[0].score >= STRONG_SCORE
+    assert candidates[0].link_text == label
+
+
 def test_cli_checkpoints_results_before_a_later_interruption(tmp_path, monkeypatch):
     from state_politics.platforms import discover
 
@@ -253,6 +267,7 @@ def test_cli_rejects_disabling_both_discovery_channels():
         "https://texasgop.org/2022platform/",
         "https://www.iowagop.org/about/platform/",
         "https://texasgop.org/2024-platform-and-legislative-priorities/",
+        "https://floridadems.org/wp-content/uploads/2026/08/FDP-Public-Ed-Resolution.pdf",
     ],
 )
 def test_real_platform_documents_score_as_strong(url):
