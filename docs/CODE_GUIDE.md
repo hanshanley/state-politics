@@ -21,7 +21,7 @@ repository audit fails when a Python file is added without an entry here.
 | `src/state_politics/platforms/dataverse.py` | Downloads and reconciles the Harvard Dataverse historical platform corpus, treating the update archive as authoritative. |
 | `src/state_politics/platforms/registry.py` | Builds the 100-organization official website registry from Wikidata candidates plus homepage verification and explicit overrides. |
 | `src/state_politics/platforms/discover.py` | Discovers candidate platform/resolution URLs from Wayback CDX and live homepages, preserves labelled opaque-PDF links and raw homepage bytes, checkpoints organization/retry results, and supports explicit live-only supplements. |
-| `src/state_politics/platforms/collect.py` | Preserves link-label evidence during rescoring, fetches candidates, extracts HTML/PDF text, repairs broken ligatures, rejects false positives, confirms state attribution, deduplicates documents, and writes the modern corpus/gap report. |
+| `src/state_politics/platforms/collect.py` | Preserves link-label evidence during rescoring, retains successful raw candidate/alternate bodies, extracts HTML/PDF text, rejects false positives, confirms state attribution, deduplicates documents, and exports source-hashed gap evidence without promoting proposals to adopted text. |
 | `src/state_politics/platforms/official_documents.py` | Deterministically rebuilds the NY-D Issuu page-image archive and LA-R scanned Wix PDFs with fixed source IDs, source hashes, OCR configuration, and Tesseract version. |
 
 ## Bill collection

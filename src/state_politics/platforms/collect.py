@@ -30,6 +30,7 @@ import time
 import unicodedata
 from dataclasses import asdict, dataclass, replace
 from pathlib import Path
+from uuid import uuid4
 
 from ..provenance import ProvenanceLog, fetch
 from .discover import STRONG_SCORE, Candidate, score_candidate
@@ -151,6 +152,7 @@ class CollectedDocument:
     official_source_id: str | None = None
     source_hashes: object | None = None
     ocr_version: str | None = None
+    stored_path: str | None = None
 
     def to_row(self) -> dict:
         row = asdict(self)
@@ -482,12 +484,13 @@ def confirm_platform(text: str, state_name: str | None = None) -> tuple[bool, st
 
 
 def _fetch_once(candidate: Candidate, target: str, log, transport, timeout: float,
-                max_attempts: int, backoff: float, sleep):
+                max_attempts: int, backoff: float, sleep, raw_dir):
     return fetch(
         target,
         source_org=f"{candidate.state} state party ({candidate.party})",
         log=log,
         transport=transport,
+        dest=Path(raw_dir) / f"document-{uuid4().hex}.bin" if raw_dir is not None else None,
         timeout=timeout,
         max_attempts=max_attempts,
         backoff=backoff,
@@ -507,6 +510,7 @@ def collect_candidate(
     backoff: float = 8.0,
     sleep=time.sleep,
     live_fallback: bool = True,
+    raw_dir: Path | str | None = None,
 ) -> CollectedDocument:
     """Fetch one candidate and decide whether it is a platform document.
 
@@ -520,33 +524,38 @@ def collect_candidate(
     the archive happened to take and 94,756 from the live page. So when the snapshot fails or
     comes back too thin to be a platform, the live URL is tried and whichever copy carries
     more text is used, with ``source`` recording which one won.
+
+    When ``raw_dir`` is supplied, retain every successful response, including rejected
+    candidates and the nonselected copy. Unique paths preserve separate observations of
+    the same URL; the provenance log binds each body to its URL, timestamp and hash.
     """
     attempts: list[tuple[str, str, bytes | None, object, str]] = []
 
     if prefer_wayback and candidate.wayback_timestamp:
         target = wayback_snapshot_url(candidate.wayback_timestamp, candidate.url)
         body, record = _fetch_once(candidate, target, log, transport, timeout, max_attempts,
-                                   backoff, sleep)
+                                   backoff, sleep, raw_dir)
         snapshot_text = extract_text(body, record.content_type, candidate.url) if body else ""
         attempts.append(("wayback", target, body, record, snapshot_text))
         if live_fallback and len(snapshot_text) < MIN_CHARS:
             if sleep and record.ok:
                 sleep(1.0)
             body2, record2 = _fetch_once(candidate, candidate.url, log, transport, timeout,
-                                         max_attempts, backoff, sleep)
+                                         max_attempts, backoff, sleep, raw_dir)
             live_text = (
                 extract_text(body2, record2.content_type, candidate.url) if body2 else ""
             )
             attempts.append(("live", candidate.url, body2, record2, live_text))
     else:
         body, record = _fetch_once(candidate, candidate.url, log, transport, timeout,
-                                   max_attempts, backoff, sleep)
+                                   max_attempts, backoff, sleep, raw_dir)
         live_text = extract_text(body, record.content_type, candidate.url) if body else ""
         attempts.append(("live", candidate.url, body, record, live_text))
         if candidate.wayback_timestamp and len(live_text) < MIN_CHARS:
             target = wayback_snapshot_url(candidate.wayback_timestamp, candidate.url)
             body2, record2 = _fetch_once(
-                candidate, target, log, transport, timeout, max_attempts, backoff, sleep
+                candidate, target, log, transport, timeout, max_attempts, backoff, sleep,
+                raw_dir,
             )
             archive_text = (
                 extract_text(body2, record2.content_type, candidate.url) if body2 else ""
@@ -567,6 +576,7 @@ def collect_candidate(
         confirmed=False, reason="", http_status=record.http_status,
         content_type=record.content_type, sha256=record.content_sha256,
         candidate_score=candidate.score, wayback_timestamp=candidate.wayback_timestamp,
+        stored_path=record.stored_path,
     )
     if not record.ok or not body:
         document.reason = f"fetch failed: status={record.http_status} error={record.error}"
@@ -602,6 +612,7 @@ def collect_for_org(
     max_attempts: int = 4,
     existing_documents: list[CollectedDocument] | None = None,
     sleep=time.sleep,
+    raw_dir: Path | str | None = None,
 ) -> list[CollectedDocument]:
     """Fetch the credible candidates for one organization, best-scoring first.
 
@@ -633,6 +644,7 @@ def collect_for_org(
             timeout=timeout,
             max_attempts=max_attempts,
             sleep=sleep,
+            raw_dir=raw_dir,
         )
         if document.confirmed:
             fingerprint = _text_fingerprint(document.text)
@@ -715,6 +727,7 @@ def gap_report(
             "gap_finding": gap.get("finding", ""),
             "gap_cause": gap.get("cause", ""),
             "gap_checked": gap.get("checked", ""),
+            "gap_evidence": json.dumps(gap.get("evidence", []), sort_keys=True),
         })
     return pd.DataFrame(rows)
 
@@ -809,6 +822,10 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--candidates", default="data/processed/platform_candidates.jsonl")
     parser.add_argument("--out-dir", default="data/processed")
     parser.add_argument("--provenance", default="data/provenance.jsonl")
+    parser.add_argument(
+        "--raw-dir", type=Path, default=Path("data/raw/platforms/documents"),
+        help="retain every successful candidate response, including rejected documents",
+    )
     parser.add_argument("--min-score", type=int, default=STRONG_SCORE)
     parser.add_argument(
         "--max-documents",
@@ -907,6 +924,7 @@ def main(argv: list[str] | None = None) -> int:
                 timeout=args.timeout,
                 max_attempts=args.max_attempts,
                 existing_documents=keep,
+                raw_dir=args.raw_dir,
             )
             documents.extend(collected)
             confirmed = sum(1 for d in collected if d.confirmed)

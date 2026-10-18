@@ -1,4 +1,7 @@
-# Why a state party has no platform in the corpus.
+# Reviewed source gaps, including legacy absence findings.
+#
+# July absence claims below remain unverified in the October audit unless newer evidence
+# is recorded. No homepage hit, rejected short document or failed request proves absence.
 #
 # The automated pipeline can say *that* it found nothing; it cannot say *why*. "No platform
 # was collected" covers a party that publishes nothing, a party whose site is broken, and a
@@ -48,9 +51,17 @@ IL:
     finding: no substantial platform page found
 KY:
   D:
-    cause: no_platform_published
-    checked: 2026-07-29
-    finding: no substantial platform page found
+    cause: summary_only
+    checked: 2026-10-18
+    finding: >-
+      the official About page contains a short statement of party positions on healthcare,
+      education, workers, infrastructure and broadband. It is not a full platform, and its
+      adoption date and operative status are not established. The prior absence finding
+      must not be interpreted as absence of substantive party statements.
+    evidence:
+      - url: https://www.kydemocrats.org/about
+        role: short_party_position_statement
+        content_sha256: f42ae8e71a85d7e3d1df91edb9debbd10026bdb44d1a95fd41b88a3776eb36a4
   R:
     cause: summary_only
     checked: 2026-07-31
@@ -101,9 +112,33 @@ NY:
     finding: no substantial platform page found
 PA:
   D:
-    cause: no_platform_published
-    checked: 2026-07-29
-    finding: no substantial platform page found
+    cause: not_confirmed
+    checked: 2026-10-18
+    finding: >-
+      official May 31, 2025 state-committee minutes report adoption of three resolutions
+      and creation of a Platform Committee. Three proposals linked from the official
+      Summer 2025 meeting page have been retained separately. Exact adopted text is not
+      verified: the minutes' descriptions do not match every linked proposal, one PDF
+      includes tracked changes and two proposals fall below the collector's platform
+      length cutoff. A full operative platform remains unresolved; neither a failed
+      homepage request nor these rejected proposals establishes absence.
+    evidence:
+      - url: https://www.padems.org/scm-summer-2025/
+        role: official_proposal_links_not_adoption_verification
+        content_sha256: 62fc862c68e962f7520596fe6e0a65dfda404b8334c091afbb87ba4aae13a013
+      - url: https://www.padems.org/wp-content/uploads/2025/08/PADEMS-June-2025-revised-Minutes-Summary-Final.pdf
+        role: resolution_adoption_report_not_final_resolution_text
+        meeting_date: "2025-05-31"
+        content_sha256: e1d6e9b157d78cba5c5f0ed0f7241916ad889ce7fe3b90b7d6f20d4b84360cfa
+      - url: https://www.padems.org/wp-content/uploads/2025/05/Resolution-Honoring-American-Values-of-DEI.pdf
+        role: resolution_proposal_not_verified_final_text
+        content_sha256: 707dab466e5b2571821cd81014fb50fadbea95906d882551ac11d8edc4c2013b
+      - url: https://www.padems.org/wp-content/uploads/2025/05/Resolution-Boycotting-Companies-Eliminated-DEI.pdf
+        role: resolution_proposal_with_tracked_changes
+        content_sha256: 5589b805d11f23cb83064aaf0feb6ecd9c29af1f14673ce57465b37861c62e77
+      - url: https://www.padems.org/wp-content/uploads/2025/05/Health-Care-Resolution.pdf
+        role: resolution_proposal_not_verified_final_text
+        content_sha256: a6a6d1e548d19b3f86444f108a8ecd215af9440a2cd1507ba952c90c610f784d
   R:
     cause: summary_only
     checked: 2026-07-30

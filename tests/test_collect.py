@@ -13,6 +13,7 @@ import time
 from pathlib import Path
 
 import pandas as pd
+import pytest
 
 from state_politics.platforms.collect import (
     _BLOCK_TAGS,
@@ -36,6 +37,7 @@ from state_politics.platforms.collect import (
     wayback_snapshot_url,
 )
 from state_politics.platforms.discover import STRONG_SCORE, Candidate
+from state_politics.provenance import ProvenanceLog, sha256_bytes
 
 _GAP_CAUSES = {"no_platform_published", "broken_site", "client_rendered",
                "summary_only", "not_confirmed"}
@@ -164,6 +166,50 @@ def test_collect_candidate_keeps_no_text_for_a_rejected_document():
     )
     assert not document.confirmed
     assert document.text == ""
+
+
+@pytest.mark.parametrize(
+    ("body", "confirmed"),
+    [(b"<p>short resolution proposal</p>", False), (platform_prose("Texas"), True)],
+)
+def test_collect_retains_bytes_even_when_confirmation_rejects_them(tmp_path, body, confirmed):
+    candidate = Candidate(
+        state="TX", party="D", url="https://example.org/platform", source="live", score=7,
+    )
+    log = ProvenanceLog(tmp_path / "provenance.jsonl")
+    document = collect_candidate(
+        candidate, raw_dir=tmp_path / "raw", log=log,
+        transport=lambda url, **kwargs: StubResponse(200, body),
+    )
+    assert Path(document.stored_path).read_bytes() == body
+    assert document.sha256 == sha256_bytes(body)
+    assert log.records()[0].stored_path == document.stored_path
+    assert document.confirmed == confirmed
+
+
+def test_collect_retains_both_copies_and_distinct_repeated_observations(tmp_path):
+    candidate = Candidate(
+        state="TX", party="D", url="https://example.org/platform", source="wayback",
+        score=7, wayback_timestamp="20250531000000",
+    )
+    archived, live = b"<p>short resolution proposal</p>", platform_prose("Texas")
+    log = ProvenanceLog(tmp_path / "provenance.jsonl")
+    documents = collect_for_org(
+        [candidate, candidate], raw_dir=tmp_path / "raw", log=log, sleep=lambda _: None,
+        transport=lambda url, **kwargs: StubResponse(
+            200, archived if "web.archive.org" in url else live,
+        ),
+    )
+    assert len(list((tmp_path / "raw").iterdir())) == 4
+    records = log.records()
+    assert [Path(row.stored_path).read_bytes() for row in records] == [
+        archived, live, archived, live,
+    ]
+    assert documents[0].confirmed and documents[0].source == "live"
+    assert Path(documents[0].stored_path).read_bytes() == live
+    assert not documents[1].confirmed and "duplicate" in documents[1].reason
+    assert documents[1].text == ""
+    assert Path(documents[1].stored_path).read_bytes() == live
 
 
 def test_collect_for_org_respects_score_threshold_and_cap():
@@ -527,6 +573,19 @@ def test_gap_report_attaches_findings_only_to_orgs_with_nothing_found():
 
     assert report.loc[("AK", "R"), "gap_cause"] == "broken_site"
     assert report.loc[("TX", "R"), "gap_finding"] == ""
+
+
+def test_gap_report_preserves_source_evidence_without_promoting_proposals():
+    registry = [{"state": "PA", "party": "D", "website": "https://www.padems.org/"}]
+    report = gap_report(registry, {}, []).iloc[0]
+    evidence = json.loads(report["gap_evidence"])
+    assert report["n_confirmed"] == 0
+    assert report["gap_cause"] == "not_confirmed"
+    assert any(row["role"] == "resolution_adoption_report_not_final_resolution_text"
+               for row in evidence)
+    assert all(len(row["content_sha256"]) == 64 for row in evidence)
+    confirmed = gap_report(registry, {}, [_doc("PA", "D", True)]).iloc[0]
+    assert json.loads(confirmed["gap_evidence"]) == []
 
 
 def test_fold_keeps_possessives_matchable():

@@ -47,6 +47,9 @@ Generated research files remain ignored under `data/`:
   development diagnostics, never a fallback.
 - `processed/contemporary-source-pilot/`: separately retained 2026 California Democratic,
   Texas Democratic and Texas Republican evidence, not a completed contemporary corpus.
+- `processed/contemporary-gap-source-review-v1/`: eight raw-source-bound captures,
+  seven limited assistant source reviews, three separately labelled Pennsylvania resolution
+  proposals and a supplemental 100-organization ledger; no verified final adopted texts.
 - `raw/openstates/2026-10-public.pgdump`: retained source; SHA-256
   `6aa8341edc9ec251f4fb1eafb134b3415e72296e5391e05b39aded5e1ae2580c`.
 - `processed/preview_browser_validation.json`: checks bound to the local build manifest.
@@ -356,6 +359,60 @@ recovery evidence, not an automatic resume implementation or completeness certif
 An explicit `--no-wayback` supports bounded live-only supplements without repeated failed
 archive requests. Skipped archive searches remain distinguishable from successful searches;
 disabling both channels is rejected.
+
+### Short resolutions and corrected gap findings
+
+A separate live-only Kentucky/Maryland/New Jersey/Pennsylvania supplement completed eight
+organization searches: seven homepages were retrieved, Pennsylvania Democratic returned
+HTTP 403, and only one weak New Jersey Democratic candidate was found. Those results do not
+establish that the organizations publish no policy material.
+
+Following official nested pages recovered eight additional sources with retained original
+bytes, hashes and complete extracted text. Pennsylvania's Summer 2025 meeting page links
+three resolution proposals. The official minutes document the meeting as **May 31, 2025**,
+despite `June` in their filename. They report adoption of three resolutions and creation
+of a Platform Committee, not the exact adopted wording or individual roll-call tallies.
+The proposal list and adoption descriptions do not completely match.
+
+Two linked proposals contain only 2,058 and 2,260 extracted characters and fail the
+collector's 2,500-character full-platform cutoff. The longer boycott proposal passes the
+automatic heuristic despite containing a cover letter, editorial comments and tracked
+changes. This demonstrates both why a rejected short document is not absence evidence
+and why heuristic confirmation is not adoption/version verification. All three remain
+separate proposals, with the draft quarantined; no global threshold was lowered and none
+was added to analytical counts or training.
+
+Kentucky Democratic's official About page also supplies a substantive short position
+statement, not a full adopted platform. The PA-D and KY-D findings in
+`conf/platform_gaps.yml` now record these distinctions and exact source-byte hashes.
+The gap CSV preserves that evidence as JSON rather than dropping it during regeneration.
+Other July absence claims remain legacy findings, not newly confirmed October absences.
+The authored-input checksum was intentionally updated for these reviewed changes; this
+does not resolve the remaining scientific/artifact audit failures.
+
+`processed/contemporary-gap-source-review-v1/` contains the complete captures and review
+rationales, exact capture/review code, provenance and a separate
+`source_coverage_reviewed_gaps.json`. The latter preserves all 100 organizations and leaves
+the analytical cutoff and every operative-platform verification unresolved. MDGOP bylaws
+are retained as context pending complete review, not passed off as a platform.
+Following the Pennsylvania index's resolutions/bylaws link returned HTTP 403; a separate
+retry with declared browser headers returned HTTP 404. Both outcomes are retained and
+the final-text/version gap remains unresolved. The raw minutes, not a search excerpt or
+upload date, establish the meeting date and limited adoption evidence.
+
+The ordinary collection CLI now also retains every successful candidate response under
+`data/raw/platforms/documents/` (`--raw-dir` overrides it). Distinct paths preserve archived,
+live, repeated and rejected copies, with URL/time/hash bindings in provenance; selected
+rows retain `stored_path`. This repairs the previous hash-only collection gap without
+silently admitting short statements, minutes or draft proposals to the analytical corpus.
+Programmatic callers opt in with `raw_dir`; old parquet rows remain readable.
+
+An actual three-proposal capture with the collector's default request headers was refused
+with HTTP 403. A separately retained fresh capture using explicitly recorded browser
+headers successfully exercised raw-body retention for all three PDFs. Its result reproduces
+the two short rejections and the draft's heuristic confirmation; none is analytical
+admission. Both runs, their exact code and complete provenance remain under the source-review
+directory. Replaying retained bytes was not presented as a fresh network retrieval.
 
 A fresh Texas Democratic homepage capture exercised actual byte retention and candidate
 reload under `data/processed/contemporary-source-pilot/retention-pilot-v1/`.

@@ -29,9 +29,9 @@ manual_inputs:
     sha256: 3922a79989f4107c3f7e16f50b6df3e54e7c22512b3c00cc82b35c61ec87fe16
     source: Open States subject strings + CAP major-topic codebook
   - path: conf/platform_gaps.yml
-    kind: hand_verified_absence_findings
-    sha256: 453fb1f4b0544859ea483aa3ef57dc93c2cfd703ee8af3cf7cd577d7c96b871f
-    source: official party sites, archives, CMS indexes, alternate domains, Ballotpedia
+    kind: reviewed_source_gap_findings
+    sha256: 62d61c6e0020b2f454c275f9beb6508fb7754357cd32c80d932dba46334b72c8
+    source: legacy July dispositions plus source-hashed October official statements, resolution proposals and adoption minutes
   - path: conf/caucus_priority_registry.yml
     kind: curated_primary_source_registry
     sha256: 148e01f87db25e29864c91a4ab5af8cc0546222c722f4ea5372ff2cffee7629f
