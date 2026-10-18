@@ -9,7 +9,7 @@ replacement classifier or establish complete contemporary coverage.
 | Historical platforms | Recovered 2,091 authoritative archive documents, with publisher checksums and old/new archive reconciliation. | Historical availability must not be substituted for operative modern platforms. |
 | Contemporary platforms | A 100-organization source ledger separates historical recovery, discovery and unresolved current evidence. Retrieval provenance is retained. | Finish discovery, collection/extraction, institutional/version review and dated gap dispositions. |
 | Sponsorship | Party attribution uses validated historical memberships and a first-action date proxy; unresolved primary sponsors block D/R assignment. | Rebuild source bills and quantify attribution changes; the proxy is not an exact filing/sponsorship date. |
-| Bills | October 2026 source downloaded (10,768,629,207 bytes), checksum/provenance retained, and archive tables inspected using a verified local PostgreSQL client. Reuse requires a matching source/path/checksum. | Refreshed bill/action/vote extraction, source reconciliation and reviewed filing-time text. Snapshot abstracts and version links exist, but their timing is not automatically safe for filing-attention classification. |
+| Bills | October snapshot extracted: 1,090,369 source-context measures across all 50 states, 5,028,893 sponsorships, 9,002,451 actions and 873,980 vote events. All eleven tables have recorded hashes/counts. | Official-source reconciliation, historical affiliations and filing-time text review. Full extraction is not a certified source universe or analytical denominator. |
 | Classification | Official English ModernBERT-base training/inference, one primary topic or abstention, source hashes, model manifests and saved logits. Encoder gradients, an optimizer update and save/reload were demonstrated locally. | No real-label topic model has been trained. Synthetic feasibility weights are not a classifier. |
 | Labels | External CAP files recovered; split/group/exact-text checks and explicit reviewed-label provenance are implemented. | Source permissions, adapted-topic compatibility, near-duplicate families and reviewed state-domain training/development/test labels. |
 | Evaluation | Development-only temperature/threshold selection, exact evidence joins, abstention accounting, per-topic and subgroup metrics. | Reviewer arrangement, frozen empirical gates, independent target tests and clustered uncertainty. No checkpoint can be certified by changing a status field. |
@@ -42,6 +42,12 @@ Generated research files remain ignored under `data/`:
 - `raw/openstates/2026-10-public.pgdump`: retained source; SHA-256
   `6aa8341edc9ec251f4fb1eafb134b3415e72296e5391e05b39aded5e1ae2580c`.
 - `processed/preview_browser_validation.json`: checks bound to the local build manifest.
+- `processed/bill_extraction_manifest.json`: completed extraction, source checksum,
+  source/admission counts and hashes of all eleven tables.
+- `processed/bill_source_audit.json`: observed date, all-state/session coverage, per-bill
+  flags and the inspected alternative historical-affiliation source.
+- `processed/party_membership_reference.parquet`: all 21,993 original source party
+  memberships with dates retained, including 21,810 entirely undated records.
 - `preview/`: unpublished evidence browser and complete source downloads.
 
 Dependency metadata was intentionally updated to declare Transformers explicitly. The
@@ -78,6 +84,51 @@ The extraction manifest intentionally leaves the analytical cutoff unset. Retain
 context from sessions overlapping 2018 does not mean every retained row belongs in a
 2018-onward analytical denominator. Actual dates, missingness and session completeness must
 be measured after extraction.
+
+## Measured source limitations after extraction
+
+Of 1,090,369 retained source-context records, 7,594 precede 2018 and must not enter an
+unqualified 2018-onward denominator. There are 24,661 missing first-action dates and
+14 latest-action dates after the October 18 observation date. Future dates may represent
+scheduled effectiveness rather than corrupt data; they require source/action review.
+
+The snapshot supplies nonempty abstracts for 376,070 measures and version references for
+1,069,117. The retained sidecars contain 388,389 abstracts, 1,743,057 source URLs,
+1,899,909 version records and 2,617,690 version links. Reference availability is not full-text
+retrieval or proof that a summary describes the introduced version.
+
+**Historical party attribution is a major unresolved source gap, not a reason to restore the
+old current-party fallback.** The dump has 21,993 party memberships, of which 21,810
+have no date bounds. Under the strict dated-membership rule, 1,081,990 measures remain
+unknown; only 39 D, 21 R and two other-party measures resolve, while Nebraska's 8,317
+remain nonpartisan. These outputs cannot support D/R agenda comparisons.
+
+A second source was recovered rather than assuming the dump was the only option:
+the CC0 Open States people repository at revision
+`bf4caf105dc0e4fbd52d06e970ec264540f5da97` (September 24, 2026).
+Its archive SHA-256 is
+`f0e96e3c5737d25852c7d7b242dce71f34f8a3b7c8dc271dc4fc464f6774b5cf`.
+The inspected state legislature/retired files contain 21,886 people; 20,760 party records
+are undated, and only 183 have any date bound. This source therefore does not by itself
+repair the temporal gap. Legislative tenure and file creation/update dates are not silently
+substituted for party-affiliation dates.
+
+Reproduce the source audit, including the alternative-source check, with:
+
+```bash
+PG_RESTORE="$PWD/data/tools/Postgres.app/Contents/Versions/18/bin/pg_restore" \
+uv run python -m state_politics.analysis.audit_bills \
+  --observed-on 2026-10-18 \
+  --people-archive data/raw/openstates/people-bf4caf105dc0e4fbd52d06e970ec264540f5da97.tar.gz \
+  --people-revision bf4caf105dc0e4fbd52d06e970ec264540f5da97 \
+  --people-sha256 f0e96e3c5737d25852c7d7b242dce71f34f8a3b7c8dc271dc4fc464f6774b5cf
+```
+
+The audit checks completed-extraction hashes before reading data, requires exact bill/evidence
+joins, and exports all 50 state rows, 807 observed state/session/filing-year cells and
+1,090,369 per-bill flag rows. Zero retained rows would describe source coverage, not prove an
+official zero. The original measures, text, references and unresolved affiliations remain
+available for further recovery and review.
 
 ## Blocking decisions
 

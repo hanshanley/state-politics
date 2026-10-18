@@ -31,7 +31,7 @@ repository audit fails when a Python file is added without an entry here.
 | `src/state_politics/bills/__init__.py` | Bill subpackage marker. |
 | `src/state_politics/bills/openstates_dump.py` | Streams selected tables from the Open States PostgreSQL custom dump through `pg_restore` without restoring a database. |
 | `src/state_politics/bills/people.py` | Downloads current legislators and normalizes party labels, including fusion-voting ballot lines. |
-| `src/state_politics/bills/ingest.py` | Builds bill and sponsorship parquet files, resolves sponsor parties, parses PostgreSQL arrays, and validates filing/session years. |
+| `src/state_politics/bills/ingest.py` | Stages eleven source-bound bill/sponsorship/action/vote/evidence tables, preserves abstracts/version references, resolves dated sponsor parties, and records incomplete/completed extraction manifests. |
 | `src/state_politics/bills/outcomes.py` | Streams action/vote tables, resolves historical chambers and date-aware voter party, and adds explicit recorded-stage fields to bills. |
 
 ## Analysis
@@ -56,6 +56,7 @@ repository audit fails when a Python file is added without an entry here.
 | `src/state_politics/analysis/trends.py` | Computes equal-state 2018–2019 vs 2024–2025 bill-topic change, paired sign-flip inference, FDR correction and supported state slopes. |
 | `src/state_politics/analysis/outcomes.py` | Computes recorded chamber-passage/later-stage and enactment rates, chamber summaries, paired-state tests, and passage-vote party support. |
 | `src/state_politics/analysis/coverage.py` | Produces a machine-readable account of supported, partial, limited, and unsupported analytical questions from current artifact schemas. |
+| `src/state_politics/analysis/audit_bills.py` | Checks extraction hashes and exact evidence joins, measures date/attribution/text gaps, and exports all-state/session coverage plus source-bound per-bill flags without certifying completeness or classifications. |
 | `src/state_politics/analysis/diffusion.py` | Detects exact/near-duplicate bill-title clusters without dropping observed candidate blocks and reports cohesion and ceremonial status. |
 
 ## Plotting library
@@ -109,7 +110,7 @@ repository audit fails when a Python file is added without an entry here.
 | `tests/test_terms.py` | State-party document construction, committee precedence, peer-absent handling and literal numeric log2 ratios. |
 | `tests/test_trends.py` | Early/late shares, slope direction, BH correction and state-year observation floors. |
 | `tests/test_outcomes.py` | Historical chamber resolution, date-aware voter party, recorded-stage precedence, outcome floors, and roll-call aggregation. |
-| `tests/test_coverage.py` | Capability report distinguishes supported, partial, limited, and unavailable analytical questions. |
+| `tests/test_coverage.py` | Capability reporting, source-audit date/missingness counts, all-state coverage and exact evidence joins. |
 | `tests/test_caucuses.py` | Curated source collection, failure recording, institutional separation and 50-state coverage plot invariants. |
 | `tests/test_plotting.py` | Portfolio palette, measured source-note layout, top-label spacing, shared panel order/count, and contradicted-row styling. |
 | `tests/test_reproducibility.py` | Manifest hashes, trusted hosts, source-hash failure paths, deterministic sampling, OCR row replacement and full audit success. |
