@@ -1,5 +1,17 @@
 # state-politics
 
+> **Audit in progress — existing findings are not currently validated.**
+> The figures, analytical counts and conclusions below are retained as legacy results,
+> not refreshed findings. Their full inputs have not been recovered or independently
+> revalidated. The old classifier used nearest-description embedding similarity;
+> it was not a supervised political-topic classifier. The replacement uses the official
+> English ModernBERT-base encoder with supervised fine-tuning and explicit abstention,
+> but no trained, independently evaluated topic checkpoint is available yet.
+> Historical recovery currently contains 2,091 documents; this does not establish
+> contemporary platform coverage. See the [audit status](docs/AUDIT_STATUS.md) and
+> [local-only companion specification](docs/WEBSITE.md). Nothing has been added to
+> themarginoferror.com.
+
 **What are the 50 state Democratic and Republican party organizations actually emphasizing?**
 
 This project measures the policy priorities of all 100 U.S. state-level party organizations
@@ -20,7 +32,7 @@ taxonomy so they can be compared directly.
 
 ---
 
-## Data
+## Legacy data inventory (not yet revalidated)
 
 - **Stated priorities:** 687 confirmed party-committee documents in the modern collection:
   502 current documents (500 dated 2018+ and two currently published but undated) across 81
@@ -45,8 +57,9 @@ documented in [Methods](docs/METHODS.md) and
 
 Every 2018-present platform, and every major-party platform from 1990 onward, is segmented
 into planks and classified against a
-[Comparative Agendas Project](https://www.comparativeagendas.net/) taxonomy using a validated
-text classifier — 49,575 planks from 1,221 documents, with 43,971 classified.
+[Comparative Agendas Project](https://www.comparativeagendas.net/) adapted taxonomy using the
+legacy similarity classifier — previously reported as 49,575 planks from 1,221 documents,
+with 43,971 classified. These counts and classifications remain under audit.
 
 ![What Democratic and Republican state parties talk about](outputs/party_emphasis.png)
 
@@ -67,8 +80,9 @@ The national values are equal-state means over the same states represented for b
 both streams. Raw pooled-plank and pooled-bill results are retained as sensitivity artifacts, so
 long platforms and high-volume legislatures cannot define a party average by themselves.
 
-Every row was re-derived a second time using topic labels written by **legislative staff**
-instead of by this project's model. That independent check uses the 24 states with both party
+The legacy analysis re-derived rows using **source subject tags** instead of this project's
+model. Their authorship, independence and taxonomy compatibility require verification.
+That reported check uses the 24 states with both party
 streams and mappable tags; its direction, not its level, is the comparison shown in the third
 column.
 

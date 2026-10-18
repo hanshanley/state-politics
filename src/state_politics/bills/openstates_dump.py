@@ -32,10 +32,13 @@ import subprocess
 from collections.abc import Iterator
 from pathlib import Path
 
+from ..provenance import FetchRecord, ProvenanceLog, download_to_file, sha256_file
+
 __all__ = [
     "DUMP_URL",
     "SOURCE_ORG",
     "copy_blocks",
+    "download_dump",
     "find_pg_restore",
     "list_tables",
     "stream_table",
@@ -69,6 +72,12 @@ _JURISDICTION_RE = re.compile(r"state:([a-z]{2})\b")
 
 def find_pg_restore() -> str:
     """Locate ``pg_restore``, or raise with an actionable message."""
+    configured = os.environ.get("PG_RESTORE")
+    if configured:
+        found = shutil.which(configured)
+        if not found:
+            raise RuntimeError(f"PG_RESTORE is not an executable: {configured}")
+        return found
     found = shutil.which("pg_restore")
     if found:
         return found
@@ -78,9 +87,40 @@ def find_pg_restore() -> str:
             return str(candidate)
     raise RuntimeError(
         "pg_restore not found. Install the PostgreSQL client tools, e.g. `brew install libpq` "
+        "or set PG_RESTORE to a verified local executable. "
         "(Homebrew keeps them out of PATH; this module also looks in "
         f"{_EXTRA_BIN_DIRS[0]})."
     )
+
+
+def download_dump(dump_path: Path | str, month: str, *, log: ProvenanceLog) -> FetchRecord:
+    """Reuse only a source-bound, checksum-verified snapshot; never overwrite unknown data."""
+    if re.fullmatch(r"\d{4}-(0[1-9]|1[0-2])", month) is None:
+        raise ValueError("dump month must be YYYY-MM")
+    find_pg_restore()
+    dump_path = Path(dump_path)
+    url = DUMP_URL.format(month=month)
+    if dump_path.exists():
+        retained = [
+            record for record in log
+            if record.ok and record.url == url and record.stored_path
+            and Path(record.stored_path).resolve() == dump_path.resolve()
+        ]
+        if (
+            not dump_path.is_file() or not retained
+            or sha256_file(dump_path) != retained[-1].content_sha256
+        ):
+            raise ValueError(
+                f"{dump_path}: existing dump lacks matching source/checksum provenance; "
+                "preserve it and select another --dump path"
+            )
+        return retained[-1]
+    record = download_to_file(
+        url, dump_path, source_org=SOURCE_ORG, log=log, timeout=300.0,
+    )
+    if not record.ok:
+        raise RuntimeError(f"dump download failed: {record.error}")
+    return record
 
 
 def list_tables(dump_path: Path | str) -> list[str]:
@@ -201,18 +241,25 @@ def state_of(jurisdiction_id: str | None) -> str | None:
 
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description=__doc__.splitlines()[0])
-    parser.add_argument("--dump", default="data/raw/openstates/2026-07-public.pgdump")
+    parser.add_argument("--dump", required=True)
+    parser.add_argument("--download-month", help="fetch/reuse an explicit YYYY-MM snapshot")
+    parser.add_argument("--provenance", type=Path, default=Path("data/provenance.jsonl"))
     parser.add_argument("--list", action="store_true", help="print the archive's tables")
     args = parser.parse_args(argv)
 
     dump = Path(args.dump)
+    if args.download_month:
+        record = download_dump(dump, args.download_month, log=ProvenanceLog(args.provenance))
+        print(record.to_json())
+        if not args.list:
+            return 0
     if not dump.exists():
         parser.error(f"{dump} not found")
     if args.list:
         for table in list_tables(dump):
             print(table)
         return 0
-    parser.error("nothing to do; pass --list or use bills.ingest")
+    parser.error("nothing to do; pass --list, --download-month or use bills.ingest")
     return 1
 
 

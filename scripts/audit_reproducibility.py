@@ -25,12 +25,12 @@ import argparse
 import hashlib
 import json
 import re
+import shutil
 import subprocess
 import sys
 from pathlib import Path
 from urllib.parse import urlsplit
 
-import pandas as pd
 import yaml
 
 ROOT = Path(__file__).resolve().parent.parent
@@ -168,19 +168,20 @@ def audit_manifest(audit: Audit, manifest: dict, *, require_tracked: bool) -> No
         sha256_file(ROOT / "uv.lock") == environment["uv_lock_sha256"],
         "uv.lock changed without reproducibility-manifest update",
     )
-    version = subprocess.run(
-        [environment["ocr_runtime"]["command"], "--version"],
-        check=True,
-        capture_output=True,
-        text=True,
-    ).stdout.splitlines()[0]
-    audit.require(
-        environment["ocr_runtime"]["version"] in version,
-        f"OCR runtime version differs from manifest: {version}",
-    )
+    command = environment["ocr_runtime"]["command"]
+    audit.require(shutil.which(command) is not None, f"OCR runtime missing: {command}")
+    if shutil.which(command):
+        result = subprocess.run([command, "--version"], capture_output=True, text=True)
+        version = result.stdout.splitlines()[0] if result.stdout else result.stderr
+        audit.require(
+            result.returncode == 0 and environment["ocr_runtime"]["version"] in version,
+            f"OCR runtime differs from manifest: {version}",
+        )
 
 
 def audit_gold(audit: Audit) -> None:
+    import pandas as pd
+
     meta = load_yaml(ROOT / "data/gold/plank_topics_gold.meta.yml")
     gold = pd.read_csv(ROOT / "data/gold/plank_topics_gold.csv")
     topics = load_yaml(ROOT / "conf/topics.yml")["topics"]
@@ -333,6 +334,8 @@ def audit_curated_configs(audit: Audit, manifest: dict) -> None:
 
 
 def audit_artifacts(audit: Audit) -> dict:
+    import pandas as pd
+
     data = ROOT / "data/processed"
     required = [
         "platforms_2018_present.parquet",
@@ -554,6 +557,10 @@ def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description=__doc__.splitlines()[0])
     parser.add_argument("--require-tracked", action="store_true")
     parser.add_argument(
+        "--inventory-only", action="store_true",
+        help="record missing prerequisites without running data-dependent scientific checks",
+    )
+    parser.add_argument(
         "--report", default=ROOT / "data/processed/reproducibility_report.json"
     )
     args = parser.parse_args(argv)
@@ -561,10 +568,12 @@ def main(argv: list[str] | None = None) -> int:
     audit = Audit()
     manifest = load_yaml(MANIFEST)
     audit_manifest(audit, manifest, require_tracked=args.require_tracked)
-    audit_gold(audit)
-    audit_analysis_parameters(audit, manifest)
     audit_curated_configs(audit, manifest)
-    computed = audit_artifacts(audit)
+    computed = {}
+    if not args.inventory_only:
+        audit_gold(audit)
+        audit_analysis_parameters(audit, manifest)
+        computed = audit_artifacts(audit)
     audit_public_docs(audit)
     if args.require_tracked:
         tracked = git_files(["ls-files"])
@@ -582,14 +591,24 @@ def main(argv: list[str] | None = None) -> int:
                     supplement in tracked,
                     f"artifact supplement producer is not tracked: {supplement}",
                 )
-    audit.finish()
-
     report = {
         "manifest_version": manifest["version"],
-        "checks_passed": audit.checks,
+        "scope": "inventory_only" if args.inventory_only else "full",
+        "status": "blocked" if audit.failures else "structural_checks_passed",
+        "scientific_certification": "not_performed",
+        "checks_run": audit.checks,
+        "checks_passed": audit.checks - len(audit.failures),
+        "failures": audit.failures,
+        "artifacts": [
+            {**entry, "status": "present" if (ROOT / entry["path"]).exists() else "missing"}
+            for entry in manifest["generated_artifacts"]
+        ],
         "computed_results": computed,
         "manual_input_hashes": {
-            entry["path"]: entry["sha256"] for entry in manifest["manual_inputs"]
+            entry["path"]: (
+                sha256_file(ROOT / entry["path"]) if (ROOT / entry["path"]).exists() else None
+            )
+            for entry in manifest["manual_inputs"]
         },
         "random_seeds": {
             process["name"]: process["seed"] for process in manifest["random_processes"]
@@ -601,6 +620,7 @@ def main(argv: list[str] | None = None) -> int:
     path.parent.mkdir(parents=True, exist_ok=True)
     path.write_text(json.dumps(report, indent=2, sort_keys=True), encoding="utf-8")
     print(f"wrote {path}")
+    audit.finish()
     return 0
 
 

@@ -9,6 +9,7 @@ counts. Large related tables are streamed into Parquet instead of materialized i
 from __future__ import annotations
 
 from collections import Counter, defaultdict
+from datetime import date as calendar_date
 from pathlib import Path
 
 __all__ = [
@@ -71,22 +72,32 @@ def party_on_date(
     intervals: list[tuple[str, str, str]] | None,
     date: str | None,
 ) -> str:
-    """Resolve a person's party on a date, falling back to the closest prior membership."""
-    if not intervals:
+    """Resolve only memberships covering a known event date; never extrapolate affiliation."""
+    if not intervals or not date:
         return "unknown"
-    date = (date or "")[:10]
-    active = [
-        row
-        for row in intervals
-        if (not date or not row[0] or row[0] <= date)
-        and (not date or not row[1] or row[1] >= date)
-    ]
-    candidates = active or [
-        row for row in intervals if not date or not row[0] or row[0] <= date
-    ]
-    if not candidates:
-        candidates = intervals
-    return max(candidates, key=lambda row: row[0])[2]
+    date = date[:10]
+    try:
+        calendar_date.fromisoformat(date)
+    except ValueError:
+        return "unknown"
+    active = []
+    for row in intervals:
+        if not row[0] and not row[1]:
+            return "unknown"
+        for bound in row[:2]:
+            if not bound:
+                continue
+            try:
+                if calendar_date.fromisoformat(bound).isoformat() != bound:
+                    return "unknown"
+            except ValueError:
+                return "unknown"
+        if row[0] and row[1] and row[0] > row[1]:
+            return "unknown"
+        if (not row[0] or row[0] <= date) and (not row[1] or row[1] >= date):
+            active.append(row)
+    parties = {row[2] for row in active}
+    return parties.pop() if len(parties) == 1 else "unknown"
 
 
 def recorded_outcome(

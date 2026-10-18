@@ -1857,6 +1857,7 @@ models = [
     { name = "scikit-learn" },
     { name = "sentence-transformers" },
     { name = "torch" },
+    { name = "transformers" },
 ]
 ocr = [
     { name = "pillow" },
@@ -1880,6 +1881,7 @@ requires-dist = [
     { name = "scikit-learn", marker = "extra == 'models'", specifier = ">=1.5" },
     { name = "sentence-transformers", marker = "extra == 'models'", specifier = ">=3.0" },
     { name = "torch", marker = "extra == 'models'", specifier = ">=2.4" },
+    { name = "transformers", marker = "extra == 'models'", specifier = ">=4.48" },
 ]
 provides-extras = ["dev", "models", "ocr"]
 

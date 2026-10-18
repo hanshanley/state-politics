@@ -8,6 +8,7 @@ from state_politics.analysis.state_focus import (
     _kentucky_priority_units,
     _maryland_agenda_units,
     build_state_focus_atlas,
+    caucus_units,
     combine_stated_emphasis,
     focus_metrics,
 )
@@ -46,6 +47,21 @@ def test_maryland_parser_uses_the_agenda_sentence_not_assignments():
         "Senate Democratic Caucus agenda will focus on growth, affordability, and protecting "
         "against attacks from the federal Administration in the 2026 Legislative Session."
     ]
+
+
+def test_caucus_units_preserve_source_metadata_and_verbatim_spans():
+    text = "Schools\n\n" + "Fund public schools and support teachers. " * 8
+    source = pd.DataFrame([{
+        "state": "PA", "party": "D", "year": 2024, "institution": "Senate caucus",
+        "url": "https://example.test/agenda", "source_hash": "source-digest", "text": text,
+    }])
+    units = caucus_units(source)
+    row = units.iloc[0]
+    assert row["url"] == source.iloc[0]["url"]
+    assert row["source_hash"] == "source-digest"
+    assert row["source_text"] == text
+    assert text[row["source_start"]:row["source_end"]] == row["text"]
+    assert row["segmentation_method"] == "paragraph_policy_units_v1"
 
 
 def test_caucus_supplement_never_overrides_party_committee_evidence():

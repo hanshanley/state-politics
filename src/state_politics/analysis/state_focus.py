@@ -20,15 +20,15 @@ sample size and evidence type. Missing evidence stays missing instead of being g
 from __future__ import annotations
 
 import argparse
+import hashlib
 import re
 from pathlib import Path
 
+from .modernbert import add_model_arguments, load_classifier, policy_units, prediction_rows
 from .profiles import MIN_BILL_OBSERVATIONS, MIN_OBSERVATIONS, topic_vectors
 from .taxonomy import (
     DEFAULT_TOPICS_PATH,
-    EmbeddingClassifier,
     load_topics,
-    segment_planks,
 )
 
 __all__ = [
@@ -106,10 +106,18 @@ def caucus_units(frame):
         elif row.state == "MD" and row.party == "D":
             texts = _maryland_agenda_units(row.text)
         else:
-            texts = [plank.text for plank in segment_planks(row.text, document_index)]
+            texts = [unit for _, _, unit in policy_units(row.text)]
+        metadata = row._asdict()
+        document_id = hashlib.sha256(
+            f"{row.state}:{row.party}:{row.year}:{row.institution}:"
+            f"{metadata.get('url', '')}:{row.text}".encode()
+        ).hexdigest()
         for unit_index, text in enumerate(texts):
+            start = row.text.find(text)
             rows.append(
                 {
+                    **metadata,
+                    "document_id": document_id,
                     "document_index": document_index,
                     "unit_index": unit_index,
                     "state": row.state,
@@ -118,23 +126,39 @@ def caucus_units(frame):
                     "evidence_type": "legislative_caucus",
                     "institution": row.institution,
                     "text": text,
+                    "source_text": row.text,
+                    "source_text_sha256": hashlib.sha256(row.text.encode()).hexdigest(),
+                    "source_start": start if start >= 0 else None,
+                    "source_end": start + len(text) if start >= 0 else None,
+                    "segmentation_method": (
+                        "curated_priority_extraction_v1"
+                        if (row.state, row.party) in {("KY", "R"), ("MD", "D")}
+                        else "paragraph_policy_units_v1"
+                    ),
                     "n_words": len(text.split()),
                 }
             )
     return pd.DataFrame(rows)
 
 
-def classify_caucus_priorities(frame, classifier: EmbeddingClassifier, topics):
+def classify_caucus_priorities(frame, classifier, topics):
     """Classify curated caucus units and return plank- and emphasis-level tables."""
     import pandas as pd
 
     units = caucus_units(frame)
     if units.empty:
         return units, pd.DataFrame()
-    predictions = classifier.predict_many(units["text"].tolist(), batch_size=64)
-    units["topic"] = [code for code, _, _ in predictions]
-    units["similarity"] = [round(score, 4) for _, score, _ in predictions]
-    units["margin"] = [round(margin, 4) for _, _, margin in predictions]
+    predictions = prediction_rows(
+        classifier, units["text"].tolist(), domain="plank", batch_size=8
+    )
+    units["record_id"] = [
+        hashlib.sha256(
+            f"{row.document_id}:{row.unit_index}:{row.segmentation_method}:{row.text}".encode()
+        ).hexdigest()
+        for row in units.itertuples(index=False)
+    ]
+    for column in predictions[0]:
+        units[column] = [row[column] for row in predictions]
 
     named = {topic.code: topic.name for topic in topics}
     classified = units[units["topic"].notna()]
@@ -370,10 +394,11 @@ def main(argv: list[str] | None = None) -> int:
     )
     parser.add_argument("--topics", default=DEFAULT_TOPICS_PATH)
     parser.add_argument("--out-dir", default=root / "data/processed")
+    add_model_arguments(parser)
     args = parser.parse_args(argv)
 
     topics = load_topics(args.topics)
-    classifier = EmbeddingClassifier(topics)
+    classifier = load_classifier(args, topics)
     caucus_frame = pd.read_parquet(args.caucus)
     caucus_planks, caucus_emphasis = classify_caucus_priorities(
         caucus_frame, classifier, topics

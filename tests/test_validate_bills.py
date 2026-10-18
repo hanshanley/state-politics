@@ -89,6 +89,21 @@ def test_tag_replication_uses_tags_not_the_model():
     assert table[table["party"] == "R"]["topic"].tolist() == [12]
 
 
+def test_agreement_accounts_for_abstentions_in_the_reference_denominator():
+    frame = pd.DataFrame([
+        {"subject": "Education", "topic": 6},
+        {"subject": "Education", "topic": None},
+        {"subject": "Taxation", "topic": None},
+        {"subject": "Unmapped", "topic": 6},
+    ])
+    report = agreement_report(frame, SUBJECT_MAP, TOPIC_NAMES).set_index("topic")
+    assert report.loc[6, "n"] == 2
+    assert report.loc[6, "agreement"] == 0.5
+    assert report.loc[6, "agreement_when_classified"] == 1.0
+    assert report.loc[6, "coverage"] == 0.5
+    assert report.loc[1, "n_abstained"] == 1
+
+
 def test_tag_replication_excludes_third_party_sponsors():
     """Shares are per major party; 'other' and unknown must not dilute a denominator."""
     frame = pd.DataFrame([

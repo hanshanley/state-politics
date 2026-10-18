@@ -251,6 +251,34 @@ def test_classify_bills_leaves_very_short_titles_unclassified():
     assert out.iloc[1]["topic"] == 1
 
 
+def test_unscored_and_empty_bills_keep_traceable_prediction_schema():
+    import hashlib
+
+    from state_politics.analysis.revealed import classify_bills
+
+    class UncalledClassifier:
+        run_id = "research-run"
+        base_model_run = "base-run"
+        manifest = {"status": "provisional", "taxonomy_sha256": "taxonomy"}
+
+        def predict_records(self, *args, **kwargs):
+            raise AssertionError("excluded/insufficient evidence must not call the model")
+
+    bills = pd.DataFrame([
+        {"bill_id": "shell", "state": "IL", "title": "EDUCATION-TECH"},
+        {"bill_id": "short", "state": "TX", "title": "Tax."},
+    ])
+    result = classify_bills(bills, UncalledClassifier())
+    assert result["record_id"].tolist() == ["shell", "short"]
+    assert result["model_run"].tolist() == ["research-run", "research-run"]
+    assert result["abstention_reason"].tolist() == ["procedural_shell", "insufficient_evidence"]
+    assert result["classification_status"].tolist() == ["excluded", "abstained"]
+    assert result.iloc[1]["input_sha256"] == hashlib.sha256(b"Tax.").hexdigest()
+    assert result["score_type"].eq("not_scored").all()
+    empty = classify_bills(bills.iloc[:0], UncalledClassifier())
+    assert empty.empty and set(empty.columns) == set(result.columns)
+
+
 def test_topic_vectors_recomputes_shares_instead_of_summing_eras():
     """The platform table is split by era and each era's shares sum to 1.
 

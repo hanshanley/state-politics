@@ -40,11 +40,14 @@ repository audit fails when a Python file is added without an entry here.
 |---|---|
 | `src/state_politics/analysis/__init__.py` | Analysis subpackage marker. |
 | `src/state_politics/analysis/taxonomy.py` | Defines the CAP topic schema, segments platforms into planks, and implements keyword/embedding classifiers with bounded-memory inference. |
+| `src/state_politics/analysis/modernbert.py` | Loads hash-bound local ModernBERT checkpoints, preserves paragraph/token spans, returns one topic or abstention, and exports split-selected evidence-bound logits. No automatic legacy fallback or implemented certification. |
+| `src/state_politics/analysis/train_topics.py` | Fine-tunes encoder and head on provenance-labelled manifests; rejects split leakage, unsupported topics and over-budget training units; saves provisional weights and run hashes. |
+| `src/state_politics/analysis/evaluate_topics.py` | Scores saved logits with abstentions in denominators, fits temperature/thresholds on development data only, reports topic/subgroup support and probability losses, and never certifies a model. |
 | `src/state_politics/analysis/gold_sample.py` | Creates the deterministic sampling frame and seeded unlabeled template used for new human-labeling rounds. |
-| `src/state_politics/analysis/validate.py` | Scores keyword and embedding classifiers against the fixed 50-plank human-labelled gold snapshot. |
+| `src/state_politics/analysis/validate.py` | Scores historical keyword/embedding baselines against the previously inspected 50-plank snapshot; reviewer provenance remains unresolved. |
 | `src/state_politics/analysis/emphasis.py` | Classifies platform planks, clusters redundant collected/cross-corpus documents, and computes equal-state matched-party topic shares plus pooled sensitivity outputs. |
 | `src/state_politics/analysis/revealed.py` | Classifies bills state-by-state, excludes drafting placeholders/pre-2018 leakage, reports coverage, and computes equal-state matched headline shares plus pooled sensitivity. |
-| `src/state_politics/analysis/validate_bills.py` | Validates bill-title topics against legislative-staff subject tags and independently replicates headline shares from tags. |
+| `src/state_politics/analysis/validate_bills.py` | Measures subject-tag agreement and coverage without assuming source tags are independent truth or universally staff-authored. |
 | `src/state_politics/analysis/profiles.py` | Produces era-matched state summaries and leave-one-out outlier rankings gated by sample floors and multinomial null simulations. |
 | `src/state_politics/analysis/intraparty.py` | Measures within-party dispersion, within-vs-between coherence, divisive topics, centroid distance, and permutation significance. |
 | `src/state_politics/analysis/state_focus.py` | Builds the 100-row state × party atlas with leave-one-out baselines, 500-bill reliability floors, classification coverage and curated caucus units. |
@@ -68,6 +71,7 @@ repository audit fails when a Python file is added without an entry here.
 | File | Responsibility |
 |---|---|
 | `scripts/sample_gold_planks.py` | Thin CLI wrapper around `analysis.gold_sample`; writes a seeded unlabeled template and never overwrites the fixed gold snapshot. |
+| `scripts/build_site.py` | Builds an explicitly unpublished static evidence preview from saved coverage/source files; reconciles source counts and exports complete historical text without running models or collectors. |
 | `scripts/audit_reproducibility.py` | Validates manual-input hashes, sources, seeds, producers, OCR rows, artifact relationships, state coverage, formulas, and public documentation. |
 | `scripts/report_figures.py` | Recomputes and prints every canonical number quoted in public documentation/figures. |
 | `scripts/plot_platform_coverage.py` | Plots historical corpus recency by state and party. |
@@ -94,6 +98,8 @@ repository audit fails when a Python file is added without an entry here.
 | `tests/test_people.py` | Legislator parsing and party/fusion-label normalization. |
 | `tests/test_bills.py` | Dump parsing, party attribution, date sanity, PostgreSQL arrays and state filtering. |
 | `tests/test_taxonomy.py` | Topic loading, plank segmentation, threshold behavior, chunked inference equivalence and keyword normalization. |
+| `tests/test_modernbert.py` | Token/paragraph coverage, one-topic/abstention decisions, checkpoint refusal, evidence joins, split leakage, review provenance and development-only calibration. |
+| `tests/test_site.py` | Full-text downloads and all-organization coverage reconcile; absent search results remain unresolved rather than being labelled platform absence. |
 | `tests/test_emphasis.py` | Gold snapshot existence/coverage, emphasis denominators and classifier score handling. |
 | `tests/test_validate_bills.py` | Subject-tag normalization, no-guess conflict handling, precision/recall and tag replication. |
 | `tests/test_diffusion.py` | Title normalization, duplicate-index safety, clustering, transitive cohesion and ceremonial flags. |

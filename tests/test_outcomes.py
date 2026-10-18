@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import pandas as pd
+import pytest
 
 from state_politics.analysis.outcomes import (
     build_outcome_tables,
@@ -41,6 +42,23 @@ def test_party_membership_resolves_at_vote_date():
     assert party_on_date(intervals, "2020-05-01") == "D"
     assert party_on_date(intervals, "2025-05-01") == "R"
     assert party_on_date(None, "2025-05-01") == "unknown"
+
+
+def test_party_membership_never_uses_expired_future_or_conflicting_affiliations():
+    intervals = [("2020-01-01", "2020-12-31", "D"), ("2022-01-01", "", "R")]
+    assert party_on_date(intervals, "2019-01-01") == "unknown"
+    assert party_on_date(intervals, "2021-06-01") == "unknown"
+    assert party_on_date(intervals, None) == "unknown"
+    assert party_on_date(intervals, "2020") == "unknown"
+    assert party_on_date([("", "", "D"), ("", "", "R")], "2024-01-01") == "unknown"
+
+
+@pytest.mark.parametrize("interval", [
+    ("2020", "", "D"), ("2020-01", "", "D"), ("", "", "D"),
+    ("2020-13-01", "", "D"), ("2024-01-01", "2023-01-01", "D"),
+])
+def test_party_membership_does_not_guess_missing_partial_or_malformed_bounds(interval):
+    assert party_on_date([interval], "2024-06-01") == "unknown"
 
 
 def test_recorded_outcome_uses_highest_explicit_action_stage():

@@ -7,10 +7,66 @@ capability statements from artifact schemas and sample sizes instead of relying 
 from __future__ import annotations
 
 import argparse
+import csv
 import json
+from collections import defaultdict
 from pathlib import Path
 
-__all__ = ["build_capability_report"]
+__all__ = ["build_capability_report", "build_source_ledger"]
+
+
+def build_source_ledger(organizations, historical, discovery=()):
+    """Account for every expected organization without treating discovery as collection."""
+    from ..bills.openstates_dump import STATE_CODES
+    from ..provenance import utc_now_iso
+
+    expected = {(state.upper(), party) for state in STATE_CODES for party in ("D", "R")}
+    registered = {(row["state"], row["party"]) for row in organizations}
+    if registered != expected or len(organizations) != len(expected):
+        raise ValueError(
+            "registry must identify exactly the 100 expected state-party organizations"
+        )
+    searches = {(row["state"], row["party"]): row for row in discovery}
+    documents = defaultdict(list)
+    for row in historical:
+        if (row["state"], row["party"]) in expected:
+            documents[row["state"], row["party"]].append(row)
+    rows = []
+    for org in sorted(organizations, key=lambda row: (row["state"], row["party"])):
+        key = (org["state"], org["party"])
+        archive = documents[key]
+        search = searches.get(key)
+        searched = search and str(search.get("searched", "")).lower() == "true"
+        rows.append({
+            "state": key[0], "party": key[1], "institution": "party_committee",
+            "name": org["name"], "website": org.get("website"),
+            "registry_verified_on": org.get("verified_on"),
+            "registry_needs_review": org.get("needs_review"),
+            "historical_document_count": len(archive),
+            "historical_latest_year": max((row["year"] for row in archive), default=None),
+            "discovery_status": (
+                "searched" if searched else "retrieval_failed" if search else "not_completed"
+            ),
+            "modern_evidence_status": "unresolved",
+            "operative_platform_status": "unresolved",
+            "bill_party_comparison": (
+                "not_applicable_nonpartisan" if key[0] == "NE" else "not_rebuilt"
+            ),
+            "discovery_evidence": search,
+            "gap_disposition": (
+                "Source discovery is not collection or a reviewed absence determination."
+            ),
+        })
+    return {
+        "schema_version": 1, "generated_at": utc_now_iso(), "analysis_cutoff": None,
+        "status": "incomplete_source_audit", "expected_organizations": 100,
+        "rows": rows,
+        "limitations": [
+            "Historical evidence is not evidence of a currently operative platform.",
+            "No organization is marked absent merely because a search failed or found no URLs.",
+            "A verified analytical cutoff requires recovered and reconciled source coverage.",
+        ],
+    }
 
 
 def build_capability_report(data_dir: Path):
@@ -180,11 +236,32 @@ def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description=__doc__.splitlines()[0])
     parser.add_argument("--data-dir", default=root / "data/processed")
     parser.add_argument("--out", default=root / "data/processed/analysis_capabilities.json")
+    parser.add_argument("--sources-only", action="store_true")
+    parser.add_argument("--registry", type=Path, default=root / "conf/party_registry.yml")
     args = parser.parse_args(argv)
 
-    report = build_capability_report(Path(args.data_dir))
     out = Path(args.out)
     out.parent.mkdir(parents=True, exist_ok=True)
+    if args.sources_only:
+        import yaml
+
+        data = Path(args.data_dir)
+        historical_path = data / "platforms_historical.jsonl"
+        historical = [
+            json.loads(line) for line in historical_path.read_text().splitlines() if line
+        ]
+        discovery_path = data / "platform_discovery_status.csv"
+        discovery = []
+        if discovery_path.exists():
+            with discovery_path.open(newline="") as handle:
+                discovery = list(csv.DictReader(handle))
+        report = build_source_ledger(
+            yaml.safe_load(args.registry.read_text())["organizations"], historical, discovery
+        )
+        out.write_text(json.dumps(report, indent=2) + "\n")
+        print(f"wrote {out}; unresolved modern evidence is not zero coverage")
+        return 0
+    report = build_capability_report(Path(args.data_dir))
     out.write_text(
         json.dumps(report.to_dict(orient="records"), indent=2), encoding="utf-8"
     )

@@ -10,6 +10,7 @@ from __future__ import annotations
 
 import pytest
 
+from state_politics.bills import openstates_dump as dump_module
 from state_politics.bills.ingest import (
     MAX_FILING_LEAD,
     _filing_year,
@@ -17,6 +18,69 @@ from state_politics.bills.ingest import (
     normalize_party,
 )
 from state_politics.bills.openstates_dump import STATE_CODES, copy_blocks, state_of
+from state_politics.provenance import FetchRecord, ProvenanceLog, sha256_file
+
+
+def test_configured_pg_restore_takes_precedence_and_invalid_override_fails(monkeypatch):
+    monkeypatch.setattr(
+        dump_module.shutil, "which",
+        lambda value: {
+            "/verified/pg_restore": "/verified/pg_restore", "pg_restore": "/other/pg_restore",
+        }.get(value),
+    )
+    monkeypatch.setenv("PG_RESTORE", "/verified/pg_restore")
+    assert dump_module.find_pg_restore() == "/verified/pg_restore"
+    monkeypatch.setenv("PG_RESTORE", "/invalid/pg_restore")
+    with pytest.raises(RuntimeError, match="PG_RESTORE is not an executable"):
+        dump_module.find_pg_restore()
+
+
+def test_dump_reuse_requires_matching_month_path_and_checksum(tmp_path, monkeypatch):
+    monkeypatch.setattr(dump_module, "find_pg_restore", lambda: "/verified/pg_restore")
+    monkeypatch.setattr(
+        dump_module, "download_to_file", lambda *a, **kw: pytest.fail("must not overwrite"),
+    )
+    path = tmp_path / "source.pgdump"
+    path.write_bytes(b"synthetic archive fixture")
+    log = ProvenanceLog(tmp_path / "provenance.jsonl")
+    record = FetchRecord(
+        url=dump_module.DUMP_URL.format(month="2026-10"), source_org=dump_module.SOURCE_ORG,
+        retrieved_at="2026-10-18T00:00:00Z", ok=True, stored_path=str(path),
+        content_sha256=sha256_file(path),
+    )
+    log.append(record)
+    assert dump_module.download_dump(path, "2026-10", log=log) == record
+    with pytest.raises(ValueError, match="source/checksum provenance"):
+        dump_module.download_dump(path, "2026-09", log=log)
+    path.write_bytes(b"damaged fixture")
+    with pytest.raises(ValueError, match="source/checksum provenance"):
+        dump_module.download_dump(path, "2026-10", log=log)
+    assert path.read_bytes() == b"damaged fixture"
+
+
+def test_dump_download_preflights_tools_and_propagates_failure(tmp_path, monkeypatch):
+    def unavailable():
+        raise RuntimeError("pg_restore not found")
+
+    calls = []
+    monkeypatch.setattr(dump_module, "find_pg_restore", unavailable)
+    monkeypatch.setattr(dump_module, "download_to_file", lambda *a, **kw: calls.append(a))
+    log = ProvenanceLog(tmp_path / "provenance.jsonl")
+    path = tmp_path / "source.pgdump"
+    with pytest.raises(RuntimeError, match="pg_restore not found"):
+        dump_module.download_dump(path, "2026-10", log=log)
+    assert not calls and not path.exists()
+    monkeypatch.setattr(dump_module, "find_pg_restore", lambda: "/verified/pg_restore")
+    monkeypatch.setattr(
+        dump_module, "download_to_file", lambda *a, **kw: FetchRecord(
+            url=a[0], source_org=dump_module.SOURCE_ORG,
+            retrieved_at="2026-10-18T00:00:00Z", ok=False, error="timeout",
+        ),
+    )
+    with pytest.raises(RuntimeError, match="timeout"):
+        dump_module.download_dump(path, "2026-10", log=log)
+    with pytest.raises(ValueError, match="YYYY-MM"):
+        dump_module.download_dump(path, "2026-13", log=log)
 
 
 def test_copy_blocks_parses_a_copy_section():
@@ -122,18 +186,20 @@ def test_attribute_party_marks_genuinely_bipartisan_bills():
     assert attribute_party(["D", "R"], ["D", "R"]) == "bipartisan"
 
 
-def test_attribute_party_falls_back_to_all_sponsors_when_no_primary_resolves():
+def test_attribute_party_falls_back_only_when_no_primary_is_recorded():
     assert attribute_party([], ["D", "D"]) == "D"
-    assert attribute_party(["unknown"], ["R", "R"]) == "R"
+    assert attribute_party(["unknown"], ["R", "R"]) == "unknown"
+    assert attribute_party(["D", "unknown"], ["D", "R"]) == "unknown"
+    assert attribute_party(["other"], ["other", "D"]) == "other"
 
 
 def test_attribute_party_returns_unknown_rather_than_guessing():
     assert attribute_party([], []) == "unknown"
-    assert attribute_party(["other"], ["other", "unknown"]) == "unknown"
+    assert attribute_party(["other"], ["other", "unknown"]) == "other"
 
 
 def test_third_party_sponsors_do_not_become_major_party_bills():
-    assert attribute_party(["other"], ["other"]) == "unknown"
+    assert attribute_party(["other"], ["other"]) == "other"
 
 
 def test_filing_year_rejects_dates_the_session_contradicts():
@@ -158,3 +224,53 @@ def test_filing_year_falls_back_when_a_date_is_missing():
     assert _filing_year(2020, None) == 2020
     assert _filing_year(None, 2021) == 2021
     assert _filing_year(None, None) is None
+
+
+def test_build_bills_uses_historical_memberships_and_preserves_unresolved_primary(monkeypatch):
+    from state_politics.bills import ingest
+
+    jurisdiction = "ocd-jurisdiction/country:us/state:tx/government"
+    tables = {
+        "opencivicdata_jurisdiction": [{"id": jurisdiction}],
+        "opencivicdata_legislativesession": [{
+            "id": "session", "jurisdiction_id": jurisdiction, "start_date": "2019-01-01",
+        }],
+        "opencivicdata_organization": [
+            {"id": "dem", "classification": "party", "name": "Democratic"},
+            {"id": "rep", "classification": "party", "name": "Republican"},
+        ],
+        "opencivicdata_membership": [
+            {"person_id": "switcher", "organization_id": "dem",
+             "start_date": "2018-01-01", "end_date": "2021-12-31"},
+            {"person_id": "switcher", "organization_id": "rep",
+             "start_date": "2022-01-01", "end_date": ""},
+        ],
+        "opencivicdata_bill": [
+            {"id": bill_id, "legislative_session_id": "session", "first_action_date": filed,
+             "title": "Provide funding for public education"}
+            for bill_id, filed in (
+                ("early", "2019-02-01"), ("late", "2023-02-01"), ("unknown", "2019-02-01")
+            )
+        ],
+        "opencivicdata_billsponsorship": [
+            {"bill_id": bill_id, "person_id": "switcher", "primary": "t"}
+            for bill_id in ("early", "late")
+        ] + [
+            {"bill_id": "unknown", "person_id": "missing", "primary": "t"},
+            {"bill_id": "unknown", "person_id": "switcher", "primary": "f"},
+        ],
+    }
+    def stream(path, table):
+        return iter(tables.get(table, []))
+
+    monkeypatch.setattr(ingest, "stream_table", stream)
+    from state_politics.bills import openstates_dump
+    monkeypatch.setattr(openstates_dump, "stream_table", stream)
+    bills, sponsors = ingest.build_bills("fixture")
+    indexed = bills.set_index("bill_id")
+    assert indexed.at["early", "sponsor_party"] == "D"
+    assert indexed.at["late", "sponsor_party"] == "R"
+    assert indexed.at["unknown", "sponsor_party"] == "unknown"
+    assert indexed.at["early", "party_attribution_date_basis"] == "first_action_proxy"
+    assert indexed.at["early", "party_attribution_date"] == "2019-02-01"
+    assert len(sponsors) == 4

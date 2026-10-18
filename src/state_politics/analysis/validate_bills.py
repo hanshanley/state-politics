@@ -1,34 +1,11 @@
-"""Check the bill-title classifier against subject tags assigned by legislative staff.
+"""Compare classifier predictions with source-subject tags through an authored crosswalk.
 
-Why this module exists
-----------------------
-The plank classifier is scored against a hand-labelled gold set, but every plank in that set
-is a *platform plank*. Bills are classified from their titles, which are shorter, more
-procedural and written to a different purpose, so the plank accuracy figure does not transfer
-to them. That left the revealed-preference half of the headline comparison resting on an
-unmeasured classifier.
-
-Roughly half of all bills carry ``subject`` tags applied by the legislature's own staff. Those
-tags are a genuinely independent signal: a different labeller, a different labelling process,
-recorded before this project existed. Mapping the unambiguous ones onto the project's topic
-scheme (``conf/subject_topic_map.yml``) gives a large-sample agreement rate that nobody in this
-project chose.
-
-How to read the number
-----------------------
-It is **agreement between two imperfect labellers, not accuracy against truth**. Neither side
-is ground truth: a clerk's tag can be wrong or coarse, and a bill can genuinely span topics.
-Three specific cautions:
-
-* Only bills whose tags map unambiguously are scored. Those bills are easier than average --
-  a bill tagged "motor vehicles" usually says so in its title -- so this is an **upper bound**
-  on the classifier's accuracy over all bills, and is reported as such.
-* Bills carrying tags that map to two or more different topics are dropped rather than counted
-  wrong, because there is no single correct answer to compare against.
-* 13 states publish no tags at all, so coverage is not nationally representative.
-
-Agreement is still worth measuring: a low number would mean the revealed-preference shares are
-not trustworthy, and that is a claim this project should be able to check rather than assume.
+Subject provenance and availability vary by state and require source-level verification.
+Neither these tags nor the project's authored crosswalk establish ground truth. Agreement
+on unambiguously mapped rows is neither nationally representative accuracy nor an accuracy
+upper bound. Abstentions remain in the eligible denominator; classified-only agreement is
+reported separately. Tag replication is independent of the model only when the evaluated
+tags were not used for its training, calibration, or selection.
 """
 
 from __future__ import annotations
@@ -38,7 +15,8 @@ import re
 from collections import Counter
 from pathlib import Path
 
-from .taxonomy import DEFAULT_TOPICS_PATH, EmbeddingClassifier, load_topics
+from .modernbert import add_model_arguments, load_classifier
+from .taxonomy import DEFAULT_TOPICS_PATH, load_topics
 
 __all__ = [
     "DEFAULT_MAP_PATH",
@@ -94,9 +72,13 @@ def agreement_report(frame, subject_map: dict[str, int], topic_names: dict[int, 
 
     reference = frame["subject"].map(lambda s: tag_topic(s, subject_map))
     scored = frame.assign(reference=reference)
-    scored = scored[scored["reference"].notna() & scored["topic"].notna()]
+    scored = scored[scored["reference"].notna()]
     if scored.empty:
-        return pd.DataFrame(columns=["topic", "topic_name", "n", "agreed", "agreement"])
+        return pd.DataFrame(columns=[
+            "topic", "topic_name", "n", "agreed", "agreement", "n_classified",
+            "n_abstained", "coverage", "agreement_when_classified", "n_predicted",
+            "precision", "top_confusion", "top_contaminant",
+        ])
 
     rows = []
     for code, group in scored.groupby("reference"):
@@ -112,6 +94,13 @@ def agreement_report(frame, subject_map: dict[str, int], topic_names: dict[int, 
             "n": len(group),
             "agreed": agreed,
             "agreement": round(agreed / len(group), 4),
+            "n_classified": int(group["topic"].notna().sum()),
+            "n_abstained": int(group["topic"].isna().sum()),
+            "coverage": round(group["topic"].notna().mean(), 4),
+            "agreement_when_classified": (
+                round(agreed / group["topic"].notna().sum(), 4)
+                if group["topic"].notna().any() else None
+            ),
             "n_predicted": len(predicted),
             "precision": round(precise / len(predicted), 4) if len(predicted) else None,
             # What the classifier says instead, when it disagrees. A single dominant confusion
@@ -124,7 +113,7 @@ def agreement_report(frame, subject_map: dict[str, int], topic_names: dict[int, 
 
 
 def _top_confusion(group, code: int, topic_names: dict[int, str]) -> str:
-    wrong = group[group["topic"] != code]["topic"]
+    wrong = group[group["topic"].notna() & (group["topic"] != code)]["topic"]
     if wrong.empty:
         return ""
     predicted, count = Counter(wrong.tolist()).most_common(1)[0]
@@ -143,14 +132,9 @@ def _top_contaminant(predicted, code: int, topic_names: dict[int, str]) -> str:
 def tag_replication(bills, subject_map: dict[str, int], topic_names: dict[int, str]):
     """Re-derive each party's revealed emphasis using tags instead of the model.
 
-    This is the strongest check available on the headline comparison, because it replaces the
-    classifier entirely: the topic labels come from legislative staff, so a finding that
-    survives it does not depend on this project's model at all.
-
-    It is a replication on a *subsample* -- only the 35 states with unambiguously mappable
-    published tags, and only bills whose tags map to one topic -- so the shares are not directly
-    comparable in level to the full-corpus figures. What is comparable is the direction and
-    rough size of each party's gap between what it says and what it files.
+    This uses a selected subsample with published, unambiguously mapped tags. Source coverage
+    must be measured from the actual snapshot; levels are not directly comparable with the
+    full corpus. Independence requires that these tags were not used for model development.
     """
     import pandas as pd
 
@@ -172,7 +156,7 @@ def tag_replication(bills, subject_map: dict[str, int], topic_names: dict[int, s
 
 
 def tag_replication_by_state(bills, subject_map: dict[str, int], topic_names: dict[int, str]):
-    """State-party topic shares derived solely from legislative-staff tags."""
+    """State-party topic shares derived solely from mapped source tags."""
     import pandas as pd
 
     frame = bills[bills["sponsor_party"].isin(("D", "R"))].copy()
@@ -208,6 +192,7 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--map", default=DEFAULT_MAP_PATH)
     parser.add_argument("--topics", default=DEFAULT_TOPICS_PATH)
     parser.add_argument("--out", default=root / "data/processed/bill_tag_agreement.csv")
+    add_model_arguments(parser)
     parser.add_argument("--sample", type=int, default=60000,
                         help="bills to score; the full tagged set is far larger than needed "
                              "for a stable rate and slower to embed")
@@ -232,26 +217,29 @@ def main(argv: list[str] | None = None) -> int:
     topics = load_topics(args.topics)
     topic_names = {t.code: t.name for t in topics}
 
-    frame = pd.read_parquet(bills_path, columns=["state", "year", "title", "subject"])
+    frame = pd.read_parquet(bills_path)
+    frame = frame[pd.to_numeric(frame["year"], errors="coerce") >= 2018]
     frame = frame[frame["subject"].astype(str).str.len() > 0]
     frame = frame.assign(reference=frame["subject"].map(lambda s: tag_topic(s, subject_map)))
     usable = frame[frame["reference"].notna()]
     print(f"bills with tags:        {len(frame):,}")
-    print(f"tags map to one topic:  {len(usable):,} ({100 * len(usable) / len(frame):.1f}%)")
+    mapped_rate = 100 * len(usable) / len(frame) if len(frame) else 0
+    print(f"tags map to one topic:  {len(usable):,} ({mapped_rate:.1f}%)")
     print(f"states represented:     {usable['state'].nunique()}/50")
 
     if len(usable) > args.sample:
         usable = usable.sample(args.sample, random_state=args.seed)
     print(f"scoring:                {len(usable):,} bills", flush=True)
 
-    classifier = EmbeddingClassifier(topics)
+    classifier = load_classifier(args, topics)
     classified = classify_bills(usable.drop(columns=["reference"]), classifier)
     classified["subject"] = usable["subject"].to_numpy()
 
     report = agreement_report(classified, subject_map, topic_names)
     total = int(report["n"].sum())
     agreed = int(report["agreed"].sum())
-    print(f"\noverall agreement:      {agreed:,}/{total:,} ({100 * agreed / total:.1f}%)")
+    rate = f"{100 * agreed / total:.1f}%" if total else "unavailable"
+    print(f"\noverall agreement:      {agreed:,}/{total:,} ({rate})")
     print("\nby topic (recall = tagged bills the model finds; "
           "precision = model's picks the tag confirms):")
     print(f"  {'topic':<38} {'recall':>7} {'prec':>7}  {'n':>6}  most common contaminant")

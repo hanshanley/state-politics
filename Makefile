@@ -10,11 +10,15 @@
 PY := uv run python
 DATA := data/processed
 OUT := outputs
+OPENSTATES_MONTH ?= 2026-10
+BILL_DUMP ?= data/raw/openstates/$(OPENSTATES_MONTH)-public.pgdump
+CHECKPOINT ?= data/models/modernbert-topics
+MODEL_ARGS := --checkpoint "$(CHECKPOINT)"
 
 .DEFAULT_GOAL := help
 .PHONY: help setup all analysis figures test lint clean-derived \
         historical registry platforms official-documents caucus-priorities \
-        legislators bills-dump audit
+        legislators bills-dump audit source-ledger preview
 
 help:
 	@echo "Targets:"
@@ -23,6 +27,7 @@ help:
 	@echo "  analysis     classify planks and bills, compute emphasis and divergence"
 	@echo "  figures      regenerate every figure in $(OUT)/"
 	@echo "  test lint audit  run tests / lint / traceability audit"
+	@echo "  source-ledger preview  inventory sources / build local-only evidence preview"
 	@echo ""
 	@echo "Slow, network-heavy (run explicitly):"
 	@echo "  registry     verify all 100 state party websites (~10 min)"
@@ -62,33 +67,27 @@ legislators: $(DATA)/legislators_current.parquet
 $(DATA)/legislators_current.parquet:
 	$(PY) -m state_politics.bills.people
 
-# Needs pg_restore: `brew install libpq`. Deletes the 10.7 GB dump afterwards; its URL and
-# SHA-256 stay in the provenance log so the extraction remains reproducible.
+# Preflight before downloading. Retain the source after extraction for recovery and audit.
 bills-dump:
-	$(PY) -c "from state_politics.provenance import ProvenanceLog, download_to_file; \
-		r = download_to_file( \
-			'https://data.openstates.org/postgres/monthly/2026-07-public.pgdump', \
-			'data/raw/openstates/2026-07-public.pgdump', \
-			source_org='Open States / Plural Policy (public PostgreSQL dump)', \
-			log=ProvenanceLog('data/provenance.jsonl'), timeout=300.0); \
-		print('ok' if r.ok else r.error)"
-	$(PY) -m state_politics.bills.ingest
-	rm -f data/raw/openstates/2026-07-public.pgdump
+	$(PY) -c "from state_politics.bills.openstates_dump import find_pg_restore; print(find_pg_restore())"
+	$(PY) -m state_politics.bills.openstates_dump \
+		--dump "$(BILL_DUMP)" --download-month "$(OPENSTATES_MONTH)" --list
+	$(PY) -m state_politics.bills.ingest --dump "$(BILL_DUMP)"
 
 # ---- Analysis ---------------------------------------------------------------------------
 
 analysis: historical
 	$(PY) -m state_politics.analysis.validate
-	$(PY) -m state_politics.analysis.emphasis
-	$(PY) -m state_politics.analysis.revealed
+	$(PY) -m state_politics.analysis.emphasis $(MODEL_ARGS)
+	$(PY) -m state_politics.analysis.revealed $(MODEL_ARGS)
 	$(PY) -m state_politics.analysis.outcomes
-	$(PY) -m state_politics.analysis.validate_bills
+	$(PY) -m state_politics.analysis.validate_bills $(MODEL_ARGS)
 	$(PY) -m state_politics.analysis.profiles
 	$(PY) -m state_politics.analysis.diffusion
 	$(PY) -m state_politics.analysis.intraparty
 	$(PY) -m state_politics.analysis.elections
 	$(PY) -m state_politics.analysis.terms
-	$(PY) -m state_politics.analysis.state_focus
+	$(PY) -m state_politics.analysis.state_focus $(MODEL_ARGS)
 	$(PY) -m state_politics.analysis.trends
 	$(PY) -m state_politics.analysis.coverage
 
@@ -106,6 +105,12 @@ figures:
 	$(PY) scripts/plot_outcomes.py
 
 all: analysis figures
+
+source-ledger:
+	$(PY) -m state_politics.analysis.coverage --sources-only --out "$(DATA)/source_coverage.json"
+
+preview: source-ledger
+	$(PY) scripts/build_site.py
 
 # ---- Checks -----------------------------------------------------------------------------
 

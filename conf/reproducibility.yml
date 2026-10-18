@@ -6,8 +6,9 @@
 version: 1
 
 environment:
-  pyproject_sha256: 304e11ca339c9a05f1c6b7a0ee9349b81692734a1e690a0a3fbf8b2ba0d31a01
-  uv_lock_sha256: 7ca29ea21ab918dd33dc049a702bbaa2979af9e10e7859d6153934145e0e8bf6
+  # Intentional ModernBERT/Transformers dependency declaration; not scientific validation.
+  pyproject_sha256: 50da6bfacdb59fd7ccaf1186b97aed3bf508fd318b45e5907c12dcb7e8c9a50d
+  uv_lock_sha256: 187cfa610fc20ee6f9024c00d08777d0bdc688b1bda4adb5da9b79024fbcebbe
   python_requirement: '>=3.11'
   ocr_runtime:
     command: tesseract

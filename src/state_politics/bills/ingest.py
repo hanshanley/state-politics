@@ -27,16 +27,18 @@ from __future__ import annotations
 
 import argparse
 from collections import defaultdict
+from datetime import date
 from pathlib import Path
 
 from .openstates_dump import state_of, stream_table
+from .outcomes import party_membership_intervals, party_on_date
 
 # Party normalization lives in `people`, and is imported rather than restated here: the two
 # modules read the same party strings from the same source, and a second copy of the mapping
 # silently drifted out of sync once already.
 from .people import normalize_party
 
-__all__ = ["attribute_party", "build_bills", "party_by_person"]
+__all__ = ["attribute_party", "build_bills"]
 
 
 
@@ -65,48 +67,37 @@ def _filing_year(session_year: int | None, first_action_year: int | None) -> int
     return first_action_year
 
 
-def party_by_person(dump_path: Path | str) -> dict[str, str]:
-    """Map ``person_id`` -> party code, from party-organization memberships.
-
-    Where a legislator has belonged to more than one party organization the most recent
-    membership wins, so a party switch is reflected rather than resolved arbitrarily.
-    """
-    party_orgs: dict[str, str] = {}
-    for row in stream_table(dump_path, "opencivicdata_organization"):
-        if (row.get("classification") or "") == "party":
-            party_orgs[row["id"]] = normalize_party(row.get("name"))
-
-    best: dict[str, tuple[str, str]] = {}
-    for row in stream_table(dump_path, "opencivicdata_membership"):
-        person_id = row.get("person_id")
-        party = party_orgs.get(row.get("organization_id") or "")
-        if not person_id or party is None:
-            continue
-        start = row.get("start_date") or ""
-        previous = best.get(person_id)
-        if previous is None or start >= previous[0]:
-            best[person_id] = (start, party)
-    return {person_id: party for person_id, (_, party) in best.items()}
-
-
 def attribute_party(primary_parties: list[str], all_parties: list[str]) -> str:
     """Reduce a bill's sponsor parties to one attribution.
 
-    Primary sponsors decide it. Cosponsor lists are frequently long, cross-party and
-    procedural, so letting them vote would blur the distinction this whole table exists to
-    draw; they are only consulted when no primary sponsor could be resolved.
+    An unresolved primary sponsor blocks attribution. All sponsors are used only when
+    the source records no primary sponsors, and that fallback is recorded by the caller.
     """
-    considered = [p for p in primary_parties if p in ("D", "R")]
-    if not considered:
-        considered = [p for p in all_parties if p in ("D", "R")]
-    if not considered:
+    considered = primary_parties or all_parties
+    if not considered or "unknown" in considered:
         return "unknown"
     distinct = set(considered)
     if distinct == {"D"}:
         return "D"
     if distinct == {"R"}:
         return "R"
-    return "bipartisan"
+    if distinct == {"D", "R"}:
+        return "bipartisan"
+    return "other"
+
+
+def sponsorship_date(first_action: str | None, session_start: str | None) -> tuple[str, str]:
+    """Use a credible exact first-action date; session dates do not date sponsorships."""
+    if not first_action:
+        return "", "missing_first_action"
+    try:
+        parsed = date.fromisoformat(first_action[:10])
+    except ValueError:
+        return "", "invalid_first_action"
+    session_year = _year_of(session_start)
+    if session_year and parsed.year < session_year - MAX_FILING_LEAD:
+        return "", "contradictory_first_action"
+    return parsed.isoformat(), "first_action_proxy"
 
 
 def build_bills(dump_path: Path | str, *, min_year: int = 2018):
@@ -129,7 +120,12 @@ def build_bills(dump_path: Path | str, *, min_year: int = 2018):
             "session_start": row.get("start_date"),
         }
 
-    person_party = party_by_person(dump_path)
+    party_orgs = {
+        row["id"]: normalize_party(row.get("name"))
+        for row in stream_table(dump_path, "opencivicdata_organization")
+        if row.get("classification") == "party"
+    }
+    memberships = party_membership_intervals(dump_path, party_orgs)
 
     bills: dict[str, dict] = {}
     for row in stream_table(dump_path, "opencivicdata_bill"):
@@ -150,6 +146,9 @@ def build_bills(dump_path: Path | str, *, min_year: int = 2018):
         latest = max(y for y in (session_year, first_action_year) if y is not None)
         if latest < min_year:
             continue
+        party_date, party_date_basis = sponsorship_date(
+            row.get("first_action_date"), session["session_start"]
+        )
         bills[row["id"]] = {
             "bill_id": row["id"],
             "state": session["state"],
@@ -157,6 +156,9 @@ def build_bills(dump_path: Path | str, *, min_year: int = 2018):
             "session_name": session["session_name"],
             "session_year": session_year,
             "first_action_year": first_action_year,
+            "first_action_date": row.get("first_action_date"),
+            "party_attribution_date": party_date,
+            "party_attribution_date_basis": party_date_basis,
             # The best available filing year: the bill's own first action when recorded and
             # credible, otherwise the year its session convened. See `_filing_year`.
             "year": _filing_year(session_year, first_action_year),
@@ -178,7 +180,11 @@ def build_bills(dump_path: Path | str, *, min_year: int = 2018):
         if bill_id not in bills:
             continue
         person_id = row.get("person_id")
-        party = person_party.get(person_id or "", "unknown")
+        party = party_on_date(
+            memberships.get(person_id or ""), bills[bill_id]["party_attribution_date"]
+        )
+        if bills[bill_id]["state"] == "NE":
+            party = "nonpartisan"
         is_primary = (row.get("primary") or "").lower() in ("t", "true")
         sponsor_rows.append({
             "bill_id": bill_id,
@@ -189,6 +195,13 @@ def build_bills(dump_path: Path | str, *, min_year: int = 2018):
             "primary": is_primary,
             "classification": row.get("classification"),
             "party": party,
+            "party_attribution_date": bills[bill_id]["party_attribution_date"],
+            "party_attribution_date_basis": bills[bill_id]["party_attribution_date_basis"],
+            "party_resolution": (
+                "active_membership" if party in ("D", "R", "other")
+                else "nonpartisan_legislature" if party == "nonpartisan"
+                else "unresolved"
+            ),
         })
         (primary_by_bill if is_primary else all_by_bill)[bill_id].append(party)
         if is_primary:
@@ -199,6 +212,12 @@ def build_bills(dump_path: Path | str, *, min_year: int = 2018):
             primary_by_bill.get(bill_id, []), all_by_bill.get(bill_id, [])
         )
         record["n_sponsors"] = len(all_by_bill.get(bill_id, []))
+        primary = primary_by_bill.get(bill_id, [])
+        record["sponsor_attribution_basis"] = "primary" if primary else "all_sponsors_fallback"
+        record["n_primary_sponsors"] = len(primary)
+        record["n_unresolved_primary_sponsors"] = primary.count("unknown")
+        if record["state"] == "NE":
+            record["sponsor_party"] = "nonpartisan"
 
     return pd.DataFrame(list(bills.values())), pd.DataFrame(sponsor_rows)
 
@@ -254,7 +273,7 @@ def main(argv: list[str] | None = None) -> int:
     from .outcomes import extract_outcomes
 
     parser = argparse.ArgumentParser(description=__doc__.splitlines()[0])
-    parser.add_argument("--dump", default="data/raw/openstates/2026-07-public.pgdump")
+    parser.add_argument("--dump", required=True, help="explicit, provenance-logged source snapshot")
     parser.add_argument("--out-dir", default="data/processed")
     parser.add_argument("--min-year", type=int, default=2018)
     args = parser.parse_args(argv)

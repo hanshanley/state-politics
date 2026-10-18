@@ -28,10 +28,14 @@ from __future__ import annotations
 
 import argparse
 import gc
+import hashlib
+import json
 import re
 from pathlib import Path
 
-from .taxonomy import DEFAULT_TOPICS_PATH, MIN_TOPIC_SIMILARITY, EmbeddingClassifier, load_topics
+from ..provenance import sha256_file
+from .modernbert import add_model_arguments, load_classifier, prediction_rows
+from .taxonomy import DEFAULT_TOPICS_PATH, MIN_TOPIC_SIMILARITY, load_topics
 
 __all__ = [
     "classify_bills", "count_topics_by_state", "divergence_table",
@@ -57,56 +61,72 @@ def is_procedural_shell_title(title: str, state: str) -> bool:
     )
 
 
-def classify_bills(bills, classifier: EmbeddingClassifier, *, batch_size: int = 512,
+def classify_bills(bills, classifier, *, batch_size: int = 8,
                    min_similarity: float = MIN_TOPIC_SIMILARITY, min_title_chars: int = 20):
-    """Classify bills by title. Returns the frame with ``topic`` and ``similarity`` columns.
+    """Classify available filing-time evidence, retaining every abstention and exact input."""
+    import pandas as pd
 
-    Very short titles ("Relating to taxation.") carry too little signal to place, and are left
-    unclassified rather than assigned on the strength of one word.
-    """
-    import numpy as np
-
-    # Written to keep peak memory low rather than to read prettily: this runs over ~880k bill
-    # titles, and the obvious version (copy the frame, materialise every title, keep a Python
-    # list of result tuples) was repeatedly OOM-killed. Nothing here holds more than one slice
-    # of embeddings plus two flat arrays.
-    frame = bills
-    titles = frame["title"].fillna("").astype(str).to_numpy()
-    states = (
-        frame["state"].fillna("").astype(str).to_numpy()
-        if "state" in frame.columns
-        else [""] * len(frame)
-    )
-    procedural = np.fromiter(
-        (
-            is_procedural_shell_title(title, state)
-            for title, state in zip(titles, states, strict=True)
-        ),
-        dtype=bool,
-        count=len(titles),
-    )
-    long_enough = np.fromiter((len(t) >= min_title_chars for t in titles),
-                              dtype=bool, count=len(titles))
-    usable = np.flatnonzero(long_enough & ~procedural)
-
-    codes = np.full(len(titles), np.nan, dtype=float)
-    scores = np.zeros(len(titles), dtype=float)
-    for start in range(0, len(usable), _BILL_SLICE):
-        index = usable[start:start + _BILL_SLICE]
-        predictions = classifier.predict_many(
-            [titles[i] for i in index], batch_size=batch_size, min_similarity=min_similarity,
+    rows, usable, texts = [], [], []
+    manifest = getattr(classifier, "manifest", {})
+    defaults = {
+        "topic": None, "candidate_topic": None, "runner_up": None,
+        "score": None, "margin": None, "abstention_reason": None,
+        "n_chunks": 0, "scores": "[]", "logits": "[]", "chunk_spans": "[]",
+        "input_sha256": None, "input_domain": "bill", "score_type": "not_scored",
+        "model_run": getattr(classifier, "run_id", None),
+        "base_model_run": getattr(classifier, "base_model_run", None),
+        "model_status": manifest.get("status", "legacy_baseline"),
+        "taxonomy_sha256": manifest.get("taxonomy_sha256"),
+        "calibration_sha256": getattr(classifier, "calibration_sha256", None),
+        "n_input_tokens": None, "n_discarded_tokens": None,
+        "record_id": None, "procedural_shell": False, "classification_text": "",
+        "input_tier": None, "classification_status": None,
+    }
+    for position, row in enumerate(bills.to_dict("records")):
+        title = str(row.get("title") or "") if pd.notna(row.get("title")) else ""
+        summary = row.get("summary", "")
+        introduced = row.get("introduced_text", "")
+        summary = str(summary) if pd.notna(summary) else ""
+        introduced = str(introduced) if pd.notna(introduced) else ""
+        text = "\n\n".join(part for part in (title, summary, introduced) if part.strip())
+        shell = is_procedural_shell_title(title, str(row.get("state", ""))) and not (
+            summary.strip() or introduced.strip()
         )
-        for position, (code, similarity, _) in zip(index, predictions, strict=True):
-            if code is not None:
-                codes[position] = code
-            scores[position] = similarity
-        del predictions
-
-    return frame.assign(
-        topic=codes,
-        similarity=np.round(scores, 4),
-        procedural_shell=procedural,
-    )
+        reason = "procedural_shell" if shell else (
+            "insufficient_evidence" if len(text.strip()) < min_title_chars else None
+        )
+        rows.append({
+            **defaults,
+            "topic": None, "score": None, "margin": None, "abstention_reason": reason,
+            "procedural_shell": shell, "classification_text": text,
+            "record_id": row.get("bill_id"),
+            "input_sha256": hashlib.sha256(text.encode()).hexdigest(),
+            "classification_status": "excluded" if shell else "abstained",
+            "input_tier": (
+                "introduced_text" if introduced.strip()
+                else "official_summary" if summary.strip() else "title_only"
+            ),
+        })
+        if reason is None:
+            usable.append(position)
+            texts.append(text)
+    for start in range(0, len(usable), _BILL_SLICE):
+        predictions = prediction_rows(
+            classifier, texts[start:start + _BILL_SLICE], domain="bill",
+            batch_size=batch_size, min_similarity=min_similarity,
+        )
+        for position, prediction in zip(
+            usable[start:start + _BILL_SLICE], predictions, strict=True
+        ):
+            rows[position].update(prediction)
+            rows[position]["classification_status"] = (
+                "classified" if prediction["topic"] is not None else "abstained"
+            )
+    result = bills.copy()
+    predictions = pd.DataFrame(rows, index=result.index, columns=list(defaults))
+    for column in predictions:
+        result[column] = predictions[column]
+    return result
 
 
 def _release_memory() -> None:
@@ -124,17 +144,9 @@ def _release_memory() -> None:
 def count_topics_by_state(
         bills_path, classifier, *, states=None,
         min_similarity: float = MIN_TOPIC_SIMILARITY,
-                          batch_size: int = 512, min_title_chars: int = 20, progress=print):
-    """Classify bills **one state at a time**, keeping only the aggregate counts.
-
-    Nothing downstream needs a per-bill topic column: the outputs are counts by
-    (state, party, year, topic). Holding 880,000 classified rows in order to group them was
-    what kept getting this step OOM-killed on a 16 GB machine.
-
-    Reading is pushed down to the parquet file per state, so peak memory is one state's bills --
-    at most New York's ~105,000 -- rather than the whole corpus. The trade is a few seconds of
-    extra IO per state, which is nothing next to the embedding pass.
-    """
+                          batch_size: int = 8, min_title_chars: int = 20, progress=print,
+                          predictions_dir=None):
+    """Classify one state at a time, optionally persisting auditable per-bill partitions."""
     import pandas as pd
 
     if states is None:
@@ -145,18 +157,33 @@ def count_topics_by_state(
     seen = attributed = classified_total = 0
     for position, state in enumerate(states, start=1):
         frame = pd.read_parquet(
-            bills_path, columns=["state", "year", "title", "sponsor_party"],
+            bills_path,
             filters=[("state", "==", state)],
         )
         seen += len(frame)
+        frame = frame[pd.to_numeric(frame["year"], errors="coerce") >= MIN_BILL_YEAR]
+        frame = classify_bills(
+            frame, classifier, batch_size=batch_size,
+            min_similarity=min_similarity, min_title_chars=min_title_chars,
+        )
+        if predictions_dir is not None:
+            if (
+                "bill_id" not in frame or frame["bill_id"].isna().any()
+                or not frame["bill_id"].map(
+                    lambda value: isinstance(value, str) and bool(value.strip())
+                ).all()
+                or frame["bill_id"].duplicated().any()
+            ):
+                raise ValueError("record-level exports require unique source bill IDs")
+            destination = Path(predictions_dir) / f"{state}.parquet"
+            destination.parent.mkdir(parents=True, exist_ok=True)
+            partial = destination.with_suffix(".parquet.part")
+            frame.to_parquet(partial, index=False)
+            partial.replace(destination)
         frame = frame[frame["sponsor_party"].isin(("D", "R"))].rename(
             columns={"sponsor_party": "party"}).reset_index(drop=True)
-        frame = frame[pd.to_numeric(frame["year"], errors="coerce") >= MIN_BILL_YEAR]
         attributed += len(frame)
         if not frame.empty:
-            frame = classify_bills(frame, classifier, batch_size=batch_size,
-                                   min_similarity=min_similarity,
-                                   min_title_chars=min_title_chars)
             usable = frame[frame["topic"].notna()]
             classified_total += len(usable)
             for party, party_frame in frame.groupby("party"):
@@ -172,6 +199,7 @@ def count_topics_by_state(
                         ),
                         "n_substantive_attributed": len(substantive),
                         "n_classified_total": n_classified,
+                        "n_abstained": len(substantive) - n_classified,
                         "classification_rate": (
                             n_classified / len(substantive) if len(substantive) else 0.0
                         ),
@@ -194,7 +222,10 @@ def count_topics_by_state(
               else pd.DataFrame(
                   columns=["state", "party", "year", "topic", "n_bills"]
               ))
-    coverage = pd.DataFrame(coverage_rows)
+    coverage = pd.DataFrame(coverage_rows, columns=[
+        "state", "party", "n_attributed", "n_procedural_excluded",
+        "n_substantive_attributed", "n_classified_total", "n_abstained", "classification_rate",
+    ])
     return counts, {
         "n_bills": seen,
         "n_attributed": attributed,
@@ -297,13 +328,29 @@ def main(argv: list[str] | None = None) -> int:
     )
     parser.add_argument("--topics", default=DEFAULT_TOPICS_PATH)
     parser.add_argument("--out-dir", default="data/processed")
+    add_model_arguments(parser)
     args = parser.parse_args(argv)
 
     topics = load_topics(args.topics)
-    classifier = EmbeddingClassifier(topics)
+    classifier = load_classifier(args, topics)
     print(f"model {classifier.model_name} on device {classifier.device}")
 
-    by_state, totals, coverage = count_topics_by_state(args.bills, classifier)
+    predictions_dir = Path(args.out_dir) / "bill_predictions" / classifier.run_id
+    predictions_dir.mkdir(parents=True, exist_ok=False)
+    prediction_manifest = {
+        "status": "incomplete", "model_run": classifier.run_id,
+        "source_bills_sha256": sha256_file(args.bills),
+        "scientific_certification": "not_performed",
+    }
+    manifest_path = predictions_dir / "prediction_manifest.json"
+    manifest_path.write_text(json.dumps(prediction_manifest, indent=2) + "\n")
+    by_state, totals, coverage = count_topics_by_state(
+        args.bills, classifier, predictions_dir=predictions_dir
+    )
+    prediction_manifest.update(status="complete_extraction_not_source_certification", partitions={
+        path.name: sha256_file(path) for path in sorted(predictions_dir.glob("*.parquet"))
+    })
+    manifest_path.write_text(json.dumps(prediction_manifest, indent=2) + "\n")
     print(f"bills with a party attribution: {totals['n_attributed']:,} "
           f"of {totals['n_bills']:,}")
     print(f"classified: {totals['n_classified']:,}")

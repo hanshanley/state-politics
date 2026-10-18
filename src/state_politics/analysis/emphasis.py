@@ -13,22 +13,28 @@ Two comparisons the resulting table supports:
   (see ``--historical-from``) and on the
   2018-present corpus this project collected, showing how emphasis has moved.
 
-Everything here is descriptive. Classification accuracy is 62% top-1 / 78% top-2 on a
-hand-labelled sample (see :mod:`state_politics.analysis.validate`), which supports statements
-about broad aggregate emphasis and not about any individual plank.
+Everything here is descriptive. Historical embedding-baseline metrics do not validate the
+replacement classifier or establish reliable aggregate findings. Independent target-domain
+evaluation is required; abstention coverage accompanies classified-only topic shares.
 """
 
 from __future__ import annotations
 
 import argparse
+import hashlib
 import itertools
 import re
 from pathlib import Path
 
+from .modernbert import (
+    add_model_arguments,
+    load_classifier,
+    policy_units,
+    prediction_rows,
+)
 from .taxonomy import (
     DEFAULT_TOPICS_PATH,
     MIN_TOPIC_SIMILARITY,
-    EmbeddingClassifier,
     load_topics,
     segment_planks,
 )
@@ -40,8 +46,8 @@ __all__ = ["classify_corpus", "emphasis_by_party", "emphasis_table"]
 MODERN_FROM = 2018
 
 
-def classify_corpus(frame, classifier: EmbeddingClassifier, *, text_column: str = "text",
-                    batch_size: int = 256,
+def classify_corpus(frame, classifier, *, text_column: str = "text",
+                                    batch_size: int = 8,
                     min_similarity: float = MIN_TOPIC_SIMILARITY):
     """Segment every document into planks and classify them. Returns a plank-level frame."""
     import pandas as pd
@@ -49,27 +55,44 @@ def classify_corpus(frame, classifier: EmbeddingClassifier, *, text_column: str 
     records = []
     for row_index, row in enumerate(frame.itertuples(index=False)):
         text = getattr(row, text_column, "") or ""
-        for plank in segment_planks(text, row_index):
+        metadata = row._asdict()
+        source_key = "\n".join(
+            str(metadata.get(key, "")) for key in
+            ("state", "party", "year", "url", "member", "official_source_id")
+        )
+        document_id = hashlib.sha256((source_key + "\n" + text).encode()).hexdigest()
+        if hasattr(classifier, "predict_records"):
+            units = policy_units(text)
+        else:
+            units = [(None, None, plank.text) for plank in segment_planks(text, row_index)]
+        for unit_index, (start, end, unit_text) in enumerate(units):
             records.append({
+                **metadata,
+                "document_id": document_id,
+                "record_id": hashlib.sha256(
+                    f"{document_id}:{unit_index}:{unit_text}".encode()
+                ).hexdigest(),
                 "document_index": row_index,
                 "state": row.state,
                 "party": row.party,
                 "year": getattr(row, "year", None),
                 "era": getattr(row, "era", None),
-                "plank_index": plank.plank_index,
-                "n_words": plank.n_words,
-                "text": plank.text,
+                "plank_index": unit_index,
+                "source_start": start,
+                "source_end": end,
+                "n_words": len(unit_text.split()),
+                "text": unit_text,
             })
     if not records:
         return pd.DataFrame(columns=["state", "party", "year", "topic", "similarity"])
 
     planks = pd.DataFrame(records)
-    predictions = classifier.predict_many(
-        planks["text"].tolist(), batch_size=batch_size, min_similarity=min_similarity
+    predictions = prediction_rows(
+        classifier, planks["text"].tolist(), domain="plank",
+        batch_size=batch_size, min_similarity=min_similarity
     )
-    planks["topic"] = [code for code, _, _ in predictions]
-    planks["similarity"] = [round(sim, 4) for _, sim, _ in predictions]
-    planks["margin"] = [round(margin, 4) for _, _, margin in predictions]
+    for column in predictions[0]:
+        planks[column] = [row[column] for row in predictions]
     return planks
 
 
@@ -245,13 +268,14 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--historical", default="data/processed/platforms_historical.parquet")
     parser.add_argument("--topics", default=DEFAULT_TOPICS_PATH)
     parser.add_argument("--out-dir", default="data/processed")
+    add_model_arguments(parser)
     parser.add_argument("--historical-from", type=int, default=1990,
                         help="earliest historical year to classify; the full corpus reaches "
                              "back to 1840 and is far larger than the modern one")
     args = parser.parse_args(argv)
 
     topics = load_topics(args.topics)
-    classifier = EmbeddingClassifier(topics)
+    classifier = load_classifier(args, topics)
     print(f"model {classifier.model_name} on device {classifier.device}")
 
     frames = []
@@ -264,8 +288,7 @@ def main(argv: list[str] | None = None) -> int:
     # years, so they are assigned by their own date instead.
     modern_year = pd.to_numeric(modern["year"], errors="coerce")
     in_window = modern_year.isna() | (modern_year >= MODERN_FROM)
-    frames.append(modern[in_window].assign(era="2018-present", source_corpus="collected")[
-        ["state", "party", "year", "era", "text", "source_corpus"]])
+    frames.append(modern[in_window].assign(era="2018-present", source_corpus="collected"))
     print(f"modern documents:     {int(in_window.sum())} "
           f"({int((~in_window).sum())} dated before {MODERN_FROM}, moved to the earlier era)")
 
@@ -277,7 +300,7 @@ def main(argv: list[str] | None = None) -> int:
             & (historical["year"] >= args.historical_from)
             & (historical["state"] != "US")
         ].assign(era=f"{args.historical_from}-2017", source_corpus="dataverse")
-        frames.append(historical[["state", "party", "year", "era", "text", "source_corpus"]])
+        frames.append(historical)
         print(f"historical documents: {len(historical)} (from {args.historical_from})")
 
     # Pre-window modern documents belong with the historical era, not with the years they were
@@ -285,17 +308,22 @@ def main(argv: list[str] | None = None) -> int:
     early = modern[~in_window]
     if not early.empty:
         frames.append(early.assign(era=f"{args.historical_from}-2017",
-                                   source_corpus="collected")[
-            ["state", "party", "year", "era", "text", "source_corpus"]])
+                                   source_corpus="collected"))
 
     corpus = _drop_duplicate_documents(pd.concat(frames, ignore_index=True))
     planks = classify_corpus(corpus, classifier)
     print(f"planks classified:    {len(planks)} "
-          f"({int(planks['topic'].isna().sum())} below the similarity threshold)")
+          f"({int(planks['topic'].isna().sum())} abstentions)")
 
     out_dir = Path(args.out_dir)
     out_dir.mkdir(parents=True, exist_ok=True)
-    planks.drop(columns=["text"]).to_parquet(out_dir / "planks_classified.parquet", index=False)
+    planks.to_parquet(out_dir / "planks_classified.parquet", index=False)
+    coverage = planks.groupby(["state", "party", "era"], dropna=False).agg(
+        n_eligible=("record_id", "size"), n_classified=("topic", "count")
+    ).reset_index()
+    coverage["n_abstained"] = coverage["n_eligible"] - coverage["n_classified"]
+    coverage["classification_rate"] = coverage["n_classified"] / coverage["n_eligible"]
+    coverage.to_csv(out_dir / "plank_classification_coverage.csv", index=False)
 
     by_org = emphasis_table(planks, topics, by=("state", "party", "era"))
     by_org.to_csv(out_dir / "emphasis_by_org.csv", index=False)
