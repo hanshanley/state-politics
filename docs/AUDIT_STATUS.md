@@ -13,7 +13,44 @@ replacement classifier or establish complete contemporary coverage.
 | Classification | Two actual official English ModernBERT-base fine-tuning runs saved and reloaded: external-only policy training, then 6,001-unit joint target/rejection training with 21 policy outputs plus null. | Both candidates still make 27 correct decisions in the same 50 development records. Learned rejection reduces false acceptance but loses correct policy decisions; neither candidate is approved for production. |
 | Labels | External CAP files recovered; split/group/exact-text checks and explicit reviewed-label provenance are implemented. | Source permissions, adapted-topic compatibility, near-duplicate families and reviewed state-domain training/development/test labels. |
 | Evaluation | Development-only temperature/threshold selection, exact evidence joins, abstention accounting, per-topic and subgroup metrics. | Reviewer arrangement, frozen empirical gates, independent target tests and clustered uncertainty. No checkpoint can be certified by changing a status field. |
-| Companion | Local-only historical-evidence preview and full-text downloads. Chromium checks cover state/party filtering, pagination, keyboard controls, 375px mobile overflow, request failures/races, no-JavaScript fallback and all 2,091 downloaded texts. | Audited classification/analysis exports and eventual report; no production integration is authorized. |
+| Companion | Local-only historical and bounded-recovery preview with complete downloads. Recovery browsing separately retains 309 attempts, 299 responses, ten failures and source-bound alternate OCR; all 100 organization rows remain unresolved. | Audited classification/analysis exports, redistribution review and eventual report; no production integration is authorized. |
+
+## Recovery explorer and limited version review
+
+The optional recovery build validates the frozen inventory's manifest, source-text/OCR
+bindings, identities, all 100 organization rows and counts. It preserves every selected
+capture, including failures and byte-identical responses; standard extraction and alternate
+OCR are separate. Rebuilding without recovery removes only the known recovery outputs.
+The browser-tested build is `data/preview-recovery-v1/`; its complete gzip download
+reproduces all 309 original capture records byte-for-byte. Desktop/mobile checks cover
+pagination, explicit failures, complete OCR, keyboard access, no-JavaScript coverage and
+download links, visible HTTP errors, stale collection-switch responses and literal
+synthetic script/image text. The frozen browser-check v2 manifest SHA-256 is
+`69f42474ee6ed3e802189fe1ef3b9373ce62d36ead95f31497b9d3651250c147`;
+its result binds the build manifest and original complete capture stream.
+All 100 recovery partitions and 309 complete records were independently reconciled with
+the original packet; exact inventory/manifest copies and review spans were also verified.
+The 179 focused site, coverage, collector, registry and discovery tests pass.
+This is interface verification, not model accuracy,
+operative-platform certification or full-campaign coverage.
+
+`data/processed/source-version-visual-review-v1/` freezes five **limited assistant reviews**
+with full source texts, exact version/adoption spans, original body hashes and two directly
+inspected physical-page renders. Its manifest SHA-256 is
+`9bedabf57afd8e937cee13d5c7f7584477566b310fd0fe98fcba00feb33868d8`.
+The New Mexico Republican PDF's physical page 4 has blank signature/adoption fields;
+this does not prove that adoption never occurred. Oklahoma's Democratic PDF's physical
+page 2 explicitly reports convention approval on June 29, 2025 and identifies an addendum
+to the 2024 national platform. Arkansas's PDF URL is draft-labelled, but the inspected
+title is not an adoption determination. New Mexico Democrats' 2026 Core Values title
+and full-platform March 9, 2024 amendment footer do not settle their operative relationship.
+None of these reviews is a full-document topic review, independent event verification,
+training label or analytical admission. All operative statuses remain unresolved.
+
+`docs/WEBSITE.md` now records a concrete publication handoff against the locally inspected
+publication runbook and visual tokens: frozen static artifacts, report-first approval,
+complete evidence downloads, explicit release gates and deployment checks. No publication
+repository files, routes, assets or navigation have been changed.
 
 ## Claim disposition
 

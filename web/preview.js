@@ -1,6 +1,7 @@
 "use strict";
 const state = document.getElementById("state");
 const party = document.getElementById("party");
+const collection = document.getElementById("collection");
 const status = document.getElementById("evidence-status");
 const evidence = document.getElementById("evidence");
 const pagination = document.getElementById("pagination");
@@ -17,22 +18,48 @@ function render() {
   for (const row of records.slice(begin, begin + pageSize)) {
     const article = document.createElement("article");
     const heading = document.createElement("h3");
-    heading.textContent = `${row.state} / ${row.party} / ${row.year} — ${row.filename}`;
+    const recovery = collection.value === "recovery";
+    heading.textContent = recovery
+      ? `${row.state} / ${row.party} — ${row.capture_id}`
+      : `${row.state} / ${row.party} / ${row.year} — ${row.filename}`;
     const note = document.createElement("p");
     note.className = "note";
-    note.textContent = "Historical archive · Not classified by ModernBERT";
+    note.textContent = recovery
+      ? `${row.retrieval_status.replaceAll("_", " ")} · Operative version unresolved · Not admitted to analysis`
+      : "Historical archive · Not classified by ModernBERT";
     const details = document.createElement("details");
     const summary = document.createElement("summary");
     summary.textContent = "Read recovered source text";
     const text = document.createElement("div");
     text.className = "source-text";
     text.tabIndex = 0;
-    text.textContent = row.text;
+    text.textContent = recovery
+      ? (row.retrieval_status === "retrieval_failed"
+        ? "Retrieval failed. No response body or source text was retained."
+        : (row.extracted_text || "Response body retained, but standard extraction produced no text."))
+      : row.text;
     details.append(summary, text);
     const source = document.createElement("a");
-    source.href = "https://doi.org/10.7910/DVN/KNOSHL";
-    source.textContent = "Publisher archive and provenance";
+    source.href = recovery ? row.url : "https://doi.org/10.7910/DVN/KNOSHL";
+    source.textContent = recovery ? row.url : "Publisher archive and provenance";
     article.append(heading, note, source, details);
+    if (recovery) {
+      const identity = document.createElement("p");
+      identity.className = "note";
+      identity.textContent = `${row.extraction_method} · Body SHA-256: ${row.source_sha256 || "none retained"}`;
+      article.append(identity);
+      if (row.alternate_ocr) {
+        const ocr = document.createElement("details");
+        const label = document.createElement("summary");
+        label.textContent = "Read alternate OCR (uncertified transcription; original extraction preserved above)";
+        const transcription = document.createElement("div");
+        transcription.className = "source-text";
+        transcription.tabIndex = 0;
+        transcription.textContent = row.alternate_ocr.extracted_text;
+        ocr.append(label, transcription);
+        article.append(ocr);
+      }
+    }
     evidence.append(article);
   }
   pagination.hidden = records.length <= pageSize;
@@ -40,7 +67,7 @@ function render() {
   next.disabled = begin + pageSize >= records.length;
   status.textContent = records.length
     ? `Documents ${begin + 1}–${Math.min(begin + pageSize, records.length)} of ${records.length}.`
-    : "No recovered historical documents for this selection. Contemporary evidence remains unresolved.";
+    : `No ${collection.value === "recovery" ? "captures in these selected recovery packets" : "recovered historical documents"} for this selection. This is not publication absence; operative coverage remains unresolved.`;
 }
 
 async function update() {
@@ -64,13 +91,15 @@ async function update() {
   try {
     const parties = party.value ? [party.value] : ["D", "R"];
     const groups = await Promise.all(parties.map(async (code) => {
-      const response = await fetch(`evidence/${state.value}-${code}.json`);
+      const prefix = collection.value === "recovery" ? "recovery-" : "";
+      const response = await fetch(`evidence/${prefix}${state.value}-${code}.json`);
       if (!response.ok) throw new Error(`Source partition unavailable (HTTP ${response.status}).`);
       return response.json();
     }));
     if (request !== generation) return;
-    records = groups.flat().sort((a, b) => b.year - a.year
-      || a.filename.localeCompare(b.filename));
+    records = groups.flat().sort(collection.value === "recovery"
+      ? (a, b) => a.capture_id.localeCompare(b.capture_id, undefined, { numeric: true })
+      : (a, b) => b.year - a.year || a.filename.localeCompare(b.filename));
     render();
   } catch (error) {
     if (request !== generation) return;
@@ -80,6 +109,7 @@ async function update() {
 
 state.addEventListener("change", update);
 party.addEventListener("change", update);
+collection.addEventListener("change", update);
 document.getElementById("filters").addEventListener("submit", event => event.preventDefault());
 previous.addEventListener("click", () => { page--; render(); });
 next.addEventListener("click", () => { page++; render(); });

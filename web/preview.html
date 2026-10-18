@@ -15,8 +15,8 @@
     <p class="lede">An evidence-first explorer of party platforms and legislative filing.
       The research is being rebuilt; comparisons and conclusions are withheld.</p>
     <aside aria-label="Research status">
-      <strong>Not publication-ready.</strong> ModernBERT training infrastructure is in place,
-      but no independently evaluated topic classifier or refreshed bill corpus is available.
+      <strong>Not publication-ready.</strong> Trained ModernBERT candidates remain provisional.
+      Refreshed legislative source tables are retained, but validated comparisons are unavailable.
       Historical documents do not establish what a party currently advocates.
       No analytical cutoff has been certified.
     </aside>
@@ -30,22 +30,24 @@
       <form id="filters">
         <label>State<select id="state"><option value="">All states</option>@@STATE_OPTIONS@@</select></label>
         <label>Party<select id="party"><option value="">Both parties</option><option value="D">Democratic</option><option value="R">Republican</option></select></label>
+        <label>Source collection<select id="collection"><option value="historical">Historical archive</option>@@RECOVERY_OPTION@@</select></label>
         <label>Topic<select disabled aria-describedby="topic-status"><option>Not available</option></select></label>
       </form>
       <p id="topic-status" class="note">Topic filters and stated-versus-filed charts remain unavailable
         until the classification and source-audit gates pass. “Unresolved” is not zero.</p>
+      @@RECOVERY_NOTE@@
       <p id="row-count" role="status" aria-live="polite">100 organization rows</p>
       <div class="table-wrap">
         <table id="coverage">
           <caption>Historical recovery and unresolved contemporary evidence, by organization</caption>
-          <thead><tr><th scope="col">State / party</th><th scope="col">Historical documents</th><th scope="col">Latest archive year</th><th scope="col">Contemporary evidence</th><th scope="col">Bill comparison</th></tr></thead>
+          <thead><tr><th scope="col">State / party</th><th scope="col">Historical documents</th><th scope="col">Latest archive year</th><th scope="col">Operative status</th><th scope="col">Selected recovery</th><th scope="col">Bill comparison</th></tr></thead>
           <tbody>@@COVERAGE_ROWS@@</tbody>
         </table>
       </div>
     </section>
     <section aria-labelledby="evidence-heading">
       <h2 id="evidence-heading">Read the evidence</h2>
-      <p>Choose a state to inspect recovered historical documents. These are source records,
+      <p>Choose a state and source collection to inspect recovered evidence. These are source records,
         not ModernBERT predictions. Party committees and legislative caucuses are not interchangeable.</p>
       <p id="evidence-status" role="status" aria-live="polite">Choose a state; complete records are also available below.</p>
       <div id="evidence"></div>
@@ -58,6 +60,7 @@
       <p><a href="downloads/historical_documents.jsonl.gz" download>Complete recovered archive (JSONL, gzip; includes text)</a>
         · <a href="downloads/source_coverage.json" download>All 100 coverage rows (JSON)</a>
         · <a href="downloads/build_manifest.json" download>Build inputs and hashes</a></p>
+      @@RECOVERY_DOWNLOADS@@
       <p class="note">The archive includes historical national and non-major-party records that are
         not counted in the state-major-party table. No unavailable analytical results have been
         substituted with historical records. Redistribution permissions must be reviewed before

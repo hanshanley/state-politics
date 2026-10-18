@@ -32,7 +32,8 @@ td { border-bottom: 1px solid var(--rule); }
 a { color: var(--ink); text-decoration-color: var(--accent); text-underline-offset: 3px; }
 #row-count, #evidence-status { font-size: 13px; color: var(--muted); }
 #evidence article { border-top: 1px solid var(--rule); padding: 18px 0; }
-#evidence h3 { margin: 0; font-size: 1.15rem; font-weight: normal; }
+#evidence h3 { margin: 0; font-size: 1.15rem; font-weight: normal; overflow-wrap: anywhere; }
+#evidence a, #evidence .note { overflow-wrap: anywhere; }
 .source-text { white-space: pre-wrap; overflow-wrap: anywhere; max-height: 32rem; overflow-y: auto; }
 summary { cursor: pointer; }
 #pagination { margin-top: 15px; }
