@@ -9,7 +9,7 @@ from collections import Counter
 from pathlib import Path
 
 from ..provenance import sha256_file
-from .modernbert import decide
+from .modernbert import checked_output_codes, decide
 from .taxonomy import DEFAULT_TOPICS_PATH, load_topics
 from .train_topics import load_examples
 
@@ -47,11 +47,19 @@ def join_predictions(labels: list[dict], predictions: list[dict]) -> list[dict]:
         joined.append({
             **row, "logits": json.loads(logits) if isinstance(logits, str) else logits,
         })
+        if "output_codes" in prediction:
+            joined[-1]["output_codes"] = prediction["output_codes"]
     return joined
 
 
 def metrics(rows: list[dict], codes: list[int], policy: dict) -> dict:
-    decisions = [decide(row["logits"], codes, **policy) for row in rows]
+    outputs = [checked_output_codes(codes, row.get("output_codes", codes)) for row in rows]
+    if outputs and any(mapping != outputs[0] for mapping in outputs):
+        raise ValueError("evaluation rows have inconsistent model output maps")
+    decisions = [
+        decide(row["logits"], mapping, **policy)
+        for row, mapping in zip(rows, outputs, strict=True)
+    ]
     classified = sum(decision.topic is not None for decision in decisions)
     correct = sum(
         decision.topic is not None and decision.topic == row.get("topic")
@@ -83,9 +91,9 @@ def metrics(rows: list[dict], codes: list[int], policy: dict) -> dict:
     )
     supported = [row["f1"] for row in per_topic if row["support"]]
     reference_scores = [
-        (codes.index(row["topic"]), decision.scores)
-        for row, decision in zip(rows, decisions, strict=True)
-        if row.get("topic") in codes and decision.scores
+        (mapping.index(row["topic"]), decision.scores)
+        for row, decision, mapping in zip(rows, decisions, outputs, strict=True)
+        if row.get("topic") in mapping and decision.scores
     ]
     nll = (
         -sum(math.log(max(scores[target], 1e-300)) for target, scores in reference_scores)
@@ -110,7 +118,11 @@ def metrics(rows: list[dict], codes: list[int], policy: dict) -> dict:
         "correct_abstention_count": correctly_abstained,
         "macro_f1_supported_topics": sum(supported) / len(supported) if supported else None,
         "probability_metrics": {
-            "scope": "single_topic_references_with_nonempty_logits",
+            "scope": (
+                "topic_and_abstention_references_with_nonempty_logits"
+                if outputs and None in outputs[0]
+                else "single_topic_references_with_nonempty_logits"
+            ),
             "n": len(reference_scores), "multiclass_log_loss": nll,
             "multiclass_brier_score": brier,
         },
@@ -144,7 +156,7 @@ def calibrate(rows, codes, *, min_precision, min_coverage, min_support):
         if loss is not None:
             temperatures.append((loss, temperature))
     if not temperatures:
-        raise ValueError("development temperature fitting requires single-topic references")
+        raise ValueError("development temperature fitting requires supported reference outputs")
     _, temperature = min(temperatures)
     for confidence in (0.5, 0.6, 0.7, 0.8, 0.9, 0.95, 0.99):
         for margin in (0.0, 0.1, 0.2, 0.3):

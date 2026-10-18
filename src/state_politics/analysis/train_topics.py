@@ -27,6 +27,7 @@ from .taxonomy import DEFAULT_TOPICS_PATH, load_topics
 
 SPLITS = {"train", "dev", "test", "challenge"}
 LABEL_ORIGINS = {"external_coded", "reviewed_target"}
+TRAINING_ABSTENTIONS = {"non_policy", "mixed_policy", "insufficient_evidence"}
 
 
 def load_examples(path: Path | str, codes: list[int]) -> list[dict]:
@@ -66,14 +67,24 @@ def load_examples(path: Path | str, codes: list[int]) -> list[dict]:
         ):
             raise ValueError(f"row {number}: evaluation requires reviewed target-domain labels")
         if row.get("topic") not in codes and not (
-            row.get("topic") is None and row.get("abstention_reason")
-            and row["split"] != "train"
+            row.get("topic") is None
+            and isinstance(row.get("abstention_reason"), str)
+            and row["abstention_reason"].strip()
+            and "topic" in row
         ):
             raise ValueError(f"row {number}: invalid topic or missing abstention rationale")
+        if row["split"] == "train" and row["topic"] is None and (
+            row["label_origin"] != "reviewed_target"
+            or row["abstention_reason"] not in TRAINING_ABSTENTIONS
+        ):
+            raise ValueError(f"row {number}: training rejection needs an explicit reviewed reason")
         normalized = re.sub(r"\W+", " ", row["text"].casefold()).strip()
         if not normalized:
             raise ValueError(f"row {number}: empty substantive input")
-        row["text_sha256"] = hashlib.sha256(row["text"].encode()).hexdigest()
+        text_hash = hashlib.sha256(row["text"].encode()).hexdigest()
+        if row.get("text_sha256", text_hash) != text_hash:
+            raise ValueError(f"row {number}: reviewed text hash mismatch")
+        row["text_sha256"] = text_hash
         fingerprint = hashlib.sha256(normalized.encode()).hexdigest()
         for kind, key in (("group", row["group_id"]), ("text", fingerprint)):
             previous = owners.setdefault((kind, key), row["split"])
@@ -91,6 +102,7 @@ def train(args) -> Path:
     rows = load_examples(args.labels, codes)
     train_rows = [row for row in rows if row["split"] == "train"]
     counts = Counter(row["topic"] for row in train_rows)
+    outputs = [*codes, None] if counts[None] else codes
     missing = set(codes) - counts.keys()
     if missing:
         raise ValueError(f"training labels missing topics: {sorted(missing)}")
@@ -121,13 +133,19 @@ def train(args) -> Path:
                 f"{row['record_id']}: training unit exceeds token budget; review/segment it "
                 "rather than propagating its document label to unrelated chunks"
             )
-        examples.append((encoded, codes.index(row["topic"])))
+        examples.append((encoded, outputs.index(row["topic"])))
     model = AutoModelForSequenceClassification.from_pretrained(
         MODEL_ID, revision=MODEL_REVISION,
         config=modernbert_config(
-            MODEL_ID, revision=MODEL_REVISION, num_labels=len(codes),
-            id2label={i: str(code) for i, code in enumerate(codes)},
-            label2id={str(code): i for i, code in enumerate(codes)},
+            MODEL_ID, revision=MODEL_REVISION, num_labels=len(outputs),
+            id2label={
+                i: str(code) if code is not None else "ABSTAIN"
+                for i, code in enumerate(outputs)
+            },
+            label2id={
+                str(code) if code is not None else "ABSTAIN": i
+                for i, code in enumerate(outputs)
+            },
         ),
         trust_remote_code=False, attn_implementation="sdpa",
     ).to(device)
@@ -139,14 +157,16 @@ def train(args) -> Path:
     initial_encoder_parameter = encoder_parameter.detach().cpu().clone()
     optimizer = torch.optim.AdamW(model.parameters(), lr=args.learning_rate, weight_decay=0.01)
     weights = torch.tensor(
-        [len(train_rows) / (len(codes) * counts[code]) for code in codes], device=device
+        [len(train_rows) / (len(outputs) * counts[code]) for code in outputs], device=device
     )
     criterion = torch.nn.CrossEntropyLoss(weight=weights)
     args.out.mkdir(parents=True)
     manifest = {
-        "schema_version": 1, "model_id": MODEL_ID, "base_revision": MODEL_REVISION,
+        "schema_version": 2 if counts[None] else 1,
+        "model_id": MODEL_ID, "base_revision": MODEL_REVISION,
         "status": "provisional", "created_at": utc_now_iso(),
         "topic_codes": codes, "taxonomy_sha256": sha256_file(args.topics),
+        "output_codes": outputs, "training_abstention_count": counts[None],
         "labels_sha256": sha256_file(args.labels),
         "code_sha256": {
             name: sha256_file(Path(__file__).with_name(name))
@@ -160,7 +180,8 @@ def train(args) -> Path:
         "reviewer_types": dict(Counter(
             row["reviewer_type"] for row in rows if row["label_origin"] == "reviewed_target"
         )),
-        "training_topic_counts": dict(counts), "hardware": describe_hardware(),
+        "training_topic_counts": {code: counts[code] for code in codes},
+        "hardware": describe_hardware(),
         "torch_version": torch.__version__,
         "input": {
             "max_tokens": args.max_tokens, "overlap": args.overlap,

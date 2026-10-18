@@ -210,8 +210,12 @@ def prepare(
         "per_source_topic_cap": per_source_topic, "sources": source_reports,
         "split_counts": dict(Counter(row["split"] for row in chosen)),
         "training_topic_counts": dict(Counter(
-            row["topic"] for row in chosen if row["split"] == "train"
+            row["topic"] for row in chosen
+            if row["split"] == "train" and row["topic"] is not None
         )),
+        "training_abstention_count": sum(
+            row["split"] == "train" and row["topic"] is None for row in chosen
+        ),
         "limitations": [
             "External numeric codes are provisional initialization labels, not project gold.",
             "Quarantine rules detect known conflicts; they do not prove remaining compatibility.",

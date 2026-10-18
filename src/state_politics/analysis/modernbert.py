@@ -22,6 +22,18 @@ INPUT_CONSTRUCTION = "separate_marker_and_text_tokens_v1"
 WINDOWING = "paragraph_boundaries_with_overlap_v1"
 
 
+def checked_output_codes(codes: list[int], value) -> list[int | None]:
+    """The only additional model output is rejection, never another policy topic."""
+    outputs = json.loads(value) if isinstance(value, str) else value
+    if (
+        not isinstance(outputs, list)
+        or any(type(code) is not int for code in outputs if code is not None)
+        or outputs not in (codes, [*codes, None])
+    ):
+        raise ValueError("model output codes must match the taxonomy with optional final rejection")
+    return outputs
+
+
 def modernbert_config(source, **kwargs):
     """Keep the legacy compile setting out of newer model constructors."""
     from transformers import AutoConfig
@@ -152,7 +164,7 @@ class Decision:
 
 def decide(
     chunk_logits: list[list[float]],
-    codes: list[int],
+    codes: list[int | None],
     *,
     temperature: float,
     min_confidence: float,
@@ -161,6 +173,8 @@ def decide(
     """Conservative chunk consensus; scores remain diagnostics, not proof of certainty."""
     if (
         len(codes) < 2 or len(set(codes)) != len(codes)
+        or None in codes[:-1]
+        or any(type(code) is not int for code in codes if code is not None)
         or not math.isfinite(temperature) or temperature <= 0
         or not 0 <= min_confidence <= 1 or not 0 <= min_margin <= 1
     ):
@@ -185,6 +199,7 @@ def decide(
         "mixed_chunk_topics" if len(winners) > 1
         else "low_confidence" if means[first] < min_confidence
         else "ambiguous_margin" if margin < min_margin
+        else "supervised_rejection" if codes[first] is None
         else None
     )
     return Decision(
@@ -211,7 +226,7 @@ class ModernBertClassifier:
             )
         self.manifest = json.loads(manifest_path.read_text())
         if (
-            self.manifest.get("schema_version") != 1
+            self.manifest.get("schema_version") not in (1, 2)
             or self.manifest.get("model_id") != MODEL_ID
             or self.manifest.get("base_revision") != MODEL_REVISION
         ):
@@ -221,6 +236,18 @@ class ModernBertClassifier:
         self.codes = self.manifest["topic_codes"]
         if self.codes != [topic.code for topic in topics]:
             raise ValueError("checkpoint label order differs from the requested taxonomy")
+        self.output_codes = checked_output_codes(
+            self.codes, self.manifest.get("output_codes", self.codes),
+        )
+        rejection = self.manifest["schema_version"] == 2
+        if (
+            self.output_codes != ([*self.codes, None] if rejection else self.codes)
+            or rejection and (
+                type(self.manifest.get("training_abstention_count")) is not int
+                or self.manifest["training_abstention_count"] < 1
+            )
+        ):
+            raise ValueError("checkpoint rejection output lacks supervised training evidence")
         if self.manifest["status"] != "certified" and not allow_provisional:
             raise ValueError(
                 "ModernBERT checkpoint is provisional. Independent target-domain evaluation "
@@ -243,7 +270,10 @@ class ModernBertClassifier:
         if (
             config.get("model_type") != "modernbert"
             or config.get("architectures") != ["ModernBertForSequenceClassification"]
-            or config.get("id2label") != {str(i): str(code) for i, code in enumerate(self.codes)}
+            or config.get("id2label") != {
+                str(i): str(code) if code is not None else "ABSTAIN"
+                for i, code in enumerate(self.output_codes)
+            }
         ):
             raise ValueError("checkpoint architecture/label mapping differs from its manifest")
         inputs = self.manifest.get("input", {})
@@ -284,7 +314,7 @@ class ModernBertClassifier:
                 raise ValueError(
                     "calibration is not bound to this model/taxonomy/development split"
                 )
-            decide([], self.codes, **calibrated["decision"])
+            decide([], self.output_codes, **calibrated["decision"])
             self.manifest["decision"] = calibrated["decision"]
             self.manifest["decision_status"] = "development_calibrated"
             self.calibration_sha256 = sha256_file(calibration)
@@ -331,7 +361,7 @@ class ModernBertClassifier:
                 ).to(self.device)
                 with torch.inference_mode():
                     logits.extend(self.model(**inputs).logits.float().cpu().tolist())
-            decision = decide(logits, self.codes, **policy)
+            decision = decide(logits, self.output_codes, **policy)
             record = asdict(decision)
             record.update(
                 input_sha256=hashlib.sha256(text.encode()).hexdigest(),
@@ -347,6 +377,11 @@ class ModernBertClassifier:
                 calibration_sha256=self.calibration_sha256,
                 base_model_run=self.base_model_run,
                 taxonomy_sha256=self.manifest["taxonomy_sha256"],
+                output_codes=json.dumps(self.output_codes),
+                rejection_score=(
+                    decision.scores[-1] if self.output_codes[-1] is None and decision.scores
+                    else None
+                ),
             )
             records.append(record)
         return records

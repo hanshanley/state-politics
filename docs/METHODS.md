@@ -4,6 +4,12 @@ Full methodology for [state-politics](../README.md). The README carries the find
 caveats a reader needs to interpret them; this document carries the detail needed to check,
 extend or dispute them.
 
+**Audit notice (October 18, 2026):** historical collection counts, inferred absences,
+classification scores and attribution/validation claims below describe the legacy study,
+not revalidated findings. See [AUDIT_STATUS.md](AUDIT_STATUS.md) for the recovered evidence,
+source limitations and actual supervised-model diagnostics. The original gold snapshot's
+reviewer provenance is unresolved; it is not verified independent human truth.
+
 The complete input-hash, OCR, random-seed and artifact-producer audit is documented separately
 in [REPRODUCIBILITY.md](REPRODUCIBILITY.md).
 
@@ -208,6 +214,25 @@ be resolved at all are `unknown`, never guessed.
 ---
 
 ## Classifying both streams into one taxonomy
+
+### Current supervised research contract
+
+The replacement uses locally fine-tuned, revision-pinned official English ModernBERT-base,
+not nearest-description embedding similarity. It returns one of the same 21 policy topics
+or null. Training may add a separate learned rejection output only from explicitly reviewed
+non-policy, mixed-policy or insufficient-evidence inputs; this is not another policy topic.
+Full output maps and logits survive evidence joins, evaluation and development-only
+calibration. Policy-only checkpoints remain supported as frozen research artifacts, never
+as a silent fallback. Neither checkpoint type is automatically certified.
+
+The first actual model matches, rather than beats, the historical baseline's 54% decision
+accuracy on 50 provisional assistant development judgments. Separate target/rejection
+training evidence is now retained with source hashes and individual assistant rationales;
+development documents and labels remain reserved. Independent review, source-quality and
+taxonomy resolution, broader class support and empirical release gates remain necessary.
+No replacement has been approved for production or publication.
+
+### Legacy analytical pipeline (not revalidated)
 
 With both platform corpora in hand, `state_politics.analysis` segments every document into
 planks, classifies each against a shared issue taxonomy, and measures **share of planks** —

@@ -266,6 +266,45 @@ automatically valid for enriched text; some previously ambiguous titles now have
 substantive evidence. Abstract timing is unverified and cannot establish filing-time attention.
 No labels, weights or thresholds were changed to obtain a better-looking score.
 
+## Explicit rejection and separate target-domain training
+
+The first pilot was trained only on policy topics: confidence thresholds alone cannot
+teach it what a committee list or honorary resolution is. Training now accepts an explicit
+null target only for reviewed target evidence with a `non_policy`, `mixed_policy` or
+`insufficient_evidence` reason. Unreviewed external "other" codes and unresolved taxonomy
+disputes are not converted into rejection examples.
+
+When such examples are present, the head has 21 unchanged policy outputs plus one learned
+rejection output. Manifest schema 2 declares the exact output map and rejection support;
+schema-1 policy-only checkpoints remain loadable. A winning rejection yields topic null,
+not a 22nd counted policy category. Predictions retain the full output map, logits and
+rejection probability. Evaluation and development calibration preserve this map and include
+reviewed null references in probability losses when that output exists. Existing uncertainty
+and chunk-disagreement abstentions remain in force; no automatic certification is added.
+
+All **128 complete inputs** in `data/labels/target-adaptation-pilot-v1/` received explicit
+assistant semantic review: 106 were selected for provisional training and 22 quarantined
+without labels. Selected training contains 57 policy examples and 49 rejection examples
+(40 non-policy, eight insufficient-evidence, one mixed). Every selected record retains its
+full input, source binding, reviewer identity/date and individual rationale. Keyword and
+length strata were used only to sample additional titles, not to assign their labels:
+the sampled "recognizances" bill is substantive criminal justice, for example.
+
+The 50 original development judgments remain unchanged. Their IDs, groups and exact/close
+text were reserved; no Texas Republican development document was split into training.
+The two additional platform documents are California Democratic 2026 and Texas Democratic
+2026-2028, distinct from the legacy diagnostic's California/Texas documents. Legacy diagnostic
+texts were also reserved. These checks do not rule out paraphrased bill-family dependence.
+
+`data/labels/cap-target-rejection-pilot-v1/` contains 6,001 training records: the same 5,895
+external initialization units plus 106 reviewed target units, with the unchanged 50-unit
+development set. Culture still has only ten arts examples; a learned rejection head does
+not repair that deficiency or certify mixed-policy detection from one mixed example.
+The reviews are assistant judgments, not independent human gold. Rubric disputes, broken
+unit boundaries and ambiguous source context remain in the separate quarantine rather
+than being silently taught as non-policy. Model quality must be measured after actual
+training and reload; the implementation itself is not an accuracy improvement.
+
 ## Additional contemporary source recovery
 
 Three separately retained official-source PDFs now support broader extraction review:

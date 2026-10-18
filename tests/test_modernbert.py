@@ -49,6 +49,20 @@ def test_decision_returns_one_topic_or_accounted_for_abstention():
         decide([[float("nan"), 0]], [1, 2], **policy)
 
 
+def test_supervised_rejection_is_not_counted_as_an_additional_topic():
+    policy = dict(temperature=1, min_confidence=0.8, min_margin=0.2)
+    rejected = decide([[0, 0, 12]], [1, 2, None], **policy)
+    assert rejected.topic is None and rejected.candidate_topic is None
+    assert rejected.abstention_reason == "supervised_rejection"
+    assert rejected.scores[-1] > 0.99
+    accepted = decide([[12, 0, 1]], [1, 2, None], **policy)
+    assert accepted.topic == 1 and accepted.runner_up is None
+    mixed = decide([[0, 0, 12], [12, 0, 0]], [1, 2, None], **policy)
+    assert mixed.topic is None and mixed.abstention_reason == "mixed_chunk_topics"
+    with pytest.raises(ValueError, match="label map"):
+        decide([[0, 12, 0]], [1, None, 2], **policy)
+
+
 def test_policy_units_retain_short_headings_and_all_substantive_text():
     text = "Health\n\n" + "Expand access to public health services. " * 8 + "\n\nEducation\n\n" + (
         "Improve public schools and support teachers. " * 8
@@ -155,6 +169,20 @@ def test_external_corpus_is_checksum_bound_and_reserves_target_text_families(tmp
         )
 
 
+def test_preparation_keeps_reviewed_rejection_separate_from_policy_topic_counts(tmp_path):
+    target = _label(
+        "honor", "Honoring a community volunteer.", topic=None,
+        label_origin="reviewed_target", abstention_reason="non_policy",
+    )
+    rows, report = prepare(
+        tmp_path, [1, 6], per_source_topic=1, min_year=2000, seed=1,
+        reviewed=[target], sources=[],
+    )
+    assert rows == [target]
+    assert report["training_topic_counts"] == {}
+    assert report["training_abstention_count"] == 1
+
+
 def test_missing_or_empty_checkpoint_never_falls_back_to_embeddings(tmp_path):
     topics = load_topics()
     with pytest.raises(FileNotFoundError, match="not an automatic fallback"):
@@ -169,6 +197,26 @@ def test_missing_or_empty_checkpoint_never_falls_back_to_embeddings(tmp_path):
     with pytest.raises(ValueError, match="provisional"):
         ModernBertClassifier(topics, tmp_path)
     with pytest.raises(ValueError, match="required model/tokenizer"):
+        ModernBertClassifier(topics, tmp_path, allow_provisional=True)
+
+
+@pytest.mark.parametrize("changes", [
+    {"schema_version": 1},
+    {"training_abstention_count": 0},
+    {"training_abstention_count": True},
+    {"output_codes": None},
+])
+def test_checkpoint_refuses_inconsistent_rejection_contract_before_weights(tmp_path, changes):
+    topics = load_topics()
+    codes = [topic.code for topic in topics]
+    manifest = {
+        "schema_version": 2, "model_id": MODEL_ID, "base_revision": MODEL_REVISION,
+        "taxonomy_sha256": sha256_file(DEFAULT_TOPICS_PATH), "topic_codes": codes,
+        "output_codes": [*codes, None], "training_abstention_count": 10,
+        "status": "provisional", **changes,
+    }
+    (tmp_path / "training_manifest.json").write_text(json.dumps(manifest))
+    with pytest.raises(ValueError, match="output codes|rejection output"):
         ModernBertClassifier(topics, tmp_path, allow_provisional=True)
 
 
@@ -201,6 +249,52 @@ def test_label_manifest_does_not_promote_predictions_to_independent_labels(tmp_p
     path.write_text(json.dumps(_label("one", "School funding", label_origin="model")) + "\n")
     with pytest.raises(ValueError, match="model guesses"):
         load_examples(path, [1, 6])
+
+
+def test_training_rejection_requires_reviewed_evidence_and_an_admissible_reason(tmp_path):
+    path = tmp_path / "labels.jsonl"
+    valid = _label(
+        "one", "Honoring a retiring volunteer.", topic=None,
+        label_origin="reviewed_target", abstention_reason="non_policy",
+    )
+    path.write_text(json.dumps(valid) + "\n")
+    assert load_examples(path, [1, 6])[0]["topic"] is None
+    for update in (
+        {"label_origin": "external_coded"},
+        {"abstention_reason": "taxonomy_adjudication_pending"},
+        {"reviewer_id": ""},
+        {"text_sha256": "changed"},
+    ):
+        path.write_text(json.dumps({**valid, **update}) + "\n")
+        with pytest.raises(ValueError):
+            load_examples(path, [1, 6])
+
+
+def test_rejection_outputs_survive_evidence_join_and_probability_evaluation():
+    policy = dict(temperature=1, min_confidence=0.8, min_margin=0.2)
+    labels = [
+        {"record_id": "policy", "text_sha256": "one", "domain": "bill", "topic": 1},
+        {"record_id": "honor", "text_sha256": "two", "domain": "bill", "topic": None},
+    ]
+    predictions = [
+        {"record_id": row["record_id"], "input_sha256": row["text_sha256"],
+         "input_domain": "bill", "output_codes": json.dumps([1, 2, None]),
+         "logits": json.dumps([logits])}
+        for row, logits in zip(labels, ([12, 0, 0], [0, 0, 12]), strict=True)
+    ]
+    joined = join_predictions(labels, predictions)
+    report = metrics(joined, [1, 2], policy)
+    assert report["decision_accuracy"] == 1
+    assert report["n_classified"] == 1 and report["correct_abstention_count"] == 1
+    assert report["abstention_reasons"] == {"supervised_rejection": 1}
+    assert report["probability_metrics"]["n"] == 2
+    assert report["probability_metrics"]["multiclass_log_loss"] < 0.001
+    assert len(report["per_topic"]) == 2
+    for mapping in ([1, 2], [1, None, 2], [1, 2, 3]):
+        changed = [{**row} for row in joined]
+        changed[1]["output_codes"] = mapping
+        with pytest.raises(ValueError):
+            metrics(changed, [1, 2], policy)
 
 
 def test_evaluation_counts_abstentions_and_never_calibrates_on_test():
@@ -367,7 +461,10 @@ def test_split_export_calibration_and_frozen_evaluation_handoff(tmp_path, monkey
             evaluate_main(arguments)
 
 
-def test_real_local_checkpoint_loads_and_processes_all_chunks_without_legacy_apis(tmp_path):
+@pytest.mark.parametrize("with_rejection", [False, True])
+def test_real_local_checkpoint_loads_and_processes_all_chunks_without_legacy_apis(
+    tmp_path, with_rejection,
+):
     transformers = pytest.importorskip("transformers")
     tokenizers = pytest.importorskip("tokenizers")
     backend = tokenizers.Tokenizer(tokenizers.models.WordLevel({
@@ -386,12 +483,14 @@ def test_real_local_checkpoint_loads_and_processes_all_chunks_without_legacy_api
     ) == tokenizer.encode("school funding", add_special_tokens=True)
     topics = load_topics()
     codes = [topic.code for topic in topics]
+    outputs = [*codes, None] if with_rejection else codes
+    names = [str(code) if code is not None else "ABSTAIN" for code in outputs]
     config = transformers.ModernBertConfig(
         vocab_size=6, hidden_size=16, intermediate_size=32,
         num_hidden_layers=2, num_attention_heads=2, max_position_embeddings=128,
         pad_token_id=1, bos_token_id=2, eos_token_id=3,
-        id2label={i: str(code) for i, code in enumerate(codes)},
-        label2id={str(code): i for i, code in enumerate(codes)},
+        id2label=dict(enumerate(names)),
+        label2id={name: i for i, name in enumerate(names)},
     )
     if hasattr(config, "reference_compile"):
         config.reference_compile = False
@@ -399,9 +498,11 @@ def test_real_local_checkpoint_loads_and_processes_all_chunks_without_legacy_api
     model.save_pretrained(tmp_path, safe_serialization=True)
     tokenizer.save_pretrained(tmp_path)
     manifest = {
-        "schema_version": 1, "model_id": MODEL_ID, "base_revision": MODEL_REVISION,
+        "schema_version": 2 if with_rejection else 1,
+        "model_id": MODEL_ID, "base_revision": MODEL_REVISION,
         "taxonomy_sha256": sha256_file(DEFAULT_TOPICS_PATH),
         "topic_codes": codes, "status": "provisional",
+        "output_codes": outputs, "training_abstention_count": 10 if with_rejection else 0,
         "checkpoint_files": {
             path.name: sha256_file(path) for path in tmp_path.iterdir() if path.is_file()
         },
@@ -420,5 +521,8 @@ def test_real_local_checkpoint_loads_and_processes_all_chunks_without_legacy_api
     assert records[0]["n_input_tokens"] == 140
     assert records[0]["n_discarded_tokens"] == 0
     assert len(json.loads(records[0]["logits"])) >= 2
+    assert len(json.loads(records[0]["logits"])[0]) == len(outputs)
+    assert json.loads(records[0]["output_codes"]) == outputs
+    assert (records[0]["rejection_score"] is not None) == with_rejection
     assert records[0]["topic"] is None
     assert records[1]["abstention_reason"] == "insufficient_evidence"
