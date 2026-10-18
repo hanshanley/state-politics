@@ -108,17 +108,24 @@ failure rows where a source returned 404/403 or could not be retrieved.
 
 ## Open States actions and votes
 
-The 2026-07 public PostgreSQL dump is the source for bills, actions, chambers and roll calls.
-The 10,711,908,617-byte object has SHA-256
+The legacy outcome expansion used the 2026-07 public PostgreSQL dump.
+That 10,711,908,617-byte object has SHA-256
 `e4b8eb6d40d2da768074dab29bbf0d6949b8f24a50d75c5807669edcee5af78c`, recorded repeatedly in
 `data/provenance.jsonl`. During the outcome expansion, a throttled download was reconstructed
 from independently size-checked HTTP ranges and accepted only after matching that prior full-file
 hash exactly.
 
-`bills/outcomes.py` streams large action/vote tables directly into compressed Parquet. Historical
-chamber comes from organization ancestry; voter party comes from the membership interval active
-on the vote date. The 10.7 GB source dump is deleted after extraction, while its URL, size and
-hash remain in provenance.
+The current audit instead retains `data/raw/openstates/2026-10-public.pgdump`, SHA-256
+`6aa8341edc9ec251f4fb1eafb134b3415e72296e5391e05b39aded5e1ae2580c`.
+Its extraction manifest binds all eleven saved tables. Current extraction retains the raw
+dump and stages outputs before promotion; it does not delete the source after success.
+The older source/hash must not be used to describe the October artifacts.
+
+`bills/outcomes.py` streams large action/vote tables directly into compressed Parquet.
+Historical chamber comes from organization ancestry; voter party is resolved only from
+usable membership intervals covering the vote date. Undated memberships remain unknown,
+and chamber/party field availability is not scientific certification. The capability
+report distinguishes retained files from analytical support and names missing inputs.
 
 ## Clean-room rebuild order
 

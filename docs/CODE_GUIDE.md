@@ -56,7 +56,7 @@ repository audit fails when a Python file is added without an entry here.
 | `src/state_politics/analysis/terms.py` | Computes TF-IDF and literal same-party log2 term concentration against peers of the same party and evidence genre; peer-absent terms are categorical. |
 | `src/state_politics/analysis/trends.py` | Computes equal-state 2018–2019 vs 2024–2025 bill-topic change, paired sign-flip inference, FDR correction and supported state slopes. |
 | `src/state_politics/analysis/outcomes.py` | Computes recorded chamber-passage/later-stage and enactment rates, chamber summaries, paired-state tests, and passage-vote party support. |
-| `src/state_politics/analysis/coverage.py` | Produces a machine-readable account of supported, partial, limited, and unsupported analytical questions from current artifact schemas. |
+| `src/state_politics/analysis/coverage.py` | Separates retained/partial/missing artifacts from unsupported scientific claims, explicitly names missing inputs without zero-filling, and preserves the unresolved all-organization source ledger. |
 | `src/state_politics/analysis/audit_bills.py` | Checks extraction hashes and exact evidence joins, measures date/attribution/text gaps, and exports all-state/session coverage plus source-bound per-bill flags without certifying completeness or classifications. |
 | `src/state_politics/analysis/diffusion.py` | Detects exact/near-duplicate bill-title clusters without dropping observed candidate blocks and reports cohesion and ceremonial status. |
 

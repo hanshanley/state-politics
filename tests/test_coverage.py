@@ -123,8 +123,7 @@ def test_membership_reference_preserves_raw_undated_and_dated_source_rows(monkey
     assert reference.set_index("id").at["undated", "timing_status"] == "undated"
 
 
-@pytest.mark.parametrize("year", [None, 2016, 2024])
-def test_capability_report_distinguishes_unsupported_questions(tmp_path, year):
+def _capability_source_fixtures(tmp_path, year):
     pd.DataFrame(
         [
             {
@@ -163,11 +162,15 @@ def test_capability_report_distinguishes_unsupported_questions(tmp_path, year):
         [{"state": "TX", "party": "D", "n_confirmed": 1}]
     ).to_csv(tmp_path / "platform_gap_report.csv", index=False)
 
+
+@pytest.mark.parametrize("year", [None, 2016, 2024])
+def test_capability_report_distinguishes_unsupported_questions(tmp_path, year):
+    _capability_source_fixtures(tmp_path, year)
     report = build_capability_report(tmp_path).set_index("question")
 
     assert report.loc["Bill enactment/pass rates", "support"] == "unsupported"
     assert report.loc["Roll-call voting behavior", "support"] == "unsupported"
-    assert report.loc["Policy stance or ideological direction", "support"] == "limited"
+    assert report.loc["Policy stance or ideological direction", "support"] == "unsupported"
     for question in (
         "Current stated state-level agenda",
         "Reliable within-party stated comparison",
@@ -182,3 +185,64 @@ def test_capability_report_distinguishes_unsupported_questions(tmp_path, year):
     assert "1/100 state-party rows pass the legacy 30-unit heuristic" in report.loc[
         "Reliable within-party stated comparison", "evidence"
     ]
+
+
+def test_existing_bill_trend_outcome_and_vote_artifacts_do_not_certify_claims(tmp_path):
+    _capability_source_fixtures(tmp_path, 2024)
+    bills = pd.read_parquet(tmp_path / "bills.parquet")
+    bills["recorded_outcome"] = "became_law"
+    bills["recorded_enacted"] = True
+    bills["originating_chamber"] = "lower"
+    bills.to_parquet(tmp_path / "bills.parquet")
+    pd.DataFrame([{"state": "TX", "reliable": True}]).to_csv(
+        tmp_path / "bill_outcomes_by_state_party.csv", index=False,
+    )
+    pd.DataFrame([{"state": "TX", "year": 2025}]).to_csv(
+        tmp_path / "bill_topic_trends_by_party.csv", index=False,
+    )
+    for name in ("bill_actions.parquet", "vote_events.parquet", "vote_party_counts.parquet"):
+        pd.DataFrame([{"state": "TX"}]).to_parquet(tmp_path / name)
+    report = build_capability_report(tmp_path)
+    assert report["artifact_status"].eq("available").all()
+    assert report["missing_artifacts"].eq("").all()
+    assert report["support"].eq("unsupported").all()
+    assert report["scientific_certification"].eq("not_performed").all()
+    assert report["analysis_cutoff"].isna().all()
+    assert "candidate" in report.set_index("question").loc[
+        "Election and voting bill focus", "evidence"
+    ]
+
+
+def test_missing_capability_inputs_are_explicit_not_zero_coverage(tmp_path):
+    report = build_capability_report(tmp_path)
+    assert len(report) == 11
+    assert report["support"].eq("unsupported").all()
+    assert report["artifact_status"].eq("missing").all()
+    assert report["missing_artifacts"].str.len().gt(0).all()
+    assert report["evidence"].str.contains("Missing retained inputs:").all()
+    introduced = report.set_index("question").loc["Introduced-bill agenda by party and state"]
+    assert introduced["coverage"] == "not measured: source artifact missing"
+    assert "bills.parquet" in introduced["missing_artifacts"]
+    assert "0" not in introduced["evidence"]
+
+
+def test_capability_counts_separate_raw_attribution_and_unknown_chambers(tmp_path):
+    _capability_source_fixtures(tmp_path, 2024)
+    pd.DataFrame([
+        {"state": "TX", "sponsor_party": "unknown", "subject": " ",
+         "originating_chamber": "lower"},
+        {"state": "NY", "sponsor_party": "unknown", "subject": None,
+         "originating_chamber": None},
+    ]).to_parquet(tmp_path / "bills.parquet")
+    report = build_capability_report(tmp_path).set_index("question")
+    evidence = report.loc["Introduced-bill agenda by party and state", "evidence"]
+    assert "2 retained source-context bills; 0 carry D/R attribution" in evidence
+    assert "Legacy classifier coverage reports 1 attributed rows" in evidence
+    assert report.loc["Chamber-specific historical agenda", "coverage"].startswith("1/50 ")
+    assert report.loc["Legislative-staff tag validation", "coverage"].startswith("0/50 ")
+
+
+def test_corrupt_present_capability_artifact_is_not_treated_as_missing(tmp_path):
+    (tmp_path / "platforms_2018_present.parquet").write_bytes(b"not a parquet file")
+    with pytest.raises(ValueError, match="[Pp]arquet"):
+        build_capability_report(tmp_path)

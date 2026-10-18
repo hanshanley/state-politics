@@ -15,6 +15,28 @@ replacement classifier or establish complete contemporary coverage.
 | Evaluation | Development-only temperature/threshold selection, exact evidence joins, abstention accounting, per-topic and subgroup metrics. | Reviewer arrangement, frozen empirical gates, independent target tests and clustered uncertainty. No checkpoint can be certified by changing a status field. |
 | Companion | Local-only historical and bounded-recovery preview with complete downloads. Recovery browsing separately retains 309 attempts, 299 responses, ten failures and source-bound alternate OCR; all 100 organization rows remain unresolved. | Audited classification/analysis exports, redistribution review and eventual report; no production integration is authorized. |
 
+## Remaining capability claims repaired
+
+All eleven capability-report questions now remain **unsupported**; an explicit
+`artifact_status` separately describes available, partial or missing retained files.
+`missing_artifacts` names absences rather than filling them with zero coverage.
+Corrupt present inputs still fail. Neither a recorded-outcome/chamber column, vote file,
+legacy reliability flag nor a generated trend table confers scientific support.
+Election-detector counts are candidates, source subject tags are not independent staff
+gold, and topic attention is not stance. Hard-coded Missouri vote-coverage and certified
+2018-2025 trend-coverage implications have been removed.
+
+The actual snapshot is `data/processed/capability-audit-v1/`, manifest SHA-256
+`03f9e1b0f1d2302cc2588fd393deb379337dface1ce5888bc57e901a7a155290`.
+Both complete outputs, producer/test code and eleven input dispositions are frozen and
+independently verified. Retained inputs include 1,090,369 bills, 9,002,451 actions and
+873,980 vote events. Only **60 bill records** carry D/R attribution under the current
+historical-membership rules; legacy classifier totals are not reused as those counts.
+All rows retain null analytical cutoffs and `not_performed` scientific certification.
+The 29 focused coverage/site regressions pass, including complete-but-uncertified inputs,
+missing versus zero, corrupt inputs, raw versus legacy counts and null chamber metadata.
+No classifications, weights or comparative analytical results were regenerated.
+
 ## Recovery explorer and limited version review
 
 The optional recovery build validates the frozen inventory's manifest, source-text/OCR
@@ -1201,9 +1223,9 @@ The old 30-unit reliability flag is displayed only as a legacy heuristic, not
 classification or comparability validation. Regressions exercise confirmed
 recent, older and undated sources while that flag is true. The analytical-depth
 document now distinguishes implemented research methods from certified findings.
-Other legacy bill/trend/outcome/vote support labels still describe artifact/schema
-availability, not release approval; those analyses were not regenerated or
-certified by this source-reporting repair.
+The later all-question capability repair described above also withholds bill/trend/
+outcome/vote support, separating artifact availability into its own field. Those
+analyses were not regenerated or certified by either reporting repair.
 
 ## Blocking decisions
 
