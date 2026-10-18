@@ -117,6 +117,86 @@ independently checked. Neither comparison nor follow-up admits training examples
 analytical evidence, changes the cutoff or certifies the classifier. These packets remain
 separate from inventory v2 and the 309-record preview; neither has been silently amended.
 
+## Four-state source recovery and institutional-index repair
+
+A further bounded primary-source run covers **both parties in Iowa, Massachusetts,
+Minnesota and Wisconsin**: 18 curated seeds and 55 one-hop document requests produce
+73 capture records, 68 retained responses and five failures. All 1,512 observed references,
+including excluded references and repeated parent sightings, are retained. This is neither
+an exhaustive crawl nor eight certified operative platforms. Administrative documents,
+proposals, older sources and Google viewer shells remain distinguishable from policy text.
+
+Eighteen separate ordinary public alternatives retain another 15 responses, including
+12 exact-file-ID Drive PDF downloads, one party-hosted Wisconsin PDF, one default-worksheet
+CSV export and the Minnesota Republican apex homepage. The old Minnesota Republican
+platform still returns 404 at the working apex host. Two older Wisconsin S3 objects still
+return 403 over HTTPS. Original TLS/HTTP failures remain unchanged; no authentication,
+permission/challenge bypass or disabled TLS validation was used.
+
+Together these packets contain **91 request records, 83 retained responses, eight failed
+requests and 54 actual PDF responses**. These are not distinct-platform counts. Offline
+reconciliation checked every manifest/body/text hash, byte size, standard extraction,
+seed/target set, parent binding, public-download derivation and strict CSV parse. It
+reconstructed all reference observations and confirmed false training/analytical admission
+and a null cutoff throughout. The CSV is the default worksheet only; other tabs and workbook
+completeness are not verified. PDF parser warnings on an Iowa source remain visible;
+reproducible extraction does not certify visual or textual completeness.
+
+The two retained Massachusetts Republican scans have empty original standard extractions.
+A separate OCR packet recovers both documents across three physical pages, retaining original
+PDFs, page renders, per-page text/hashes and executable/traineddata/configuration provenance.
+Every render and OCR result was independently reproduced, and all three renders were inspected.
+Both documents display December 4, 2024 despite their 2025 upload paths; that is a displayed
+document date, not independent adoption verification. OCR spacing/layout errors remain, and
+the actual Tesseract 5.5.3 versus declared 5.5.2 runtime mismatch is still unresolved.
+
+These sources exposed three further discovery defects. Existing secondary/deep mode now
+recognizes generic party-document, constitution and bylaws indexes without making them strong
+policy candidates. Recognized Drive file viewers are retained from ordinary anchors as well
+as embeds, preserving exact case-sensitive IDs and parent evidence; unrelated external anchors
+remain excluded. A filename/last-segment year now precedes upload-directory year hints: both
+named 2024 Iowa platforms previously inherited 2025/2026 directory years. None of these hints
+is an adoption date. Fragment-only skip links and popup actions are no longer document
+candidates.
+
+Thirty frozen before/after HTML replays against `464d64a`, using actual final URLs and zero
+live requests, retain 34 newly visible candidate observations at 19 distinct URLs. Every added
+candidate remains below the strong threshold. The only removed previous candidates are
+12 fragment-only navigation observations. This is a selected-source comparison, not
+full-campaign coverage; Wisconsin Democrats' existing `our-party` index already matched the
+older secondary terms. The completed v1 comparison is retained; v2 additionally records the
+fragment-navigation correction rather than silently overwriting the first comparison.
+
+Limited Minnesota source-role review also exposes an unresolved discrepancy: the official
+index reports a 100-item Action Agenda cap, but its linked 2026 PDF contains 108 distinct
+heading-anchored policy candidates, matching all 108 passed numbered items in the exported
+ballot. The worksheet contains 120 options overall: 110 reported passes and ten failures,
+including non-numbered platform amendments and a petition option. Vote/percentage arithmetic
+was checked, not independently verified as an election result. The retained official call
+and proposed convention rules also state a 100-item cap; the current constitution permits
+subsequent State Central Committee modifications but does not explain these eight additional
+items. Do not silently drop eight items or certify all 108 from the reported results alone.
+
+The 108 candidate spans preserve exact text offsets, headings, section context, source hashes
+and ballot-item bindings. Two explicitly recorded title aliases and one inspected mixed-font
+heading prevent silent mismatches. Pagination/layout material can remain in spans; they still
+need cleaning and substantive topic review. They are **not gold labels, admitted training
+examples or an independent test set**; sibling items share one document family.
+
+| Local packet | Manifest SHA-256 |
+|---|---|
+| `data/processed/four-state-primary-source-followup-v1/` | `698c7f263cd12682774403313587ed7592ea035007f3178a924048b6c68ecd41` |
+| `data/processed/four-state-public-download-followup-v1/` | `3fb7ffde9ac2ea9fef77d4cc5ca6fe7bd3525402f47aaeefbb059bbbf26d2168` |
+| `data/processed/four-state-recovery-verification-v2/` | `2959619ea59e5a4337b113d00f18640a2bda6153d74fd776595341243ec9dedb` |
+| `data/processed/four-state-scan-ocr-v1/` | `4960b7c5df95d2da537277991c7f510d90f22740bfbd9fdef50bba5239da1785` |
+| `data/processed/mn-action-agenda-role-review-v1/` | `541222bddad1c6acc68d0b79df02b71a0acd82b7d30e39f7835f7d70087f798d` |
+
+These Git-ignored evidence packets remain local-only and separate from inventory v2 and the
+309-record preview. Code/documentation pushes do not back up their bodies. No classifier,
+canonical labels, analytical inputs, historical attribution, cutoff or publication files
+changed; all eleven analytical questions remain unsupported. Focused discovery/collection
+checks are not a new full scientific/reproducibility audit.
+
 ## Remaining capability claims repaired
 
 All eleven capability-report questions now remain **unsupported**; an explicit

@@ -80,6 +80,7 @@ _TERMS_RE = re.compile("|".join(DISCOVERY_TERMS), re.I)
 SECONDARY_TERMS = (
     "issues", "beliefs", "values", "where-we-stand", "our-party", "agenda", "goals",
     "mission", "positions", "what-we-believe", "our-vision", "convention",
+    "party-documents", "party_documents", "partydocuments", "constitution", "bylaws",
 )
 _SECONDARY_RE = re.compile("|".join(SECONDARY_TERMS), re.I)
 
@@ -464,7 +465,7 @@ def homepage_candidates(
     secondary: bool = False,
     raw_dir: Path | str | None = None,
 ) -> tuple[list[Candidate], str | None]:
-    """Scan same-origin links and embedded PDF/Drive references. Exactly one request.
+    """Scan same-origin links, embedded PDFs and linked/embedded Drive files. One request.
 
     Returns ``(candidates, error)`` for the same reason as :func:`wayback_candidates`.
     An embed establishes a reference, not authorship, adoption or a scoring shortcut.
@@ -491,18 +492,21 @@ def homepage_candidates(
     seen: set[str] = set()
     candidates = []
     for href, label, tag, mimetype in parser.links:
+        if href.startswith("#"):
+            continue
         absolute = urllib.parse.urljoin(base, href)
         if absolute in seen or is_excluded(absolute):
             continue
         parts = urllib.parse.urlsplit(absolute)
+        drive_document = (
+            parts.scheme in {"http", "https"} and parts.netloc.lower() == "drive.google.com"
+            and _DRIVE_FILE_RE.fullmatch(parts.path) is not None
+        )
         embedded_document = (
             tag != "a" and parts.scheme in {"http", "https"}
             and (
                 parts.path.lower().endswith(".pdf") or mimetype == "application/pdf"
-                or (
-                    parts.netloc.lower() == "drive.google.com"
-                    and _DRIVE_FILE_RE.fullmatch(parts.path)
-                )
+                or drive_document
             )
         )
         labelled_pdf = (
@@ -511,13 +515,14 @@ def homepage_candidates(
         )
         matches = (
             _TERMS_RE.search(absolute) or (secondary and _SECONDARY_RE.search(absolute))
-            or labelled_pdf or embedded_document
+            or labelled_pdf or embedded_document or drive_document
         )
         if not matches:
             continue
         if tag != "a" and not embedded_document:
             continue
-        if parts.netloc != urllib.parse.urlsplit(base).netloc and not embedded_document:
+        if (parts.netloc != urllib.parse.urlsplit(base).netloc
+                and not embedded_document and not drive_document):
             continue
         seen.add(absolute)
         score, reasons = score_candidate(absolute, mimetype, link_text=label, link_tag=tag)
@@ -531,11 +536,16 @@ def homepage_candidates(
 
 
 def _year_hint(url: str, timestamp: str | None) -> int | None:
-    """Best guess at the document's year from its URL, else the capture year.
+    """Prefer a filename/last-segment year over other URL years, then capture year.
 
     The URL wins when it carries one: ``/2022platform/`` captured in 2023 is the 2022
-    platform, and dating it by the capture would be wrong.
+    platform. An upload directory can be newer than its named document. This remains
+    a discovery hint, not an adoption or operative date.
     """
+    last = urllib.parse.urlsplit(url).path.rstrip("/").rsplit("/", 1)[-1]
+    match = _YEAR_IN_URL_RE.search(last)
+    if match:
+        return int(match.group(1))
     match = _YEAR_IN_URL_RE.search(url)
     if match:
         return int(match.group(1))

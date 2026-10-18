@@ -143,6 +143,77 @@ def test_drive_file_normalization_preserves_case_sensitive_document_identity():
     )
 
 
+def test_homepage_retains_linked_drive_file_but_not_unrelated_external_anchors():
+    homepage = "https://example.org/platform"
+    viewer = "https://drive.google.com/file/d/CaseSensitive_Platform/view?usp=sharing"
+    body = f'''<a href="{viewer}">2025 Party Platform</a>
+        <a href="https://drive.google.com.evil.test/file/d/Fake/view">Party Platform</a>
+        <a href="https://drive.google.com/drive/folders/FolderID">Platform</a>
+        <a href="https://elsewhere.org/platform.pdf">Party Platform</a>'''.encode()
+    requests = []
+
+    def transport(url, **kwargs):
+        requests.append(url)
+        return StubResponse(200, body, homepage)
+
+    candidates, error = homepage_candidates(
+        homepage, state="MA", party="D", transport=transport,
+    )
+    assert error is None
+    assert requests == [homepage]
+    assert len(candidates) == 1
+    candidate = candidates[0]
+    assert candidate.url == viewer
+    assert candidate.link_tag == "a"
+    assert candidate.link_text == "2025 Party Platform"
+    assert candidate.link_source_sha256 == sha256(body).hexdigest()
+    assert candidate.score < STRONG_SCORE
+
+
+@pytest.mark.parametrize("secondary", [False, True])
+def test_homepage_does_not_promote_fragment_only_navigation_to_documents(secondary):
+    homepage = "https://example.org/platform/"
+    body = b'''<a href="#content">Skip to content</a>
+        <a href="#elementor-action:popup:open">Open menu</a>
+        <a href="/platform-2024.pdf">Party platform</a>'''
+    candidates, error = homepage_candidates(
+        homepage, state="MN", party="D", secondary=secondary,
+        transport=lambda url, **kwargs: StubResponse(200, body, homepage),
+    )
+    assert error is None
+    assert [c.url for c in candidates] == ["https://example.org/platform-2024.pdf"]
+
+
+@pytest.mark.parametrize(
+    "path", ["/partydocuments/", "/party-documents/", "/party_documents/",
+             "/constitution/", "/bylaws/"],
+)
+def test_deep_discovery_retains_weak_institutional_indexes_without_widening_primary(path):
+    homepage = "https://example.org/"
+    body = (f'<a href="{path}">Party documents</a>'
+            f'<a href="https://elsewhere.org{path}">Party documents</a>').encode()
+    requests = []
+
+    def transport(url, **kwargs):
+        requests.append(url)
+        return StubResponse(200, body, homepage)
+
+    primary, error = homepage_candidates(
+        homepage, state="MN", party="D", transport=transport,
+    )
+    assert error is None and primary == []
+    assert requests == [homepage]
+    secondary, error = homepage_candidates(
+        homepage, state="MN", party="D", transport=transport, secondary=True,
+    )
+    assert error is None
+    assert len(secondary) == 1
+    assert secondary[0].url == homepage.rstrip("/") + path
+    assert secondary[0].score < STRONG_SCORE
+    assert secondary[0].link_source_sha256 == sha256(body).hexdigest()
+    assert requests == [homepage, homepage]
+
+
 @pytest.mark.parametrize("label", ["Education Resolution", "Education Resolutions"])
 def test_official_singular_or_plural_resolution_label_preserves_opaque_pdf(label):
     homepage = "https://example.org/"
@@ -384,6 +455,25 @@ def test_year_hint_prefers_the_url_over_the_capture_date():
         transport=lambda url, *, timeout, headers: StubResponse(200, _cdx_body(rows)),
     )
     assert found[0].year_hint == 2022
+
+
+@pytest.mark.parametrize(
+    "url,year",
+    [
+        ("https://iowademocrats.org/wp-content/uploads/2025/07/Platform-2024-reformatted.pdf",
+         2024),
+        ("https://iowagop.org/wp-content/uploads/sites/40/2026/02/"
+         "2024_Iowa_Republican_Platform_FINAL-FINAL.pdf", 2024),
+    ],
+)
+def test_year_hint_prefers_named_document_year_over_upload_directory(url, year):
+    rows = [["20261018000000", url, "application/pdf"]]
+    found, error = wayback_candidates(
+        "example.org", state="IA", party="D",
+        transport=lambda url, **kwargs: StubResponse(200, _cdx_body(rows)),
+    )
+    assert error is None
+    assert found[0].year_hint == year
 
 
 def test_year_hint_falls_back_to_the_capture_date():
