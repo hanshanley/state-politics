@@ -9,6 +9,7 @@ endpoint crowding real documents out of the CDX result window.
 from __future__ import annotations
 
 import json
+from hashlib import sha256
 
 import pytest
 
@@ -17,6 +18,7 @@ from state_politics.platforms.discover import (
     STRONG_SCORE,
     Candidate,
     discover_for_org,
+    homepage_candidates,
     is_excluded,
     normalize_url,
     score_candidate,
@@ -31,6 +33,30 @@ class StubResponse:
         self.content = content
         self.headers = {"Content-Type": "application/json"}
         self.url = url
+
+
+def test_homepage_retains_officially_labelled_opaque_pdf_with_evidence():
+    homepage = "https://example.org/"
+    body = b'''<a href="/_files/ugd/061e99_153b98fadd5d43039829c3ce89c47905.pdf?x=1&amp;y=2"
+               ><span>PARTY</span> PLATFORM</a>
+               <a href="https://elsewhere.org/opaque.pdf">Party Platform</a>
+               <a href="/unrelated.pdf">Download</a>
+               <a href="/news">Party Platform debate</a>'''
+    candidates, error = homepage_candidates(
+        homepage, state="TX", party="D",
+        transport=lambda url, **kwargs: StubResponse(200, body, homepage),
+    )
+    assert error is None
+    assert len(candidates) == 1
+    candidate = candidates[0]
+    assert candidate.url == (
+        "https://example.org/_files/ugd/061e99_153b98fadd5d43039829c3ce89c47905.pdf?x=1&y=2"
+    )
+    assert candidate.score >= STRONG_SCORE
+    assert candidate.link_text == "PARTY PLATFORM"
+    assert candidate.link_source_url == homepage
+    assert candidate.link_source_sha256 == sha256(body).hexdigest()
+    assert candidate.year_hint is None
 
 
 @pytest.mark.parametrize(
@@ -76,6 +102,8 @@ def test_news_posts_do_not_score_as_documents(url):
         "https://idahodems.org/about/platform/feed/",
         "https://example.org/tag/platform/",
         "https://example.org/assets/platform.css",
+        "https://example.org/platform/061e99_153b98fadd5d43039829c3ce89c47905",
+        "https://example.org/platform/061e99_153b98fadd5d43039829c3ce89c47905.png",
     ],
 )
 def test_known_noise_is_excluded(url):

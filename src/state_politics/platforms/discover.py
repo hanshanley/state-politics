@@ -40,6 +40,7 @@ import re
 import time
 import urllib.parse
 from dataclasses import asdict, dataclass, field
+from html.parser import HTMLParser
 from pathlib import Path
 
 from ..provenance import ProvenanceLog, fetch
@@ -118,7 +119,6 @@ _EXCLUDE_RE = re.compile(
     # Delaware Republicans alone produced 1,883 of these, swamping the genuine /platform page.
     r"|/_api/|wix-laboratory"
     r"|\.json(?:$|\?)"                        # JSON assets are never platform documents
-    r"|/[0-9a-f]{6}_[0-9a-f]{12,}"             # Wix media hashes
     r"|-Icons-|/-Social-|/-Sitemap-"           # Wix design-system paths
     r"|/-?[\d.]+(?:em|px|rem|vh|vw|%)(?:$|/)"  # CSS values appended as path segments
     r"|/\d+K?/(?:month|year)"
@@ -166,6 +166,9 @@ class Candidate:
     score: int = 0
     reasons: list[str] = field(default_factory=list)
     year_hint: int | None = None
+    link_text: str | None = None
+    link_source_url: str | None = None
+    link_source_sha256: str | None = None
 
     def to_dict(self) -> dict:
         return asdict(self)
@@ -214,10 +217,13 @@ def is_excluded(url: str) -> bool:
     """True for URLs that match a discovery term but cannot be a platform document."""
     if _EXCLUDE_RE.search(url):
         return True
+    path = urllib.parse.urlsplit(url).path
+    if re.search(r"/[0-9a-f]{6}_[0-9a-f]{12,}", path, re.I) and not path.lower().endswith(".pdf"):
+        return True
     # A repeated path segment is the signature of a generated URL, not a document. Wix mints
     # paths such as /platform/10K/black/10K/black/white beneath every real page; no genuine
     # document path repeats a segment.
-    segments = [s for s in urllib.parse.urlsplit(url).path.split("/") if s]
+    segments = [s for s in path.split("/") if s]
     if len(segments) != len(set(segments)):
         return True
     # A purely numeric trailing segment is a CSS value or coordinate, not a document.
@@ -229,7 +235,9 @@ def _path_segments(url: str) -> list[str]:
     return [segment for segment in path.split("/") if segment]
 
 
-def score_candidate(url: str, mimetype: str | None = None) -> tuple[int, list[str]]:
+def score_candidate(
+    url: str, mimetype: str | None = None, *, link_text: str | None = None,
+) -> tuple[int, list[str]]:
     """Score how likely ``url`` is to be an actual platform document.
 
     Positive evidence is structural (a path segment that *is* "platform", a four-digit year
@@ -305,6 +313,10 @@ def score_candidate(url: str, mimetype: str | None = None) -> tuple[int, list[st
     if not _TERMS_RE.search(url):
         score -= 5
         reasons.append("no discovery term in URL")
+
+    if is_downloadable and link_text and _TERMS_RE.search(link_text):
+        score = max(score, STRONG_SCORE)
+        reasons.append(f"official document link label: {link_text[:200]}")
 
     return score, reasons
 
@@ -391,7 +403,37 @@ def wayback_candidates(
     return candidates, None
 
 
-_HREF_RE = re.compile(r"""<a[^>]+href=["']([^"'#]+)["']""", re.I)
+class _HomepageLinks(HTMLParser):
+    def __init__(self):
+        super().__init__(convert_charrefs=True)
+        self.links: list[tuple[str, str]] = []
+        self._href: str | None = None
+        self._text: list[str] = []
+
+    def _finish(self):
+        if self._href is not None:
+            self.links.append((self._href, " ".join(" ".join(self._text).split())))
+        self._href = None
+        self._text = []
+
+    def handle_starttag(self, tag, attrs):
+        if tag == "a":
+            self._finish()
+            attributes = dict(attrs)
+            self._href = attributes.get("href")
+            self._text = [attributes.get("aria-label") or attributes.get("title") or ""]
+
+    def handle_data(self, data):
+        if self._href is not None:
+            self._text.append(data)
+
+    def handle_endtag(self, tag):
+        if tag == "a":
+            self._finish()
+
+    def close(self):
+        super().close()
+        self._finish()
 
 
 def homepage_candidates(
@@ -404,7 +446,7 @@ def homepage_candidates(
     sleep=time.sleep,
     secondary: bool = False,
 ) -> tuple[list[Candidate], str | None]:
-    """Scan the live homepage's links for platform-like URLs. Exactly one request.
+    """Scan URL terms and labelled same-origin PDFs. Exactly one request.
 
     Returns ``(candidates, error)`` for the same reason as :func:`wayback_candidates`.
     """
@@ -422,24 +464,36 @@ def homepage_candidates(
         return [], f"homepage fetch failed: status={record.http_status} error={record.error}"
 
     html = body.decode("utf-8", errors="replace")
+    parser = _HomepageLinks()
+    parser.feed(html)
+    parser.close()
     base = record.final_url or homepage
     seen: set[str] = set()
     candidates = []
-    for href in _HREF_RE.findall(html):
+    for href, label in parser.links:
         absolute = urllib.parse.urljoin(base, href)
         if absolute in seen or is_excluded(absolute):
             continue
-        matches = _TERMS_RE.search(absolute) or (secondary and _SECONDARY_RE.search(absolute))
+        labelled_pdf = (
+            urllib.parse.urlsplit(absolute).path.lower().endswith(".pdf")
+            and _TERMS_RE.search(label)
+        )
+        matches = (
+            _TERMS_RE.search(absolute) or (secondary and _SECONDARY_RE.search(absolute))
+            or labelled_pdf
+        )
         if not matches:
             continue
         # Stay on the party's own site; an outbound link is somebody else's document.
         if urllib.parse.urlsplit(absolute).netloc != urllib.parse.urlsplit(base).netloc:
             continue
         seen.add(absolute)
-        score, reasons = score_candidate(absolute)
+        score, reasons = score_candidate(absolute, link_text=label)
         candidates.append(Candidate(
             state=state, party=party, url=absolute, source="live",
             score=score, reasons=reasons, year_hint=_year_hint(absolute, None),
+            link_text=label, link_source_url=base,
+            link_source_sha256=record.content_sha256,
         ))
     return candidates, None
 

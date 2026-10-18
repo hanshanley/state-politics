@@ -647,3 +647,16 @@ def test_candidate_scores_are_recomputed_when_loading(tmp_path):
 
     kept = _load_candidates(path, rescore=False)[("HI", "R")][0]
     assert kept.score == 3
+
+
+def test_official_link_label_survives_candidate_rescoring(tmp_path):
+    path = tmp_path / "candidates.jsonl"
+    candidate = Candidate(
+        state="TX", party="D", url="https://example.org/_files/opaque.pdf",
+        source="live", score=-5, link_text="PARTY PLATFORM",
+        link_source_url="https://example.org/", link_source_sha256="a" * 64,
+    )
+    path.write_text(json.dumps(candidate.to_dict()) + "\n")
+    loaded = _load_candidates(path)[("TX", "D")][0]
+    assert loaded.score >= STRONG_SCORE
+    assert loaded.link_source_sha256 == candidate.link_source_sha256

@@ -10,7 +10,7 @@ replacement classifier or establish complete contemporary coverage.
 | Contemporary platforms | A 100-organization source ledger separates historical recovery, discovery and unresolved current evidence. Retrieval provenance is retained. | Finish discovery, collection/extraction, institutional/version review and dated gap dispositions. |
 | Sponsorship | Party attribution uses validated historical memberships and a first-action date proxy; unresolved primary sponsors block D/R assignment. | Rebuild source bills and quantify attribution changes; the proxy is not an exact filing/sponsorship date. |
 | Bills | October snapshot extracted: 1,090,369 source-context measures across all 50 states, 5,028,893 sponsorships, 9,002,451 actions and 873,980 vote events. All eleven tables have recorded hashes/counts. | Official-source reconciliation, historical affiliations and filing-time text review. Full extraction is not a certified source universe or analytical denominator. |
-| Classification | Official English ModernBERT-base training/inference, one primary topic or abstention, source hashes, model manifests and saved logits. Encoder gradients, an optimizer update and save/reload were demonstrated locally. | No real-label topic model has been trained. Synthetic feasibility weights are not a classifier. |
+| Classification | Official English ModernBERT-base encoder and head fine-tuned on 5,895 external-coded units; actual saved weights reloaded and evaluated with one primary topic or abstention. | First provisional pilot does not improve overall development decision accuracy over the historical baseline. Non-policy rejection, target-domain adaptation and independent certification remain unresolved. |
 | Labels | External CAP files recovered; split/group/exact-text checks and explicit reviewed-label provenance are implemented. | Source permissions, adapted-topic compatibility, near-duplicate families and reviewed state-domain training/development/test labels. |
 | Evaluation | Development-only temperature/threshold selection, exact evidence joins, abstention accounting, per-topic and subgroup metrics. | Reviewer arrangement, frozen empirical gates, independent target tests and clustered uncertainty. No checkpoint can be certified by changing a status field. |
 | Companion | Local-only historical-evidence preview and full-text downloads. Chromium checks cover state/party filtering, pagination, keyboard controls, 375px mobile overflow, request failures/races, no-JavaScript fallback and all 2,091 downloaded texts. | Audited classification/analysis exports and eventual report; no production integration is authorized. |
@@ -39,6 +39,14 @@ Generated research files remain ignored under `data/`:
 - `models/modernbert-feasibility/feasibility_report.json`: synthetic local feasibility only.
 - `models/modernbert-locked-feasibility/feasibility_report.json`: full-encoder synthetic
   update at batch four by 1,024 tokens under the actual locked runtime, with exact save/reload.
+- `models/modernbert-cap-pilot-v1/`: actual external-label fine-tuning checkpoint and
+  training manifest; provisional, not approved for production.
+- `processed/topic-pilot-v1/`: evidence-bound development predictions, unchanged research
+  decision policy, evaluation report and source-hashed post-hoc error/enrichment inspection.
+- `models/minilm-pilot-historical-baseline-v1/`: frozen historical baseline and matched
+  development diagnostics, never a fallback.
+- `processed/contemporary-source-pilot/`: separately retained 2026 California Democratic,
+  Texas Democratic and Texas Republican evidence, not a completed contemporary corpus.
 - `raw/openstates/2026-10-public.pgdump`: retained source; SHA-256
   `6aa8341edc9ec251f4fb1eafb134b3415e72296e5391e05b39aded5e1ae2580c`.
 - `processed/preview_browser_validation.json`: checks bound to the local build manifest.
@@ -203,6 +211,90 @@ uv run python -m state_politics.analysis.prepare_topics \
 This prepares a research initialization corpus, not a certified replacement classifier.
 Independent target review, a finalized rubric, broader state/party examples, family leakage
 review, calibration and empirical release gates remain outstanding.
+
+## First actual trained-model diagnostic
+
+The official revision-pinned English ModernBERT-base encoder and classifier head completed
+three epochs on `data/labels/cap-initialization-pilot-v2/labels.jsonl`: 5,895 external-coded
+training units, batch four, 1,024-token budget, learning rate `2e-5`, seed `20261018`.
+The saved `data/models/modernbert-cap-pilot-v1/` reloads through the strict research loader.
+Its manifest verifies an actual encoder-parameter update, dataset/code hashes and three
+epoch-history entries. This is a real topic-training run, distinct from the earlier
+synthetic feasibility checkpoints.
+
+**It has not demonstrated an overall improvement.** The following comparison uses the same
+50 provisional assistant-reviewed development units, not independent human gold.
+Thresholds were not tuned after inspecting the results: the new model uses its recorded
+research defaults of temperature 1.0, confidence 0.8 and margin 0.2; the historical
+nearest-description baseline uses cosine similarity 0.2.
+
+| Diagnostic | Historical MiniLM | Trained ModernBERT pilot |
+|---|---:|---:|
+| Classified / all eligible | 39 / 50 (78%) | 40 / 50 (80%) |
+| Correct topics / classified | 19 / 39 (48.72%) | 20 / 40 (50%) |
+| Correct topics / all eligible | 19 / 50 (38%) | 20 / 50 (40%) |
+| Correct abstentions / reference abstentions | 8 / 20 | 7 / 20 |
+| Correct topic or correct abstention / all eligible | 27 / 50 (54%) | 27 / 50 (54%) |
+| Bill decision accuracy | 23 / 40 (57.5%) | 22 / 40 (55%) |
+| Platform-unit decision accuracy | 4 / 10 (40%) | 5 / 10 (50%) |
+
+The ten platform units come from one Texas Republican document. Three inputs exceed the
+legacy model's 256-token budget; its scores are cosine similarities, not calibrated
+probabilities. These tiny development slices do not establish representative accuracy,
+statistical superiority or publication readiness for either model.
+
+The trained model's 23 reference disagreements comprise 13 accepted inputs whose reference
+abstains, seven wrong topics and three missed topics through abstention. It confidently
+assigns topics to committee lists, an honorific resolution and a retrospective report.
+For example, `DNR-VARIOUS` receives a health prediction above 0.99 despite insufficient
+evidence. Raising confidence alone is not an established remedy; substantive boundaries
+and rejection need reviewed training evidence, not just a different encoder.
+
+The retained abstract sidecar supplies evidence for 14 of the 40 development bills and six
+of the 18 bill errors. A separate, explicitly post-hoc enrichment inspection fed the full
+retained abstracts to the unchanged checkpoint. Agricultural overtime changed from
+agriculture to labor; expungement changed from macroeconomics to criminal justice.
+The honorific resolution still received a substantive topic, and cultural facilities
+remained misclassified. Richer text can address some evidence shortages but did not solve
+rejection or category support in these inspected cases.
+
+Full error units, original review rationales, both input tiers, source abstract IDs,
+predictions and hashes are retained under
+`data/processed/topic-pilot-v1/posthoc-evidence-review-v1/`. This targeted inspection is
+not a new test set or an improved accuracy estimate. Title-only references are not
+automatically valid for enriched text; some previously ambiguous titles now have additional
+substantive evidence. Abstract timing is unverified and cannot establish filing-time attention.
+No labels, weights or thresholds were changed to obtain a better-looking score.
+
+## Additional contemporary source recovery
+
+Three separately retained official-source PDFs now support broader extraction review:
+
+| Organization and document | Extracted characters | Parser units | Largest unit, characters |
+|---|---:|---:|---:|
+| California Democratic, 2026 | 156,442 | 167 | 9,555 |
+| Texas Democratic, 2026-2028 | 186,814 | 235 | 5,402 |
+| Texas Republican, 2026 | 296,224 | 299 | 12,840 |
+
+These are source/parser counts, not verified policy commitments or full organization coverage.
+The California and Texas Democratic PDFs emitted PDF object-recovery warnings. Front matter,
+contents, quotations, extraction artifacts and mixed units still require review. California's
+landing-page adoption description and filename appear to disagree on February 22 versus
+February 23; the discrepancy is unresolved, not silently normalized.
+
+The Texas Democratic homepage's `PARTY PLATFORM` anchor links to an opaque Wix PDF filename.
+Discovery previously missed it for two independent reasons: it ignored the anchor label,
+and its Wix-media noise rule excluded the legitimate hashed PDF. Discovery now retains
+same-origin PDFs with substantive document labels and binds their link evidence to the
+source-page URL and byte hash. Non-PDF Wix noise remains excluded. Collection preserves
+the label during rescoring instead of discarding the discovery improvement.
+
+Replaying the exact retained official homepage now discovers that PDF as a strong candidate,
+with the original source-page hash. The result is retained as
+`data/processed/contemporary-source-pilot/texas_democratic_official_candidate_v2.jsonl`.
+The ongoing full crawl started before this repair and does not acquire the new behavior
+mid-run. These supplemental documents have not been silently merged into the main corpus,
+and a failed search still does not establish absence of a platform.
 
 ## Blocking decisions
 

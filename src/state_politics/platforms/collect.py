@@ -745,7 +745,7 @@ def _load_candidates(path: Path, *, rescore: bool = True
                      ) -> dict[tuple[str, str], list[Candidate]]:
     """Load discovered candidates, recomputing each score by default.
 
-    The stored score is a cache of a pure function of (url, mimetype), and collection filters
+    The stored score is a cache of (url, mimetype, official link text), and collection filters
     on it. Trusting the cached value silently binds the fetch set to whichever scorer ran at
     discovery time: after the scorer was corrected, Hawaii's Republican platform PDF still
     carried its old score of 3, stayed below the strong threshold, and was never fetched --
@@ -760,7 +760,9 @@ def _load_candidates(path: Path, *, rescore: bool = True
                 continue
             candidate = Candidate(**json.loads(line))
             if rescore:
-                score, reasons = score_candidate(candidate.url, candidate.mimetype)
+                score, reasons = score_candidate(
+                    candidate.url, candidate.mimetype, link_text=candidate.link_text,
+                )
                 candidate = replace(candidate, score=score, reasons=reasons)
             grouped.setdefault((candidate.state, candidate.party), []).append(candidate)
     return grouped
