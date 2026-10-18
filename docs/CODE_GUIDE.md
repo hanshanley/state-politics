@@ -32,7 +32,7 @@ repository audit fails when a Python file is added without an entry here.
 | `src/state_politics/bills/openstates_dump.py` | Streams selected tables from the Open States PostgreSQL custom dump through `pg_restore` without restoring a database. |
 | `src/state_politics/bills/people.py` | Downloads current legislators and normalizes party labels, including fusion-voting ballot lines. |
 | `src/state_politics/bills/ingest.py` | Stages eleven source-bound bill/sponsorship/action/vote/evidence tables, preserves abstracts/version references, resolves dated sponsor parties, and records incomplete/completed extraction manifests. |
-| `src/state_politics/bills/outcomes.py` | Streams action/vote tables, resolves historical chambers and date-aware voter party, and adds explicit recorded-stage fields to bills. |
+| `src/state_politics/bills/outcomes.py` | Streams action/vote tables, resolves historical chambers and date-aware voter party, distinguishes missing from unclassified actions, and writes source-reconciled corrections separately from the frozen extraction. |
 
 ## Analysis
 

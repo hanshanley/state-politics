@@ -130,6 +130,30 @@ joins, and exports all 50 state rows, 807 observed state/session/filing-year cel
 official zero. The original measures, text, references and unresolved affiliations remain
 available for further recovery and review.
 
+## Recorded-action missingness correction
+
+The original extraction labelled 44,425 measures `no_action_data`, but only 24,661 had
+zero action records. The other **19,764 measures across 30 states** had recorded actions
+without source action classifications. These are now explicitly
+`action_stage_unclassified`, not missing, pending, failed or enacted. All other recorded
+outcomes and bill fields remain unchanged.
+
+The correction reconciled per-bill action counts against all **9,002,451 retained action
+records**, after verifying both source artifact hashes against the completed extraction
+manifest. The original eleven-table extraction bundle remains untouched. A separate
+`data/processed/bill-outcome-correction-v1/` contains the full corrected `bills.parquet`,
+the exact changed rows and a hash-bound `outcome_correction_manifest.json`.
+
+```bash
+.venv/bin/python -m state_politics.bills.outcomes \
+  --source-dir data/processed \
+  --out-dir data/processed/bill-outcome-correction-v1
+```
+
+Use that corrected bill path explicitly in subsequent outcome analysis. The correction
+does not certify chronology, veto overrides, final disposition, source completeness or
+historical party attribution; those independent audit questions remain open.
+
 ## Provisional supervised-label preparation
 
 The three retained CAP files contain 508,287 rows. They are not interchangeable with the

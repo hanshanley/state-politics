@@ -2,6 +2,8 @@
 
 from __future__ import annotations
 
+import json
+
 import pandas as pd
 import pytest
 
@@ -11,10 +13,14 @@ from state_politics.analysis.outcomes import (
     party_rollcall_support,
 )
 from state_politics.bills.outcomes import (
+    main as repair_outcomes,
+)
+from state_politics.bills.outcomes import (
     organization_chamber,
     party_on_date,
     recorded_outcome,
 )
+from state_politics.provenance import sha256_file
 
 
 def test_committee_resolves_to_parent_chamber():
@@ -62,11 +68,74 @@ def test_party_membership_does_not_guess_missing_partial_or_malformed_bounds(int
 
 
 def test_recorded_outcome_uses_highest_explicit_action_stage():
-    assert recorded_outcome({"introduction"}, set()) == "introduced_or_pending"
-    assert recorded_outcome({"passage"}, {"upper"}) == "passed_one_chamber"
-    assert recorded_outcome({"passage"}, {"upper", "lower"}) == "passed_legislature"
-    assert recorded_outcome({"executive-veto"}, {"upper", "lower"}) == "vetoed"
-    assert recorded_outcome({"became-law"}, {"upper", "lower"}) == "became_law"
+    assert recorded_outcome({"introduction"}, set(), n_actions=1) == "introduced_or_pending"
+    assert recorded_outcome({"passage"}, {"upper"}, n_actions=1) == "passed_one_chamber"
+    assert recorded_outcome({"passage"}, {"upper", "lower"}, n_actions=2) == "passed_legislature"
+    assert recorded_outcome({"executive-veto"}, {"upper", "lower"}, n_actions=3) == "vetoed"
+    assert recorded_outcome({"became-law"}, {"upper", "lower"}, n_actions=3) == "became_law"
+
+
+def test_unclassified_actions_are_not_missing_or_assumed_pending():
+    assert recorded_outcome(set(), set(), n_actions=0) == "no_action_data"
+    assert recorded_outcome(set(), set(), n_actions=2) == "action_stage_unclassified"
+    with pytest.raises(ValueError, match="contradict"):
+        recorded_outcome({"introduction"}, set(), n_actions=0)
+
+
+def _outcome_source(tmp_path, *, wrong_count=False):
+    source = tmp_path / "source"
+    source.mkdir()
+    bills = pd.DataFrame({
+        "bill_id": ["unclassified", "missing", "introduced"],
+        "state": ["TX", "VT", "TX"],
+        "title": ["Original title", "No actions", "Introduced title"],
+        "n_actions": [2 if wrong_count else 1, 0, 1],
+        "recorded_outcome": ["no_action_data", "no_action_data", "introduced_or_pending"],
+    })
+    bills.to_parquet(source / "bills.parquet", index=False)
+    pd.DataFrame({
+        "bill_id": ["unclassified", "introduced"], "classification": ["", "introduction"],
+    }).to_parquet(source / "bill_actions.parquet", index=False)
+    (source / "bill_extraction_manifest.json").write_text(json.dumps({
+        "status": "complete_extraction_not_source_certification",
+        "artifacts": {
+            name: {"sha256": sha256_file(source / name)}
+            for name in ("bills.parquet", "bill_actions.parquet")
+        },
+    }))
+    return source, bills
+
+
+def test_outcome_correction_preserves_extraction_and_unrelated_values(tmp_path):
+    source, original = _outcome_source(tmp_path)
+    original_hash = sha256_file(source / "bills.parquet")
+    out = tmp_path / "correction"
+    assert repair_outcomes(["--source-dir", str(source), "--out-dir", str(out)]) == 0
+    actual = pd.read_parquet(out / "bills.parquet")
+    expected = original.copy()
+    expected.loc[0, "recorded_outcome"] = "action_stage_unclassified"
+    pd.testing.assert_frame_equal(actual, expected)
+    assert sha256_file(source / "bills.parquet") == original_hash
+    manifest = json.loads((out / "outcome_correction_manifest.json").read_text())
+    assert manifest["n_action_records_checked"] == 2
+    assert manifest["n_outcomes_changed"] == 1
+    assert manifest["artifacts"]["bills.parquet"]["sha256"] == sha256_file(out / "bills.parquet")
+    assert pd.read_parquet(out / "bill_outcome_changes.parquet")["bill_id"].tolist() == [
+        "unclassified",
+    ]
+    with pytest.raises(FileExistsError, match="new correction"):
+        repair_outcomes(["--source-dir", str(source), "--out-dir", str(out)])
+
+
+@pytest.mark.parametrize("damage", ["checksum", "counts"])
+def test_outcome_correction_refuses_corrupt_or_inconsistent_source(tmp_path, damage):
+    source, _ = _outcome_source(tmp_path, wrong_count=damage == "counts")
+    if damage == "checksum":
+        (source / "bill_actions.parquet").write_bytes(b"corrupt source")
+    out = tmp_path / "refused"
+    with pytest.raises(ValueError, match="checksum mismatch|disagree"):
+        repair_outcomes(["--source-dir", str(source), "--out-dir", str(out)])
+    assert not out.exists()
 
 
 def test_law_eligible_excludes_resolutions():

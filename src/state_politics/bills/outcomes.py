@@ -8,9 +8,14 @@ counts. Large related tables are streamed into Parquet instead of materialized i
 
 from __future__ import annotations
 
+import argparse
+import json
+import tempfile
 from collections import Counter, defaultdict
 from datetime import date as calendar_date
 from pathlib import Path
+
+from ..provenance import sha256_file, utc_now_iso
 
 __all__ = [
     "extract_outcomes",
@@ -103,8 +108,12 @@ def party_on_date(
 def recorded_outcome(
     classes: set[str],
     passage_chambers: set[str],
+    *,
+    n_actions: int,
 ) -> str:
-    """Highest recorded bill stage, using action classifications only."""
+    """Highest classified stage, distinguishing absent from unclassified actions."""
+    if n_actions < 0 or (n_actions == 0 and (classes or passage_chambers)):
+        raise ValueError("action classifications contradict the recorded action count")
     if "became-law" in classes:
         return "became_law"
     if "executive-signature" in classes:
@@ -121,7 +130,24 @@ def recorded_outcome(
         return "recorded_failure_or_withdrawal"
     if classes:
         return "introduced_or_pending"
-    return "no_action_data"
+    return "action_stage_unclassified" if n_actions else "no_action_data"
+
+
+def repair_action_missingness(bills):
+    """Repair the legacy absent-action label without guessing an unclassified stage."""
+    import pandas as pd
+
+    if (
+        bills["bill_id"].isna().any() or bills["bill_id"].duplicated().any()
+        or bills["n_actions"].isna().any()
+        or not pd.api.types.is_integer_dtype(bills["n_actions"])
+        or bills["n_actions"].lt(0).any()
+    ):
+        raise ValueError("outcome repair requires unique bill IDs and nonnegative action counts")
+    repaired = bills.copy()
+    mask = repaired["recorded_outcome"].eq("no_action_data") & repaired["n_actions"].gt(0)
+    repaired.loc[mask, "recorded_outcome"] = recorded_outcome(set(), set(), n_actions=1)
+    return repaired
 
 
 class _ParquetSink:
@@ -392,6 +418,7 @@ def extract_outcomes(dump_path, bills, out_dir: Path):
         lambda bill_id: recorded_outcome(
             action_metrics[bill_id]["classes"],
             action_metrics[bill_id]["passage_chambers"],
+            n_actions=action_metrics[bill_id]["n_actions"],
         )
     )
     bills["recorded_enacted"] = bills["bill_id"].map(
@@ -413,3 +440,82 @@ def extract_outcomes(dump_path, bills, out_dir: Path):
         lambda bill_id: vote_metrics[bill_id]["vote_result_fail"]
     )
     return bills
+
+
+def main(argv: list[str] | None = None) -> int:
+    """Write a separate, source-bound correction bundle; never rewrite an extraction."""
+    import pandas as pd
+    import pyarrow.parquet as pq
+
+    parser = argparse.ArgumentParser(description=main.__doc__)
+    parser.add_argument("--source-dir", type=Path, required=True)
+    parser.add_argument("--out-dir", type=Path, required=True)
+    args = parser.parse_args(argv)
+    if args.out_dir.exists():
+        raise FileExistsError(f"{args.out_dir}: select a new correction directory")
+    source_manifest = args.source_dir / "bill_extraction_manifest.json"
+    extraction = json.loads(source_manifest.read_text())
+    if extraction.get("status") != "complete_extraction_not_source_certification":
+        raise ValueError("outcome repair requires a completed source extraction")
+    source_artifacts = {}
+    for name in ("bills.parquet", "bill_actions.parquet"):
+        digest = sha256_file(args.source_dir / name)
+        if digest != extraction["artifacts"][name]["sha256"]:
+            raise ValueError(f"{name}: extraction checksum mismatch")
+        source_artifacts[name] = {"sha256": digest, "path": str((args.source_dir / name).resolve())}
+    bills = pd.read_parquet(args.source_dir / "bills.parquet")
+    repaired = repair_action_missingness(bills)
+    action_counts = Counter()
+    for batch in pq.ParquetFile(args.source_dir / "bill_actions.parquet").iter_batches(
+        columns=["bill_id"],
+    ):
+        action_counts.update(batch.column(0).to_pylist())
+    if set(action_counts) - set(bills["bill_id"]):
+        raise ValueError("action records contain bills outside the extraction")
+    observed = bills["bill_id"].map(action_counts).fillna(0).astype("int64")
+    if not observed.eq(bills["n_actions"]).all():
+        raise ValueError("bill action counts disagree with retained action records")
+    changed = bills["recorded_outcome"].ne(repaired["recorded_outcome"])
+    changes = bills.loc[changed, ["bill_id", "state", "n_actions", "recorded_outcome"]].rename(
+        columns={"recorded_outcome": "previous_recorded_outcome"},
+    )
+    changes["recorded_outcome"] = repaired.loc[changed, "recorded_outcome"]
+    manifest = {
+        "schema_version": 1, "status": "complete_correction_not_outcome_certification",
+        "created_at": utc_now_iso(),
+        "source_extraction_manifest": str(source_manifest.resolve()),
+        "source_extraction_manifest_sha256": sha256_file(source_manifest),
+        "source_artifacts": source_artifacts,
+        "code_sha256": sha256_file(__file__),
+        "n_bills": len(bills), "n_action_records_checked": sum(action_counts.values()),
+        "n_outcomes_changed": int(changed.sum()),
+        "before": bills["recorded_outcome"].value_counts().to_dict(),
+        "after": repaired["recorded_outcome"].value_counts().to_dict(),
+        "limitations": [
+            "Only absent-versus-unclassified action semantics are repaired.",
+            "Chronology, veto overrides, final disposition and completeness remain unaudited.",
+            "Historical sponsor attribution is unchanged and remains unresolved.",
+            "Use this bills.parquet explicitly; the original extraction is preserved.",
+        ],
+    }
+    args.out_dir.parent.mkdir(parents=True, exist_ok=True)
+    with tempfile.TemporaryDirectory(prefix=".outcome-repair-", dir=args.out_dir.parent) as temp:
+        staging = Path(temp)
+        repaired.to_parquet(staging / "bills.parquet", index=False)
+        changes.to_parquet(staging / "bill_outcome_changes.parquet", index=False)
+        manifest["artifacts"] = {
+            name: {"sha256": sha256_file(staging / name), "rows": len(frame)}
+            for name, frame in (
+                ("bills.parquet", repaired), ("bill_outcome_changes.parquet", changes),
+            )
+        }
+        (staging / "outcome_correction_manifest.json").write_text(
+            json.dumps(manifest, indent=2, allow_nan=False) + "\n",
+        )
+        staging.rename(args.out_dir)
+    print(f"wrote {args.out_dir}: {int(changed.sum()):,} corrected outcome labels")
+    return 0
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())
