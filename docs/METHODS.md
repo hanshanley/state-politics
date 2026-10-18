@@ -225,12 +225,21 @@ Full output maps and logits survive evidence joins, evaluation and development-o
 calibration. Policy-only checkpoints remain supported as frozen research artifacts, never
 as a silent fallback. Neither checkpoint type is automatically certified.
 
-The first actual model matches, rather than beats, the historical baseline's 54% decision
-accuracy on 50 provisional assistant development judgments. Separate target/rejection
-training evidence is now retained with source hashes and individual assistant rationales;
-development documents and labels remain reserved. Independent review, source-quality and
+Both the external-only and subsequent target/rejection pilots make 27/50 correct decisions
+on the same provisional assistant development judgments, matching rather than beating the
+historical baseline. Saved training evidence retains source hashes and individual assistant
+rationales; development documents and labels remain reserved. Independent review, source-quality and
 taxonomy resolution, broader class support and empirical release gates remain necessary.
 No replacement has been approved for production or publication.
+
+Primary policy evidence and optional heading/preface context must remain separately
+traceable. A source-native bullet is not automatically single-topic; a section title is not
+a topic label. The unlabelled source-context probe documented in `AUDIT_STATUS.md` changes
+nine of 39 decisions using unchanged weights and thresholds, including movements toward
+and away from abstention. It establishes input sensitivity, not better accuracy or a
+preferred input format. Do not automatically prepend context or assign family-related
+policy to the broad culture category without resolving the substantive rubric. The saved
+category-23 positives cover arts rather than the full adapted family/religion scope.
 
 ### Legacy analytical pipeline (not revalidated)
 

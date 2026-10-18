@@ -72,6 +72,10 @@ Generated research files remain ignored under `data/`:
 - `processed/reviewed-platform-boundaries-v1/` and `reviewed-platform-boundaries-v2/`:
   nine California, then 39 combined California/Texas boundary inputs with explicit
   multi-span context, footer exclusions and duplicate-location evidence; no topic labels.
+- `processed/reviewed-platform-context-probe-v1/`: separately frozen primary/context
+  input pairs, all 78 predictions/logits and an unlabelled sensitivity report; not accuracy.
+- `processed/topic-family-boundary-review-v1/`: source-hashed training support by
+  topic/domain/origin, all ten culture-training texts and thirteen unlabelled rubric cases.
 - `raw/openstates/2026-10-public.pgdump`: retained source; SHA-256
   `6aa8341edc9ec251f4fb1eafb134b3415e72296e5391e05b39aded5e1ae2580c`.
 - `processed/preview_browser_validation.json`: checks bound to the local build manifest.
@@ -588,7 +592,8 @@ whitespace joiner. No non-whitespace character in either reviewed region is unac
 for after the recorded footer exclusions. This is a bounded, assistant-reviewed
 multi-span prototype, **not a production parser replacement**, an independently reviewed
 topic set or permission to train. A native bullet may itself still contain multiple policy
-areas. No new inference/training run or original-reference change accompanies these inputs.
+areas. These boundary packets authorize neither production inference nor training or
+original-reference changes. A separate frozen research probe is described below.
 
 | Recovered boundary artifact | SHA-256 |
 |---|---|
@@ -600,6 +605,75 @@ areas. No new inference/training run or original-reference change accompanies th
 These PDFs, renders and research packets persist locally under ignored `data/` paths.
 The Git checkpoint records the findings and hashes, not a remote backup of those files.
 The full scientific artifact gate and independent-review requirements remain unresolved.
+
+### Source context is not automatically a classification improvement
+
+A separately frozen, **unlabelled** diagnostic compares primary text alone with the reviewed
+heading/preface context on all 39 inputs. The same saved target/rejection checkpoint and
+unchanged research thresholds produce all 78 outputs; no new training, calibration or
+reference judgments are involved. Exact inputs, logits, scores, abstention reasons and
+source identities persist. Independent reconstruction verifies every decision from logits
+and all tokenizer offsets within the saved chunk spans. Each input fits one chunk
+(at most 129 source tokens), so no source tokens are discarded.
+
+Adding context changes **nine of 39 decisions**: four accepted-topic changes, two
+policy-to-abstention changes and three abstention-to-policy changes. Thirty retain the same
+accepted topic. Acceptance is 36/39 primary-only and 37/39 with context; this is **not
+accuracy** and neither higher acceptance nor unchanged decisions demonstrate correctness.
+These purposefully selected cases share only two documents and include a repeated
+commitment; no independent-example or representative-performance claim is made.
+
+Concrete output changes make the remaining problem visible. California children/families
+item 7 explicitly concerns young men's mental health, yet its prediction changes from
+Health to Law, crime and justice when the governing preface is added. A Texas campaign-finance
+bullet changes from Government operations to International affairs; the anti-BDS/compelled
+attestation bullet changes from Civil rights and liberties to International affairs.
+Conversely, the Asian-partner sovereignty bullet moves from an accepted Public lands and
+water prediction to abstention. These are post-hoc observations, **not newly certified
+reference labels**, a new test score or evidence for a universal context-removal rule.
+
+The exact primary/context distinction must survive the data contract. Do not automatically
+prepend headings in production, let a section title substitute for a policy-topic judgment,
+or change model-selection thresholds on these examples. Representative reviewed targets,
+context-precedence rules and evaluation of the eventual input construction remain necessary.
+
+### Broad category names conceal narrow supervised support
+
+Reconstruction of all 6,001 training rows agrees exactly with the saved checkpoint's
+per-topic counts. Of 106 assistant-reviewed target rows, 91 are bills and 15 are platform
+units. Only **six platform units are policy-positive**, spanning five topics:
+Civil rights and liberties, Health, Environment, Energy, and Law, crime and justice.
+The other nine platform units are rejections. Total target row count is not evidence of
+broad target-platform policy support.
+
+Category 23, named Culture, family and social issues in the adapted taxonomy, has only
+**ten positive training examples**. All ten were read: they concern arts, cultural
+heritage or artistic exchange, and all come from four Democratic national-platform groups
+(2000, 2008, 2012 and 2016). There are no reviewed target-domain category-23 positives.
+These supplied labels therefore do not establish supervised coverage of the adapted
+marriage/family/religion scope. This does not prove a model can never generalize; it means
+the broad category name and existing training count do not validate that generalization.
+
+A separate packet retains thirteen complete Texas Republican rubric candidates with their
+original unit IDs, exact source slices and physical-page locations. They contrast school
+religion, medical conscience, parental authority, child healthcare, disability services,
+marriage officiation/definition, historic preservation, religious holidays, divorce, foster
+care and adoption. No topic labels or training permission have been assigned. Extracted
+page markers and an absorbed Mental Health heading remain explicit boundary problems,
+not silently cleaned text. In particular, a family-related word does not by itself make
+healthcare, rights or social-service policy a category-23 example.
+
+| Diagnostic/support artifact | SHA-256 |
+|---|---|
+| Pre-inference paired-input plan | `56c316cd9784dd825587988a086e507e110e829c518ad9749eba9edd86bf5f86` |
+| All 78 predictions and logits | `db233c3be36229b356df5c1b4f57617a311b2c894ad2226f1f77cccf49ba2462` |
+| Context-sensitivity report | `3109377effafc31a33dbcff3c30a9f1a7a895dca1ecb8946a76c670d99fd8695` |
+| All 21 topics' training support | `704cb7084e03c85f3ceda4ff6d86d2063644b4c10180b95cb38248d81736868d` |
+| Thirteen unresolved rubric candidates | `b59427ef4c8dae6467d6e2b64f4059beca8cd7adf5ecd3b62db33b045b623ffe` |
+
+The original 27/50 development results and model weights remain unchanged. Neither the
+source-context diagnostic nor the support audit admits any new analytical classifications
+or justifies another training run before the source/rubric gaps are addressed.
 
 ### Preserve repeated units' actual source locations
 
