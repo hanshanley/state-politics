@@ -10,6 +10,7 @@ from __future__ import annotations
 
 import json
 from hashlib import sha256
+from pathlib import Path
 
 import pytest
 
@@ -57,6 +58,130 @@ def test_homepage_retains_officially_labelled_opaque_pdf_with_evidence():
     assert candidate.link_source_url == homepage
     assert candidate.link_source_sha256 == sha256(body).hexdigest()
     assert candidate.year_hint is None
+
+
+def test_homepage_retains_distinct_replayable_bodies(tmp_path):
+    from state_politics.provenance import ProvenanceLog
+
+    log = ProvenanceLog(tmp_path / "provenance.jsonl")
+    bodies = [
+        b'<a href="/platform.pdf">Party platform</a>',
+        b'<a href="/2026-platform.pdf">2026 platform</a>',
+    ]
+    for body in bodies:
+        candidates, error = homepage_candidates(
+            "https://example.org/", state="TX", party="D", log=log,
+            raw_dir=tmp_path / "raw",
+            transport=lambda url, body=body, **kwargs: StubResponse(200, body),
+        )
+        assert error is None
+        assert candidates[0].link_source_sha256 == sha256(body).hexdigest()
+    records = list(log)
+    assert len(records) == 2
+    assert records[0].stored_path != records[1].stored_path
+    for body, record in zip(bodies, records, strict=True):
+        assert Path(record.stored_path).read_bytes() == body
+        assert record.content_sha256 == sha256(body).hexdigest()
+
+
+def test_cli_checkpoints_results_before_a_later_interruption(tmp_path, monkeypatch):
+    from state_politics.platforms import discover
+
+    registry = tmp_path / "registry.json"
+    registry.write_text(json.dumps({"organizations": [
+        {"state": "AK", "party": "D"}, {"state": "AK", "party": "R"},
+    ]}))
+    out = tmp_path / "candidates.jsonl"
+    checkpoint_dir = tmp_path / "checkpoints"
+    raw_dir = tmp_path / "raw"
+
+    def run(org, **kwargs):
+        assert kwargs["raw_dir"] == str(raw_dir)
+        if org["party"] == "R":
+            raise RuntimeError("interrupted")
+        return discover.DiscoveryOutcome(
+            state="AK", party="D", wayback_ok=True,
+            candidates=[Candidate(
+                state="AK", party="D", url="https://example.org/platform.pdf",
+                source="live", score=5, link_text="Party platform",
+            )],
+        )
+
+    monkeypatch.setattr(discover, "discover_for_org", run)
+    with pytest.raises(RuntimeError, match="interrupted"):
+        discover.main([
+            "--registry", str(registry), "--out", str(out), "--delay", "0",
+            "--raw-dir", str(raw_dir), "--checkpoint-dir", str(checkpoint_dir),
+        ])
+    checkpoint = json.loads((checkpoint_dir / "AK-D-initial.json").read_text())
+    assert checkpoint["outcome"]["candidates"][0]["link_text"] == "Party platform"
+    assert checkpoint["registry_sha256"] == sha256(registry.read_bytes()).hexdigest()
+    assert checkpoint["discovery_code_sha256"] == sha256(
+        Path(discover.__file__).read_bytes()
+    ).hexdigest()
+    assert not out.exists()
+    assert not list(checkpoint_dir.glob("*.part"))
+    with pytest.raises(SystemExit):
+        discover.main([
+            "--registry", str(registry), "--out", str(out),
+            "--checkpoint-dir", str(checkpoint_dir),
+        ])
+
+
+def test_cli_keeps_failed_archive_retries_separate_from_initial_results(tmp_path, monkeypatch):
+    from state_politics.platforms import discover
+
+    registry = tmp_path / "registry.json"
+    registry.write_text(json.dumps({"organizations": [{"state": "AK", "party": "D"}]}))
+    out = tmp_path / "candidates.jsonl"
+    checkpoint_dir = tmp_path / "checkpoints"
+
+    def run(org, *, include_live, **kwargs):
+        return discover.DiscoveryOutcome(
+            state=org["state"], party=org["party"],
+            wayback_error="initial failure" if include_live else "retry failure",
+            candidates=[Candidate(
+                state="AK", party="D", url="https://example.org/platform.pdf",
+                source="live", score=5,
+            )] if include_live else [],
+        )
+
+    monkeypatch.setattr(discover, "discover_for_org", run)
+    monkeypatch.setattr(discover.time, "sleep", lambda _: None)
+    assert discover.main([
+        "--registry", str(registry), "--out", str(out), "--delay", "0",
+        "--checkpoint-dir", str(checkpoint_dir),
+    ]) == 0
+    initial = json.loads((checkpoint_dir / "AK-D-initial.json").read_text())
+    retry = json.loads((checkpoint_dir / "AK-D-wayback-retry.json").read_text())
+    assert initial["outcome"]["wayback_error"] == "initial failure"
+    assert initial["retry_outcome"] is None
+    assert retry["retry_outcome"]["wayback_error"] == "retry failure"
+    assert len(retry["outcome"]["candidates"]) == 1
+    assert len(out.read_text().splitlines()) == 1
+
+
+def test_live_only_discovery_never_queries_the_archive():
+    def transport(url, **kwargs):
+        assert "web.archive.org" not in url
+        return StubResponse(200, b'<a href="/platform.pdf">Party platform</a>', url)
+
+    outcome = discover_for_org(
+        {"state": "TX", "party": "D", "website": "https://example.org/"},
+        include_wayback=False, transport=transport,
+    )
+    assert outcome.live_ok
+    assert not outcome.wayback_ok
+    assert outcome.wayback_error is None
+    assert len(outcome.candidates) == 1
+
+
+def test_cli_rejects_disabling_both_discovery_channels():
+    from state_politics.platforms.discover import main
+
+    with pytest.raises(SystemExit) as error:
+        main(["--no-live", "--no-wayback"])
+    assert error.value.code == 2
 
 
 @pytest.mark.parametrize(

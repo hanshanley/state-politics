@@ -40,8 +40,10 @@ import re
 import time
 import urllib.parse
 from dataclasses import asdict, dataclass, field
+from hashlib import sha256
 from html.parser import HTMLParser
 from pathlib import Path
+from uuid import uuid4
 
 from ..provenance import ProvenanceLog, fetch
 
@@ -445,6 +447,7 @@ def homepage_candidates(
     transport=None,
     sleep=time.sleep,
     secondary: bool = False,
+    raw_dir: Path | str | None = None,
 ) -> tuple[list[Candidate], str | None]:
     """Scan URL terms and labelled same-origin PDFs. Exactly one request.
 
@@ -458,6 +461,7 @@ def homepage_candidates(
         timeout=30.0,
         max_attempts=1,
         sleep=sleep,
+        dest=Path(raw_dir) / f"homepage-{uuid4().hex}.html" if raw_dir is not None else None,
         note=f"live link scan for {state}-{party}",
     )
     if not record.ok or not body:
@@ -519,8 +523,10 @@ def discover_for_org(
     log: ProvenanceLog | None = None,
     transport=None,
     include_live: bool = True,
+    include_wayback: bool = True,
     sleep=time.sleep,
     deep: bool = False,
+    raw_dir: Path | str | None = None,
 ) -> DiscoveryOutcome:
     """Discover candidates for one registry row, merging both channels.
 
@@ -556,7 +562,7 @@ def discover_for_org(
     seen: set[str] = set()
     errors: list[str] = []
     any_ok = False
-    for search_domain, terms in searches:
+    for search_domain, terms in searches if include_wayback else []:
         found, error = wayback_candidates(
             search_domain, state=state, party=party, from_year=from_year, log=log,
             transport=transport, sleep=sleep, terms=terms,
@@ -575,7 +581,7 @@ def discover_for_org(
     if include_live:
         live, live_error = homepage_candidates(
             website, state=state, party=party, log=log, transport=transport, sleep=sleep,
-            secondary=deep,
+            secondary=deep, raw_dir=raw_dir,
         )
         outcome.live_ok = live_error is None
         outcome.live_error = live_error
@@ -616,9 +622,15 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--registry", default="conf/party_registry.yml")
     parser.add_argument("--out", default="data/processed/platform_candidates.jsonl")
     parser.add_argument("--provenance", default="data/provenance.jsonl")
+    parser.add_argument("--raw-dir", default="data/raw/platforms/discovery",
+                        help="retain homepage response bodies referenced by provenance")
+    parser.add_argument("--checkpoint-dir",
+                        help="new directory for per-organization results; defaults beside --out")
     parser.add_argument("--from-year", type=int, default=2018)
     parser.add_argument("--no-live", action="store_true",
                         help="skip the live homepage scan (Wayback only)")
+    parser.add_argument("--no-wayback", action="store_true",
+                        help="scan live homepages only, without archive queries or retries")
     parser.add_argument("--delay", type=float, default=1.0,
                         help="seconds to pause between organizations")
     parser.add_argument("--states", default="",
@@ -627,6 +639,8 @@ def main(argv: list[str] | None = None) -> int:
                         help="widen the search with secondary terms and pre-rebrand domains; "
                              "for organizations the ordinary pass found nothing for")
     args = parser.parse_args(argv)
+    if args.no_live and args.no_wayback:
+        parser.error("at least one discovery channel must be enabled")
 
     orgs = yaml.safe_load(Path(args.registry).read_text(encoding="utf-8"))["organizations"]
     if args.states:
@@ -634,16 +648,43 @@ def main(argv: list[str] | None = None) -> int:
         orgs = [o for o in orgs if o["state"] in wanted]
 
     log = ProvenanceLog(args.provenance)
+    output_path = Path(args.out)
+    checkpoint_dir = (
+        Path(args.checkpoint_dir) if args.checkpoint_dir else
+        output_path.with_name(output_path.stem + "_checkpoints")
+    )
+    if checkpoint_dir.exists():
+        parser.error(f"checkpoint directory exists: {checkpoint_dir}; choose a new output run")
+    checkpoint_dir.mkdir(parents=True)
+    context = {
+        "schema_version": 1,
+        "registry_sha256": sha256(Path(args.registry).read_bytes()).hexdigest(),
+        "discovery_code_sha256": sha256(Path(__file__).read_bytes()).hexdigest(),
+        "arguments": vars(args),
+    }
+
+    def save_checkpoint(outcome, phase, retried=None):
+        path = checkpoint_dir / f"{outcome.state}-{outcome.party}-{phase}.json"
+        temporary = path.with_suffix(".json.part")
+        with temporary.open("x", encoding="utf-8") as handle:
+            json.dump({
+                **context, "phase": phase, "outcome": asdict(outcome),
+                "retry_outcome": asdict(retried) if retried is not None else None,
+            }, handle, sort_keys=True)
+            handle.write("\n")
+        temporary.replace(path)
+
     all_candidates: list[Candidate] = []
     outcomes: list[DiscoveryOutcome] = []
     for index, org in enumerate(orgs, start=1):
         outcome = discover_for_org(
             org, from_year=args.from_year, log=log, include_live=not args.no_live,
-            deep=args.deep,
+            deep=args.deep, raw_dir=args.raw_dir, include_wayback=not args.no_wayback,
         )
         strong = [c for c in outcome.candidates if c.score >= STRONG_SCORE]
         outcomes.append(outcome)
         all_candidates.extend(outcome.candidates)
+        save_checkpoint(outcome, "initial")
         flag = "" if outcome.searched else "  <-- SEARCH FAILED"
         print(f"[{index:>3}/{len(orgs)}] {org['state']}-{org['party']:<2} "
               f"candidates={len(outcome.candidates):<4} strong={len(strong)}{flag}", flush=True)
@@ -673,6 +714,7 @@ def main(argv: list[str] | None = None) -> int:
             else:
                 print(f"  {outcome.state}-{outcome.party}: still failing "
                       f"({retried.wayback_error})", flush=True)
+            save_checkpoint(outcome, "wayback-retry", retried)
 
     path = write_candidates(all_candidates, args.out)
     status_path = Path(args.out).with_name("platform_discovery_status.csv")

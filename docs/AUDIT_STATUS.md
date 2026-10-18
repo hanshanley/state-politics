@@ -296,6 +296,40 @@ The ongoing full crawl started before this repair and does not acquire the new b
 mid-run. These supplemental documents have not been silently merged into the main corpus,
 and a failed search still does not establish absence of a platform.
 
+### Recoverable discovery runs
+
+The existing crawl has attempted its initial 100 organizations. All 100 archive queries
+entered the failure-retry pass; that describes retrieval failures, not missing historical
+platforms. Its homepage fetches retained hashes but not the response bodies, and its final
+candidate/status files are not written until after retries. This makes an interrupted
+run needlessly difficult to recover.
+
+New discovery CLI runs retain homepage bytes in `data/raw/platforms/discovery/`, using
+distinct filenames so a later response cannot overwrite earlier evidence. Provenance binds
+the stored path, response hash and original retrieval time. Each organization also receives
+an atomic JSON checkpoint before the next organization starts. Archive retry snapshots are
+separate and preserve both the original live candidates and the retry result, including
+explicit failures. Checkpoints include registry/code hashes and the exact run arguments.
+
+The default checkpoint directory sits beside `--out`; `--checkpoint-dir` and `--raw-dir`
+allow a separately named run. Existing checkpoint directories are refused. This is durable
+recovery evidence, not an automatic resume implementation or completeness certification.
+An explicit `--no-wayback` supports bounded live-only supplements without repeated failed
+archive requests. Skipped archive searches remain distinguishable from successful searches;
+disabling both channels is rejected.
+
+A fresh Texas Democratic homepage capture exercised actual byte retention and candidate
+reload under `data/processed/contemporary-source-pilot/retention-pilot-v1/`.
+The same official PDF remained strong after collection rescoring. The old running process
+does not gain these changes retroactively, and no duplicate full crawl was launched.
+
+A bounded two-organization Texas live-only supplement also completed through the actual
+CLI, retaining both homepage bodies, both organization checkpoints, four candidates and
+the channel-specific status CSV in `data/processed/contemporary-discovery-supplement-v1/`.
+One candidate is strong: the Texas Democratic PDF. The Republican homepage's three weak
+hits do not establish absence; its separately recovered 2026 official platform remains in
+the source pilot. No archive requests were made by this supplement.
+
 ## Blocking decisions
 
 The reviewer arrangement remains unresolved. Do not assume a human-review commitment or

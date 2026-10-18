@@ -6,7 +6,10 @@
 > revalidated. The old classifier used nearest-description embedding similarity;
 > it was not a supervised political-topic classifier. The replacement uses the official
 > English ModernBERT-base encoder with supervised fine-tuning and explicit abstention,
-> but no trained, independently evaluated topic checkpoint is available yet.
+> and a first provisional checkpoint has now been trained. On 50 assistant-reviewed
+> development units it matched the old method's 54% decision accuracy and still
+> accepted non-policy material. It is not independently validated or approved for
+> full-corpus replacement.
 > Historical recovery currently contains 2,091 documents; this does not establish
 > contemporary platform coverage. See the [audit status](docs/AUDIT_STATUS.md) and
 > [local-only companion specification](docs/WEBSITE.md). Nothing has been added to
