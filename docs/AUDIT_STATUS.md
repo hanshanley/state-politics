@@ -130,6 +130,56 @@ joins, and exports all 50 state rows, 807 observed state/session/filing-year cel
 official zero. The original measures, text, references and unresolved affiliations remain
 available for further recovery and review.
 
+## Provisional supervised-label preparation
+
+The three retained CAP files contain 508,287 rows. They are not interchangeable with the
+adapted project taxonomy: reproductive-health, tax, election-access/administration and
+family/culture boundaries require review. Original and harmonized code columns can differ;
+inconsistent major/subtopic combinations also exist. The initialization preparer verifies
+the exact source hashes, quarantines known incompatibilities, encoding damage and short
+context-dependent units, excludes duplicate/close target text, and retains the original
+codes and source-row references for selected records. It does not turn an unflagged row into
+project gold.
+
+The reviewed culture migration is CAP `23/2300` from legacy PAP `6/609`, not equality between
+the two code columns. Current local preparation selects 5,895 external initialization units
+across all 21 project topics, capped at 100 per source/topic and dated 2000 onward.
+**Culture has only ten selected examples**, and these cover arts, not the adapted category's
+full family/moral scope. This remains a serious training-support limitation.
+
+The official CAP source-use statement was retained with provenance as
+`raw/cap/source_use.html`. Project-generated variables carry CC-BY-NC-SA-4.0 terms;
+original-text rights can also apply. The platform codebook identifies its source units as
+quasi-sentences, not necessarily standalone state-level policy commitments.
+Source/model redistribution is not approved by this research preparation.
+
+A 200-unit diagnostic packet contains two bills per state and 100 units from the newly
+recovered official 2026 Texas Republican platform. The latter is one document, not a
+representative state-platform sample. Fifty initial units (40 titles and ten platform units)
+have explicit assistant-review identities, dates, rationales and exact evidence bindings,
+including non-policy/mixed/insufficient-evidence abstentions. All are development diagnostics;
+none are independent human gold or a blind certification test. The user was unavailable
+to choose a reviewer arrangement; no human-review commitment is assumed.
+
+The Texas PDF exposes 285 consecutively numbered policy planks. Paragraph-only extraction
+had collapsed the document into 73 large units. Number-aware extraction now retains those
+285 planks separately and preserves surrounding front matter and appendices: 299 total
+source units, not 299 verified policy commitments. Source offsets remain exact, and
+front matter is not silently dropped or labelled as substantive policy.
+
+The dataset and review artifacts remain ignored under `data/labels/`. The preparer CLI is:
+
+```bash
+uv run python -m state_politics.analysis.prepare_topics \
+  --reviewed-target data/labels/target-pilot-2026-10-18/reviewed_dev.jsonl \
+  --out data/labels/cap-initialization-pilot-v2 \
+  --per-source-topic 100
+```
+
+This prepares a research initialization corpus, not a certified replacement classifier.
+Independent target review, a finalized rubric, broader state/party examples, family leakage
+review, calibration and empirical release gates remain outstanding.
+
 ## Blocking decisions
 
 The reviewer arrangement remains unresolved. Do not assume a human-review commitment or

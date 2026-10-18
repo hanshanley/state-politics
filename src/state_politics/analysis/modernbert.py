@@ -44,7 +44,31 @@ def model_input_ids(tokenizer, token_ids: list[int]) -> list[int]:
 
 
 def policy_units(text: str) -> list[tuple[int, int, str]]:
-    """Preserve paragraph text and offsets, attaching short headings to the following unit."""
+    """Respect long consecutive numbered planks, retaining all surrounding source text."""
+    matches = list(re.finditer(r"(?m)^[ \t]*(\d{1,4})\.[ \t]+", text))
+    best = (0, 0)
+    first = 0
+    for end in range(1, len(matches) + 1):
+        if end < len(matches) and int(matches[end][1]) == int(matches[end - 1][1]) + 1:
+            continue
+        if int(matches[first][1]) == 1 and end - first > best[1] - best[0]:
+            best = (first, end)
+        first = end
+    if best[1] - best[0] < 20:
+        return _paragraph_units(text)
+    first, last = best
+    starts = [match.start() for match in matches[first:last]]
+    end = matches[last].start() if last < len(matches) else len(text)
+    boundaries = starts[1:] + [end]
+    return (
+        _paragraph_units(text[:starts[0]])
+        + [(start, stop, text[start:stop]) for start, stop in zip(starts, boundaries, strict=True)]
+        + [(end + start, end + stop, unit) for start, stop, unit in _paragraph_units(text[end:])]
+    )
+
+
+def _paragraph_units(text: str) -> list[tuple[int, int, str]]:
+    """Attach short headings to following paragraphs without dropping source characters."""
     units = []
     pending_start = None
     for match in re.finditer(r"\S.*?(?=\n[ \t]*\n|\Z)", text, re.S):

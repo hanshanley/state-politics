@@ -1,6 +1,8 @@
 """Decision, source-span, checkpoint and supervised-label safeguards without model downloads."""
 
+import csv
 import json
+import re
 
 import pytest
 
@@ -20,6 +22,7 @@ from state_politics.analysis.modernbert import (
     section_windows,
     token_windows,
 )
+from state_politics.analysis.prepare_topics import compatibility_flags, prepare
 from state_politics.analysis.taxonomy import DEFAULT_TOPICS_PATH, load_topics
 from state_politics.analysis.train_topics import load_examples
 from state_politics.provenance import sha256_file
@@ -60,6 +63,96 @@ def test_policy_units_retain_short_headings_and_all_substantive_text():
         assert text[start:end] == unit
         covered.update(range(start, end))
     assert all(index in covered for index, char in enumerate(text) if not char.isspace())
+
+
+def test_numbered_platform_planks_are_not_collapsed_into_page_sized_units():
+    prefix = "Committee and contents\n\n1. First principle\n2. Second principle\n\n"
+    policies = "".join(
+        f"{number}. Policy {number}: " + "A complete policy commitment. " * 7 + "\n"
+        for number in range(1, 25)
+    )
+    suffix = "\n1. Appendix resolution one.\n2. Appendix resolution two.\n"
+    text = prefix + policies + suffix
+    units = policy_units(text)
+    numbered = [unit for _, _, unit in units if re.match(r"\d+\. Policy ", unit)]
+    assert len(numbered) == 24
+    assert numbered[0].startswith("1. Policy 1:")
+    assert numbered[-1].startswith("24. Policy 24:")
+    covered = set()
+    for start, end, unit in units:
+        assert text[start:end] == unit
+        covered.update(range(start, end))
+    assert all(i in covered for i, character in enumerate(text) if not character.isspace())
+
+
+def test_short_or_nonconsecutive_numbering_does_not_imply_independent_planks():
+    text = "1. A short condition.\n2. Another condition.\n\n" + "Explanation. " * 20
+    assert len(policy_units(text)) == 1
+
+
+def _cap_row(**updates):
+    return {
+        "id": "one", "bill_id": "115-HR-1", "year": "2016",
+        "majortopic": "6", "subtopic": "600", "pap_majortopic": "6",
+        "pap_subtopic": "600",
+        "description": "We support expanding public school access with sustained funding "
+        "for teachers and students.",
+        **updates,
+    }
+
+
+def test_external_initialization_quarantines_incompatible_codes_and_preserves_migration():
+    codes = {2, 3, 6, 23}
+    assert compatibility_flags(_cap_row(), codes, 2000) == []
+    assert "rights_reproductive_health_boundary" in compatibility_flags(
+        _cap_row(majortopic="2", subtopic="202", pap_majortopic="2", pap_subtopic="202"),
+        codes, 2000,
+    )
+    assert "major_subtopic_disagreement" in compatibility_flags(
+        _cap_row(subtopic="300"), codes, 2000,
+    )
+    assert "source_code_versions_disagree" in compatibility_flags(
+        _cap_row(pap_majortopic="3", pap_subtopic="300"), codes, 2000,
+    )
+    assert compatibility_flags(
+        _cap_row(majortopic="23", subtopic="2300", pap_subtopic="609"), codes, 2000,
+    ) == []
+
+
+def test_external_corpus_is_checksum_bound_and_reserves_target_text_families(tmp_path):
+    path = tmp_path / "source.csv"
+    rows = [
+        _cap_row(), _cap_row(id="duplicate"),
+        _cap_row(id="bad", subtopic="300"),
+        _cap_row(id="culture", majortopic="23", subtopic="2300", pap_subtopic="609",
+                 description="We support funding public museums and local artistic "
+                 "programs so communities can preserve cultural heritage."),
+    ]
+    with path.open("w", newline="") as handle:
+        writer = csv.DictWriter(handle, fieldnames=rows[0])
+        writer.writeheader()
+        writer.writerows(rows)
+    source = (path.name, "bill", "https://example.test/frozen.csv", sha256_file(path))
+    target = _label("reviewed", rows[0]["description"] + " Today.", "dev")
+    prepared, report = prepare(
+        tmp_path, [3, 6, 23], per_source_topic=1, min_year=2000, seed=1,
+        reviewed=[target], sources=[source],
+    )
+    assert [row["topic"] for row in prepared if row["split"] == "train"] == [23]
+    assert prepared[0]["source_major"] == "23"
+    assert prepared[0]["label_origin"] == "external_coded"
+    assert prepared[-1]["reviewer_type"] == "assistant"
+    summary = report["sources"][0]
+    assert summary["n_raw"] == sum(summary["dispositions"].values()) == 4
+    assert summary["dispositions"]["quarantined"] == 1
+    assert summary["dispositions"]["exact_duplicate_or_target_overlap"] == 1
+    assert summary["target_near_copy_candidates_rejected"] == 1
+    path.write_text(path.read_text() + "\n")
+    with pytest.raises(ValueError, match="checksum mismatch"):
+        prepare(
+            tmp_path, [3, 6, 23], per_source_topic=1, min_year=2000, seed=1,
+            reviewed=[], sources=[source],
+        )
 
 
 def test_missing_or_empty_checkpoint_never_falls_back_to_embeddings(tmp_path):

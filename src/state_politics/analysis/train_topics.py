@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import argparse
 import hashlib
+import importlib.metadata
 import json
 import random
 import re
@@ -131,6 +132,11 @@ def train(args) -> Path:
         trust_remote_code=False, attn_implementation="sdpa",
     ).to(device)
     model.gradient_checkpointing_enable()
+    encoder_name, encoder_parameter = next(
+        (name, parameter) for name, parameter in model.named_parameters()
+        if name.endswith("attn.Wqkv.weight")
+    )
+    initial_encoder_parameter = encoder_parameter.detach().cpu().clone()
     optimizer = torch.optim.AdamW(model.parameters(), lr=args.learning_rate, weight_decay=0.01)
     weights = torch.tensor(
         [len(train_rows) / (len(codes) * counts[code]) for code in codes], device=device
@@ -142,6 +148,14 @@ def train(args) -> Path:
         "status": "provisional", "created_at": utc_now_iso(),
         "topic_codes": codes, "taxonomy_sha256": sha256_file(args.topics),
         "labels_sha256": sha256_file(args.labels),
+        "code_sha256": {
+            name: sha256_file(Path(__file__).with_name(name))
+            for name in ("train_topics.py", "modernbert.py", "taxonomy.py")
+        },
+        "dependency_versions": {
+            package: importlib.metadata.version(package)
+            for package in ("torch", "transformers", "tokenizers", "safetensors", "numpy")
+        },
         "split_counts": dict(Counter(row["split"] for row in rows)),
         "reviewer_types": dict(Counter(
             row["reviewer_type"] for row in rows if row["label_origin"] == "reviewed_target"
@@ -157,10 +171,13 @@ def train(args) -> Path:
         "decision_status": "uncalibrated_research_defaults",
         "seed": args.seed, "learning_rate": args.learning_rate,
         "batch_size": args.batch_size, "epochs": args.epochs,
+        "optimizer": {"name": "AdamW", "weight_decay": 0.01, "gradient_clip_norm": 1.0},
+        "training_history": [],
         "limitations": [
             "not independently certified; do not publish",
             "group and normalized-text leakage checked; near-duplicate families need review",
             "development calibration and held-out target-domain evaluation pending",
+            "optimizer-state resumption is not implemented; interrupted runs need a new directory",
         ],
     }
     for epoch in range(args.epochs):
@@ -182,8 +199,20 @@ def train(args) -> Path:
             torch.nn.utils.clip_grad_norm_(model.parameters(), 1.0, error_if_nonfinite=True)
             optimizer.step()
             loss_sum += float(loss.detach().cpu()) * len(batch)
-        print(json.dumps({"epoch": epoch + 1, "training_loss": loss_sum / len(examples)}),
-              flush=True)
+            if (start // args.batch_size + 1) % 100 == 0:
+                print(json.dumps({
+                    "epoch": epoch + 1, "examples_processed": start + len(batch),
+                    "training_loss_so_far": loss_sum / (start + len(batch)),
+                }), flush=True)
+        epoch_report = {
+            "epoch": epoch + 1, "training_loss": loss_sum / len(examples),
+            "completed_at": utc_now_iso(),
+        }
+        manifest["training_history"].append(epoch_report)
+        print(json.dumps(epoch_report), flush=True)
+    if torch.equal(initial_encoder_parameter, encoder_parameter.detach().cpu()):
+        raise RuntimeError("encoder parameters did not update; refusing a head-only checkpoint")
+    manifest["encoder_update_verified"] = {"parameter": encoder_name, "changed": True}
     model.save_pretrained(args.out, safe_serialization=True)
     tokenizer.save_pretrained(args.out)
     manifest["checkpoint_files"] = {
