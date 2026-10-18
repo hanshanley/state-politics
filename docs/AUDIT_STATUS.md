@@ -601,6 +601,21 @@ These PDFs, renders and research packets persist locally under ignored `data/` p
 The Git checkpoint records the findings and hashes, not a remote backup of those files.
 The full scientific artifact gate and independent-review requirements remain unresolved.
 
+### Preserve repeated units' actual source locations
+
+Following the repeated-commitment review, a regression exposed a separate provenance bug
+in the legislative-caucus fallback. It discarded the offsets returned by `policy_units`
+and searched the full document for each unit's text again. Identical paragraphs therefore
+both pointed to the first occurrence, even though they remained separate analytical rows.
+The fallback now keeps the segmenter's original start/end offsets. This changes neither
+unit text nor topic assignments and does not silently remove repeated commitments.
+
+The regression verifies two distinct exact source locations, not merely that both source
+slices equal the repeated text. Curated Kentucky/Maryland extraction keeps its existing
+behavior: a normalized or synthesized input without an exact contiguous source match has
+null contiguous offsets and retains the full source text. No recovered-corpus error rate
+or regenerated caucus result is claimed; the missing analytical artifacts remain blocked.
+
 ### Recoverable discovery runs
 
 The existing crawl has attempted its initial 100 organizations. All 100 archive queries

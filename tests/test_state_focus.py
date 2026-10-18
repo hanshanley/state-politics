@@ -64,6 +64,41 @@ def test_caucus_units_preserve_source_metadata_and_verbatim_spans():
     assert row["segmentation_method"] == "paragraph_policy_units_v1"
 
 
+def test_caucus_units_keep_distinct_source_locations_for_repeated_paragraphs():
+    paragraph = "Fund public schools and support teachers. " * 8
+    text = paragraph + "\n\n" + paragraph
+    source = pd.DataFrame([{
+        "state": "PA", "party": "D", "year": 2024, "institution": "Senate caucus",
+        "text": text,
+    }])
+
+    units = caucus_units(source)
+
+    assert units["text"].tolist() == [paragraph, paragraph]
+    assert units["source_start"].tolist() == [0, len(paragraph) + 2]
+    assert units["source_end"].tolist() == [len(paragraph), len(text)]
+
+
+def test_caucus_units_do_not_invent_contiguous_spans_for_normalized_agenda():
+    text = (
+        "Committee assignments. Senate Democratic Caucus agenda will focus on "
+        "public schools\nand affordable housing in the 2026 Legislative Session."
+    )
+    source = pd.DataFrame([{
+        "state": "MD", "party": "D", "year": 2026, "institution": "Senate caucus",
+        "text": text,
+    }])
+
+    units = caucus_units(source)
+
+    assert len(units) == 1
+    assert "public schools and affordable housing" in units.iloc[0]["text"]
+    assert units.iloc[0]["source_text"] == text
+    assert units["source_start"].isna().all()
+    assert units["source_end"].isna().all()
+    assert units.iloc[0]["segmentation_method"] == "curated_priority_extraction_v1"
+
+
 def test_caucus_supplement_never_overrides_party_committee_evidence():
     committee = pd.DataFrame(
         [

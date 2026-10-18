@@ -106,14 +106,20 @@ def caucus_units(frame):
         elif row.state == "MD" and row.party == "D":
             texts = _maryland_agenda_units(row.text)
         else:
-            texts = [unit for _, _, unit in policy_units(row.text)]
+            texts = None
+        if texts is None:
+            units = policy_units(row.text)
+        else:
+            units = []
+            for text in texts:
+                start = row.text.find(text)
+                units.append((start, start + len(text), text))
         metadata = row._asdict()
         document_id = hashlib.sha256(
             f"{row.state}:{row.party}:{row.year}:{row.institution}:"
             f"{metadata.get('url', '')}:{row.text}".encode()
         ).hexdigest()
-        for unit_index, text in enumerate(texts):
-            start = row.text.find(text)
+        for unit_index, (start, end, text) in enumerate(units):
             rows.append(
                 {
                     **metadata,
@@ -129,7 +135,7 @@ def caucus_units(frame):
                     "source_text": row.text,
                     "source_text_sha256": hashlib.sha256(row.text.encode()).hexdigest(),
                     "source_start": start if start >= 0 else None,
-                    "source_end": start + len(text) if start >= 0 else None,
+                    "source_end": end if start >= 0 else None,
                     "segmentation_method": (
                         "curated_priority_extraction_v1"
                         if (row.state, row.party) in {("KY", "R"), ("MD", "D")}
