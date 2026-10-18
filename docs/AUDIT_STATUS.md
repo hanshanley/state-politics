@@ -47,6 +47,9 @@ Generated research files remain ignored under `data/`:
   target/rejection checkpoint, with encoder-update proof and hash-bound training manifest.
 - `processed/topic-rejection-pilot-v1/`: pre-inference frozen policy/plan, checkpoint
   verification, full predictions, matched 50-record comparison and exact evaluation code.
+- `processed/topic-rejection-pilot-v1/enriched-development-v1/`: separately frozen
+  full-abstract judgments and paired title/enriched inference on fourteen development bills;
+  not a replacement for the original reference set or filing-time certification.
 - `models/minilm-pilot-historical-baseline-v1/`: frozen historical baseline and matched
   development diagnostics, never a fallback.
 - `processed/contemporary-source-pilot/`: separately retained 2026 California Democratic,
@@ -54,6 +57,10 @@ Generated research files remain ignored under `data/`:
 - `processed/contemporary-gap-source-review-v1/`: eight raw-source-bound captures,
   seven limited assistant source reviews, three separately labelled Pennsylvania resolution
   proposals and a supplemental 100-organization ledger; no verified final adopted texts.
+- `processed/pa-version-followup-v1/` and `pa-version-followup-v2/`: bounded official
+  meeting/bylaws/media and linked-host captures, with exact request attempts and response bytes.
+- `processed/source-gap-followup-v2/`: nine explicit limited source dispositions, the
+  byte-identical resolution comparison and an updated unresolved 100-organization ledger.
 - `raw/openstates/2026-10-public.pgdump`: retained source; SHA-256
   `6aa8341edc9ec251f4fb1eafb134b3415e72296e5391e05b39aded5e1ae2580c`.
 - `processed/preview_browser_validation.json`: checks bound to the local build manifest.
@@ -381,8 +388,59 @@ under `data/models/modernbert-cap-target-rejection-pilot-v1/`. Key SHA-256 bindi
 
 These generated files persist locally but are ignored by Git; the pushed audit records
 their outcome and hashes, not a remote backup of the model or datasets. The scientific
-artifact gate remains red: the last recorded run failed 37 of 315 checks. Neither a
+artifact gate remains red: the last recorded full run failed 37 of 315 checks. Neither a
 successful training command nor passing structural tests closes that gate.
+
+### Full-abstract development diagnostic: limited gains, substantial abstention
+
+All fourteen available development-bill abstracts were reviewed in full, not just the
+previously selected errors. Their complete rows were checked against the hash-bound original
+Parquet source. New assistant judgments were frozen at **19:09:47 UTC on October 18, 2026**,
+before fresh inference: eleven policy references and three abstentions. Three formerly
+insufficient titles now support provisional policy judgments. These new references preserve,
+rather than overwrite, the original title-only judgments. Previous model results and the
+six-error inspection were already known; this is neither blind nor independent human gold.
+
+Both input conditions below use **the same new full-evidence references**, including when
+the classifier receives only a title. They are not the original 50-record scores. Each
+actual checkpoint was reloaded, fresh title decisions reproduced its earlier decisions,
+and the same unchanged research thresholds were applied to both input conditions.
+
+| Fourteen bills, full-evidence references | Classified | Correct policy | Correct abstentions | Correct decisions |
+|---|---:|---:|---:|---:|
+| External-only ModernBERT, title | 11 / 14 | 5 | 1 / 3 | 6 / 14 (42.86%) |
+| External-only ModernBERT, title + abstract | 11 / 14 | 6 | 1 / 3 | 7 / 14 (50.00%) |
+| Target/rejection ModernBERT, title | 7 / 14 | 4 | 3 / 3 | 7 / 14 (50.00%) |
+| Target/rejection ModernBERT, title + abstract | 5 / 14 | 5 | 3 / 3 | 8 / 14 (57.14%) |
+
+The enriched rejection model classifies only **35.71%** of these records. Its five correct
+accepted cases do not establish general precision. Both models recover expungement and
+police-certification topics with fuller evidence; the rejection model also recovers the
+AI/XR education pilot. Agricultural overtime improves only in the external-only model.
+Workers' compensation and wastewater regress with enrichment, while the rejection model
+still abstains on cultural facilities, bottle-bill miniatures and environmental outreach.
+The external-only model also falsely classifies the enriched honorary measures.
+
+Inputs reached 1,643 tokens and two chunks, with zero discarded tokens in the enriched
+predictions. Full token coverage does not cure poor classification. Every source row still
+has filing-time eligibility **not verified**: one summary describes a House Substitute,
+another has a CD1 marker, and even original-version descriptions lack independently
+verified availability dates. Paid military-service leave for public employees also remains
+an unresolved public-workforce/leave/military-benefits boundary, not a manufactured label.
+
+The packet, references, full inputs, all four prediction files, matched records, report,
+log and exact preparation/inference code persist under
+`data/processed/topic-rejection-pilot-v1/enriched-development-v1/`.
+Training, calibration, analytical admission and scientific certification are explicitly
+unauthorized for these diagnostic judgments. The unchanged original comparison remains
+**27 / 50 correct decisions for all three methods**.
+
+| Diagnostic artifact | SHA-256 |
+|---|---|
+| Full review packet | `a3f46eb8c4ad86c05b2c0418a7fee7ddc24562064c454bd615c94377f1f50104` |
+| Frozen reviewed labels | `e2ce8a59e0965ea515627372855e1dc9e8b91ce7457355a2d64ed81fee6b7b24` |
+| Four-condition comparison | `f65ee46da0acbb9e4ed00f457c89970af82582ebe9d258b50237e9da97292909` |
+| Full matched records | `b66609e6f16ab13b4818ca97c2fa58f29bd918071ea7b83f83549a6d2222f2cb` |
 
 ## Additional contemporary source recovery
 
@@ -469,8 +527,9 @@ does not resolve the remaining scientific/artifact audit failures.
 `processed/contemporary-gap-source-review-v1/` contains the complete captures and review
 rationales, exact capture/review code, provenance and a separate
 `source_coverage_reviewed_gaps.json`. The latter preserves all 100 organizations and leaves
-the analytical cutoff and every operative-platform verification unresolved. MDGOP bylaws
-are retained as context pending complete review, not passed off as a platform.
+the analytical cutoff and every operative-platform verification unresolved. Complete
+review of the MDGOP bylaws remains pending; the later follow-up records only a limited
+review of their platform-adoption section, not a policy platform.
 Following the Pennsylvania index's resolutions/bylaws link returned HTTP 403; a separate
 retry with declared browser headers returned HTTP 404. Both outcomes are retained and
 the final-text/version gap remains unresolved. The raw minutes, not a search excerpt or
@@ -501,6 +560,58 @@ the channel-specific status CSV in `data/processed/contemporary-discovery-supple
 One candidate is strong: the Texas Democratic PDF. The Republican homepage's three weak
 hits do not establish absence; its separately recovered 2026 official platform remains in
 the source pilot. No archive requests were made by this supplement.
+
+### Institutional rules, duplicate uploads and restricted minutes
+
+Further bounded retrieval retained Pennsylvania's Winter 2026 meeting page, May 2025
+bylaws, a submitted 2026 ICE resolution and a public media-query response. Default requests
+returned HTTP 403; separately logged browser-header retries recovered these four bodies.
+A guessed Summer 2026 meeting URL instead returned 404, which applies only to that URL.
+The Winter page contains an internal 2025/2026 date conflict; its agenda is not an adoption
+report. Only the relevant Platform Committee provisions of the 52,127-character bylaws
+were reviewed. They describe proposing whether to adopt a quadrennial platform, not proof
+that one was adopted. The header says amended May 31, 2025 despite the May 30 filename.
+
+The bounded media query supplied February and June upload locations for the resolution.
+Both PDFs were retained and compared: **identical 105,964 bytes and identical extracted
+text**, with SHA-256
+`da1a9a818e55861436546f91ce4f2b5c7e196eb67e2db67ba7cb9b1aa975f5be`.
+They are one byte-level document at two locations, not two independent commitments.
+The text remains a signed submission; neither upload timestamp establishes adoption,
+and the proposal's political/factual assertions were not independently verified.
+
+Following the official minutes link returned **HTTP 200 with an owner-permission error**,
+not the Fall 2025 minutes. The raw HTML response is preserved as failure evidence; no
+alternate-download bypass was attempted. The linked public folder listing identifies six
+files but does not supply their contents or verify their versions. Neither successful HTTP
+transport nor a public filename is counted as a recovered policy document.
+
+The previously captured Maryland Republican bylaws were reviewed only for section 5.6.
+That section provides a state-platform drafting, amendment and adoption process, including
+a two-thirds convention vote. It does not establish that adoption occurred. The MD-R
+registry disposition now withholds the old publication-absence assertion and records
+unresolved platform text, adoption and operative status, with the exact source hash.
+The PA-D disposition likewise distinguishes institutional rules, submissions, duplicates
+and restricted minutes. Other unrechecked July findings remain legacy assertions.
+
+The two new capture packets preserve exact request attempts, raw responses, extracted
+text, link evidence and code. `data/processed/source-gap-followup-v2/` records nine
+source-specific assistant dispositions, exact relevant bylaws spans and a derived ledger
+that still preserves all 100 organizations, an unset analytical cutoff and unresolved
+operative-platform verification. No source was admitted to policy counts or training.
+The authored gap checksum was intentionally updated for these reviewed corrections.
+The new inventory-only audit with the isolated OCR runtime still fails **29 of 267**
+checks: 28 missing derived artifacts and the Tesseract 5.5.3 version mismatch. It does
+not run the full scientific checks or supersede the older 315-check full-audit result.
+Both the initial missing-PATH report and the explicit-OCR report are retained in this
+follow-up directory; neither is represented as a pass.
+
+| Follow-up artifact | SHA-256 |
+|---|---|
+| First capture packet | `e12639847926fe70094074c59ac8aff42ec398da318174255eb5032d6f2f754e` |
+| Linked-host capture packet | `518f0330ef3c7c8442bfdb501bd15ceacb32a46747289134bfae7b25a124d452` |
+| Limited source reviews | `8a249db7bbc95a23c6fe24e864e0fb205b0cad9ec634154917838e17d15f64b4` |
+| Derived 100-organization ledger | `70ec5a09f1ef0b6ac5b3e6ea5ac65164fb8317cb69e4c5f50ac6e62f286caad4` |
 
 ## Blocking decisions
 

@@ -30,8 +30,8 @@ manual_inputs:
     source: Open States subject strings + CAP major-topic codebook
   - path: conf/platform_gaps.yml
     kind: reviewed_source_gap_findings
-    sha256: 62d61c6e0020b2f454c275f9beb6508fb7754357cd32c80d932dba46334b72c8
-    source: legacy July dispositions plus source-hashed October official statements, resolution proposals and adoption minutes
+    sha256: 01d7dc6dedd332b8df5fbebe9bdc3f5931c27e981d23d7c0826c06870f3a2c17
+    source: legacy July dispositions plus source-hashed October statements, submitted resolutions, adoption minutes and limited institutional-rule review
   - path: conf/caucus_priority_registry.yml
     kind: curated_primary_source_registry
     sha256: 148e01f87db25e29864c91a4ab5af8cc0546222c722f4ea5372ff2cffee7629f

@@ -15,7 +15,7 @@
 #   broken_site            - the site is down, suspended, or serving errors
 #   client_rendered        - a platform page exists but its text requires a JS runtime
 #   summary_only           - the party publishes a short position blurb, not a platform
-#   not_confirmed          - candidates were fetched but none read as a platform
+#   not_confirmed          - source review has not established an operative platform
 #
 # `checked` is the UTC date the probe was run, so a stale explanation is visible as stale.
 
@@ -87,9 +87,20 @@ MD:
     checked: 2026-07-29
     finding: no substantial platform page found
   R:
-    cause: no_platform_published
-    checked: 2026-07-29
-    finding: no substantial platform page found
+    cause: not_confirmed
+    checked: 2026-10-18
+    finding: >-
+      section 5.6 of the retained official bylaws describes a state-platform drafting,
+      amendment and adoption process, including a two-thirds convention vote. Only this
+      relevant section has been reviewed; bylaws are institutional evidence, not a policy
+      platform or proof that adoption occurred. A platform's actual text, adoption and
+      operative version remain unresolved. The earlier unsuccessful search does not
+      establish that no platform is published.
+    evidence:
+      - url: https://mdgop.org/wp-content/uploads/sites/30/2025/10/MDGOP-BYLAWS-Current-As-Amended-11-23-2024.pdf
+        role: institutional_platform_adoption_procedure_not_platform
+        reviewed_scope: section_5_6_only
+        content_sha256: b07578241edc5f29bde6e876a85e78581f663000c3aeadb0467c1882c15a4c87
 MI:
   R:
     cause: summary_only
@@ -120,8 +131,13 @@ PA:
       Summer 2025 meeting page have been retained separately. Exact adopted text is not
       verified: the minutes' descriptions do not match every linked proposal, one PDF
       includes tracked changes and two proposals fall below the collector's platform
-      length cutoff. A full operative platform remains unresolved; neither a failed
-      homepage request nor these rejected proposals establishes absence.
+      length cutoff. The retained bylaws describe how a Platform Committee proposes
+      whether to adopt a quadrennial platform; this is not evidence of actual adoption.
+      A separate 2026 ICE resolution appears in byte-identical February and June uploads,
+      but remains a submitted text without verified adoption. The Winter 2026 meeting
+      page links Fall 2025 minutes; their download returns an owner-permission error,
+      despite HTTP 200. A full operative platform remains unresolved; neither failed
+      requests, restricted downloads nor rejected proposals establishes absence.
     evidence:
       - url: https://www.padems.org/scm-summer-2025/
         role: official_proposal_links_not_adoption_verification
@@ -139,6 +155,19 @@ PA:
       - url: https://www.padems.org/wp-content/uploads/2025/05/Health-Care-Resolution.pdf
         role: resolution_proposal_not_verified_final_text
         content_sha256: a6a6d1e548d19b3f86444f108a8ecd215af9440a2cd1507ba952c90c610f784d
+      - url: https://www.padems.org/wp-content/uploads/2025/07/PA-DEMS-BYLAWS_05-30-2025.pdf
+        role: institutional_platform_adoption_procedure_not_platform
+        reviewed_scope: rule_iv_section_1_platform_provisions_only
+        content_sha256: 039fc61c4d316c1c74b4d9e69cf6b3382be3888f4506e405ec4f830615fbf463
+      - url: https://www.padems.org/scm-winter-2026/
+        role: meeting_agenda_and_document_links_not_adoption_report
+        content_sha256: 0f25b40d72bb5fa713317f4157b7a3fcf677ec9fa34c5f29e7f0c6bb2a81365b
+      - url: https://www.padems.org/wp-content/uploads/2026/02/Resolution2026-01_CondemnWeaponizationofICE.pdf
+        role: submitted_resolution_adoption_unverified
+        content_sha256: da1a9a818e55861436546f91ce4f2b5c7e196eb67e2db67ba7cb9b1aa975f5be
+      - url: https://www.padems.org/wp-content/uploads/2026/06/Resolution2026-01_CondemnWeaponizationofICE.pdf
+        role: byte_identical_copy_not_verified_adopted_version
+        content_sha256: da1a9a818e55861436546f91ce4f2b5c7e196eb67e2db67ba7cb9b1aa975f5be
   R:
     cause: summary_only
     checked: 2026-07-30
