@@ -87,6 +87,21 @@ def test_extract_text_strips_scripts_and_chrome():
         assert chrome not in text
 
 
+def test_html_extraction_ignores_comments_and_decodes_policy_text():
+    from state_politics.platforms.registry import visible_text
+
+    html = (
+        b"<!-- template WWW => <script>not a real script -->"
+        b"<p>We support workers&#8217; rights &amp; wages &lt; $20.</p>"
+        b"<script>const marker = '<!--';</script>"
+        b"<p>We oppose discrimination&#x2E;</p>"
+        b"<!-- hidden footer > do not classify -->"
+    )
+    expected = "We support workers\u2019 rights & wages < $20. We oppose discrimination."
+    assert extract_text(html, "text/html", "https://x.test/platform/") == expected
+    assert visible_text(html).strip() == expected.lower()
+
+
 def test_confirm_platform_requires_length_and_declarative_language():
     ok, reason, hits = confirm_platform(PLATFORM_PROSE)
     assert ok
@@ -781,14 +796,14 @@ def test_strip_blocks_matches_the_regex_it_replaced():
         assert actual == expected, html
 
 
-def test_strip_blocks_does_not_blow_up_on_unclosed_tags():
+@pytest.mark.parametrize("html", ["<nav a>" * 200_000, "<!-- hidden > " * 200_000])
+def test_strip_blocks_does_not_blow_up_on_unclosed_tags(html):
     """Hostile pages must not hang the crawler.
 
     Every byte here comes from a third-party website. The regex this replaced backtracked
     quadratically on unclosed tags: 112 KB took 6.5 s and a fetch may be 64 MB, so one page
     of unclosed <nav> tags stalled the crawl indefinitely.
     """
-    html = "<nav a>" * 200_000
     start = time.perf_counter()
     strip_blocks(html, _BLOCK_TAGS)
     assert time.perf_counter() - start < 5.0
@@ -797,6 +812,10 @@ def test_strip_blocks_does_not_blow_up_on_unclosed_tags():
 def test_strip_blocks_keeps_text_after_an_unclosed_tag():
     """An unclosed block must drop the tag, not the rest of the document."""
     assert "real content" in strip_blocks("<nav>menu<p>real content", _BLOCK_TAGS)
+
+
+def test_strip_blocks_keeps_unterminated_comments_hidden():
+    assert strip_blocks("visible<!-- <nav>hidden > text", _BLOCK_TAGS).strip() == "visible"
 
 
 def test_rejects_a_national_platform_that_names_another_state_more():

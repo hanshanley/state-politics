@@ -1084,6 +1084,73 @@ analytical counts or training. These ignored `data/` packets are persistent loca
 research artifacts; committing their hashes and documentation does **not** back up their
 bytes to GitHub. No production publication files, routes or assets changed.
 
+### Reconciled bounded recovery inventory and completed Oregon follow-through
+
+Two immutable inventory snapshots now reconcile selected recovery packets without
+conflating responses with platforms. Snapshot v1 contains 229 capture attempts,
+219 retained responses and ten failed attempts. Snapshot v2 preserves every v1
+record unchanged and adds all **80 nested Oregon resolution pages** selected from
+nine retained 2018-2026 annual indexes. All eighty returned HTTP 200 with nonempty
+extractions; raw bodies, all 697 parent-link occurrences, child links and exact
+parent bindings persist. Following those pages does not exhaust their downstream links.
+
+The expanded bounded inventory has **309 attempts, 299 retained responses and
+296 distinct body hashes**. Three byte-identical pairs are retained as repeated
+captures, not independent documents: California Republican URL variants, South
+Carolina Democratic protocol variants and two Oklahoma Democratic PDF locations.
+It accounts for all 100 expected organizations, with retained responses for 48.
+The other 52 lack responses **in these selected packets**, not necessarily in the
+full campaign: earlier pilot, Pennsylvania/Maryland and other recovery packets
+are outside this inventory. These are not adopted-platform coverage statistics.
+Five alternate OCR outputs and two public viewer exports remain separately bound
+to their source bodies. All operative statuses and analytical cutoff remain unresolved.
+
+Strict JSON parsing exposed four unrelated legacy failed-fetch records containing
+nonstandard `NaN` source hashes. The new derivatives explicitly normalize only those
+four fields to null and record every change; original packets remain immutable.
+This differs from the legal Unicode separators repaired above. The demonstrated
+NaN origin is old research-helper serialization, not an established production
+collector defect. Both snapshots are strict JSON, with independently reconciled
+capture identities, source/text hashes and all 100 CSV/JSON organization rows.
+
+### HTML extraction repair and bounded source-role review
+
+Reading actual Oregon text exposed leaked template comments and undecoded numeric
+character references. Collection and homepage identity extraction now share the
+existing linear block-removal helper, which also skips comments before interpreting
+apparent tags inside them. HTML entities are decoded only after tag removal, preserving
+literal policy comparisons such as an escaped less-than sign. Closed script contents
+remain excluded even when they contain a literal comment opener. Existing handling
+of unclosed block tags and the bounded-time safeguards remain covered.
+
+A separate offline replay reproduces all eighty original extractions exactly with
+the frozen old collector, then saves both complete old and repaired texts. All
+eighty change; their template-comment leakage is removed. This is not a fresh
+retrieval, a complete semantic cleanup or evidence of improved classifier accuracy.
+Div-based page boilerplate and substantive native-unit boundaries remain unresolved.
+Neither frozen captures nor canonical labels/model files were rewritten.
+
+Six complete original texts received assistant source-role review, not topic labels.
+The Joe Smith resolution's operative section is commemorative, while the Chemawa
+resolution proposes a substantive governance change despite its honoring title.
+Two resolutions with 2019 identifiers explicitly report approval in 2020, so
+identifiers cannot substitute for adoption dates. Exact adoption and operative
+evidence spans are retained in both text versions. These are source-reported
+adoption claims, not independently verified events or operative-version certification.
+All six remain excluded from training, model selection, independent gold and analysis.
+
+| Bounded inventory/replay artifact | SHA-256 |
+|---|---|
+| Recovery inventory v1 manifest | `a8a332ce84f3a52e1c27bb1b9bf728f7f30d1097a68ee21d282680c9bbdac599` |
+| Eighty-source Oregon capture manifest | `811f2e7f7576faf4314320ba312f65c971d9e35c1e35adf4b9dd7f7213222e94` |
+| Expanded recovery inventory v2 manifest | `b0289b4b86603022c4ad1ce2c0106f411bf470a2d4dbecc1c076891ecf442f28` |
+| Oregon extraction/source-review manifest | `ec278bc75461c23734867c2e0ad1e15bf934d7a1adebbf7937e78f3771331af3` |
+| Six assistant source-role reviews | `cc7789865230710e14818f994cc37922c96c3d1e770a94e6524626881fcacfa7` |
+
+All packets above remain under ignored local `data/processed/` paths. The Git
+checkpoint backs up code, documentation and recorded hashes, **not these bytes**.
+No production publication route, asset or integration was added.
+
 ## Blocking decisions
 
 The reviewer arrangement remains unresolved. Do not assume a human-review commitment or

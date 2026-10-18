@@ -43,6 +43,7 @@ import csv
 import io
 import re
 from dataclasses import asdict, dataclass
+from html import unescape
 from pathlib import Path
 
 from ..provenance import USER_AGENT, ProvenanceLog, fetch, utc_now_iso
@@ -356,12 +357,10 @@ def registrable_domain(url: str) -> str:
     return ".".join(labels[-2:]) if len(labels) >= 2 else host
 
 
-#: Opening tag of a block whose contents are markup, not prose.
 _BLOCK_TAGS = ("script", "style")
-_BLOCK_OPEN_RE = re.compile(r"<(" + "|".join(_BLOCK_TAGS) + r")\b[^>]*>", re.I)
 
 def strip_blocks(html: str, tags: tuple[str, ...]) -> str:
-    """Remove ``<tag>...</tag>`` blocks with a linear scan.
+    """Remove HTML comments and ``<tag>...</tag>`` blocks with a linear scan.
 
     The obvious regex for this -- ``<(script|nav|...)\b[^>]*>.*?</\1>`` -- backtracks
     quadratically on hostile input, because every opening tag that never closes rescans to the
@@ -372,6 +371,7 @@ def strip_blocks(html: str, tags: tuple[str, ...]) -> str:
     """
     if not html:
         return html
+    opening = re.compile(r"<!--|<(" + "|".join(map(re.escape, tags)) + r")\b[^>]*>", re.I)
     lowered = html.lower()
     out: list[str] = []
     position = 0
@@ -381,12 +381,18 @@ def strip_blocks(html: str, tags: tuple[str, ...]) -> str:
     # 1.4 MB of unclosed <nav> took 196 s before this set was added.
     exhausted: set[str] = set()
     while True:
-        match = _BLOCK_OPEN_RE.search(html, position)
+        match = opening.search(html, position)
         if match is None:
             out.append(html[position:])
             return "".join(out)
         out.append(html[position:match.start()])
         out.append(" ")
+        if match.group(0) == "<!--":
+            closing = html.find("-->", match.end())
+            if closing == -1:
+                return "".join(out)
+            position = closing + 3
+            continue
         tag = match.group(1).lower()
         if tag in exhausted:
             position = match.end()
@@ -429,7 +435,7 @@ def visible_text(body: bytes) -> str:
     """Lowercased visible text of an HTML page, with scripts, tags and URLs removed."""
     html = body.decode("utf-8", errors="replace")
     html = strip_blocks(html, _BLOCK_TAGS)
-    html = _TAG_RE.sub(" ", html)
+    html = unescape(_TAG_RE.sub(" ", html))
     return re.sub(r"\s+", " ", html).lower()
 
 

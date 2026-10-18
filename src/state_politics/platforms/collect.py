@@ -29,12 +29,13 @@ import re
 import time
 import unicodedata
 from dataclasses import asdict, dataclass, replace
+from html import unescape
 from pathlib import Path
 from uuid import uuid4
 
 from ..provenance import ProvenanceLog, fetch, sha256_file, utc_now_iso
 from .discover import STRONG_SCORE, Candidate, score_candidate
-from .registry import STATE_NAMES
+from .registry import STATE_NAMES, strip_blocks
 
 #: Postal code -> state name, for attributing a document to the state party that wrote it.
 STATE_NAMES_BY_CODE = {code: name for name, code in STATE_NAMES.items()}
@@ -81,48 +82,7 @@ MIN_CHARS = 2500
 #: Hand-checked explanations for the parties with no platform, joined into the gap report.
 _GAP_FINDINGS_PATH = Path(__file__).resolve().parents[3] / "conf" / "platform_gaps.yml"
 
-#: Opening tag of a block whose contents are markup, not prose.
 _BLOCK_TAGS = ("script", "style", "nav", "header", "footer")
-_BLOCK_OPEN_RE = re.compile(r"<(" + "|".join(_BLOCK_TAGS) + r")\b[^>]*>", re.I)
-
-def strip_blocks(html: str, tags: tuple[str, ...]) -> str:
-    """Remove ``<tag>...</tag>`` blocks with a linear scan.
-
-    The obvious regex for this -- ``<(script|nav|...)\b[^>]*>.*?</\1>`` -- backtracks
-    quadratically on hostile input, because every opening tag that never closes rescans to the
-    end of the document. Measured here: 14 KB of unclosed ``<nav>`` took 0.11 s, 112 KB took
-    6.5 s, and a fetch is allowed to be 64 MB. Since every byte scanned comes from a
-    third-party website, that is a denial-of-service vector on the crawler, so the scan is done
-    explicitly with ``str.find`` instead. An unclosed tag drops the tag and keeps the text.
-    """
-    if not html:
-        return html
-    lowered = html.lower()
-    out: list[str] = []
-    position = 0
-    # Once no closing tag for a name exists after some offset, none exists after any later
-    # offset either. Without remembering that, a document full of unclosed tags re-scans to
-    # the end for every one of them, which is the same quadratic blow-up in a different guise:
-    # 1.4 MB of unclosed <nav> took 196 s before this set was added.
-    exhausted: set[str] = set()
-    while True:
-        match = _BLOCK_OPEN_RE.search(html, position)
-        if match is None:
-            out.append(html[position:])
-            return "".join(out)
-        out.append(html[position:match.start()])
-        out.append(" ")
-        tag = match.group(1).lower()
-        if tag in exhausted:
-            position = match.end()
-            continue
-        closing = lowered.find(f"</{tag}", match.end())
-        if closing == -1:
-            exhausted.add(tag)
-            position = match.end()
-            continue
-        end = html.find(">", closing)
-        position = len(html) if end == -1 else end + 1
 
 _TAG_RE = re.compile(r"<[^>]+>")
 
@@ -238,9 +198,7 @@ def extract_text(body: bytes, content_type: str | None, url: str) -> str:
         return ""
     html = body.decode("utf-8", errors="replace")
     html = strip_blocks(html, _BLOCK_TAGS)
-    text = _TAG_RE.sub(" ", html)
-    text = re.sub(r"&nbsp;?", " ", text)
-    text = re.sub(r"&amp;", "&", text)
+    text = unescape(_TAG_RE.sub(" ", html))
     return repair_ligatures(
         re.sub(r"[ \t]+", " ", re.sub(r"\n{3,}", "\n\n", text)).strip())
 
