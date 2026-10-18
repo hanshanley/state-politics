@@ -123,11 +123,12 @@ def test_membership_reference_preserves_raw_undated_and_dated_source_rows(monkey
     assert reference.set_index("id").at["undated", "timing_status"] == "undated"
 
 
-def test_capability_report_distinguishes_unsupported_questions(tmp_path):
+@pytest.mark.parametrize("year", [None, 2016, 2024])
+def test_capability_report_distinguishes_unsupported_questions(tmp_path, year):
     pd.DataFrame(
         [
             {
-                "state": "TX", "party": "D", "confirmed": True, "year": 2024,
+                "state": "TX", "party": "D", "confirmed": True, "year": year,
                 "subject": "", "sponsor_party": "D",
             }
         ]
@@ -167,4 +168,17 @@ def test_capability_report_distinguishes_unsupported_questions(tmp_path):
     assert report.loc["Bill enactment/pass rates", "support"] == "unsupported"
     assert report.loc["Roll-call voting behavior", "support"] == "unsupported"
     assert report.loc["Policy stance or ideological direction", "support"] == "limited"
-    assert report.loc["Current stated state-level agenda", "support"] == "supported"
+    for question in (
+        "Current stated state-level agenda",
+        "Reliable within-party stated comparison",
+        "Current party-committee platform coverage",
+    ):
+        assert report.loc[question, "support"] == "unsupported"
+    source_evidence = report.loc["Current stated state-level agenda", "evidence"]
+    dated = int(year is not None and year >= 2018)
+    undated = int(year is None)
+    assert f"{dated} heuristic-confirmed dated 2018+ source records" in source_evidence
+    assert f"{undated} undated source records" in source_evidence
+    assert "1/100 state-party rows pass the legacy 30-unit heuristic" in report.loc[
+        "Reliable within-party stated comparison", "evidence"
+    ]

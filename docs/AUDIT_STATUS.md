@@ -1151,6 +1151,23 @@ All packets above remain under ignored local `data/processed/` paths. The Git
 checkpoint backs up code, documentation and recorded hashes, **not these bytes**.
 No production publication route, asset or integration was added.
 
+### Current-source capability claims withheld
+
+The legacy capability builder no longer calls heuristic-confirmed or undated
+records a supported current agenda. Current stated agendas, reliable within-party
+stated comparisons and operative platform coverage now remain unsupported, with
+unresolved validity/coverage rather than false zeroes. Dated 2018+ records,
+undated records and overlapping organization availability counts remain visible
+as source inventory, without converting missing records into publication absence.
+
+The old 30-unit reliability flag is displayed only as a legacy heuristic, not
+classification or comparability validation. Regressions exercise confirmed
+recent, older and undated sources while that flag is true. The analytical-depth
+document now distinguishes implemented research methods from certified findings.
+Other legacy bill/trend/outcome/vote support labels still describe artifact/schema
+availability, not release approval; those analyses were not regenerated or
+certified by this source-reporting repair.
+
 ## Blocking decisions
 
 The reviewer arrangement remains unresolved. Do not assume a human-review commitment or

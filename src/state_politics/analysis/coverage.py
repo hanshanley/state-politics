@@ -2,6 +2,7 @@
 
 Deep analysis also means refusing unsupported questions. This module derives coverage and
 capability statements from artifact schemas and sample sizes instead of relying on prose.
+Availability and sample size do not establish scientific validation or operative platforms.
 """
 
 from __future__ import annotations
@@ -99,10 +100,11 @@ def build_capability_report(data_dir: Path):
     tagged = bills["subject"].fillna("").str.len() > 0
     confirmed = platforms[platforms["confirmed"]]
     years = pd.to_numeric(confirmed["year"], errors="coerce")
-    current = confirmed[years.isna() | (years >= 2018)]
-    stated_states = set(current["state"]) | set(caucuses["state"])
-    current_orgs = current.groupby(["state", "party"]).ngroups
-    all_date_orgs = confirmed.groupby(["state", "party"]).ngroups
+    dated_from_2018 = confirmed[years >= 2018]
+    undated = confirmed[years.isna()]
+    dated_orgs = dated_from_2018.groupby(["state", "party"]).ngroups
+    undated_orgs = undated.groupby(["state", "party"]).ngroups
+    available_orgs = confirmed.groupby(["state", "party"]).ngroups
     outcomes_path = data_dir / "bill_outcomes_by_state_party.csv"
     outcomes = pd.read_csv(outcomes_path) if outcomes_path.exists() else pd.DataFrame()
     votes_path = data_dir / "vote_events.parquet"
@@ -113,18 +115,25 @@ def build_capability_report(data_dir: Path):
     rows = [
         {
             "question": "Current stated state-level agenda",
-            "support": "supported",
-            "coverage": f"{len(stated_states)}/50 states",
+            "support": "unsupported",
+            "coverage": "operative coverage unresolved",
             "evidence": (
-                f"{len(current)} current party-committee documents plus "
-                f"{len(caucuses)} separately labelled caucus sources"
+                f"{len(dated_from_2018)} heuristic-confirmed dated 2018+ source records; "
+                f"{len(undated)} undated source records; "
+                f"{len(caucuses)} separately labelled caucus sources. "
+                "Content confirmation verifies neither adoption, operative version, "
+                "analytical cutoff nor topic accuracy"
             ),
         },
         {
             "question": "Reliable within-party stated comparison",
-            "support": "partial",
-            "coverage": f"{int(atlas['stated_focus_reliable'].sum())}/100 state-party rows",
-            "evidence": "Requires at least 30 classified units; smaller sources remain descriptive",
+            "support": "unsupported",
+            "coverage": "comparison validity unresolved",
+            "evidence": (
+                f"{int(atlas['stated_focus_reliable'].sum())}/100 state-party rows pass "
+                "the legacy 30-unit heuristic. Sample size alone does not validate "
+                "classification, source versions or within-party comparability"
+            ),
         },
         {
             "question": "Introduced-bill agenda by party and state",
@@ -218,13 +227,14 @@ def build_capability_report(data_dir: Path):
         },
         {
             "question": "Current party-committee platform coverage",
-            "support": "partial",
-            "coverage": f"{current['state'].nunique()}/50 states; "
-                        f"{current_orgs}/100 organizations",
+            "support": "unsupported",
+            "coverage": "operative coverage unresolved",
             "evidence": (
-                f"{100 - current_orgs} lack a current source: "
-                f"{100 - all_date_orgs} have no confirmed source at any date and "
-                f"{all_date_orgs - current_orgs} are legacy-only"
+                f"{dated_orgs}/100 organizations have heuristic-confirmed dated 2018+ "
+                f"source records; {undated_orgs}/100 have undated source records; "
+                f"{available_orgs}/100 have source records at any date or undated. "
+                "These overlapping availability counts establish neither operative "
+                "coverage nor publication absence"
             ),
         },
     ]
