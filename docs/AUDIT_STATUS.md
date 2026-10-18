@@ -13,7 +13,7 @@ replacement classifier or establish complete contemporary coverage.
 | Classification | Two actual official English ModernBERT-base fine-tuning runs saved and reloaded: external-only policy training, then 6,001-unit joint target/rejection training with 21 policy outputs plus null. | Both candidates still make 27 correct decisions in the same 50 development records. Learned rejection reduces false acceptance but loses correct policy decisions; neither candidate is approved for production. |
 | Labels | External CAP files recovered; split/group/exact-text checks and explicit reviewed-label provenance are implemented. | Source permissions, adapted-topic compatibility, near-duplicate families and reviewed state-domain training/development/test labels. |
 | Evaluation | Development-only temperature/threshold selection, exact evidence joins, abstention accounting, per-topic and subgroup metrics. | Reviewer arrangement, frozen empirical gates, independent target tests and clustered uncertainty. No checkpoint can be certified by changing a status field. |
-| Companion | Local-only historical and bounded-recovery preview with complete downloads. Recovery browsing separately retains 309 attempts, 299 responses, ten failures and source-bound alternate OCR; all 100 organization rows remain unresolved. | Audited classification/analysis exports, redistribution review and eventual report; no production integration is authorized. |
+| Companion | Local-only historical and bounded-recovery preview with complete downloads. The successor retains 488 capture records, 469 responses, 19 failures, seven OCR bodies and two DOCX main-document alternatives; all 100 organization rows remain unresolved. | Audited classification/analysis exports, redistribution review and eventual report; no production integration is authorized. |
 
 ## Embedded-document discovery and New Mexico recovery
 
@@ -57,8 +57,8 @@ the draft 2026 Core Values to the March 7, 2026 convention for a vote. That vote
 the past at this October 18, 2026 capture; pending-submission wording establishes neither
 the outcome nor non-adoption. Adoption/supersession and operative relationships remain
 unresolved. No topic labels, model weights, analytical admissions or cutoffs changed.
-These new packets are not yet incorporated into the existing 309-record recovery preview;
-its inventory and browser-verification counts remain unchanged. All `data/` evidence stays
+These packets were not incorporated into the original 309-record recovery preview;
+the expanded successor below now includes them without changing that original. All `data/` evidence stays
 local and Git-ignored; a code/documentation push does not back it up.
 
 ## Singular-resolution discovery and bounded follow-up
@@ -217,6 +217,46 @@ These Git-ignored evidence packets remain local-only and separate from inventory
 canonical labels, analytical inputs, historical attribution, cutoff or publication files
 changed; all eleven analytical questions remain unsupported. Focused discovery/collection
 checks are not a new full scientific/reproducibility audit.
+
+## Expanded recovery explorer and exact native-field preservation
+
+The new immutable `data/processed/recovery-source-inventory-v4/` combines the preserved
+309-record baseline with eight explicit capture packets. It retains **488 capture records,
+469 responses, 19 failures and 460 distinct response-body hashes across 55 organizations**.
+All 100 organization rows remain present; the other 45 have no retained response in this
+selected union, not an evidenced absence of party policy. This is still not all campaign
+evidence. Seven distinct bodies have OCR alternatives and two have DOCX main-document
+text, separately typed and never counted as new source captures.
+
+The shared validator checks every successor raw body, byte count, native/alternative text
+hash, source binding, type/method compatibility, organization count and non-admission flag.
+The producer refuses existing outputs. Exact comparison against all 309 baseline records
+also preserves empty failed-native strings versus nulls: the initial inventory v3 is
+superseded because it normalized that distinction. Its packet and browser snapshot remain
+unchanged, not silently repaired. Version v4 adds a producer invariant and regression cases
+covering both representations. Original bodies, standard text and four explicit inherited
+legacy-NaN normalizations remain unchanged.
+
+The current local build is `data/preview-recovery-v3/`. Chromium compared all 100 exported
+partitions, all nine distinct alternative extractions and all 19 failures; both complete
+gzip downloads reproduce the frozen 488-record recovery stream and 2,091-record archive
+byte-for-byte. Additional checks cover legacy OCR compatibility, literal markup in native,
+OCR and DOCX text, pagination, stale-response errors, keyboard access, no-JavaScript
+downloads and 390-pixel layout. The focused connected suite now passes 229 cases.
+
+The missing canonical capability JSON/CSV reports were regenerated without inferring any
+analytical results: all eleven questions remain unsupported, uncertified and cutoff-null.
+A fresh full reproducibility run still fails **35 of 316 checks**, principally missing
+canonical analytical artifacts plus an OCR executable absent from the default PATH.
+The isolated OCR runtime and its declared/actual version mismatch remain separate evidence,
+not a claim that the default runtime check passed. Neither source recovery nor interface
+verification certifies classifier accuracy, operative coverage or comparative findings.
+
+| Local artifact | SHA-256 |
+|---|---|
+| Inventory v4 manifest | `1c9d777f00997b10c7612be51f7f7cd3e9e2b799df5f0d99afa4205f6958a3f9` |
+| Browser-check v4 manifest | `7ff02e3d0b9d063641fc9c1fafd07f4b207039ec7e464d40a29ca9774a6bf39b` |
+| Full audit after recovery v4 | `d0bcce4809505d4878ec0359d3d633599c1060429df420155ba9679a3fe20007` |
 
 ## Remaining capability claims repaired
 
@@ -673,7 +713,7 @@ under `data/models/modernbert-cap-target-rejection-pilot-v1/`. Key SHA-256 bindi
 
 These generated files persist locally but are ignored by Git; the pushed audit records
 their outcome and hashes, not a remote backup of the model or datasets. The scientific
-artifact gate remains red: the last recorded full run failed 37 of 315 checks. Neither a
+artifact gate remains red: that checkpoint's full run failed 37 of 315 checks. Neither a
 successful training command nor passing structural tests closes that gate.
 
 ### Full-abstract development diagnostic: limited gains, substantial abstention

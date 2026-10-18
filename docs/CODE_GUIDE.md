@@ -23,6 +23,7 @@ repository audit fails when a Python file is added without an entry here.
 | `src/state_politics/platforms/discover.py` | Discovers candidate URLs from Wayback CDX and live homepages; recognizes singular/plural resolutions, labelled opaque PDFs, embedded PDFs and linked/embedded Drive files with parent hashes/tag evidence. Existing deep mode also finds weak institutional-document indexes. Preserves case-sensitive Drive IDs/raw bytes, excludes fragment-only navigation, prefers named-document years over upload-directory hints, and checkpoints organization/retry results. References and year hints do not establish adoption. |
 | `src/state_politics/platforms/collect.py` | Preserves link-label evidence during rescoring, retains successful raw candidate/alternate bodies, extracts HTML/PDF text, rejects false positives, confirms state attribution, deduplicates documents, and exports source-hashed gap evidence without promoting proposals to adopted text. |
 | `src/state_politics/platforms/official_documents.py` | Deterministically rebuilds the NY-D Issuu page-image archive and LA-R scanned Wix PDFs with fixed source IDs, source hashes, OCR configuration, and Tesseract version. |
+| `src/state_politics/platforms/recovery.py` | Reconciles bounded recovery inventories, preserves baseline capture identities/failures and typed OCR/DOCX alternatives, verifies manifests/text/source bindings and raw successor bodies, and refuses scientific admission or packet overwrite. |
 
 ## Bill collection
 
@@ -74,6 +75,7 @@ repository audit fails when a Python file is added without an entry here.
 |---|---|
 | `scripts/sample_gold_planks.py` | Thin CLI wrapper around `analysis.gold_sample`; writes a seeded unlabeled template and never overwrites the fixed gold snapshot. |
 | `scripts/build_site.py` | Builds an explicitly unpublished static evidence preview from saved coverage/source files; reconciles source counts and exports complete historical text without running models or collectors. |
+| `scripts/build_recovery_inventory.py` | Freezes an immutable local successor from an existing recovery inventory, explicit additional capture packets and source-bound OCR/DOCX derivatives; never crawls, trains or certifies adopted policy. |
 | `scripts/audit_reproducibility.py` | Validates manual-input hashes, sources, seeds, producers, OCR rows, artifact relationships, state coverage, formulas, and public documentation. |
 | `scripts/report_figures.py` | Recomputes and prints every canonical number quoted in public documentation/figures. |
 | `scripts/plot_platform_coverage.py` | Plots historical corpus recency by state and party. |

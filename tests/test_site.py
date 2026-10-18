@@ -12,6 +12,7 @@ import yaml
 
 from state_politics.analysis.coverage import build_source_ledger
 from state_politics.analysis.coverage import main as coverage_main
+from state_politics.platforms.recovery import build_inventory
 from state_politics.provenance import sha256_file
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -77,7 +78,7 @@ def test_source_ledger_does_not_call_a_failed_search_platform_absence():
         build_source_ledger(organizations[:-1], [])
 
 
-def recovery_fixture(tmp_path, separator="\u2028"):
+def recovery_fixture(tmp_path, separator="\u2028", *, failed_text=None):
     organizations = yaml.safe_load((ROOT / "conf/party_registry.yml").read_text())[
         "organizations"
     ]
@@ -89,11 +90,12 @@ def recovery_fixture(tmp_path, separator="\u2028"):
     packet = tmp_path / "recovery"
     packet.mkdir()
     text = f"Complete recovered text{separator}<script>literal source evidence</script>"
+    (packet / "source.bin").write_text(text)
     digest = hashlib.sha256(text.encode()).hexdigest()
     ocr_text = f"Complete alternate OCR{separator}uncertified transcription"
     retained = {
         "capture_id": "packet:0", "state": "TX", "party": "D",
-        "url": "https://example.org/platform", "stored_path": "raw/source.bin",
+        "url": "https://example.org/platform", "stored_path": str(packet / "source.bin"),
         "source_sha256": digest, "text_sha256": digest, "extracted_text": text,
         "retrieval_status": "response_retained",
         "extraction_method": "captured_response_standard_extraction",
@@ -109,7 +111,7 @@ def recovery_fixture(tmp_path, separator="\u2028"):
         retained,
         {**retained, "capture_id": "packet:1", "url": "https://example.org/duplicate"},
         {**retained, "capture_id": "packet:2", "url": "https://example.org/failed",
-         "stored_path": None, "source_sha256": None, "extracted_text": None,
+         "stored_path": None, "source_sha256": None, "extracted_text": failed_text,
          "text_sha256": hashlib.sha256(b"").hexdigest(), "alternate_ocr": None,
          "retrieval_status": "retrieval_failed"},
     ]
@@ -219,3 +221,189 @@ def test_preview_rejects_recovery_manifest_paths_outside_packet(tmp_path):
     with pytest.raises(ValueError, match="escapes its packet"):
         build_preview(coverage, history, tmp_path / "preview",
                       recovery_path=packet / "inventory.json")
+
+
+def write_source_packet(packet, rows, filename):
+    packet.mkdir(exist_ok=True)
+    (packet / filename).write_text("".join(
+        json.dumps(row, ensure_ascii=False, allow_nan=False) + "\n" for row in rows
+    ))
+    (packet / "manifest.json").write_text(json.dumps({"files": {
+        filename: sha256_file(packet / filename),
+    }}))
+
+
+def successor_fixture(tmp_path, separator="\u2028", *, failed_text=None):
+    coverage, history, baseline, original = recovery_fixture(
+        tmp_path, separator, failed_text=failed_text
+    )
+    source_packet = tmp_path / "additional"
+    source_packet.mkdir()
+    body = source_packet / "source.docx"
+    body.write_bytes(b"Retained DOCX bytes for source-binding fixture")
+    source = {
+        "capture_id": "additional:0", "state": "TX", "party": "D",
+        "url": "https://example.org/template.docx", "ok": True,
+        "stored_path": str(body), "content_sha256": sha256_file(body),
+        "content_bytes": body.stat().st_size, "extracted_text": "",
+        "text_sha256": hashlib.sha256(b"").hexdigest(),
+        "operative_platform_status": "unresolved",
+        "training_admission": False, "analytical_admission": False,
+    }
+    write_source_packet(source_packet, [source], "captures.jsonl")
+    text = f"DOCX paragraphs{separator}<script>literal template, not executed</script>"
+    alternate = {
+        "capture_id": source["capture_id"], "state": "TX", "party": "D",
+        "source_sha256": source["content_sha256"],
+        "extraction_method": "stdlib_zipfile_elementtree_word_document_xml_paragraphs",
+        "extracted_text": text, "text_sha256": hashlib.sha256(text.encode()).hexdigest(),
+        "training_admission": False, "analytical_admission": False,
+    }
+    derivative = tmp_path / "docx-alternative"
+    write_source_packet(derivative, [alternate], "extractions.jsonl")
+    return coverage, history, baseline, original, source_packet, derivative, source, alternate
+
+
+@pytest.mark.parametrize("separator", ["\u2028", "\u2029", "\u0085"])
+@pytest.mark.parametrize("failed_text", [None, ""])
+def test_successor_preserves_sources_failures_and_typed_derivatives(
+    tmp_path, separator, failed_text,
+):
+    coverage, history, baseline, original, sources, derivative, source, alt = successor_fixture(
+        tmp_path, separator, failed_text=failed_text
+    )
+    old_bytes = {name: (baseline / name).read_bytes() for name in (
+        "inventory.json", "manifest.json", "captures.jsonl", "organizations.csv",
+    )}
+    packet = tmp_path / "successor"
+    result = build_inventory(
+        baseline / "inventory.json", [sources / "captures.jsonl"],
+        [("docx_main_document", derivative / "extractions.jsonl")], packet,
+    )
+    assert result["n_selected_capture_attempts"] == 4
+    assert result["n_retained_response_captures"] == 3
+    assert result["n_failed_retrieval_attempts"] == 1
+    assert result["n_distinct_response_body_hashes"] == 2
+    assert result["n_distinct_bodies_with_alternate_ocr"] == 1
+    assert result["n_distinct_bodies_with_docx_main_document"] == 1
+    assert result["analysis_cutoff"] is None
+    assert len(result["rows"]) == 100
+    out = tmp_path / "preview"
+    build_preview(coverage, history, out, recovery_path=packet / "inventory.json")
+    captures = json.loads((out / "evidence/recovery-TX-D.json").read_text())
+    assert len(captures) == 4
+    for row, prior in zip(captures[:3], original, strict=True):
+        for key, value in prior.items():
+            if key != "alternate_ocr":
+                assert row[key] == value
+    assert captures[0]["alternate_extractions"][0]["kind"] == "ocr"
+    assert captures[-1]["extracted_text"] == ""
+    assert captures[-1]["alternate_extractions"][0]["kind"] == "docx_main_document"
+    assert captures[-1]["alternate_extractions"][0]["extracted_text"] == alt["extracted_text"]
+    assert captures[-1]["input_disposition"] == source
+    with gzip.open(out / "downloads/recovery_captures.jsonl.gz", "rb") as handle:
+        assert handle.read() == (packet / "captures.jsonl").read_bytes()
+    assert all((baseline / name).read_bytes() == value for name, value in old_bytes.items())
+    with pytest.raises(FileExistsError, match="refusing to overwrite"):
+        build_inventory(baseline / "inventory.json", [], [], packet)
+
+
+@pytest.mark.parametrize("defect,match", [
+    ("source_body", "body hash"),
+    ("source_bytes", "byte count"),
+    ("source_cutoff", "analytical cutoff"),
+    ("parent", "matching source capture"),
+    ("binding", "source binding"),
+    ("text", "source/text hash"),
+    ("admission", "analytical admission"),
+    ("unknown_kind", "unknown recovery alternate"),
+    ("kind_mismatch", "kind/method mismatch"),
+    ("duplicate_input", "duplicate recovery capture"),
+])
+def test_successor_rejects_bad_source_or_alternate_before_writing(tmp_path, defect, match):
+    _, _, baseline, _, sources, derivative, source, alt = successor_fixture(tmp_path)
+    kind = "docx_main_document"
+    paths = [sources / "captures.jsonl"]
+    if defect == "source_body":
+        Path(source["stored_path"]).write_bytes(b"Changed raw source")
+        source["content_bytes"] = Path(source["stored_path"]).stat().st_size
+    elif defect == "source_bytes":
+        source["content_bytes"] += 1
+    elif defect == "source_cutoff":
+        source["analysis_cutoff"] = "2026-10-18"
+    elif defect == "parent":
+        alt["capture_id"] = "missing:0"
+    elif defect == "binding":
+        alt["source_sha256"] = "b" * 64
+    elif defect == "text":
+        alt["extracted_text"] += " changed"
+    elif defect == "admission":
+        alt["analytical_admission"] = True
+    elif defect == "unknown_kind":
+        kind = "topic_predictions"
+    elif defect == "kind_mismatch":
+        kind = "ocr"
+    elif defect == "duplicate_input":
+        paths *= 2
+    write_source_packet(sources, [source], "captures.jsonl")
+    write_source_packet(derivative, [alt], "extractions.jsonl")
+    out = tmp_path / "successor"
+    with pytest.raises(ValueError, match=match):
+        build_inventory(
+            baseline / "inventory.json", paths,
+            [(kind, derivative / "extractions.jsonl")], out,
+        )
+    assert not out.exists()
+
+
+@pytest.mark.parametrize("defect,match", [
+    ("body", "body hash"),
+    ("bytes", "byte count"),
+    ("alternate_kind", "unknown recovery alternate"),
+    ("alternate_method", "kind/method mismatch"),
+    ("alternate_binding", "source/text hash"),
+    ("alternate_text", "source/text hash"),
+    ("alternate_admission", "analytical admission"),
+    ("alternate_identity", "duplicate recovery alternate"),
+    ("alternate_on_failure", "source/text hash"),
+    ("cutoff", "analytical cutoff"),
+])
+def test_preview_revalidates_typed_inventory_before_output(tmp_path, defect, match):
+    coverage, history, baseline, _, sources, derivative, _, _ = successor_fixture(tmp_path)
+    packet = tmp_path / "successor"
+    build_inventory(
+        baseline / "inventory.json", [sources / "captures.jsonl"],
+        [("docx_main_document", derivative / "extractions.jsonl")], packet,
+    )
+    with (packet / "captures.jsonl").open() as handle:
+        captures = [json.loads(line) for line in handle]
+    row = captures[-1]
+    alt = row["alternate_extractions"][0]
+    if defect == "body":
+        Path(row["stored_path"]).write_bytes(b"Changed raw source")
+    elif defect == "bytes":
+        row["source_bytes"] += 1
+    elif defect == "alternate_kind":
+        alt["kind"] = "topic_predictions"
+    elif defect == "alternate_method":
+        alt["kind"] = "ocr"
+    elif defect == "alternate_binding":
+        alt["source_sha256"] = "b" * 64
+    elif defect == "alternate_text":
+        alt["extracted_text"] += " changed"
+    elif defect == "alternate_admission":
+        alt["training_admission"] = True
+    elif defect == "alternate_identity":
+        row["alternate_extractions"].append(alt)
+    elif defect == "alternate_on_failure":
+        captures[2]["alternate_extractions"] = [alt]
+    elif defect == "cutoff":
+        row["analysis_cutoff"] = "2026-10-18"
+    (packet / "captures.jsonl").write_text("".join(
+        json.dumps(row, ensure_ascii=False) + "\n" for row in captures
+    ))
+    refresh_recovery_manifest(packet)
+    out = tmp_path / "preview"
+    with pytest.raises(ValueError, match=match):
+        build_preview(coverage, history, out, recovery_path=packet / "inventory.json")
+    assert not out.exists()

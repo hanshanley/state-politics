@@ -4,123 +4,18 @@
 from __future__ import annotations
 
 import argparse
-import csv
 import gzip
-import hashlib
 import html
 import json
 import shutil
 from collections import defaultdict
 from pathlib import Path
-from urllib.parse import urlsplit
 
 from state_politics.bills.openstates_dump import STATE_CODES
+from state_politics.platforms.recovery import load_recovery
 from state_politics.provenance import sha256_file
 
 ROOT = Path(__file__).resolve().parents[1]
-
-
-def load_recovery(path: Path, expected: set) -> tuple[dict, list]:
-    def reject_constant(value):
-        raise ValueError(f"nonstandard recovery JSON constant: {value}")
-
-    def load(file):
-        return json.loads(file.read_text(), parse_constant=reject_constant)
-
-    root = path.parent.resolve()
-    manifest = load(root / "manifest.json")
-    required = {"inventory.json", "captures.jsonl", "organizations.csv"}
-    if path.name != "inventory.json" or not required.issubset(manifest["files"]):
-        raise ValueError("incomplete recovery inventory manifest")
-    for name, digest in manifest["files"].items():
-        source = (root / name).resolve()
-        if not source.is_relative_to(root):
-            raise ValueError("recovery manifest path escapes its packet")
-        if sha256_file(source) != digest:
-            raise ValueError(f"recovery manifest hash mismatch: {name}")
-    inventory = load(path)
-    if inventory.get("schema") != "bounded_recovery_inventory_v1":
-        raise ValueError("incompatible bounded recovery inventory")
-    captures = [
-        json.loads(line, parse_constant=reject_constant)
-        for line in (root / "captures.jsonl").read_text().split("\n") if line.strip()
-    ]
-    if len({row["capture_id"] for row in captures}) != len(captures):
-        raise ValueError("duplicate recovery capture identity")
-    groups = defaultdict(list)
-    bodies = defaultdict(list)
-    for row in captures:
-        key = row["state"], row["party"]
-        if key not in expected:
-            raise ValueError(f"unexpected recovery organization: {key}")
-        url = urlsplit(row["url"])
-        if url.scheme not in {"http", "https"} or not url.netloc:
-            raise ValueError("recovery source URL must be HTTP(S)")
-        if (row["operative_platform_status"] != "unresolved"
-                or row["training_admission"] or row["analytical_admission"]):
-            raise ValueError("recovery captures cannot imply analytical admission")
-        groups[key].append(row)
-        if row["retrieval_status"] == "response_retained":
-            text = row["extracted_text"]
-            if not row["stored_path"] or not row["source_sha256"]:
-                raise ValueError("retained recovery response lacks body identity")
-            if not isinstance(text, str) or hashlib.sha256(text.encode()).hexdigest() != row[
-                "text_sha256"
-            ]:
-                raise ValueError("recovery text hash mismatch")
-            bodies[row["source_sha256"]].append(row)
-        elif row["retrieval_status"] == "retrieval_failed":
-            if row["stored_path"] or row["source_sha256"] or row["extracted_text"]:
-                raise ValueError("failed recovery cannot contain a retained response")
-        else:
-            raise ValueError("unknown recovery retrieval status")
-        ocr = row["alternate_ocr"]
-        if ocr is not None and (
-            row["retrieval_status"] != "response_retained"
-            or (ocr["state"], ocr["party"]) != key
-            or ocr["source_sha256"] != row["source_sha256"]
-            or not isinstance(ocr["extracted_text"], str)
-            or hashlib.sha256(ocr["extracted_text"].encode()).hexdigest() != ocr["text_sha256"]
-        ):
-            raise ValueError("recovery OCR source/text hash mismatch")
-    rows = inventory["rows"]
-    if len(rows) != 100 or {(r["state"], r["party"]) for r in rows} != expected:
-        raise ValueError("recovery requires all 100 expected organizations")
-    with (root / "organizations.csv").open(newline="") as handle:
-        csv_rows = list(csv.DictReader(handle))
-    if csv_rows != [{k: str(v) for k, v in row.items()} for row in rows]:
-        raise ValueError("recovery CSV does not reconcile with inventory")
-    for row in rows:
-        org = groups[row["state"], row["party"]]
-        retained = [r for r in org if r["retrieval_status"] == "response_retained"]
-        counts = {
-            "n_selected_capture_attempts": len(org),
-            "n_retained_response_captures": len(retained),
-            "n_failed_retrieval_attempts": len(org) - len(retained),
-            "n_distinct_response_body_hashes": len({r["source_sha256"] for r in retained}),
-        }
-        if any(row[key] != value for key, value in counts.items()):
-            raise ValueError("recovery organization counts do not reconcile")
-        if (row["operative_platform_status"] != "unresolved"
-                or row["training_admission"] or row["analytical_admission"]):
-            raise ValueError("recovery organization operative status must remain unresolved")
-    totals = {
-        "expected_organizations": 100, "n_selected_capture_attempts": len(captures),
-        "n_retained_response_captures": sum(map(len, bodies.values())),
-        "n_failed_retrieval_attempts": sum(
-            row["retrieval_status"] == "retrieval_failed" for row in captures
-        ),
-        "n_distinct_response_body_hashes": len(bodies),
-        "n_repeated_body_hash_groups": sum(len(group) > 1 for group in bodies.values()),
-        "n_organizations_with_retained_responses": len({
-            (row["state"], row["party"]) for group in bodies.values() for row in group
-        }),
-    }
-    if any(inventory[key] != value for key, value in totals.items()):
-        raise ValueError("recovery inventory totals do not reconcile")
-    if inventory["analysis_cutoff"] is not None:
-        raise ValueError("bounded recovery does not establish an analytical cutoff")
-    return inventory, captures
 
 
 def build_preview(
@@ -192,7 +87,8 @@ def build_preview(
         ),
         "@@RECOVERY_DOWNLOADS@@": (
             '<p><a href="downloads/recovery_captures.jsonl.gz" download>'
-            'Complete selected recovery captures (JSONL, gzip; full text and alternate OCR)</a>'
+            'Complete selected recovery captures '
+            '(JSONL, gzip; full text and alternate extractions)</a>'
             ' · <a href="downloads/recovery_inventory.json" download>'
             'Recovery inventory and all 100 organization rows</a>'
             ' · <a href="downloads/recovery_inventory_manifest.json" download>'

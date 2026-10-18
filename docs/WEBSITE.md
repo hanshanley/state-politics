@@ -14,7 +14,7 @@ The initial implementation leads with source coverage, not an unvalidated partis
 2. All 100 state-party rows, with historical document counts, last archive year and unresolved
    operative-platform status. Nebraska's D/R bill comparison is not applicable.
 3. State/party-filtered historical and optional bounded-recovery browsing, with original
-   text, source attribution, explicit retrieval failures and separately labelled alternate OCR.
+   text, source attribution, explicit retrieval failures and separately typed OCR/DOCX alternatives.
 4. Complete source/evidence downloads, input hashes and methodology caveats.
 
 Warm paper (`#f2efe7`), ink (`#171713`), restrained red, serif headings and thin rules follow
@@ -41,13 +41,15 @@ To include an already frozen, reconciled recovery inventory:
 ```bash
 uv run python scripts/build_site.py \
   --coverage data/processed/source_coverage.json \
-  --recovery data/processed/recovery-source-inventory-v2/inventory.json \
-  --out data/preview-recovery-v1
+  --recovery data/processed/recovery-source-inventory-v4/inventory.json \
+  --out data/preview-recovery-v3
 ```
 
-The builder verifies the packet manifest, complete text/OCR hashes, source bindings, all
-100 organization rows and aggregate counts before producing output. It does not re-fetch
-sources, reverify every original raw body or resolve platform adoption. Failed requests and
+The builder verifies the packet manifest, complete native/alternative text hashes, source
+bindings, all 100 organization rows and aggregate counts before producing output. Schema v2
+also verifies every retained raw body and byte count; older schema-v1 inventories remain
+readable with their original manifest/text validation. It does not re-fetch sources or
+resolve platform adoption. Failed requests and
 byte-identical responses remain separate captures. Building again without `--recovery`
 removes the known recovery partitions and downloads so stale evidence is not left exposed.
 
@@ -58,7 +60,7 @@ removes the known recovery partitions and downloads so stale evidence is not lef
 | `downloads/historical_documents.jsonl.gz` | Complete recovered archive, including original text and historical national/non-major-party records excluded from the state-major-party table. |
 | `downloads/source_coverage.json` | All 100 source-ledger rows; unknown current coverage remains unresolved. |
 | `downloads/build_manifest.json` | Schema version, unpublished/uncertified status, source and template hashes, record counts and uncertified analytical cutoff. |
-| `evidence/recovery-{STATE}-{PARTY}.json` | Optional complete capture records, including unsuccessful requests and separately source-bound alternate OCR; all 100 partitions exist when enabled. |
+| `evidence/recovery-{STATE}-{PARTY}.json` | Optional complete capture records, including unsuccessful requests and separately source-bound OCR/DOCX alternatives; all 100 partitions exist when enabled. |
 | `downloads/recovery_captures.jsonl.gz` | Optional byte-preserving complete frozen capture stream, not deduplicated or reduced to accepted extractions. |
 | `downloads/recovery_inventory.json` | Original bounded inventory, all 100 organization rows and its unresolved version/admission statuses. |
 | `downloads/recovery_inventory_manifest.json` | Original packet manifest. Its paths and file hashes describe the research packet, not renamed/compressed website outputs; compare decompressed capture bytes and the original inventory bytes. |
@@ -74,14 +76,38 @@ The downloaded gzip was decompressed and matched byte-for-byte to the complete r
 JSONL. `data/processed/preview_browser_validation.json` identifies the tested build hash.
 This validates interface behavior, not classifications, scientific findings or publication.
 
-The recovery build separately exposes 309 attempts, 299 retained responses and 296 distinct
-body hashes. Its packet is a selected union, not the full recovery campaign or 299 verified
-platforms. Chromium checks additionally exercise recovery pagination, null-text failures,
-complete alternate OCR, 390px overflow, zero-capture disclosures, collection-switch races
-and literal rendering of synthetic script/image markup. The corresponding local check
-packet is `data/processed/recovery-preview-browser-check-v2/`; its manifest freezes the
-checker, screenshots and result bound to the exact build/capture-stream hashes. This does
-not replace the historical-only validation packet.
+The current recovery build exposes 488 capture records, 469 retained responses, 19 failures
+and 460 distinct body hashes across 55 organizations. The other 45 organization rows are
+not evidenced policy absences. This remains a selected union, not the full recovery campaign
+or 469 verified platforms. Seven bodies have OCR alternatives and two have DOCX
+main-document text; DOCX alternatives exclude layout, images and other XML parts and must
+not be labelled OCR. Native extraction remains separate, including empty/null failures.
+Chromium checked every partition, all nine alternative bodies, all 19 failures, pagination,
+390px overflow, zero-capture disclosures, collection-switch races, legacy OCR compatibility
+and literal script/image markup in all three text surfaces. The corresponding local packet
+is `data/processed/recovery-preview-browser-check-v4/`; its manifest freezes the checker,
+screenshots and results bound to the exact build/capture-stream hashes. Earlier preview
+and verification packets remain unchanged. Inventory v3 is superseded because it normalized
+empty failed-native strings to null; v4 preserves every baseline native field exactly.
+
+The successor was produced with the command below. Completed inventory directories refuse
+overwrite; use a fresh version path for another run rather than modifying an old packet.
+
+```bash
+uv run python scripts/build_recovery_inventory.py \
+  --baseline data/processed/recovery-source-inventory-v2/inventory.json \
+  --captures data/processed/nm-embedded-core-values-recovery-v1/captures.jsonl \
+  --captures data/processed/nm-platform-version-followup-v1/captures.jsonl \
+  --captures data/processed/nm-linked-policy-recovery-v1/captures.jsonl \
+  --captures data/processed/fl-embedded-resolution-recovery-v1/captures.jsonl \
+  --captures data/processed/discovery-reference-followup-v1/captures.jsonl \
+  --captures data/processed/four-state-primary-source-followup-v1/captures.jsonl \
+  --captures data/processed/four-state-public-download-followup-v1/captures.jsonl \
+  --captures data/processed/institutional-index-followup-v1/captures.jsonl \
+  --ocr data/processed/four-state-scan-ocr-v1/extractions.jsonl \
+  --docx data/processed/recovered-docx-alternate-extraction-v1/extractions.jsonl \
+  --out data/processed/recovery-source-inventory-v4
+```
 
 ## Future analytical contract
 

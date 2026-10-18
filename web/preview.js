@@ -48,16 +48,20 @@ function render() {
       identity.className = "note";
       identity.textContent = `${row.extraction_method} · Body SHA-256: ${row.source_sha256 || "none retained"}`;
       article.append(identity);
-      if (row.alternate_ocr) {
-        const ocr = document.createElement("details");
+      const alternatives = row.alternate_extractions
+        || (row.alternate_ocr ? [{ ...row.alternate_ocr, kind: "ocr" }] : []);
+      for (const alternate of alternatives) {
+        const detail = document.createElement("details");
         const label = document.createElement("summary");
-        label.textContent = "Read alternate OCR (uncertified transcription; original extraction preserved above)";
+        label.textContent = alternate.kind === "docx_main_document"
+          ? "Read alternate DOCX main-document text (no layout, images or other XML parts; original extraction preserved above)"
+          : "Read alternate OCR (uncertified transcription; original extraction preserved above)";
         const transcription = document.createElement("div");
         transcription.className = "source-text";
         transcription.tabIndex = 0;
-        transcription.textContent = row.alternate_ocr.extracted_text;
-        ocr.append(label, transcription);
-        article.append(ocr);
+        transcription.textContent = alternate.extracted_text;
+        detail.append(label, transcription);
+        article.append(detail);
       }
     }
     evidence.append(article);
