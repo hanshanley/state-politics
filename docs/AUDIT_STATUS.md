@@ -15,6 +15,52 @@ replacement classifier or establish complete contemporary coverage.
 | Evaluation | Development-only temperature/threshold selection, exact evidence joins, abstention accounting, per-topic and subgroup metrics. | Reviewer arrangement, frozen empirical gates, independent target tests and clustered uncertainty. No checkpoint can be certified by changing a status field. |
 | Companion | Local-only historical and bounded-recovery preview with complete downloads. Recovery browsing separately retains 309 attempts, 299 responses, ten failures and source-bound alternate OCR; all 100 organization rows remain unresolved. | Audited classification/analysis exports, redistribution review and eventual report; no production integration is authorized. |
 
+## Embedded-document discovery and New Mexico recovery
+
+An anchor-only scan missed the Core Values PDF embedded directly in New Mexico Democrats'
+official platform page. Discovery now retains `iframe`/`embed`/`object` references to PDFs
+and recognized Google Drive file viewers, including external hosting, with the original
+parent response hash and element tag. Ordinary external anchors remain excluded.
+Case-sensitive Drive document IDs remain distinct. Candidate rescoring preserves the
+embedded-reference evidence; an opaque viewer remains below the automatic collection
+threshold, not a verified PDF or adopted platform. Discovery still makes only one request
+per scanned page and does not automatically follow or rewrite embedded URLs.
+
+Three new local recovery packets retain **27 retrieval records**, all successful responses:
+two official indexes, 21 linked issue pages, two SPARC-linked PDFs, the embedded viewer
+response and its ordinary public download. These are selected-source recovery records,
+not 27 distinct platforms or a complete New Mexico/campaign source universe. Relative to
+inventory v2, they contain 24 previously unretained body hashes; all 21 issue-page URLs
+and the embedded PDF are new to that inventory. Complete response bytes, extracted texts,
+parent links, fetch provenance, failed-request counters and producer snapshots are retained.
+The two SPARC PDFs match the previously retained originals byte-for-byte.
+
+| Local packet | Manifest SHA-256 |
+|---|---|
+| `data/processed/nm-platform-version-followup-v1/` | `e778c0753e0fd98bc1cd064c100076bd4319a4bfe3587870a1cf0c7f4dd6c1d3` |
+| `data/processed/nm-linked-policy-recovery-v1/` | `351d0e1ab4a329d6589ead40b263109760252c55a19b7bced839a57743569d41` |
+| `data/processed/nm-embedded-core-values-recovery-v1/` | `17a8eb6b2dda89e34d97a651e1a18673ca3b9833f3d34c28bf4cfd17f5ab2c5f` |
+| `data/processed/nm-platform-version-review-v1/` | `fdf8c998b31df90f498601e19049d23b8b1c9680e6416b063f8b8c3ae541acb3` |
+
+The fourth packet freezes five limited assistant version reviews, seven nonexhaustive
+comparison cases, complete reviewed texts, exact evidence spans and two directly inspected
+physical-page renders. The newly found two-page Core Values PDF is substantively different
+from the SPARC-linked 2026 draft, not merely another rendering: health-care wording differs,
+and the displayed version adds a dedicated disability-rights section, among other changes.
+The documents must not be collapsed into one text or treated as interchangeable labels.
+The PDF metadata title contains `2026-04-13`; its creation metadata reports August 4, 2026.
+Neither is an adoption date. The official party page displays this document while separately
+linking the 2024 full platform.
+
+The SPARC index reports March 2024 approval by 95.23% of delegates and describes sending
+the draft 2026 Core Values to the March 7, 2026 convention for a vote. That vote date is in
+the past at this October 18, 2026 capture; pending-submission wording establishes neither
+the outcome nor non-adoption. Adoption/supersession and operative relationships remain
+unresolved. No topic labels, model weights, analytical admissions or cutoffs changed.
+These new packets are not yet incorporated into the existing 309-record recovery preview;
+its inventory and browser-verification counts remain unchanged. All `data/` evidence stays
+local and Git-ignored; a code/documentation push does not back it up.
+
 ## Remaining capability claims repaired
 
 All eleven capability-report questions now remain **unsupported**; an explicit

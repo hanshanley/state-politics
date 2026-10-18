@@ -84,6 +84,65 @@ def test_homepage_retains_distinct_replayable_bodies(tmp_path):
         assert record.content_sha256 == sha256(body).hexdigest()
 
 
+def test_homepage_retains_opaque_embedded_drive_reference_without_certifying_it():
+    homepage = "https://example.org/platform"
+    viewer = "https://drive.google.com/file/d/CaseSensitive_FileID/preview"
+    body = f'''<h2>Our Core Values</h2><iframe src="{viewer}"></iframe>
+        <iframe src="https://video.example.org/platform"></iframe>
+        <iframe src="https://drive.google.com.evil.test/file/d/Fake/preview"></iframe>
+        <a href="https://elsewhere.org/platform.pdf">Party platform</a>'''.encode()
+    requests = []
+
+    def transport(url, **kwargs):
+        requests.append(url)
+        return StubResponse(200, body, homepage)
+
+    candidates, error = homepage_candidates(
+        homepage, state="NM", party="D", transport=transport,
+    )
+    assert error is None
+    assert requests == [homepage]
+    assert len(candidates) == 1
+    candidate = candidates[0]
+    assert candidate.url == viewer
+    assert candidate.link_tag == "iframe"
+    assert candidate.link_source_url == homepage
+    assert candidate.link_source_sha256 == sha256(body).hexdigest()
+    assert candidate.score < STRONG_SCORE
+    assert candidate.mimetype is None
+    assert "embedded document reference: iframe[src]" in candidate.reasons
+
+
+@pytest.mark.parametrize(
+    "markup,tag,mimetype",
+    [
+        ('<iframe src="/opaque.pdf" title="Party Platform"></iframe>', "iframe", None),
+        ('<embed src="https://cdn.example.net/opaque.pdf" title="Party Platform">',
+         "embed", None),
+        ('<object data="https://cdn.example.net/opaque" type="application/pdf" '
+         'aria-label="Party Platform"></object>', "object", "application/pdf"),
+    ],
+)
+def test_homepage_retains_labelled_embedded_pdfs(markup, tag, mimetype):
+    homepage = "https://example.org/"
+    candidates, error = homepage_candidates(
+        homepage, state="TX", party="D",
+        transport=lambda url, **kwargs: StubResponse(200, markup.encode(), homepage),
+    )
+    assert error is None
+    assert len(candidates) == 1
+    assert candidates[0].link_tag == tag
+    assert candidates[0].mimetype == mimetype
+    assert candidates[0].score >= STRONG_SCORE
+    assert candidates[0].link_text == "Party Platform"
+
+
+def test_drive_file_normalization_preserves_case_sensitive_document_identity():
+    assert normalize_url("https://drive.google.com/file/d/FileA/preview") != normalize_url(
+        "https://drive.google.com/file/d/Filea/preview"
+    )
+
+
 def test_cli_checkpoints_results_before_a_later_interruption(tmp_path, monkeypatch):
     from state_politics.platforms import discover
 

@@ -867,14 +867,35 @@ def test_candidate_scores_are_recomputed_when_loading(tmp_path):
     assert kept.score == 3
 
 
-def test_official_link_label_survives_candidate_rescoring(tmp_path):
+@pytest.mark.parametrize("link_tag", [None, "object"])
+def test_official_link_label_survives_candidate_rescoring(tmp_path, link_tag):
     path = tmp_path / "candidates.jsonl"
     candidate = Candidate(
         state="TX", party="D", url="https://example.org/_files/opaque.pdf",
         source="live", score=-5, link_text="PARTY PLATFORM",
         link_source_url="https://example.org/", link_source_sha256="a" * 64,
+        link_tag=link_tag,
     )
     path.write_text(json.dumps(candidate.to_dict()) + "\n")
     loaded = _load_candidates(path)[("TX", "D")][0]
     assert loaded.score >= STRONG_SCORE
     assert loaded.link_source_sha256 == candidate.link_source_sha256
+    assert loaded.link_tag == link_tag
+    if link_tag == "object":
+        assert "embedded document reference: object[data]" in loaded.reasons
+
+
+def test_embedded_viewer_rescoring_preserves_evidence_without_promoting_it(tmp_path):
+    path = tmp_path / "candidates.jsonl"
+    candidate = Candidate(
+        state="NM", party="D",
+        url="https://drive.google.com/file/d/CaseSensitive_FileID/preview",
+        source="live", score=99, link_tag="iframe",
+        link_source_url="https://example.org/", link_source_sha256="a" * 64,
+    )
+    path.write_text(json.dumps(candidate.to_dict()) + "\n")
+    loaded = _load_candidates(path)[("NM", "D")][0]
+    assert loaded.score < STRONG_SCORE
+    assert loaded.link_tag == "iframe"
+    assert loaded.link_source_sha256 == candidate.link_source_sha256
+    assert "embedded document reference: iframe[src]" in loaded.reasons

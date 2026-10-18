@@ -140,6 +140,7 @@ _STRONG_SEGMENT_RE = re.compile(
 _DOC_SUFFIX_RE = re.compile(rf"(?:^|[-_]){_DOC_WORD}$", re.I)
 _YEAR_IN_URL_RE = re.compile(r"(?:^|[^\d])(19[89]\d|20[0-4]\d)(?:[^\d]|$)")
 _PRIORITIES_RE = re.compile(r"legislative[-_ ]?priorities|policy[-_ ]?agenda", re.I)
+_DRIVE_FILE_RE = re.compile(r"/file/d/[A-Za-z0-9_-]+/(?:preview|view)/?$")
 
 
 def normalize_url(url: str) -> str:
@@ -151,6 +152,8 @@ def normalize_url(url: str) -> str:
     """
     parts = urllib.parse.urlsplit(url)
     host = re.sub(r"^(?:www\.|archive\.)", "", parts.netloc.lower())
+    if host == "drive.google.com" and _DRIVE_FILE_RE.fullmatch(parts.path):
+        return f"{host}{parts.path.rstrip('/')}"
     path = re.sub(r"/index\.html?$", "/", parts.path, flags=re.I).rstrip("/")
     return f"{host}{path.lower()}"
 
@@ -171,6 +174,7 @@ class Candidate:
     link_text: str | None = None
     link_source_url: str | None = None
     link_source_sha256: str | None = None
+    link_tag: str | None = None
 
     def to_dict(self) -> dict:
         return asdict(self)
@@ -239,6 +243,7 @@ def _path_segments(url: str) -> list[str]:
 
 def score_candidate(
     url: str, mimetype: str | None = None, *, link_text: str | None = None,
+    link_tag: str | None = None,
 ) -> tuple[int, list[str]]:
     """Score how likely ``url`` is to be an actual platform document.
 
@@ -319,6 +324,10 @@ def score_candidate(
     if is_downloadable and link_text and _TERMS_RE.search(link_text):
         score = max(score, STRONG_SCORE)
         reasons.append(f"official document link label: {link_text[:200]}")
+
+    if link_tag in {"iframe", "embed", "object"}:
+        attribute = "data" if link_tag == "object" else "src"
+        reasons.append(f"embedded document reference: {link_tag}[{attribute}]")
 
     return score, reasons
 
@@ -408,22 +417,28 @@ def wayback_candidates(
 class _HomepageLinks(HTMLParser):
     def __init__(self):
         super().__init__(convert_charrefs=True)
-        self.links: list[tuple[str, str]] = []
+        self.links: list[tuple[str, str, str, str | None]] = []
         self._href: str | None = None
         self._text: list[str] = []
 
     def _finish(self):
         if self._href is not None:
-            self.links.append((self._href, " ".join(" ".join(self._text).split())))
+            self.links.append((self._href, " ".join(" ".join(self._text).split()), "a", None))
         self._href = None
         self._text = []
 
     def handle_starttag(self, tag, attrs):
+        attributes = dict(attrs)
         if tag == "a":
             self._finish()
-            attributes = dict(attrs)
             self._href = attributes.get("href")
             self._text = [attributes.get("aria-label") or attributes.get("title") or ""]
+        elif tag in {"iframe", "embed", "object"}:
+            target = attributes.get("data" if tag == "object" else "src")
+            if target:
+                label = attributes.get("aria-label") or attributes.get("title") or ""
+                mimetype = (attributes.get("type") or "").lower().split(";")[0].strip()
+                self.links.append((target, " ".join(label.split()), tag, mimetype or None))
 
     def handle_data(self, data):
         if self._href is not None:
@@ -449,9 +464,10 @@ def homepage_candidates(
     secondary: bool = False,
     raw_dir: Path | str | None = None,
 ) -> tuple[list[Candidate], str | None]:
-    """Scan URL terms and labelled same-origin PDFs. Exactly one request.
+    """Scan same-origin links and embedded PDF/Drive references. Exactly one request.
 
     Returns ``(candidates, error)`` for the same reason as :func:`wayback_candidates`.
+    An embed establishes a reference, not authorship, adoption or a scoring shortcut.
     """
     body, record = fetch(
         homepage,
@@ -474,30 +490,42 @@ def homepage_candidates(
     base = record.final_url or homepage
     seen: set[str] = set()
     candidates = []
-    for href, label in parser.links:
+    for href, label, tag, mimetype in parser.links:
         absolute = urllib.parse.urljoin(base, href)
         if absolute in seen or is_excluded(absolute):
             continue
+        parts = urllib.parse.urlsplit(absolute)
+        embedded_document = (
+            tag != "a" and parts.scheme in {"http", "https"}
+            and (
+                parts.path.lower().endswith(".pdf") or mimetype == "application/pdf"
+                or (
+                    parts.netloc.lower() == "drive.google.com"
+                    and _DRIVE_FILE_RE.fullmatch(parts.path)
+                )
+            )
+        )
         labelled_pdf = (
-            urllib.parse.urlsplit(absolute).path.lower().endswith(".pdf")
+            parts.path.lower().endswith(".pdf")
             and _TERMS_RE.search(label)
         )
         matches = (
             _TERMS_RE.search(absolute) or (secondary and _SECONDARY_RE.search(absolute))
-            or labelled_pdf
+            or labelled_pdf or embedded_document
         )
         if not matches:
             continue
-        # Stay on the party's own site; an outbound link is somebody else's document.
-        if urllib.parse.urlsplit(absolute).netloc != urllib.parse.urlsplit(base).netloc:
+        if tag != "a" and not embedded_document:
+            continue
+        if parts.netloc != urllib.parse.urlsplit(base).netloc and not embedded_document:
             continue
         seen.add(absolute)
-        score, reasons = score_candidate(absolute, link_text=label)
+        score, reasons = score_candidate(absolute, mimetype, link_text=label, link_tag=tag)
         candidates.append(Candidate(
-            state=state, party=party, url=absolute, source="live",
+            state=state, party=party, url=absolute, source="live", mimetype=mimetype,
             score=score, reasons=reasons, year_hint=_year_hint(absolute, None),
             link_text=label, link_source_url=base,
-            link_source_sha256=record.content_sha256,
+            link_source_sha256=record.content_sha256, link_tag=tag,
         ))
     return candidates, None
 

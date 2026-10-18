@@ -740,6 +740,7 @@ def _load_candidates(path: Path, *, rescore: bool = True
             if rescore:
                 score, reasons = score_candidate(
                     candidate.url, candidate.mimetype, link_text=candidate.link_text,
+                    link_tag=candidate.link_tag,
                 )
                 candidate = replace(candidate, score=score, reasons=reasons)
             grouped.setdefault((candidate.state, candidate.party), []).append(candidate)
