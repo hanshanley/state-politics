@@ -10,7 +10,7 @@ replacement classifier or establish complete contemporary coverage.
 | Contemporary platforms | A 100-organization source ledger separates historical recovery, discovery and unresolved current evidence. Retrieval provenance is retained. | Finish discovery, collection/extraction, institutional/version review and dated gap dispositions. |
 | Sponsorship | Party attribution uses validated historical memberships and a first-action date proxy; unresolved primary sponsors block D/R assignment. | Rebuild source bills and quantify attribution changes; the proxy is not an exact filing/sponsorship date. |
 | Bills | October snapshot extracted: 1,090,369 source-context measures across all 50 states, 5,028,893 sponsorships, 9,002,451 actions and 873,980 vote events. All eleven tables have recorded hashes/counts. | Official-source reconciliation, historical affiliations and filing-time text review. Full extraction is not a certified source universe or analytical denominator. |
-| Classification | Official English ModernBERT-base encoder and head fine-tuned on 5,895 external-coded units; actual saved weights reloaded and evaluated with one primary topic or abstention. | First provisional pilot does not improve overall development decision accuracy over the historical baseline. Non-policy rejection, target-domain adaptation and independent certification remain unresolved. |
+| Classification | Two actual official English ModernBERT-base fine-tuning runs saved and reloaded: external-only policy training, then 6,001-unit joint target/rejection training with 21 policy outputs plus null. | Both candidates still make 27 correct decisions in the same 50 development records. Learned rejection reduces false acceptance but loses correct policy decisions; neither candidate is approved for production. |
 | Labels | External CAP files recovered; split/group/exact-text checks and explicit reviewed-label provenance are implemented. | Source permissions, adapted-topic compatibility, near-duplicate families and reviewed state-domain training/development/test labels. |
 | Evaluation | Development-only temperature/threshold selection, exact evidence joins, abstention accounting, per-topic and subgroup metrics. | Reviewer arrangement, frozen empirical gates, independent target tests and clustered uncertainty. No checkpoint can be certified by changing a status field. |
 | Companion | Local-only historical-evidence preview and full-text downloads. Chromium checks cover state/party filtering, pagination, keyboard controls, 375px mobile overflow, request failures/races, no-JavaScript fallback and all 2,091 downloaded texts. | Audited classification/analysis exports and eventual report; no production integration is authorized. |
@@ -43,6 +43,10 @@ Generated research files remain ignored under `data/`:
   training manifest; provisional, not approved for production.
 - `processed/topic-pilot-v1/`: evidence-bound development predictions, unchanged research
   decision policy, evaluation report and source-hashed post-hoc error/enrichment inspection.
+- `models/modernbert-cap-target-rejection-pilot-v1/`: actual three-epoch joint
+  target/rejection checkpoint, with encoder-update proof and hash-bound training manifest.
+- `processed/topic-rejection-pilot-v1/`: pre-inference frozen policy/plan, checkpoint
+  verification, full predictions, matched 50-record comparison and exact evaluation code.
 - `models/minilm-pilot-historical-baseline-v1/`: frozen historical baseline and matched
   development diagnostics, never a fallback.
 - `processed/contemporary-source-pilot/`: separately retained 2026 California Democratic,
@@ -305,8 +309,80 @@ development set. Culture still has only ten arts examples; a learned rejection h
 not repair that deficiency or certify mixed-policy detection from one mixed example.
 The reviews are assistant judgments, not independent human gold. Rubric disputes, broken
 unit boundaries and ambiguous source context remain in the separate quarantine rather
-than being silently taught as non-policy. Model quality must be measured after actual
-training and reload; the implementation itself is not an accuracy improvement.
+than being silently taught as non-policy.
+
+### Saved/reloaded rejection-aware result: no overall improvement
+
+The second actual run completed at **19:02:55 UTC on October 18, 2026**. All three epochs
+finished on the 6,001 training records, with batch four, 1,024-token budget, learning rate
+`2e-5` and seed `20261018`. Training losses were 1.5689, 0.7333 and 0.3236; decreasing
+training loss is not evidence of better target-domain decisions. A real encoder attention
+parameter changed. Schema 2 declares the unchanged 21 policy codes plus final null and
+49 reviewed training rejections. Actual saved weights and tokenizer were hash-verified
+and reloaded; the default loader still refuses this provisional checkpoint.
+
+Before inference, the comparison retained the first pilot's exact research policy:
+temperature 1, minimum confidence 0.8 and minimum margin 0.2. No thresholds or reference
+judgments were changed after observing the result. Each prediction is joined to the
+same complete reference text and checked input hash, not compared through aggregate totals
+alone.
+
+| Same 50 development records | Historical MiniLM | External-only ModernBERT | Target/rejection ModernBERT |
+|---|---:|---:|---:|
+| Classified / eligible | 39 / 50 | 40 / 50 | 29 / 50 |
+| Coverage | 78% | 80% | 58% |
+| Correct policy decisions | 19 | 20 | 15 |
+| Precision among classified | 48.72% | 50.00% | 51.72% |
+| Correct reference abstentions | 8 / 20 | 7 / 20 | 12 / 20 |
+| Correct topic or abstention / eligible | 27 / 50 (54%) | 27 / 50 (54%) | 27 / 50 (54%) |
+| Bill decision accuracy | 57.5% | 55.0% | 57.5% |
+| Platform decision accuracy | 40.0% | 50.0% | 40.0% |
+
+Relative to the first ModernBERT run, seven records newly match their references and
+seven no longer do; 20 match both and 16 match neither. The five additional correct
+abstentions are offset by five fewer correct policy decisions. Of the new candidate's
+21 abstentions, seven are explicit learned rejections and 14 are low-confidence decisions.
+Its remaining 23 errors comprise eight accepted reference-abstention units, six incorrect
+policy topics and nine missed policy topics. Every remaining bill error and all ten
+platform units were inspected against their complete retained text after evaluation.
+
+The learned head correctly rejects the inspected platform title and editorial-committee
+lists, but still accepts both genuinely mixed platform units. It also still accepts a
+retrospective court-report submission as criminal-justice policy with approximately
+0.99999 maximum probability. Agricultural overtime remains misclassified as agriculture;
+expungement remains macroeconomics. The new candidate regresses on the foreign-law
+court plank and dual-citizenship office-eligibility plank. These are concrete failures,
+not grounds to lower thresholds or claim successful replacement.
+
+Only 106 of 6,001 joint training records are reviewed state-domain examples: 91 bills
+and 15 platform units. The external component contains 2,000 bills and 3,895 platform
+units. This limited target support, the single reviewed mixed example, unsupported
+family/moral coverage, unresolved rubric boundaries and possible bill-family dependence
+remain material limitations. The 40 development bills and ten units from one Texas
+Republican document are not a representative all-state test or independent human gold.
+No third run or production migration is justified merely by a lower training loss.
+
+The new probability report covers **50 policy-or-null references**, whereas the first
+model's probability losses covered only **30 policy references**. Their log loss and Brier
+scores must not be compared as if they used the same output space and denominator.
+
+Persistent evidence is under `data/processed/topic-rejection-pilot-v1/`:
+`evaluation_plan.json`, `checkpoint_verification.json`, `development_predictions.jsonl`,
+`development_report.json`, `matched_records.jsonl`, `matched_comparison.json`, training
+and evaluation logs, and exact evaluation/comparison scripts. The local checkpoint is
+under `data/models/modernbert-cap-target-rejection-pilot-v1/`. Key SHA-256 bindings are:
+
+| Artifact | SHA-256 |
+|---|---|
+| Combined label JSONL | `693195cc478fcc65003ef30da005824b2c884dc59fd9636cb5b26ea51ccf44fe` |
+| Frozen research policy | `6eb22b67622d5106cafc947ab704605607602710d64e269bec83d6355b572c8f` |
+| Saved training manifest | `ba90c19710b07df593dee5c10a402b76c68fb558c1a6c9230be1383ffa70ae08` |
+| Actual model weights | `922bd7bb95374701760bacfe398302e8c3a50bce817fe6a933ff333496d96738` |
+
+These generated files persist locally but are ignored by Git; the pushed audit records
+their outcome and hashes, not a remote backup of the model or datasets. The scientific
+artifact gate remains red: the last recorded run failed 37 of 315 checks. Neither a
+successful training command nor passing structural tests closes that gate.
 
 ## Additional contemporary source recovery
 
