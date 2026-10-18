@@ -692,11 +692,23 @@ or regenerated caucus result is claimed; the missing analytical artifacts remain
 
 ### Recoverable discovery runs
 
-The existing crawl has attempted its initial 100 organizations. All 100 archive queries
-entered the failure-retry pass; that describes retrieval failures, not missing historical
-platforms. Its homepage fetches retained hashes but not the response bodies, and its final
-candidate/status files are not written until after retries. This makes an interrupted
-run needlessly difficult to recover.
+The original full crawl has now completed its initial 100 organizations and archive retry
+pass. Independently reconciled final outputs contain 54 candidate links, including 42
+heuristically strong candidates across 35 organizations. Live homepage retrieval succeeded
+for 91 organizations; all 100 archive searches remained unsuccessful. Failed live searches
+were AR-D, IL-D, NJ-R, NM-D, NM-R, NV-D, OK-R, PA-D and WA-D. Neither a failed request nor
+zero homepage candidates establishes that a platform is absent. Candidate strength does
+not establish document identity, adoption, operative status or successful extraction.
+
+The saved `data/processed/platform_candidates.jsonl` SHA-256 is
+`caf33fc8c0a7eadc945cb85687bd1c78c1ead2a3b819cec56bff6da108d38770`;
+`data/processed/platform_discovery_status.csv` SHA-256 is
+`532fc673a0b214b87d42f4168c5cf8649fa1badc0dbb7c02c1cf3d291379b354`.
+The CSV contains exactly 100 unique state/party pairs, and its candidate counts reconcile
+to the 54 JSONL rows. These are local ignored artifacts, not a remote data backup. The run
+predates the recovery controls below: homepage fetches retained hashes but not response
+bodies, and final candidate/status files were written only after retries. Its completion
+does not retroactively supply missing bodies or resolve any operative-platform status.
 
 New discovery CLI runs retain homepage bytes in `data/raw/platforms/discovery/`, using
 distinct filenames so a later response cannot overwrite earlier evidence. Provenance binds
