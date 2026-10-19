@@ -907,6 +907,56 @@ archives the printed-header parser/regressions. Its actual **exit 1 / 34 failure
 research additions do not substitute for missing canonical inputs or scientific gates.
 Audit manifest: `d3c38230d36692029d9f79d330b406b3700c93141932fa85a66539cbc0d8c406`.
 
+### Montana LC source rows excluded as additional formal filings
+
+The filing consumers now share `exclude_mt_lc_source_requests_v1`, a narrow source-identity
+guard rather than an introduction-status adjudication. An exact Montana LC request row
+is not an additional independent formal filing, even when imported classification says
+`bill`. This does **not** establish that its underlying request was never introduced,
+delete any source row or evidence, label LC3368 a publisher test, or merge the contradictory
+SB6/HB117 and SB85/HB161 formal records. Montana input frames missing a nonempty source
+identifier fail explicitly.
+
+The guard is wired through revealed emphasis, recorded outcomes, election shares and
+tag validation, title-based terms, exact/near reuse **before candidate blocking**, and
+direct source-tag validation/replication/trends. LC source-request rows do not reach the classifier.
+Record exports preserve original fields and exact assembled input/hash, with
+`source_draft_request`, an explicit `excluded` status and reason, and no model scores.
+Coverage reports `n_source_draft_excluded`, retains the original attributed source-row
+count and excludes requests from substantive/classified/abstention denominators.
+State-focus and capability evidence carry the exclusion count.
+
+The separate source census binds **all 1,090,369 source rows** and preserves all
+**18,403 complete Montana contexts**. It identifies **12,321 LC request source rows**:
+**7,343** pass the old classification-only outcome predicate; **12,321** pass the
+election measure-type predicate. These are latent scope exposures, **not thousands
+of demonstrated published double-counts**. Only 60 source rows nationally currently
+carry D/R attribution, and **none is in Montana**. The guard therefore removes
+**zero currently party-attributed rows**. Its effects on unattributed title-reuse
+candidates were not quantified here.
+
+All **12,321** request rows were exported as complete, unscored exclusions. Independent
+replay re-reads the unchanged canonical source, reconstructs every national scope flag
+without the producer's matcher, independently reconstructs both measure-type predicates,
+and checks every source field, input text/hash, exclusion status and empty score/chunk
+record. It also reproduces the session/classification accounting. No model was loaded
+or called, and no existing analytical table, label, weight or threshold was regenerated.
+
+- Source-scope manifest: `a2a7150f95d8f2def6d7ff8e5d0b553a9e7f04c8647b2cc2da54b53eac4b4656`.
+- Independent replay manifest: `9b60368fb3f3a7fa81f259063a64a89c8d9005da89e2ccfcb8bd59a0950b999b`.
+
+This repairs one known source-scope error, not the remaining historical filing universe,
+event-time attribution, operative-text or classifier certification gaps. Full raw packets
+remain local/Git-ignored rather than backed up by a code push. The report companion
+remains unpublished and outside the publication repository.
+
+Canonical audit checkpoint **v31** verifies **65** completed research packets and
+archives all affected analysis modules and regressions. The actual result remains
+**exit 1 / 34 failures among 330 checks**; its complete report is byte-identical to
+v30. The scope fix does not replace missing canonical outputs or pass scientific
+release gates. Audit manifest:
+`d53d0795214c777775770507743856dcb0fe19e7201581c4f1bbe0b55bd03cce`.
+
 ## Training reservation enforcement
 
 The training CLI now accepts an explicit `--source-reservation` pointing to a

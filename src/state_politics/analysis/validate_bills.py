@@ -15,6 +15,7 @@ import re
 from collections import Counter
 from pathlib import Path
 
+from ..bills.montana import source_draft_request_mask
 from .modernbert import add_model_arguments, load_classifier
 from .taxonomy import DEFAULT_TOPICS_PATH, load_topics
 
@@ -70,6 +71,7 @@ def agreement_report(frame, subject_map: dict[str, int], topic_names: dict[int, 
     """
     import pandas as pd
 
+    frame = frame.loc[~source_draft_request_mask(frame)]
     reference = frame["subject"].map(lambda s: tag_topic(s, subject_map))
     scored = frame.assign(reference=reference)
     scored = scored[scored["reference"].notna()]
@@ -138,7 +140,9 @@ def tag_replication(bills, subject_map: dict[str, int], topic_names: dict[int, s
     """
     import pandas as pd
 
-    frame = bills[bills["sponsor_party"].isin(("D", "R"))].copy()
+    frame = bills[
+        bills["sponsor_party"].isin(("D", "R")) & ~source_draft_request_mask(bills)
+    ].copy()
     frame["reference"] = frame["subject"].map(lambda s: tag_topic(s, subject_map))
     frame = frame[frame["reference"].notna()]
     if frame.empty:
@@ -159,7 +163,9 @@ def tag_replication_by_state(bills, subject_map: dict[str, int], topic_names: di
     """State-party topic shares derived solely from mapped source tags."""
     import pandas as pd
 
-    frame = bills[bills["sponsor_party"].isin(("D", "R"))].copy()
+    frame = bills[
+        bills["sponsor_party"].isin(("D", "R")) & ~source_draft_request_mask(bills)
+    ].copy()
     frame["topic"] = frame["subject"].map(lambda value: tag_topic(value, subject_map))
     frame = frame[frame["topic"].notna()]
     if frame.empty:
@@ -218,6 +224,7 @@ def main(argv: list[str] | None = None) -> int:
     topic_names = {t.code: t.name for t in topics}
 
     frame = pd.read_parquet(bills_path)
+    frame = frame.loc[~source_draft_request_mask(frame)]
     frame = frame[pd.to_numeric(frame["year"], errors="coerce") >= 2018]
     frame = frame[frame["subject"].astype(str).str.len() > 0]
     frame = frame.assign(reference=frame["subject"].map(lambda s: tag_topic(s, subject_map)))
@@ -256,7 +263,7 @@ def main(argv: list[str] | None = None) -> int:
     # pass, so there is no reason to subsample it.
     full = pd.read_parquet(
         bills_path,
-        columns=["state", "year", "subject", "sponsor_party"],
+        columns=["state", "identifier", "year", "subject", "sponsor_party"],
     )
     full = full[
         (full["year"] >= 2018)

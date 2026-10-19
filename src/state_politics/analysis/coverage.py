@@ -157,10 +157,14 @@ def build_capability_report(data_dir: Path):
             f" and {int(bill_coverage['n_source_test_excluded'].sum()):,} source-test exclusions"
             if "n_source_test_excluded" in bill_coverage.columns else ""
         )
+        draft_exclusions = (
+            f" and {int(bill_coverage['n_source_draft_excluded'].sum()):,} source-draft exclusions"
+            if "n_source_draft_excluded" in bill_coverage.columns else ""
+        )
         bill_evidence += (
             f" Legacy classifier coverage reports {int(bill_coverage['n_attributed'].sum()):,} "
             f"attributed rows and {int(bill_coverage['n_procedural_excluded'].sum()):,} "
-            f"procedural exclusions{test_exclusions}; "
+            f"procedural exclusions{test_exclusions}{draft_exclusions}; "
             "these are not reconciled or certified denominators."
         )
     actions_path = data_dir / "bill_actions.parquet"

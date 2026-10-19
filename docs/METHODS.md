@@ -508,9 +508,10 @@ the client implementation. For both Montana API families, `offset` denotes a pag
 index; row-offset-style enumeration can return empty pages while omitting most of the
 population. Every declared page, raw object, explicit cohort, request body and hash
 is retained, with an independent source/alias replay. Four unmatched source identities
-remain unresolved in the initial sidecar. Filing denominators, evaluation groups and
-event-time text/party evidence still require a consistent identity contract; no source
-alias is silently merged or admitted to training/analysis.
+remain unresolved in the initial sidecar. That sidecar did not change filing denominators
+or evaluation groups; event-time text/party evidence and historical formal-identity
+continuity remain unverified. No source alias is silently merged or admitted to
+training/analysis.
 
 The print-identity follow-up makes the historical limitation concrete: retained
 2025 Senate prints identify SB6 and SB85, whereas their LC-linked current native
@@ -523,6 +524,34 @@ with identical complete extracted text but different byte hashes. Source version
 rows and both responses remain intact. HTTP-200 application shells are not substantive
 bill evidence; explicit 404s remain failures. Neither shared LC/title evidence nor a
 complete current API traversal proves a complete historical filing universe.
+
+The shared `exclude_mt_lc_source_requests_v1` contract now excludes **Montana LC source
+rows as additional independent formal filings**, regardless of imported `bill` or
+`proposed bill` classification. It does not declare their underlying requests unintroduced,
+delete source records, infer publisher-test status, or merge contradictory Senate/House
+identities. Montana analytical inputs must retain a nonempty source `identifier`; missing
+identities raise an explicit error rather than bypassing the guard.
+
+The guard runs before classifier inference, outcome eligibility, election shares/tag
+validation, bill-title document assembly, exact/near title-reuse candidate construction,
+and direct source-tag replication/trends. Classification exports retain every source
+column, exact assembled input/hash and the separate `source_draft_request` flag.
+Excluded requests have status `excluded`, reason `source_draft_request` and no model
+scores; they are not substantive abstentions. Coverage retains all attributed source
+rows in `n_attributed`, reports `n_source_draft_excluded` separately, and removes requests
+from substantive/classified denominators. State-focus and capability exports propagate
+that count without conferring certification.
+
+A separate immutable census and independent replay bind all 1,090,369 source rows and
+all 18,403 complete Montana contexts. They identify 12,321 LC request rows, including
+7,343 passing the **classification-only** outcome predicate and all 12,321 passing the
+election measure-type predicate. These are potential exposures, not measured changes
+to published results: **none of the current Montana source rows has D/R attribution**,
+so zero currently party-attributed rows are removed. Effects on unattributed title-reuse
+candidates were not quantified by this census. All 12,321 complete request exclusions
+were exported and independently replayed without model inference. Existing analytical
+tables were not regenerated; the remaining historical-universe, attribution, evidence
+and classifier gates are unchanged.
 
 ---
 

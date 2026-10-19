@@ -35,6 +35,8 @@ import itertools
 import re
 from pathlib import Path
 
+from ..bills.montana import source_draft_request_mask
+
 __all__ = ["find_near_duplicates", "find_reuse_clusters", "is_ceremonial",
            "normalize_title", "significant_tokens"]
 
@@ -101,7 +103,9 @@ def find_reuse_clusters(
     uniform-law adoption that both parties file.
     """
 
-    frame = bills[["state", "year", "title", "sponsor_party"]].copy()
+    frame = bills.loc[
+        ~source_draft_request_mask(bills), ["state", "year", "title", "sponsor_party"],
+    ].copy()
     frame["normalized"] = frame["title"].fillna("").map(normalize_title)
     frame = frame[
         (frame["normalized"].str.len() >= min_chars)
@@ -171,7 +175,9 @@ def find_near_duplicates(
     ``max_block`` are skipped rather than allowed to dominate the runtime.
     """
 
-    frame = bills[["state", "year", "title", "sponsor_party"]].copy()
+    frame = bills.loc[
+        ~source_draft_request_mask(bills), ["state", "year", "title", "sponsor_party"],
+    ].copy()
     frame["normalized"] = frame["title"].fillna("").map(normalize_title)
     frame["tokens"] = frame["normalized"].map(significant_tokens)
     frame = frame[frame["tokens"].map(len) >= min_tokens]
@@ -281,7 +287,9 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--min-states", type=int, default=3)
     args = parser.parse_args(argv)
 
-    bills = pd.read_parquet(args.bills, columns=["state", "year", "title", "sponsor_party"])
+    bills = pd.read_parquet(
+        args.bills, columns=["state", "identifier", "year", "title", "sponsor_party"],
+    )
     clusters = find_reuse_clusters(bills, min_states=args.min_states)
 
     out_dir = Path(args.out_dir)

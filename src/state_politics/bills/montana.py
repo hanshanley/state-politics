@@ -43,6 +43,24 @@ def _key(identifier):
     return match[1], int(match[2])
 
 
+def source_draft_request_mask(bills: pd.DataFrame) -> pd.Series:
+    """Identify Montana LC source rows, not additional formal filings or never-filed policies."""
+    mask = pd.Series(False, index=bills.index, name="source_draft_request")
+    if "state" not in bills:
+        return mask
+    montana = bills["state"].eq("MT").fillna(False)
+    if not montana.any():
+        return mask
+    if "identifier" not in bills or not bills.loc[montana, "identifier"].map(
+        lambda value: isinstance(value, str) and bool(value.strip())
+    ).all():
+        raise ValueError("Montana filing scope requires nonempty source identifiers")
+    mask.loc[montana] = bills.loc[montana, "identifier"].map(
+        lambda identifier: (key := _key(identifier)) is not None and key[0] == "LC"
+    ).to_numpy()
+    return mask
+
+
 def parse_native_pages(sessions: list[dict], responses: dict[int, list[dict]]) -> pd.DataFrame:
     """Validate complete page-index enumeration and preserve each original native object."""
     rows = []

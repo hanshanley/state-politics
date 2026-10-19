@@ -69,3 +69,20 @@ def test_subject_validation_is_independent_of_cross_state_share():
 
     assert scores["precision"] == 0.5
     assert scores["recall"] == 0.5
+
+
+def test_draft_requests_do_not_change_election_shares_or_tag_validation():
+    source = pd.DataFrame({
+        "state": ["MT", "MT", "MT", "OH"],
+        "identifier": ["LC 442", "SB 6", "HB 117", "HB 1"],
+        "title": [
+            "Election administration", "School funding", "Election administration", "Housing",
+        ],
+        "subject": ["Elections", "", "Elections", ""],
+        "classification": ["bill"] * 4, "sponsor_party": ["R"] * 4,
+    })
+    focus, _, validation = election_focus(source)
+    montana = focus.set_index("state").loc["MT"]
+    assert montana["n_bills"] == 2 and montana["n_election_bills"] == 1
+    assert montana["election_share"] == 0.5
+    assert validation["n_tagged_bills"] == 1

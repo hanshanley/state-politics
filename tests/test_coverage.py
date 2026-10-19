@@ -187,15 +187,16 @@ def test_capability_report_distinguishes_unsupported_questions(tmp_path, year):
     ]
 
 
-def test_capability_report_preserves_source_test_exclusion_counts(tmp_path):
+def test_capability_report_preserves_source_test_and_draft_exclusion_counts(tmp_path):
     _capability_source_fixtures(tmp_path, 2024)
     path = tmp_path / "bill_classification_coverage.csv"
-    coverage = pd.read_csv(path).assign(n_source_test_excluded=1)
+    coverage = pd.read_csv(path).assign(n_source_test_excluded=1, n_source_draft_excluded=2)
     coverage.to_csv(path, index=False)
 
     report = build_capability_report(tmp_path).set_index("question")
     evidence = report.loc["Introduced-bill agenda by party and state", "evidence"]
     assert "0 procedural exclusions and 1 source-test exclusions" in evidence
+    assert "2 source-draft exclusions" in evidence
     assert "not reconciled or certified denominators" in evidence
 
 

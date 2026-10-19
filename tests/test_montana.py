@@ -6,7 +6,30 @@ import json
 import pandas as pd
 import pytest
 
-from state_politics.bills.montana import parse_document_headers, reconcile
+from state_politics.bills.montana import (
+    parse_document_headers,
+    reconcile,
+    source_draft_request_mask,
+)
+
+
+def test_source_draft_scope_is_state_specific_and_preserves_conflicting_formal_identities():
+    source = pd.DataFrame({
+        "state": ["MT", "MT", "MT", "MT", "TX"],
+        "identifier": ["LC 0239", "LC0442", "SB 6", "HB 117", "LC 239"],
+    }, index=[2, 7, 2, 8, 9])
+    original = source.copy()
+    assert source_draft_request_mask(source).tolist() == [True, True, False, False, False]
+    pd.testing.assert_frame_equal(source, original)
+
+
+@pytest.mark.parametrize("identifiers", [None, [None], [""]])
+def test_montana_scope_refuses_missing_source_identity(identifiers):
+    source = pd.DataFrame({"state": ["MT"]})
+    if identifiers is not None:
+        source["identifier"] = identifiers
+    with pytest.raises(ValueError, match="source identifiers"):
+        source_draft_request_mask(source)
 
 
 @pytest.mark.parametrize(

@@ -17,6 +17,8 @@ import argparse
 import re
 from pathlib import Path
 
+from ..bills.montana import source_draft_request_mask
+
 __all__ = ["election_subtype", "election_focus", "validate_title_rule"]
 
 MIN_COMPARABLE_BILLS = 500
@@ -113,7 +115,9 @@ def election_focus(frame):
     """State-party election shares and leave-one-state-out peer comparisons."""
     import pandas as pd
 
-    major = frame[frame["sponsor_party"].isin(("D", "R"))].copy()
+    major = frame[
+        frame["sponsor_party"].isin(("D", "R")) & ~source_draft_request_mask(frame)
+    ].copy()
     if "classification" in major:
         # States differ enormously in ceremonial resolutions and appointments (0% to 58% of
         # rows). Election share over *all* rows therefore measures chamber procedure as much as
@@ -176,7 +180,7 @@ def main(argv: list[str] | None = None) -> int:
 
     bills = pd.read_parquet(
         args.bills,
-        columns=["state", "title", "subject", "sponsor_party", "classification"],
+        columns=["state", "identifier", "title", "subject", "sponsor_party", "classification"],
     )
     focus, subtypes, validation = election_focus(bills)
     out = Path(args.out_dir)

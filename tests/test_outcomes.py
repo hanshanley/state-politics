@@ -165,6 +165,21 @@ def test_law_eligible_excludes_resolutions():
     assert not is_law_eligible("bill|joint resolution")
 
 
+def test_draft_classification_and_outcome_never_create_additional_formal_filings():
+    bills = pd.DataFrame({
+        "bill_id": ["draft", "senate", "house"], "state": ["MT"] * 3,
+        "identifier": ["LC 239", "SB 6", "HB 117"],
+        "sponsor_party": ["R"] * 3, "year": [2025] * 3, "classification": ["bill"] * 3,
+        "n_actions": [1] * 3, "n_vote_events": [0] * 3,
+        "recorded_outcome": ["became_law", "introduced_or_pending", "introduced_or_pending"],
+        "originating_chamber": ["lower", "upper", "lower"],
+    })
+    state, _, chamber, _ = build_outcome_tables(bills)
+    assert state.n_bills.tolist() == [2]
+    assert state.n_enacted.tolist() == [0]
+    assert set(chamber.originating_chamber) == {"upper", "lower"}
+
+
 def test_outcome_tables_use_recorded_actions_and_reliability_floor():
     rows = []
     for state in ("TX", "VT"):

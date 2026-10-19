@@ -470,6 +470,44 @@ def test_source_test_exclusions_leave_coverage_denominators_but_remain_exported(
     assert exported["classification_status"].tolist() == ["excluded", "excluded", "classified"]
 
 
+def test_draft_requests_are_exported_but_never_scored_or_counted_as_extra_filings(tmp_path):
+    from state_politics.analysis.revealed import count_topics_by_state
+
+    text = "Funding public schools and teacher salaries statewide."
+
+    class StubClassifier:
+        def predict_many(self, texts, **kwargs):
+            assert texts == [text, text]
+            return [(6, 0.9, 0.3)] * 2
+
+    bills = pd.DataFrame({
+        "bill_id": ["draft-239", "senate-6", "house-117", "draft-442"],
+        "identifier": ["LC 0239", "SB 6", "HB 117", "LC0442"],
+        "classification": ["bill", "bill", "bill", "proposed bill"],
+        "title": text, "introduced_text": text,
+        "state": "MT", "sponsor_party": "R", "year": 2025,
+    })
+    path = tmp_path / "bills.parquet"
+    bills.to_parquet(path, index=False)
+    counts, totals, coverage = count_topics_by_state(
+        path, StubClassifier(), progress=None, predictions_dir=tmp_path / "predictions",
+    )
+    assert counts.n_bills.tolist() == [2]
+    assert totals == {"n_bills": 4, "n_attributed": 4, "n_classified": 2}
+    row = coverage.iloc[0]
+    assert row["n_source_draft_excluded"] == 2
+    assert row["n_substantive_attributed"] == row["n_classified_total"] == 2
+    assert row["n_abstained"] == 0 and row["classification_rate"] == 1.0
+    exported = pd.read_parquet(tmp_path / "predictions" / "MT.parquet")
+    pd.testing.assert_frame_equal(exported[bills.columns], bills)
+    drafts = exported[exported.source_draft_request]
+    assert drafts.record_id.tolist() == ["draft-239", "draft-442"]
+    assert drafts.classification_status.eq("excluded").all()
+    assert drafts.abstention_reason.eq("source_draft_request").all()
+    assert drafts.topic.isna().all() and drafts.n_chunks.eq(0).all()
+    assert drafts.classification_text.eq(text).all() and drafts.input_sha256.notna().all()
+
+
 def test_topic_vectors_recomputes_shares_instead_of_summing_eras():
     """The platform table is split by era and each era's shares sum to 1.
 

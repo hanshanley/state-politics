@@ -7,6 +7,7 @@ import pytest
 
 from state_politics.analysis.trends import (
     benjamini_hochberg,
+    main,
     party_topic_trends,
     state_topic_trends,
 )
@@ -113,3 +114,31 @@ def test_state_trends_exclude_pre_window_years():
         "state == 'AK' and party == 'D' and topic == 1"
     ).iloc[0]
     assert row["first_year"] == 2018
+
+
+def test_cli_subject_replication_excludes_drafts_before_counting(tmp_path):
+    counts = _rows().replace({"state": {"AK": "MT"}})
+    counts["topic_name"] = counts.topic.map({1: "Macroeconomics", 2: "Education"})
+    counts.to_csv(tmp_path / "counts.csv", index=False)
+    source = counts.loc[counts.index.repeat(counts.n_bills)].reset_index(drop=True)
+    source["subject"] = source.topic.map({1: "Taxation", 2: "Education"})
+    source["identifier"] = "HB " + source.index.astype(str)
+    source = source.rename(columns={"party": "sponsor_party"})
+    requests = pd.DataFrame({
+        "state": ["MT"] * 20, "sponsor_party": ["D"] * 20, "year": [2018] * 20,
+        "subject": ["Taxation"] * 20, "identifier": ["LC 239"] * 20,
+    })
+    pd.concat([source, requests], ignore_index=True).to_parquet(
+        tmp_path / "bills.parquet", index=False,
+    )
+    (tmp_path / "tags.yml").write_text("tags:\n  taxation: 1\n  education: 2\n")
+    assert main([
+        "--by-state-year", str(tmp_path / "counts.csv"),
+        "--bills", str(tmp_path / "bills.parquet"),
+        "--subject-map", str(tmp_path / "tags.yml"),
+        "--out-dir", str(tmp_path / "out"),
+    ]) == 0
+    result = pd.read_csv(tmp_path / "out/bill_topic_trends_by_party_tags.csv")
+    row = result.query("party == 'D' and topic == 1").iloc[0]
+    assert row.early_share == pytest.approx(0.20)
+    assert row.late_share == pytest.approx(0.40)

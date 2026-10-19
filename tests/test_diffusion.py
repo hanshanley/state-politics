@@ -58,6 +58,19 @@ def test_find_reuse_clusters_finds_a_genuine_template():
     assert clusters.iloc[0]["n_states"] == 4
 
 
+@pytest.mark.parametrize("find_clusters", [find_reuse_clusters, find_near_duplicates])
+def test_request_only_state_cannot_manufacture_a_filing_reuse_cluster(find_clusters):
+    source = pd.DataFrame({
+        "state": ["MT", "OH", "TX", "MT"], "year": [2025] * 4,
+        "sponsor_party": ["R"] * 4, "identifier": ["LC 239", "HB 1", "HB 2", "HB 117"],
+        "title": ["Enacting the audiology and speech-language pathology interstate compact"] * 4,
+    })
+    assert find_clusters(source.iloc[:3], min_states=3).empty
+    clusters = find_clusters(source, min_states=3)
+    assert clusters.n_states.tolist() == [3]
+    assert clusters.n_bills.tolist() == [3]
+
+
 def test_generic_administrative_titles_are_excluded():
     """Every state files a budget bill; that is not evidence of copying."""
     rows = [(state, 2021, "An Act making appropriations for the general state budget", "D")

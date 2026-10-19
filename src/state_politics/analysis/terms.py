@@ -21,6 +21,8 @@ from __future__ import annotations
 import argparse
 from pathlib import Path
 
+from ..bills.montana import source_draft_request_mask
+
 __all__ = [
     "build_bill_documents",
     "build_stated_documents",
@@ -93,7 +95,9 @@ _DEMONYMS = {
 
 def build_bill_documents(bills):
     """One concatenated bill-title document per state and major party."""
-    frame = bills[bills["sponsor_party"].isin(("D", "R"))].copy()
+    frame = bills[
+        bills["sponsor_party"].isin(("D", "R")) & ~source_draft_request_mask(bills)
+    ].copy()
     frame["party"] = frame["sponsor_party"]
     documents = (
         frame.groupby(["state", "party"])["title"]
@@ -346,7 +350,9 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--out-dir", default=root / "data/processed")
     args = parser.parse_args(argv)
 
-    bills = pd.read_parquet(args.bills, columns=["state", "title", "sponsor_party"])
+    bills = pd.read_parquet(
+        args.bills, columns=["state", "identifier", "title", "sponsor_party"],
+    )
     platforms = pd.read_parquet(args.platforms)
     caucuses = pd.read_parquet(args.caucuses)
     bill_documents = build_bill_documents(bills)

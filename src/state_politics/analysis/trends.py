@@ -17,6 +17,8 @@ import argparse
 import math
 from pathlib import Path
 
+from ..bills.montana import source_draft_request_mask
+
 EARLY_YEARS = (2018, 2019)
 LATE_YEARS = (2024, 2025)
 MIN_STATE_YEAR_BILLS = 50
@@ -272,12 +274,13 @@ def main(argv: list[str] | None = None) -> int:
     state = state_topic_trends(frame).merge(named, on="topic", how="left")
     bills = pd.read_parquet(
         args.bills,
-        columns=["state", "year", "subject", "sponsor_party"],
+        columns=["state", "identifier", "year", "subject", "sponsor_party"],
     )
     bills = bills[
         bills["sponsor_party"].isin(("D", "R"))
         & bills["year"].between(min(EARLY_YEARS), max(LATE_YEARS))
         & bills["subject"].fillna("").ne("")
+        & ~source_draft_request_mask(bills)
     ].copy()
     subject_map = load_subject_map(args.subject_map)
     bills["topic"] = bills["subject"].map(lambda value: tag_topic(value, subject_map))

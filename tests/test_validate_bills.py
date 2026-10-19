@@ -23,6 +23,24 @@ TOPIC_NAMES = {1: "Macroeconomics", 6: "Education", 12: "Law, crime and justice"
 SUBJECT_MAP = {"education": 6, "schools": 6, "taxation": 1, "courts": 12}
 
 
+def test_subject_agreement_and_replication_exclude_requests_but_keep_formal_abstentions():
+    frame = pd.DataFrame({
+        "state": ["MT"] * 3, "identifier": ["LC 239", "SB 6", "HB 117"],
+        "subject": ["Taxation", "Education", "Education"],
+        "topic": [None, 6, None], "sponsor_party": ["R"] * 3,
+    })
+    report = agreement_report(frame, SUBJECT_MAP, TOPIC_NAMES)
+    assert report.topic.tolist() == [6]
+    assert report.n.tolist() == [2] and report.n_abstained.tolist() == [1]
+    for replicate, share_column in (
+        (tag_replication, "tag_share"), (tag_replication_by_state, "share"),
+    ):
+        table = replicate(frame, SUBJECT_MAP, TOPIC_NAMES)
+        assert table.topic.tolist() == [6]
+        assert table.n_bills.tolist() == [2]
+        assert table[share_column].tolist() == [1.0]
+
+
 def test_normalize_tag_strips_state_reference_codes():
     """Tags carry state-specific trailing codes that would fragment the vocabulary."""
     assert normalize_tag("Resolutions--Congratulatory & Honorary (I0705)") == (

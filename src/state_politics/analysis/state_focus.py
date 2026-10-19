@@ -341,6 +341,7 @@ def build_state_focus_atlas(stated, bills, topics):
         "n_attributed",
         "n_procedural_excluded",
         "n_source_test_excluded",
+        "n_source_draft_excluded",
         "n_substantive_attributed",
         "n_classified_total",
         "classification_rate",

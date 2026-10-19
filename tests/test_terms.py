@@ -29,6 +29,17 @@ def test_bill_documents_group_titles_by_state_party():
     assert ("TX", "unknown") not in documents.index
 
 
+def test_bill_term_evidence_excludes_requests_without_merging_formal_records():
+    source = pd.DataFrame({
+        "state": ["MT"] * 3, "sponsor_party": ["R"] * 3,
+        "identifier": ["LC 239", "SB 6", "HB 117"],
+        "title": ["Request-only language", "Senate policy text", "House policy text"],
+    })
+    [document] = list(build_bill_documents(source).itertuples())
+    assert document.n_source_items == 2
+    assert document.text == "Senate policy text. House policy text"
+
+
 def test_stated_documents_prefer_committee_over_caucus_supplement():
     platforms = pd.DataFrame(
         [

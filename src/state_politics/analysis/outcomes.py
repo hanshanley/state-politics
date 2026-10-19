@@ -11,6 +11,8 @@ import argparse
 import json
 from pathlib import Path
 
+from ..bills.montana import source_draft_request_mask
+
 MIN_OUTCOME_BILLS = 500
 MIN_ACTION_COVERAGE = 0.80
 MIN_ROLLCALL_VOTERS = 10
@@ -57,6 +59,7 @@ def build_outcome_tables(bills):
         bills["sponsor_party"].isin(("D", "R"))
         & bills["year"].ge(2018)
         & bills["classification"].map(is_law_eligible)
+        & ~source_draft_request_mask(bills)
     ].copy()
     frame["has_action_data"] = frame["n_actions"].fillna(0).gt(0)
     frame["advanced"] = frame["recorded_outcome"].isin(
