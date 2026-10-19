@@ -358,6 +358,14 @@ URL alone. The literal observed Senate `(NP)` marker and leading House U+F020 ch
 remain in source text; other unknown prefixes/suffixes are not guessed away.
 Source-context conflicts and missing/unknown prints never receive scientific admission.
 
+The observed Senate `(Corrected Copy)` marker is retained explicitly as `copy_note`,
+not removed as harmless decoration. A matching chamber/session/number and `__` print
+code under that marker do **not** establish an uncorrected original: the original-print
+observation stays false and `corrected_copy_not_uncorrected_original` remains an issue.
+The linked cohort's 2019 SB186 is such a case. Complete accounting can replay its
+identity and full text while retaining that negative disposition; it must not turn
+the correction into certified initial-filing evidence to make collection checks pass.
+
 Extraction campaigns bind actual source-attempt names, exact planned candidate rows,
 response receipts and parser/runner hashes. Root manifests include completed child
 manifests; interrupted extraction directories are retained and a new attempt is used.
@@ -369,6 +377,24 @@ semantic review, legal/version adjudication or filing-time certification. A boun
 replay names its exact completed batch count; it does not claim the full campaign or
 the national bill population has complete text. No canonical classifier input, label
 or analytical admission is changed by these research extractions.
+
+The complete linked Florida cohort now accounts for 2,864 imported links and four
+separately recovered originals, not every Florida bill or every external-reference
+row. Its unlabelled candidate-input inventory joins every complete page/pre unit with
+an explicit two-newline separator and exact source-unit offsets. It retains translated
+HTML addition/deletion offsets, including deleted words, and never prepends current
+titles, summaries or another version's text. The corrected-copy issue travels with
+its candidate. PDF strikeouts are not decoded or silently interpreted.
+
+The pinned English ModernBERT tokenizer plans overlapping, section-aware windows under
+the saved 1,024-token research policy, with 1,018 source tokens after marker/wrapper
+allowances. Every one of 11,472,022 source tokens is covered; no model forward pass
+occurs. Independent replay reconstructs full input strings and markup from native
+records, retokenizes them and checks every window/offset, overlap and maximum length
+without producer input/chunk helpers. Tokenizer warnings about full strings exceeding
+8,192 tokens are not inference on overlong sequences: only bounded windows are planned.
+Full coverage does not certify a coherent single-topic unit, resolve deleted-text
+semantics, authorize labels, or prove classification improvement.
 
 Collection report schema 2 separately records `quarantined_link_ids`. Its small reviewed
 conflict registry matches **both the exact source bill ID and response SHA-256**, not a

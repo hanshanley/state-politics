@@ -17,7 +17,7 @@ _HOUSE = re.compile(
 )
 _SENATE = re.compile(
     r"\s*Florida\s+Senate\s*-\s*(?P<year>20\d{2})\s+"
-    r"(?:\(NP\)\s+)?"
+    r"(?:\(NP\)\s+|(?P<copy_note>\(Corrected Copy\))\s+)?"
     r"(?P<substitutes>(?:(?:CS/)*CS\s+for\s+)?)SB\s+(?P<number>\d+)[ \t]*(?=\r?\n|\Z)"
 )
 _HOUSE_CODE = re.compile(
@@ -73,6 +73,7 @@ def parse_print_context(text: str) -> dict:
         original = (
             int(code["number"]) == int(header["number"])
             and not header["substitutes"]
+            and not header.groupdict().get("copy_note")
             and (
                 (
                     code["version"] == "00"
@@ -88,6 +89,7 @@ def parse_print_context(text: str) -> dict:
         "header": {
             "identifier": f"{chamber} {int(header['number'])}",
             "session_identifier": header["year"],
+            "copy_note": header.groupdict().get("copy_note"),
             "source_start": header.start(),
             "source_end": header.end(),
             "source_text": header[0],
@@ -257,6 +259,8 @@ def extract_filed_document(
             issues.add("unrecognized_native_header")
         elif header["identifier"] != expected or header["session_identifier"] != session_identifier:
             issues.add("native_context_conflict")
+        if header is not None and header["copy_note"] is not None:
+            issues.add("corrected_copy_not_uncorrected_original")
         if not observation["original_print_observed"]:
             issues.add("original_print_not_established")
     return {

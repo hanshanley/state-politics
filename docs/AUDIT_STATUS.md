@@ -1282,9 +1282,9 @@ link identifiers.
 | `florida-modern-native-text-verification-v1` (19 batches plus four originals) | `7ca8dba10c1e31039f99c1036917a0ecc669dd88b1fef7fb04fac2ce5f8ea0f1` |
 | `florida-modern-native-text-verification-v2` (22 batches plus four originals) | `f9324bacc45fecbb7b15f59baa85401e5d7a370ccaefb7f2ba8d704e45ef3800` |
 
-The exact **2,864-link / 45-batch** capture campaign remains active. Its current
-extraction follower writes `florida-modern-filed-native-text-v3`; neither in-progress
-root is a completed packet. Offline campaign exercises cover interruption recovery,
+At that bounded checkpoint, the exact **2,864-link / 45-batch** capture campaign
+remained active. Its extraction follower wrote `florida-modern-filed-native-text-v3`;
+neither root was then a completed packet. Offline campaign exercises cover interruption recovery,
 later source-attempt names, root binding of child manifests, exact source selections,
 parser identity, terminated collectors and nonzero unresolved/quarantine results.
 Incomplete extraction attempts remain preserved rather than overwritten.
@@ -1303,6 +1303,76 @@ are identical to v33. The two new passing checks cover the new Python code-guide
 entries, not scientific certification. No missing canonical output was fabricated
 or replaced with a research packet. Audit manifest:
 `3d2c9658292843b5222f286efb4a1ef2292342a12d3d45c62f74fe829b8d1409`.
+
+### Complete linked Florida cohort and version-isolated candidate inputs
+
+The source campaign has now completed all **45 batches / 2,864 imported links**,
+with every selected response retained and no unresolved/quarantined link. Its manifest
+is `5103153fdde5b3b18089ce7912c3f6290558b3af371949bd16b34db16fa36472`.
+Together with four separately recovered originals, this accounts for **2,868 distinct
+linked bills**, not the statewide bill universe or all 2,872 modern external rows.
+
+The completed v3 extraction preserved all text but flagged one new literal format:
+2019 **SB186** prints **`(Corrected Copy)`**. Its full-cohort v3 verifier correctly
+failed rather than accepting an unrecognized header. That failed replay remains
+incomplete, not a passed packet; its original code/log and the v3 native packet
+remain preserved. The parser successor now records the exact chamber/session/number
+and `copy_note`, but **keeps the original-print observation false**, including under
+the printed `2019186__` code. It explicitly reports
+`corrected_copy_not_uncorrected_original`; no correction date or uncorrected filing
+version is inferred. Both the v3 and v4 extractors exit nonzero for this review issue.
+
+Complete independent replay now covers **2,864 imported links plus four originals**,
+including that known negative disposition: **14,463 full text units**, comprising
+**12,851 PDF pages** from **1,256 PDFs** and **1,612 HTML pre blocks**, with **266,915**
+added/deleted markup spans. All PDF pages are reproduced with pypdf and separately
+checked for native identity/print code with PyMuPDF. Every HTML word, markup offset,
+native source span, response checksum and exact canonical/context join is replayed.
+The corrected source remains a corrected copy; full accounting is not filing-time
+or semantic certification.
+
+| Completed packet | Manifest SHA-256 |
+|---|---|
+| Full native v3 diagnostic | `c610ffa9eef93ab72cd6bd666f59d50950c4ab17c6a5def7b6c1542ba6687eec` |
+| Full native v4 successor | `daff114f6f0bb4654338c7e7382bcfb9101cc77c5045029e99ca426acc519fb5` |
+| Full independent native replay v4 | `b3ec7e5a56310dec88cdfbcb1a265fbd1847451aabf7ce1c8ba3b9bd21c7c4c5` |
+| `florida-corrected-copy-review-v1` | `ccde63a902ac984a973fa2d275865619ee2f96e6dee326332465d7eeefafa512` |
+| `florida-native-bill-input-inventory-v1` | `6946d82b351f774c355949eb63055e19d7f99acabcedfc95fe850b42661719a9` |
+| `florida-native-bill-input-verification-v1` | `6848ad07f537ded4d50dac819c7f0ad96a3d05e6df0b0fd5434fa11584a07a8c` |
+
+The correction review independently compares all **2,864 original contexts / 14,420
+original text units** across v3/v4: source context, response hashes, text and markup
+are unchanged. Only explicit copy-note/header observations and the one exception's
+issue classification change. The four supplemental originals remain separate rather
+than acquiring invented imported link IDs.
+
+The unlabelled candidate-input inventory preserves **45,973,697 characters**, exact
+source-unit/HTML markup offsets and the corrected-copy issue. No current title,
+summary or later text is mixed into these version-specific strings. Under the saved
+English ModernBERT tokenizer and **1,024-token** research policy, **1,938 of 2,868**
+inputs need multiple windows. The largest has **237,966 source tokens / 314 windows**.
+All **11,472,022** source tokens are covered by **14,523** planned windows, with
+**zero discarded tokens**. This is planning, not model inference. A separate verifier
+reconstructs every input from native records and checks all exact unit/markup offsets,
+retokenized lengths, window bounds, overlap and character spans without producer
+input/chunk helpers. Four null supplemental link IDs remain null, not failed identity
+matches. Full strings exceeding the tokenizer's advertised context are not fed to a
+model; every planned window remains within the frozen budget.
+
+Every version, filing-time, training/evaluation and analytical admission remains false.
+Plain candidate text still contains deleted words, headers and boilerplate; PDF
+strikeouts are not decoded. Neither complete token coverage nor agreement with
+publisher identities supplies independent topic gold, homogeneous policy units or
+classifier accuracy. Canonical sources, model weights, labels and publication remain
+unchanged; the complete retained research packets are local and Git-ignored.
+
+The actual full audit checkpoint v38 binds **89 completed research packets**, including
+the seven newly completed Florida packets above. It still exits **1** with **299 of
+333 checks passing** and the same **34 failures** as v37; the entire audit report,
+including all seven authored-input hashes, is identical. Its manifest is
+`112d03feec3d0fc3e76f1cfc9c6130c6027e3f523e259fb58c3a1341738b7b07`.
+The frozen snapshot precedes this result paragraph. No provisional packet substitutes
+for missing canonical scientific outputs.
 
 ## Training reservation enforcement
 

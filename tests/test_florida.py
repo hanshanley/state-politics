@@ -44,6 +44,28 @@ def test_body_citations_do_not_become_native_headers():
     assert parse_print_context(SENATE.replace("SB 72", "(Unknown) SB 72"))["header"] is None
 
 
+def test_corrected_copy_retains_identity_without_becoming_uncorrected_original():
+    text = SENATE.replace("SB 72", "(Corrected Copy) SB 72")
+    result = extract_filed_document(
+        ("<pre>" + text + "</pre>").encode(),
+        state="FL", identifier="SB 72", session_identifier="2019",
+    )
+    observation = result["text_units"][0]["native_print_observation"]
+    assert observation["header"]["identifier"] == "SB 72"
+    assert observation["header"]["copy_note"] == "(Corrected Copy)"
+    assert observation["print_codes"][0]["suffix"] == "__"
+    assert observation["original_print_observed"] is False
+    assert result["text_units"][0]["text"] == text
+    assert result["issues"] == [
+        "corrected_copy_not_uncorrected_original", "original_print_not_established",
+    ]
+    assert result["status"] == "requires_source_review"
+    assert result["filing_time_text_certified"] is False
+    assert result["training_admission"] is False
+    header = observation["header"]
+    assert text[header["source_start"]:header["source_end"]] == header["source_text"]
+
+
 def test_nested_pre_markup_does_not_drop_trailing_source_text():
     body = ("<pre>" + SENATE + "First<pre>Second</pre>Third</pre>").encode()
     result = extract_filed_document(body, state="FL", identifier="SB 72", session_identifier="2019")
