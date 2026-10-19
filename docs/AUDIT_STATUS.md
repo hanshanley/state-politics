@@ -4,7 +4,7 @@ The existing figures and analytical conclusions are **legacy, not revalidated fi
 The current changes repair infrastructure and preserve evidence; they do not certify a
 replacement classifier or establish complete contemporary coverage.
 
-**October 19, 2026 checkpoint:** actual audit **v44** binds **102 completed research
+**October 19, 2026 checkpoint:** actual audit **v45** binds **107 completed research
 and accounting packets**. The canonical audit has **300/334 passing checks**
 and **34 missing-artifact failures**. Known source, collection and scientific failures
 remain explicit; this is not a completed project or a certified classifier.
@@ -16,7 +16,10 @@ remain explicit; this is not a completed project or a certified classifier.
 | Sponsorship | Date-aware attribution remains conservative. Official Washington evidence supplies separate session-roster D/R observations for 14,132 of 14,143 measures. Separately, 1,481 native SD roster rows identify all 7,086 prime-sponsor references; 205 mixed-party cases remain explicit. No filing-time party is overwritten. | A session roster does not establish affiliation at filing. Washington retains ten source-identified tests and one substantive original without a native primary-sponsor API record. SD cross-session cosponsor IDs, institutional sponsorship and event-time affiliations remain separately accounted for; all-state recovery is open. |
 | Bills | October snapshot extracted: 1,090,369 source-context measures across all 50 states, 5,028,893 sponsorships, 9,002,451 actions and 873,980 vote events. All eleven tables have recorded hashes/counts. Native documents retained for all 241 non-test measures in the bounded Washington metadata-gap cohort; separately, all 5,369 native SD introduced candidates and 15,308 physical pages captured and exactly replayed in both readers. | Official-source reconciliation, historical affiliations and filing-time text review. One Washington resolution has a version-note conflict; one SD PDF prints no session year. Neither these recoveries nor snapshot extraction certifies statewide/national original-text completeness or an analytical denominator. |
 | Parallel state recovery | Missouri, Pennsylvania and Ohio initial cohorts retain 188 complete PDF candidates / 3,095 pages and 124 corresponding HTML versions from 192 selections. Full Florida replay separately accounts for 2,868 linked contexts, including an explicitly negative corrected-copy disposition. | Four selected PA/OH originals remain unresolved. Missouri withdrawal-only notices are not policy text; historical corroboration does not resolve publisher identity conflicts. These bounded recoveries are not statewide text completeness or classifier certification. |
-| California native archive | Complete 2023–2024 regular-session native census matches all 5,544 canonical identities; 26 introduced CAML captures are retained, including 16 selected candidates, four assistant-judged intent-only exclusions and six unselected diagnostics. Full range/member integrity and all 26 texts replay independently. | The remainder of the state’s original documents is not recovered. Selection and assistant judgments are not independent labels, random sampling, filing-time certification or scientific admission. |
+| California native archive | Complete 2023–2024 regular-session census and all 5,544 typed introduced-source candidates recovered, with 20 special-session candidates separate. All 204,862 archive entries pass CRC verification; all 5,564 complete XML/text candidates replay independently. | Completeness is relative to this archive's typed introduced versions, not all California sessions or legal filing-time certification. Normalized text flattens legislative markup; exact raw XML remains available. No labels or scientific admission. |
+| Texas native reports | Complete 88R House/Senate filed reports reconcile 11,807 of 11,809 canonical regular contexts. Sixteen introduced PDF+HTML pairs retain 55 physical PDF pages and 16 HTML text blocks. | Literal canonical SB 15247 and SR 1960 remain unmatched. Other originals, historical affiliations, typed markup interpretation and filing-time certification remain open. Special sessions are isolated, not combined with 88R. |
+| New York native index | Official 2023–2024 Assembly search response retains 24,316 rows and 24,268 exact canonical matches. Sixteen base-print PDFs preserve all 54 pages, 129,383 characters and 506 extraction blocks. | Canonical J 272, one untyped `00000` row and 47 anomalous source-only identities remain separate. Unselected originals, visual markup and legal-version identity remain unresolved; the blocked API was not bypassed. |
+| Illinois native index | Official 103rd-General-Assembly index retains 13,391 rows and matches all 13,376 canonical regular contexts. Sixteen native HTML originals retain 168,697 characters and exact block spans. | Fifteen source-only entries, 878 canonical introduced-metadata gaps, SR 292's unavailable static original listing and unfetched originals remain explicit. Identity enumeration is not complete original-text recovery or filing-time certification. |
 | Classification | Four saved official English ModernBERT-base pilots compared on the same 52 platform references: external-only 41/52, joint 47/52, broader-source 47/52, Republican-expanded 49/52. The fourth run correctly rejects 3/4 mixtures and 6/6 non-policy units. | The fourth run loses one policy decision, still accepts a mixture above 0.999 and regresses on insufficient-evidence and taxonomy-boundary development cases. Both sets are examined diagnostics, not fresh independent tests. Independent review and empirical gates remain required. No candidate is approved. |
 | Labels | External CAP files and two state-reference CSVs recovered; exact-context Florida candidates and complete bounded overlap witnesses are frozen without label admission. Split/group/text and reviewed-platform source-body checks retain explicit label provenance. | Modern Florida external titles/subtopics are missing; Pennsylvania rows stop in 2016. Annotation provenance, source permissions, adapted-topic compatibility, bill families and independent state-domain references remain unresolved. |
 | Evaluation | Checkpoint-bound training/evaluation split isolation, development-only temperature/threshold selection, exact evidence joins, abstention accounting, per-topic and subgroup metrics. | Reviewer arrangement, frozen empirical gates, independent target tests and clustered uncertainty. No checkpoint can be certified by changing a status field. |
@@ -39,7 +42,100 @@ research collectors must continue retaining per-exchange headers/bodies and
 enforcing their aggregate allowances; this repair cannot recover previously lost
 response bytes or retroactively make earlier collection compliant.
 
-## California native census and bounded original-text recovery
+## California complete native archive and introduced-source candidates
+
+The bounded recovery below has been followed by full acquisition of the official
+2023–2024 archive. `data/processed/california-official-full-originals-v3/`
+retains the complete **1,261,848,876-byte** ZIP, SHA-256
+`71f098005021971d50c8408bfb1a745d053a633cfa81b3c0d454aa4cdd77b9b6`.
+Independent offline replay verifies every one of its **204,862** ZIP entries,
+including CRC and uncompressed hashes, and checks local/central metadata for the
+5,566 used members. All **5,544 regular-session canonical identities** have
+exactly one native table/XML candidate typed `Introduced`/`INT`; no candidate is
+missing, ambiguous, identity-conflicting or text-failing within that scope.
+Twenty special-session candidates remain separate: nine in session 1 and eleven
+in session 2. Intent-only and other previously unselected documents are retained,
+not removed to improve source or classification coverage.
+
+The packet contains **5,564 complete raw CAML documents and normalized text
+candidates**, totalling **55,860,334 characters**: 9,473,855 header characters,
+46,375,351 body characters and 11,128 synthetic joiner characters. Bodies include
+4,836 `Bill` and 728 `Resolution` nodes. `introduced_candidates.parquet` records
+native version/measure identities, exact raw XML/text hashes and paths;
+`canonical_dispositions.parquet` preserves every regular canonical join. All
+columns of the six filtered canonical input tables survive separately. Current
+canonical titles, abstracts and summaries are not prepended to these inputs.
+
+The **16,692 construction spans** are exactly one header, synthetic `\n\n`
+joiner and body per candidate. Character offsets address the normalized Unicode
+text; header/body byte offsets and hashes address complete nodes in raw XML.
+These are **not typed nested legislative-markup spans**. Text and tails inside
+nested XML survive the projection with a synthetic space between each text/tail
+fragment before whitespace collapse. Insertion,
+deletion, strikeout and other markup semantics are flattened. Deleted words are
+not identified or removed. Exact markup remains in `originals/raw_caml/`;
+semantic markup interpretation and its source-offset mapping remain unfinished.
+
+Only **one new transport request** acquired the archive. The exact original
+42,104-byte/65-request ledger prefix remains checksum-bound; aggregate collection
+is **66/128**, not a reset allowance. The full HTTP 200 body, raw/parsed headers,
+receipt and empty stderr are retained. Transport used ordinary verified HTTPS
+without redirect following or certificate bypass. Each successful packet has its
+own archive path; hard links share retained bytes but do not require the failed
+attempt directories to remain addressable.
+
+Full-recovery v1 failed on an existing-directory creation error. Diagnostic v2
+incorrectly accepted only `Bill` bodies, missing 728 `Resolution` candidates
+(723 regular). Those attempts remain preserved and are not completed recoveries.
+Successful v3 manifest SHA-256:
+`bd5fc67a78c88eeeda65a7b132a7031c52e5968f91eebf205487f872d818ebd6`.
+Parent semantic replay and strict inventory comparison passed with all **11,166**
+file hashes unchanged.
+
+“No residual gaps” means complete accounting of the archive's current typed
+`Introduced`/`INT` candidates and their regular-session canonical joins. It does
+not establish filing-time legal identity, sponsor party, source semantics,
+training/evaluation suitability, model accuracy, analytical admission or
+publication approval. All admission flags remain false. Raw recovery packets are
+ignored local files and are **not backed up by pushing Git commits**.
+
+### Complete unlabelled candidate inputs and token coverage
+
+`data/processed/california-native-bill-input-inventory-v2/` preserves all **5,564**
+recovered text candidates as complete Parquet and JSONL records, including
+**5,544 regular canonical joins** and **20 explicitly unjoined special-session
+candidates**. The six canonical input tables and construction-span table are
+copied without changing their columns or bytes. Every input uses the entire
+normalized native header/body candidate; current titles, summaries and later
+versions are not prepended or substituted.
+
+The pinned official English ModernBERT tokenizer and existing production
+`section_windows`/input-wrapper helpers cover all **11,456,430 input tokens**
+in **15,574 planned windows**, with **zero discarded tokens**. Windows use the
+frozen 1,024-token budget: four domain-marker tokens, two wrapper tokens and up
+to 1,018 source tokens, with 128-token overlap. **2,531 inputs require multiple
+windows**; the largest contains **344,209 tokens / 387 windows**. Complete token
+and offset hashes, window boundaries, source identities, raw XML/text hashes and
+non-admission flags remain attached to each record.
+
+Independent read-only replay reparses all XML header/body text and tails,
+reproduces the exact space-between-fragments/whitespace-collapse construction,
+retokenizes every input and checks every bounded window and full export against
+the canonical/source bindings. All **23 packet file hashes** remain unchanged.
+Manifest SHA-256:
+`21520fcde171e9bc1026c6a3dce790f0f381a31cb35262c67db01b55be35d7c4`.
+
+Inventory v1 remains an unverified diagnostic: its token plans were complete,
+but its verifier incorrectly concatenated XML text/tail fragments without
+their declared separating spaces. v2 preserves that verifier, failed replay
+log and exact v1 manifest without overwriting the diagnostic. No network
+requests, model forward passes or new labels were needed. Zero discarded
+tokens describes the **normalized, markup-flattened candidate**, not unchanged
+raw whitespace, interpreted legislative markup, model accuracy or source
+admission. Every legal-version, markup-interpretation, training, evaluation,
+analytical and publication certification/admission flag remains false.
+
+### Earlier bounded census and range-integrity recovery
 
 The retained official `pubinfo_2023.zip` at the Legislature's downloads host
 contains a complete `BILL_TBL.dat` with 5,564 rows. Its 5,544 distinct
@@ -78,22 +174,159 @@ body, and no redirect responses occurred. The span diagnostic
 remain incomplete diagnostics, not completed packets. The supplement made zero
 network requests and did not reset the original allowance.
 
-Only required archive members were reconstructed: 1,068,471 compressed bytes /
+In that earlier bounded phase, only required members were reconstructed:
+1,068,471 compressed bytes /
 6,395,180 uncompressed bytes, not the entire 1,261,848,876-byte ZIP. CAML XML has
 no physical page denominator. “Introduced”/`INT` is observed official table/XML
 version metadata, not certified filing-time identity. The cohort is not random
 or representative; no labels, model weights, historical affiliations, canonical
 records, analytical admission or publication status changed.
 
-Actual canonical audit v44 binds both California packets, the shared retrieval
-repair and its pre-fix/targeted regression logs alongside the earlier research
-evidence: **102 completed packets**, return code **1**, **300/334** passing checks
+Actual canonical audit v45 binds the complete California archive and unlabelled
+token inventory, the Texas, New York and Illinois recovery packets, and their
+parent replay logs alongside the earlier research evidence. The shared retrieval
+repair's 163 collection/discovery/Dataverse caller regressions are also archived.
+There are **107 completed packets**, return code **1**, **300/334** passing checks
 and the same **34** missing-artifact failures. Its entire canonical report is
-identical to v43; neither new sources nor resource cleanup manufactures missing
-analytical artifacts or changes scientific non-certification. The manifest SHA-256
-is `a60398756975a55bee86f93f03158812664d063c81e045c03b4d0f9396b59333`.
+identical to v44, including all failures, computed results, authored-input hashes
+and scientific non-certification. Source recovery does not manufacture missing
+analytical artifacts. Strict manifest/inventory verification passed; the audit
+manifest SHA-256 is
+`1be7ffda7d3f478d5d35be39f8bd19137bae7398aacdc53124ff4530f83fb927`.
 Frozen documentation precedes this result paragraph and top-line update.
 Ignored source/probe/audit packets remain local, not backed up by a Git push.
+
+## Texas 88R filed-census and bounded original-text recovery
+
+`data/processed/texas-official-parallel-recovery-v3/` retains complete official
+House/Senate filed reports for the 88th regular session: **11,807 identities**
+(8,285 House; 3,522 Senate). The reports enumerate HB 5,413; HCR 123; HJR 206;
+HR 2,543; SB 2,633; SCR 62; SJR 93; SR 734. All are preserved rather than
+counting only ordinary bills. Exact joins cover **11,807 of 11,809** canonical
+regular contexts with no ambiguity. Literal canonical identifiers **SB 15247**
+and **SR 1960** remain unmatched; neither is guessed into another identity or
+declared nonexistent.
+
+The deterministic initial cohort retains **16 introduced identities**, each with
+one complete official PDF and HTML response: **16 pairs / 32 document bodies**.
+`document_pages.parquet` has 71 extraction records, but only **55 physical PDF
+pages**; the other **16 HTML blocks are not physical pages**. Exact page/text
+hashes and combined-text offsets replay independently. Raw HTML preserves nested
+tags and attributes; derived text does not retain insertion/deletion, strikeout
+or formatting as typed annotations, nor raw-HTML byte offsets. This is bounded
+source recovery, not statewide original-text completeness.
+
+Across all attempts collection used **40/128 physical requests**: 35 HTTP 200,
+one HTTP 302, one HTTP 500 and three TLS timeouts without an HTTP response.
+All received bodies, including the redirect/error, remain byte-bound; zero-byte
+timeout records are explicit. Offline replay checks request numbering, pacing,
+budget, response bounds and packet-local body lengths/hashes. It validates the
+retained TLS declaration and hashed collector, not a new cryptographic handshake.
+The original absolute ledger paths are historical observations; verification
+uses retained packet-local copies and needs no external transport directory.
+
+Canonical regular tables retain their original columns. Special sessions 881,
+882, 883 and 884 are separately retained (117, 169, 598 and 399 contexts), with
+disjoint regular/special IDs. Earlier v1/v2 verifier defects remain preserved:
+unequal-length strict zip, a zero-count categorical disposition, and bill-only
+header expectations that did not handle resolutions. They added no requests.
+
+Successful manifest SHA-256:
+`c0376c019d06084ec1cf74406d3e7095e90bb493f8aff480994f17b87c9eb9ba`.
+Parent semantic replay passed; exact inventory and all **263 file hashes**
+remain unchanged. No canonical mutation, new labels, model inference,
+filing-time/party certification or analytical/publication admission occurred.
+
+## New York 2023–2024 native census and bounded original prints
+
+One unpaginated official Assembly advanced-search response reports **24,316
+rows**, retaining **24,315 unique typed identities** and one untyped raw `00000`
+row with blank title. Exact joins cover **24,268 of 24,269** canonical contexts.
+The **47 source-only identities** have blank titles/anomalous numbers (43 A,
+one J90058 and three S); they are retained as anomalies, not additional
+certified filings. Canonical **J 272** remains unmatched and is not renamed to
+native **B 272**, despite similar subject matter. No special-session rows were
+identified; the empty disposition is not proof none existed. The packet also
+retains all 72,807 scoped canonical source URLs and 53,331 version links.
+
+The sixteen retained base-print PDFs are A21, A22, B174, B272, C10, C138, E1, E2,
+J9, J10, K11, K12, R1, R2, S11 and S12. Their **54 physical pages** preserve
+**129,383 extracted characters**, **506 PyMuPDF blocks** and **70 spans**
+(16 whole-document byte spans plus 54 page-character spans). Exact unnormalized
+page text is joined with one declared reversible form feed. Requested print
+URLs, native/canonical keys and first-page chamber/session/number observations
+remain separate from legal introduced-version certification. PDF visual
+formatting and insertion/deletion semantics are not decoded from plain text.
+The other 24,299 typed candidates have no newly recovered text in this cohort.
+
+Collection used **24/128 aggregate physical requests** across attempts: 23 HTTP
+200 and one HTTP 401. All 24 actual bodies/header sets are retained, including
+the 140-byte 401. Verified TLS, sequential pacing and no redirects, retries or
+credential workarounds are recorded. Credential-free bulk/API access remained
+unavailable; no statewide original-text recovery is claimed.
+
+`data/processed/ny_parallel_official_recovery_v2/` manifest SHA-256:
+`76b39fadeb4bfafcf35055570672ed119d550a6a44da453572f64dd70dae65b2`.
+Its exact custom manifest contains 203 path/hash/byte records; the only
+unmanifested file is `manifest.json`. Parent replay validates that schema and
+leaves all **204 actual file hashes** unchanged. An initial parent probe
+incorrectly assumed plain hash values and stopped before invoking the verifier;
+the failed log is retained, and the frozen manifest was not rewritten.
+Source producer/verifier paths and hashes are retained in
+`runtime_and_source_bindings.json`; their actual code is also archived by the
+aggregate audit. Replay requires the bound source scripts and locked runtime.
+
+The incomplete v1 verifier wrongly expected a 46/0 source-only/canonical-only
+split instead of 47/1 and failed to recognize canonical API paths containing
+`2023-2024`. It remains preserved, not counted as completed evidence. No labels,
+canonical fields, model weights, filing-time party/version certification or
+training/evaluation/analytical/publication admission changed.
+
+## Illinois 103rd-General-Assembly native census and original HTML
+
+The native index retains **13,391 rows**, exactly matching all **13,376**
+canonical regular-session contexts without missing or ambiguous canonical
+identities. Native type counts are AM 929; EO 12; HB 5,929; HJR 76; HJRCA 22;
+HR 989; JSR 2; SB 3,997; SJR 68; SJRCA 14; SR 1,353. Fifteen source-only
+entries remain separate: **AM 1020256**, twelve executive orders and JSR 1–2.
+No identities are repaired from repository filenames or inferred aliases.
+
+The sixteen selected originals retain **515,168 raw HTML bytes**, **44,158
+status-XML bytes**, **168,697 normalized characters** and **2,413 text-bearing
+`tr` blocks**. Block spans are zero-based, half-open raw-HTML byte ranges with
+exact HTML and hashes. The declared projection decodes entities, normalizes
+whitespace, maps `u` to synthetic `[[INSERT:…]]` markers, and maps
+`strike`/`s`/`del` to `[[DELETE:…]]`. These are explicit collector rendering
+rules, not independently certified interpretation of every underline/strike.
+Individual markup tags do not have separate span rows; the raw HTML and
+enclosing block retain them. No physical-page denominator is available.
+
+**13,359 canonical static-original candidates remain unfetched.** SR 292 lacks
+a static original listing in this evidence. Separately, **878 canonical
+contexts lack introduced-version metadata** (562 HB, 315 SB, one SR); this is
+not evidence that the corresponding 877 listed bill originals are unavailable.
+Verified-TLS PDF routes remained unavailable; HTML was retained rather than
+silently substituting later PDFs.
+
+Across all attempts the collector used **87/128 physical requests**: 48 HTTP
+200, eighteen HTTP 404 bodies retained, and 21 explicit empty no-response TLS
+captures. These include sixteen native-index requests, 32 selected HTML/XML
+requests, sixteen failed beta-PDF probes, sixteen current-route 404s, two
+legacy-route 404s and five initial TLS failures. The copied append-only ledger
+and all 87 body/header pairs are packet-local; minimum request-start spacing
+is 1.00067 seconds. Failed predecessors preserve existing-directory creation,
+categorical-zero-count, missing-static-original, filename-versus-display
+identity, and joint-resolution header-expectation defects. None is counted as
+completed evidence.
+
+Successful root: `data/processed/illinois-official-parallel-recovery-v5/`.
+Manifest SHA-256:
+`7a6074694413ababde9cc1fb91ae52ac45ff6bf2b6966734292bc44d29da006e`.
+The exact manifest binds 276 files; parent semantic replay leaves all **277**
+file hashes, including the manifest, unchanged. Source transport, selection,
+producer and verifier scripts are archived under `source/`. No canonical
+mutation, labels, model inference, historical-party/legal-version certification
+or training/evaluation/analytical/publication admission occurred.
 
 ## Withdrawal-only source inputs: production evidence abstention
 
