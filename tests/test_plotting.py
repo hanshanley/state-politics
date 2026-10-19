@@ -268,7 +268,36 @@ def test_stated_vs_revealed_panels_share_one_row_order():
     )
 
 
-def test_stated_vs_revealed_flags_rows_an_independent_labelling_contradicts():
+def test_stated_vs_revealed_leaves_unavailable_shares_unplotted(tmp_path):
+    import sys
+    from pathlib import Path
+
+    import pandas as pd
+
+    from state_politics.analysis.revealed import divergence_table
+
+    root = Path(__file__).resolve().parents[1]
+    sys.path.insert(0, str(root / "scripts"))
+    import plot_stated_vs_revealed as script
+
+    platform = pd.DataFrame({
+        "topic": [5, 6], "topic_name": ["Labor", "Education"],
+        "D": [0.6, 0.4], "R": [0.7, 0.3],
+    })
+    bills = pd.DataFrame({
+        "topic": [5, 6], "party": ["D", "D"], "share": [0.8, 0.2], "n_bills": [8, 2],
+    })
+    try:
+        script.build_figure(divergence_table(platform, bills), tmp_path / "comparison.png")
+        panels = plt.gcf().get_axes()[:2]
+        assert panels[0].collections[1].get_offsets()[:, 0].count() == 2
+        assert panels[1].collections[0].get_offsets()[:, 0].count() == 2
+        assert panels[1].collections[1].get_offsets()[:, 0].count() == 0
+    finally:
+        plt.close("all")
+
+
+def test_stated_vs_revealed_flags_rows_an_independent_labelling_contradicts(tmp_path):
     """A withdrawn claim must be visibly withdrawn in the figure, not silently dropped.
 
     The housing gap survived the model but not the subject-tag replication. Removing the row
@@ -294,24 +323,54 @@ def test_stated_vs_revealed_flags_rows_an_independent_labelling_contradicts():
         {"topic": 14, "party": "D", "holds": False},
         {"topic": 12, "party": "D", "holds": True},
         {"topic": 18, "party": "R", "holds": False},
+        {"topic": 6, "party": "R", "holds": None},
     ])
 
-    processed = root / "data" / "processed"
+    processed = tmp_path / "data" / "processed"
     processed.mkdir(parents=True, exist_ok=True)
     path = processed / "headline_tag_replication.csv"
-    preserved = path.read_bytes() if path.exists() else None
-    try:
-        tags.to_csv(path, index=False)
-        flagged = script.unreliable_topics(root, table)
-    finally:
-        if preserved is not None:
-            path.write_bytes(preserved)
-        else:
-            path.unlink(missing_ok=True)
+    tags.to_csv(path, index=False)
+    flagged = script.unreliable_topics(tmp_path, table)
 
     assert (14, "D") in flagged, "housing gap does not replicate and must be flagged"
     assert (12, "D") not in flagged, "law-and-crime gap replicates and must not be flagged"
     assert (18, "R") not in flagged, "unmapped tag topics cannot be replication failures"
+    assert (6, "R") not in flagged, "missing comparisons cannot be replication failures"
+
+
+@pytest.mark.parametrize("all_missing", [False, True])
+def test_figure_report_excludes_unknown_replication_verdicts(
+    tmp_path, monkeypatch, capsys, all_missing,
+):
+    import sys
+    from pathlib import Path
+
+    import pandas as pd
+
+    root = Path(__file__).resolve().parents[1]
+    sys.path.insert(0, str(root / "scripts"))
+    import report_figures as script
+
+    comparison = pd.DataFrame({
+        "topic_name": ["Labor", "Education", "Law"], "party": ["D", "D", "R"],
+        "stated_share": [0.5, 0.3, None], "model_share": [0.6, 0.2, None],
+        "tag_share": [0.7, 0.4, None],
+        "holds": [None] * 3 if all_missing else [True, False, None],
+    })
+    comparison.to_csv(tmp_path / "headline_tag_replication.csv", index=False)
+    monkeypatch.setattr(script, "ROOT", tmp_path)
+    monkeypatch.setattr(script, "DATA", tmp_path)
+    assert script.main() == 0
+    output = capsys.readouterr().out
+    if all_missing:
+        assert "headline rows replicated unavailable" in output
+        assert "headline rows unavailable 3/3" in output
+        assert "does not hold" not in output
+    else:
+        assert "1/2 available rows" in output
+        assert "headline rows unavailable 1/3" in output
+        assert output.count("does not hold") == 1
+        assert "Law" not in output
 
 
 def test_all_state_focus_matrix_has_every_state_and_explicit_nebraska_gap():

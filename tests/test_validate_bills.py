@@ -9,9 +9,11 @@ accurate against nothing.
 from __future__ import annotations
 
 import pandas as pd
+import pytest
 
 from state_politics.analysis.validate_bills import (
     agreement_report,
+    headline_replication_table,
     load_subject_map,
     normalize_tag,
     tag_replication,
@@ -21,6 +23,113 @@ from state_politics.analysis.validate_bills import (
 
 TOPIC_NAMES = {1: "Macroeconomics", 6: "Education", 12: "Law, crime and justice"}
 SUBJECT_MAP = {"education": 6, "schools": 6, "taxation": 1, "courts": 12}
+
+
+def test_headline_replication_keeps_each_missing_source_verdict_unavailable():
+    for missing_source in ("stated", "model", "tags"):
+        platform = pd.DataFrame({
+            "topic": [1, 6], "topic_name": ["Macroeconomics", "Education"],
+            "D": [0.6, 0.4], "R": [0.7, 0.3],
+        })
+        model = pd.DataFrame({
+            "topic": [1, 6, 1, 6], "party": ["D", "D", "R", "R"],
+            "share": [0.8, 0.2, 0.9, 0.1], "n_bills": [8, 2, 9, 1],
+        })
+        tags = model.copy()
+        if missing_source == "stated":
+            platform.loc[platform["topic"] == 1, "R"] = float("nan")
+        else:
+            source = model if missing_source == "model" else tags
+            source.loc[(source["party"] == "R") & (source["topic"] == 1), "share"] = (
+                float("nan")
+            )
+        table = headline_replication_table(platform, model, tags).set_index(["party", "topic"])
+        assert pd.isna(table.loc[("R", 1), "holds"])
+        assert table.loc[("R", 6), "holds"]
+        assert table.loc[("D", 1), "holds"]
+
+
+def test_headline_replication_separates_absent_parties_from_absent_topics():
+    platform = pd.DataFrame({
+        "topic": [1], "topic_name": ["Macroeconomics"], "D": [1.0], "R": [1.0],
+    })
+    model = pd.DataFrame({
+        "topic": [1], "party": ["D"], "share": [1.0], "n_bills": [2],
+    })
+    tags = pd.DataFrame({
+        "topic": [6, 6], "topic_name": ["Education", "Education"],
+        "party": ["D", "R"], "share": [1.0, 1.0], "n_bills": [3, 4],
+    })
+    table = headline_replication_table(platform, model, tags).set_index(["party", "topic"])
+    assert len(table) == 4
+    assert table.loc[("D", 6), "stated_share"] == 0.0
+    assert table.loc[("D", 6), "model_share"] == 0.0
+    assert table.loc[("D", 6), "tag_share"] == 1.0
+    assert table.loc[("D", 6), "topic_name"] == "Education"
+    assert table.loc["R", "model_share"].isna().all()
+    assert table.loc["R", "holds"].isna().all()
+
+
+def test_headline_replication_rejects_inconsistent_topic_names():
+    for platform in (
+        pd.DataFrame(columns=["topic", "topic_name", "D", "R"]),
+        pd.DataFrame({
+            "topic": [6], "topic_name": ["Education"], "D": [1.0], "R": [1.0],
+        }),
+    ):
+        model = pd.DataFrame({
+            "topic": [6], "topic_name": ["Schools"], "party": ["D"],
+            "share": [1.0], "n_bills": [2],
+        })
+        tags = model.assign(topic_name="Education")
+        with pytest.raises(ValueError, match="topic names disagree"):
+            headline_replication_table(platform, model, tags)
+
+
+@pytest.mark.parametrize("have_model_r", [True, False])
+def test_tag_replication_cli_matches_model_states_too(tmp_path, monkeypatch, have_model_r):
+    from state_politics.analysis import revealed, validate_bills
+
+    bills = pd.DataFrame({
+        "state": ["TX", "TX", "VT", "VT"], "sponsor_party": ["D", "R", "D", "R"],
+        "identifier": ["HB 1", "HB 2", "HB 3", "HB 4"], "year": [2024] * 4,
+        "subject": ["Education"] * 4,
+    })
+    bills_path = tmp_path / "bills.parquet"
+    bills.to_parquet(bills_path, index=False)
+    platform = pd.DataFrame({
+        "state": ["TX", "TX", "VT", "VT"], "party": ["D", "R", "D", "R"],
+        "topic": [6] * 4, "share": [1.0] * 4, "era": ["2018-present"] * 4,
+    })
+    platform_path = tmp_path / "platform.csv"
+    platform.to_csv(platform_path, index=False)
+    model = pd.DataFrame({
+        "state": ["TX", "TX", "VT"], "party": ["D", "R", "D"],
+        "topic": [6] * 3, "topic_name": ["Education"] * 3,
+        "share": [1.0] * 3, "n_bills": [1] * 3,
+    })
+    if not have_model_r:
+        model = model.loc[model["party"] != "R"]
+    model_path = tmp_path / "model.csv"
+    model.to_csv(model_path, index=False)
+    monkeypatch.setattr(validate_bills, "load_classifier", lambda *args: None)
+    monkeypatch.setattr(validate_bills, "load_subject_map", lambda *args: SUBJECT_MAP)
+    monkeypatch.setattr(
+        revealed, "classify_bills", lambda frame, classifier: frame.assign(topic=6),
+    )
+    assert validate_bills.main([
+        "--bills", str(bills_path), "--platform-by-org", str(platform_path),
+        "--bill-by-state", str(model_path), "--out", str(tmp_path / "agreement.csv"),
+    ]) == 0
+    comparison = pd.read_csv(tmp_path / "headline_tag_replication.csv")
+    replication = pd.read_csv(tmp_path / "bill_emphasis_by_tag.csv")
+    if have_model_r:
+        assert set(comparison["n_states"]) == {1}
+        assert set(replication["n_states"]) == {1}
+        assert replication["n_bills"].sum() == 2
+    else:
+        assert comparison.empty
+        assert replication.empty
 
 
 def test_subject_agreement_and_replication_exclude_requests_but_keep_formal_abstentions():

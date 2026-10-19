@@ -212,10 +212,17 @@ def main() -> int:
 
     replication = _load("headline_tag_replication.csv")
     if replication is not None:
-        holds = replication["holds"].fillna(False).astype(bool)
-        print(f"  headline rows replicated {int(holds.sum())}/{len(replication)} "
+        holds = replication["holds"].astype("boolean")
+        n_available = int(holds.notna().sum())
+        rate = (
+            f"{int(holds.sum())}/{n_available} available rows"
+            if n_available else "unavailable (no comparable rows)"
+        )
+        print(f"  headline rows replicated {rate} "
               "using tag labels instead of the model")
-        for _, row in replication[~holds].iterrows():
+        if holds.isna().any():
+            print(f"  headline rows unavailable {int(holds.isna().sum())}/{len(replication)}")
+        for _, row in replication[holds.eq(False).fillna(False)].iterrows():
             print(f"    does not hold      {row['topic_name']} ({row['party']}): "
                   f"said {row['stated_share'] * 100:.1f}%, "
                   f"model {row['model_share'] * 100:.1f}%, "

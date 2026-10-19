@@ -46,11 +46,12 @@ SOURCE_NOTE = (
     "Project major-topic scheme, assigned by a local sentence-transformer scoring 62% top-1 and "
     "78% top-2 on a hand-labelled plank sample. Bills are classified from titles, which are "
     "shorter and noisier than planks. Filing a bill is not passing one: this measures agenda, "
-    "not achievement. Rows marked † are contradicted when bill topics are "
-    "re-derived from Open States subject tags assigned by legislative staff rather than by "
-    "this model, and should not be read as findings; topics with no mapped staff tag are not "
-    "flagged. The classifier tends to file a tax bill "
-    "under the thing being taxed, which inflates housing in particular."
+    "not achievement. Rows marked † fail to retain the same nonzero gap direction when bill "
+    "topics are re-derived from source-subject tags through the authored crosswalk; these "
+    "are not confirmed findings. Topics without a mapped tag or an available comparison "
+    "are not flagged. The classifier tends to file a tax bill "
+    "under the thing being taxed, which inflates housing in particular. "
+    "Unavailable source shares have no marker; they are not zeros."
 )
 
 
@@ -98,12 +99,11 @@ def sample_description(root: Path) -> str:
 
 
 def unreliable_topics(root: Path, table: pd.DataFrame) -> set[tuple[int, str]]:
-    """(topic, party) pairs an independent labelling contradicts.
+    """(topic, party) pairs whose available tag comparison does not replicate the direction.
 
-    Bill topics are re-derived from Open States `subject` tags, which are assigned by
-    legislative staff and owe nothing to this project's classifier. A row is flagged when the
-    two labellings put the filed share on *opposite* sides of the stated share -- that is, when
-    they disagree about the direction of the gap, which is the only thing the figure claims.
+    A row is flagged only when an available tag comparison fails to support the same
+    nonzero direction. An unavailable comparison is not a contradiction. Subject provenance
+    and any training dependence require separate verification.
     """
     replication = root / "data/processed/headline_tag_replication.csv"
     if not replication.exists():
@@ -113,7 +113,7 @@ def unreliable_topics(root: Path, table: pd.DataFrame) -> set[tuple[int, str]]:
     return {
         (int(row.topic), row.party)
         for row in comparison[
-            ~comparison["holds"].fillna(False)
+            comparison["holds"].astype("boolean").eq(False).fillna(False)
             & comparison["topic"].isin(mapped_topics)
         ].itertuples()
     }

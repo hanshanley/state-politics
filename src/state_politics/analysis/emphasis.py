@@ -144,13 +144,13 @@ def emphasis_by_party(planks, topics, *, matched_states: bool = True):
             index=["state", "party"], columns="topic", values="share", fill_value=0.0
         )
         party_means = vectors.groupby(level="party").mean().reindex(["D", "R"])
-        wide = party_means.T.reindex(columns=["D", "R"]).fillna(0.0).reset_index()
+        wide = party_means.T.reindex(columns=["D", "R"]).reset_index()
         n_states = vectors.index.get_level_values("state").nunique()
         weighting = "equal_state_matched"
     else:
         table = emphasis_table(major, topics, by=("party",))
         wide = table.pivot(index="topic", columns="party", values="share")
-        wide = wide.reindex(columns=["D", "R"]).fillna(0.0).reset_index()
+        wide = wide.fillna(0.0).reindex(columns=["D", "R"]).reset_index()
         n_states = major["state"].nunique()
         weighting = "pooled_planks"
     names = {topic.code: topic.name for topic in topics}

@@ -200,8 +200,7 @@ def test_divergence_table_reports_the_gap_between_saying_and_filing():
     assert len(table) == 4
 
 
-def test_divergence_table_treats_a_missing_side_as_zero_not_as_missing():
-    """A topic a party never legislates is a real zero, not an absent observation."""
+def test_divergence_table_preserves_an_entirely_unobserved_party():
     from state_politics.analysis.revealed import divergence_table
 
     platform = pd.DataFrame({"topic": [19], "topic_name": ["International"],
@@ -209,8 +208,91 @@ def test_divergence_table_treats_a_missing_side_as_zero_not_as_missing():
     bills = pd.DataFrame({"topic": [19], "party": ["D"], "share": [0.001], "n_bills": [2]})
     table = divergence_table(platform, bills)
     rep = table[table.party == "R"].iloc[0]
-    assert rep["revealed_share"] == 0.0
-    assert rep["stated_minus_revealed"] == 0.02
+    assert pd.isna(rep["revealed_share"])
+    assert pd.isna(rep["stated_minus_revealed"])
+    assert pd.isna(rep["n_bills"])
+
+
+def test_divergence_table_zeros_only_absent_topics_in_observed_parties():
+    from state_politics.analysis.revealed import divergence_table
+
+    platform = pd.DataFrame({
+        "topic": [5, 6], "topic_name": ["Labor", "Education"],
+        "D": [1.0, 0.0], "R": [0.1, 0.9],
+    })
+    bills = pd.DataFrame({
+        "topic": [5, 6], "party": ["D", "R"],
+        "share": [1.0, 1.0], "n_bills": [10, 20],
+    })
+    table = divergence_table(platform, bills).set_index(["party", "topic"])
+    assert table.loc[("R", 5), "revealed_share"] == 0.0
+    assert table.loc[("R", 5), "n_bills"] == 0
+    assert table.loc[("R", 5), "stated_minus_revealed"] == 0.1
+    assert table.loc[("D", 6), "revealed_share"] == 0.0
+
+
+def test_divergence_table_keeps_explicit_missing_shares():
+    from state_politics.analysis.revealed import divergence_table
+
+    platform = pd.DataFrame({
+        "topic": [5, 6], "topic_name": ["Labor", "Education"],
+        "D": [None, 0.4], "R": [0.1, 0.9],
+    })
+    bills = pd.DataFrame({
+        "topic": [5, 6, 5, 6], "party": ["D", "D", "R", "R"],
+        "share": [0.2, None, None, 0.4], "n_bills": [2, None, None, 4],
+    })
+    table = divergence_table(platform, bills).set_index(["party", "topic"])
+    assert pd.isna(table.loc[("D", 5), "stated_share"])
+    assert pd.isna(table.loc[("D", 6), "revealed_share"])
+    assert pd.isna(table.loc[("R", 5), "revealed_share"])
+    assert table["stated_minus_revealed"].isna().sum() == 3
+
+
+def test_divergence_table_retains_bill_only_topics_and_both_party_zeros():
+    from state_politics.analysis.revealed import divergence_table
+
+    platform = pd.DataFrame({
+        "topic": [5], "topic_name": ["Labor"], "D": [1.0], "R": [1.0],
+    })
+    bills = pd.DataFrame({
+        "topic": [5, 6, 5], "topic_name": ["Labor", "Education", "Labor"],
+        "party": ["D", "D", "R"], "share": [0.6, 0.4, 1.0], "n_bills": [6, 4, 10],
+    })
+    table = divergence_table(platform, bills).set_index(["party", "topic"])
+    assert len(table) == 4
+    assert table.loc[("D", 6), "topic_name"] == "Education"
+    assert table.loc[("D", 6), "stated_minus_revealed"] == -0.4
+    assert table.loc[("R", 6), "stated_share"] == 0.0
+    assert table.loc[("R", 6), "revealed_share"] == 0.0
+    assert table.loc[("R", 6), "n_bills"] == 0
+
+
+def test_divergence_table_with_no_platform_sample_keeps_comparisons_unavailable():
+    from state_politics.analysis.revealed import divergence_table
+
+    platform = pd.DataFrame(columns=["topic", "topic_name", "D", "R"])
+    bills = pd.DataFrame({
+        "topic": [5], "topic_name": ["Labor"], "party": ["D"], "share": [1.0],
+        "n_bills": [2],
+    })
+    table = divergence_table(platform, bills).set_index("party")
+    assert set(table.index) == {"D", "R"}
+    assert table["stated_share"].isna().all()
+    assert table["stated_minus_revealed"].isna().all()
+    assert table.loc["D", "revealed_share"] == 1.0
+    assert pd.isna(table.loc["R", "revealed_share"])
+
+
+def test_pooled_platform_emphasis_does_not_invent_a_missing_party_share():
+    planks = _planks(
+        [("TX", "D", "e", 5)] * 3 + [("TX", "R", "e", None)] * 2
+    )
+    table = emphasis_by_party(planks, TOPICS, matched_states=False)
+    assert table["D"].tolist() == [1.0]
+    assert table["R"].isna().all()
+    assert table["gap"].isna().all()
+    assert table["n_R"].tolist() == [0]
 
 
 def test_bill_party_emphasis_weights_states_equally():
@@ -234,6 +316,23 @@ def test_bill_party_emphasis_weights_states_equally():
 
     assert equal.loc[equal["topic"] == 5, "share"].iloc[0] == 0.5
     assert pooled.loc[pooled["topic"] == 5, "share"].iloc[0] == 100 / 101
+
+
+def test_bill_party_emphasis_counts_each_partys_observed_states():
+    from state_politics.analysis.revealed import party_emphasis_from_states
+
+    state_counts = pd.DataFrame([
+        {"state": "TX", "party": "D", "topic": 5, "topic_name": "Labor",
+         "n_bills": 100, "share": 1.0},
+        {"state": "VT", "party": "D", "topic": 1, "topic_name": "Macroeconomics",
+         "n_bills": 1, "share": 1.0},
+        {"state": "TX", "party": "R", "topic": 1, "topic_name": "Macroeconomics",
+         "n_bills": 2, "share": 1.0},
+    ])
+    for equal_state in (True, False):
+        table = party_emphasis_from_states(state_counts, equal_state=equal_state)
+        assert set(table.loc[table["party"] == "D", "n_states"]) == {2}
+        assert set(table.loc[table["party"] == "R", "n_states"]) == {1}
 
 
 def test_classify_bills_leaves_very_short_titles_unclassified():

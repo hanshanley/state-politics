@@ -27,6 +27,7 @@ __all__ = [
     "agreement_report",
     "tag_replication",
     "tag_replication_by_state",
+    "headline_replication_table",
 ]
 
 DEFAULT_MAP_PATH = Path(__file__).resolve().parents[3] / "conf" / "subject_topic_map.yml"
@@ -187,6 +188,47 @@ def tag_replication_by_state(bills, subject_map: dict[str, int], topic_names: di
     return counts
 
 
+def headline_replication_table(platform_emphasis, model_emphasis, tag_emphasis):
+    """Compare directions only where all three source shares are available."""
+    import pandas as pd
+
+    from .revealed import divergence_table
+
+    topic_universe = pd.concat([
+        platform_emphasis["topic"], model_emphasis["topic"], tag_emphasis["topic"],
+    ]).drop_duplicates()
+    model = divergence_table(
+        platform_emphasis, model_emphasis, topic_universe=topic_universe,
+    )
+    tags = divergence_table(
+        platform_emphasis, tag_emphasis, topic_universe=topic_universe,
+    )
+    comparison = model[
+        ["party", "topic", "topic_name", "stated_share", "revealed_share"]
+    ].rename(columns={"revealed_share": "model_share"}).merge(
+        tags[["party", "topic", "topic_name", "revealed_share"]].rename(
+            columns={"revealed_share": "tag_share", "topic_name": "tag_topic_name"}
+        ),
+        on=["party", "topic"], how="outer", validate="one_to_one",
+    )
+    conflicting_names = (
+        comparison["topic_name"].notna() & comparison["tag_topic_name"].notna()
+        & comparison["topic_name"].ne(comparison["tag_topic_name"])
+    )
+    if conflicting_names.any():
+        raise ValueError("model and tag topic names disagree")
+    comparison["topic_name"] = comparison["topic_name"].combine_first(
+        comparison.pop("tag_topic_name")
+    )
+    available = comparison[["stated_share", "model_share", "tag_share"]].notna().all(axis=1)
+    comparison["holds"] = (
+        (comparison["model_share"] - comparison["stated_share"])
+        * (comparison["tag_share"] - comparison["stated_share"])
+        > 0
+    ).astype("boolean").where(available)
+    return comparison
+
+
 def main(argv: list[str] | None = None) -> int:
     import pandas as pd
 
@@ -282,24 +324,30 @@ def main(argv: list[str] | None = None) -> int:
         party: set(tag_state.loc[tag_state["party"] == party, "state"])
         for party in ("D", "R")
     }
+    model_state = pd.read_csv(args.bill_by_state)
+    model_states = {
+        party: set(model_state.loc[model_state["party"] == party, "state"])
+        for party in ("D", "R")
+    }
     comparison_states = (
         platform_states["D"]
         & platform_states["R"]
         & tag_states["D"]
         & tag_states["R"]
+        & model_states["D"]
+        & model_states["R"]
     )
     replication = party_emphasis_from_states(
         tag_state,
         states=comparison_states,
-    ).rename(columns={"share": "tag_share"})
+    )
     replication_path = out.with_name("bill_emphasis_by_tag.csv")
-    replication.to_csv(replication_path, index=False)
+    replication.rename(columns={"share": "tag_share"}).to_csv(replication_path, index=False)
 
-    model_state = pd.read_csv(args.bill_by_state)
     model = party_emphasis_from_states(
         model_state,
         states=comparison_states,
-    ).rename(columns={"share": "model_share"})
+    )
     stated_vectors = current_platform[
         current_platform["state"].isin(comparison_states)
     ].pivot_table(
@@ -311,28 +359,11 @@ def main(argv: list[str] | None = None) -> int:
     stated = (
         stated_vectors.groupby(level="party")
         .mean()
-        .stack(future_stack=True)
-        .rename("stated_share")
+        .T.reindex(columns=["D", "R"])
         .reset_index()
     )
-    comparison = (
-        stated.merge(
-            model[["party", "topic", "model_share"]],
-            on=["party", "topic"],
-            how="outer",
-        )
-        .merge(
-            replication[["party", "topic", "tag_share"]],
-            on=["party", "topic"],
-            how="outer",
-        )
-        .fillna(0.0)
-    )
-    comparison["holds"] = (
-        (comparison["model_share"] - comparison["stated_share"])
-        * (comparison["tag_share"] - comparison["stated_share"])
-        > 0
-    )
+    stated["topic_name"] = stated["topic"].map(topic_names)
+    comparison = headline_replication_table(stated, model, replication)
     comparison["n_states"] = len(comparison_states)
     comparison["topic_name"] = comparison["topic"].map(topic_names)
     comparison_path = out.with_name("headline_tag_replication.csv")
@@ -345,10 +376,14 @@ def main(argv: list[str] | None = None) -> int:
             comparison["model_share"] - comparison["tag_share"]
         ).abs().sort_values(ascending=False).index
         for _, row in comparison.reindex(order).iterrows():
+            verdict = (
+                "unavailable" if pd.isna(row["holds"])
+                else "holds" if row["holds"] else "DOES NOT HOLD"
+            )
             print(f"  {row['topic_name'][:33]:<34}{row['party']:>6}"
                   f"{row['stated_share'] * 100:7.1f}%"
                   f"{row['model_share'] * 100:7.1f}%{row['tag_share'] * 100:7.1f}%  "
-                  f"{'holds' if row['holds'] else 'DOES NOT HOLD'}")
+                  f"{verdict}")
     print(f"\nwrote {out}")
     print(f"wrote {replication_path}")
     print(f"wrote {comparison_path}")

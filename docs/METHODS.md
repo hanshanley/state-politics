@@ -15,6 +15,7 @@ in [REPRODUCIBILITY.md](REPRODUCIBILITY.md).
 
 **Contents**
 
+- [Comparison accounting](#comparison-accounting)
 - [Stream A: platforms](#stream-a-platforms)
 - [Committee-document gaps](#committee-document-observations-and-withdrawn-absence-claims)
 - [Stream B: legislators and bills](#stream-b-legislators-and-bills)
@@ -29,6 +30,31 @@ in [REPRODUCIBILITY.md](REPRODUCIBILITY.md).
 - [Repository layout](#repository-layout)
 - [Provenance](#provenance)
 - [Figure style](#figure-style)
+
+---
+
+## Comparison accounting
+
+**October 19, 2026 correction:** topic shares are conditional on a classified
+sample. An absent topic within an observed party sample is a structural zero;
+an absent party sample or an explicitly unknown share is not. Comparisons
+preserve unknown shares and leave their gaps unavailable. The topic grid
+includes topics observed in any compared stream, retaining source-provided
+topic names and rejecting conflicting names for the same code. A topic missing
+from every compared source is not fabricated as a new observation.
+
+Equal-state and pooled bill summaries report each party's own observed state
+count. The subject-tag replication additionally requires the same states to
+have both D/R observations in all three streams: platforms, model-labelled
+bills and tag-labelled bills. A missing share in any stream leaves the
+replication verdict unavailable. Available ties do not establish the same
+nonzero gap direction. Reports separate unavailable rows from available
+replication counts; charts leave missing values unplotted rather than drawing
+zero-valued markers or calling missing evidence a contradiction.
+
+These production accounting corrections do not revalidate the legacy figures,
+counts or agreement claims below. Source completeness, event-time attribution,
+classifier certification and analytical regeneration remain separate gates.
 
 ---
 

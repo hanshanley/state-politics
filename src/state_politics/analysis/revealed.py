@@ -299,11 +299,13 @@ def count_topics_by_state(
     }, coverage
 
 
-def divergence_table(platform_emphasis, bill_emphasis):
+def divergence_table(platform_emphasis, bill_emphasis, *, topic_universe=()):
     """Join stated and revealed emphasis and report the gap between them, per party per topic.
 
     ``stated_minus_revealed`` is positive where a party's platforms give a topic more room than
-    its legislators' bills do.
+    its legislators' bills do. An absent topic is zero only within an observed party sample;
+    unavailable samples and explicitly missing shares remain missing. ``topic_universe`` can
+    include topics observed in another comparison stream, such as subject tags.
     """
     import pandas as pd
 
@@ -311,21 +313,44 @@ def divergence_table(platform_emphasis, bill_emphasis):
         id_vars=["topic", "topic_name"], value_vars=["D", "R"],
         var_name="party", value_name="stated_share",
     )
+    revealed = bill_emphasis.rename(columns={"share": "revealed_share"})[
+        ["topic", "party", "revealed_share", "n_bills"]
+    ].copy()
+    stated_parties = stated.loc[stated["stated_share"].notna(), "party"]
+    revealed_parties = revealed.loc[revealed["revealed_share"].notna(), "party"]
+    stated["_stated_observed"] = True
+    revealed["_revealed_observed"] = True
     merged = stated.merge(
-        bill_emphasis.rename(columns={"share": "revealed_share"})[
-            ["topic", "party", "revealed_share", "n_bills"]
-        ],
-        on=["topic", "party"], how="outer",
+        revealed, on=["topic", "party"], how="outer", validate="one_to_one",
     )
-    merged["stated_share"] = merged["stated_share"].fillna(0.0)
-    merged["revealed_share"] = merged["revealed_share"].fillna(0.0)
+    grid = pd.MultiIndex.from_product(
+        [
+            pd.Index([*merged["topic"].drop_duplicates(), *topic_universe]).drop_duplicates(),
+            pd.Index(["D", "R", *revealed["party"].drop_duplicates()]).drop_duplicates(),
+        ],
+        names=["topic", "party"],
+    )
+    merged = merged.set_index(["topic", "party"]).reindex(grid).reset_index()
+    absent_stated = merged["_stated_observed"].isna() & merged["party"].isin(stated_parties)
+    absent_revealed = (
+        merged["_revealed_observed"].isna() & merged["party"].isin(revealed_parties)
+    )
+    merged.loc[absent_stated, "stated_share"] = 0.0
+    merged.loc[absent_revealed, ["revealed_share", "n_bills"]] = 0
     merged["stated_minus_revealed"] = merged["stated_share"] - merged["revealed_share"]
     names = (
-        pd.concat([platform_emphasis[["topic", "topic_name"]]])
-        .drop_duplicates().set_index("topic")["topic_name"]
+        pd.concat([
+            platform_emphasis[["topic", "topic_name"]],
+            bill_emphasis.reindex(columns=["topic", "topic_name"]),
+        ]).dropna(subset=["topic_name"]).drop_duplicates()
     )
+    if names["topic"].duplicated().any():
+        raise ValueError("platform and bill topic names disagree")
+    names = names.set_index("topic")["topic_name"]
     merged["topic_name"] = merged["topic"].map(names)
-    return merged.sort_values(["party", "stated_minus_revealed"], ascending=[True, False])
+    return merged.drop(columns=["_stated_observed", "_revealed_observed"]).sort_values(
+        ["party", "stated_minus_revealed"], ascending=[True, False]
+    )
 
 
 def party_emphasis_from_states(state_counts, *, states=None, equal_state=True):
@@ -360,7 +385,8 @@ def party_emphasis_from_states(state_counts, *, states=None, equal_state=True):
             .reset_index()
         )
         result = means.merge(counts, on=["party", "topic"], how="left")
-        result["n_states"] = vectors.index.get_level_values("state").nunique()
+        result["n_bills"] = result["n_bills"].fillna(0).astype(int)
+        result["n_states"] = result["party"].map(vectors.groupby(level="party").size())
     else:
         result = (
             frame.groupby(["party", "topic"])["n_bills"]
@@ -371,7 +397,7 @@ def party_emphasis_from_states(state_counts, *, states=None, equal_state=True):
         result["share"] = result["n_bills"] / result.groupby("party")[
             "n_bills"
         ].transform("sum")
-        result["n_states"] = frame["state"].nunique()
+        result["n_states"] = result["party"].map(frame.groupby("party")["state"].nunique())
     names = frame[["topic", "topic_name"]].drop_duplicates().set_index("topic")[
         "topic_name"
     ]
@@ -492,7 +518,6 @@ def main(argv: list[str] | None = None) -> int:
         platform_vectors.groupby(level="party")
         .mean()
         .T.reindex(columns=["D", "R"])
-        .fillna(0.0)
         .reset_index()
     )
     platform["topic_name"] = platform["topic"].map(named)
@@ -505,6 +530,13 @@ def main(argv: list[str] | None = None) -> int:
         display[column] = (display[column] * 100).round(1)
     for party in ("D", "R"):
         subset = display[display["party"] == party]
+        unavailable = int(subset["stated_minus_revealed"].isna().sum())
+        if unavailable:
+            print(f"\n  {party}: {unavailable} topic comparisons unavailable")
+        subset = subset.dropna(subset=["stated_minus_revealed"])
+        if subset.empty:
+            print(f"\n  {party}: no comparable platform/bill topic shares")
+            continue
         print(f"\n  {party}: talked about far more than filed")
         print(subset.head(3)[["topic_name", "stated_share", "revealed_share"]]
               .to_string(index=False))

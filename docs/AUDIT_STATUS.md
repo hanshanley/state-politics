@@ -26,7 +26,48 @@ remain explicit; this is not a completed project or a certified classifier.
 | Classification | Four saved official English ModernBERT-base pilots compared on the same 52 platform references: external-only 41/52, joint 47/52, broader-source 47/52, Republican-expanded 49/52. The fourth run correctly rejects 3/4 mixtures and 6/6 non-policy units. | The fourth run loses one policy decision, still accepts a mixture above 0.999 and regresses on insufficient-evidence and taxonomy-boundary development cases. Both sets are examined diagnostics, not fresh independent tests. Independent review and empirical gates remain required. No candidate is approved. |
 | Labels | External CAP files and two state-reference CSVs recovered; exact-context Florida candidates and complete bounded overlap witnesses are frozen without label admission. Split/group/text and reviewed-platform source-body checks retain explicit label provenance. | Modern Florida external titles/subtopics are missing; Pennsylvania rows stop in 2016. Annotation provenance, source permissions, adapted-topic compatibility, bill families and independent state-domain references remain unresolved. |
 | Evaluation | Checkpoint-bound training/evaluation split isolation, development-only temperature/threshold selection, exact evidence joins, abstention accounting, per-topic and subgroup metrics. | Reviewer arrangement, frozen empirical gates, independent target tests and clustered uncertainty. No checkpoint can be certified by changing a status field. |
+| Comparison accounting | Missing samples and explicitly unknown shares no longer become zero-valued gaps. Party-specific state counts and three-stream matched-state replication are repaired; unavailable verdicts remain separate in exports, reports and plots. | Legacy analytical outputs have not been regenerated or certified. Correct missingness accounting does not supply missing source evidence, historical affiliations or independent classifier validation. |
 | Companion | Local-only preview v9 exposes all 1,559 recovery captures, 119 failures and 61 alternative extraction identities across 55 OCR bodies, three DOCX bodies and one native-block body, alongside the 2,091 historical documents. The source ledger includes the corrected Arizona and Alaska registry rows. All 100 organization rows remain unresolved. | Audited classification/analysis exports, redistribution review and eventual report; no production integration is authorized. |
+
+## Comparison missingness and matched-state accounting
+
+Direct production inspection and five executed pre-fix regressions reproduced
+missing-party bill shares becoming zero, explicit null shares becoming zero,
+missing-topic counts remaining null despite a known classified sample, pooled
+platform sensitivity inventing a missing party's share, and a global union
+state count being reported for each party. The failed run is retained as
+`comparison_missingness_before_v1.log`; the original production files and
+regression inputs are bound by `comparison_missingness_before_v1.sha256`.
+
+The comparison now distinguishes an absent topic within an observed classified
+party sample from an unavailable sample or an explicitly unknown observation.
+Only the former receives a zero share and, for bills, a zero topic count.
+The output retains each observed topic for both major parties, including
+bill-only topics and their source-provided names; conflicting names for the
+same topic code fail explicitly. An unavailable side leaves the numerical gap
+unavailable. The upstream pooled platform summary and comparison CLI no longer
+reintroduce missing-party zeros. Equal-state and pooled bill summaries report
+the number of observed states for each party, not the union across parties.
+
+The subject-tag replication had a separate unconditional zero-fill and omitted
+model-state availability from its matched-state intersection. It now reuses
+the comparison rules across the union of all three streams' topics and matches
+states with both D/R observations in platforms, model-labelled bills and
+tag-labelled bills. Its `holds` verdict is nullable: an unavailable source
+share produces an unavailable verdict, not a failed replication. CSV exports
+retain the missing value; the reporting script separately counts unavailable
+rows and uses only available verdicts in its replication denominator. Plotting
+preserves missing markers and does not flag unavailable verdicts as
+contradictions. Known ties still do not support a nonzero directional claim.
+
+All **82** tests in the three affected emphasis, bill-validation and plotting
+suites pass, including actual temporary-file CLI/export checks with classifier
+test doubles, an empty matched-state case, nullable report denominators and
+masked plotted observations. Targeted Ruff checks also pass. The actual final
+run is retained as `comparison_missingness_complete_v1.log`. No production
+inference, training, label edits or analytical regeneration was performed.
+These are accounting repairs, not improved accuracy measurements or new
+substantive findings; the v53 audit and frozen legacy outputs remain unchanged.
 
 ## Shared retrieval response lifecycle and evidence limits
 
@@ -1135,17 +1176,32 @@ source collector is absent at bridge creation. The next stage must inherit
 The completed source/full-tail packets and bridge are now integrated into actual
 aggregate v53; native-version preparation remains separate and unapproved.
 
-### Complete paired-reader inputs in preparation
+### Complete paired-reader input packet, parent replay running
 
-A separate zero-HTTP worker is preparing complete unlabelled token/window
-inventories for both retained reader views of all **2,004 native contexts**.
-The planned **4,008 reader views are not 4,008 bills**. Neither reader is chosen
-as ground truth, the two unresolved identities remain present, and current
-titles/summaries cannot replace or augment a complete source view. The new
-self-contained packet must independently reproduce every PDF/page, complete
-text and token/window plan before parent replay; no completed input inventory
-or classifier admission is claimed yet. This scope is distinct from the
-publisher-native version census below.
+The zero-HTTP worker has returned the immutable
+`north-carolina-full-native-pdf-token-input-inventory-v1` packet, manifest
+`30bfb40f95b53b67f516d2dc49efb9c05efb2935ee1df0f8ad6b042a588d5a42`.
+It retains **2,004 native contexts / 4,008 separate reader views**, not 4,008
+bills, across **12,065 payload / 12,066 total files**. Worker-reported totals
+are **10,917,908 tokens / 14,520 windows / zero discarded tokens**. Neither
+reader is selected as ground truth or hybridized; both unresolved identities
+remain present, with no title/summary replacement or prepending.
+
+The character accounting explicitly distinguishes **40,663,421 page
+characters** from **40,672,979 joined characters**, including exactly **4,779
+LF interpage joiners per reader**. The earlier source replay's 20,489,184
+PyMuPDF and 20,174,237 pypdf totals are page characters, not joined model-view
+lengths. Both complete text, token/offset and window exports are retained.
+
+The parent has inspected the frozen verifier and pinned the handoff, manifest,
+verifier and common guard. Actual parent common-guard replay
+`nc-two-reader-parent-actual-v1` is running; Python PID **39834** and the first
+**100 PDFs / 200 views** were observed after launch. Its log is
+`nc_two_reader_parent_actual_v1.log`. Worker direct/guarded replays and five
+focused tests are reported separately, not substituted for the pending parent
+execution. No parent-completed replay, aggregate inclusion or classifier
+admission is claimed yet. This scope is distinct from the publisher-native
+version census below.
 
 ### Native-version census preparation, not completed collection
 
