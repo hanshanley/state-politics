@@ -9,7 +9,7 @@ replacement classifier or establish complete contemporary coverage.
 | Historical platforms | Recovered 2,091 authoritative archive documents, with publisher checksums and old/new archive reconciliation. | Historical availability must not be substituted for operative modern platforms. |
 | Contemporary platforms | Inventory v8 preserves 1,559 requests, including 1,440 retained responses across all 100 organizations, 119 failures and 1,371 body hashes. Corrected Alaska's stale host and recovered an image-only Massachusetts resolution. | Deferred navigation/images, OCR quality, source/institution/version adjudication and operative coverage remain unresolved. Retained responses are not verified platforms. |
 | Sponsorship | Date-aware attribution remains conservative. Official Washington original-record and explicit native-primary sponsor evidence now supply separate historical session-roster D/R observations for 14,132 of 14,143 measures, without overwriting any filing-time party. | A biennial roster does not establish affiliation at filing. Ten remaining source rows identify themselves as system tests; one substantive original is recovered but lacks a native primary-sponsor API record. Event-time affiliation and all-state recovery remain open. |
-| Bills | October snapshot extracted: 1,090,369 source-context measures across all 50 states, 5,028,893 sponsorships, 9,002,451 actions and 873,980 vote events. All eleven tables have recorded hashes/counts. | Official-source reconciliation, historical affiliations and filing-time text review. Full extraction is not a certified source universe or analytical denominator. |
+| Bills | October snapshot extracted: 1,090,369 source-context measures across all 50 states, 5,028,893 sponsorships, 9,002,451 actions and 873,980 vote events. All eleven tables have recorded hashes/counts. Native documents now retained for all 241 non-test measures in the bounded Washington metadata-gap cohort. | Official-source reconciliation, historical affiliations and filing-time text review. One recovered resolution has a version-note conflict. Neither this bounded recovery nor snapshot extraction certifies statewide/national original-text completeness or an analytical denominator. |
 | Classification | Four saved official English ModernBERT-base pilots compared on the same 52 platform references: external-only 41/52, joint 47/52, broader-source 47/52, Republican-expanded 49/52. The fourth run correctly rejects 3/4 mixtures and 6/6 non-policy units. | The fourth run loses one policy decision, still accepts a mixture above 0.999 and regresses on insufficient-evidence and taxonomy-boundary development cases. Both sets are examined diagnostics, not fresh independent tests. Independent review and empirical gates remain required. No candidate is approved. |
 | Labels | External CAP files recovered; split/group/exact-text and reviewed-platform source-body checks plus explicit reviewed-label provenance are implemented. | Source permissions, adapted-topic compatibility, near-duplicate families and reviewed state-domain training/development/test labels. |
 | Evaluation | Checkpoint-bound training/evaluation split isolation, development-only temperature/threshold selection, exact evidence joins, abstention accounting, per-topic and subgroup metrics. | Reviewer arrangement, frozen empirical gates, independent target tests and clustered uncertainty. No checkpoint can be certified by changing a status field. |
@@ -210,6 +210,69 @@ Canonical audit **v17** records **28** completed research packets and still retu
 with the same **34/324** failures. Its manifest is
 `ff2a2f641bd81fc7e59f404fc21d57302a3215e8bb5672215c6e8bd83a50d6af`;
 the canonical report remains unchanged.
+
+### Original-document recovery and a version-note conflict
+
+The completed original-link campaign follows **389 retained references across 249** of
+the exact **251** native-recovery targets. **407 requests** include explicit conditional
+HTTPS alternatives, yielding **371 retained responses for 240 measures** and **36 HTTP
+404 failures**. Every failure belongs to nine previously reviewed system-test records;
+the ten test records together include one without an original-note link. These are
+bounded request outcomes, not proof that the publisher has no other documents.
+
+Strict extraction retains **241 HTML / 130 PDF** full texts and **1,809 PDF pages**.
+The **9,163,509** extracted characters include parallel formats and are not unique policy
+volume. All raw bytes, complete text files, source-version/link rows and unsuccessful
+receipts remain in immutable packets. **366** automatic native-heading/session matches
+cover **237** measures. Five resolution-format exceptions across three more measures
+have explicit assistant source-scope reviews, bringing supported original-source context
+to **240 measures** without changing any earlier automated result.
+
+Those exceptions are 2017-2018 SR 8678, 2023-2024 SR 8601 and 2025-2026 HR 4607.
+SR 8678 has only publisher-path session support, not a fabricated document date.
+The 2023 SR 8601 retains deleted earlier years and underlined replacements; plain text
+alone cannot distinguish operative from deleted language. HR 4607 uses its native
+year-prefixed resolution heading rather than an ordinary bill-cover format.
+These are source-scope reviews, not independent semantic or filing-time certification.
+
+The remaining substantive original-note gap, **2019-2020 SR 8601**, has two retained
+references, not four. Both official HTML bodies were successfully recovered. The imported
+**Substitute Resolution** note conflicts with the first document's plain **SENATE
+RESOLUTION 8601** heading. The other document explicitly prints **ENGROSSED SENATE
+RESOLUTION E8601**, agreeing with its imported note. Both adoption clauses refer to the
+2019 session, but the added rules-heading year is **2018** in the plain-heading version
+and **2019** in the engrossed version. Complete texts, native markup, exact source notes,
+header excerpts and the discrepancy are preserved separately. A plain heading does not
+by itself prove earliest filing-time text; no source note is overwritten or original
+version certified from this contrast.
+
+Across these two retrieval packets, **409 requests / 373 retained response bodies**
+now provide native documents for **all 241 non-test measures in this bounded cohort**.
+This is not 373 unique bills, all-Washington full-text coverage, or automatic admission
+to classification. Original-source scope remains supported for 240 measures, with one
+explicit version-identity conflict. This text/version issue is separate from **2023-2024
+HB 2379's native-primary sponsorship gap**. The detailed API's **245 missing / six
+duplicate original-record decisions** remain unchanged; document recovery does not
+silently rewrite those metadata results or historical party affiliation.
+
+Frozen packets and manifest identities:
+
+- `washington-original-document-recovery-v1`: `de4e2aa8dfbedb80dc2055b07eaa5fe9f3f662e4c6e7a2adb4a0d512f22e3463`.
+- `washington-original-document-text-v1`: `1843d908a3a93d74fd1f3cc8745482bea18a038142cc006fc6159e9ac22950c4`.
+- `washington-original-document-scope-review-v1`: `7d6de611043ce93e57911b722e96abe98f84633a960b672953776063a1634d05`.
+- `washington-resolution-alternate-document-recovery-v1`: `2fa2355527cb2d25b1e92fc844f3e00eeb5c5c6e69dbf0836612f872cba75ffe`.
+- `washington-resolution-version-note-review-v1`: `c519ad5c88c59ef974786b0cd5b0c682ddfb65cdcf5d5ecd99ce7dc14b474079`.
+
+All five are under `data/processed/`, with copied producers and explicit source/hash
+bindings. Raw responses and derived texts remain Git-ignored local artifacts rather
+than remotely backed-up bytes.
+No canonical baseline, model weights, analytical results or site integration changes.
+
+Canonical audit **v18** records **33** completed research packets and retains the actual
+return code **1**, with unchanged **34/324** failed checks. Its report is byte-identical
+to v17, not a passing audit. Audit manifest:
+`7b121b81fff57365f0fb36b2f1f977e8872c0aae9d3cbac6bbd44616b75041bd`;
+report: `68d28c7efe5a0eaaf222ded46a49a2a9283b6921c939dd3c7961fac4a899832a`.
 
 ## Training reservation enforcement
 

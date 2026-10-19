@@ -301,6 +301,37 @@ and printed sponsors are preserved separately from any dated-party or classifica
 claim. Full source packets, the copied resolver and independent XML replays are indexed
 in [AUDIT_STATUS.md](AUDIT_STATUS.md).
 
+### Original document references are candidates, not version truth
+
+The bounded Washington recovery follows actual retained version-link URLs, not guessed
+bill-document paths. Its initial original-note filter accepts Bill, Resolution, Joint
+Memorial, Joint Resolution and Concurrent Resolution. All matching version/link rows,
+baseline identities and failed requests are preserved; an HTTP failure can trigger an
+explicitly recorded HTTPS alternative, never a silent URL rewrite.
+
+Native cover identity and session support are checked separately from imported notes.
+Resolution-specific formatting can require an explicit source-scope review rather than
+an ordinary bill-cover regex. Reviews add sidecar decisions without changing earlier
+automated unknowns. A publisher's biennium path is weaker evidence than a dated cover
+and is labelled accordingly; quoted or struck prior years are not event metadata.
+
+Exhausting original-note references does not establish absence of an original document.
+Following the remaining 2019-2020 SR 8601 references exposed a plain native resolution
+heading beneath an imported Substitute Resolution note, alongside a genuinely
+engrossed-heading version. Both complete bodies and the note/header disagreement remain
+separate. Their different added rules-heading years also demonstrate why later-version
+text must not silently substitute for filing-time evidence. The plain heading alone
+does not certify earliest-version identity, and source notes remain unchanged.
+
+HTML is strictly decoded; PDF text is extracted from every page with page boundaries
+retained. Plain text loses legislative underline/deletion styling even when extraction
+succeeds. Raw native HTML/PDF and complete derived texts are therefore retained together,
+with explicit styling-loss and review limitations. These files are not automatically
+classifier inputs, independent semantic gold or certified filing-time text. Counts of
+parallel HTML/PDF captures, pages and characters are not unique-bill or policy-volume
+denominators. This recovery neither changes the original metadata API's ambiguities nor
+certifies all-state full-text coverage.
+
 ---
 
 ---
