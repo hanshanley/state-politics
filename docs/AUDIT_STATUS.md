@@ -4,8 +4,8 @@ The existing figures and analytical conclusions are **legacy, not revalidated fi
 The current changes repair infrastructure and preserve evidence; they do not certify a
 replacement classifier or establish complete contemporary coverage.
 
-**October 19, 2026 checkpoint:** actual audit **v45** binds **107 completed research
-and accounting packets**. The canonical audit has **300/334 passing checks**
+**October 19, 2026 checkpoint:** actual audit **v46** binds **108 completed research
+and accounting packets**. The canonical audit has **302/336 passing checks**
 and **34 missing-artifact failures**. Known source, collection and scientific failures
 remain explicit; this is not a completed project or a certified classifier.
 
@@ -73,8 +73,9 @@ These are **not typed nested legislative-markup spans**. Text and tails inside
 nested XML survive the projection with a synthetic space between each text/tail
 fragment before whitespace collapse. Insertion,
 deletion, strikeout and other markup semantics are flattened. Deleted words are
-not identified or removed. Exact markup remains in `originals/raw_caml/`;
-semantic markup interpretation and its source-offset mapping remain unfinished.
+not identified or removed. Exact markup remains in `originals/raw_caml/`.
+Semantic interpretation remains unfinished. The separate native-element inventory
+below now supplies nested source offsets without interpreting them as legal operations.
 
 Only **one new transport request** acquired the archive. The exact original
 42,104-byte/65-request ledger prefix remains checksum-bound; aggregate collection
@@ -134,6 +135,45 @@ tokens describes the **normalized, markup-flattened candidate**, not unchanged
 raw whitespace, interpreted legislative markup, model accuracy or source
 admission. Every legal-version, markup-interpretation, training, evaluation,
 analytical and publication certification/admission flag remains false.
+
+### Complete native nested-element provenance
+
+`data/processed/california-2023-native-element-provenance-v1/` independently
+maps **all 1,095,245 XML elements** in the same **5,564** candidates:
+339,701 header elements, 749,980 body elements and 5,564 outer document roots.
+Each row retains its expanded native name, attributes, parent/index, exact raw
+element byte bounds and hash, and nullable normalized-text character bounds.
+Namespace declarations and original prefix spellings remain in the complete
+raw XML. The map includes nested formatting, all 204 `Fraction` structures,
+6,896 tables and 2,168 italic elements, not just three construction spans per
+document. Those names are source observations, not interpreted policy or legal
+operations.
+
+There are **842,467 elements contributing non-whitespace text** and **247,214
+selected elements without such text**; the latter include formatting/spacing
+elements and must not be misreported as missing documents or images. Outer roots
+have no contiguous input span because the input explicitly selects header/body
+subtrees. Synthetic fragment spaces and the two-LF header/body joiner are not
+original XML characters. Byte spans include complete elements and their tags;
+they are not individual decoded-character-to-raw-byte alignment.
+
+All **55,860,334 input characters** remain unchanged. Complete
+Parquet/physical-LF JSONL records retain every source-candidate field and full
+text alongside the new mapping metadata. Regular/special identities and the
+six original canonical table bytes remain unchanged.
+The existing token inventory is not overwritten or retrospectively declared
+markup-aware. A separate ElementTree reconstruction and quote-aware lexical
+byte scan reproduce every element, parent, attribute and character/byte span;
+all **11,146 packet file hashes** remain unchanged. Manifest SHA-256:
+`c9b201d6d7314e46be860c5df85c147eb5d3b88363ebe32780c2f801ee97210a`.
+Focused regressions also cover repeated elements, quoted tag delimiters,
+entities/CDATA/comment boundaries and declared UTF-8/UTF-16/Latin-1 encodings.
+The full independent byte replay covers this retained UTF-8 corpus.
+
+No network, model inference, new labels, source-text replacement or scientific
+admission occurred. In particular, italic markup is not automatically a certified
+insertion, existing/deleted law is not removed, fractions are not silently
+rewritten, and source structure is not evidence of classifier accuracy.
 
 ### Earlier bounded census and range-integrity recovery
 
@@ -195,6 +235,19 @@ manifest SHA-256 is
 `1be7ffda7d3f478d5d35be39f8bd19137bae7398aacdc53124ff4530f83fb927`.
 Frozen documentation precedes this result paragraph and top-line update.
 Ignored source/probe/audit packets remain local, not backed up by a Git push.
+
+Actual canonical audit **v46** adds the complete California nested-element packet,
+production mapper, focused tests, independent replay and the preserved initial
+encoding-fixture failure log. It binds **108 completed packets** and retains
+audit return code **1**, **302/336 passing checks**, the same **34 missing-artifact
+failures** and scientific non-certification. The only canonical report fields
+changed from v45 are the passing/total counts for the two newly documented Python
+files; all failures, computed results and authored-input hashes are identical.
+Strict manifest/inventory verification passed. Manifest SHA-256:
+`bcf5e4f1c22d1b305c901692436725854e0bb8081727172feff7602adb864d6f`.
+The running New York campaign is not counted as completed evidence. Its first
+batch's complete immutable transport dependencies are being archived separately.
+Frozen documentation precedes this result paragraph and top-line update.
 
 ## Texas 88R filed-census and bounded original-text recovery
 
@@ -281,6 +334,50 @@ split instead of 47/1 and failed to recognize canonical API paths containing
 `2023-2024`. It remains preserved, not counted as completed evidence. No labels,
 canonical fields, model weights, filing-time party/version certification or
 training/evaluation/analytical/publication admission changed.
+
+### Resumable full native-print campaign, not completed coverage
+
+`data/processed/ny-full-source-campaign-v1/` freezes a complete retrieval plan
+for the **24,315 typed identities in the retained index**, with one untyped row
+and canonical-only J 272 separately accounted for: **24,317 total dispositions**.
+This is not an independently established universe of every New York measure.
+In particular, A1–A20 are absent from this retained index, not proved nonexistent.
+Native B/C/E/R prefixes are literal unsuffixed index identifiers, distinct from
+amendment letters after a number. Their selected PDFs print chamber/number
+resolution headers without those prefixes; legal taxonomy and original filing
+identity are not independently certified.
+
+The first immutable checkpoint adds **64** complete PDF candidates, **A23–A86**,
+to the sixteen inherited captures: **80 retrieval/extraction successes** and
+**24,235 typed candidates still pending at that checkpoint**. The new captures
+retain **202 physical pages**, **982 PyMuPDF blocks**, **640,561 PyMuPDF
+characters** and **639,625 pypdf characters**. Different decoder counts are not
+silently equated. PyMuPDF document totals include declared form-feed page joiners:
+129,345 inherited page characters + 38 joiners = 129,383; 640,423 new page
+characters + 138 joiners = 640,561. Thus all eighty PDFs contain **769,768 page
+characters** and **769,944 joined-document characters**, not contradictory
+extraction totals. Fresh `sort=False` extraction exactly reproduces every page,
+without stripping or normalization. Parent independent replay covers all 256 inherited/new pages
+and leaves **429 immutable contract/checkpoint/foundation file hashes unchanged**.
+The untyped and canonical-only rows are not new HTTP retrieval failures.
+
+The prospective **full-corpus** ceiling is **50,000 physical exchanges including
+the inherited 24**, not a reset of the historical 128-request pilot allowance.
+The first new checkpoint uses **88 exchanges = 24 inherited + 64 new**.
+Request reservations, retained bodies/headers, minimum one-second start spacing,
+bounded retries, access/service-failure stops and immutable batch checkpoints
+support resumable collection. Headers are ordered library-parsed pairs, not raw
+wire-format bytes. Parent launched the finite continuation and
+verified advancing persisted request and terminal-candidate counts. The live
+campaign itself is **not a completed research packet** or statewide original-text
+certification; its later progress is separate from the frozen first checkpoint.
+
+Contract manifest:
+`31c92499b76eae6dd93aaaf523b3bc12eea50f2c06d00b74d6b508563d2a3fc4`.
+First batch manifest:
+`cbbee0aecdf305547f800cd449bdf6fc870a03486116ffb263e92a817ed75465`.
+All legal-version, markup-interpretation, party, label and analytical/publication
+gates remain unresolved. No new classifier predictions or labels were produced.
 
 ## Illinois 103rd-General-Assembly native census and original HTML
 
