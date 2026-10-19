@@ -415,9 +415,9 @@ The original GRP1 unsupported-shape diagnostic remains unchanged in this archive
 the separate supplement below supplies its complete body and element map. The
 **2,980 historical/boundary**, **24 special-session** and **18,230 regular
 canonical contexts** remain distinct and unadmitted. Full unlabelled token/window
-coverage for these 21,234 candidates is being prepared separately, using the
-existing pinned tokenizer/window policy and the GRP supplement, without training,
-inference or new labels. This structural replay is now bound by completed
+coverage for these 21,234 candidates now passes the separate parent replay below,
+using the existing pinned tokenizer/window policy and the GRP supplement, without
+training, inference or new labels. This structural replay is now bound by completed
 aggregate v53 and does not confer scientific or publication approval.
 
 ### GRP1 complete-body extraction repair
@@ -446,6 +446,47 @@ Complete local predecessor manifests and source-table bindings support replay;
 the multi-gigabyte original ZIP is not duplicated or silently read externally.
 This supplement is now bound by completed aggregate v53. All model, training,
 evaluation, filing-time, legal, analytical and publication admissions remain false.
+
+### Complete four-biennium unlabelled token coverage
+
+`data/processed/california-multibiennium-native-token-input-inventory-v1/`
+now passes **actual independent parent execution** of the complete offline
+source/token/window replay under the common network/original-data/session guard.
+All **21,234 candidates / 216,899,831 source characters / 44,310,128 source
+tokens / 59,837 windows** reproduce exactly, with **zero discarded tokens** and
+all **42,580 files unchanged**. Manifest SHA-256:
+`deb1acdeb953a30446175e4cb11be935511cb6a4114f1e1a093a60b89e97170a`.
+Actual parent handle `ca-full-token-parent-actual-v1` exits zero; its log is
+`ca_full_token_parent_actual_v1.log`, not the worker's earlier similarly named log.
+The separately persisted `ca_full_token_actual_parent_execution_receipt_v1.json`
+binds that actual execution, manifest, report, guard and log hashes.
+
+Complete inputs retain the exact old 21,233 normalized projections plus the
+separate **325,896-character GRP1** projection. Source types remain **18,361 Bill /
+2,872 Resolution / one GRP**. There are **9,602 multiwindow inputs** and
+4,941,184 overlap token positions. The largest input, `20210AB47499INT`, retains
+**2,059,508 characters / 403,687 tokens / 454 windows**. Historical, boundary,
+special-session and regular source contexts remain distinct, not newly admitted
+filings.
+
+The pinned official English ModernBERT tokenizer uses revision
+`8949b909ec900327062f0ebf497f51aef5e6f0c8`, the existing 1,024-token model window,
+1,018-source-token budget and 128-token overlap. No current title, abstract or
+summary replaces or augments a native projection. Together with the previously
+parent-replayed 5,564-candidate 2023-2024 inventory, all **26,798 California
+candidate texts** across the five archived biennia now have complete unlabelled
+token plans. This does not interpret flattened legislative markup or establish
+filing-time identity, policy labels or model accuracy.
+
+The first producer completed tokenization but failed its source-metadata check
+because adding expected hard links increases `nlink`. Its failed log remains
+preserved. A separate finalizer independently reconstructs aggregates and accepts
+only identical source paths, bytes, hashes, inodes and mtimes, allowing solely
+nondecreasing link counts; it neither retokenizes nor changes source rows.
+The actual parent replay verifies that distinction as well as every source and
+token plan. This packet is later than frozen aggregate v53, not retroactively
+inserted into it. No inference, training, label, analytical or publication
+admission is performed.
 
 ## Full-campaign preparation gates: Pennsylvania, Ohio and Missouri
 
@@ -527,18 +568,39 @@ against the exact frozen collector: HTTP 200 with curl exit **18 and 28** reache
 `success_collected` for each of PDF, House XML discovery and Senate modal
 discovery responses; an interruption after the first genuine copy leaves an
 unsealed directory that the next seal returns without a manifest; requesting
-half-open range **[1, 32)** returns the existing **[0, 32)** checkpoint instead of 31 records;
-and same-size corruption of a PDF dependency is also returned under its unchanged
+half-open range **[1, 32)** returns the existing **[0, 32)** checkpoint instead of
+31 records; and same-size corruption of a PDF dependency is returned under its unchanged
 manifest. The valid 32-record fixture's 363 payloads are independently hashed
 before the context/corruption cases.
 
 These are offline actual-driver failures, not additional publisher requests.
 Sockets and children are denied, private fixtures are removed and the frozen
-preparation remains unchanged. A zero-HTTP immutable v3 is being prepared with
-the executed proof; positive replay is not full-launch approval. Actual parent
+preparation remains unchanged. Actual parent
 logs: `missouri_preparation_v2_parent_actual_v1.log` and
 `missouri_v2_parent_release_blockers_v1.log`; the persistent diagnostic is
 `missouri_v2_parent_release_blockers_v1.json`.
+
+The immutable zero-HTTP v3 successor passes actual parent common-guard replay
+with **2,308 files unchanged**, manifest
+`c8b2ff6c11e64c808c6119ae555d57980bc50c12521df70e63d5d58dbc4989ad`.
+Its partial-transport and checkpoint-staging repairs do not authorize launch.
+Parent then executes **eight access-stop recovery failures**: HTTP **403 or 429**,
+PDF or House XML discovery, interrupted after durable result-file persistence
+or after result-ledger append. Recovery preserves the genuine result but treats
+the access denial as an ordinary source negative, sends the next candidate
+request and returns two completed candidates with no stop.
+
+Three further actual context negatives accept a valid 32-candidate checkpoint
+for requested population 33, accept changed source URLs under the same ordered
+context IDs, and silently reuse an existing work root after its requested seed
+source plan changes. The last case returns the old 32 completed records and
+unchanged checkpoint. The probe denies networking/children, confines writes and
+cleanup to private fixtures and its exclusive report, removes those fixtures
+and verifies all **2,308 frozen files unchanged**. Evidence:
+`missouri_v3_parent_release_blockers_v1.json` and its actual log. The same worker
+is preparing immutable zero-HTTP v4 with access-stop recovery and immutable
+initialization/checkpoint-context gates. Mutable later progress counters are
+not immutable source context and must not invalidate a legitimate earlier seal.
 
 None of these three states has an authorized full continuation running.
 
@@ -1073,6 +1135,18 @@ source collector is absent at bridge creation. The next stage must inherit
 The completed source/full-tail packets and bridge are now integrated into actual
 aggregate v53; native-version preparation remains separate and unapproved.
 
+### Complete paired-reader inputs in preparation
+
+A separate zero-HTTP worker is preparing complete unlabelled token/window
+inventories for both retained reader views of all **2,004 native contexts**.
+The planned **4,008 reader views are not 4,008 bills**. Neither reader is chosen
+as ground truth, the two unresolved identities remain present, and current
+titles/summaries cannot replace or augment a complete source view. The new
+self-contained packet must independently reproduce every PDF/page, complete
+text and token/window plan before parent replay; no completed input inventory
+or classifier admission is claimed yet. This scope is distinct from the
+publisher-native version census below.
+
 ### Native-version census preparation, not completed collection
 
 The separately frozen zero-HTTP preparation
@@ -1081,7 +1155,7 @@ page identities**, reusing the **two retained pages / seven native version rows*
 and leaving **2,002 pages pending**. Parent guarded replay verifies all **1,050
 files unchanged**, manifest
 `eee72fbf1abcdcb0794a23114ed2ce6e87ce4b7e93f0bdf919c932f63cd81933`.
-No canonical version rows are substituted. Full collection must inherit a
+No canonical version rows are substituted. Full collection must inherit
 manifest-backed, independently verified terminal source ledgers, including all
 **2,007** source exchanges now confirmed by both completed parent replays.
 The prospective **15,000** aggregate cap and two-attempt page limit are not reset.
@@ -1124,6 +1198,16 @@ its failure log is preserved. The corrected, actual successful diagnostic is
 `nc_native_v2_parent_release_blockers_v2.json` and its matching log.
 The same worker is preparing immutable zero-HTTP **v3**; neither preparation
 replay nor a synthetic fixture authorizes full collection.
+
+A separate executed parent parser probe also shows silent partial enumeration:
+one recognized edition pair plus an additional PDF-only link, RTF-only link, or
+complete pair with an extra HTML attribute all return `success` with only the
+first version recorded. These are three synthetic source-format negatives, not
+claims that those variants occur in the still-uncollected real pages. The exact
+HTML and parser outputs are retained in `nc_native_v2_anchor_coverage_v1.json`.
+The v3 worker is correcting complete edition-anchor accounting, retaining
+unsupported structures explicitly rather than treating any matched subset as a
+complete native version list.
 
 ## Colorado regular-session source census and full continuation
 
