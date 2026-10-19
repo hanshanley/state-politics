@@ -12,6 +12,7 @@ from urllib.parse import urlsplit
 
 import yaml
 
+from state_politics.bills.openstates_dump import STATE_CODES
 from state_politics.provenance import sha256_file, utc_now_iso
 
 ROOT = Path(__file__).resolve().parents[3]
@@ -208,8 +209,9 @@ def build_inventory(
     if out.exists():
         raise FileExistsError("refusing to overwrite recovery inventory")
     organizations = yaml.safe_load(registry.read_text())["organizations"]
-    expected = {(org["state"], org["party"]) for org in organizations}
-    if len(organizations) != 100 or len(expected) != 100:
+    expected = {(state.upper(), party) for state in STATE_CODES for party in ("D", "R")}
+    registered = {(org["state"], org["party"]) for org in organizations}
+    if len(organizations) != 100 or registered != expected:
         raise ValueError("registry must contain exactly 100 unique organizations")
     inherited, original = load_recovery(baseline, expected)
     captures = [
@@ -334,6 +336,19 @@ def build_inventory(
             }
             for row in by_body[key]:
                 row["alternate_extractions"].append(alternate)
+    for related in by_body.values():
+        alternatives = {}
+        for row in related:
+            for alternate in row["alternate_extractions"]:
+                identity = alternate["extraction_id"]
+                if identity in alternatives and alternatives[identity] != alternate:
+                    raise ValueError("inconsistent recovery alternate extraction identity")
+                alternatives[identity] = alternate
+        for row in related:
+            existing = {alt["extraction_id"] for alt in row["alternate_extractions"]}
+            row["alternate_extractions"].extend(
+                alt for identity, alt in alternatives.items() if identity not in existing
+            )
     groups = defaultdict(list)
     bodies = defaultdict(list)
     for row in captures:

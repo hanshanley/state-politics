@@ -7,13 +7,117 @@ replacement classifier or establish complete contemporary coverage.
 | Area | Verified progress | Remaining gate |
 |---|---|---|
 | Historical platforms | Recovered 2,091 authoritative archive documents, with publisher checksums and old/new archive reconciliation. | Historical availability must not be substituted for operative modern platforms. |
-| Contemporary platforms | Completed the 54-link discovery inventory's collection in a separate run: 52 retained bodies, two retrieval failures and 100 organization checkpoints. Complete rejected extractions remain available. | Follow substantive linked documents, resolve failed/empty discovery, and complete institutional/version review and dated gap dispositions. Automated acceptance is not operative coverage. |
+| Contemporary platforms | Reconciled a uniform all-100-organization campaign, all 296 still-unretained deferred direct documents, and 37 legacy request receipts. Inventory v5 preserves 1,452 requests, including 1,346 retained responses across 97 organizations. | Resolve the three remaining recovery-response gaps, deferred navigation and source/institution/version review. Retained responses are not verified platforms or operative coverage. |
 | Sponsorship | Party attribution uses validated historical memberships and a first-action date proxy; unresolved primary sponsors block D/R assignment. | Rebuild source bills and quantify attribution changes; the proxy is not an exact filing/sponsorship date. |
 | Bills | October snapshot extracted: 1,090,369 source-context measures across all 50 states, 5,028,893 sponsorships, 9,002,451 actions and 873,980 vote events. All eleven tables have recorded hashes/counts. | Official-source reconciliation, historical affiliations and filing-time text review. Full extraction is not a certified source universe or analytical denominator. |
 | Classification | Two actual official English ModernBERT-base fine-tuning runs saved and reloaded: external-only policy training, then 6,001-unit joint target/rejection training with 21 policy outputs plus null. | Both candidates still make 27 correct decisions in the same 50 development records. Learned rejection reduces false acceptance but loses correct policy decisions; neither candidate is approved for production. |
 | Labels | External CAP files recovered; split/group/exact-text checks and explicit reviewed-label provenance are implemented. | Source permissions, adapted-topic compatibility, near-duplicate families and reviewed state-domain training/development/test labels. |
 | Evaluation | Development-only temperature/threshold selection, exact evidence joins, abstention accounting, per-topic and subgroup metrics. | Reviewer arrangement, frozen empirical gates, independent target tests and clustered uncertainty. No checkpoint can be certified by changing a status field. |
-| Companion | Local-only historical and bounded-recovery preview with complete downloads. The successor retains 488 capture records, 469 responses, 19 failures, seven OCR bodies and two DOCX main-document alternatives; all 100 organization rows remain unresolved. | Audited classification/analysis exports, redistribution review and eventual report; no production integration is authorized. |
+| Companion | Local-only preview v4 exposes all 1,452 recovery captures, 106 failures, 20 OCR bodies and three DOCX main-document alternatives, alongside the 2,091 historical documents. All 100 organization rows remain unresolved. | Audited classification/analysis exports, redistribution review and eventual report; no production integration is authorized. |
+
+## Uniform registry recovery and current explorer checkpoint
+
+The current immutable recovery inventory is **v5**, and the local preview is
+`data/preview-recovery-v4/`. Every field and alternate extraction in the original
+488-record v4 stream is preserved exactly. The successor has **1,452 request records,
+1,346 retained responses, 106 failures and 1,296 distinct response-body hashes**.
+All 100 organizations now have capture records; 97 have a retained response in this
+recovery union. Arizona Democrats, Illinois Democrats and Oklahoma Republicans do not.
+Those three are recovery-response gaps, not evidence that no platform or policy exists;
+the historical archive remains a separate evidence layer.
+
+The uniform campaign accounts for 631 requests: 100 registered homepages, one HTTPS
+follow-up, 191 first-hop navigation requests, 91 second-hop requests and 248 document
+requests. It retained 605 responses, including 237 actual PDFs, and 26 failures.
+Offline reconciliation checked every capture/body/text hash, receipt, organization count,
+parent binding and all 6,471 observed references. Reconstructing recorded URL resolution
+found no corrected relative targets. The bounded crawl is not an exhaustive website search.
+
+All **296 distinct still-unretained deferred direct-document targets** were subsequently
+requested, rather than only high-scoring candidates. These produced 251 retained responses,
+250 actual PDFs and 45 failures, all in the South Carolina Republican follow-up. Exact
+selection/parent reconciliation binds every target to its original observation and frozen
+plan. Older resolutions, county/district bylaws, minutes, roll calls and forms are included:
+these counts must not be described as newly recovered platforms. Deferred navigation
+references remain outside this document follow-up.
+
+A separate adapter reconciles **37 actual historical request receipts**, not extra copies
+of selected-fetch pointers, attempts arrays or reviewed texts: three California/Texas PDF
+requests, 20 gap-review/retention requests, ten Pennsylvania follow-up-v1 requests and four
+follow-up-v2 requests. There are 21 retained responses and 16 failures. Original selected
+texts, including the pilot PDFs' layout extraction, remain unchanged; new extraction from
+another retained receipt is explicitly distinguished. Pennsylvania's Fall 2025 minutes
+request remains an HTTP-200 owner-permission-error HTML shell, **not minutes or DOCX**.
+No restriction was bypassed. Legacy manifests use specific hash fields; previously
+unhashed receipt files are frozen now, not falsely claimed historically hash-pinned.
+
+### Extraction quality and institutional boundaries
+
+The uniform PDFs reproduced warnings on 35 captures. Ten had empty native extraction;
+Montana Republican bylaws had nonempty native text but explicit incomplete-font warnings.
+A separate derivative recovers these eleven sources across 94 physical pages. Two further
+substantive scans add three pages: a South Carolina party resolution and a Texas governor
+letter. **All 97 new OCR page renders and transcriptions were independently reproduced**,
+using the restored declared Tesseract 5.5.2. Large Florida map pages have explicitly reduced
+DPI under a 20-million-pixel limit; OCR does not preserve district geometry.
+
+Five limited assistant source-role reviews bind seven visually inspected page renders and
+the full extracted county delegate procedure. They are not gold labels or certification:
+
+- South Carolina's resolution contains substantive endorsement language; its displayed
+  page does not establish an adoption date, and OCR drops list numbers 2–5.
+- Texas's July 6, 2021 letter is from the governor to the PUC, not a state-party platform
+  merely because a party index links it. OCR omits its signature/name block.
+- New Mexico's two-page ballot graphic encodes recommendations spatially. Plain OCR of
+  FOR/AGAINST labels is not reliable policy-direction evidence.
+- Montana's inspected cover and first substantive page report June 29, 2024 adoption/
+  amendment, without independent confirmation. OCR corrupts contents leaders/numerals.
+- Idaho's separately recovered DOCX is a Canyon County delegate procedure and unfilled
+  affiliation pledge, not statewide policy. Main-document XML is not layout or final-state
+  certification.
+
+The 34 other empty-native PDFs in the deferred packet remain explicit extraction gaps,
+primarily older resolutions and administrative material. Original native text is never
+overwritten. Successor builds reuse inherited typed alternatives for repeated bytes only
+within the same state-party organization, reject conflicting extraction identities and
+require the actual 50-state × D/R registry. The browser shows recorded OCR runtimes,
+unknown row-level runtimes and the incomplete-font warning without calling DOCX OCR.
+
+The isolated declared runtime is `data/tools/ocr-5.5.2/`. Historical 5.5.3 derivatives and
+`data/tools/ocr/` remain preserved; restoring the runtime does not relabel those outputs.
+The current full audit using 5.5.2 fails **34 of 317 checks**, all explicit missing canonical
+analytical inputs/results. The earlier default-PATH 35/316 result below is historical.
+Neither ModernBERT candidate is approved; the unchanged 27/50 development result is not
+improved by downloading text. No labels, weights, cutoff or analytical admission changed.
+
+Chromium checked every partition, all 23 distinct alternative extractions and all 106
+failures, plus byte-exact complete recovery/historical gzip downloads. It also checked
+runtime/warning disclosures, pagination, mobile/keyboard/no-JavaScript behavior, HTTP
+failures, response races and literal markup. Since no real organization now has zero
+captures, that UI edge case uses a synthetic empty partition rather than dropping the test.
+The connected discovery/collection/registry/coverage/site regressions pass 233 cases.
+
+| Current local artifact | Manifest/report SHA-256 |
+|---|---|
+| Uniform registry capture | `23f5ba877a71d6e8c32e5639571725f633cdfe70d9dbc25d2287ff5b67feff0d` |
+| Uniform registry verification | `b7a0a5c78007748ab65327942777c365768e42ad0f40dcb879b777719a3b78e4` |
+| Deferred document capture | `c6eb7e19feae92ab46fe2f09604fd97d61f12d8899cccb09e8c88eb7d5d09ad2` |
+| Legacy request adapter | `09eec438dfe81e69492b23e6489cec9f4c704b05b4bff823effe284150064955` |
+| Uniform pinned OCR | `489d27a93a93f015350770c3135154071fc0dd37e4b4028e680c1cc8b35ed602` |
+| Additions/render/OCR verification | `4529559d350208bfa697bd01ff26c969d431b8e37d60b22a546fa1d4bc026ae6` |
+| Deferred substantive OCR | `bfbcabc5921530d41b96e2d0fd9dcc1518339d6e93df83c36ef7f118299ea482` |
+| County delegate DOCX derivative | `a36dd6000b44081b46f44695402ad6bb951c58c026dd7071b131d26dc4424525` |
+| Exact selection/receipt/derivative contracts | `faaac7445cd73968a73a7d1e00062e9bfc07055869259a5fb182f1074bbaf4e7` |
+| Limited source-role review | `f30c903eb4bb2e7d4ffaa509f408e39bf2c3936236423dbc4bbbf9d3beeb988c` |
+| Recovery inventory v5 | `5337a6c6f38093b0789d088b118567096fe008ab6e98c1ff865f15eef2cbc8de` |
+| Browser-check v5 | `00ac8f9b92b2cdf92001356507f80f5f4a4518529f8cd06a95c9b97cb1d495d7` |
+| Full audit after recovery v5 report | `37ca49cec25c223c4579b7f99f4d56fbb1cf3de86c96c370ece01ab600ee8083` |
+| Full audit v5 frozen packet/runtime receipt | `a6e2d0fead564780803ea6e198fe6b763bf0910e1963f056fc11e740440d1054` |
+
+All source bodies and evidence packets remain local and Git-ignored. Pushing tracked code
+and these hashes does **not** remotely back up the raw evidence. No publication files,
+deployment inputs or public routes changed. Earlier sections retain their checkpoint-specific
+counts and runtime findings; they do not supersede this current status.
 
 ## Embedded-document discovery and New Mexico recovery
 
@@ -218,7 +322,7 @@ canonical labels, analytical inputs, historical attribution, cutoff or publicati
 changed; all eleven analytical questions remain unsupported. Focused discovery/collection
 checks are not a new full scientific/reproducibility audit.
 
-## Expanded recovery explorer and exact native-field preservation
+## Earlier recovery v4 checkpoint and exact native-field preservation
 
 The new immutable `data/processed/recovery-source-inventory-v4/` combines the preserved
 309-record baseline with eight explicit capture packets. It retains **488 capture records,
@@ -237,7 +341,7 @@ unchanged, not silently repaired. Version v4 adds a producer invariant and regre
 covering both representations. Original bodies, standard text and four explicit inherited
 legacy-NaN normalizations remain unchanged.
 
-The current local build is `data/preview-recovery-v3/`. Chromium compared all 100 exported
+That checkpoint's local build is `data/preview-recovery-v3/`. Chromium compared all 100 exported
 partitions, all nine distinct alternative extractions and all 19 failures; both complete
 gzip downloads reproduce the frozen 488-record recovery stream and 2,091-record archive
 byte-for-byte. Additional checks cover legacy OCR compatibility, literal markup in native,
@@ -246,7 +350,7 @@ downloads and 390-pixel layout. The focused connected suite now passes 229 cases
 
 The missing canonical capability JSON/CSV reports were regenerated without inferring any
 analytical results: all eleven questions remain unsupported, uncertified and cutoff-null.
-A fresh full reproducibility run still fails **35 of 316 checks**, principally missing
+That checkpoint's full reproducibility run failed **35 of 316 checks**, principally missing
 canonical analytical artifacts plus an OCR executable absent from the default PATH.
 The isolated OCR runtime and its declared/actual version mismatch remain separate evidence,
 not a claim that the default runtime check passed. Neither source recovery nor interface

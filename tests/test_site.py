@@ -407,3 +407,75 @@ def test_preview_revalidates_typed_inventory_before_output(tmp_path, defect, mat
     with pytest.raises(ValueError, match=match):
         build_preview(coverage, history, out, recovery_path=packet / "inventory.json")
     assert not out.exists()
+
+
+def test_successor_requires_the_actual_fifty_state_major_party_pairs(tmp_path):
+    _, _, baseline, _ = recovery_fixture(tmp_path)
+    registry = yaml.safe_load((ROOT / "conf/party_registry.yml").read_text())
+    registry["organizations"][0]["state"] = "ZZ"
+    path = tmp_path / "registry.yml"
+    path.write_text(yaml.safe_dump(registry))
+    with pytest.raises(ValueError, match="100 unique organizations"):
+        build_inventory(
+            baseline / "inventory.json", [], [], tmp_path / "successor", registry=path,
+        )
+    assert not (tmp_path / "successor").exists()
+
+
+@pytest.mark.parametrize("difference", ["party", "body"])
+def test_successor_reuses_inherited_alternatives_only_for_same_organization_and_body(
+    tmp_path, difference,
+):
+    _, _, baseline, _, sources, derivative, source, _ = successor_fixture(tmp_path)
+    first = tmp_path / "first-successor"
+    build_inventory(
+        baseline / "inventory.json", [sources / "captures.jsonl"],
+        [("docx_main_document", derivative / "extractions.jsonl")], first,
+    )
+    repeat = tmp_path / "repeat"
+    different = {**source, "capture_id": "repeat:1", "party": "R"}
+    if difference == "body":
+        other = tmp_path / "other.docx"
+        other.write_bytes(b"Different retained source")
+        different.update({
+            "party": "D", "stored_path": str(other),
+            "content_sha256": sha256_file(other), "content_bytes": other.stat().st_size,
+        })
+    write_source_packet(repeat, [
+        {**source, "capture_id": "repeat:0"},
+        different,
+    ], "captures.jsonl")
+    second = tmp_path / "second-successor"
+    build_inventory(first / "inventory.json", [repeat / "captures.jsonl"], [], second)
+    with (second / "captures.jsonl").open() as handle:
+        rows = [json.loads(line) for line in handle]
+    assert rows[-2]["alternate_extractions"] == rows[-3]["alternate_extractions"]
+    assert rows[-2]["alternate_extractions"][0]["kind"] == "docx_main_document"
+    assert rows[-1]["alternate_extractions"] == []
+    assert rows[-2]["extracted_text"] == ""
+    assert rows[-2]["input_disposition"]["capture_id"] == "repeat:0"
+
+
+def test_successor_rejects_conflicting_inherited_alternative_identities(tmp_path):
+    _, _, baseline, _, sources, derivative, source, _ = successor_fixture(tmp_path)
+    write_source_packet(sources, [
+        source, {**source, "capture_id": "additional:1"},
+    ], "captures.jsonl")
+    first = tmp_path / "first-successor"
+    build_inventory(
+        baseline / "inventory.json", [sources / "captures.jsonl"],
+        [("docx_main_document", derivative / "extractions.jsonl")], first,
+    )
+    capture_path = first / "captures.jsonl"
+    rows = [json.loads(line) for line in capture_path.open()]
+    rows[-1]["alternate_extractions"][0] = {
+        **rows[-1]["alternate_extractions"][0], "extracted_text": "Conflicting transcription",
+        "text_sha256": hashlib.sha256(b"Conflicting transcription").hexdigest(),
+    }
+    capture_path.write_text("".join(json.dumps(row) + "\n" for row in rows))
+    manifest = json.loads((first / "manifest.json").read_text())
+    manifest["files"]["captures.jsonl"] = sha256_file(capture_path)
+    (first / "manifest.json").write_text(json.dumps(manifest))
+    with pytest.raises(ValueError, match="inconsistent recovery alternate extraction identity"):
+        build_inventory(first / "inventory.json", [], [], tmp_path / "second-successor")
+    assert not (tmp_path / "second-successor").exists()

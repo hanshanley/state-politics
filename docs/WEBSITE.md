@@ -41,8 +41,8 @@ To include an already frozen, reconciled recovery inventory:
 ```bash
 uv run python scripts/build_site.py \
   --coverage data/processed/source_coverage.json \
-  --recovery data/processed/recovery-source-inventory-v4/inventory.json \
-  --out data/preview-recovery-v3
+  --recovery data/processed/recovery-source-inventory-v5/inventory.json \
+  --out data/preview-recovery-v4
 ```
 
 The builder verifies the packet manifest, complete native/alternative text hashes, source
@@ -76,7 +76,50 @@ The downloaded gzip was decompressed and matched byte-for-byte to the complete r
 JSONL. `data/processed/preview_browser_validation.json` identifies the tested build hash.
 This validates interface behavior, not classifications, scientific findings or publication.
 
-The current recovery build exposes 488 capture records, 469 retained responses, 19 failures
+The current recovery build exposes **1,452 capture records, 1,346 retained responses,
+106 failures and 1,296 distinct body hashes across 97 organizations**. All 100 organizations
+have capture records; Arizona Democrats, Illinois Democrats and Oklahoma Republicans have
+no retained response in this union, not an evidenced publication absence. These are not
+1,346 platforms. Twenty bodies have OCR alternatives; three have separately typed DOCX
+main-document text. All original 488 records and alternatives remain identical.
+
+Recorded OCR runtime versions are displayed per extraction, including historical 5.5.3
+where retained on the row; missing row-level runtime metadata is explicit, not replaced
+with the current executable's version. The Montana incomplete-font warning is visible
+despite nonempty native text. OCR remains uncertified and does not preserve map geometry
+or spatial ballot-selection marks. DOCX is not labelled OCR.
+
+`data/processed/recovery-preview-browser-check-v5/` binds the exact build/capture hashes,
+screenshots and checker. Chromium reconciled all 100 partitions, all 23 distinct alternatives,
+all 106 failures and complete byte-exact recovery/historical gzip streams. It also covers
+runtime/warning disclosures, keyboard/mobile/no-JavaScript behavior, literal markup and
+HTTP/race handling. The zero-capture edge case uses a synthetic empty partition because
+all real organizations now have requests. Neither this check nor a retained homepage
+certifies source role, current platform coverage, adoption or analytical eligibility.
+
+The current successor is reproducible from saved packets:
+
+```bash
+uv run python scripts/build_recovery_inventory.py \
+  --baseline data/processed/recovery-source-inventory-v4/inventory.json \
+  --captures data/processed/uniform-registry-source-recovery-v1/captures.jsonl \
+  --captures data/processed/uniform-deferred-document-recovery-v1/captures.jsonl \
+  --captures data/processed/legacy-platform-capture-adapter-v1/captures.jsonl \
+  --ocr data/processed/uniform-registry-pinned-ocr-v1/extractions.jsonl \
+  --ocr data/processed/deferred-substantive-scan-ocr-v1/extractions.jsonl \
+  --docx data/processed/deferred-delegate-docx-extraction-v1/extractions.jsonl \
+  --out data/processed/recovery-source-inventory-v5
+```
+
+Use a fresh version path when the output already exists. Previously retained alternatives
+are reused for repeated source bytes within the same state-party organization row, not
+across state-party rows, and conflicting extraction identities fail before output. This
+does not adjudicate the underlying document's institution. Raw data remains
+local/Git-ignored; pushing documentation does not remotely back it up.
+
+### Preserved earlier recovery build
+
+The earlier v4 inventory / preview v3 exposes 488 capture records, 469 retained responses, 19 failures
 and 460 distinct body hashes across 55 organizations. The other 45 organization rows are
 not evidenced policy absences. This remains a selected union, not the full recovery campaign
 or 469 verified platforms. Seven bodies have OCR alternatives and two have DOCX

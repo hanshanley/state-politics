@@ -60,7 +60,24 @@ function render() {
         transcription.className = "source-text";
         transcription.tabIndex = 0;
         transcription.textContent = alternate.extracted_text;
-        detail.append(label, transcription);
+        detail.append(label);
+        const provenance = alternate.input_disposition || alternate;
+        if (alternate.kind === "ocr"
+            && provenance.selection_reason === "native_extraction_reported_incomplete_font") {
+          const warning = document.createElement("p");
+          warning.className = "note";
+          warning.textContent = "The native PDF extractor reported incomplete font output. Its unchanged text above is incomplete; this OCR remains an uncertified alternative.";
+          detail.append(warning);
+        }
+        if (alternate.kind === "ocr") {
+          const runtime = document.createElement("p");
+          runtime.className = "note";
+          const version = provenance.tesseract_version ?? provenance.ocr_version;
+          runtime.textContent = typeof version === "string"
+            ? `OCR runtime: ${version}` : "OCR runtime: not recorded on this extraction row.";
+          detail.append(runtime);
+        }
+        detail.append(transcription);
         article.append(detail);
       }
     }
