@@ -4,7 +4,7 @@ The existing figures and analytical conclusions are **legacy, not revalidated fi
 The current changes repair infrastructure and preserve evidence; they do not certify a
 replacement classifier or establish complete contemporary coverage.
 
-**October 19, 2026 checkpoint:** actual audit **v43** binds **100 completed research
+**October 19, 2026 checkpoint:** actual audit **v44** binds **102 completed research
 and accounting packets**. The canonical audit has **300/334 passing checks**
 and **34 missing-artifact failures**. Known source, collection and scientific failures
 remain explicit; this is not a completed project or a certified classifier.
@@ -16,6 +16,7 @@ remain explicit; this is not a completed project or a certified classifier.
 | Sponsorship | Date-aware attribution remains conservative. Official Washington evidence supplies separate session-roster D/R observations for 14,132 of 14,143 measures. Separately, 1,481 native SD roster rows identify all 7,086 prime-sponsor references; 205 mixed-party cases remain explicit. No filing-time party is overwritten. | A session roster does not establish affiliation at filing. Washington retains ten source-identified tests and one substantive original without a native primary-sponsor API record. SD cross-session cosponsor IDs, institutional sponsorship and event-time affiliations remain separately accounted for; all-state recovery is open. |
 | Bills | October snapshot extracted: 1,090,369 source-context measures across all 50 states, 5,028,893 sponsorships, 9,002,451 actions and 873,980 vote events. All eleven tables have recorded hashes/counts. Native documents retained for all 241 non-test measures in the bounded Washington metadata-gap cohort; separately, all 5,369 native SD introduced candidates and 15,308 physical pages captured and exactly replayed in both readers. | Official-source reconciliation, historical affiliations and filing-time text review. One Washington resolution has a version-note conflict; one SD PDF prints no session year. Neither these recoveries nor snapshot extraction certifies statewide/national original-text completeness or an analytical denominator. |
 | Parallel state recovery | Missouri, Pennsylvania and Ohio initial cohorts retain 188 complete PDF candidates / 3,095 pages and 124 corresponding HTML versions from 192 selections. Full Florida replay separately accounts for 2,868 linked contexts, including an explicitly negative corrected-copy disposition. | Four selected PA/OH originals remain unresolved. Missouri withdrawal-only notices are not policy text; historical corroboration does not resolve publisher identity conflicts. These bounded recoveries are not statewide text completeness or classifier certification. |
+| California native archive | Complete 2023–2024 regular-session native census matches all 5,544 canonical identities; 26 introduced CAML captures are retained, including 16 selected candidates, four assistant-judged intent-only exclusions and six unselected diagnostics. Full range/member integrity and all 26 texts replay independently. | The remainder of the state’s original documents is not recovered. Selection and assistant judgments are not independent labels, random sampling, filing-time certification or scientific admission. |
 | Classification | Four saved official English ModernBERT-base pilots compared on the same 52 platform references: external-only 41/52, joint 47/52, broader-source 47/52, Republican-expanded 49/52. The fourth run correctly rejects 3/4 mixtures and 6/6 non-policy units. | The fourth run loses one policy decision, still accepts a mixture above 0.999 and regresses on insufficient-evidence and taxonomy-boundary development cases. Both sets are examined diagnostics, not fresh independent tests. Independent review and empirical gates remain required. No candidate is approved. |
 | Labels | External CAP files and two state-reference CSVs recovered; exact-context Florida candidates and complete bounded overlap witnesses are frozen without label admission. Split/group/text and reviewed-platform source-body checks retain explicit label provenance. | Modern Florida external titles/subtopics are missing; Pennsylvania rows stop in 2016. Annotation provenance, source permissions, adapted-topic compatibility, bill families and independent state-domain references remain unresolved. |
 | Evaluation | Checkpoint-bound training/evaluation split isolation, development-only temperature/threshold selection, exact evidence joins, abstention accounting, per-topic and subgroup metrics. | Reviewer arrangement, frozen empirical gates, independent target tests and clustered uncertainty. No checkpoint can be certified by changing a status field. |
@@ -37,6 +38,62 @@ and module documentation now state these limits explicitly. Separate bounded
 research collectors must continue retaining per-exchange headers/bodies and
 enforcing their aggregate allowances; this repair cannot recover previously lost
 response bytes or retroactively make earlier collection compliant.
+
+## California native census and bounded original-text recovery
+
+The retained official `pubinfo_2023.zip` at the Legislature's downloads host
+contains a complete `BILL_TBL.dat` with 5,564 rows. Its 5,544 distinct
+`SESSION_YEAR=20232024`, `SESSION_NUM=0` regular-session identities exactly match
+the canonical regular-session type/number keys; 20 special-session rows remain
+separate. The retained full table's SHA-256 is
+`1d5196070e80987ddb7e8a30452d3831d0ec6c904f18503919ed448b8fbde6dc`.
+This is complete identity enumeration for that session, not full text recovery.
+
+`data/processed/california-official-parallel-recovery-v1/` retains **26**
+introduced CAML XML captures. Sixteen form the selected policy-candidate cohort;
+AB2987, SB1078, SB395 and SB123 are four assistant-judged intent-only candidate
+exclusions, **not gold non-policy labels**. Six additional replacement diagnostic
+captures remain unselected. All 26 raw XML documents remain available; exclusions
+from the selected cohort do not erase documents or historical measures.
+The manifest SHA-256 is
+`20b8d077ab143c5645fdae5576d271785bd5cfef2645484b1096967922c9e46c`.
+Parent replay passed and left all 235 file hashes unchanged.
+
+The first verifier did not explicitly assert HTTP `Content-Range` or ZIP CRC
+fields. A separate offline supplement,
+`data/processed/california-official-range-integrity-verification-v1/`, closes
+that gap without overwriting the first packet. Parent read-only replay verifies
+33 HTTP ranges, 28 complete ZIP members, the complete census and version evidence,
+all 26 CAML texts and 52 source spans. It checks response ranges and byte counts,
+local/central member metadata, full decompression, uncompressed lengths and CRC-32,
+including the split census-member completion. All 170 packet file hashes remain
+unchanged. Its manifest SHA-256 is
+`0a8fe109a4e7839e7d53a7fa6ed015b8edf8ec076704ef010e2a646f29da1008`.
+
+Collection used **65/128 aggregate transport requests** across attempts. All 24
+nonempty HTTP-error bodies are retained; two TLS failures received no response
+body, and no redirect responses occurred. The span diagnostic
+`california-official-parallel-recovery-v1.incomplete-span-attempt` and offline
+`california-official-range-integrity-verification-v1.incomplete-zip64-attempt`
+remain incomplete diagnostics, not completed packets. The supplement made zero
+network requests and did not reset the original allowance.
+
+Only required archive members were reconstructed: 1,068,471 compressed bytes /
+6,395,180 uncompressed bytes, not the entire 1,261,848,876-byte ZIP. CAML XML has
+no physical page denominator. “Introduced”/`INT` is observed official table/XML
+version metadata, not certified filing-time identity. The cohort is not random
+or representative; no labels, model weights, historical affiliations, canonical
+records, analytical admission or publication status changed.
+
+Actual canonical audit v44 binds both California packets, the shared retrieval
+repair and its pre-fix/targeted regression logs alongside the earlier research
+evidence: **102 completed packets**, return code **1**, **300/334** passing checks
+and the same **34** missing-artifact failures. Its entire canonical report is
+identical to v43; neither new sources nor resource cleanup manufactures missing
+analytical artifacts or changes scientific non-certification. The manifest SHA-256
+is `a60398756975a55bee86f93f03158812664d063c81e045c03b4d0f9396b59333`.
+Frozen documentation precedes this result paragraph and top-line update.
+Ignored source/probe/audit packets remain local, not backed up by a Git push.
 
 ## Withdrawal-only source inputs: production evidence abstention
 
