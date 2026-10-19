@@ -34,7 +34,7 @@ repository audit fails when a Python file is added without an entry here.
 | `src/state_politics/bills/people.py` | Downloads current legislators and normalizes party labels, including fusion-voting ballot lines. |
 | `src/state_politics/bills/ingest.py` | Stages eleven source-bound bill/sponsorship/action/vote/evidence tables, preserves abstracts/version references, resolves dated sponsor parties, and records incomplete/completed extraction manifests. |
 | `src/state_politics/bills/outcomes.py` | Streams action/vote tables, resolves historical chambers and date-aware voter party, distinguishes missing from unclassified actions, and writes source-reconciled corrections separately from the frozen extraction. |
-| `src/state_politics/bills/washington.py` | Replays retained official Washington bill versions and biennial rosters; joins exact original bill keys and chamber-scoped sponsor IDs, preserves duplicate/missing records and full legal titles, and freezes separate session-party evidence without filling event-time affiliation or admitting analytical inputs. |
+| `src/state_politics/bills/washington.py` | Replays retained official Washington bill versions and biennial rosters; optionally verifies an exact-population resolution supplement with per-request identity/receipt checks and original file/row provenance; joins exact original bill keys and chamber-scoped sponsor IDs, preserves duplicate/missing records and legal titles, and freezes separate session-party evidence without filling event-time affiliation or admitting analytical inputs. |
 
 ## Analysis
 
@@ -119,7 +119,7 @@ repository audit fails when a Python file is added without an entry here.
 | `tests/test_terms.py` | State-party document construction, committee precedence, peer-absent handling and literal numeric log2 ratios. |
 | `tests/test_trends.py` | Early/late shares, slope direction, BH correction and state-year observation floors. |
 | `tests/test_outcomes.py` | Historical chamber resolution, date-aware voter party, recorded-stage precedence, outcome floors, and roll-call aggregation. |
-| `tests/test_washington.py` | Exact official bill/session/chamber joins, version separation, duplicate/blank/switched-chamber safeguards, schema rejection, complete source/baseline preservation and immutable hash-bound reconciliation packets. |
+| `tests/test_washington.py` | Exact official bill/session/chamber joins, version separation, duplicate/blank/switched-chamber safeguards, schema rejection, complete source/baseline preservation, exact-target supplemental response checks, explicit retrieval failures and placeholder dates in immutable hash-bound reconciliation packets. |
 | `tests/test_coverage.py` | Capability reporting, source-audit date/missingness counts, all-state coverage and exact evidence joins. |
 | `tests/test_caucuses.py` | Curated source collection, failure recording, institutional separation and 50-state coverage plot invariants. |
 | `tests/test_plotting.py` | Portfolio palette, measured source-note layout, top-label spacing, shared panel order/count, and contradicted-row styling. |

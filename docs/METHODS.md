@@ -259,6 +259,26 @@ date filter. Sampled missing HB/SB lookups return engrossed rather than original
 versions. Neither a placeholder nor an amended version may silently become filing-time
 evidence. See the dated counts and manifest identities in [AUDIT_STATUS.md](AUDIT_STATUS.md).
 
+The completed supplemental resolution packet covers all **417** exact missing SR/HR
+requests. Reproduce its separate successor without overwriting the original:
+
+```bash
+.venv/bin/python -m state_politics.bills.washington \
+  --supplementary data/processed/washington-official-resolution-recovery-v1 \
+  --supplementary-manifest-sha256 7dc7dc1ab633ee0e5bb7e9b305fa674156349047e3a191953ab91431d2fbff22 \
+  --out data/processed/washington-official-bill-reconciliation-NEW
+```
+
+The supplement must cover the exact initial missing-resolution population and provide
+its own complete manifest, plan, run and receipts. Every returned record must match the
+requested biennium, numeric bill number and original chamber. Failures stay explicit,
+and amended-only returns do not silently become originals. A successor preserves the
+complete initial and supplemental source packets, local XML row positions and a global
+record index. It adds **413** original resolutions, for **13,892** unique matches and
+**9,034 D / 4,858 R** session-roster observations. All 413 additional introduction dates
+are publisher placeholders. Event-time affiliations remain unknown and legal-title
+support remains 12,735; raw retrieval success is not equivalent to original-text recovery.
+
 ---
 
 ---

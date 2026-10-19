@@ -8,7 +8,7 @@ replacement classifier or establish complete contemporary coverage.
 |---|---|---|
 | Historical platforms | Recovered 2,091 authoritative archive documents, with publisher checksums and old/new archive reconciliation. | Historical availability must not be substituted for operative modern platforms. |
 | Contemporary platforms | Inventory v8 preserves 1,559 requests, including 1,440 retained responses across all 100 organizations, 119 failures and 1,371 body hashes. Corrected Alaska's stale host and recovered an image-only Massachusetts resolution. | Deferred navigation/images, OCR quality, source/institution/version adjudication and operative coverage remain unresolved. Retained responses are not verified platforms. |
-| Sponsorship | Date-aware attribution remains conservative. Official Washington bill-key and chamber-scoped numeric-ID joins now supply separate historical session-roster D/R evidence for 13,479 measures, without overwriting any filing-time party. | A biennial roster does not establish affiliation at filing. Exact event-date evidence and unresolved primary sponsors still block canonical D/R assignment. |
+| Sponsorship | Date-aware attribution remains conservative. Official Washington bill-key and chamber-scoped numeric-ID joins now supply separate historical session-roster D/R evidence for 13,892 measures, without overwriting any filing-time party. | A biennial roster does not establish affiliation at filing. Exact event-date evidence and unresolved primary sponsors still block canonical D/R assignment. |
 | Bills | October snapshot extracted: 1,090,369 source-context measures across all 50 states, 5,028,893 sponsorships, 9,002,451 actions and 873,980 vote events. All eleven tables have recorded hashes/counts. | Official-source reconciliation, historical affiliations and filing-time text review. Full extraction is not a certified source universe or analytical denominator. |
 | Classification | Four saved official English ModernBERT-base pilots compared on the same 52 platform references: external-only 41/52, joint 47/52, broader-source 47/52, Republican-expanded 49/52. The fourth run correctly rejects 3/4 mixtures and 6/6 non-policy units. | The fourth run loses one policy decision, still accepts a mixture above 0.999 and regresses on insufficient-evidence and taxonomy-boundary development cases. Both sets are examined diagnostics, not fresh independent tests. Independent review and empirical gates remain required. No candidate is approved. |
 | Labels | External CAP files recovered; split/group/exact-text and reviewed-platform source-body checks plus explicit reviewed-label provenance are implemented. | Source permissions, adapted-topic compatibility, near-duplicate families and reviewed state-domain training/development/test labels. |
@@ -61,8 +61,8 @@ HTTP 500 failure. A direct resolution lookup returns an original excluded by the
 date filter because its introduction date is the publisher placeholder
 `0001-01-01T00:00:00`; this is not an actual event date. The sampled missing HB/SB
 lookups instead return engrossed versions, not original text. A separate planned
-417-resolution recovery is in progress at this checkpoint; its unfinished output is
-not included in the completed counts above.
+417-resolution recovery was planned from these exact measured gaps; its completed
+successor is recorded below.
 
 Frozen manifest identities:
 
@@ -80,6 +80,48 @@ records all **19** completed research-packet manifest identities; research evide
 not substituted for the missing analytical inputs. Audit manifest:
 `b919856baf9772f0236c7b6b3adf2253eb425071a152e8f6a4905f9aa5c4f10e`;
 report: `68d28c7efe5a0eaaf222ded46a49a2a9283b6921c939dd3c7961fac4a899832a`.
+
+### Resolving the date-filtered resolution gap
+
+The completed exact-lookup packet
+`data/processed/washington-official-resolution-recovery-v1/` retains **417/417**
+successful responses for every previously missing SR/HR measure. A new manifest-bound
+successor, `data/processed/washington-official-bill-reconciliation-v2/`, preserves all
+earlier source records and all 14,143 baseline references; **413** additional originals
+are recovered. All 413 carry the publisher introduction-date placeholder, which is
+explicitly counted and never converted to an actual event date.
+
+The combined **25,196** source-version records now yield **13,892** unique original
+matches and **9,034 D / 4,858 R session-roster observations**. **245** baseline measures
+still lack an original, and six retain duplicate-original ambiguity. Three SR and one
+HR remain in the missing population because their direct lookups return amended rather
+than original versions. Successful retrieval therefore does not imply an original-text
+recovery. Legal-title support stays **12,735**, and the original source-only population
+and its dispositions do not change.
+
+Every supplemental source is checked against its planned baseline bill, biennium,
+chamber, exact query/receipt and complete source hash. All records retain both the global
+ledger index and original file/local-row positions. A separate independent XML replay
+again checks all 14,143 decisions and every extracted field. No canonical event-time
+party, classification, analytical input or publication status changes.
+
+The original sponsorship-probe HTTP 500 came from an incorrect **billNumber** argument;
+the service requires **billId**. The corrected seven-request probe packet v2 retains
+**seven successful responses**, including a native sponsor list with explicit member
+IDs, chamber and Primary/Secondary type. This repairs the query error rather than
+claiming publisher unavailability or inventing party evidence from names. A follow-up
+native-sponsor recovery for the exact **251** remaining uncertain measures is running
+at this checkpoint; it is not included in these completed results.
+
+- Resolution retrieval manifest: `7dc7dc1ab633ee0e5bb7e9b305fa674156349047e3a191953ab91431d2fbff22`.
+- Reconciliation v2 manifest: `9fed147fe940afc52ae2db77652db0aa6b9d8a0acf99e37fa8d578397621dd8e`.
+- Independent replay v2 manifest: `990ced96731fca7a08a908284bbd6dfeb4cc61baf356897b1b3ad5c59860f1bf`.
+- Corrected probe v2 manifest: `02037089ce8652b9d89a3d404800d68ea5a0093cfffa380d81a5ca448dcffeec`.
+
+Canonical audit **v15** retains the actual return code **1**, the unchanged **34/324**
+failures and all **23** completed research-packet identities. Its report is byte-identical
+to v14; its new wrapper manifest is
+`3908d69b2f96c3305a260436dea380a56c2d85e7660522776bb39dbaeef87550`.
 
 ## Training reservation enforcement
 

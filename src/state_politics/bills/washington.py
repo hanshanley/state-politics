@@ -9,6 +9,7 @@ import shutil
 import xml.etree.ElementTree as ET
 from collections import Counter, defaultdict
 from pathlib import Path
+from urllib.parse import urlencode
 
 import pandas as pd
 
@@ -141,11 +142,16 @@ def _write_jsonl(path: Path, rows: list[dict]) -> None:
 def build_reconciliation(
     source: Path, bills: Path, out: Path, *,
     source_sha256: str = SOURCE_SHA256, bills_sha256: str = BILLS_SHA256,
+    supplementary: Path | None = None, supplementary_sha256: str | None = None,
 ) -> dict:
     if out.exists():
         raise FileExistsError(out)
     if out.resolve().is_relative_to(source.resolve()):
         raise ValueError("output must not be inside the immutable source packet")
+    if (supplementary is None) != (supplementary_sha256 is None):
+        raise ValueError("supplementary source and its manifest identity must be supplied together")
+    if supplementary is not None and out.resolve().is_relative_to(supplementary.resolve()):
+        raise ValueError("output must not be inside the supplementary packet")
     if sha256_file(source / "manifest.json") != source_sha256:
         raise ValueError("official source packet identity changed")
     required = {"plan.json", "receipts.jsonl", "source/introduced_since_2017.xml"}
@@ -170,6 +176,69 @@ def build_reconciliation(
     baseline = baseline.loc[baseline.state.eq("WA")].copy()
     if baseline.empty or baseline.isna().any().any() or baseline.bill_id.duplicated().any():
         raise ValueError("empty, incomplete or duplicate Washington baseline")
+    supplementary_failures = []
+    if supplementary is not None:
+        if sha256_file(supplementary / "manifest.json") != supplementary_sha256:
+            raise ValueError("supplementary source packet identity changed")
+        packet_manifest = verify_manifest(
+            supplementary, {"plan.json", "receipts.jsonl", "run.json"}
+        )
+        plan = json.loads((supplementary / "plan.json").read_text())
+        if plan["initial_source_manifest_sha256"] != source_sha256:
+            raise ValueError("supplementary source belongs to a different initial packet")
+        initial = reconcile(baseline.to_dict("records"), legislation, members)
+        expected_targets = {
+            row["bill_id"] for row in initial
+            if row["record_link_status"] == "missing_original_record"
+            and row["identifier"].split()[0] in {"SR", "HR"}
+        }
+        requests = plan["requests"]
+        if (len(requests) != len(expected_targets)
+                or {row["bill_id"] for row in requests} != expected_targets):
+            raise ValueError("supplementary plan must cover the exact missing-resolution set")
+        by_id = {row["bill_id"]: row for row in initial}
+        supplement_receipts = [
+            json.loads(line) for line in (supplementary / "receipts.jsonl").open()
+        ]
+        if len(supplement_receipts) != len(requests):
+            raise ValueError("supplementary receipt population differs from its plan")
+        for row in legislation:
+            row["source_file"] = "source/official_packet/source/introduced_since_2017.xml"
+            row["source_file_row_index"] = row["source_row_index"]
+        for request in requests:
+            target = by_id[request["bill_id"]]
+            biennium = target["session_identifier"][:4] + "-" + target["session_identifier"][-2:]
+            name = f"{biennium}_{target['identifier'].replace(' ', '_')}.xml"
+            url = (
+                "https://wslwebservices.leg.wa.gov/LegislationService.asmx/GetLegislation?"
+                + urlencode({"biennium": biennium, "billNumber": target["identifier"].split()[1]})
+            )
+            if (request["biennium"] != biennium or request["identifier"] != target["identifier"]
+                    or request["file"] != name or request["url"] != url):
+                raise ValueError("supplementary request does not match its exact baseline target")
+            matches = [row for row in supplement_receipts if row["file"] == name]
+            if len(matches) != 1 or matches[0]["url"] != url:
+                raise ValueError(f"missing or inconsistent supplementary receipt: {name}")
+            receipt = matches[0]
+            if receipt["ok"] is not True:
+                supplementary_failures.append(receipt)
+                continue
+            relative = f"source/{name}"
+            if (relative not in packet_manifest["files"]
+                    or receipt["content_sha256"] != sha256_file(supplementary / relative)):
+                raise ValueError(f"supplementary source/receipt mismatch: {name}")
+            added = parse_records((supplementary / relative).read_bytes())
+            for row in added:
+                if (row["Biennium"] != biennium
+                        or row["BillNumber"] != target["identifier"].split()[1]
+                        or row["OriginalAgency"] != (
+                            "House" if target["identifier"].startswith("H") else "Senate"
+                        )):
+                    raise ValueError(f"supplementary response contains a different bill: {name}")
+                row["source_file"] = f"source/supplementary_packet/{relative}"
+                row["source_file_row_index"] = row["source_row_index"]
+                row["source_row_index"] = len(legislation)
+                legislation.append(row)
     decisions = reconcile(baseline.to_dict("records"), legislation, members)
     original = [row for row in legislation
                 if row["SubstituteVersion"] == "0" and row["EngrossedVersion"] == "0"]
@@ -180,6 +249,8 @@ def build_reconciliation(
     report = {
         "created_at": utc_now_iso(),
         "source_manifest_sha256": source_sha256, "bills_sha256": bills_sha256,
+        "supplementary_manifest_sha256": supplementary_sha256,
+        "supplementary_retrieval_failures": supplementary_failures,
         "official_version_records": len(legislation),
         "official_original_records": len(original),
         "official_unique_original_keys": len({
@@ -194,6 +265,11 @@ def build_reconciliation(
         "unique_original_records_with_legal_title": sum(
             row["record_link_status"] == "unique_original_record"
             and bool(row.get("official_LegalTitle")) for row in decisions
+        ),
+        "unique_original_records_with_placeholder_introduction_date": sum(
+            row["record_link_status"] == "unique_original_record"
+            and row.get("official_IntroducedDate", "").startswith("0001-01-01")
+            for row in decisions
         ),
         "source_only_original_records": len(source_only),
         "source_only_unique_keys": len({(row["Biennium"], row["BillId"]) for row in source_only}),
@@ -213,6 +289,8 @@ def build_reconciliation(
     out.mkdir(parents=True)
     (out / "source").mkdir()
     shutil.copytree(source, out / "source/official_packet")
+    if supplementary is not None:
+        shutil.copytree(supplementary, out / "source/supplementary_packet")
     baseline.to_parquet(out / "source/baseline_washington_bills.parquet", index=False)
     shutil.copyfile(__file__, out / "producer.py")
     _write_jsonl(out / "official_legislation.jsonl", legislation)
@@ -232,8 +310,13 @@ def main() -> None:
     parser.add_argument("--source", type=Path, default=SOURCE)
     parser.add_argument("--bills", type=Path, default=Path("data/processed/bills.parquet"))
     parser.add_argument("--out", type=Path, required=True)
+    parser.add_argument("--supplementary", type=Path)
+    parser.add_argument("--supplementary-manifest-sha256")
     args = parser.parse_args()
-    print(json.dumps(build_reconciliation(args.source, args.bills, args.out), indent=2))
+    print(json.dumps(build_reconciliation(
+        args.source, args.bills, args.out, supplementary=args.supplementary,
+        supplementary_sha256=args.supplementary_manifest_sha256,
+    ), indent=2))
 
 
 if __name__ == "__main__":

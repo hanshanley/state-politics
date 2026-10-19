@@ -167,3 +167,82 @@ def test_packet_freezes_complete_source_and_exact_baseline_without_modifying_inp
             bills_sha256=bills_hash,
         )
     assert not (tmp_path / "changed").exists()
+
+
+def _supplement(tmp_path, source, bills, *, successful=True, wrong_bill=False):
+    pd.DataFrame([
+        _bill(),
+        _bill(bill_id="resolution", identifier="SR 8663", originating_chamber="upper"),
+    ]).to_parquet(bills)
+    supplement = tmp_path / "supplement"
+    (supplement / "source").mkdir(parents=True)
+    url = (
+        "https://wslwebservices.leg.wa.gov/LegislationService.asmx/GetLegislation?"
+        "biennium=2019-20&billNumber=8663"
+    )
+    name = "2019-20_SR_8663.xml"
+    (supplement / "plan.json").write_text(json.dumps({
+        "initial_source_manifest_sha256": sha256_file(source / "manifest.json"),
+        "requests": [{
+            "file": name, "bill_id": "resolution", "identifier": "SR 8663",
+            "biennium": "2019-20", "url": url,
+        }],
+    }))
+    receipt = {"file": name, "url": url, "ok": successful, "content_sha256": None}
+    if successful:
+        path = supplement / "source" / name
+        path.write_bytes(_xml([_legislation(
+            BillId="SR 8663", BillNumber="8664" if wrong_bill else "8663",
+            OriginalAgency="Senate", IntroducedDate="0001-01-01T00:00:00",
+        )]))
+        receipt["content_sha256"] = sha256_file(path)
+    (supplement / "receipts.jsonl").write_text(json.dumps(receipt) + "\n")
+    (supplement / "run.json").write_text("{}\n")
+    (supplement / "manifest.json").write_text(json.dumps({
+        "files": {str(p.relative_to(supplement)): sha256_file(p)
+                  for p in sorted(supplement.rglob("*")) if p.is_file()},
+    }))
+    return supplement
+
+
+@pytest.mark.parametrize("successful", [True, False])
+def test_resolution_supplement_preserves_placeholder_dates_and_explicit_failures(
+    tmp_path, successful,
+):
+    source, bills = _packet(tmp_path)
+    supplement = _supplement(tmp_path, source, bills, successful=successful)
+    out = tmp_path / "successor"
+    report = build_reconciliation(
+        source, bills, out, source_sha256=sha256_file(source / "manifest.json"),
+        bills_sha256=sha256_file(bills), supplementary=supplement,
+        supplementary_sha256=sha256_file(supplement / "manifest.json"),
+    )
+    with (out / "bill_reconciliation.jsonl").open() as stream:
+        rows = [json.loads(line) for line in stream]
+    assert rows[1]["filing_time_party"] == "unknown"
+    assert report["unique_original_records_with_placeholder_introduction_date"] == int(successful)
+    assert len(report["supplementary_retrieval_failures"]) == int(not successful)
+    if successful:
+        assert rows[1]["session_roster_party"] == "unknown"
+        assert rows[1]["record_link_status"] == "unique_original_record"
+        assert rows[1]["official_record_rows"] == [2]
+        assert rows[1]["official_source_file_row_index"] == 0
+        assert rows[1]["official_source_file"].endswith("source/2019-20_SR_8663.xml")
+    else:
+        assert rows[1]["record_link_status"] == "missing_original_record"
+    verify_manifest(out, {"source/supplementary_packet/manifest.json"})
+
+
+def test_supplement_rejects_unbound_or_wrong_bill_responses_before_writing(tmp_path):
+    source, bills = _packet(tmp_path)
+    supplement = _supplement(tmp_path, source, bills, wrong_bill=True)
+    with pytest.raises(ValueError, match="supplied together"):
+        build_reconciliation(source, bills, tmp_path / "unbound", supplementary=supplement)
+    out = tmp_path / "wrong"
+    with pytest.raises(ValueError, match="different bill"):
+        build_reconciliation(
+            source, bills, out, source_sha256=sha256_file(source / "manifest.json"),
+            bills_sha256=sha256_file(bills), supplementary=supplement,
+            supplementary_sha256=sha256_file(supplement / "manifest.json"),
+        )
+    assert not out.exists()
