@@ -4,7 +4,7 @@ The existing figures and analytical conclusions are **legacy, not revalidated fi
 The current changes repair infrastructure and preserve evidence; they do not certify a
 replacement classifier or establish complete contemporary coverage.
 
-**October 19, 2026 checkpoint:** actual audit **v46** binds **108 completed research
+**October 19, 2026 checkpoint:** actual audit **v48** binds **111 completed research
 and accounting packets**. The canonical audit has **302/336 passing checks**
 and **34 missing-artifact failures**. Known source, collection and scientific failures
 remain explicit; this is not a completed project or a certified classifier.
@@ -18,7 +18,7 @@ remain explicit; this is not a completed project or a certified classifier.
 | Parallel state recovery | Missouri, Pennsylvania and Ohio initial cohorts retain 188 complete PDF candidates / 3,095 pages and 124 corresponding HTML versions from 192 selections. Full Florida replay separately accounts for 2,868 linked contexts, including an explicitly negative corrected-copy disposition. | Four selected PA/OH originals remain unresolved. Missouri withdrawal-only notices are not policy text; historical corroboration does not resolve publisher identity conflicts. These bounded recoveries are not statewide text completeness or classifier certification. |
 | California native archive | Complete 2023–2024 regular-session census and all 5,544 typed introduced-source candidates recovered, with 20 special-session candidates separate. All 204,862 archive entries pass CRC verification; all 5,564 complete XML/text candidates replay independently. | Completeness is relative to this archive's typed introduced versions, not all California sessions or legal filing-time certification. Normalized text flattens legislative markup; exact raw XML remains available. No labels or scientific admission. |
 | Texas native reports | Complete 88R House/Senate filed reports reconcile 11,807 of 11,809 canonical regular contexts. Sixteen introduced PDF+HTML pairs retain 55 physical PDF pages and 16 HTML text blocks. | Literal canonical SB 15247 and SR 1960 remain unmatched. Other originals, historical affiliations, typed markup interpretation and filing-time certification remain open. Special sessions are isolated, not combined with 88R. |
-| New York native index | Official 2023–2024 Assembly search response retains 24,316 rows and 24,268 exact canonical matches. Sixteen base-print PDFs preserve all 54 pages, 129,383 characters and 506 extraction blocks. | Canonical J 272, one untyped `00000` row and 47 anomalous source-only identities remain separate. Unselected originals, visual markup and legal-version identity remain unresolved; the blocked API was not bypassed. |
+| New York native index | Official 2023–2024 Assembly search response retains 24,316 rows and 24,268 exact canonical matches. Self-contained first-batch archive preserves 80 PDF candidates / 256 pages / 769,944 joined-document characters / 1,488 extraction blocks. | Canonical J 272, one untyped `00000` row and 47 anomalous source-only identities remain separate. Full collection is running, not complete. Unselected originals, visual markup and legal-version identity remain unresolved; the blocked API was not bypassed. |
 | Illinois native index | Official 103rd-General-Assembly index retains 13,391 rows and matches all 13,376 canonical regular contexts. Sixteen native HTML originals retain 168,697 characters and exact block spans. | Fifteen source-only entries, 878 canonical introduced-metadata gaps, SR 292's unavailable static original listing and unfetched originals remain explicit. Identity enumeration is not complete original-text recovery or filing-time certification. |
 | Classification | Four saved official English ModernBERT-base pilots compared on the same 52 platform references: external-only 41/52, joint 47/52, broader-source 47/52, Republican-expanded 49/52. The fourth run correctly rejects 3/4 mixtures and 6/6 non-policy units. | The fourth run loses one policy decision, still accepts a mixture above 0.999 and regresses on insufficient-evidence and taxonomy-boundary development cases. Both sets are examined diagnostics, not fresh independent tests. Independent review and empirical gates remain required. No candidate is approved. |
 | Labels | External CAP files and two state-reference CSVs recovered; exact-context Florida candidates and complete bounded overlap witnesses are frozen without label admission. Split/group/text and reviewed-platform source-body checks retain explicit label provenance. | Modern Florida external titles/subtopics are missing; Pennsylvania rows stop in 2016. Annotation provenance, source permissions, adapted-topic compatibility, bill families and independent state-domain references remain unresolved. |
@@ -249,6 +249,26 @@ The running New York campaign is not counted as completed evidence. Its first
 batch's complete immutable transport dependencies are being archived separately.
 Frozen documentation precedes this result paragraph and top-line update.
 
+Actual canonical audit **v47** adds the independently replayed New York
+self-contained first-batch archive and the explicitly negative Montana direct
+archive response. It verifies **110 completed research/accounting packets**;
+the entire canonical report equals v46: return code **1**, **302/336 passing**,
+**34 missing-artifact failures**, unchanged authored-input hashes and no
+scientific certification. New York's growing campaign is not included as a
+completed root. Strict manifest/inventory verification passed. Manifest SHA-256:
+`50d35294df108419cc57bccda0f07bdf281e69c8bb9916187400009fb16b3a01`.
+Frozen documentation precedes this result paragraph and top-line update.
+
+Actual canonical audit **v48** adds the self-contained Texas first-batch archive,
+its exact producer/verifiers, parent guarded replay and the continuation readiness
+snapshot. All **111 completed research/accounting packets** verify. The complete
+canonical report equals v47: **302/336 passing**, **34 missing-artifact failures**,
+return code **1**, unchanged authored inputs and no scientific certification.
+Strict exact-file/hash verification passed. Manifest SHA-256:
+`5505db471beb293f6a146715e3c0218c40f9da59ca31d72fb8e90d75d37ac669`.
+Neither live full-source campaign is represented as a completed root.
+Frozen documentation precedes this result paragraph and top-line update.
+
 ## Texas 88R filed-census and bounded original-text recovery
 
 `data/processed/texas-official-parallel-recovery-v3/` retains complete official
@@ -289,6 +309,48 @@ Successful manifest SHA-256:
 Parent semantic replay passed; exact inventory and all **263 file hashes**
 remain unchanged. No canonical mutation, new labels, model inference,
 filing-time/party certification or analytical/publication admission occurred.
+
+### Full HTML campaign and self-contained first additional batch
+
+`data/processed/texas-full-source-campaign-v1/` supplies a resumable plan for
+**all 11,807 native filed identities**, preserving the two canonical-only
+identities separately: **11,809 accounted contexts**. Bounded official discovery
+found a per-file FTP offering, not a complete introduced-text archive; this does
+not establish that no bulk archive exists elsewhere.
+
+The frozen first additional batch accounts for HB 1–HB 32: **31 new HTML
+successes and one unavailable-HTML shell**, alongside sixteen inherited
+successes. Thus the frozen checkpoint contains **47 HTML successes, one
+unverified-header shell and 11,759 pending native identities**. HB 1 explicitly
+says HTML/Word are unavailable. Its original PDF link is retained in canonical
+version-link evidence, but was **not fetched or accessibility-tested**; the shell
+is not policy text or an invented successful fallback.
+
+`data/processed/texas-full-source-first-batch-archive-v1/` preserves all contract,
+foundation, first-batch and readiness dependencies through explicit source-path
+mapping. All **928 files**, including nested manifests, remain unchanged across
+parent replay. The verifier reproduces **3,459,919 HTML bytes, 1,513,222 extracted
+characters and 116,482 markup spans**, plus population and transport accounting.
+It also succeeds with networking and all original project/session data reads
+denied, using only the archived copies. Observed markup is not certified
+legislative insertion/deletion meaning. Manifest SHA-256:
+`316c14a703602fc59f6f1bf6520423c6bf6f52573f1c01c47024179197afdfda`.
+
+The prospective ceiling is **25,000 aggregate physical exchanges including the
+historical 40**, not a reset of the original 128-request pilot. The checkpoint
+accounts for **73 = 40 inherited + one discovery + 32 document exchanges**.
+Its 99-event prospective prefix includes the three discovery events; the document
+batch alone has 96 events. Requests are paced, retries and reservations persist,
+and access/service failures stop collection explicitly.
+
+Parent independently replayed the initial campaign before launching its finite
+**11,759-candidate continuation** and verified advancing persisted counts.
+The frozen collector checkpoints complete 32-identity groups, but will leave the
+final **15 identities uncheckpointed**; their durable evidence must be sealed
+separately after the collector exits. Neither the running campaign nor that
+unsealed tail is a completed source packet. HB 1's PDF fallback remains separate
+work under the same aggregate accounting, not a concurrent unbudgeted fetch.
+No labels, inference, canonical changes or scientific/publication admission.
 
 ## New York 2023–2024 native census and bounded original prints
 
@@ -371,6 +433,10 @@ wire-format bytes. Parent launched the finite continuation and
 verified advancing persisted request and terminal-candidate counts. The live
 campaign itself is **not a completed research packet** or statewide original-text
 certification; its later progress is separate from the frozen first checkpoint.
+The frozen collector seals only complete groups of 64. Even normal completion
+would leave **43 additional identities outside its 379 full checkpoints**.
+Their terminal evidence must be separately sealed and independently replayed
+after collection ends; zero pending alone is not a self-contained archive.
 
 Contract manifest:
 `31c92499b76eae6dd93aaaf523b3bc12eea50f2c06d00b74d6b508563d2a3fc4`.
@@ -378,6 +444,33 @@ First batch manifest:
 `cbbee0aecdf305547f800cd449bdf6fc870a03486116ffb263e92a817ed75465`.
 All legal-version, markup-interpretation, party, label and analytical/publication
 gates remain unresolved. No new classifier predictions or labels were produced.
+
+### Self-contained first-batch archive and offline replay
+
+`data/processed/ny-full-source-first-batch-archive-v2/` now separately freezes the
+contract, inherited sixteen PDFs and first additional sixty-four. The four-file
+campaign checkpoint alone referenced **1,108 additional files** under the growing
+campaign tree; copying only its manifest would not preserve the actual evidence.
+The archive instead binds **1,541 original dependencies**, clarification reports
+and exact sources through **1,545 explicit original-to-archive mappings**.
+Its **1,550 files** include every required body, parsed-header/outcome/stderr
+record, terminal candidate receipt, full reader text, block/span file and the
+**192-event frozen request prefix**, not the live ledger.
+
+Parent replay reproduces all **80 logical PDFs, 256 physical pages, 512 reader-page
+texts and 1,488 PyMuPDF blocks**, while preserving every duplicate required path.
+PyMuPDF page/joined totals are 769,768/769,944; pypdf totals are 768,579/768,755.
+Both use the same 176 declared form-feed joiners without claiming the decoders
+produce identical text. **All 1,550 before/after file hashes remain unchanged**.
+A further guarded replay succeeds with networking and all reads of original
+project data or session files denied: it actually consumes the archived copies.
+
+Manifest SHA-256:
+`229903cb72db98d2d8e8c4d3f0f11e2133ce4fc2968f494dda879e9d6421f69d`.
+The preserved v1 predecessor omitted two nested manifest paths from its top-level
+inventory and is a diagnostic, not a completed packet. V2 fixes the exact inventory
+without modifying v1 or the running campaign. This completed **first-batch archive**
+does not certify the full campaign, filing-time identity or any scientific claim.
 
 ## Illinois 103rd-General-Assembly native census and original HTML
 
@@ -1339,6 +1432,21 @@ overview returned **200**, but only the Bill Explorer application shell with an 
 root, not bill-specific evidence. These responses do not resolve either identity or
 certify LC3368 as a publisher test record. No visual-layout, operative-version,
 filing-time, party-at-filing or policy-label certification is asserted.
+
+A new direct archive-host check follows an indexed PDF search result without
+mistaking that result for a currently retrievable original. Exactly **one** new
+verified-TLS request, without retry or redirect, again returns **HTTP 404**.
+Unlike the earlier helper's error receipt, the complete **49,280-byte response
+body** and ordered parsed headers are retained and independently checked against
+the declared Content-Length. Duplicate header fields are preserved; they are not
+raw wire-format bytes. No PDF or source identity is recovered, and no conclusion
+of nonexistence follows. Earlier physical redirect/retry counts cannot be
+reconstructed from the old logical receipts; the one-new-exchange allowance is
+not represented as a reset historical budget. Packet
+`data/processed/montana-sr55-direct-archive-followup-v1/`, manifest SHA-256:
+`b3a7847bfd69f2008f9cc21440e4a167f3cb7725fe631ffdfbb4d4fc21ea91ed`.
+All original source context fields and the prior four nonmatch decisions remain
+unchanged; no labels, legal-version findings or analytical admission were added.
 
 The independent replay reopens every raw PDF through both readers, checks all exact
 header spans without the producer's parser, and rebinds the full source contexts,
