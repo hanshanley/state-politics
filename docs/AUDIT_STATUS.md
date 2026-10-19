@@ -21,6 +21,23 @@ remain explicit; this is not a completed project or a certified classifier.
 | Evaluation | Checkpoint-bound training/evaluation split isolation, development-only temperature/threshold selection, exact evidence joins, abstention accounting, per-topic and subgroup metrics. | Reviewer arrangement, frozen empirical gates, independent target tests and clustered uncertainty. No checkpoint can be certified by changing a status field. |
 | Companion | Local-only preview v9 exposes all 1,559 recovery captures, 119 failures and 61 alternative extraction identities across 55 OCR bodies, three DOCX bodies and one native-block body, alongside the 2,091 historical documents. The source ledger includes the corrected Arizona and Alaska registry rows. All 100 organization rows remain unresolved. | Audited classification/analysis exports, redistribution review and eventual report; no production integration is authorized. |
 
+## Shared retrieval response lifecycle and evidence limits
+
+After the v43 checkpoint, the shared `fetch` path was repaired to close successful,
+HTTP-error, retryable and oversized responses after reading or rejecting them,
+before another attempt or return. A redirect without a `Location` is no longer
+returned already closed by the default transport; its caller owns final cleanup.
+This fixes a resource-lifecycle gap without treating an error response as data or
+changing retry decisions and source-admission rules.
+
+The helper's receipts summarize logical retrievals, **not every physical request**.
+It still does not retain intermediate redirect/retry bodies or HTTP-error bodies,
+and its attempt count is not a cross-attempt HTTP request budget. The code guide
+and module documentation now state these limits explicitly. Separate bounded
+research collectors must continue retaining per-exchange headers/bodies and
+enforcing their aggregate allowances; this repair cannot recover previously lost
+response bytes or retroactively make earlier collection compliant.
+
 ## Withdrawal-only source inputs: production evidence abstention
 
 The production bill-input path now recognizes the complete reviewed Missouri

@@ -1,7 +1,7 @@
 """Provenance-tracked retrieval.
 
-Every remote artifact this project uses is fetched through :func:`fetch`, which writes an
-append-only JSONL record capturing *where the bytes came from and when*: the requested URL,
+Standard collection paths use :func:`fetch`, which can write an append-only JSONL record
+capturing *where the bytes came from and when*: the requested URL,
 the final URL after redirects, the HTTP status, the SHA-256 of the body, the byte count, the
 content type, the UTC retrieval timestamp, and the organization that collected the data.
 
@@ -16,6 +16,9 @@ Design notes
   and returned to the caller, not thrown away as an exception.
 * Network transport is injected, so the retry/record logic is testable without a network.
 * Retries cover transport errors plus 429/5xx, which are transient. A 404 is not retried.
+* Records summarize logical retrievals, not every transport exchange. Intermediate redirect/
+  retry bodies and HTTP-error bodies are not retained here. Bounded research collectors that
+  need complete transport evidence use separate per-exchange ledgers and body retention.
 """
 
 from __future__ import annotations
@@ -359,9 +362,9 @@ def _default_transport(url: str, *, timeout: float, headers: dict[str, str]) -> 
         if response.status_code not in (301, 302, 303, 307, 308):
             return response
         location = response.headers.get("location")
-        response.close()
         if not location:
             return response
+        response.close()
         url = urllib.parse.urljoin(url, location)
         reason = url_is_fetchable(url)
         if reason:
@@ -471,6 +474,9 @@ def fetch(
                 sleep(backoff * attempt)
                 continue
             break
+        close = getattr(response, "close", None)
+        if close is not None:
+            close()
         oversize = ok and max_bytes is not None and len(body) > max_bytes
         if oversize:
             ok, body = False, b""

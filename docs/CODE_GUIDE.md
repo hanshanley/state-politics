@@ -9,7 +9,7 @@ repository audit fails when a Python file is added without an entry here.
 | File | Responsibility |
 |---|---|
 | `src/state_politics/__init__.py` | Package version and public package metadata. |
-| `src/state_politics/provenance.py` | Fetches network resources, blocks SSRF/private addresses, follows checked redirects, hashes content, and appends immutable JSONL provenance records. |
+| `src/state_politics/provenance.py` | Fetches network resources, blocks SSRF/private addresses, follows checked redirects, releases consumed/error responses before reuse, hashes successful content, and optionally appends logical-retrieval JSONL provenance records; does not itself retain complete redirect/retry/error-body evidence or enforce cross-attempt request budgets. |
 | `src/state_politics/compute.py` | Selects the available model execution device and enforces the no-hosted-inference dependency rule. |
 | `src/state_politics/caucuses.py` | Collects the four explicitly separate legislative-caucus priority sources into `caucus_priorities.parquet`; never labels them party platforms. |
 

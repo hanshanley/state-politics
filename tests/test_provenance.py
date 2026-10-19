@@ -143,6 +143,64 @@ def test_fetch_retries_transient_status_then_succeeds():
     assert record.ok is True
 
 
+@pytest.mark.parametrize(
+    "statuses,max_bytes", [((200,), 100), ((404,), 100), ((503, 200), 100), ((200,), 1)]
+)
+def test_fetch_closes_responses_before_returning_or_retrying(monkeypatch, statuses, max_bytes):
+    monkeypatch.setattr("state_politics.provenance.url_is_fetchable", lambda url: None)
+    responses = []
+
+    class ClosingResponse(StubResponse):
+        closed = False
+
+        def close(self):
+            assert not self.closed
+            self.closed = True
+
+    def transport(url, *, timeout, headers):
+        assert all(response.closed for response in responses)
+        response = ClosingResponse(statuses[len(responses)], b"response body")
+        responses.append(response)
+        return response
+
+    _, record = fetch(
+        "https://example.org/x", source_org="org", transport=transport,
+        max_attempts=len(statuses), max_bytes=max_bytes, sleep=lambda _: None,
+    )
+    assert record.http_status == statuses[-1]
+    assert len(responses) == len(statuses)
+    assert all(response.closed for response in responses)
+
+
+def test_redirect_without_location_is_returned_open_and_closed_by_fetch(monkeypatch):
+    import requests
+
+    from state_politics.provenance import _default_transport
+
+    monkeypatch.setattr("state_politics.provenance.url_is_fetchable", lambda url: None)
+    responses = []
+
+    class ClosingResponse(StubResponse):
+        closed = False
+
+        def close(self):
+            assert not self.closed
+            self.closed = True
+
+    def get(url, **kwargs):
+        response = ClosingResponse(302, b"redirect response with no target")
+        responses.append(response)
+        return response
+
+    monkeypatch.setattr(requests, "get", get)
+    response = _default_transport("https://example.org/x", timeout=10, headers={})
+    assert not response.closed
+    response.close()
+    _, record = fetch("https://example.org/x", source_org="org", max_attempts=1)
+    assert record.http_status == 302 and not record.ok
+    assert all(response.closed for response in responses)
+
+
 def test_fetch_records_transport_error_after_exhausting_attempts():
     def transport(url, *, timeout, headers):
         raise TimeoutError("connection timed out")
