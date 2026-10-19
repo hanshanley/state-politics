@@ -6,13 +6,17 @@
 > revalidated. The old classifier used nearest-description embedding similarity;
 > it was not a supervised political-topic classifier. The replacement uses the official
 > English ModernBERT-base encoder with supervised fine-tuning and explicit abstention,
-> and two provisional checkpoints have now been trained. Both made 27 correct
-> decisions on the same 50 assistant-reviewed development units (54%). Joint rejection
-> training reduced false acceptance but lost correct policy decisions. Neither is
+> and four provisional checkpoints have now been trained. The latest made 31/50 correct
+> development decisions and 49/52 on an examined source-disjoint diagnostic, but still
+> accepted a mixed-policy input above 0.999 confidence. These are assistant-reviewed,
+> already examined diagnostics, not fresh independent tests. No checkpoint is
 > independently validated or approved for full-corpus replacement.
 > Historical recovery currently contains 2,091 documents; this does not establish
 > contemporary platform coverage. A separate recovery inventory now retains source
 > responses for all 100 state-major-party organizations, not 100 verified platforms.
+> The bill-document reference inventory covers all 1,090,369 retained source-context
+> measures and preserves all 2,617,690 version links; references are not verified full
+> texts, filing-time evidence or a complete official legislative universe.
 > See the [audit status](docs/AUDIT_STATUS.md) and
 > [local-only companion specification](docs/WEBSITE.md). Nothing has been added to
 > themarginoferror.com.

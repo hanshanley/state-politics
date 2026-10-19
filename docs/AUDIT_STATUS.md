@@ -274,6 +274,61 @@ to v17, not a passing audit. Audit manifest:
 `7b121b81fff57365f0fb36b2f1f977e8872c0aae9d3cbac6bbd44616b75041bd`;
 report: `68d28c7efe5a0eaaf222ded46a49a2a9283b6921c939dd3c7961fac4a899832a`.
 
+## All-state document-reference inventory and retrieval
+
+The persistent `state_politics.bills.documents` pipeline now inventories **all 1,090,369**
+retained source-context measures, **1,899,909** version records and **2,617,690** links
+from the checksum-verified completed October extraction. Every link survives, including
+duplicate URLs and later/unclassified version notes. No version records lack a link in
+this snapshot. Exact bill/version identity conflicts fail rather than cross-attaching text.
+
+The immutable first pass flags **143,688** whitespace-bearing URLs. Schema-2 successor
+v2 preserves each original string while recording a separately encoded request URL,
+making syntactically usable references explicit for **37,431 additional measures**.
+This is not 37,431 new downloads: v2 has **1,064,790** source-context measures with a
+usable request URL, including the ten reviewed publisher tests. It retains **21,252**
+measures without a version link and **4,327** with only unsupported FTP references
+(**6,522 links**). These are snapshot/reference limitations, not publication absences.
+All **752,872 original-note, 439,026 later-note and 1,425,792 unclassified-note links**
+remain candidates; original-note hints are not native-version truth.
+
+The reusable collector accepts an explicit manifest-bound link-ID batch, preserves raw
+bytes and failure receipts, records HTTPS alternatives separately, skips reviewed source
+tests and returns nonzero for unresolved links. An eight-state whitespace-URL smoke
+capture retains **seven responses and one Oregon DNS failure**, across **eight receipts /
+nine transport attempts**. This is a small retrieval exercise, not coverage certification.
+
+Reading native formats shows why successful requests must not become classifier inputs
+automatically. **SD and WY return HTML application shells**, not native bill text; WY's
+referenced PDF filename also differs from the baseline chamber identifier and remains
+unresolved. **AZ is a proposed strike-everything amendment**, and **UT is an automatic
+comparison carrying its own inaccuracy disclaimer**, not an original bill. **NM, OK and
+WV** have supported introduced-cover/session contexts in HTML, PDF and DOCX respectively;
+DOCX-derived text is explicitly main-document-only.
+
+The Oregon failure was followed through the actual current publisher overview, not
+abandoned or repaired by a silent host rewrite. Its native anchors lead to the **2019
+SB 9 introduced bill and Senate amendment**, both successfully retained with full
+all-page PDF text and separate cover/source reviews. The old DNS failure remains intact.
+Complete native responses, full derived text, excerpts, exact notes and review limitations
+are frozen; none is independent policy-semantic review or filing-time certification.
+
+- Reference inventory v1: `83f9f13d1e452840decdf372f89e406382398a1e2a6ec1418696c9e83a297afa`.
+- Reference inventory v2: `cd6e133bbcf380d0ea4a775f866c1152b1d27242584a58cc0245672c1308e648`.
+- Eight-state capture: `d66f176bd1fab0dd7013ae03c1f12a7bb279b2c95d705b3f3297e88287cb2c86`.
+- Native review/Oregon recovery: `e68a6b151f57cc25bf6aac8b3d2ac86b48296cf32ce0551991417ce3c0fb0222`.
+
+The source-only packets remain local under `data/processed/`; code and hashes do not
+remotely back up source bytes. Canonical bill parties, classifications and analyses are
+unchanged, and the companion remains unpublished and unintegrated.
+
+Canonical audit **v19** indexes **37** completed research packets and records the actual
+return code **1**, with **34/326** failed checks. Its failure list is identical to v18;
+the new reference pipeline does not supply the missing certified analytical inputs.
+Audit manifest: `6d61dea7fa3bfde4f47f221ffe086e779cf625e81ad1f60f317ee62fd2891491`.
+The artifact-dependent integration test remains failing on those missing canonical
+outputs; it is not waived or changed to treat provisional research as passing.
+
 ## Training reservation enforcement
 
 The training CLI now accepts an explicit `--source-reservation` pointing to a

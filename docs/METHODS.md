@@ -303,6 +303,40 @@ in [AUDIT_STATUS.md](AUDIT_STATUS.md).
 
 ### Original document references are candidates, not version truth
 
+The all-state reference inventory is reproducible from the completed October extraction:
+
+```bash
+.venv/bin/python -m state_politics.bills.documents inventory \
+  --extraction-manifest-sha256 9a3555e5194ac3d45ab30c4107df4f720ad40f3ce85e040fa5336138d8ee8a29 \
+  --out data/processed/bill-document-reference-inventory-NEW
+```
+
+Every source version and link is retained, including later/unclassified notes and duplicate
+URLs. Bill/version identity conflicts fail explicitly; missing version metadata and unlinked
+versions remain visible. Source URL strings are never rewritten. Schema 2 adds a separately
+labelled `request_url` when whitespace needs percent-encoding; controls, malformed hosts and
+unsupported schemes remain unresolved. Syntactic usability is not a network or document check.
+An imported original-note hint never certifies native version identity.
+
+The `collect` subcommand requires an inventory manifest checksum, explicit `--link-id`
+selection and a new `--out`. It retains complete response bytes and physical JSONL receipts,
+paces requests, records failed HTTP requests and explicit HTTPS alternatives, skips reviewed
+publisher tests without dropping their source records, and returns nonzero for unresolved
+selected links. Captures remain research-only: HTTP 200 can return an application shell
+instead of bill text, and a genuine PDF may be an amendment or automatic comparison.
+Native format/version and semantic review remain separate from retrieval.
+
+For example, an explicit reference already exercised in the eight-state capture can be
+collected into a new immutable output directory:
+
+```bash
+.venv/bin/python -m state_politics.bills.documents collect \
+  --inventory data/processed/bill-document-reference-inventory-v2 \
+  --inventory-manifest-sha256 cd6e133bbcf380d0ea4a775f866c1152b1d27242584a58cc0245672c1308e648 \
+  --link-id 949a408a-29d6-44bf-b094-9ab37d50d95c \
+  --out data/processed/bill-document-selected-capture-NEW
+```
+
 The bounded Washington recovery follows actual retained version-link URLs, not guessed
 bill-document paths. Its initial original-note filter accepts Bill, Resolution, Joint
 Memorial, Joint Resolution and Concurrent Resolution. All matching version/link rows,
