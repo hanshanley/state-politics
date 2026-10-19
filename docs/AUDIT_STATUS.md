@@ -10,7 +10,7 @@ replacement classifier or establish complete contemporary coverage.
 | Contemporary platforms | Inventory v8 preserves 1,559 requests, including 1,440 retained responses across all 100 organizations, 119 failures and 1,371 body hashes. Corrected Alaska's stale host and recovered an image-only Massachusetts resolution. | Deferred navigation/images, OCR quality, source/institution/version adjudication and operative coverage remain unresolved. Retained responses are not verified platforms. |
 | Sponsorship | Party attribution uses validated historical memberships and a first-action date proxy; unresolved primary sponsors block D/R assignment. | Rebuild source bills and quantify attribution changes; the proxy is not an exact filing/sponsorship date. |
 | Bills | October snapshot extracted: 1,090,369 source-context measures across all 50 states, 5,028,893 sponsorships, 9,002,451 actions and 873,980 vote events. All eleven tables have recorded hashes/counts. | Official-source reconciliation, historical affiliations and filing-time text review. Full extraction is not a certified source universe or analytical denominator. |
-| Classification | Three saved official English ModernBERT-base pilots compared on 52 source-disjoint platform references spanning all 21 topics: external-only 41/52, joint 47/52, broader-source 47/52. Original development results remain separately preserved. | The broader model gains one policy decision but loses a metadata rejection. Three of four mixed units are still wrongly accepted at scores above 0.99. Broader Republican training sources, independent evaluation and empirical gates remain required. No candidate is approved. |
+| Classification | Four saved official English ModernBERT-base pilots compared on the same 52 platform references: external-only 41/52, joint 47/52, broader-source 47/52, Republican-expanded 49/52. The fourth run correctly rejects 3/4 mixtures and 6/6 non-policy units. | The fourth run loses one policy decision, still accepts a mixture above 0.999 and regresses on insufficient-evidence and taxonomy-boundary development cases. Both sets are examined diagnostics, not fresh independent tests. Independent review and empirical gates remain required. No candidate is approved. |
 | Labels | External CAP files recovered; split/group/exact-text and reviewed-platform source-body checks plus explicit reviewed-label provenance are implemented. | Source permissions, adapted-topic compatibility, near-duplicate families and reviewed state-domain training/development/test labels. |
 | Evaluation | Checkpoint-bound training/evaluation split isolation, development-only temperature/threshold selection, exact evidence joins, abstention accounting, per-topic and subgroup metrics. | Reviewer arrangement, frozen empirical gates, independent target tests and clustered uncertainty. No checkpoint can be certified by changing a status field. |
 | Companion | Local-only preview v9 exposes all 1,559 recovery captures, 119 failures and 61 alternative extraction identities across 55 OCR bodies, three DOCX bodies and one native-block body, alongside the 2,091 historical documents. The source ledger includes the corrected Arizona and Alaska registry rows. All 100 organization rows remain unresolved. | Audited classification/analysis exports, redistribution review and eventual report; no production integration is authorized. |
@@ -73,16 +73,61 @@ The separate replay packet at
 `data/processed/republican-platform-curriculum-verification-v1/` has manifest
 `9433f093e2c14a7f66d3a25ff25e6d6243c319ee52a43eaf37801c207a528971`.
 
-A fourth full-encoder ModernBERT run is underway on **6,108 training rows** under the
+A fourth full-encoder ModernBERT run completed on **6,108 training rows** under the
 unchanged three-epoch, batch-four, seed-20261018 optimizer/input settings. Its
 pre-prediction plan at `data/processed/republican-platform-pilot-v1/evaluation_plan.json`
 has hash `1058e00294799bac359f04c4f1b12321fb34fe2f420feb653b98fd655b8a2b00`.
 The **63** training rejections are learned targets, not an adjusted acceptance threshold.
-No new result is claimed before saved-weight verification and actual evaluation.
-Both evaluation sets have previously been examined: future comparisons are diagnostics,
-not a new independent test. More positives, source diversity and rejection support change
-together, so any result cannot isolate their individual effects. All packets remain local
-ignored artifacts; pushing code does not remotely back up their source bytes or weights.
+All three epochs completed with finite losses, the saved encoder attention weights
+changed, and every saved model/tokenizer file hash reconciles. The default loader still
+refuses the provisional checkpoint; no acceptance status was changed.
+
+| Unchanged diagnostic | Broader-source | Republican-expanded |
+|---|---:|---:|
+| Development decisions | 30/50 | 31/50 |
+| Development bill decisions | 23/40 | 24/40 |
+| Development platform decisions | 7/10 | 7/10 |
+| Challenge decisions | 47/52 | 49/52 |
+| Challenge correct policy decisions | 41/42 | 40/42 |
+| Challenge correct mixed-policy rejections | 1/4 | 3/4 |
+| Challenge correct non-policy rejections | 5/6 | 6/6 |
+
+The challenge has **three gains and one regression**: Washington Republican and Democratic
+mixed passages and Minnesota front matter are now rejected, but Minnesota's lobbying-gift
+ban is newly rejected. The Montana voting-method unit remains incorrectly rejected.
+Montana's tax-and-tariff mixture is still wrongly accepted as macroeconomics at an
+uncalibrated **0.99924** score. Confidence is not an empirical acceptance guarantee.
+Party diagnostic totals change from 26/28 to 27/28 D and 21/24 to 22/24 R; these tiny,
+purposive, source-dependent slices do not estimate party accuracy.
+
+Development has **five gains and four regressions**, not an unqualified improvement.
+Both previously accepted Texas mixtures are rejected, but one previously correct
+government-operations policy is newly rejected and an unresolved habeas-corpus boundary
+is now accepted. Correct rejection of insufficient-evidence bills falls **5/6 to 3/6**;
+taxonomy-boundary rejections fall **1/3 to 0/3**. The aggregate rejection total stays
+13/20, hiding changes in both directions. Original judgments are not edited to improve
+these results.
+
+`data/processed/republican-platform-pilot-v1/` retains all original logits, reports,
+checkpoint verification, fixed policy and the complete **102-reference / 408-candidate**
+decision ledger. Evaluation manifest:
+`87c5198dc94f08f1670e4fb3a44f5935eef7a8890939c7b788c31d7ff8b061a1`;
+training manifest:
+`33545e8cb221a0d82c67e37dff59c2bb7d472965f48250900264cfd96976211c`.
+Both evaluation sets have previously been examined: these are diagnostics, not a new
+independent test. More positives, source diversity and rejection support change together,
+so the result cannot isolate their individual effects. All packets remain local ignored
+artifacts; pushing code does not remotely back up their source bytes or weights.
+
+The full canonical audit was rerun after the completed diagnostic evaluation.
+`data/processed/reproducibility-audit-checkpoint-v13/` records actual return code **1**
+and **34/322 failures**. Its failure list exactly matches v12: the added producer is
+documented and introduces no new audit failure. All **15** research-packet manifest
+identities and the pinned OCR runtime are retained without substituting research results
+for missing canonical analytical inputs. Audit packet manifest:
+`547fbf00dfb4ab7b817bbb7d8b3f2e33ac82b78103221c7a70c3f61dab15f49c`;
+report: `c022104276e70013f4eaa486487d3573ac9e4a4d08ef5ac2e16aca2074ecdc07`.
+The model remains unapproved and production integration remains unauthorized.
 
 ## Expanded source-bound platform curriculum
 

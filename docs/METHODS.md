@@ -437,6 +437,15 @@ interpretation. Neither familiar diagnostic set becomes a fresh blind test merel
 because the training sources have expanded. Training loss and coverage cannot replace
 measured policy correctness, rejection errors, gains/regressions and source/party slices.
 
+The completed fourth run scores 49/52 on the source-disjoint diagnostic, versus 47/52
+for the broader-source checkpoint: correct mixtures increase 1/4 to 3/4 and non-policy
+rejections 5/6 to 6/6, but correct policy decisions decrease 41/42 to 40/42. The remaining
+tax/tariff mixture is accepted above 0.999. On the original development set, 31/50 versus
+30/50 hides five gains and four regressions, including poorer rejection of insufficient
+bill evidence and unresolved taxonomy boundaries. No gold, thresholds or candidate
+approval status changes to remove those failures. Full saved logits and the complete
+four-model, 102-case ledger support the diagnostic comparison, not certification.
+
 ### Legacy analytical pipeline (not revalidated)
 
 With both platform corpora in hand, `state_politics.analysis` segments every document into
