@@ -16,7 +16,7 @@ remain explicit; this is not a completed project or a certified classifier.
 | Sponsorship | Date-aware attribution remains conservative. Official Washington evidence supplies separate session-roster D/R observations for 14,132 of 14,143 measures. Separately, 1,481 native SD roster rows identify all 7,086 prime-sponsor references; 205 mixed-party cases remain explicit. No filing-time party is overwritten. | A session roster does not establish affiliation at filing. Washington retains ten source-identified tests and one substantive original without a native primary-sponsor API record. SD cross-session cosponsor IDs, institutional sponsorship and event-time affiliations remain separately accounted for; all-state recovery is open. |
 | Bills | October snapshot extracted: 1,090,369 source-context measures across all 50 states, 5,028,893 sponsorships, 9,002,451 actions and 873,980 vote events. All eleven tables have recorded hashes/counts. Native documents retained for all 241 non-test measures in the bounded Washington metadata-gap cohort; separately, all 5,369 native SD introduced candidates and 15,308 physical pages captured and exactly replayed in both readers. | Official-source reconciliation, historical affiliations and filing-time text review. One Washington resolution has a version-note conflict; one SD PDF prints no session year. Neither these recoveries nor snapshot extraction certifies statewide/national original-text completeness or an analytical denominator. |
 | Parallel state recovery | Missouri, Pennsylvania and Ohio initial cohorts retain 188 complete PDF candidates / 3,095 pages and 124 corresponding HTML versions from 192 selections. Full Florida replay separately accounts for 2,868 linked contexts, including an explicitly negative corrected-copy disposition. | Four selected PA/OH originals remain unresolved. Missouri withdrawal-only notices are not policy text; historical corroboration does not resolve publisher identity conflicts. These bounded recoveries are not statewide text completeness or classifier certification. |
-| Full-source campaigns | New York, Texas, Illinois and Colorado continuations are running under frozen finite contracts. North Carolina collection has exited; completed-corpus sealing and replay are pending. Ohio and Pennsylvania preparations reuse recovered originals. | Only independently replayed completed checkpoints count as recovered coverage. Actual final-tail closure and full replay remain required; Ohio/Pennsylvania full collections are not launched. |
+| Full-source campaigns | New York, Texas, Illinois and Colorado continuations are running under frozen finite contracts. North Carolina's sealed final-20 archive passes independent replay; full-corpus replay remains pending. Ohio and Pennsylvania preparations reuse recovered originals. | Only independently replayed completed checkpoints count as recovered coverage. Full replay remains required; Ohio/Pennsylvania full collections are not launched. |
 | California native archives | Five complete biennial archives spanning 2017–2026 retain 26,798 native introduced candidates and 26,797 original normalized exports; all 993,735 ZIP entries pass independent integrity replay. A separate parent-replayed GRP1 supplement now preserves its complete 320,397-character native body and 4,229 element spans. | The 2,980 historical/boundary source-only contexts and 44 special-session candidates are separate, not admitted. GRP1 has a native GRP body, previously unsupported by the Bill/Resolution mapper; old exports remain unchanged. Archive completeness and structural projection do not certify filing-time identity, legal semantics or policy labels. |
 | Texas native reports | Complete 88R House/Senate filed reports reconcile 11,807 of 11,809 canonical regular contexts. Sixteen introduced PDF+HTML pairs retain 55 physical PDF pages and 16 HTML text blocks. | Literal canonical SB 15247 and SR 1960 remain unmatched. Other originals, historical affiliations, typed markup interpretation and filing-time certification remain open. Special sessions are isolated, not combined with 88R. |
 | New York native index | Official 2023–2024 Assembly search response retains 24,316 rows and 24,268 exact canonical matches. Self-contained first-batch archive preserves 80 PDF candidates / 256 pages / 769,944 joined-document characters / 1,488 extraction blocks. | Canonical J 272, one untyped `00000` row and 47 anomalous source-only identities remain separate. Full collection is running, not complete. Unselected originals, visual markup and legal-version identity remain unresolved; the blocked API was not bypassed. |
@@ -371,6 +371,28 @@ These recoveries used **four new physical requests**:
 request-budget reset. Complete normalized text/raw XML is not certified legal
 markup, operative-version or filing-time evidence, trained labels or approval
 for inference, analysis or publication.
+
+### Four-biennium native element provenance
+
+Parent independently executes the complete structural replay at
+`data/processed/california-multisession-native-element-provenance-v3/`:
+**21,234 candidates accounted for, 21,233 mapped, 4,149,173 elements and
+216,573,935 unchanged projection characters**. All **106,220 files remain
+unchanged** under the common guard denying networking and original project/session
+data reads. Manifest SHA-256:
+`3159965bb1d27a454d2d1da88d8feb5468e5e36ad2fa703d1046ab16a88c3592`.
+Actual parent log: `ca_multisession_native_structure_parent_guard_v3.log`.
+The native names, attributes, parents and byte/text spans preserve structure,
+not interpreted legal amendment semantics.
+
+The original GRP1 unsupported-shape diagnostic remains unchanged in this archive;
+the separate supplement below supplies its complete body and element map. The
+**2,980 historical/boundary**, **24 special-session** and **18,230 regular
+canonical contexts** remain distinct and unadmitted. Full unlabelled token/window
+coverage for these 21,234 candidates is being prepared separately, using the
+existing pinned tokenizer/window policy and the GRP supplement, without training,
+inference or new labels. This structural replay is not yet in completed
+aggregate v52 and does not confer scientific or publication approval.
 
 ### GRP1 complete-body extraction repair
 
@@ -911,15 +933,33 @@ Both retained negative PDFs print nonnumeric headers: HR 311's source prints
 `HOUSE JOINT RESOLUTION DRHJR20008-LG-198D`. Neither is promoted to verified
 numeric identity, a canonical alias or classifier input.
 
-Completed-corpus and actual final-20 dependency sealing/replay remain in
-progress; terminal counters alone do not close that gate. The legacy preparation
-manifest/state remain preserved, not rewritten as terminal evidence. Existing
-checkpoint ledger prefixes require transport dependencies outside their local
-document directories; the new self-contained completion archive and separate
-tail archive must resolve and verify those dependencies explicitly. A distinct
-zero-request preparation now targets all 2,004 publisher-native version pages,
-but no full version census is claimed. Any future version collection must inherit
-the independently verified terminal request lineage, not reset its budget.
+The worker sealed a separate **44,306-file completed-corpus archive** at
+`north-carolina-full-source-completed-archive-v1`, manifest
+`7f5ef06af91c05effd07b7ab3999bafb7edaff6593eff36ed376ccc98d395ad7`.
+Parent full-corpus guarded replay remains pending; terminal counters and a
+worker's completed archive alone do not close that gate. The legacy preparation
+manifest/state and all 63 original checkpoints remain preserved, not rewritten
+as terminal evidence.
+
+The separate **18,287-file final-20 archive** at
+`north-carolina-full-source-final-tail-archive-v1` **passes actual parent guarded
+replay**, manifest
+`f09fbb916356fd3a75ff3efca3928305d79d6d2d45b872a9d898a2d47e868506`.
+The replay independently reconstructs twenty complete PDFs / **57 pages per
+reader**, with **168,894 PyMuPDF / 166,556 pypdf characters**, and validates all
+**18,275 source mappings**. Its outer dependency resolver retains and resolves
+the **entire 2,004-exchange document-ledger prefix**, not just the twenty final
+documents. Networking and original project/session data reads are denied; the
+archive stays unchanged. Actual log:
+`nc_completed_tail20_parent_actual_v1.log`. This tail replay does not substitute
+for replaying all 2,004 source documents.
+
+The terminal lineage contains **two distinct ledgers**: 2,004 document exchanges
+and three publisher-index/page exchanges, for **2,007 aggregate exchanges**.
+The original 32 document exchanges already belong to the 2,004, not an additional
+allowance. Future version collection must bind both archived ledgers and the
+parent-verified terminal source manifest; no synthetic unified ledger or budget
+reset is permitted. No full publisher-native version census is claimed.
 
 ### Native-version census preparation, not completed collection
 
@@ -934,12 +974,21 @@ manifest-backed, independently verified terminal source ledger, including all
 **2,007** source exchanges if confirmed by the pending sealed-corpus replay.
 The prospective **15,000** aggregate cap and two-attempt page limit are not reset.
 
-Parent inspection additionally found that the version collector's interrupted
-reservation recovery does not reconcile a durable ledger ordinal with a stale
-state counter after an append-before-state-save crash. A versioned successor
-with actual write-boundary, duplicate/orphan, complete-LF and budget tests is
-pending. The archived preparation replay proves retained evidence consistency,
-not crash-safe collection or permission to launch.
+The parent also executes the archived actual-driver suite in isolated temporary
+storage: **five tests pass in 567.591 seconds**, including the real 2,004-page
+population, final-20 alignment and no refetch of the two reused pages. These
+positive and stop/budget cases do not cover every failure path.
+
+Parent inspection finds additional release blockers. Interrupted reservation
+recovery does not reconcile a durable ledger ordinal with a stale state counter
+after an append-before-state-save crash. Checkpoint dependencies retain only the
+last request directory, omitting earlier retry/redirect exchanges. A nonempty
+HTTP 200 body can be parsed as success despite a nonzero curl exit code, allowing
+a partial page to masquerade as a complete native-version list. A separately
+versioned successor with genuine write-boundary, transport-prefix, retry/redirect
+closure, duplicate/orphan, complete-LF and budget tests is pending. The archived
+preparation replay proves retained evidence consistency, not crash-safe,
+lossless collection or permission to launch.
 
 ## Colorado regular-session source census and full continuation
 
