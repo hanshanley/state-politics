@@ -8,7 +8,7 @@ replacement classifier or establish complete contemporary coverage.
 |---|---|---|
 | Historical platforms | Recovered 2,091 authoritative archive documents, with publisher checksums and old/new archive reconciliation. | Historical availability must not be substituted for operative modern platforms. |
 | Contemporary platforms | Inventory v8 preserves 1,559 requests, including 1,440 retained responses across all 100 organizations, 119 failures and 1,371 body hashes. Corrected Alaska's stale host and recovered an image-only Massachusetts resolution. | Deferred navigation/images, OCR quality, source/institution/version adjudication and operative coverage remain unresolved. Retained responses are not verified platforms. |
-| Sponsorship | Date-aware attribution remains conservative. Official Washington original-record and explicit native-primary sponsor evidence now supply separate historical session-roster D/R observations for 14,132 of 14,143 measures, without overwriting any filing-time party. | A biennial roster does not establish affiliation at filing. Ten remaining source rows identify themselves as system tests; one substantive original is recovered but lacks a native primary-sponsor API record. Event-time affiliation and all-state recovery remain open. |
+| Sponsorship | Date-aware attribution remains conservative. Official Washington evidence supplies separate session-roster D/R observations for 14,132 of 14,143 measures. Separately, 1,481 native SD roster rows identify all 7,086 prime-sponsor references; 205 mixed-party cases remain explicit. No filing-time party is overwritten. | A session roster does not establish affiliation at filing. Washington retains ten source-identified tests and one substantive original without a native primary-sponsor API record. SD cross-session cosponsor IDs, institutional sponsorship and event-time affiliations remain separately accounted for; all-state recovery is open. |
 | Bills | October snapshot extracted: 1,090,369 source-context measures across all 50 states, 5,028,893 sponsorships, 9,002,451 actions and 873,980 vote events. All eleven tables have recorded hashes/counts. Native documents retained for all 241 non-test measures in the bounded Washington metadata-gap cohort; separately, all 5,369 native SD introduced candidates and 15,308 physical pages captured and exactly replayed in both readers. | Official-source reconciliation, historical affiliations and filing-time text review. One Washington resolution has a version-note conflict; one SD PDF prints no session year. Neither these recoveries nor snapshot extraction certifies statewide/national original-text completeness or an analytical denominator. |
 | Classification | Four saved official English ModernBERT-base pilots compared on the same 52 platform references: external-only 41/52, joint 47/52, broader-source 47/52, Republican-expanded 49/52. The fourth run correctly rejects 3/4 mixtures and 6/6 non-policy units. | The fourth run loses one policy decision, still accepts a mixture above 0.999 and regresses on insufficient-evidence and taxonomy-boundary development cases. Both sets are examined diagnostics, not fresh independent tests. Independent review and empirical gates remain required. No candidate is approved. |
 | Labels | External CAP files recovered; split/group/exact-text and reviewed-platform source-body checks plus explicit reviewed-label provenance are implemented. | Source permissions, adapted-topic compatibility, near-duplicate families and reviewed state-domain training/development/test labels. |
@@ -660,6 +660,52 @@ these three successors. Its actual **exit 1 / 34 failures among 328 checks** rem
 unchanged, and its canonical report is byte-identical to v25. No research packet replaces
 a missing analytical artifact or suppresses a release failure. Audit manifest:
 `5b623c9621f9eb2836ba6907838e1e6e8922f475065379dd69cabc2f89d12a2f`.
+
+### Native SD sponsorship inventory and complete independent replay
+
+The client-proven native session-members operation has now been captured for **all
+14 in-scope sessions**, retaining **1,481 complete roster records**, original bytes,
+receipts and physical/global row positions. The separate sponsorship inventory preserves
+every original field and order for all **5,369 native bills**, **54,057 `Sponsors` array
+entries** and **7,086 `PrimeSponsors` entries**. These arrays overlap; adding their counts
+would double-count prime designations as additional sponsorships.
+
+All **7,086 prime references**, across **4,415 measures**, match a unique member under
+the exact native session and session-member IDs. The source-roster observations agree
+on Republican for **3,710** measures and Democratic for **500**; **205** retain mixed
+prime-party observations and receive no single-party consensus. All primaries remain,
+including opposite-chamber primaries. **953** other measures have no personal prime
+and an explicit session-committee observation; **2023 SB2** instead retains its interim-
+committee observations. Institutions are not assigned a personal party.
+
+**54,050** general sponsor entries match exact-session roster IDs. The remaining **seven**
+occurrences, across **2025 SB10, SB203 and SJR501**, contain **six distinct IDs** owned by
+the retained **2024** roster. Their original IDs and other-session statuses are preserved.
+A separate follow-through finds a unique **joint `PersonId` and `MemberId` bridge** into
+the 2025 roster for every occurrence, without name matching or replacing the source IDs.
+Two bridges have different source/target chamber observations. These are explicit identity
+bridges, not permission to substitute an old chamber or party, or proof of erroneous source
+sponsorship. Prefiling dates and retrieval-time sponsor metadata still need interpretation.
+
+The independent replay checks all **14 raw responses, 1,481 member rows and 61,143 array
+positions**, complete raw JSON, every context/hash/position, all exact/other-session match
+lists and all bill-level observations. Its bridge review preserves both source and target
+records and leaves the original exact-match party field null for the seven cross-session
+references. All **16 non-null `InactiveDate` observations** remain verbatim, not inferred
+party-membership endpoints. No source-date or roster observation certifies party at filing.
+
+- Native sponsorship inventory manifest: `7c1450c43f7a1af22d4e532cba4e5fcdde6af28cffa318a5aab89c3d4cfd31fb`.
+- Independent replay/identity-bridge manifest: `4add996b2ff2e3f7fbc2149710083b4bd426eea90af63271177c6e1eb55d6795`.
+
+Both packets remain Git-ignored local evidence, **not backed up remotely by pushing these
+hashes**. Raw rosters contain contact fields; they are not approved browser/download
+exports. No canonical party, model, training/admission decision or publication changed.
+
+Canonical audit checkpoint **v27** verifies **57** completed research packets, including
+the sponsorship inventory and independent replay. It retains actual **exit 1**, with
+**34 failures among 328 checks** and a report byte-identical to v26. The new source
+evidence does not replace missing canonical analyses or certify a classifier. Audit manifest:
+`4b14ed5d7e8825040cab5d081b51482f4e8ced4c64cf4b0de5b94e9c724dd907`.
 
 ## Training reservation enforcement
 

@@ -368,6 +368,24 @@ the other supplies action/vote metadata. Retain both source rows and their refer
 review; do not treat raw row-count differences as a count of missing analytical bills or
 automatically combine their parties, actions, versions or outcomes.
 
+Native SD sponsorship inventory preserves both original `Sponsors` and `PrimeSponsors`
+arrays, their field names, every position and the complete source JSON. They overlap and
+must not be summed as disjoint sponsorships. Match a source session-member ID only to
+the same requested and response session; retain every match and any ambiguity. All native
+primaries remain, including opposite-chamber primaries. A unanimous known-party roster
+observation is distinct from mixed, unresolved and institutional observations and is
+never a certified filing-time party. No first sponsor, majority party, current affiliation
+or committee-to-person fallback supplies missing evidence.
+
+If only another session's member record matches the source ID, preserve that relationship
+without rewriting the original ID or exact-session party field. An exact joint `PersonId`
+and `MemberId` bridge to the requested session is a separately retained identity observation,
+not a silent replacement. Keep source/target chamber, party and inactivation fields
+separate; chamber changes make old-session substitution particularly unsafe. `InactiveDate`
+is not treated as a dated party-membership interval. Independently replay raw rosters and
+all source-array positions before indexing a completed research inventory. Raw roster
+contact fields remain local and are not approved for companion exports.
+
 Native version-list recovery follows the publisher's bill-ID-bound versions endpoint for
 every native bill, retaining all introduced, engrossed and enrolled records. A separate
 response replay checks complete raw JSON, source context, physical row positions, optional
