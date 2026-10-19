@@ -300,6 +300,16 @@ unchanged. Manifest SHA-256:
 No live collector is represented as completed coverage. Frozen documentation
 precedes this result paragraph and top-line update.
 
+The attempted **v51 aggregate freeze is an incomplete diagnostic**, not a new
+completed checkpoint. Its canonical report records **308/342 passing checks**
+and the same 34 failures, but the wrapper then misread Colorado's nested
+`path/bytes/sha256` entries as bare digests. No completed `run.json` or aggregate
+manifest was created. All **204 diagnostic files** remain preserved, with a
+separate exact inventory. Explicit Colorado schema adaptation passes six focused
+regressions and verifies all **886 original payload hashes/sizes**, exact file
+inventory and totals without changing the checkpoint. This was an adapter error,
+not evidence of changed source bytes or scientific approval.
+
 ### Four additional complete biennial archives
 
 Independent parent guarded replay now also covers the full **2017–2018,
