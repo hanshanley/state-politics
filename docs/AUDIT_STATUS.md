@@ -10,7 +10,7 @@ replacement classifier or establish complete contemporary coverage.
 | Contemporary platforms | Inventory v7 preserves 1,559 requests, including 1,440 retained responses across all 100 organizations, 119 failures and 1,371 body hashes. Corrected Alaska's stale host and recovered an image-only Massachusetts resolution. | Deferred navigation/images, OCR quality, source/institution/version adjudication and operative coverage remain unresolved. Retained responses are not verified platforms. |
 | Sponsorship | Party attribution uses validated historical memberships and a first-action date proxy; unresolved primary sponsors block D/R assignment. | Rebuild source bills and quantify attribution changes; the proxy is not an exact filing/sponsorship date. |
 | Bills | October snapshot extracted: 1,090,369 source-context measures across all 50 states, 5,028,893 sponsorships, 9,002,451 actions and 873,980 vote events. All eleven tables have recorded hashes/counts. | Official-source reconciliation, historical affiliations and filing-time text review. Full extraction is not a certified source universe or analytical denominator. |
-| Classification | Three official English ModernBERT-base pilots saved and reloaded. The broader-source candidate uses 60 platform positives across all 21 topics and 16 rejections; fixed-policy decisions improve to 30/50 pooled and 7/10 platform. | Only five platform policy references cover just two topics, all from one development source. Two mixed-policy units are still wrongly accepted. Broader Republican training sources, independent source-disjoint tests and empirical gates remain required. No candidate is approved. |
+| Classification | Three saved official English ModernBERT-base pilots compared on 52 source-disjoint platform references spanning all 21 topics: external-only 41/52, joint 47/52, broader-source 47/52. Original development results remain separately preserved. | The broader model gains one policy decision but loses a metadata rejection. Three of four mixed units are still wrongly accepted at scores above 0.99. Broader Republican training sources, independent evaluation and empirical gates remain required. No candidate is approved. |
 | Labels | External CAP files recovered; split/group/exact-text and reviewed-platform source-body checks plus explicit reviewed-label provenance are implemented. | Source permissions, adapted-topic compatibility, near-duplicate families and reviewed state-domain training/development/test labels. |
 | Evaluation | Checkpoint-bound training/evaluation split isolation, development-only temperature/threshold selection, exact evidence joins, abstention accounting, per-topic and subgroup metrics. | Reviewer arrangement, frozen empirical gates, independent target tests and clustered uncertainty. No checkpoint can be certified by changing a status field. |
 | Companion | Local-only preview v8 exposes all 1,559 recovery captures, 119 failures and 60 alternative extraction identities across 55 OCR bodies and three DOCX bodies, alongside the 2,091 historical documents. The source ledger includes the corrected Arizona and Alaska registry rows. All 100 organization rows remain unresolved. | Audited classification/analysis exports, redistribution review and eventual report; no production integration is authorized. |
@@ -153,6 +153,59 @@ source-disjoint challenge, **not independent human gold, a random sample, repres
 population accuracy or a release certification**. Two positives per topic and six source
 clusters cannot substantiate stable topic/subgroup performance. Source-family dependence
 and the adapted family/moral rubric remain unresolved.
+
+The actual fixed-policy comparison completed for all three saved checkpoints:
+
+| Challenge result | External-only | Joint target/rejection | Broader-source curriculum |
+|---|---:|---:|---:|
+| Correct decisions | 41/52 | 47/52 | 47/52 |
+| Correctly accepted policy references | 40/42 | 40/42 | 41/42 |
+| Correctly rejected mixed units | 0/4 | 1/4 | 1/4 |
+| Correctly rejected non-policy units | 1/6 | 6/6 | 5/6 |
+| Democratic references, correct decisions | 23/28 | 26/28 | 26/28 |
+| Republican references, correct decisions | 18/24 | 21/24 | 21/24 |
+
+The broader model fixes the general scientific-research reference previously assigned
+international affairs, but newly accepts Minnesota's publication-description front matter
+as government operations with score **0.922**. Those are the only changes in correctness
+relative to the joint model, so the wider challenge does **not** demonstrate an aggregate
+improvement. A Montana ranked-choice/primary-design policy is withheld by all three
+models under the fixed confidence floor; its provisional reference is topic 20.
+
+Both tax/trade and economic deregulation/labor mixtures are still forced into topic 1,
+and a parent bullet combining banking, taxation, workforce programs and antitrust is
+forced into topic 15. The broader model's scores for these three false accepts are
+**0.999997, 0.999950 and 0.992607**. High uncalibrated scores are not safeguards against
+lossy single-topic assignments. It accepts 45/52 cases; only **41/45** accepted decisions
+match the provisional references. The mixed/non-policy failures must not disappear behind
+the 41/42 accepted-policy result.
+
+`data/processed/source-disjoint-platform-comparison-v1/` retains all **156** original
+prediction records, three reports tied to their respective original training evidence,
+the complete 52-reference decision ledger, all-topic/party/organization/reference-kind
+metrics and the frozen plan/policy/producer. Each checkpoint's default loader still
+refuses provisional inference. No references, thresholds or weights were changed after
+predictions. Comparison manifest:
+`7f6b14d6de0beb166b7203a99770af542a28835940e68106f3ffea032e19b45d`.
+These ignored local packets are not backed up by the code push. No canonical
+classification, analytical export or website integration changed.
+
+The independent programmatic replay in
+`data/processed/source-disjoint-platform-verification-v1/` reconciles all **156**
+original predictions and decisions, all 52 complete references, source/context offsets,
+model/training-label identities and every global, party, organization and reference-kind
+metric. It confirms the one gain and one regression without rerunning inference or
+editing references. Manifest:
+`06181a94c3b898f39813f78bf1703616de4ec056da17281b7932760a429f0f79`.
+This is evidence replay, not independent semantic reference review.
+
+The fresh canonical audit, `data/processed/reproducibility-audit-checkpoint-v11/`,
+retains actual return code **1**, status **blocked**, and **34/321 failures**. Its
+failure list exactly equals v10's 34 canonical-input/result gaps. It binds all seven
+research-packet identities without substituting their provisional outputs for canonical
+inputs. Manifest:
+`10aa093a52d97da69c558bebff0485c5240bf3e7dbc3ba136d5129c745065820`;
+report `955876d44031781cd937da6f5dee41f217c8852898e6625fb3967998d031d2c3`.
 
 ## Retired unsupported platform-absence claims
 

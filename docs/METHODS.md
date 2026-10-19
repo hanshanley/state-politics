@@ -374,6 +374,17 @@ No calibration, threshold selection, training or reference editing is allowed du
 this comparison. Topic/party/source support and correct rejections must be reported
 alongside accepted policy decisions, not hidden in one pooled score.
 
+The completed comparison makes 41/52, 47/52 and 47/52 correct decisions for external-only,
+joint and broader-source models respectively. Broader-source improves policy matches
+from 40/42 to 41/42 but loses one non-policy rejection (6/6 to 5/6). Both supervised
+rejection models reject only one of four mixed-policy units. Three mixtures are still
+accepted with broader-source scores above 0.99; an independent empirical acceptance
+gate cannot be replaced by confidence or accepted-policy accuracy. Full original logits,
+all 52 reference rows, all 156 candidate records, fixed-policy decisions, gains/regressions
+and topic/party/source/reference-kind metrics are retained in the comparison packet.
+The exact ledger shows one gain and one regression relative to the joint checkpoint,
+not a demonstrated aggregate improvement. No gold, threshold or weight was changed.
+
 ### Legacy analytical pipeline (not revalidated)
 
 With both platform corpora in hand, `state_politics.analysis` segments every document into
