@@ -213,6 +213,52 @@ These are sponsorship rows, not unique bills. The state/primary breakdown direct
 source recovery, but does not itself supply missing historical affiliations or certify
 the recorded date bounds.
 
+### Official Washington session evidence, separately from event-time affiliation
+
+The official Legislature's historical sponsor rosters and detailed bill-version API are
+retained in `data/processed/washington-official-legislative-recovery-v1/`, with complete
+native XML, service documentation, eight successful provenance receipts and a manifest.
+The bounded scope is the five biennia 2017-18 through 2025-26 and the detailed
+introduced-since-January-1-2017 response. Its observed coverage is not an assertion
+that this date-filtered operation includes all measures.
+
+Reproduce the checksum-bound reconciliation against the retained October baseline:
+
+```bash
+.venv/bin/python -m state_politics.bills.washington \
+  --out data/processed/washington-official-bill-reconciliation-NEW
+```
+
+The producer verifies every retained-source hash and required receipt before writing,
+refuses occupied output directories, preserves all 14,143 Washington baseline bill
+references, and copies the complete official packet. Zero-substitute/zero-engrossment
+originals join only on exact session and bill identifier. Multiple originals are not
+silently collapsed. The official prime-sponsor ID then joins the roster on **biennium,
+ID and chamber**, never fuzzy name or ID alone. Changing chambers can preserve the
+numeric ID while changing the roster row, and some old-chamber rows are blank.
+
+The first reconciliation yields 13,479 unique official matches, 12,735 nonempty legal
+titles and 8,773 D / 4,706 R source-scoped session-party observations. The official
+short/long descriptions and legal title remain separate from the original title.
+They are source-version evidence at retrieval, not certified filing-time full text.
+The 658 missing originals, six duplicated-original keys and all 3,979 source-only
+originals retain explicit evidence. Source-only rows include appointments and
+pre-window measures; they must not simply enlarge the bill denominator.
+
+`session_roster_party` is intentionally not `sponsor_party` or `filing_time_party`.
+A roster scoped to a biennium supplies no independently adjudicated event-time party
+interval. Every exported filing-time decision remains unknown, canonical inputs remain
+unchanged, and both analytical/training admission flags are false. An independent
+programmatic XML replay covers every decision/field and exact original-column identity;
+it does not constitute independent semantic certification.
+
+The alternate-operation probe packet separately demonstrates why source operations must
+remain distinguishable: a missing Senate resolution has a publisher introduction-date
+placeholder `0001-01-01T00:00:00` and appears through exact bill lookup, not the bulk
+date filter. Sampled missing HB/SB lookups return engrossed rather than original
+versions. Neither a placeholder nor an amended version may silently become filing-time
+evidence. See the dated counts and manifest identities in [AUDIT_STATUS.md](AUDIT_STATUS.md).
+
 ---
 
 ---

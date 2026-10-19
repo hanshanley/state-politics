@@ -1,0 +1,169 @@
+"""Official bill-key joins must not become invented historical affiliations."""
+
+from __future__ import annotations
+
+import json
+import xml.etree.ElementTree as ET
+
+import pandas as pd
+import pytest
+
+from state_politics.bills.washington import (
+    BIENNIA,
+    NS,
+    build_reconciliation,
+    parse_records,
+    reconcile,
+)
+from state_politics.platforms.recovery import verify_manifest
+from state_politics.provenance import sha256_file
+
+
+def _xml(rows, *, members=False):
+    kind = "Member" if members else "Legislation"
+    root = ET.Element(f"{{{NS}}}ArrayOf{kind}")
+    for row in rows:
+        element = ET.SubElement(root, f"{{{NS}}}{kind}")
+        for key, value in row.items():
+            ET.SubElement(element, f"{{{NS}}}{key}").text = value
+    return ET.tostring(root)
+
+
+def _bill(**updates):
+    return {
+        "bill_id": "ocd-bill/example", "state": "WA", "session_identifier": "2019-2020",
+        "identifier": "HB 1001", "title": "Housing", "originating_chamber": "lower",
+        "sponsor_party": "unknown", **updates,
+    }
+
+
+def _legislation(**updates):
+    return {
+        "Biennium": "2019-20", "BillId": "HB 1001", "BillNumber": "1001",
+        "SubstituteVersion": "0", "EngrossedVersion": "0", "OriginalAgency": "House",
+        "IntroducedDate": "2019-01-14T00:00:00", "PrimeSponsorID": "101",
+        "LegalTitle": "AN ACT Relating to housing;", **updates,
+    }
+
+
+def _members():
+    return [
+        {"Biennium": "2019-20", **row}
+        for row in parse_records(_xml([
+            {"Id": "101", "Name": "Example Member", "Agency": "House", "Party": "D"},
+            {"Id": "101", "Name": "Example Member", "Agency": "Senate", "Party": "R"},
+        ], members=True), members=True)
+    ]
+
+
+def test_exact_bill_and_chamber_join_retains_session_evidence_not_filing_party():
+    versions = parse_records(_xml([
+        _legislation(), _legislation(BillId="SHB 1001", SubstituteVersion="1"),
+        _legislation(Biennium="2021-22", PrimeSponsorID="999"),
+    ]))
+    row, = reconcile([_bill()], versions, _members())
+    assert row["record_link_status"] == "unique_original_record"
+    assert row["official_record_rows"] == [0]
+    assert row["official_roster_rows"] == [0]
+    assert row["session_roster_party"] == "D"
+    assert row["official_LegalTitle"] == "AN ACT Relating to housing;"
+    assert row["sponsor_party"] == row["filing_time_party"] == "unknown"
+    assert row["analytical_admission"] is False
+
+
+def test_duplicate_originals_are_retained_not_arbitrarily_selected():
+    versions = parse_records(_xml([_legislation(), _legislation(PrimeSponsorID="202")]))
+    row, = reconcile([_bill()], versions, _members())
+    assert row["record_link_status"] == "multiple_original_records"
+    assert row["official_record_rows"] == [0, 1]
+    assert row["session_roster_party"] == "unknown"
+
+
+@pytest.mark.parametrize(("members", "reason"), [
+    ([], "missing_chamber_scoped_roster_member"),
+    (_members()[1:], "missing_chamber_scoped_roster_member"),
+    ([{**_members()[0], "Party": "", "Name": ""}], "missing_or_unsupported_roster_party"),
+    ([_members()[0], _members()[0]], "multiple_chamber_scoped_roster_members"),
+])
+def test_roster_gaps_never_borrow_another_chamber_or_choose_duplicate(members, reason):
+    row, = reconcile([_bill()], parse_records(_xml([_legislation()])), members)
+    assert row["session_roster_party"] == "unknown"
+    assert row["session_roster_party_reason"] == reason
+
+
+def test_missing_original_chamber_conflict_and_repeated_baseline_are_explicit():
+    records = parse_records(_xml([_legislation()]))
+    missing, = reconcile([_bill(identifier="HB 1002")], records, _members())
+    assert missing["record_link_status"] == "missing_original_record"
+    conflict, = reconcile([_bill(originating_chamber="upper")], records, _members())
+    assert conflict["record_link_status"] == "chamber_or_identifier_conflict"
+    assert conflict["session_roster_party"] == "unknown"
+    with pytest.raises(ValueError, match="unique Washington"):
+        reconcile([_bill(), _bill()], records, _members())
+
+
+def test_xml_rejects_wrong_schema_and_out_of_scope_or_duplicate_fields():
+    with pytest.raises(ValueError, match="unexpected official"):
+        parse_records(b"<html>Unavailable</html>")
+    with pytest.raises(ValueError, match="out-of-scope"):
+        parse_records(_xml([_legislation(Biennium="2027-28")]))
+    root = ET.fromstring(_xml([_legislation()]))
+    ET.SubElement(root[0], f"{{{NS}}}PrimeSponsorID").text = "202"
+    with pytest.raises(ValueError, match="duplicate PrimeSponsorID"):
+        parse_records(ET.tostring(root))
+
+
+def _packet(tmp_path):
+    source = tmp_path / "original"
+    (source / "source").mkdir(parents=True)
+    (source / "plan.json").write_text("{}\n")
+    files = {"introduced_since_2017.xml": _xml([
+        _legislation(), _legislation(BillId="HB 1002", BillNumber="1002"),
+    ])}
+    for biennium in BIENNIA:
+        files[f"roster_{biennium}.xml"] = _xml([
+            {"Id": "101", "Agency": "House", "Name": "Example Member", "Party": "D"},
+        ], members=True)
+    receipts = []
+    for name, body in files.items():
+        path = source / "source" / name
+        path.write_bytes(body)
+        receipts.append({"file": name, "ok": True, "content_sha256": sha256_file(path)})
+    (source / "receipts.jsonl").write_text(
+        "".join(json.dumps(row) + "\n" for row in receipts)
+    )
+    (source / "manifest.json").write_text(json.dumps({
+        "files": {str(p.relative_to(source)): sha256_file(p)
+                  for p in sorted(source.rglob("*")) if p.is_file()},
+    }))
+    bills = tmp_path / "bills.parquet"
+    pd.DataFrame([_bill(), _bill(bill_id="other", state="OR")]).to_parquet(bills)
+    return source, bills
+
+
+def test_packet_freezes_complete_source_and_exact_baseline_without_modifying_inputs(tmp_path):
+    source, bills = _packet(tmp_path)
+    source_hash, bills_hash = sha256_file(source / "manifest.json"), sha256_file(bills)
+    out = tmp_path / "reconciliation"
+    report = build_reconciliation(
+        source, bills, out, source_sha256=source_hash, bills_sha256=bills_hash,
+    )
+    assert report["baseline_bills"] == 1
+    assert report["source_only_original_records"] == 1
+    assert report["session_roster_party"] == {"D": 1}
+    assert report["unique_original_records_with_legal_title"] == 1
+    assert sha256_file(bills) == bills_hash
+    original = source / "source/introduced_since_2017.xml"
+    assert (out / "source/official_packet/source/introduced_since_2017.xml").read_bytes() == (
+        original.read_bytes()
+    )
+    verify_manifest(out, {"bill_reconciliation.jsonl", "source_only_originals.jsonl"})
+    with pytest.raises(FileExistsError):
+        build_reconciliation(source, bills, out)
+    original.write_bytes(b"changed")
+    with pytest.raises(ValueError, match="hash mismatch"):
+        build_reconciliation(
+            source, bills, tmp_path / "changed", source_sha256=source_hash,
+            bills_sha256=bills_hash,
+        )
+    assert not (tmp_path / "changed").exists()

@@ -8,12 +8,78 @@ replacement classifier or establish complete contemporary coverage.
 |---|---|---|
 | Historical platforms | Recovered 2,091 authoritative archive documents, with publisher checksums and old/new archive reconciliation. | Historical availability must not be substituted for operative modern platforms. |
 | Contemporary platforms | Inventory v8 preserves 1,559 requests, including 1,440 retained responses across all 100 organizations, 119 failures and 1,371 body hashes. Corrected Alaska's stale host and recovered an image-only Massachusetts resolution. | Deferred navigation/images, OCR quality, source/institution/version adjudication and operative coverage remain unresolved. Retained responses are not verified platforms. |
-| Sponsorship | Party attribution uses validated historical memberships and a first-action date proxy; unresolved primary sponsors block D/R assignment. | Rebuild source bills and quantify attribution changes; the proxy is not an exact filing/sponsorship date. |
+| Sponsorship | Date-aware attribution remains conservative. Official Washington bill-key and chamber-scoped numeric-ID joins now supply separate historical session-roster D/R evidence for 13,479 measures, without overwriting any filing-time party. | A biennial roster does not establish affiliation at filing. Exact event-date evidence and unresolved primary sponsors still block canonical D/R assignment. |
 | Bills | October snapshot extracted: 1,090,369 source-context measures across all 50 states, 5,028,893 sponsorships, 9,002,451 actions and 873,980 vote events. All eleven tables have recorded hashes/counts. | Official-source reconciliation, historical affiliations and filing-time text review. Full extraction is not a certified source universe or analytical denominator. |
 | Classification | Four saved official English ModernBERT-base pilots compared on the same 52 platform references: external-only 41/52, joint 47/52, broader-source 47/52, Republican-expanded 49/52. The fourth run correctly rejects 3/4 mixtures and 6/6 non-policy units. | The fourth run loses one policy decision, still accepts a mixture above 0.999 and regresses on insufficient-evidence and taxonomy-boundary development cases. Both sets are examined diagnostics, not fresh independent tests. Independent review and empirical gates remain required. No candidate is approved. |
 | Labels | External CAP files recovered; split/group/exact-text and reviewed-platform source-body checks plus explicit reviewed-label provenance are implemented. | Source permissions, adapted-topic compatibility, near-duplicate families and reviewed state-domain training/development/test labels. |
 | Evaluation | Checkpoint-bound training/evaluation split isolation, development-only temperature/threshold selection, exact evidence joins, abstention accounting, per-topic and subgroup metrics. | Reviewer arrangement, frozen empirical gates, independent target tests and clustered uncertainty. No checkpoint can be certified by changing a status field. |
 | Companion | Local-only preview v9 exposes all 1,559 recovery captures, 119 failures and 61 alternative extraction identities across 55 OCR bodies, three DOCX bodies and one native-block body, alongside the 2,091 historical documents. The source ledger includes the corrected Arizona and Alaska registry rows. All 100 organization rows remain unresolved. | Audited classification/analysis exports, redistribution review and eventual report; no production integration is authorized. |
+
+## Official Washington bill-source recovery
+
+The October 19, 2026 recovery retains the complete **24,779** official Washington
+bill-version records returned by the Legislature's introduced-since-2017 operation,
+**791** historical roster rows across 2017-18 through 2025-26, service documentation
+and all eight successful retrieval receipts. Original XML bytes, request scope and hashes
+are frozen in `data/processed/washington-official-legislative-recovery-v1/`.
+There are **17,472** zero-substitute/zero-engrossment source rows and **17,464** distinct
+original bill keys; duplicated originals are retained rather than silently deduplicated.
+
+`data/processed/washington-official-bill-reconciliation-v1/` preserves all **14,143**
+baseline Washington measures and joins **13,479** to a unique original official record
+using exact session and bill identifiers. An exact biennium, numeric prime-sponsor ID
+and original-chamber join then supplies **8,773 D / 4,706 R session-roster observations**.
+No fuzzy sponsor-name join, current-roster backfill or invented membership interval is
+used. **12,735** matched records include a legal title, retained alongside the official
+short/long descriptions and the original baseline title. These are retrieval-time
+version-specific source fields, not certified full bill text or filing-time text.
+
+**658** baseline measures lack a unique original in the bulk response, and **six**
+have multiple originals. The missing-original population includes **414 SR, three HR,
+128 HB, 109 SB, two SJM, one SJR and one SCR**. A sponsor ID can occur in both chambers
+after a midterm chamber change; some former-chamber entries are blank. Joining on ID
+alone would erase this distinction. The implementation retains chamber boundaries,
+blank/duplicate roster uncertainty and every original source-record position.
+
+The **3,979** source-only original records are not automatically missing analytical bills.
+They comprise **1,513 gubernatorial appointments**, **2,266 other pre-2018
+introductions**, and **200 other post-2017 source-only measures** requiring reconciliation.
+These are mutually exclusive descriptive dispositions, not admission decisions. Complete
+source-only records and all baseline nonmatches remain downloadable local packet files.
+
+An independent XML replay in
+`data/processed/washington-official-reconciliation-verification-v1/` checks every extracted
+record field, all 14,143 decisions, exact baseline-column preservation, every source-only
+index and all packet hashes. This is programmatic reproduction, **not independent
+semantic review or event-time affiliation certification**. All 14,143 Washington
+canonical parties remain unknown; the national 39 D / 21 R totals are unchanged.
+No analytical, model-training or publication admission follows from these new observations.
+
+Bounded alternate-operation probes are separately retained in
+`data/processed/washington-official-gap-probes-v1/`: six successful responses and one
+HTTP 500 failure. A direct resolution lookup returns an original excluded by the bulk
+date filter because its introduction date is the publisher placeholder
+`0001-01-01T00:00:00`; this is not an actual event date. The sampled missing HB/SB
+lookups instead return engrossed versions, not original text. A separate planned
+417-resolution recovery is in progress at this checkpoint; its unfinished output is
+not included in the completed counts above.
+
+Frozen manifest identities:
+
+- Official retrieval: `fe98a43d5add0dcc058f9d80f256f36a1dfeddf76a32af45b4fda9d35aa47ecb`.
+- Bill reconciliation: `f16b3b1e29e7fb3f02c7ea5c0bda00fcc0a3cd107c4d864aa79f89cf478b04ee`.
+- Independent replay: `d4e1c0e182d00cd84f20a4de8c067d3a679925bddfd0036788407f71fa8eea5a`.
+- Alternate-operation probes: `fa4556abe9791f60396662bd5ee4828c93a7ff9a0915c85a7d8816e98b5d696c`.
+
+Raw evidence remains Git-ignored local data; pushing code and recorded hashes does not
+remotely back up these source bytes. The companion remains unpublished and unintegrated.
+
+The canonical full audit checkpoint **v14** still returns **1**, with **34/324**
+failed checks: the same canonical analytical-input/result failures as v13. The wrapper
+records all **19** completed research-packet manifest identities; research evidence was
+not substituted for the missing analytical inputs. Audit manifest:
+`b919856baf9772f0236c7b6b3adf2253eb425071a152e8f6a4905f9aa5c4f10e`;
+report: `68d28c7efe5a0eaaf222ded46a49a2a9283b6921c939dd3c7961fac4a899832a`.
 
 ## Training reservation enforcement
 
