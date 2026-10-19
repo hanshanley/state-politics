@@ -393,6 +393,18 @@ or document-role certification. Only the bill-ID-bound **versions** response sup
 own category and observation columns. A field value shared across endpoints is not proof
 that the documents have the same role.
 
+Complete-cohort category reconciliation independently replays amendment arrays, including
+successful empty responses, and preserves both raw fields and physical/global source order.
+Document ownership is indexed separately for native bill versions, amendments and positive
+instruction-document observations. The successor adds category-specific relationships to
+the complete original reference table without replacing its fields or earlier decisions.
+Exact bill-context matches, unresolved source identities, cross-context matches, unparsed
+URLs, absent IDs and any multi-category ownership remain distinct. API absence is not a
+failed download; an exact metadata match is not a certified PDF or policy label. The frozen
+SD replay resolves all 1,933 formerly unlisted parsed references to amendment metadata under
+their exact bill contexts, while leaving the 3,950 unparsed legacy links and HJR split
+explicit. The introduced-document plan is not expanded using amendment version observations.
+
 All-page embedded extraction can also silently omit visible text. For NM 2026 HB 99's
 23-page amendments-in-context PDF, both pypdf and MuPDF extracted only a 61-character
 session heading. Rendered pages visibly contained policy text; pinned Tesseract 5.5.2

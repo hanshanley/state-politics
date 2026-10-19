@@ -573,6 +573,46 @@ both live collections. The actual canonical **exit 1 / 34 failures among 328 che
 remains unchanged; its report is byte-identical to v23. Audit manifest:
 `f10e4dd20804db2974a3fb336943d5c3e0c7e3eedb2d6c83c19ee2abff29dad2`.
 
+### Complete native amendment recovery and all-reference category replay
+
+The separate amendment collector has now completed **all 5,369 native bill requests**.
+`data/processed/south-dakota-native-amendment-recovery-v2/` retains **3,246 complete
+amendment rows** for **1,696** bills and the successful empty responses for **3,673**
+others. Empty arrays are native observations, not missing captures or transport failures.
+The full raw JSON retains **3,246 distinct amendment-document IDs** and **3,246 distinct
+positive instruction-document IDs**. These remain separate source categories; neither
+instruction text nor amendment PDF contents were downloaded in this metadata job.
+
+The separate `data/processed/south-dakota-native-amendment-verification-v1/` independently
+replays **every response**, complete raw JSON, source contexts, global/local row positions,
+hashes, lengths, derived observations and empty-bill identities. It preserves the entire
+native table and every field/previous decision in the **18,053-link** baseline comparison.
+All **1,933** previously unlisted parsed references now match the **exact native bill's
+amendment metadata**, not wrong-bill attachments. The successor comparison accounts for
+**12,168** exact-context bill-version references, **1,933** exact-context amendment
+references, **3,950** unparsed legacy URLs and **two** unresolved HJR-context references.
+No document-ID overlap appears among the version, amendment and instruction categories.
+This is endpoint ownership evidence, not certification of linked PDF contents.
+
+**2,271 amendment rows** contain the literal bill-version observation `Introduced`.
+They stay amendments, never additional original-bill candidates. The original version
+comparison, unique introduced-document plan, canonical source identities and all admission
+decisions remain unchanged. The original **one-reference** proof is preserved alongside
+this complete-cohort successor rather than rewritten as though it reviewed all references.
+
+- Amendment recovery manifest: `d4ce70dbbfca259e0ec8b8120ce9006d59ef4e712f6331395e567e8514a688d3`.
+- Independent replay/category comparison manifest: `15b7a6f813b832d8cdce037faa4125ed63f983a9b8dbe5b9b5e28e7e1c3402c4`.
+
+The introduced-PDF job is still separate and incomplete; its partial output is not indexed
+as complete. No new model, event-time party, analytical result or production publication
+is certified by this metadata replay. Raw packets remain Git-ignored local evidence, not
+remotely backed up by pushing these manifest identities.
+
+Canonical audit checkpoint **v25** verifies **52** completed research packets and excludes
+the partial introduced-PDF collection. It retains actual **exit 1**, with **34 failures
+among 328 checks** and a report byte-identical to v24. Audit manifest:
+`9ab5c6a52d14252bc147419653458d80d52c1acbcf9964bf0dc2a1b849044bef`.
+
 ## Training reservation enforcement
 
 The training CLI now accepts an explicit `--source-reservation` pointing to a
