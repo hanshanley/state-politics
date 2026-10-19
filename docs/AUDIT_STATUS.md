@@ -4,8 +4,8 @@ The existing figures and analytical conclusions are **legacy, not revalidated fi
 The current changes repair infrastructure and preserve evidence; they do not certify a
 replacement classifier or establish complete contemporary coverage.
 
-**October 19, 2026 checkpoint:** actual audit **v49** binds **113 completed research
-and accounting packets**. The canonical audit has **304/338 passing checks**
+**October 19, 2026 checkpoint:** actual audit **v50** binds **114 completed research
+and accounting packets**. The canonical audit has **306/340 passing checks**
 and **34 missing-artifact failures**. Known source, collection and scientific failures
 remain explicit; this is not a completed project or a certified classifier.
 
@@ -282,6 +282,20 @@ excluding the manifest and both new packets unchanged. Manifest SHA-256:
 `4c20f199c43c13190d6b0db9e7a7fe7ef1d0af5c239c6f43bb7256ccacd16754`.
 The NY/TX/IL live campaigns are not completed roots. Frozen documentation precedes
 this result paragraph and top-line update; no canonical input or admission changed.
+
+Actual canonical audit **v50** adds the independently replayed New York joint-print
+header/redirect packet, exact parser/tests/producers, both-reader replay log and
+explicitly informational live-campaign progress snapshot. All **114 completed
+research/accounting packets** verify. Only passing/total counts differ from v49
+for the two newly documented Python files: **306/340 passing**, the same
+**34 missing-artifact failures**, return code **1** and scientific certification
+**not performed**. All other canonical report fields and authored-input hashes
+are identical. Independent verification checks the exact **175-file** audit
+inventory excluding its manifest and all **2,094** joint-print packet files
+unchanged. Manifest SHA-256:
+`0fdd3839efb051dea9fcbfd89b0626319824100d62482a8baca9b5c8fb0230d8`.
+No live collector is represented as completed coverage. Frozen documentation
+precedes this result paragraph and top-line update.
 
 ## Texas 88R filed-census and bounded original-text recovery
 
