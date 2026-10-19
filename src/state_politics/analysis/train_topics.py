@@ -13,6 +13,8 @@ from datetime import date
 from itertools import product
 from pathlib import Path
 
+from ..bills.openstates_dump import STATE_CODES
+from ..platforms.recovery import load_json, verify_manifest
 from ..provenance import sha256_file, utc_now_iso
 from .modernbert import (
     DOMAINS,
@@ -29,6 +31,7 @@ from .taxonomy import DEFAULT_TOPICS_PATH, load_topics
 SPLITS = {"train", "dev", "test", "challenge"}
 LABEL_ORIGINS = {"external_coded", "reviewed_target"}
 TRAINING_ABSTENTIONS = {"non_policy", "mixed_policy", "insufficient_evidence"}
+PLATFORM_STATES = frozenset(state.upper() for state in STATE_CODES)
 
 
 def validate_split_isolation(rows: list[dict]) -> None:
@@ -170,10 +173,80 @@ def load_examples(path: Path | str, codes: list[int]) -> list[dict]:
     return rows
 
 
+def validate_source_reservation(rows: list[dict], path: Path) -> dict:
+    """Exclude reserved platform organizations and source identities from training."""
+    verify_manifest(path.parent, {path.name})
+    reservation = load_json(path)
+    sources = reservation.get("sources")
+    if not isinstance(sources, list) or not sources:
+        raise ValueError("source reservation requires a nonempty sources list")
+    organizations = set()
+    hashes = set()
+    for source in sources:
+        if (
+            not isinstance(source, dict)
+            or not isinstance(source.get("state"), str)
+            or source["state"] not in PLATFORM_STATES
+            or source.get("party") not in ("D", "R")
+            or source.get("organization") != f"{source['state']}-{source['party']}"
+        ):
+            raise ValueError("source reservation has an invalid organization")
+        if source["organization"] in organizations:
+            raise ValueError("source reservation has a duplicate organization")
+        organizations.add(source["organization"])
+        for key in ("source_sha256", "document_text_sha256"):
+            value = source.get(key)
+            if not isinstance(value, str) or re.fullmatch(r"[a-f0-9]{64}", value) is None:
+                raise ValueError(f"source reservation requires a valid {key}")
+            hashes.add(value)
+    for row in rows:
+        if row["split"] != "train" or row["domain"] != "plank":
+            continue
+        identities = set()
+        if row.get("state") is not None or row.get("party") is not None:
+            if (
+                not isinstance(row.get("state"), str)
+                or row["state"] not in PLATFORM_STATES
+                or row.get("party") not in ("D", "R")
+            ):
+                raise ValueError(f"{row['record_id']}: invalid platform state/party")
+            identities.add(f"{row['state']}-{row['party']}")
+        if row.get("organization") is not None:
+            if not isinstance(row["organization"], str):
+                raise ValueError(f"{row['record_id']}: invalid platform organization")
+            identities.add(row["organization"])
+        if row["group_id"].startswith("platform-organization:"):
+            identities.add(row["group_id"].removeprefix("platform-organization:"))
+        if any(
+            not isinstance(value, str)
+            or re.fullmatch(r"[A-Z]{2}-[DR]", value) is None
+            or value[:2] not in PLATFORM_STATES
+            for value in identities
+        ) or len(identities) > 1:
+            raise ValueError(f"{row['record_id']}: inconsistent platform organization identity")
+        if row["label_origin"] == "reviewed_target" and not identities:
+            raise ValueError(f"{row['record_id']}: reservation requires platform organization")
+        if identities & organizations or any(
+            row.get(key) in hashes for key in ("source_sha256", "document_text_sha256")
+        ):
+            raise ValueError(f"{row['record_id']}: reserved platform source in training")
+    return {
+        "path": str(path.resolve()),
+        "sha256": sha256_file(path),
+        "manifest_sha256": sha256_file(path.parent / "manifest.json"),
+        "reserved_organizations": sorted(organizations),
+    }
+
+
 def train(args) -> Path:
     topics = load_topics(args.topics)
     codes = [topic.code for topic in topics]
     rows = load_examples(args.labels, codes)
+    reservation_path = getattr(args, "source_reservation", None)
+    reservation = (
+        validate_source_reservation(rows, reservation_path)
+        if reservation_path is not None else None
+    )
     train_rows = [row for row in rows if row["split"] == "train"]
     counts = Counter(row["topic"] for row in train_rows)
     outputs = [*codes, None] if counts[None] else codes
@@ -242,6 +315,7 @@ def train(args) -> Path:
         "topic_codes": codes, "taxonomy_sha256": sha256_file(args.topics),
         "output_codes": outputs, "training_abstention_count": counts[None],
         "labels_sha256": sha256_file(args.labels),
+        "source_reservation": reservation,
         "code_sha256": {
             name: sha256_file(Path(__file__).with_name(name))
             for name in ("train_topics.py", "modernbert.py", "taxonomy.py")
@@ -324,6 +398,10 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--labels", type=Path, required=True, help="versioned JSONL label manifest")
     parser.add_argument("--topics", type=Path, default=DEFAULT_TOPICS_PATH)
     parser.add_argument("--out", type=Path, required=True)
+    parser.add_argument(
+        "--source-reservation", type=Path,
+        help="manifest-bound reservation JSON excluding whole platform organizations",
+    )
     parser.add_argument("--seed", type=int, default=20261018)
     parser.add_argument("--epochs", type=int, default=3)
     parser.add_argument("--batch-size", type=int, default=4)

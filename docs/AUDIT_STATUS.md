@@ -15,6 +15,24 @@ replacement classifier or establish complete contemporary coverage.
 | Evaluation | Checkpoint-bound training/evaluation split isolation, development-only temperature/threshold selection, exact evidence joins, abstention accounting, per-topic and subgroup metrics. | Reviewer arrangement, frozen empirical gates, independent target tests and clustered uncertainty. No checkpoint can be certified by changing a status field. |
 | Companion | Local-only preview v8 exposes all 1,559 recovery captures, 119 failures and 60 alternative extraction identities across 55 OCR bodies and three DOCX bodies, alongside the 2,091 historical documents. The source ledger includes the corrected Arizona and Alaska registry rows. All 100 organization rows remain unresolved. | Audited classification/analysis exports, redistribution review and eventual report; no production integration is authorized. |
 
+## Training reservation enforcement
+
+The training CLI now accepts an explicit `--source-reservation` pointing to a
+manifest-bound reservation JSON. Before importing model libraries or downloading weights,
+it verifies every packet file and excludes reserved platform-training organizations,
+including alternate editions, as well as matching body or complete-document text hashes.
+State/party metadata, explicit organization identifiers and organization-based groups must
+agree. Reviewed state-platform training rows require an organization identity; external
+national-platform groups do not silently become state organizations. Bills and reserved
+evaluation rows are not excluded by platform-training reservations.
+
+When supplied, the exact reservation path, JSON hash, packet-manifest hash and organization
+list enter the saved training manifest. Omission is recorded as null; older runs are not
+retroactively described as having used this guard. The six reserved organizations remain
+ID-R, MT-R, WA-R, MN-D, WA-D and VT-D. No labels or weights changed in this checkpoint.
+Complete retained KS-R, NE-R and HI-R native documents have been inspected for the next
+provisional curriculum; their source packet does not itself admit any unit to training.
+
 ## Expanded source-bound platform curriculum
 
 `data/labels/diverse-platform-curriculum-v1/` adds **54 positive policy units across all

@@ -25,7 +25,11 @@ from state_politics.analysis.modernbert import (
 )
 from state_politics.analysis.prepare_topics import compatibility_flags, prepare
 from state_politics.analysis.taxonomy import DEFAULT_TOPICS_PATH, load_topics
-from state_politics.analysis.train_topics import label_support, load_examples
+from state_politics.analysis.train_topics import (
+    label_support,
+    load_examples,
+    validate_source_reservation,
+)
 from state_politics.provenance import sha256_file
 
 
@@ -320,6 +324,101 @@ def test_label_manifest_does_not_promote_predictions_to_independent_labels(tmp_p
     path.write_text(json.dumps(_label("one", "School funding", label_origin="model")) + "\n")
     with pytest.raises(ValueError, match="model guesses"):
         load_examples(path, [1, 6])
+
+
+def _source_reservation(tmp_path):
+    path = tmp_path / "reservation.json"
+    path.write_text(json.dumps({"sources": [{
+        "organization": "WA-R", "state": "WA", "party": "R",
+        "source_sha256": "a" * 64, "document_text_sha256": "b" * 64,
+    }]}))
+    (tmp_path / "manifest.json").write_text(json.dumps({
+        "files": {path.name: sha256_file(path)},
+    }))
+    return path
+
+
+@pytest.mark.parametrize("identity", [
+    {"state": "WA", "party": "R"},
+    {"group_id": "platform-organization:WA-R"},
+    {"organization": "WA-R"},
+    {"source_sha256": "a" * 64},
+    {"document_text_sha256": "b" * 64},
+])
+def test_reservation_excludes_alternate_versions_and_reidentified_sources(tmp_path, identity):
+    row = _label(
+        "alternate-edition", "A different edition with a different body.",
+        domain="plank", label_origin="reviewed_target", state="KS", party="R",
+        source_sha256="c" * 64, document_text_sha256="d" * 64,
+    )
+    if "group_id" in identity or "organization" in identity:
+        row.pop("state")
+        row.pop("party")
+    row.update(identity)
+    with pytest.raises(ValueError, match="reserved platform source"):
+        validate_source_reservation([row], _source_reservation(tmp_path))
+
+
+def test_reservation_does_not_exclude_bills_or_evaluation_or_external_national_groups(tmp_path):
+    path = _source_reservation(tmp_path)
+    rows = [
+        _label("bill", "A bill from a shared snapshot.", source_sha256="a" * 64),
+        _label("challenge", "Reserved evaluation policy.", "challenge", domain="plank",
+               state="WA", party="R", source_sha256="a" * 64),
+        _label("external", "Historical national platform policy.", domain="plank"),
+        _label("target", "An unrelated state's policy.", domain="plank",
+               label_origin="reviewed_target", state="KS", party="R",
+               source_sha256="c" * 64, document_text_sha256="d" * 64),
+    ]
+    result = validate_source_reservation(rows, path)
+    assert result["reserved_organizations"] == ["WA-R"]
+    assert result["sha256"] == sha256_file(path)
+    assert result["manifest_sha256"] == sha256_file(tmp_path / "manifest.json")
+
+
+@pytest.mark.parametrize("identity", [
+    {},
+    {"state": "KS"},
+    {"state": "KS", "party": "R", "group_id": "platform-organization:HI-R"},
+])
+def test_reservation_requires_consistent_reviewed_platform_identity(tmp_path, identity):
+    row = _label("target", "Reviewed state policy.", domain="plank",
+                 label_origin="reviewed_target", **identity)
+    with pytest.raises(ValueError, match="organization|state/party"):
+        validate_source_reservation([row], _source_reservation(tmp_path))
+
+
+def test_training_rejects_reserved_or_corrupt_reservation_before_model_import(
+    tmp_path, monkeypatch,
+):
+    import builtins
+    from types import SimpleNamespace
+
+    from state_politics.analysis.train_topics import train
+
+    path = _source_reservation(tmp_path)
+    labels = tmp_path / "labels.jsonl"
+    labels.write_text(json.dumps(_label(
+        "reserved", "Alternate-version policy.", domain="plank",
+        label_origin="reviewed_target", state="WA", party="R", source_sha256="c" * 64,
+    )) + "\n")
+    args = SimpleNamespace(
+        labels=labels, topics=DEFAULT_TOPICS_PATH, source_reservation=path,
+        out=tmp_path / "model",
+    )
+    original_import = builtins.__import__
+
+    def no_model_import(name, *args, **kwargs):
+        assert name not in ("torch", "transformers"), "model imported before reservation check"
+        return original_import(name, *args, **kwargs)
+
+    monkeypatch.setattr(builtins, "__import__", no_model_import)
+    with pytest.raises(ValueError, match="reserved platform source"):
+        train(args)
+    path.write_text(path.read_text() + "\n")
+    with pytest.raises(ValueError, match="manifest hash mismatch"):
+        train(args)
+    assert not args.out.exists()
 
 
 @pytest.mark.parametrize("split", ["dev", "test", "challenge"])
