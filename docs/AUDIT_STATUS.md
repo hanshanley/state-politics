@@ -16,13 +16,13 @@ remain explicit; this is not a completed project or a certified classifier.
 | Sponsorship | Date-aware attribution remains conservative. Official Washington evidence supplies separate session-roster D/R observations for 14,132 of 14,143 measures. Separately, 1,481 native SD roster rows identify all 7,086 prime-sponsor references; 205 mixed-party cases remain explicit. No filing-time party is overwritten. | A session roster does not establish affiliation at filing. Washington retains ten source-identified tests and one substantive original without a native primary-sponsor API record. SD cross-session cosponsor IDs, institutional sponsorship and event-time affiliations remain separately accounted for; all-state recovery is open. |
 | Bills | October snapshot extracted: 1,090,369 source-context measures across all 50 states, 5,028,893 sponsorships, 9,002,451 actions and 873,980 vote events. All eleven tables have recorded hashes/counts. Native documents retained for all 241 non-test measures in the bounded Washington metadata-gap cohort; separately, all 5,369 native SD introduced candidates and 15,308 physical pages captured and exactly replayed in both readers. | Official-source reconciliation, historical affiliations and filing-time text review. One Washington resolution has a version-note conflict; one SD PDF prints no session year. Neither these recoveries nor snapshot extraction certifies statewide/national original-text completeness or an analytical denominator. |
 | Parallel state recovery | Missouri, Pennsylvania and Ohio initial cohorts retain 188 complete PDF candidates / 3,095 pages and 124 corresponding HTML versions from 192 selections. Full Florida replay separately accounts for 2,868 linked contexts, including an explicitly negative corrected-copy disposition. | Four selected PA/OH originals remain unresolved. Missouri withdrawal-only notices are not policy text; historical corroboration does not resolve publisher identity conflicts. These bounded recoveries are not statewide text completeness or classifier certification. |
-| Full-source campaigns | New York, Texas, Illinois and Colorado continuations are running under frozen finite contracts. North Carolina's sealed final-20 archive passes independent replay; full-corpus replay remains pending. Ohio and Pennsylvania preparations reuse recovered originals. | Only independently replayed completed checkpoints count as recovered coverage. Full replay remains required; Ohio/Pennsylvania full collections are not launched. |
+| Full-source campaigns | New York, Texas, Illinois and Colorado continuations are running under frozen finite contracts. North Carolina's entire 2,004-document corpus and separate final-20 archive pass independent replay. Ohio and Pennsylvania preparations reuse recovered originals. | North Carolina's two identity negatives and native-version census remain unresolved; source replay is not scientific certification. Other campaigns still require full replay, and Ohio/Pennsylvania full collections are not launched. |
 | California native archives | Five complete biennial archives spanning 2017–2026 retain 26,798 native introduced candidates and 26,797 original normalized exports; all 993,735 ZIP entries pass independent integrity replay. A separate parent-replayed GRP1 supplement now preserves its complete 320,397-character native body and 4,229 element spans. | The 2,980 historical/boundary source-only contexts and 44 special-session candidates are separate, not admitted. GRP1 has a native GRP body, previously unsupported by the Bill/Resolution mapper; old exports remain unchanged. Archive completeness and structural projection do not certify filing-time identity, legal semantics or policy labels. |
 | Texas native reports | Complete 88R House/Senate filed reports reconcile 11,807 of 11,809 canonical regular contexts. Sixteen introduced PDF+HTML pairs retain 55 physical PDF pages and 16 HTML text blocks. | Literal canonical SB 15247 and SR 1960 remain unmatched. Other originals, historical affiliations, typed markup interpretation and filing-time certification remain open. Special sessions are isolated, not combined with 88R. |
 | New York native index | Official 2023–2024 Assembly search response retains 24,316 rows and 24,268 exact canonical matches. Self-contained first-batch archive preserves 80 PDF candidates / 256 pages / 769,944 joined-document characters / 1,488 extraction blocks. | Canonical J 272, one untyped `00000` row and 47 anomalous source-only identities remain separate. Full collection is running, not complete. Unselected originals, visual markup and legal-version identity remain unresolved; the blocked API was not bypassed. |
 | Illinois native index | Official 103rd-General-Assembly index retains 13,391 rows and matches all 13,376 canonical regular contexts. Self-contained first checkpoint retains 48 HTML candidates / 261,997 characters / 3,034 exact text-bearing blocks. Full listed-source collection is running. | Fifteen source-only entries, 878 canonical introduced-metadata gaps and thirteen unlisted static originals remain explicit, including SR 292. Identity enumeration is not complete original-text recovery or filing-time certification. |
 | Colorado native index | Independent publisher census reconciles all 1,459 regular identities across 2023A/2024A. First checkpoint retains 32 PDFs / 264 pages; full continuation is running. | Twenty-nine special-session contexts are separate. Two canonical introduced-reference gaps are not publisher-absence findings; the corresponding bill pages remain uninspected. |
-| North Carolina native index | Independent 2023–2024 publisher census reconciles 2,004 of 2,005 canonical contexts. First checkpoint retains 32 PDFs / 74 pages. Terminal collection reports 2,002 successes and two identity negatives; full replay is pending. | Canonical HB 311 remains distinct from native HR 311 despite the shared URL. Statewide publisher version enumeration remains incomplete; canonical version rows are separately labelled, not rebranded as native. |
+| North Carolina native index | Independent 2023–2024 publisher census reconciles 2,004 of 2,005 canonical contexts. Complete source replay preserves 2,004 PDFs / 6,783 pages per reader, 2,002 observed numeric identities and two unresolved identity negatives. | Canonical HB 311 remains distinct from native HR 311 despite the shared URL. Statewide publisher version enumeration remains incomplete; canonical version rows are separately labelled, not rebranded as native. |
 | Classification | Four saved official English ModernBERT-base pilots compared on the same 52 platform references: external-only 41/52, joint 47/52, broader-source 47/52, Republican-expanded 49/52. The fourth run correctly rejects 3/4 mixtures and 6/6 non-policy units. | The fourth run loses one policy decision, still accepts a mixture above 0.999 and regresses on insufficient-evidence and taxonomy-boundary development cases. Both sets are examined diagnostics, not fresh independent tests. Independent review and empirical gates remain required. No candidate is approved. |
 | Labels | External CAP files and two state-reference CSVs recovered; exact-context Florida candidates and complete bounded overlap witnesses are frozen without label admission. Split/group/text and reviewed-platform source-body checks retain explicit label provenance. | Modern Florida external titles/subtopics are missing; Pennsylvania rows stop in 2016. Annotation provenance, source permissions, adapted-topic compatibility, bill families and independent state-domain references remain unresolved. |
 | Evaluation | Checkpoint-bound training/evaluation split isolation, development-only temperature/threshold selection, exact evidence joins, abstention accounting, per-topic and subgroup metrics. | Reviewer arrangement, frozen empirical gates, independent target tests and clustered uncertainty. No checkpoint can be certified by changing a status field. |
@@ -936,10 +936,18 @@ numeric identity, a canonical alias or classifier input.
 The worker sealed a separate **44,306-payload completed-corpus archive** at
 `north-carolina-full-source-completed-archive-v1`, manifest
 `7f5ef06af91c05effd07b7ab3999bafb7edaff6593eff36ed376ccc98d395ad7`.
-Parent full-corpus guarded replay remains pending; terminal counters and a
-worker's completed archive alone do not close that gate. The legacy preparation
-manifest/state and all 63 original checkpoints remain preserved, not rewritten
-as terminal evidence.
+Parent actual full-corpus guarded replay **passes**: all **2,004 PDFs /
+140,801,188 raw bytes / 6,783 physical pages per reader**, **44,295 source
+mappings** and **63 original checkpoints** are verified. PyMuPDF reproduces
+**20,489,184 characters** and pypdf **20,174,237**. All 6,783 reader-page texts
+differ exactly; both complete extractions are preserved rather than treated as
+identical or adjudicated ground truth. The replay retains **2,002 passed numeric
+identity observations and two unresolved identities**, with no canonical alias,
+legal-version or source-absence inference. Networking and original project/session
+reads are denied; the sealed archive stays unchanged. Actual log:
+`nc_completed_full_parent_actual_v1.log`. The legacy preparation manifest/state
+and all 63 original checkpoints remain preserved, not rewritten as terminal
+evidence. The partition is **32 + 61 x 32 + 20 = 2,004**.
 
 The separate **18,287-payload final-20 archive** at
 `north-carolina-full-source-final-tail-archive-v1` **passes actual parent guarded
@@ -963,6 +971,22 @@ allowance. Future version collection must bind both archived ledgers and the
 parent-verified terminal source manifest; no synthetic unified ledger or budget
 reset is permitted. No full publisher-native version census is claimed.
 
+The persistent actual parent terminal bridge
+`nc_parent_verified_terminal_lineage_v1.json`, SHA-256
+`4aa3149bba42c9723061862df1f6ea87bbae14ebe2200ce5e9042d63e9c256dc`,
+binds both completed replay logs/code, terminal progress and the two manifest-backed
+ledgers. The document ledger is
+`fbcff005df5dc27573149523e580de7ef0184d667495c26bd48c5182170cddad`
+(2,004 unique reservation/result pairs); the publisher ledger is
+`f99e8528de407ea75673a607db3f1111dc1b4a9799df4876e29c9e13c0ec2d35`
+(three pairs). All 2,007 results have HTTP 200 and curl exit zero. Publisher
+results omit the physical-exchange flag, so the adapter joins them to their
+physical reservation IDs/URLs rather than filtering them out. A matching active
+source collector is absent at bridge creation. The next stage must inherit
+**2,007** and begin at ordinal **2,008**. This source-lineage approval does
+**not** authorize native-version collection, classifier use or publication.
+The completed source packet and bridge are not yet integrated into aggregate v52.
+
 ### Native-version census preparation, not completed collection
 
 The separately frozen zero-HTTP preparation
@@ -972,8 +996,8 @@ and leaving **2,002 pages pending**. Parent guarded replay verifies all **1,050
 files unchanged**, manifest
 `eee72fbf1abcdcb0794a23114ed2ce6e87ce4b7e93f0bdf919c932f63cd81933`.
 No canonical version rows are substituted. Full collection must inherit a
-manifest-backed, independently verified terminal source ledger, including all
-**2,007** source exchanges if confirmed by the pending sealed-corpus replay.
+manifest-backed, independently verified terminal source ledgers, including all
+**2,007** source exchanges now confirmed by both completed parent replays.
 The prospective **15,000** aggregate cap and two-attempt page limit are not reset.
 
 The parent also executes the archived actual-driver suite in isolated temporary
