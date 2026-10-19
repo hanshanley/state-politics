@@ -243,3 +243,44 @@ def test_collection_preserves_failures_encoded_urls_and_later_version_candidates
             link_ids={"unknown-link"},
         )
     assert not (tmp_path / "unknown").exists()
+
+
+@pytest.mark.parametrize("bill_matches,bytes_match", [(True, True), (False, True), (True, False)])
+def test_known_wrong_session_bytes_are_retained_but_quarantined_only_for_reviewed_bill(
+    tmp_path, monkeypatch, bill_matches, bytes_match
+):
+    from types import SimpleNamespace
+
+    from state_politics.bills.documents import collect_document_candidates
+    from state_politics.provenance import sha256_bytes
+
+    wrong = b"known regular-session document"
+    body = wrong if bytes_match else b"publisher-corrected special-session document"
+    monkeypatch.setattr(
+        "state_politics.bills.documents._KNOWN_CONTEXT_CONFLICTS",
+        {("policy" if bill_matches else "other-bill", sha256_bytes(wrong)): "a" * 64},
+    )
+    monkeypatch.setattr("state_politics.provenance.url_is_fetchable", lambda url: None)
+    inputs, extraction_sha = _write_extraction(tmp_path)
+    inventory, out = tmp_path / "inventory", tmp_path / "captures"
+    freeze_document_inventory(inputs, inventory, extraction_manifest_sha256=extraction_sha)
+    report = collect_document_candidates(
+        inventory,
+        out,
+        inventory_manifest_sha256=sha256_file(inventory / "manifest.json"),
+        link_ids={"plain-link"},
+        transport=lambda url, **kwargs: SimpleNamespace(
+            status_code=200, content=body, headers={"Content-Type": "application/pdf"}, url=url
+        ),
+        sleep=lambda seconds: None,
+    )
+    quarantined = bill_matches and bytes_match
+    assert report["n_retained_links"] == 1
+    assert report["quarantined_link_ids"] == (["plain-link"] if quarantined else [])
+    assert report["status"] == (
+        "completed_with_quarantined_documents" if quarantined else "source_capture_not_certified"
+    )
+    receipt = json.loads((out / "receipts.jsonl").read_text())
+    assert receipt["context_review_manifest_sha256"] == ("a" * 64 if quarantined else None)
+    assert (out / receipt["source_file"]).read_bytes() == body
+    assert not report["analytical_admission"]

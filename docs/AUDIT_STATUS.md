@@ -329,6 +329,68 @@ Audit manifest: `6d61dea7fa3bfde4f47f221ffe086e779cf625e81ad1f60f317ee62fd289149
 The artifact-dependent integration test remains failing on those missing canonical
 outputs; it is not waived or changed to treat provisional research as passing.
 
+### New Mexico native recovery and cross-session quarantine
+
+The bounded New Mexico recovery now retains **all 87 whitespace-bearing references
+across 36 source-context bills**, not just introduced-note hints. Its initial **66**
+introduced-cover references span **33** bills; all original URLs, notes and parent
+responses remain intact. The native-review packet derives **33 HTML / 54 PDF** texts
+and attempts embedded extraction across **747 PDF pages**. This is not the complete
+New Mexico legislative universe or full independent semantic review.
+
+Two attached **Final Version** PDFs are demonstrably from the wrong session. Each
+2024 special-session attachment is byte-identical to the final linked by the official
+**regular-session** overview's actual **Final Version 3/04/24** anchor:
+
+| Special-session bill | Introduced-cover subject | Misattached regular-session final |
+|---|---|---|
+| SB 6 | Fentanyl penalties | Cannabis regulation |
+| SB 17 | Crime and ballistic reporting | Hospital assessment and health-care delivery |
+
+The regular overviews, native session headings, exact anchor evidence and four comparison
+receipts are preserved. Neither bill-number equality nor an HTTP-success response is
+enough to establish bill/session identity. The reusable collector now retains but
+quarantines the **exact reviewed bill-ID/response-hash pairs**, with a native-review
+manifest binding. An actual fresh two-link CLI run retained both responses, reported
+exactly two quarantines and no transport-unresolved links, and returned **1** for those
+quarantines. Legitimate regular-session contexts and changed publisher bytes are not
+blanket-blocked; they remain unreviewed and uncertified.
+
+The other **19 nonoriginal references** retain native excerpts and extraction limitations,
+not automatic version certification. One, **2026 HB 99 `OLD.pdf`**, has visible policy
+text but both independent embedded extractors return only a 61-character heading across
+23 pages. A separate pinned-Tesseract successor recovers **33,501 OCR characters on all
+23 pages**, retaining every rendered raster and per-page output. Rendered pages **1, 2
+and 23** were visually inspected, not every policy provision. The native heading identifies
+a **House Judiciary Committee substitute**, and the publisher warns that amendments
+may be proposed but not adopted. Original PDF styling remains necessary: OCR loses
+strikeout, underscore and color distinctions. Neither the filename nor the printed
+document timestamp establishes filing-time or operative-version status.
+
+A separate programmatic national reconciliation checks **all five original link fields
+and source order for 2,617,690 links**, **all six fields for 1,899,909 version records**,
+every state's reference totals, the 1,090,369-row bill coverage count and unchanged extraction
+hashes. It confirms the **37,431-measure request-usability gain** without claiming new
+full-text recovery. This is exact source-data reproduction, not independent semantic review.
+
+Completed local packet manifest identities:
+
+- NM introduced-note capture: `89f1a9f507cb1e37114941255d705d32a5c8b84196af186044584b8c5e627170`.
+- NM all-reference capture: `35ffcf75623a61f7e03ab67807f6c76090db11fc0426ee2958159333ae36055f`.
+- NM native review/cross-session proof: `1f4a9534cee09411816309c2fb18ea09ed614c5f39668038bf1a66df682c920f`.
+- Actual quarantine verification: `b35730898c53646154fc5d304f20a820187580226bd4d3ef29bba7d1250864aa`.
+- HB99 all-page OCR: `04017acea74072587c6b9f15f40f8beeb9dc50670ee1695015741920f3889975`.
+- National reference reconciliation: `839f6718d85bd04d6e57b3559232ba84426067d9a67bd74d721a3d8bfe93a562`.
+
+These immutable `data/processed/` packets remain Git-ignored local evidence; pushed code
+and hashes are not a remote raw-data backup. No canonical parties, labels, model weights,
+analytical inputs, conclusions or production-site integration change.
+
+Canonical audit **v20** verifies and indexes all **43** completed research packets,
+retains actual return code **1**, and has the **same 34/326 failures and identical
+canonical report as v19**. The missing certified analytical artifacts remain missing.
+Audit manifest: `d817b4f9d10e752d26f3876f50c2cfb7e9a90c0b7e422e00060458c83cee375a`.
+
 ## Training reservation enforcement
 
 The training CLI now accepts an explicit `--source-reservation` pointing to a

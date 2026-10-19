@@ -322,9 +322,28 @@ The `collect` subcommand requires an inventory manifest checksum, explicit `--li
 selection and a new `--out`. It retains complete response bytes and physical JSONL receipts,
 paces requests, records failed HTTP requests and explicit HTTPS alternatives, skips reviewed
 publisher tests without dropping their source records, and returns nonzero for unresolved
-selected links. Captures remain research-only: HTTP 200 can return an application shell
+or quarantined selected links. Captures remain research-only: HTTP 200 can return an application shell
 instead of bill text, and a genuine PDF may be an amendment or automatic comparison.
 Native format/version and semantic review remain separate from retrieval.
+
+Collection report schema 2 separately records `quarantined_link_ids`. Its small reviewed
+conflict registry matches **both the exact source bill ID and response SHA-256**, not a
+bill number, URL or document hash alone. Complete bytes remain retained, and each matching
+receipt records `native_context_status` and the supporting native-review manifest hash.
+This prevents two verified regular-session finals from passing unnoticed under their
+New Mexico special-session bill contexts. The same PDF under its legitimate regular-session
+bill, or changed bytes after a publisher correction, remains **unreviewed**, not automatically
+certified or globally blocked. Older captures are not retroactively described as guarded.
+
+All-page embedded extraction can also silently omit visible text. For NM 2026 HB 99's
+23-page amendments-in-context PDF, both pypdf and MuPDF extracted only a 61-character
+session heading. Rendered pages visibly contained policy text; pinned Tesseract 5.5.2
+at 200 DPI recovered 33,501 characters across all 23 pages in a separate immutable
+packet. That packet preserves every raster, per-page OCR, original PDF, earlier deficient
+text and runtime hashes. Only rendered pages 1, 2 and 23 received visual inspection;
+the OCR is not independently corrected. Native committee-substitute identity and the
+publisher's proposed/not-yet-adopted-amendment disclaimer remain explicit. Plain OCR loses
+color, strikeouts and underscores and must not stand in for adjudicated operative text.
 
 For example, an explicit reference already exercised in the eight-state capture can be
 collected into a new immutable output directory:

@@ -39,6 +39,17 @@ _ORIGINAL_NOTES = frozenset(
     }
 )
 _LATER_NOTE = re.compile(r"\b(substitute|engrossed|enrolled|amendment|passed)\b")
+# Bill numbers recur across sessions; quarantine only the reviewed bill/response pair.
+_KNOWN_CONTEXT_CONFLICTS = {
+    (
+        "ocd-bill/2fc27653-f567-4bb0-b7b1-e7818d05ef55",
+        "ae998c9f771f91f7a307433cd8f7c3ce28b0ba43bd28caad9c437e69cb5f23fe",
+    ): "1f4a9534cee09411816309c2fb18ea09ed614c5f39668038bf1a66df682c920f",
+    (
+        "ocd-bill/31eb97a6-bc4c-4a7c-9d69-f463c935deaa",
+        "770136eae8feff51faf6cdf53523c7110e25d8899aa490f450caae31d4294fd6",
+    ): "1f4a9534cee09411816309c2fb18ea09ed614c5f39668038bf1a66df682c920f",
+}
 _COUNTS = [
     "n_version_links",
     "n_usable_url_links",
@@ -317,7 +328,7 @@ def collect_document_candidates(
     shutil.copyfile(inventory / "manifest.json", out / "inventory_manifest.json")
     shutil.copyfile(__file__, out / "producer.py")
     shutil.copyfile(Path(__file__).parents[1] / "provenance.py", out / "retrieval_helper.py")
-    receipts, retained, skipped = [], set(), []
+    receipts, retained, skipped, quarantined = [], set(), [], set()
     for index, row in enumerate(selected.to_dict("records")):
         if not row["collection_eligible"]:
             skipped.append(
@@ -347,6 +358,11 @@ def collect_document_candidates(
                 max_bytes=32 * 1024 * 1024,
                 note="research candidate; native version and filing-time identity unverified",
             )
+            context_review = (
+                _KNOWN_CONTEXT_CONFLICTS.get((row["bill_id"], record.content_sha256))
+                if record.ok
+                else None
+            )
             receipt = {
                 **record.to_dict(),
                 "link_id": row["link_id"],
@@ -355,6 +371,10 @@ def collect_document_candidates(
                 "url_normalization": row["url_normalization"],
                 "attempt_kind": attempt_kind,
                 "source_file": source_file if record.ok else None,
+                "native_context_status": "quarantined_known_cross_session_document"
+                if context_review
+                else "not_reviewed",
+                "context_review_manifest_sha256": context_review,
             }
             receipts.append(receipt)
             with (out / "receipts.jsonl").open("a") as stream:
@@ -362,16 +382,20 @@ def collect_document_candidates(
             sleep(1.1)
             if record.ok:
                 retained.add(row["link_id"])
+                if context_review:
+                    quarantined.add(row["link_id"])
                 break
     if not receipts:
         (out / "receipts.jsonl").touch()
     excluded = set(selected.loc[selected["source_test_record"], "link_id"])
     unresolved = sorted(link_ids - retained - excluded)
     report = {
-        "schema_version": 1,
+        "schema_version": 2,
         "completed_at": utc_now_iso(),
         "status": "completed_with_unresolved_links"
         if unresolved
+        else "completed_with_quarantined_documents"
+        if quarantined
         else "source_capture_not_certified",
         "inventory_manifest_sha256": inventory_manifest_sha256,
         "selected_link_ids": sorted(link_ids),
@@ -381,7 +405,8 @@ def collect_document_candidates(
         "n_transport_attempts": sum(receipt["attempts"] for receipt in receipts),
         "skipped_links": skipped,
         "unresolved_link_ids": unresolved,
-        "native_document_identity_review": "not_performed",
+        "quarantined_link_ids": sorted(quarantined),
+        "native_document_identity_review": "known_conflict_fingerprints_only_not_certification",
         "filing_time_text_certified": False,
         "training_admission": False,
         "analytical_admission": False,
@@ -431,7 +456,7 @@ def main(argv=None):
         )
     print(json.dumps(report, indent=2, allow_nan=False))
     print("Manifest:", sha256_file(args.out / "manifest.json"))
-    return 1 if report.get("unresolved_link_ids") else 0
+    return 1 if report.get("unresolved_link_ids") or report.get("quarantined_link_ids") else 0
 
 
 if __name__ == "__main__":
