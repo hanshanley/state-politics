@@ -11,7 +11,7 @@ from pathlib import Path
 from ..provenance import sha256_file
 from .modernbert import checked_output_codes, decide
 from .taxonomy import DEFAULT_TOPICS_PATH, load_topics
-from .train_topics import load_examples, validate_split_isolation
+from .train_topics import label_support, load_examples, validate_split_isolation
 
 
 def wilson(successes: int, total: int) -> list[float] | None:
@@ -278,6 +278,10 @@ def main(argv=None):
             "status": "passed",
             "identities": ["record_id", "group_id", "normalized_text", "platform_source_body"],
             "scope": "complete original training labels and supplied evaluation labels",
+        },
+        "label_support": {
+            "original_training_manifest": label_support(training_rows, codes),
+            "selected_evaluation": label_support(labels, codes),
         },
         "policy_sha256": sha256_file(args.policy) if args.policy is not None else None,
         "reviewer_types": dict(Counter(row["reviewer_type"] for row in labels)),

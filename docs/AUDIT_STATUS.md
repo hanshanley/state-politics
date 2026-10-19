@@ -10,10 +10,59 @@ replacement classifier or establish complete contemporary coverage.
 | Contemporary platforms | Inventory v7 preserves 1,559 requests, including 1,440 retained responses across all 100 organizations, 119 failures and 1,371 body hashes. Corrected Alaska's stale host and recovered an image-only Massachusetts resolution. | Deferred navigation/images, OCR quality, source/institution/version adjudication and operative coverage remain unresolved. Retained responses are not verified platforms. |
 | Sponsorship | Party attribution uses validated historical memberships and a first-action date proxy; unresolved primary sponsors block D/R assignment. | Rebuild source bills and quantify attribution changes; the proxy is not an exact filing/sponsorship date. |
 | Bills | October snapshot extracted: 1,090,369 source-context measures across all 50 states, 5,028,893 sponsorships, 9,002,451 actions and 873,980 vote events. All eleven tables have recorded hashes/counts. | Official-source reconciliation, historical affiliations and filing-time text review. Full extraction is not a certified source universe or analytical denominator. |
-| Classification | Two actual official English ModernBERT-base fine-tuning runs saved and reloaded: external-only policy training, then 6,001-unit joint target/rejection training with 21 policy outputs plus null. | Both candidates still make 27 correct decisions in the same 50 development records. Learned rejection reduces false acceptance but loses correct policy decisions; neither candidate is approved for production. |
+| Classification | Two actual official English ModernBERT-base fine-tuning runs saved and reloaded: external-only policy training, then 6,001-unit joint target/rejection training with 21 policy outputs plus null. | Both make 27/50 pooled development decisions, but 40 cases are bills. Platform-only decisions worsen from 5/10 to 4/10; only six target-platform training positives span five topics and two Democratic sources. Neither candidate is approved. |
 | Labels | External CAP files recovered; split/group/exact-text and reviewed-platform source-body checks plus explicit reviewed-label provenance are implemented. | Source permissions, adapted-topic compatibility, near-duplicate families and reviewed state-domain training/development/test labels. |
 | Evaluation | Checkpoint-bound training/evaluation split isolation, development-only temperature/threshold selection, exact evidence joins, abstention accounting, per-topic and subgroup metrics. | Reviewer arrangement, frozen empirical gates, independent target tests and clustered uncertainty. No checkpoint can be certified by changing a status field. |
 | Companion | Local-only preview v7 exposes all 1,559 recovery captures, 119 failures and 60 alternative extraction identities across 55 OCR bodies and three DOCX bodies, alongside the 2,091 historical documents. The source ledger includes the corrected Arizona and Alaska registry rows. All 100 organization rows remain unresolved. | Audited classification/analysis exports, redistribution review and eventual report; no production integration is authorized. |
+
+## Platform-specific support and metadata audit
+
+The pooled **27/50** development result conceals domain differences. Reusing the exact
+saved logits, original references and unchanged research-default decision policies yields:
+
+| Provisional development decisions | External-only pilot | Target/rejection pilot |
+|---|---:|---:|
+| Bills, 40 cases | 22/40 | 23/40 |
+| Platform passages, 10 cases | 5/10 | 4/10 |
+| Pooled, 50 cases | 27/50 | 27/50 |
+
+These counts include correct abstentions. Among platform cases, correctly accepted policy
+decisions fall from four to two; correctly rejected cases rise from one to two.
+Neither ten passages from one document nor provisional assistant judgments establish
+population accuracy. The platform result is not an improvement simply because bill
+decisions improve or the pooled score stays constant.
+
+The joint pilot's **15** reviewed target-platform training rows comprise **six positive
+spans across five of 21 topics and nine rejections**. All come from two **Democratic**
+documents: California and Texas. The ten platform development rows all come from one
+Texas **Republican** document. This is sparse, party/source-confounded support, not a
+representative cross-state benchmark; it cannot isolate a party effect from document/topic
+selection. Another run on the unchanged corpus cannot repair
+the missing Republican target-platform training sources, sixteen unsupported topics,
+limited geography or absent independent test/challenge references.
+
+The original platform development rows omitted party and direct extraction-file metadata.
+A separate complete **50-row** successor restores these fields for the ten platform rows:
+party `R`, extraction path/hash and complete document-text hash. All **25** reviewed
+training/development platform spans match their retained document extractions exactly,
+and their three PDF body hashes reconcile with retained inventory captures. Topic,
+rejection, rationale, input text/hash and original prediction bytes are unchanged; all
+pooled and domain metrics remain identical. Bill party fields remain unknown rather than
+being inferred from bill content. Original training labels/manifests remain immutable.
+
+New training manifests and evaluation reports now expose per-split/domain external and
+reviewed target support for every topic, reviewed rejection counts, platform-body
+identities, recorded state/party and missing metadata. Explicit zero-row cells prevent
+absent domains or held-out splits from disappearing from the audit. Counts describe
+available supervision, not label correctness, independence or release eligibility.
+All **59** ModernBERT regressions pass.
+
+Current source-bound packet: `data/processed/platform-label-support-audit-v2/`;
+manifest `847989d20a0009158fa5689a2b065d671cee5fe81a4c83602e24c071b1a84993`.
+The preserved v1 contains the same valid metadata/metric findings but was frozen before
+a new test fixture was corrected to use an actual supported model domain. Its contents
+were not rewritten; v2 binds the corrected test source. Neither packet authorizes a
+training rerun, source adoption finding or publication.
 
 ## Checkpoint-bound evaluation lineage
 

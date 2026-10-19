@@ -10,6 +10,7 @@ import random
 import re
 from collections import Counter
 from datetime import date
+from itertools import product
 from pathlib import Path
 
 from ..provenance import sha256_file, utc_now_iso
@@ -48,6 +49,46 @@ def validate_split_isolation(rows: list[dict]) -> None:
                 raise ValueError(
                     f"{row['record_id']}: {kind} leakage across {previous}/{row['split']}"
                 )
+
+
+def label_support(rows: list[dict], codes: list[int]) -> list[dict]:
+    """Describe observed label support, not sampling representativeness or label validity."""
+    support = []
+    for split, domain in product(sorted(SPLITS), sorted(DOMAINS)):
+        selected = [row for row in rows if (row["split"], row["domain"]) == (split, domain)]
+        target = [row for row in selected if row["label_origin"] == "reviewed_target"]
+        external = Counter(
+            row["topic"] for row in selected if row["label_origin"] == "external_coded"
+        )
+        reviewed = Counter(row["topic"] for row in target)
+        platforms = target if domain == "plank" else []
+        sources = []
+        for source_hash in sorted({row["source_sha256"] for row in platforms}):
+            source_rows = [row for row in platforms if row["source_sha256"] == source_hash]
+            sources.append({
+                "source_sha256": source_hash, "n_rows": len(source_rows),
+                "states_recorded": sorted({row.get("state") for row in source_rows}, key=str),
+                "parties_recorded": sorted({row.get("party") for row in source_rows}, key=str),
+                "rows_missing_state_or_party": sum(
+                    not row.get("state") or not row.get("party") for row in source_rows
+                ),
+            })
+        support.append({
+            "split": split, "domain": domain, "n_rows": len(selected),
+            "label_origins": dict(Counter(row["label_origin"] for row in selected)),
+            "topic_support": [
+                {"topic": code, "external_coded": external[code],
+                 "reviewed_target": reviewed[code]} for code in codes
+            ],
+            "topics_without_reviewed_target_positives": [
+                code for code in codes if not reviewed[code]
+            ],
+            "reviewed_target_abstentions": dict(Counter(
+                row["abstention_reason"] for row in target if row["topic"] is None
+            )),
+            "reviewed_platform_sources": sources,
+        })
+    return support
 
 
 def load_examples(path: Path | str, codes: list[int]) -> list[dict]:
@@ -203,6 +244,7 @@ def train(args) -> Path:
             row["reviewer_type"] for row in rows if row["label_origin"] == "reviewed_target"
         )),
         "training_topic_counts": {code: counts[code] for code in codes},
+        "label_support": label_support(rows, codes),
         "hardware": describe_hardware(),
         "torch_version": torch.__version__,
         "input": {

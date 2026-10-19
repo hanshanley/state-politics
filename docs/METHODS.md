@@ -281,6 +281,19 @@ old frozen reports are preserved, not retroactively declared checked. No model w
 original label bytes need to be changed. Byte-distinct platform versions, paraphrases
 and legislative source families still require separate lineage review.
 
+New training manifests and evaluation reports disaggregate external versus reviewed
+target supervision by split, input domain and topic. They explicitly retain zero-support
+cells, reviewed abstention reasons, platform-body identities and missing organization
+metadata. Original and evaluation support are reported separately rather than double
+counting repeated development rows. These are availability counts, not certification.
+The actual joint pilot has six positive platform training spans across five topics,
+all from two Democratic sources, plus nine rejections. Its ten platform development cases
+come from one Republican source; party metadata is repaired only in a separately bound
+evaluation successor. Its platform decisions are 4/10, versus 5/10 for the external-only
+pilot, despite both having pooled 27/50 results dominated by 40 bill cases. All judgments
+remain provisional. Representative source-disjoint target labels and an independent
+evaluation arrangement are needed before another run can substantiate a replacement.
+
 ### Legacy analytical pipeline (not revalidated)
 
 With both platform corpora in hand, `state_politics.analysis` segments every document into

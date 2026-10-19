@@ -25,7 +25,7 @@ from state_politics.analysis.modernbert import (
 )
 from state_politics.analysis.prepare_topics import compatibility_flags, prepare
 from state_politics.analysis.taxonomy import DEFAULT_TOPICS_PATH, load_topics
-from state_politics.analysis.train_topics import load_examples
+from state_politics.analysis.train_topics import label_support, load_examples
 from state_politics.provenance import sha256_file
 
 
@@ -386,6 +386,37 @@ def test_training_rejection_requires_reviewed_evidence_and_an_admissible_reason(
         path.write_text(json.dumps({**valid, **update}) + "\n")
         with pytest.raises(ValueError):
             load_examples(path, [1, 6])
+
+
+def test_support_audit_does_not_confuse_external_labels_rejections_or_sources_with_target_support():
+    rows = [
+        _label("external", "External bill policy."),
+        _label("target", "State platform policy.", domain="plank",
+               label_origin="reviewed_target", source_sha256="a" * 64, state="CA", party="D"),
+        _label("reject", "Committee roster.", domain="plank", label_origin="reviewed_target",
+               source_sha256="a" * 64, state="CA", party="D",
+               topic=None, abstention_reason="non_policy"),
+        _label("heldout", "Other state platform policy.", "dev",
+               domain="plank", source_sha256="b" * 64, state="TX"),
+    ]
+    report = {(row["split"], row["domain"]): row for row in label_support(rows, [1, 6])}
+    external = report["train", "bill"]
+    assert external["topics_without_reviewed_target_positives"] == [1, 6]
+    assert external["topic_support"][1] == {
+        "topic": 6, "external_coded": 1, "reviewed_target": 0,
+    }
+    platform = report["train", "plank"]
+    assert platform["n_rows"] == 2
+    assert platform["topic_support"][1]["reviewed_target"] == 1
+    assert platform["reviewed_target_abstentions"] == {"non_policy": 1}
+    assert len(platform["reviewed_platform_sources"]) == 1
+    assert platform["reviewed_platform_sources"][0]["rows_missing_state_or_party"] == 0
+    heldout = report["dev", "plank"]["reviewed_platform_sources"][0]
+    assert heldout["parties_recorded"] == [None]
+    assert heldout["rows_missing_state_or_party"] == 1
+    assert report["dev", "bill"]["n_rows"] == 0
+    assert report["test", "plank"]["n_rows"] == 0
+    assert report["test", "plank"]["topics_without_reviewed_target_positives"] == [1, 6]
 
 
 def test_rejection_outputs_survive_evidence_join_and_probability_evaluation():
