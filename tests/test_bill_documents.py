@@ -72,6 +72,55 @@ def test_missing_version_metadata_is_explicit_not_dropped_or_inferred():
 
 
 @pytest.mark.parametrize(
+    "state,identifier,note,hint",
+    [
+        ("FL", "HB 77", "H 77 Filed", "original_note"),
+        ("FL", "SB 72", "S 0072   FiLeD", "original_note"),
+        ("FL", "HB 0077", "H 77 Filed", "original_note"),
+        ("FL", "SB 77", "H 77 Filed", "unclassified_note"),
+        ("FL", "HB 78", "H 77 Filed", "unclassified_note"),
+        ("FL", "HJR 77", "H 77 Filed", "unclassified_note"),
+        ("FL", "HB 77", "H 77 CS Filed", "unclassified_note"),
+        ("FL", "HB 77", "H 77 Amendment Filed", "later_note"),
+        ("WA", "HB 77", "H 77 Filed", "unclassified_note"),
+        *[("FL", "HB 77", f"H 77 {code}", "later_note") for code in (
+            "c1", "c2", "c3", "c4", "e1", "e2", "e3", "er",
+        )],
+        ("FL", "SB 72", "S 0072 E1", "later_note"),
+        ("FL", "HB 78", "H 77 c1", "unclassified_note"),
+        ("FL", "SB 77", "H 77 er", "unclassified_note"),
+        ("FL", "HB 77", "H 77 c1 Filed", "unclassified_note"),
+        ("FL", "HB 77", "H 77 c5", "unclassified_note"),
+        ("FL", "HB 77", "H 77 e4", "unclassified_note"),
+        ("FL", "HB 77", "H 77 erx", "unclassified_note"),
+        ("FL", "HB 77", "H 77 pb", "unclassified_note"),
+        ("WA", "HB 77", "H 77 c1", "unclassified_note"),
+    ],
+)
+def test_florida_native_notes_require_matching_chamber_and_number_without_certification(
+    state, identifier, note, hint,
+):
+    bills, versions, links = _sources()
+    bills.loc[0, ["state", "identifier", "session_identifier"]] = [state, identifier, "2019"]
+    versions.loc[0, "note"] = note
+    candidates, coverage, _ = build_document_inventory(bills, versions, links)
+    row = candidates.iloc[0]
+    assert row["version_note"] == note
+    assert row["version_note_hint"] == hint
+    assert coverage.set_index("bill_id").at["policy", "n_original_note_links"] == (
+        hint == "original_note"
+    )
+    assert coverage.set_index("bill_id").at["policy", "n_later_note_links"] == 1 + (
+        hint == "later_note"
+    )
+    assert row["source_url"] == links.iloc[0]["url"]
+    assert not row["version_identity_certified"]
+    assert not row["filing_time_text_certified"]
+    assert not row["analytical_admission"]
+    pd.testing.assert_frame_equal(coverage[bills.columns], bills)
+
+
+@pytest.mark.parametrize(
     "note,later",
     [
         ("Amendments In Context", True),

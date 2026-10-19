@@ -322,6 +322,24 @@ word boundaries avoid treating unrelated longer tokens as these labels. The v3 s
 preserves all v2 source fields and request/eligibility decisions, changing only these hints
 and their derived counts. The separate reconciliation retains every changed link identity.
 
+Florida's numbered native notes require a state-specific, chamber/number-matched rule:
+`H 77 Filed` is an original-note hint only for Florida `HB 77`, not `SB 77`, another
+number or another state. Padding, case and note whitespace are normalized without
+changing the source strings. The observed `c1`-`c4`, `e1`-`e3` and `er` suffixes
+are later-note hints under the same identity guard; retained native samples print
+committee-substitute, engrossed and enrolled headers respectively. Proposed-bill
+`pb`, unreviewed codes and ambiguous suffix combinations remain unclassified.
+Literal amendment/final-version detection retains precedence. Inventory v4 preserves
+every v3 source/reference/URL/eligibility/admission field and all non-Florida hints,
+changing only the scoped hints and their derived counts.
+
+The four missing filed references in the linked modern Florida external-reference
+cohort were recovered from retained official overview links and complete PDFs with
+matching native Senate/session/number headers. Their absence from the imported
+version-link table was not evidence that the originals did not exist. This supplies
+reference coverage, not complete cohort document retrieval, annotation provenance,
+filing-time text certification or permission to promote external codes to gold labels.
+
 The `collect` subcommand requires an inventory manifest checksum, explicit `--link-id`
 selection and a new `--out`. It retains complete response bytes and physical JSONL receipts,
 paces requests, records failed HTTP requests and explicit HTTPS alternatives, skips reviewed

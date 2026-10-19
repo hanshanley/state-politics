@@ -69,12 +69,19 @@ def _require_ids(frame: pd.DataFrame, column: str) -> None:
         raise ValueError(f"{column}: expected unique nonempty source IDs")
 
 
-def _note_hint(note: object) -> str:
+def _note_hint(note: object, *, state: object = None, identifier: object = None) -> str:
     if not isinstance(note, str):
         return "unclassified_note"
     normalized = " ".join(note.split()).casefold()
     if _LATER_NOTE.search(normalized):
         return "later_note"
+    if state == "FL" and isinstance(identifier, str):
+        stage = re.fullmatch(r"([hs])\s+(\d+)\s+(filed|c[1-4]|e[1-3]|er)", normalized)
+        bill = re.fullmatch(r"(HB|SB)\s*(\d+)", identifier)
+        if stage and bill and (
+            f"{stage[1].upper()}B" == bill[1] and int(stage[2]) == int(bill[2])
+        ):
+            return "original_note" if stage[3] == "filed" else "later_note"
     return "original_note" if normalized in _ORIGINAL_NOTES else "unclassified_note"
 
 
@@ -153,6 +160,15 @@ def build_document_inventory(bills, versions, links):
         validate="many_to_one",
     )
     candidates["version_note_hint"] = candidates["version_note"].map(_note_hint)
+    florida = candidates["state"].eq("FL") & candidates["version_note_hint"].eq("unclassified_note")
+    candidates.loc[florida, "version_note_hint"] = [
+        _note_hint(note, state="FL", identifier=identifier)
+        for note, identifier in zip(
+            candidates.loc[florida, "version_note"],
+            candidates.loc[florida, "identifier"],
+            strict=True,
+        )
+    ]
     url_plans = [_url_plan(url) for url in candidates["source_url"]]
     for index, column in enumerate(("url_status", "request_url", "url_normalization")):
         candidates[column] = [plan[index] for plan in url_plans]

@@ -1015,6 +1015,71 @@ code-guide entry. No research candidate was substituted for a missing canonical
 analytical artifact. Audit manifest:
 `05e7f4b851ea2846b372b5c87a6c86b2fe1178de2cd61d2ed443a6f982626467`.
 
+## Florida native filed-reference and version-stage repair
+
+The prior inventory preserved Florida's source notes but did not recognize its numbered
+`H ... Filed` / `S ... Filed` syntax. The repaired rule requires Florida state context
+and an exact chamber/number match, with numeric padding and note case/whitespace handled
+without rewriting source strings. Native samples also support separating the observed
+`c1`-`c4`, `e1`-`e3` and `er` codes as later-version hints. `pb`, unreviewed codes,
+ambiguous combinations, mismatched identities and other states remain unchanged.
+
+The complete national inventory **v4** still contains **2,617,690 references and
+1,090,369 source-context bills**. Independent comparison against v3 verifies every
+non-hint candidate field, all **2,572,232 non-Florida references**, all unchanged bill
+coverage fields, the derived bill/state count deltas and identical unlinked versions.
+Exactly **27,821** Florida links gain an original-note hint and **14,500** gain a
+later-note hint, across **23,307** bills. Florida's resulting totals are **27,821
+original / 14,634 later / 3,003 unclassified** links; 134 later hints already existed.
+All native-version, filing-time and analytical admission flags remain false.
+
+The external-reference cohort's **4,618** retained links should not be described as
+4,618 filed documents: **2,864** are filed-reference candidates and **1,754** are
+later-version references. Four linked bills had no imported version link: **2019
+SB70, SB408, SB894 and SB1370**. Their complete official overview pages declare Filed
+PDFs, now retained with matching native Senate/session/number headers. Thus all
+**2,868 distinct linked bills have a filed reference** after this bounded recovery.
+This is not complete native-document retrieval or a certified independent test.
+
+The evidence packet retains **19 successful complete responses**, including **322
+physical PDF pages**, one filed HTML text and four publisher overview pages. Five
+failed probes caused by an invalid HTTPS URL construction are preserved separately
+from their corrected successful requests; they are not publisher-unavailability claims.
+Samples used explicit HTTPS requests and do not claim unperformed original-HTTP
+attempts. Complete page extraction, later-version print codes/headers, four publisher
+link declarations and exact canonical contexts are independently replayed without the
+producer's note or matching helpers.
+
+| Completed packet | Manifest SHA-256 |
+|---|---|
+| `bill-document-reference-inventory-v4` | `b114f817cf07d751cbf0815888e97d88745739388ae8ac2f9c24c0b6adaa0c3e` |
+| `florida-native-filed-reference-recovery-v1` | `d6d66ef3abc96da446bc95ebf0affc2532e7b9fef83aa6edc05eac07db64c085` |
+| `florida-filed-reference-verification-v1` | `3fe35cc3312e74254ed3b1f4663ae5edfcc266ff78c77aac6a819d2b0d8d2745` |
+
+Canonical source Parquets, external labels/titles, model weights, thresholds and
+classifications are unchanged. Metadata hints, native headers and Filed routes do not
+certify annotation inputs, filing-time availability, semantic label correctness or
+redistribution rights. Source/model/analysis gates remain open; the companion remains
+unpublished. Native bodies and research packets are local/Git-ignored, not backed up
+by a code commit.
+
+Canonical audit checkpoint **v33** verifies **70** completed research packets.
+Its actual result is still **exit 1 / 34 failures among 331 checks**; the complete
+report is byte-identical to v32. No missing canonical artifact was replaced with a
+research packet. Audit manifest:
+`3e0be7b175dc6049f25f61210347ecc741e1c4a207d0f79968f2528de689ad0a`.
+
+A separate full-cohort native collection plan selects the exact **2,864** retained
+filed links in **45 sequential batches of at most 64 links**, with original HTTP
+attempts and recorded HTTPS alternatives. Plan manifest:
+`7639e85d8a292ee2d9b14873af422c6e73b2601269bbbdaa8ddc244dfe3e98b1`.
+The campaign directory is
+`data/processed/florida-modern-filed-capture-campaign-v1/`; its plan is not a
+completed capture manifest or one of the 70 completed research packets. Completed
+batches are checksum-bound and resumable; incomplete attempt directories and explicit
+unresolved/quarantined statuses survive. A running campaign is not evidence that all
+documents have been recovered, reviewed or admitted.
+
 ## Training reservation enforcement
 
 The training CLI now accepts an explicit `--source-reservation` pointing to a
