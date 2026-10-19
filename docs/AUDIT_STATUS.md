@@ -7,13 +7,13 @@ replacement classifier or establish complete contemporary coverage.
 | Area | Verified progress | Remaining gate |
 |---|---|---|
 | Historical platforms | Recovered 2,091 authoritative archive documents, with publisher checksums and old/new archive reconciliation. | Historical availability must not be substituted for operative modern platforms. |
-| Contemporary platforms | Inventory v7 preserves 1,559 requests, including 1,440 retained responses across all 100 organizations, 119 failures and 1,371 body hashes. Corrected Alaska's stale host and recovered an image-only Massachusetts resolution. | Deferred navigation/images, OCR quality, source/institution/version adjudication and operative coverage remain unresolved. Retained responses are not verified platforms. |
+| Contemporary platforms | Inventory v8 preserves 1,559 requests, including 1,440 retained responses across all 100 organizations, 119 failures and 1,371 body hashes. Corrected Alaska's stale host and recovered an image-only Massachusetts resolution. | Deferred navigation/images, OCR quality, source/institution/version adjudication and operative coverage remain unresolved. Retained responses are not verified platforms. |
 | Sponsorship | Party attribution uses validated historical memberships and a first-action date proxy; unresolved primary sponsors block D/R assignment. | Rebuild source bills and quantify attribution changes; the proxy is not an exact filing/sponsorship date. |
 | Bills | October snapshot extracted: 1,090,369 source-context measures across all 50 states, 5,028,893 sponsorships, 9,002,451 actions and 873,980 vote events. All eleven tables have recorded hashes/counts. | Official-source reconciliation, historical affiliations and filing-time text review. Full extraction is not a certified source universe or analytical denominator. |
 | Classification | Three saved official English ModernBERT-base pilots compared on 52 source-disjoint platform references spanning all 21 topics: external-only 41/52, joint 47/52, broader-source 47/52. Original development results remain separately preserved. | The broader model gains one policy decision but loses a metadata rejection. Three of four mixed units are still wrongly accepted at scores above 0.99. Broader Republican training sources, independent evaluation and empirical gates remain required. No candidate is approved. |
 | Labels | External CAP files recovered; split/group/exact-text and reviewed-platform source-body checks plus explicit reviewed-label provenance are implemented. | Source permissions, adapted-topic compatibility, near-duplicate families and reviewed state-domain training/development/test labels. |
 | Evaluation | Checkpoint-bound training/evaluation split isolation, development-only temperature/threshold selection, exact evidence joins, abstention accounting, per-topic and subgroup metrics. | Reviewer arrangement, frozen empirical gates, independent target tests and clustered uncertainty. No checkpoint can be certified by changing a status field. |
-| Companion | Local-only preview v8 exposes all 1,559 recovery captures, 119 failures and 60 alternative extraction identities across 55 OCR bodies and three DOCX bodies, alongside the 2,091 historical documents. The source ledger includes the corrected Arizona and Alaska registry rows. All 100 organization rows remain unresolved. | Audited classification/analysis exports, redistribution review and eventual report; no production integration is authorized. |
+| Companion | Local-only preview v9 exposes all 1,559 recovery captures, 119 failures and 61 alternative extraction identities across 55 OCR bodies, three DOCX bodies and one native-block body, alongside the 2,091 historical documents. The source ledger includes the corrected Arizona and Alaska registry rows. All 100 organization rows remain unresolved. | Audited classification/analysis exports, redistribution review and eventual report; no production integration is authorized. |
 
 ## Training reservation enforcement
 
@@ -29,9 +29,60 @@ evaluation rows are not excluded by platform-training reservations.
 When supplied, the exact reservation path, JSON hash, packet-manifest hash and organization
 list enter the saved training manifest. Omission is recorded as null; older runs are not
 retroactively described as having used this guard. The six reserved organizations remain
-ID-R, MT-R, WA-R, MN-D, WA-D and VT-D. No labels or weights changed in this checkpoint.
-Complete retained KS-R, NE-R and HI-R native documents have been inspected for the next
-provisional curriculum; their source packet does not itself admit any unit to training.
+ID-R, MT-R, WA-R, MN-D, WA-D and VT-D. At that checkpoint no labels or weights changed.
+The subsequent reviewed use of complete retained KS-R, NE-R and HI-R native documents
+is recorded below; their original source-context packet remains unlabelled evidence.
+
+## Republican source expansion
+
+`data/labels/republican-platform-curriculum-v1/` appends **39 positive native units across
+17 topics**, four intact mixed-policy rejections and three front-matter rejections from
+**KS-R, NE-R and HI-R**. All **6,112** preceding label dictionaries are preserved, with
+the original label file also copied byte-for-byte. The **50** development references and
+the separately frozen **52** challenge references have not changed.
+
+Target-platform training support becomes **99 positives and 23 rejections**, across
+**nine organizations in eight states**. Republican positive support expands from one
+organization to four, with **65 R / 34 D** positive units. These counts do not establish
+representative coverage, source-family independence or party balance. Republican labor
+and foreign-trade positives still each have only one source document; public-lands/water
+and culture/family have no Republican positive training unit.
+
+Every selected passage was read in its complete native source and again as the exact
+frozen unit. Complete original bytes/text/Parquet, unchanged Unicode and internal page
+gaps, source offsets, contextual spans, rationales and assistant-review provenance are
+retained. Hawaiʻi's sewage-policy bullet keeps all three nested provisions, not just its
+opening sentence. Mixed examples are actual paragraphs or single authored bullets, not
+synthetic concatenations or extraction corruption.
+
+**Five** units remain unlabelled and excluded from training: Kansas and Nebraska marriage
+recognition, Nebraska's water-allocation/environment boundary, Hawaiʻi's short Jones Act
+bullet, and its Native Hawaiian language/curriculum/services bullet. No family, trade,
+water or Native-affairs precedence rule is silently established to fill a support cell.
+
+The producer enforces the six-organization reservation and checks new units against both
+existing diagnostic sets for close textual copies. A separate programmatic replay
+reconciles every preceding dictionary, complete source file, selected/quarantined span,
+context hash, reservation and topic/party/source count. This is not independent semantic
+review or certification.
+
+Curriculum manifest:
+`c8a59cb259e6f8457411842b88f556714db6c26ba9a4307dd0af4c1c40d8d980`;
+labels: `395ffa760c684619199ac005df8e52b3d42a5e94d9a8a7e9772b7b1642a33361`.
+The separate replay packet at
+`data/processed/republican-platform-curriculum-verification-v1/` has manifest
+`9433f093e2c14a7f66d3a25ff25e6d6243c319ee52a43eaf37801c207a528971`.
+
+A fourth full-encoder ModernBERT run is underway on **6,108 training rows** under the
+unchanged three-epoch, batch-four, seed-20261018 optimizer/input settings. Its
+pre-prediction plan at `data/processed/republican-platform-pilot-v1/evaluation_plan.json`
+has hash `1058e00294799bac359f04c4f1b12321fb34fe2f420feb653b98fd655b8a2b00`.
+The **63** training rejections are learned targets, not an adjusted acceptance threshold.
+No new result is claimed before saved-weight verification and actual evaluation.
+Both evaluation sets have previously been examined: future comparisons are diagnostics,
+not a new independent test. More positives, source diversity and rejection support change
+together, so any result cannot isolate their individual effects. All packets remain local
+ignored artifacts; pushing code does not remotely back up their source bytes or weights.
 
 ## Expanded source-bound platform curriculum
 

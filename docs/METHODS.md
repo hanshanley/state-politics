@@ -394,6 +394,49 @@ and topic/party/source/reference-kind metrics are retained in the comparison pac
 The exact ledger shows one gain and one regression relative to the joint checkpoint,
 not a demonstrated aggregate improvement. No gold, threshold or weight was changed.
 
+### Nonreserved Republican curriculum expansion
+
+The successor curriculum retains every prior label dictionary and adds 39 positive
+native units, four actual mixed-policy units and three non-policy cover units from
+retained Kansas, Nebraska and Hawaiʻi Republican documents. The complete documents and
+all 51 selected/quarantined spans were read; these are provisional assistant judgments,
+not independent human gold. Five ambiguous marriage, water, Jones Act and Native Hawaiian
+language/curriculum units remain unlabelled. Do not force a category from a chapter title,
+political stance or a need to fill a topic/party cell.
+
+```bash
+uv run python -m state_politics.analysis.prepare_republican_curriculum \
+  --out data/labels/republican-platform-curriculum-v1
+uv run python -m state_politics.analysis.train_topics \
+  --labels data/labels/republican-platform-curriculum-v1/labels.jsonl \
+  --source-reservation data/labels/platform-challenge-reserved-sources-v1/reservation.json \
+  --out data/models/modernbert-republican-platform-curriculum-v1 \
+  --epochs 3 --batch-size 4 --seed 20261018 \
+  --max-tokens 1024 --overlap 128 --learning-rate 0.00002
+```
+
+Existing immutable output directories cannot be reused. Preparation freezes complete
+original source files, exact selected/context spans and hashes, inherited support scope
+in review rationales, quarantines and topic/source support. Every new unit fits the same
+1,024-token budget without truncation. The original 50 development references and the
+52 previously examined challenge references remain unchanged.
+
+The explicit reservation option verifies the whole reservation packet before model
+library imports or weight loading. It excludes reserved organizations even when editions,
+URLs or hashes change, checks organization metadata/group consistency, and excludes exact
+body/full-document identities independently of organization names. Only platform training
+is restricted: reserved evaluation rows and shared bill snapshots remain admissible.
+The exact reservation JSON and manifest hashes are saved with model provenance; omitting
+the option is recorded as null, not retroactive enforcement.
+
+The fourth run uses the same official base revision, full-encoder optimization,
+hyperparameters and fixed uncalibrated decision policy as the preceding broader-source
+run. Its plan is frozen before predictions and training completion. Source diversity,
+positive volume and rejection support change together, preventing a single-factor causal
+interpretation. Neither familiar diagnostic set becomes a fresh blind test merely
+because the training sources have expanded. Training loss and coverage cannot replace
+measured policy correctness, rejection errors, gains/regressions and source/party slices.
+
 ### Legacy analytical pipeline (not revalidated)
 
 With both platform corpora in hand, `state_politics.analysis` segments every document into
