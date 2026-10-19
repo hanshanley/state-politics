@@ -30,15 +30,15 @@ manual_inputs:
     source: Open States subject strings + CAP major-topic codebook
   - path: conf/platform_gaps.yml
     kind: reviewed_source_gap_findings
-    sha256: 01d7dc6dedd332b8df5fbebe9bdc3f5931c27e981d23d7c0826c06870f3a2c17
-    source: legacy July dispositions plus source-hashed October statements, submitted resolutions, adoption minutes and limited institutional-rule review
+    sha256: 9ef3d1c6a4cc0fe018ec6dc9bd02b0ae692bc7cb9619b44c53b7245f06448704
+    source: legacy July dispositions plus source-hashed October party statements including Illinois, submitted resolutions, adoption minutes and limited institutional-rule review
   - path: conf/caucus_priority_registry.yml
     kind: curated_primary_source_registry
     sha256: 148e01f87db25e29864c91a4ab5af8cc0546222c722f4ea5372ff2cffee7629f
     source: official state legislative caucus sites
   - path: conf/party_registry.yml
     kind: hand_verified_organization_registry
-    sha256: 9c7b185b4bed3fc087066c037fd9a07195be62c21a2252da1e757ee90697ae45
+    sha256: 6a18ccf23f137a53754e9a428ecabe6db0f5c541497a58927af4bfbe17033a8e
     source: Wikidata candidates verified against official party homepages
   - path: conf/official_document_registry.yml
     kind: curated_primary_source_registry

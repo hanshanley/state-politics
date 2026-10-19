@@ -88,6 +88,7 @@ _SECONDARY_RE = re.compile("|".join(SECONDARY_TERMS), re.I)
 #: addresses, and the archive's history -- including their older platforms -- sits under the
 #: old name, so a search of the current domain alone returns nothing at all.
 DOMAIN_ALIASES: dict[str, tuple[str, ...]] = {
+    "azdems.org": ("azdem.org",),
     "degop.gop": ("delawaregop.com",),
     "florida.gop": ("floridagop.org",),
     "virginia.gop": ("rpv.org",),

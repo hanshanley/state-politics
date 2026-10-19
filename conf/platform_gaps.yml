@@ -46,9 +46,20 @@ FL:
       "party-platform" returns nothing. The party publishes no platform document.
 IL:
   D:
-    cause: no_platform_published
-    checked: 2026-07-29
-    finding: no substantial platform page found
+    cause: summary_only
+    checked: 2026-10-19
+    finding: >-
+      the retained official Our Fight page states party priorities on jobs, communities,
+      education, the environment, democracy, healthcare, public safety and reproductive
+      choice. This is a short party-position statement, not a verified full platform;
+      its adoption date and operative status are unresolved. Ordinary public browser
+      viewing retained the response after default research requests returned 403.
+      Neither those failures nor this limited recovery establishes that no platform
+      is published elsewhere.
+    evidence:
+      - url: https://ildems.com/our-party/our-fight/
+        role: short_party_position_statement
+        content_sha256: 1013bf00747f5683c589ef2a83b977e086a6b964204126e464b944c329adf12f
 KY:
   D:
     cause: summary_only

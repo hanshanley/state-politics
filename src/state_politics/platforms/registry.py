@@ -119,8 +119,8 @@ class Override:
     evidence: str
 
 
-#: Corrections applied on top of Wikidata, each established by a direct check on
-#: 2026-07-28. Two kinds appear here:
+#: Corrections applied on top of Wikidata, established by the dated direct checks below.
+#: Two kinds appear here:
 #:
 #: * states where Wikidata carries no website at all, and
 #: * states where Wikidata's URL is stale and now resolves somewhere else entirely --
@@ -131,6 +131,14 @@ class Override:
 #: These are *candidates*: whether a row is trusted is still decided empirically by
 #: :func:`verify_homepage`, which confirms the live page names the state and the party.
 MANUAL_OVERRIDES: dict[tuple[str, str], Override] = {
+    ("AZ", "D"): Override(
+        "https://azdems.org/", "Arizona Democratic Party",
+        "direct check 2026-10-19 UTC: HTTP 200; Our Party page identifies the Arizona "
+        "Democratic Party, and Governing Documents links its official platform. Retained "
+        "homepage in remaining-organization-source-recovery-v1:0, SHA-256 "
+        "8cdfb9fd31008d5bc52b239818eea2e585f31bf1f55e55be85b9525a7ee9e0dd. "
+        "The registered azdem.org homepage failed during the uniform recovery; its linked "
+        "document URLs remain separately retained."),
     ("MT", "R"): Override(
         "https://mtgop.org/", "Montana Republican Party",
         "Wikidata has no website; direct check 2026-07-28: HTTP 200, title 'Home - MTGOP'"),

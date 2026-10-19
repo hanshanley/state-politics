@@ -242,7 +242,7 @@ def test_overrides_are_well_formed():
         assert party in {"D", "R"}
         assert override.website.startswith("https://")
         # Every correction must say how it was established.
-        assert re.search(r"2026-07-2[89]", override.evidence), override.evidence
+        assert re.search(r"\b\d{4}-\d{2}-\d{2}\b", override.evidence), override.evidence
 
 
 def test_parse_sparql_csv():

@@ -6,12 +6,14 @@
 > revalidated. The old classifier used nearest-description embedding similarity;
 > it was not a supervised political-topic classifier. The replacement uses the official
 > English ModernBERT-base encoder with supervised fine-tuning and explicit abstention,
-> and a first provisional checkpoint has now been trained. On 50 assistant-reviewed
-> development units it matched the old method's 54% decision accuracy and still
-> accepted non-policy material. It is not independently validated or approved for
-> full-corpus replacement.
+> and two provisional checkpoints have now been trained. Both made 27 correct
+> decisions on the same 50 assistant-reviewed development units (54%). Joint rejection
+> training reduced false acceptance but lost correct policy decisions. Neither is
+> independently validated or approved for full-corpus replacement.
 > Historical recovery currently contains 2,091 documents; this does not establish
-> contemporary platform coverage. See the [audit status](docs/AUDIT_STATUS.md) and
+> contemporary platform coverage. A separate recovery inventory now retains source
+> responses for all 100 state-major-party organizations, not 100 verified platforms.
+> See the [audit status](docs/AUDIT_STATUS.md) and
 > [local-only companion specification](docs/WEBSITE.md). Nothing has been added to
 > themarginoferror.com.
 

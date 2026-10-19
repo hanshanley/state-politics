@@ -86,16 +86,23 @@ organizations:
 - state: AZ
   party: D
   name: Arizona Democratic Party
-  website: https://azdem.org/
+  website: https://azdems.org/
   wikidata_id: Q4791288
-  resolved_by: wikidata-P131
-  candidate_evidence: null
+  resolved_by: manual-override
+  candidate_evidence: >-
+    Direct check 2026-10-19 UTC: retained homepage
+    remaining-organization-source-recovery-v1:0, SHA-256
+    8cdfb9fd31008d5bc52b239818eea2e585f31bf1f55e55be85b9525a7ee9e0dd.
+    Our Party identifies the Arizona Democratic Party; Governing Documents links its
+    official platform. Older azdem.org document links remain retained separately.
   homepage_status: 200
-  final_url: https://azdem.org/
-  verified_on: '2026-07-29'
-  source_url: https://query.wikidata.org/sparql
+  final_url: https://azdems.org/
+  verified_on: '2026-10-19'
+  source_url: https://azdems.org/our-party/
   needs_review: false
-  note: visible page text identifies this state's party
+  note: >-
+    Assistant source-identity review of retained homepage and Our Party text; this
+    confirms the organization, not platform adoption or operative coverage.
 - state: AZ
   party: R
   name: Arizona Republican Party

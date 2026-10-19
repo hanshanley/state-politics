@@ -7,17 +7,96 @@ replacement classifier or establish complete contemporary coverage.
 | Area | Verified progress | Remaining gate |
 |---|---|---|
 | Historical platforms | Recovered 2,091 authoritative archive documents, with publisher checksums and old/new archive reconciliation. | Historical availability must not be substituted for operative modern platforms. |
-| Contemporary platforms | Reconciled a uniform all-100-organization campaign, all 296 still-unretained deferred direct documents, and 37 legacy request receipts. Inventory v5 preserves 1,452 requests, including 1,346 retained responses across 97 organizations. | Resolve the three remaining recovery-response gaps, deferred navigation and source/institution/version review. Retained responses are not verified platforms or operative coverage. |
+| Contemporary platforms | Inventory v6 preserves 1,503 requests, including 1,389 retained responses across all 100 organizations, 114 failures and 1,339 body hashes. Recovered the remaining Arizona, Illinois and Oklahoma source-response gaps. | Deferred navigation, three older Hawaii extraction gaps, source/institution/version adjudication and operative coverage remain unresolved. Retained responses are not verified platforms. |
 | Sponsorship | Party attribution uses validated historical memberships and a first-action date proxy; unresolved primary sponsors block D/R assignment. | Rebuild source bills and quantify attribution changes; the proxy is not an exact filing/sponsorship date. |
 | Bills | October snapshot extracted: 1,090,369 source-context measures across all 50 states, 5,028,893 sponsorships, 9,002,451 actions and 873,980 vote events. All eleven tables have recorded hashes/counts. | Official-source reconciliation, historical affiliations and filing-time text review. Full extraction is not a certified source universe or analytical denominator. |
 | Classification | Two actual official English ModernBERT-base fine-tuning runs saved and reloaded: external-only policy training, then 6,001-unit joint target/rejection training with 21 policy outputs plus null. | Both candidates still make 27 correct decisions in the same 50 development records. Learned rejection reduces false acceptance but loses correct policy decisions; neither candidate is approved for production. |
 | Labels | External CAP files recovered; split/group/exact-text checks and explicit reviewed-label provenance are implemented. | Source permissions, adapted-topic compatibility, near-duplicate families and reviewed state-domain training/development/test labels. |
 | Evaluation | Development-only temperature/threshold selection, exact evidence joins, abstention accounting, per-topic and subgroup metrics. | Reviewer arrangement, frozen empirical gates, independent target tests and clustered uncertainty. No checkpoint can be certified by changing a status field. |
-| Companion | Local-only preview v4 exposes all 1,452 recovery captures, 106 failures, 20 OCR bodies and three DOCX main-document alternatives, alongside the 2,091 historical documents. All 100 organization rows remain unresolved. | Audited classification/analysis exports, redistribution review and eventual report; no production integration is authorized. |
+| Companion | Local-only preview v6 exposes all 1,503 recovery captures, 114 failures, 51 OCR bodies and three DOCX main-document alternatives, alongside the 2,091 historical documents. The source ledger includes the corrected Arizona registry. All 100 organization rows remain unresolved. | Audited classification/analysis exports, redistribution review and eventual report; no production integration is authorized. |
 
-## Uniform registry recovery and current explorer checkpoint
+## All-organization response recovery and current explorer checkpoint
 
-The current immutable recovery inventory is **v5**, and the local preview is
+The current immutable recovery inventory is **v6**, and the local preview is
+`data/preview-recovery-v6/`. It preserves every native field in the prior **1,452**
+records and every prior alternative, adds **51 request records** and **31 source-bound
+OCR extractions**, and retains unsuccessful requests alongside subsequent successes.
+The union now contains **1,503 requests, 1,389 retained responses, 114 failures and
+1,339 distinct body hashes**. All **100 organizations** have retained responses.
+This closes the three response-recovery gaps, **not** the operative-platform audit.
+No source, label, model output or analytical claim is admitted by these counts.
+
+Arizona's current plural-domain homepage, party identity, governing-document index,
+resolutions and all four previously deferred document links were retained. The index's
+official-platform link resolves to a **2020-labelled platform**, with a January 25, 2020
+footer version; its 2024 upload path is not a platform year or adoption event. The registry
+now uses `azdems.org`, preserving `azdem.org` as a historical discovery alias. Only Arizona's
+registry row was refreshed; the other organizations were not falsely reverified.
+
+Illinois and Oklahoma's original default-request 403 receipts remain preserved. Ordinary
+public Chromium navigation retained the four homepage/statement responses, without
+authentication, challenge interaction or stealth options. A separate receipt adapter binds
+those exact browser bytes; ordinary declared browser-header requests then retained all
+three PDF targets actually linked from Oklahoma's saved HTML. No web-rendered snippet was
+substituted for a raw response. Illinois's **Our Fight** is a short substantive party
+statement, not proof of a complete adopted platform. Its prior absence disposition is
+corrected to `summary_only`, with a source hash and explicit unresolved adoption.
+
+Oklahoma's **2025 platform** is separate from its administrative rules. Its main navigation
+links rules effective **January 31, 2026**, published **April 6, 2026**; the same homepage's
+footer still links rules effective **May 3, 2025**, revision 2 published **June 2, 2025**.
+Both byte-distinct versions remain retained. Ten limited assistant role/version reviews
+bind exact native-text spans; four displayed PDF pages were visually inspected and their
+renders independently reproduced. Arizona's human-dignity PDF visibly retains blank
+adoption fields despite its index approval heading, and another index-approved resolution
+still opens **PROPOSED**. Those conflicts remain unresolved, not silently finalized.
+These are limited source reviews, not topic labels, full-document validation or gold.
+
+All **278 physical pages** in the 31 remaining non-Hawaii empty-native PDFs were rendered
+and OCRed with pinned Tesseract **5.5.2**, then independently reproduced page-for-page.
+All 31 extractions are nonempty, with zero empty OCR pages; native text is untouched.
+The union now has **51 OCR bodies and three DOCX bodies**. The three still-unextracted
+deferred scans are older Hawaii resolution volumes, **663 pages** in total, not an
+established modern-policy absence. OCR accuracy and the new administrative contents remain
+uncertified; mechanical reproduction is not semantic review.
+
+Browser-check **v7** reconciles all 100 partitions, all 54 distinct alternatives, all 114
+failures, corrected Arizona source-ledger metadata and byte-exact complete recovery and
+historical downloads. New Arizona/Illinois/Oklahoma sources and both Oklahoma rules
+versions remain visibly unresolved. The temporary server was stopped. Preview v5 and
+browser-check v6 remain historical artifacts; the successor also refreshes the source
+ledger and corrects the predecessor checker's stale descriptive download-count string.
+
+The full audit with the actual declared OCR runtime still fails **34 of 317 checks**,
+all missing canonical analytical inputs/results. The reviewed registry and gap-finding
+hashes were intentionally updated; earlier frozen configurations remain unchanged.
+Both supervised ModernBERT candidates remain at **27/50 development decisions** and are
+unapproved. No labels, weights, empirical gates, analytical cutoff or publication changed.
+The connected registry/discovery/collection/coverage/site suite passes 233 cases.
+
+| Current local artifact | Manifest/report SHA-256 |
+|---|---|
+| Remaining-organization capture | `f8114ec95403994d4ac036ac407be13204ab41ced860d58926b87b1be757ed9d` |
+| Deferred Arizona / observed-policy follow-up | `b02f816e4abbd4687ccfc22f14a03343d127b65abd21579657a42fdb0eb9cfcf` |
+| Browser responses / observed Oklahoma PDF adapter | `3809509992965a1640167f3907e36bfb859e59509181ff5051eecc58bca168e8` |
+| Additional 31-source OCR | `0d40a288c49f9c5ab0fb96516b24344e6b91fc0dd6cf0d59bd81b1df3575d8e7` |
+| All 278 renders/OCR reproduced | `87f43ce790060bbdcc67da4c791d41872e21e64fc4cef5499a360394a74836b2` |
+| Limited role/version review | `028f7ec959ee601037a605786971bbd9176c9a746744d9980517f6855ecb3849` |
+| Review bindings / four inspected page reproductions | `1ab35928729aff276c99aa1c74b646cb73e19c20803926aba472c7515b60a3b6` |
+| Recovery inventory v6 | `67b978d27f7283d780dd0ae918a116bcfcfac026067fcb20844248a11284c1a3` |
+| Inventory preservation / verified input reconciliation | `212061d806a083b31a3addd927dab171c4d1ea5241acc8419adf7ddca467abd7` |
+| Browser-check v7 | `cc5f874dce5390b13d79d946800fdc7fb33044fb2943f0ead90fcc2d33dd4940` |
+| Full audit v6 report | `9cbc1840dc911cd196ea86f60fe6df9ca5b03b6c08bbbf7dab0bd0594f825798` |
+| Full audit v6 packet/runtime receipt | `f7c5c1946b2eda340ba32e8d3a946ce1163d3155f5c77751cc12b308fd6a99ad` |
+
+Source bodies, complete packet contents and previews remain local/Git-ignored. A Git push
+saves code and evidence references, **not a remote backup of those bytes**. Nothing was
+added to themarginoferror.com. Earlier checkpoint sections below preserve their original
+counts and limitations; they are not current coverage claims.
+
+## Preserved v5 uniform-registry recovery checkpoint
+
+At this checkpoint the immutable recovery inventory was **v5**, and the local preview was
 `data/preview-recovery-v4/`. Every field and alternate extraction in the original
 488-record v4 stream is preserved exactly. The successor has **1,452 request records,
 1,346 retained responses, 106 failures and 1,296 distinct response-body hashes**.
