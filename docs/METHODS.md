@@ -600,6 +600,35 @@ Senate documents or authorize merging them with House/SJ records. The volume doe
 classify 2021 LC3368 as a publisher test. Complete decoder/span/join replay establishes
 what was retained and reconstructed, not independent semantic or scientific truth.
 
+Native introduction-event observations are a separate source contract. All retained
+archive `billActions` and current `draft.billStatuses` are examined at their original
+positions. Only matching typed code/name pairs `500` / `(H) Introduced` and `100` /
+`(S) Introduced` qualify; code 29 text availability, pre-introduction letters and
+draft-request activity do not. Original event JSON, timestamps and current status
+record IDs survive. The native timestamp's literal calendar date is observed without
+timezone conversion or substitution of the session/cover year.
+
+Originating-chamber identity is explicit: an `(S) Introduced` event on a current House
+record cannot date that House filing. All opposite-chamber events remain retained.
+One valid originating event supplies a date observation; missing events, invalid
+timestamps and multiple originating events remain separate unresolved states. Distinct
+status IDs milliseconds apart are not silently collapsed or resolved by taking the
+minimum. No first/latest action, document timestamp or printed MM/DD fallback fills a
+missing date. A native record lacking a formal identity does not become a formal filing
+merely because an event resembles introduction.
+
+The complete native-event sidecar preserves all 15,830 native and 18,403 original
+source contexts, including their original dates, parties and LC/formal aliases.
+Source-context joins use the existing exact session/identifier reconciliation, not
+title similarity or guessed historical continuity. A linked LC context is not another
+formal filing. Literal-calendar comparisons are limited to exact formal contexts with
+unique valid native observations and available source dates; missing or ambiguous
+dates produce no comparison, not a false mismatch. Such comparisons are descriptive:
+imported first actions may represent earlier drafting activity and source timezone
+conventions differ. Neither agreement nor disagreement certifies filing eligibility
+or event-time party. The first null-guard diagnostic and its seven false comparisons
+remain frozen separately from the corrected successor and independent full replay.
+
 The shared `exclude_mt_lc_source_requests_v1` contract now excludes **Montana LC source
 rows as additional independent formal filings**, regardless of imported `bill` or
 `proposed bill` classification. It does not declare their underlying requests unintroduced,

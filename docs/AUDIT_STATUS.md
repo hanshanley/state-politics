@@ -1019,6 +1019,67 @@ All authored-input hashes and failure entries match v34; scientific certificatio
 remains unperformed. Audit manifest:
 `f40ee8a8f93d0504046249e1ac318752575c108f4563e716fdc96d04d8687569`.
 
+### Native Montana introduction events: dates without invented fallbacks
+
+Offline follow-through examined **266,589** retained native actions across all
+**15,830** request records, preserving every original native field and all **18,403**
+source contexts. It recovered **6,084** typed introduction events, including a unique
+originating-chamber event for **all eleven** 2019 measures absent from the volume's
+detailed histories. No new network requests were necessary; their events were already
+inside the retained native responses.
+
+| Session | Native formal identities | Typed introduction events | Unique origin event |
+|---|---:|---:|---:|
+| 2019 | 1,309 | 1,309 | 1,309 |
+| 2021 | 1,313 | 1,313 | 1,313 |
+| 2023 | 1,698 | 1,698 | 1,698 |
+| 2025 | 1,759 | 1,764 | 1,752 |
+
+In 2025, **HB11 and SB491 lack an originating introduction event** in the retained
+native responses. **HB719, HB816, HB862, SB289 and SR57 have two** originating events
+with distinct native IDs, milliseconds apart. These seven contexts have no selected
+date; no minimum-event, first-action, cover-year or printed-MM/DD fallback is used.
+HB1 and HB33 also retain later opposite-chamber `(S) Introduced` events, explicitly
+separated from their originating House events rather than counted as new filings.
+All raw events, timestamp strings, source positions and IDs remain available.
+
+Across the **6,072** exact formal contexts with a unique valid origin event, **7**
+imported first-action literal calendar dates match and **6,065** differ. This is not
+6,065 certified date errors: first actions can describe earlier drafting activity,
+and native/source timezone conventions are not aligned by this comparison. Both
+original dates remain unchanged. Prior-calendar-year prefilings retain their native
+years rather than inheriting the history volume's session year. None of these
+observations establishes filing-time party or resolves the four historical nonmatches.
+The native `LC2911` observation for HB538 does not repair its printed `LC29-1-1`.
+
+Corrected inventory:
+`data/processed/montana-native-introduction-events-v2`, manifest
+`fa80e600c142f70107f5e42018df0477df068cd12529af72d3e5864a59ed847e`.
+An initial diagnostic preserved the correct events/native dispositions but treated
+DataFrame null dates as non-`None`, falsely reporting the seven missing/duplicate
+2025 contexts as calendar nonmatches. Its original packet remains frozen:
+`montana-native-introduction-events-v1`, manifest
+`6ffccea17fa294431f3160d68f2681f38a693b265f2eb282606e03d13d5c615e`.
+The corrected successor requires actual non-null dates before comparison.
+
+Independent verification imports no producer/parser/matching helpers. It separately
+inspects all **266,589** actions, reproduces every exact introduction event/position/JSON,
+reconstructs native and source joins from original identity keys, checks every original
+column and cohort count, and reproduces the seven superseded false comparisons. All
+eleven missing detailed histories have independently replayed native event bindings.
+Verification passed at `montana-native-introduction-verification-v1`, manifest
+`4b109baec83f202334462063f79f498937e9e00d601fec0e94a94698c71d374a`.
+This is provenance/decoder replay, not independent semantic or legal certification.
+All filing-time, party, training and analytical admissions remain false; canonical
+sources, labels, model weights, analyses and publication files remain unchanged.
+
+Canonical audit checkpoint **v36** binds **80** completed bounded packets and archives
+the introduction-event producer/verifier. The actual audit remains **exit 1 / 299 of
+333 checks passing / the same 34 failures**, with unchanged authored-input hashes.
+The snapshot precedes this result paragraph; it does not certify these source events
+or substitute research sidecars for missing canonical artifacts. Audit manifest:
+`18c894c674ea2143b12a297be5f4c47785f9f6556e874388f74ef8e1342f1b36`.
+
 ## External state-bill reference recovery
 
 The publisher's Florida and Pennsylvania CAP catalogs, complete CSV responses,

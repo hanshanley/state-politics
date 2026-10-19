@@ -10,6 +10,7 @@ from state_politics.bills.montana import (
     parse_document_headers,
     parse_history_headers,
     parse_history_tallies,
+    parse_introduction_events,
     reconcile,
     source_draft_request_mask,
 )
@@ -88,6 +89,81 @@ def test_history_tallies_refuse_incomplete_or_ambiguous_source_sections(damage):
         text = text.replace("DIED IN FIRST HOUSE", "UNREVIEWED NEXT SECTION")
     with pytest.raises(ValueError, match="tallies|tally"):
         parse_history_tallies(text)
+
+
+def _archive_action(code=500, name="(H) Introduced", timestamp="2018-12-14T13:29:00"):
+    return {"code": code, "actionType": {"code": code, "description": name}, "date": timestamp}
+
+
+def test_introduction_events_keep_prefiling_year_and_exclude_text_availability():
+    raw = {"billActions": [
+        _archive_action(29, "(C) Introduced Bill Text Available Electronically"),
+        _archive_action(),
+    ]}
+    [event] = parse_introduction_events(
+        raw, source_family="archive", formal_identifier="HB 1"
+    )
+    assert event["native_action_position"] == 1
+    assert event["calendar_date_observation"] == "2018-12-14"
+    assert event["timestamp_raw_observation"] == "2018-12-14T13:29:00"
+    assert event["matches_formal_origin"] is True
+    assert event["timestamp_issue"] is None
+    assert json.loads(event["source_action_json"]) == raw["billActions"][1]
+
+
+def test_current_introductions_keep_duplicates_and_opposite_chamber_without_minimum_date():
+    statuses = [
+        {"id": 1, "billStatusCode": {"code": "100", "name": "(S) Introduced"},
+         "timeStamp": "2025-01-13T13:13:00"},
+        {"id": 2, "billStatusCode": {"code": "500", "name": "(H) Introduced"},
+         "timeStamp": "2024-12-06T16:12:00"},
+        {"id": 3, "billStatusCode": {"code": "500", "name": "(H) Introduced"},
+         "timeStamp": "2024-12-06T16:12:00.123456"},
+    ]
+    events = parse_introduction_events(
+        {"draft": {"billStatuses": statuses}}, source_family="current", formal_identifier="HB 1"
+    )
+    assert [e["native_status_id"] for e in events] == [1, 2, 3]
+    assert [e["matches_formal_origin"] for e in events] == [False, True, True]
+    assert [json.loads(e["source_action_json"]) for e in events] == statuses
+    assert parse_introduction_events(
+        {"draft": {"billStatuses": []}}, source_family="current", formal_identifier="HB 11"
+    ) == []
+    [unassigned] = parse_introduction_events(
+        {"billActions": [_archive_action()]}, source_family="archive", formal_identifier=None
+    )
+    assert unassigned["matches_formal_origin"] is None
+
+
+@pytest.mark.parametrize(
+    ("timestamp", "issue"),
+    [
+        (None, "missing_native_introduction_timestamp"),
+        ("", "missing_native_introduction_timestamp"),
+        (20250101, "invalid_native_introduction_timestamp_type"),
+        ("not a date", "unparseable_native_introduction_timestamp"),
+    ],
+)
+def test_bad_introduction_timestamps_survive_with_explicit_issues(timestamp, issue):
+    [event] = parse_introduction_events(
+        {"billActions": [_archive_action(timestamp=timestamp)]},
+        source_family="archive", formal_identifier="HB 1",
+    )
+    assert event["timestamp_raw_observation"] == timestamp
+    assert event["calendar_date_observation"] is None
+    assert event["timestamp_issue"] == issue
+
+
+def test_introduction_context_and_typed_actions_cannot_silently_conflict():
+    raw = {"billActions": [_archive_action()]}
+    raw["billActions"][0]["actionType"]["code"] = 100
+    with pytest.raises(ValueError, match="code/name"):
+        parse_introduction_events(raw, source_family="archive", formal_identifier="HB 1")
+    for context in ["LC 1", "unrecognized"]:
+        with pytest.raises(ValueError, match="formal introduction"):
+            parse_introduction_events(raw, source_family="archive", formal_identifier=context)
+    with pytest.raises(ValueError, match="source family"):
+        parse_introduction_events({}, source_family="unknown", formal_identifier=None)
 
 
 def test_source_draft_scope_is_state_specific_and_preserves_conflicting_formal_identities():

@@ -5,6 +5,7 @@ from __future__ import annotations
 import json
 import re
 from collections import Counter, defaultdict
+from datetime import datetime
 
 import pandas as pd
 
@@ -76,6 +77,62 @@ def parse_history_tallies(text: str) -> list[dict]:
             "source_start": match.start(), "source_end": match.end(), "source_text": match[0],
         })
     return records
+
+
+def parse_introduction_events(
+    raw: dict, *, source_family: str, formal_identifier: str | None,
+) -> list[dict]:
+    """Preserve typed introduction events without choosing duplicates or another chamber."""
+    formal = _key(formal_identifier)
+    if formal_identifier is not None and (
+        formal is None or formal[0] == "LC" or formal[1] <= 0
+    ):
+        raise ValueError("Invalid Montana formal introduction context")
+    if source_family == "archive":
+        actions = raw["billActions"]
+    elif source_family == "current":
+        actions = raw["draft"]["billStatuses"]
+    else:
+        raise ValueError("Unknown Montana introduction source family")
+    if not isinstance(actions, list):
+        raise ValueError("Montana native actions must be an explicit list")
+    observations = []
+    for position, action in enumerate(actions):
+        if source_family == "archive":
+            code = action["code"]
+            typed_code = action["actionType"]["code"]
+            name = action["actionType"]["description"]
+            timestamp = action["date"]
+            status_id = None
+        else:
+            code = typed_code = action["billStatusCode"]["code"]
+            name = action["billStatusCode"]["name"]
+            timestamp = action["timeStamp"]
+            status_id = action["id"]
+        if str(code) not in {"100", "500"} and str(typed_code) not in {"100", "500"}:
+            continue
+        chamber = "S" if str(code) == "100" else "H"
+        if str(code) != str(typed_code) or name != f"({chamber}) Introduced":
+            raise ValueError("Conflicting Montana introduction action code/name")
+        date, issue = None, None
+        if timestamp is None or timestamp == "":
+            issue = "missing_native_introduction_timestamp"
+        elif not isinstance(timestamp, str):
+            issue = "invalid_native_introduction_timestamp_type"
+        else:
+            try:
+                date = datetime.fromisoformat(timestamp).date().isoformat()
+            except ValueError:
+                issue = "unparseable_native_introduction_timestamp"
+        observations.append({
+            "native_action_position": position, "native_status_id": status_id,
+            "action_code_observation": str(code), "action_name_observation": name,
+            "chamber_observation": chamber, "timestamp_raw_observation": timestamp,
+            "calendar_date_observation": date, "timestamp_issue": issue,
+            "matches_formal_origin": formal[0][0] == chamber if formal else None,
+            "source_action_json": json.dumps(action, ensure_ascii=False),
+        })
+    return observations
 
 
 def parse_document_headers(text: str) -> list[dict]:
