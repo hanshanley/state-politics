@@ -130,14 +130,15 @@ uv run python -m state_politics.platforms.collect --report-only
 ## Stream B: legislators and bills
 
 `state_politics.bills.people` ingests the current legislators for all 50 states from Open
-States' **public, no-auth** per-state CSVs. This is the join key for the whole bills stream —
-a bill records who sponsored it, and this records which party that sponsor belongs to.
+States' per-state CSVs as a **current-membership inventory**, not historical party-at-filing
+evidence. Person IDs support source reconciliation, but current labels are not backfilled
+onto historical sponsorships.
 
 ```bash
 uv run python -m state_politics.bills.people
 ```
 
-**Result: 7,359 currently-serving legislators across all 50 states** — 4,045 Republican,
+**Legacy CSV inventory, not revalidated: 7,359 legislators across all 50 states** — 4,045 Republican,
 3,240 Democratic, 74 other. Chambers: 5,389 lower, 1,921 upper, 49 `legislature` (Nebraska's
 nonpartisan unicameral). Third parties and independents are deliberately kept as `other`
 rather than folded into the major two, since misfiling them would misattribute their bills.
@@ -154,50 +155,54 @@ string says which side they caucus with.
 Open States' public PostgreSQL dump.
 
 ```bash
-# ~8 min to download at 20 MB/s, then ~10 min to extract. Needs pg_restore:
-#   brew install libpq     (Homebrew keeps it out of PATH; the module looks there anyway)
-uv run python -m state_politics.bills.ingest
+# Requires the retained, provenance-logged snapshot and pg_restore.
+# Use a new output directory; existing extractions are never overwritten.
+uv run python -m state_politics.bills.ingest \
+  --dump data/raw/openstates/2026-10-public.pgdump \
+  --out-dir data/processed/bill-rebuild-v2
 ```
 
-**Result: 1,087,327 bills filed 2018–2026 across all 50 states, and 5,000,761 sponsorships.**
-Party attribution: 436,641 Democratic, 376,436 Republican, 68,529 bipartisan, 205,721 unknown.
+The retained October snapshot contains **1,090,369 source-context measures and 5,028,893
+sponsorships** across all 50 states. These are not a certified universe of bills filed
+inside the analytical window. Under the date-aware membership rules, only **39 bills are
+attributed D and 21 R**; 1,081,990 remain unknown, 8,317 nonpartisan and two other.
+The much larger legacy party totals are not current validated attribution.
 
-Three notes on how this was done, because each was a real obstacle:
+The retained dump is a PostgreSQL custom-format archive. `pg_restore` streams selected
+tables without requiring a restored database. The original snapshot remains on disk with
+source provenance; the ingestion command neither downloads a new snapshot nor deletes it.
+Other access routes' current availability is not established by this offline audit.
 
-* The per-session CSV/JSON archives are **login-gated** (every path under
-  `data.openstates.org/csv/` and `/json/` returns HTTP 403) and API v3 needs a key, so the
-  public dump is the only complete free route.
-* The dump is 10.7 GB and this machine had 32 GB free, so it is **streamed to disk with
-  incremental hashing** (`provenance.download_to_file`) rather than buffered, extracted
-  selectively, and deleted afterwards — its URL and SHA-256 stay in the provenance log, so it
-  is reproducible without keeping 10.7 GB around.
-* It is a **PostgreSQL custom-format archive**, not SQL, but it does *not* need a running
-  database: `pg_restore` streams one table at a time to stdout, which avoids restoring 10.7 GB
-  into a server that would not fit.
+**Session and first-action dates are not interchangeable.** Source-context admission uses
+their year overlap so a biennium is not lost solely because it began before 2018.
+`session_year`, `first_action_year` and the resolved context `year` remain separate.
+That admission rule does not establish exact filing dates or an analytical denominator.
+A first action implausibly preceding its session can fall back to the session year for
+context, but that fallback cannot date a sponsorship. Historical party resolution uses
+only a credible exact first-action date, explicitly labelled `first_action_proxy`.
+Missing or contradictory date evidence remains unresolved.
 
-**Dating a bill takes two dates, not one.** Open States records when a *session* convened and
-when a *bill* first saw action. Filtering on session start alone excluded the entire 2017–2018
-biennium: 20 states — New York, Texas, Massachusetts, Illinois and Ohio among them — had no
-calendar-2018 bills at all, while California's 2018-convened session stamped "2018" onto bills
-actually filed in 2019–20. A session is now admitted when *either* date overlaps the window,
-and `session_year` and `first_action_year` are both kept alongside the resolved `year`. That
-recovered **42,576 bills** and took the states with 2018 filings from 30 to 49. The fiftieth is
-North Dakota, whose legislature meets only in odd-numbered years — a fact about North Dakota,
-not a gap.
+A bill is attributed by its recorded **primary** sponsors. Any unresolved primary sponsor
+blocks D/R attribution; resolved cosponsors do not rescue an unresolved primary.
+All sponsors are considered only if the source records **no primary sponsors**, and that
+fallback is recorded. Nebraska remains outside partisan attribution.
 
-First-action dates are also *sanity-checked against their own session*, because a few are
-corrupt: a Montana bill dated year `202`, a 2019 Michigan resolution dated 1959, a 2023 West
-Virginia bill dated 2003. A first action more than two years before its session is not believed
-and the session year is used instead. Only 39 rows are affected and no topic share moves, but
-`year` is what dates a diffusion cluster, and one 1959 row would report a 2019 model bill as
-first appearing sixty years early. Two years of leeway is deliberate: New Hampshire genuinely
-files legislative service requests the year before a session opens.
+The shared resolver now also returns `party_resolution_reason`, distinguishing missing
+person IDs, missing memberships/event dates, undated or malformed memberships, reversed
+intervals, inactive/conflicting memberships, active dated membership and nonpartisan scope.
+Reasons are mutually exclusive priority outcomes, not an exhaustive list of every possible
+uncertainty on a record. The compatibility `party_on_date()` API returns the same party
+assignments as before.
 
-A bill is attributed to a party by its **primary** sponsors. Cosponsor lists are long,
-cross-party and procedural, so letting them decide would blur the very distinction the table
-exists to draw. Where no primary sponsor resolves to a major party, the attribution falls back
-to all sponsors — this decides 5.7% of party-attributed bills — and bills whose sponsors cannot
-be resolved at all are `unknown`, never guessed.
+The complete **5,028,893-row** diagnostic in
+`data/processed/bill-party-attribution-diagnostic-v1/` preserves every original sponsorship
+cell and adds only the explicit reason. It reproduces all original party assignments with
+zero mismatches; no current-party or legislative-tenure backfill is introduced.
+It finds 4,257,879 undated-membership decisions, 640,763 missing person IDs, 119,935
+missing event dates, 10,014 nonpartisan rows and just 302 active dated memberships.
+These are sponsorship rows, not unique bills. The state/primary breakdown directs further
+source recovery, but does not itself supply missing historical affiliations or certify
+the recorded date bounds.
 
 ---
 

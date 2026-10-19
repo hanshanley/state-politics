@@ -1,8 +1,8 @@
 """Ingest state legislators and their party from Open States.
 
-This is the join key for the whole bills stream: a bill tells you who sponsored it, and this
-tells you which party that sponsor belongs to. Without it, "what are Republican legislators
-filing?" cannot be answered at all.
+This is a current-membership inventory, not historical affiliation evidence. Person IDs can
+help reconcile sources, but a current party label must not be backfilled onto earlier bills.
+The bill pipeline instead uses dated party memberships from its retained source snapshot.
 
 Source
 ------

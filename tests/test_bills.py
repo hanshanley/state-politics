@@ -293,6 +293,12 @@ def test_build_bills_uses_historical_memberships_and_preserves_unresolved_primar
     assert indexed.at["early", "party_attribution_date_basis"] == "first_action_proxy"
     assert indexed.at["early", "party_attribution_date"] == "2019-02-01"
     assert len(sponsors) == 4
+    assert set(sponsors.loc[sponsors.person_id.eq("switcher"), "party_resolution_reason"]) == {
+        "active_membership",
+    }
+    assert sponsors.loc[sponsors.person_id.eq("missing"), "party_resolution_reason"].tolist() == [
+        "missing_membership",
+    ]
 
 
 def test_evidence_retains_source_versions_and_reconciles_exact_bill_joins(tmp_path, monkeypatch):

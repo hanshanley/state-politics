@@ -19,6 +19,7 @@ from state_politics.bills.outcomes import (
     organization_chamber,
     party_on_date,
     recorded_outcome,
+    resolve_party_on_date,
 )
 from state_politics.provenance import sha256_file
 
@@ -65,6 +66,26 @@ def test_party_membership_never_uses_expired_future_or_conflicting_affiliations(
 ])
 def test_party_membership_does_not_guess_missing_partial_or_malformed_bounds(interval):
     assert party_on_date([interval], "2024-06-01") == "unknown"
+
+
+@pytest.mark.parametrize(("intervals", "event_date", "party", "reason"), [
+    (None, "2024-06-01", "unknown", "missing_membership"),
+    ([("2020-01-01", "", "D")], None, "unknown", "missing_event_date"),
+    ([("2020-01-01", "", "D")], "2024", "unknown", "invalid_event_date"),
+    ([("", "", "D")], "2024-06-01", "unknown", "undated_membership"),
+    ([("2020-01", "", "D")], "2024-06-01", "unknown", "invalid_membership_date"),
+    ([("2025-01-01", "2023-01-01", "D")], "2024-06-01",
+     "unknown", "reversed_membership_interval"),
+    ([("2025-01-01", "", "D")], "2024-06-01", "unknown", "no_active_membership"),
+    ([("2020-01-01", "", "D"), ("2023-01-01", "", "R")], "2024-06-01",
+     "unknown", "conflicting_active_memberships"),
+    ([("2020-01-01", "", "D")], "2024-06-01", "D", "active_membership"),
+])
+def test_party_resolution_explains_missingness_without_changing_attribution(
+    intervals, event_date, party, reason,
+):
+    assert resolve_party_on_date(intervals, event_date) == (party, reason)
+    assert party_on_date(intervals, event_date) == party
 
 
 def test_recorded_outcome_uses_highest_explicit_action_stage():

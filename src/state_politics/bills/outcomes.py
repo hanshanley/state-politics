@@ -23,6 +23,7 @@ __all__ = [
     "party_membership_intervals",
     "party_on_date",
     "recorded_outcome",
+    "resolve_party_on_date",
 ]
 
 _CHAMBER_CLASSES = {"upper", "lower", "legislature"}
@@ -78,31 +79,45 @@ def party_on_date(
     date: str | None,
 ) -> str:
     """Resolve only memberships covering a known event date; never extrapolate affiliation."""
-    if not intervals or not date:
-        return "unknown"
+    return resolve_party_on_date(intervals, date)[0]
+
+
+def resolve_party_on_date(
+    intervals: list[tuple[str, str, str]] | None,
+    date: str | None,
+) -> tuple[str, str]:
+    """Resolve event-time affiliation with an explicit evidence or missingness reason."""
+    if not intervals:
+        return "unknown", "missing_membership"
+    if not date:
+        return "unknown", "missing_event_date"
     date = date[:10]
     try:
         calendar_date.fromisoformat(date)
     except ValueError:
-        return "unknown"
+        return "unknown", "invalid_event_date"
     active = []
     for row in intervals:
         if not row[0] and not row[1]:
-            return "unknown"
+            return "unknown", "undated_membership"
         for bound in row[:2]:
             if not bound:
                 continue
             try:
                 if calendar_date.fromisoformat(bound).isoformat() != bound:
-                    return "unknown"
+                    return "unknown", "invalid_membership_date"
             except ValueError:
-                return "unknown"
+                return "unknown", "invalid_membership_date"
         if row[0] and row[1] and row[0] > row[1]:
-            return "unknown"
+            return "unknown", "reversed_membership_interval"
         if (not row[0] or row[0] <= date) and (not row[1] or row[1] >= date):
             active.append(row)
     parties = {row[2] for row in active}
-    return parties.pop() if len(parties) == 1 else "unknown"
+    if not parties:
+        return "unknown", "no_active_membership"
+    if len(parties) != 1:
+        return "unknown", "conflicting_active_memberships"
+    return parties.pop(), "active_membership"
 
 
 def recorded_outcome(

@@ -36,14 +36,14 @@ from pathlib import Path
 
 from ..provenance import ProvenanceLog, sha256_file, utc_now_iso
 from .openstates_dump import find_pg_restore, state_of, stream_table
-from .outcomes import party_membership_intervals, party_on_date
+from .outcomes import party_membership_intervals, resolve_party_on_date
 
 # Party normalization lives in `people`, and is imported rather than restated here: the two
 # modules read the same party strings from the same source, and a second copy of the mapping
 # silently drifted out of sync once already.
 from .people import normalize_party
 
-__all__ = ["attribute_party", "build_bills", "extract_bill_evidence"]
+__all__ = ["attribute_party", "build_bills", "extract_bill_evidence", "resolve_sponsor_party"]
 
 
 
@@ -103,6 +103,20 @@ def sponsorship_date(first_action: str | None, session_start: str | None) -> tup
     if session_year and parsed.year < session_year - MAX_FILING_LEAD:
         return "", "contradictory_first_action"
     return parsed.isoformat(), "first_action_proxy"
+
+
+def resolve_sponsor_party(
+    memberships: dict[str, list[tuple[str, str, str]]],
+    person_id: str | None,
+    state: str,
+    attribution_date: str | None,
+) -> tuple[str, str]:
+    """Keep missing sponsor identities distinct from undated or conflicting affiliations."""
+    if state == "NE":
+        return "nonpartisan", "nonpartisan_legislature"
+    if not person_id:
+        return "unknown", "missing_person_id"
+    return resolve_party_on_date(memberships.get(person_id), attribution_date)
 
 
 def build_bills(dump_path: Path | str, *, min_year: int = 2018, progress=None):
@@ -207,11 +221,10 @@ def build_bills(dump_path: Path | str, *, min_year: int = 2018, progress=None):
         if bill_id not in bills:
             continue
         person_id = row.get("person_id")
-        party = party_on_date(
-            memberships.get(person_id or ""), bills[bill_id]["party_attribution_date"]
+        party, party_reason = resolve_sponsor_party(
+            memberships, person_id, bills[bill_id]["state"],
+            bills[bill_id]["party_attribution_date"],
         )
-        if bills[bill_id]["state"] == "NE":
-            party = "nonpartisan"
         is_primary = (row.get("primary") or "").lower() in ("t", "true")
         sponsor_rows.append({
             "sponsorship_id": row.get("id"),
@@ -231,6 +244,7 @@ def build_bills(dump_path: Path | str, *, min_year: int = 2018, progress=None):
                 else "nonpartisan_legislature" if party == "nonpartisan"
                 else "unresolved"
             ),
+            "party_resolution_reason": party_reason,
         })
         (primary_by_bill if is_primary else all_by_bill)[bill_id].append(party)
         if is_primary:

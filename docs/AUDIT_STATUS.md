@@ -56,6 +56,48 @@ observations, not verified coverage gaps. Legacy committee/caucus coverage total
 explicitly unrevalidated, and heuristic `confirmed` flags no longer appear in the source
 methods as adoption certification.
 
+## Complete sponsorship-attribution missingness audit
+
+The retained dump contains **21,993 party memberships**, of which **21,810 are entirely
+undated**. Only **163 people** have any dated membership; 54 also have undated records,
+and none of those mixed dated/undated people has only one recorded party. The bounds
+contain no partial-length dates that a relaxed parser could safely rescue. None of
+5,936 organization sponsorships names an explicit party organization in the retained
+membership reference. These checked alternatives do not repair historical coverage.
+
+The shared temporal resolver now exposes explicit evidence/missingness reasons while
+preserving the existing `party_on_date()` interface and every party decision. Future
+bill extraction also writes `party_resolution_reason`; current-party labels and
+legislative-tenure dates are not substituted for missing party dates.
+
+A complete replay preserves every original cell of **5,028,893 sponsorship rows** and adds
+the reason, with **zero party or source-cell mismatches**:
+
+| Resolution reason | All sponsorship rows | Recorded-primary rows |
+|---|---:|---:|
+| Undated membership | 4,257,879 | 2,052,642 |
+| Missing person ID | 640,763 | 404,536 |
+| Missing event date | 119,935 | 22,113 |
+| Nonpartisan legislature | 10,014 | 8,317 |
+| Active dated membership | 302 | 278 |
+
+These are rows, not unique bills or people. Multiple primary sponsors can occur on one
+bill. Reasons reflect the resolver's priority order: an undated membership can prevent
+a later conflict check, so absence of a conflict reason is not proof of consistent
+affiliation history. Missing person IDs also include source non-person sponsors; the
+original entity type, name and organization fields remain present for further review.
+The canonical bills still have only **39 D and 21 R** assignments under these rules;
+unresolved co-primary sponsors cannot be rescued by resolved cosponsors.
+
+The complete successor table, state/primary reason CSV, frozen code/tests and input hashes
+are in `data/processed/bill-party-attribution-diagnostic-v1/`. Manifest:
+`2f2406f260205225c3ff25ae14ea10ee9ba6ebabfd5bfb320b8538d331ff40ac`.
+All **61** focused bill/outcome regressions pass. The current-legislator and methods
+documentation now correctly distinguish current inventory from historical affiliation,
+source-context years from filing dates, and no-primary fallback from unresolved-primary
+backfill. No canonical source rows, bill party assignments or analytical results changed.
+The source gap requires additional historical evidence, not weakening the join.
+
 ## Full-document text split isolation
 
 Nine reproduced failures exposed a narrower remaining leak: distinct platform body
