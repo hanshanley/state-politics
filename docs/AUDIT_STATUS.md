@@ -933,7 +933,7 @@ Both retained negative PDFs print nonnumeric headers: HR 311's source prints
 `HOUSE JOINT RESOLUTION DRHJR20008-LG-198D`. Neither is promoted to verified
 numeric identity, a canonical alias or classifier input.
 
-The worker sealed a separate **44,306-file completed-corpus archive** at
+The worker sealed a separate **44,306-payload completed-corpus archive** at
 `north-carolina-full-source-completed-archive-v1`, manifest
 `7f5ef06af91c05effd07b7ab3999bafb7edaff6593eff36ed376ccc98d395ad7`.
 Parent full-corpus guarded replay remains pending; terminal counters and a
@@ -941,7 +941,7 @@ worker's completed archive alone do not close that gate. The legacy preparation
 manifest/state and all 63 original checkpoints remain preserved, not rewritten
 as terminal evidence.
 
-The separate **18,287-file final-20 archive** at
+The separate **18,287-payload final-20 archive** at
 `north-carolina-full-source-final-tail-archive-v1` **passes actual parent guarded
 replay**, manifest
 `f09fbb916356fd3a75ff3efca3928305d79d6d2d45b872a9d898a2d47e868506`.
@@ -952,7 +952,9 @@ the **entire 2,004-exchange document-ledger prefix**, not just the twenty final
 documents. Networking and original project/session data reads are denied; the
 archive stays unchanged. Actual log:
 `nc_completed_tail20_parent_actual_v1.log`. This tail replay does not substitute
-for replaying all 2,004 source documents.
+for replaying all 2,004 source documents. Payload counts exclude each root
+manifest: the full and tail archives contain **44,307 and 18,288 total files**,
+respectively.
 
 The terminal lineage contains **two distinct ledgers**: 2,004 document exchanges
 and three publisher-index/page exchanges, for **2,007 aggregate exchanges**.
