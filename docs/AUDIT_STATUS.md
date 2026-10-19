@@ -4,8 +4,8 @@ The existing figures and analytical conclusions are **legacy, not revalidated fi
 The current changes repair infrastructure and preserve evidence; they do not certify a
 replacement classifier or establish complete contemporary coverage.
 
-**October 19, 2026 checkpoint:** actual audit **v50** binds **114 completed research
-and accounting packets**. The canonical audit has **306/340 passing checks**
+**October 19, 2026 checkpoint:** actual audit **v52** binds **118 completed research
+and accounting packets**. The canonical audit has **308/342 passing checks**
 and **34 missing-artifact failures**. Known source, collection and scientific failures
 remain explicit; this is not a completed project or a certified classifier.
 
@@ -309,6 +309,22 @@ separate exact inventory. Explicit Colorado schema adaptation passes six focused
 regressions and verifies all **886 original payload hashes/sizes**, exact file
 inventory and totals without changing the checkpoint. This was an adapter error,
 not evidence of changed source bytes or scientific approval.
+
+Actual canonical audit **v52** completes the corrected freeze and integrates the
+Illinois native negative replay, Colorado first checkpoint, California four-biennium
+archive and corrected North Carolina first archive. Independent verification checks
+all **214 audit payload files**, all **118 completed packet manifest bindings**,
+the completed California predecessor-lineage log and preservation of all **204**
+failed-v51 diagnostic files. Relative to v50, only the passing/total check counts
+change to **308/342**; all other canonical report fields, the same **34 failures**,
+runtime, preview and admission flags remain unchanged. Canonical return code is
+**1** and scientific certification remains **not performed**. Manifest SHA-256:
+`0bd4134c9cb2d7be9d8abc4a91ecdcbad5d76a868cf374c8195bcb1791d01ead`.
+The producer and guarded packet replays verified completed packet payloads; the
+additional parent verifier checks audit inventories and source-manifest bindings,
+not another full rehash of every research payload. Live collectors and unfinished
+Ohio/Pennsylvania preparations are not completed roots. Frozen documentation
+precedes this result paragraph and top-line update.
 
 ### Four additional complete biennial archives
 
