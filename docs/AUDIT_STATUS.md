@@ -49,6 +49,13 @@ was weakened. Its manifest is
 report `831028faa66a7c8894084da932f1d336b152763adf918a88c8b3aa1e8bd45359`.
 The companion remains local-only and unpublished.
 
+The methodology's corresponding absence narrative is also withdrawn: neither a 404,
+bounded archive sweep nor a secondary-source availability statement proves publication
+absence. Its catalogue table now reflects 14 unresolved and four limited-statement
+observations, not verified coverage gaps. Legacy committee/caucus coverage totals are
+explicitly unrevalidated, and heuristic `confirmed` flags no longer appear in the source
+methods as adoption certification.
+
 ## Platform-specific support and metadata audit
 
 The pooled **27/50** development result conceals domain differences. Reusing the exact

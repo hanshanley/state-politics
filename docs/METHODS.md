@@ -16,7 +16,7 @@ in [REPRODUCIBILITY.md](REPRODUCIBILITY.md).
 **Contents**
 
 - [Stream A: platforms](#stream-a-platforms)
-- [Committee-document gaps](#the-18-parties-with-no-committee-platform-or-resolution)
+- [Committee-document gaps](#committee-document-observations-and-withdrawn-absence-claims)
 - [Stream B: legislators and bills](#stream-b-legislators-and-bills)
 - [Classifying both streams into one taxonomy](#classifying-both-streams-into-one-taxonomy)
 - [Validating the bill classifier](#validating-the-bill-classifier)
@@ -34,9 +34,10 @@ in [REPRODUCIBILITY.md](REPRODUCIBILITY.md).
 
 ## Stream A: platforms
 
-The historical corpus (1846-2017) is ingested from Harvard Dataverse; the 2018-present corpus
-does not exist anywhere and is built by this project from state party websites and the Internet
-Archive Wayback Machine.
+The historical corpus (1846-2017) is ingested from Harvard Dataverse. The project's
+2018-present source stream is collected from state party websites and the Internet Archive
+Wayback Machine. This does not establish that other collections do not exist or that the
+project has recovered every available document.
 
 ```bash
 make historical   # ingest the Dataverse corpus
@@ -44,79 +45,66 @@ make registry     # verify all 100 state party websites  (~10 min)
 make platforms    # discover + collect 2018-present platforms (~1 h, polite crawl)
 ```
 
-A document counts only when **its own text confirms it is a platform**: it must clear a length
-floor, read in the declarative voice a platform uses, name its own state (which rejects the
-national DNC/RNC platforms that several state sites host), and not be a binary file served with
-a misleading content type. Discovery is Wayback-first with a live-site fallback, spaced at 2.5 s
-per request -- at ~1 req/s the archive refused 305 of 456 fetches, and backing off took the
-success rate from 34% to 93%.
+The collector's `confirmed` field is a **heuristic extraction/discovery flag**, not a
+reviewed adoption or operative-version determination. Its filters include a length floor,
+declarative policy phrases, state-name checks and binary-response checks. Passing them
+does not establish institutional authorship, substantive policy coverage or an operative
+date. Legacy notes describe Wayback-first discovery with a live-site fallback and
+2.5-second request spacing; their reported retrieval-rate improvement has not been
+independently revalidated in this audit.
 
 The collector exhausts every candidate at or above the documented strong-score threshold; it
 does not stop after an arbitrary per-organization count. `--resume` preserves successful and
 OCR-derived rows, retries failures, and also fetches newly discovered URLs. Partial `--states`
 runs merge into the existing corpus rather than replacing unrelated states.
 
-The final corpus accounts for **1,948/1,948 strong candidate URLs**. It confirms 687 documents;
-424 candidate rows record failed retrievals, overwhelmingly explicit live-site 404 responses,
-rather than disappearing from the audit trail.
+The legacy run reported **1,948/1,948 strong candidate URLs**, 687 heuristic-confirmed
+documents and 424 failed retrievals. Those totals are not a reconstructed canonical
+contemporary corpus or current coverage certification. The separate retained recovery
+inventory and its explicit failures are documented in [AUDIT_STATUS.md](AUDIT_STATUS.md).
 
-## The 18 parties with no committee platform or resolution
+## Committee-document observations and withdrawn absence claims
 
-82 of 100 state party organizations yielded a party-committee platform or state-committee
-resolution: 687 confirmed documents total, of which 502 are current across 81 organizations and
-185 are older fallbacks. The remaining 18 organizations are the deliverable
-that a scraper normally throws away: **every one was probed by hand and carries a recorded
-reason**, in [`conf/platform_gaps.yml`](../conf/platform_gaps.yml), joined into the gap report by
-`gap_report()`. They live in version-controlled config rather than in the generated CSV,
-because an explanation written into a derived file is erased by the next run.
+The previous claim that 82 organizations had platforms and the other 18 had established
+publication gaps is **not revalidated**. Historical or heuristic-confirmed documents
+cannot certify current coverage, and failure to retrieve a platform cannot establish
+that none is published.
+
+[`conf/platform_gaps.yml`](../conf/platform_gaps.yml) now contains **18 dated observations**,
+not 18 verified absences. These include ten qualified legacy July observations and eight
+unchanged source-bound reviews. All original probe dates are preserved. The catalogue is
+joined into collector reports by `gap_report()` and survives report regeneration; it is
+not the complete 100-organization operative-platform ledger.
 
 | Cause | Orgs | Meaning |
 |---|---|---|
-| `no_platform_published` | 12 | Site is healthy and simply has no platform or state-committee resolution |
-| `summary_only` | 4 | A short position blurb, not a platform |
-| `broken_site` | 1 | Alaska GOP is serving an "Account Suspended" page |
-| `not_confirmed` | 1 | Candidates fetched, none read as a platform |
+| `not_confirmed` | 14 | The recorded evidence does not establish an operative platform. |
+| `summary_only` | 4 | The reviewed source is a limited statement, not proof that no other platform exists. |
 
-### Establishing that a gap is real
+`broken_site` and `client_rendered` remain supported observation types but have no entries
+in this catalogue. `no_platform_published` is retired and rejected by the loader, as are
+unknown causes. The source-only companion independently leaves **all 100** organizations'
+operative-platform statuses unresolved; these catalogue counts are not its coverage totals.
 
-"We did not find one" and "there is not one" are different claims, and the second needs
-evidence. For the 18 remaining gaps, and especially the four states with no party-committee
-document from either party (Kentucky, Maryland, New Jersey, Pennsylvania), six independent
-methods were run:
+### What bounded searches establish
 
-| Method | Scope | Real platforms |
-|---|---|---|
-| Every archived **PDF** >= 25 KB, no path filtering | 791 documents | **1** (Delaware GOP) |
-| Every archived **HTML page** >= 30 KB | ~500 pages | **0** |
-| **Live probing of 36 candidate paths** | 12 organizations | **0** |
-| **Each site's own CMS index** (`wp-json`, Wix manifest) | 12 organizations | **0** |
-| **Alternate and former domains** | 7 domains | **0** |
-| **Ballotpedia**, an independent reference | 12 organizations | **0** |
+Legacy notes described archive sweeps, guessed live paths, CMS indexes, alternate domains
+and secondary-source links. They did not establish exhaustive source coverage or independent
+confirmation of absence. Archive size/path filters, missing captures, access failures,
+deferred navigation and untested former hosts can leave substantive evidence undiscovered.
+A secondary source's platform link or availability statement is not an independently
+verified operative-version determination for the party.
 
-Ballotpedia is the strongest of these because it owes nothing to this pipeline. Its "Party
-platform" section says New Jersey Democrats *"follow the platform of the Democratic National
-Committee"*, records New Jersey Republicans' platform as *"not publicly available"*, and links
-both Pennsylvania parties' "platform" to a committee roster and a 509-word *Our Party* blurb.
-
-The near-misses show the depth of the search rather than its limits: Louisiana Republicans'
-largest "platform" match was their **privacy policy** (5,777 words) and Kentucky Republicans'
-was a 453-word *About* page. The Louisiana GOP's 2025 State Central Committee resolutions were
-then recovered from Wix's public CDN after the party domain served 403; New York Democrats'
-official Issuu account supplied an 84-page State Committee resolutions archive.
-
-The distinction matters: **a missing platform is mostly a real finding about the party, not a
-failure of the crawler.** That was tested rather than asserted -- see the exhaustive sweep
-below, which enumerated every archived PDF on every gap domain and found exactly one real
-platform in 791 documents. Two cases first recorded as JavaScript-rendered turned out on
-re-checking to be genuine absences, and both Hawaii organizations, once recorded as
-unreachable, are now in the corpus: their platforms were discoverable all along and had been
-suppressed by a scoring bug.
+The former assertions that missing platforms were mostly established party-level findings,
+that searches had exhausted every archived PDF/HTML page, or that JavaScript-rendered cases
+were genuine publication absences are withdrawn. A failed URL is evidence about that
+request. A short statement is evidence about that statement. Neither licenses an assertion
+about every document the organization publishes. The recovered Alaska platform and other
+later source recoveries further require keeping observation, retrieval and adoption separate.
 
 ### Supplementing state coverage without relabelling a caucus
 
-The party-committee corpus honestly reaches **46/50 states**. To cover the remaining four
-states with stated, state-level agenda evidence, `caucus_priorities.parquet` collects four
-official legislative-caucus sources in its own corpus:
+The legacy supplement named four legislative-caucus sources:
 
 | State | Caucus source | Year |
 |---|---|---:|
@@ -125,9 +113,11 @@ official legislative-caucus sources in its own corpus:
 | NJ | Assembly Republican Agenda Center | 2025 |
 | PA | Senate Democratic Caucus priorities | 2025 |
 
-This brings stated state-level agenda coverage to **50/50**, but the files are never merged
-with party platforms or used in the platform figure or stated-vs-revealed comparison. A caucus
-agenda is useful evidence and a different institution.
+These are a different institution and must remain separate from party-committee platforms.
+The former 46/50 committee and 50/50 supplemented coverage claims are not current audited
+coverage. The canonical `caucus_priorities.parquet` is missing from the latest full artifact
+audit; source candidates alone do not establish current agendas or repair the missing
+analytical input. Recovered evidence must retain its institutional role and version limitations.
 
 Regenerate the report after editing the findings, without re-crawling anything:
 
@@ -765,7 +755,7 @@ state-politics/
 ├── conf/
 │   ├── party_registry.yml       # 100 state party orgs: state, party, domain, source_url, verified_on
 │   ├── topics.yml               # CAP-anchored issue taxonomy shared by both streams
-│   ├── platform_gaps.yml        # hand-checked reason each of the 18 gaps has no platform
+│   ├── platform_gaps.yml        # dated coverage observations, not proof of platform absence
 │   └── subject_topic_map.yml    # Open States subject tags -> topic codes, for validation
 ├── data/gold/
 │   └── plank_topics_gold.csv    # 50 hand-labelled planks; authored input, not an artifact
@@ -789,8 +779,9 @@ append-only JSONL log recording the URL, HTTP status, SHA-256 of the body, byte 
 UTC retrieval timestamp, and the organization that collected the data. That log is what makes the
 "no fabricated data" principle checkable rather than aspirational.
 
-Notably, `fetch()` **does not raise on HTTP errors**. A 404 is a legitimate research finding — the
-state party published no platform — so it is recorded with `ok=False` rather than thrown away.
+Notably, `fetch()` **does not raise on HTTP errors**. A 404 is a retained request failure,
+recorded with `ok=False` rather than thrown away. It does not establish that the organization
+publishes no platform at another URL, host or time.
 
 ---
 
