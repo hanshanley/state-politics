@@ -24,6 +24,12 @@ from state_politics.analysis.modernbert import (
     token_windows,
 )
 from state_politics.analysis.prepare_topics import compatibility_flags, prepare
+from state_politics.analysis.state_references import (
+    ReferenceIndex,
+    bind_florida,
+    read_source_csv,
+    source_profile,
+)
 from state_politics.analysis.taxonomy import DEFAULT_TOPICS_PATH, load_topics
 from state_politics.analysis.train_topics import (
     label_support,
@@ -31,6 +37,104 @@ from state_politics.analysis.train_topics import (
     validate_source_reservation,
 )
 from state_politics.provenance import sha256_file
+
+
+def test_external_state_csv_preserves_logical_records_and_rejects_malformed_sources(tmp_path):
+    path = tmp_path / "state.csv"
+    path.write_text('id,year,majortopic,Bill_Title\nHB 1,2019,3,"A title\ncontinued"\n')
+    rows = read_source_csv(path, {"id", "year", "majortopic", "Bill_Title"})
+    assert rows == [{"id": "HB 1", "year": "2019", "majortopic": "3",
+                     "Bill_Title": "A title\ncontinued"}]
+    assert source_profile(rows)["year_counts"] == {"2019": 1}
+    path.write_text("id,year,majortopic,Bill_Title\nHB 1,2019,3\n")
+    with pytest.raises(ValueError, match="logical CSV record 2"):
+        read_source_csv(path, {"id"})
+    path.write_text("id,id\none,two\n")
+    with pytest.raises(ValueError, match="duplicate source columns"):
+        read_source_csv(path, {"id"})
+
+
+def test_external_state_binding_never_repairs_ids_or_certifies_matching_numeric_codes():
+    rows = [
+        {"id": key, "year": year, "majortopic": topic, "Bill_Title": ""}
+        for key, year, topic in [
+            ("HB 001", "2019", "3"), ("B 1", "2019", "3"),
+            ("HB 1", "2020", "24"), ("HB 1", "2017", "3"),
+        ]
+    ]
+    bills = [
+        {"bill_id": "fl-regular", "state": "FL", "session_identifier": "2019",
+         "identifier": "HB 1", "title": "Later source title", "year": 2020},
+        {"bill_id": "fl-special", "state": "FL", "session_identifier": "2020A",
+         "identifier": "HB 1", "title": "Special-session title", "year": 2020},
+        {"bill_id": "other-state", "state": "GA", "session_identifier": "2020",
+         "identifier": "HB 1", "title": "Other state title", "year": 2020},
+    ]
+    before = json.dumps([rows, bills], sort_keys=True)
+    bound = bind_florida(rows, bills, {3})
+    assert [row["link_status"] for row in bound] == [
+        "unique_source_context", "unparsed_external_identifier",
+        "missing_source_context", "outside_year_window",
+    ]
+    assert bound[0]["matched_bill_id"] == "fl-regular"
+    assert bound[0]["source_title"] == ""
+    assert bound[0]["candidate_title"] == "Later source title"
+    assert bound[0]["candidate_title_sha256"] == hashlib.sha256(
+        b"Later source title"
+    ).hexdigest()
+    assert {"external_title_missing", "external_subtopic_unavailable",
+            "rubric_mapping_unreviewed", "annotation_provenance_unresolved",
+            "candidate_title_version_unverified"} <= set(bound[0]["review_flags"])
+    assert "unsupported_external_major" in bound[2]["review_flags"]
+    for row in bound:
+        assert not any(row[key] for key in (
+            "training_admission", "evaluation_admission", "analytical_admission",
+            "independent_gold",
+        ))
+        assert "topic" not in row
+    assert json.dumps([rows, bills], sort_keys=True) == before
+
+
+def test_external_state_binding_retains_both_sides_of_duplicate_contexts():
+    rows = [{"id": "SB 792", "year": "2020", "majortopic": str(code), "Bill_Title": ""}
+            for code in (3, 12)]
+    bills = [{"state": "FL", "session_identifier": "2020", "identifier": "SB 792",
+              "bill_id": key, "title": "Unresolved source context"} for key in ("b", "a")]
+    bound = bind_florida(rows, bills, {3, 12})
+    assert len(bound) == 2
+    assert [row["source_major"] for row in bound] == ["3", "12"]
+    assert [row["source_csv_record_number"] for row in bound] == [2, 3]
+    for row in bound:
+        assert row["link_status"] == "ambiguous_source_context"
+        assert row["source_context_bill_ids"] == ["a", "b"]
+        assert row["matched_bill_id"] is None and row["candidate_title"] is None
+        assert "duplicate_external_context" in row["review_flags"]
+    with pytest.raises(ValueError, match="duplicate Florida source bill ID"):
+        bind_florida(rows, [bills[0], bills[0]], {3})
+
+
+def test_external_state_overlap_keeps_all_witnesses_and_short_exact_copies():
+    phrase = " ".join(f"word{number}" for number in range(35))
+    variant = phrase + " more"
+    unrelated = "distinct subject matter with entirely different evidence"
+    index = ReferenceIndex([
+        {"record_id": "short-a", "text": "HEALTH"},
+        {"record_id": "short-b", "text": "Health!"},
+        {"record_id": "prior-a", "text": phrase},
+        {"record_id": "prior-b", "text": phrase},
+        {"record_id": "different", "text": unrelated},
+    ])
+    assert index.overlaps("health") == {
+        "exact_text_reference_ids": ["short-a", "short-b"], "near_text_reference_ids": [],
+    }
+    assert index.overlaps(variant) == {
+        "exact_text_reference_ids": [], "near_text_reference_ids": ["prior-a", "prior-b"],
+    }
+    assert index.overlaps("a new topic") == {
+        "exact_text_reference_ids": [], "near_text_reference_ids": [],
+    }
+    with pytest.raises(ValueError, match="reference text"):
+        ReferenceIndex([{"record_id": "invalid", "text": ""}])
 
 
 def test_windows_cover_every_token_without_silent_truncation():

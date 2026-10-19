@@ -626,6 +626,32 @@ rows and five selected concerns reproduced from the original CSV; existing corpo
 checkpoints and development references remain unchanged. Neither affected-row counts nor
 assistant source review constitute an independent label-error estimate or finalized rubric.
 
+External state-bill reference discovery is a separate, unadmitted inventory. Retained CAP
+Florida and Pennsylvania CSVs are profiled from their actual rows rather than catalog
+dates or filenames. Pennsylvania's 102,727 rows stop in 2016 and supply no bill text/title
+column. Florida has 2,872 modern rows in 2019/2020, but all their titles are blank and
+the file supplies no subtopics. Its codebook's definition of introduction-time titles
+does not recover those absent values or verify the annotation process.
+
+`analysis/state_references.py` preserves logical CSV record identities and binds Florida
+bill numbers to exact canonical state/session/identifier contexts. Separate current-source
+candidate titles and hashes never overwrite the external title or become certified
+introduced text. Missing, ambiguous and duplicate identities remain explicit; no guessed
+chamber, number repair, special-session substitution or major-code mapping is allowed.
+All candidate training/evaluation/analytical admissions remain false.
+
+The inventory freezes all four original pilot label manifests and a named, complete
+bounded corpus of prior label/review, enriched-development, rubric and historical
+diagnostic inputs. It retains every exact/near text witness and canonical-bill-ID witness.
+Text checks use the existing casefold/nonword normalization and word-trigram Jaccard
+threshold of 0.8 with a 0.8 signature-size ratio; short exact copies are also detected.
+They do not certify paraphrase, legislative-family or encoder-pretraining isolation.
+Missing subtopics, adapted-rubric compatibility, annotation provenance, input-version
+alignment and source-use terms must be resolved before these external codes could support
+an evaluation. Neither the five observed exact overlaps nor zero measured near/family
+witnesses is a performance estimate. Original weights, thresholds and references remain
+unchanged.
+
 The separate thirteen-case family/religion draft review proposes seven conditional
 single-topic dispositions, three mixed-native dispositions and three unresolved precedence
 decisions. These are not canonical labels or approved rubric rules. All thirteen cases

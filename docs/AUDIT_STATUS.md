@@ -11,7 +11,7 @@ replacement classifier or establish complete contemporary coverage.
 | Sponsorship | Date-aware attribution remains conservative. Official Washington evidence supplies separate session-roster D/R observations for 14,132 of 14,143 measures. Separately, 1,481 native SD roster rows identify all 7,086 prime-sponsor references; 205 mixed-party cases remain explicit. No filing-time party is overwritten. | A session roster does not establish affiliation at filing. Washington retains ten source-identified tests and one substantive original without a native primary-sponsor API record. SD cross-session cosponsor IDs, institutional sponsorship and event-time affiliations remain separately accounted for; all-state recovery is open. |
 | Bills | October snapshot extracted: 1,090,369 source-context measures across all 50 states, 5,028,893 sponsorships, 9,002,451 actions and 873,980 vote events. All eleven tables have recorded hashes/counts. Native documents retained for all 241 non-test measures in the bounded Washington metadata-gap cohort; separately, all 5,369 native SD introduced candidates and 15,308 physical pages captured and exactly replayed in both readers. | Official-source reconciliation, historical affiliations and filing-time text review. One Washington resolution has a version-note conflict; one SD PDF prints no session year. Neither these recoveries nor snapshot extraction certifies statewide/national original-text completeness or an analytical denominator. |
 | Classification | Four saved official English ModernBERT-base pilots compared on the same 52 platform references: external-only 41/52, joint 47/52, broader-source 47/52, Republican-expanded 49/52. The fourth run correctly rejects 3/4 mixtures and 6/6 non-policy units. | The fourth run loses one policy decision, still accepts a mixture above 0.999 and regresses on insufficient-evidence and taxonomy-boundary development cases. Both sets are examined diagnostics, not fresh independent tests. Independent review and empirical gates remain required. No candidate is approved. |
-| Labels | External CAP files recovered; split/group/exact-text and reviewed-platform source-body checks plus explicit reviewed-label provenance are implemented. | Source permissions, adapted-topic compatibility, near-duplicate families and reviewed state-domain training/development/test labels. |
+| Labels | External CAP files and two state-reference CSVs recovered; exact-context Florida candidates and complete bounded overlap witnesses are frozen without label admission. Split/group/text and reviewed-platform source-body checks retain explicit label provenance. | Modern Florida external titles/subtopics are missing; Pennsylvania rows stop in 2016. Annotation provenance, source permissions, adapted-topic compatibility, bill families and independent state-domain references remain unresolved. |
 | Evaluation | Checkpoint-bound training/evaluation split isolation, development-only temperature/threshold selection, exact evidence joins, abstention accounting, per-topic and subgroup metrics. | Reviewer arrangement, frozen empirical gates, independent target tests and clustered uncertainty. No checkpoint can be certified by changing a status field. |
 | Companion | Local-only preview v9 exposes all 1,559 recovery captures, 119 failures and 61 alternative extraction identities across 55 OCR bodies, three DOCX bodies and one native-block body, alongside the 2,091 historical documents. The source ledger includes the corrected Arizona and Alaska registry rows. All 100 organization rows remain unresolved. | Audited classification/analysis exports, redistribution review and eventual report; no production integration is authorized. |
 
@@ -956,6 +956,64 @@ archives all affected analysis modules and regressions. The actual result remain
 v30. The scope fix does not replace missing canonical outputs or pass scientific
 release gates. Audit manifest:
 `d53d0795214c777775770507743856dcb0fe19e7201581c4f1bbe0b55bd03cce`.
+
+## External state-bill reference recovery
+
+The publisher's Florida and Pennsylvania CAP catalogs, complete CSV responses,
+codebooks and source-use page are now retained with request receipts and hashes.
+These are external research codes, not newly certified project labels.
+
+| Retained source | Actual content | Remaining reference limitation |
+|---|---|---|
+| Florida second-edition bills | 4,119 rows: 806 in 1993, 441 in 1999, 1,490 in 2019 and 1,382 in 2020 | Every 2019/2020 title is blank; subtopics are absent throughout. Individual annotation/adjudication and reliability provenance is unresolved. |
+| Pennsylvania bills and resolutions | 102,727 rows, 1979-2016 | Despite `1979_2019` in its filename, this response contains no 2017-2019 rows and no bill text/title column. It is not a contemporary target test. |
+
+The Florida codebook describes introduction-time titles and bill numbers, but that
+description does not supply the missing modern title values. The new
+`analysis/state_references.py` links only exact Florida regular-session/bill
+contexts, never current `year` alone, another state, a special session or a
+guessed identifier repair. **2,869 source rows link to 2,868 distinct canonical
+bills**. Both duplicate 2020 SB792 rows remain visible; `B 1213` and `63` are
+unparsed, and `HB 60170` is unmatched. No record is silently discarded or corrected.
+The recovered candidate titles are separately identified current-source metadata,
+not the original annotated text or certified filing-time inputs.
+
+All **2,872** modern Florida rows remain unadmitted. **166** have unsupported
+project major codes: 165 local-government code-24 rows and one code-2000 row.
+The absence of subtopics prevents applying the existing external-label boundary
+quarantines; matching major numbers alone cannot resolve family, immigration,
+reproductive-health, tax or election rubric differences.
+
+The frozen overlap corpus includes all four pilots' complete original label files,
+the retained label/review JSONLs, enriched-development and family-rubric inputs, and
+the 50-row historical diagnostic CSV: **49,793 retained text occurrences / 6,504
+distinct normalized texts across 36 scanned files**. The complete named corpus is
+archived, including files with no text inputs. **Five** linked Florida rows have
+exact-text witnesses; none has a near-text or canonical-bill-ID witness under this
+bounded check. Every witness survives in the candidate ledger. These results do
+not establish isolation from paraphrases, unrecorded bill families or encoder
+pretraining, and do not turn the collection into a blind test.
+
+Inventory packet `data/processed/external-state-bill-reference-inventory-v1/`:
+`a8ec403659337099ef3351488b4d3fcaf6536ab03608b2426db7e9896134a64d`.
+Independent verification packet
+`data/processed/external-state-bill-reference-verification-v1/`:
+`ae221b96debf4f5edb8e25415af1111daa8a06d1298fe023225ed54946596444`.
+Replay reconstructs every Florida binding, every retained reference input and all
+exact/near witnesses without the producer's matching or overlap helpers, verifies
+the publisher-declared download links and complete receipts, and reopens the exact
+canonical source. No training, inference, metric comparison, calibration, taxonomy
+change or analytical admission occurred. CAP project-variable reuse remains subject
+to noncommercial attribution/share-alike terms and any original-text rights.
+Complete source bodies and label files remain local/Git-ignored; committing the
+implementation and hashes is not a remote backup. The companion remains unpublished.
+
+Canonical audit checkpoint **v32** verifies **67** completed research packets.
+Its actual result is **exit 1 / 34 failures among 331 checks**. The failure list is
+identical to v31; the additional passing check verifies the new Python module's
+code-guide entry. No research candidate was substituted for a missing canonical
+analytical artifact. Audit manifest:
+`05e7f4b851ea2846b372b5c87a6c86b2fe1178de2cd61d2ed443a6f982626467`.
 
 ## Training reservation enforcement
 
