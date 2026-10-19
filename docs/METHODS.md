@@ -279,6 +279,28 @@ record index. It adds **413** original resolutions, for **13,892** unique matche
 are publisher placeholders. Event-time affiliations remain unknown and legal-title
 support remains 12,735; raw retrieval success is not equivalent to original-text recovery.
 
+The remaining **251** uncertain measures are queried through the distinct native
+`GetSponsors` operation using exact **biennium + original billId**, not `billNumber`.
+All source/receipt identities and the exact planned baseline population are frozen.
+`parse_records(..., sponsors=True)` preserves ID, name, chamber, explicit Primary/Secondary
+type, order and row position. `resolve_native_primary()` resolves every Primary row
+against the same biennium/chamber roster. List position, order and resolved cosponsors
+are never a primary-party fallback. Conflicting or missing primary evidence remains
+unknown. Repeated identical IDs retain all source rows and explicit duplicate counts;
+they do not by themselves contradict an otherwise unanimous recorded party.
+
+The native successor adds a distinct `source_session_party` field to a complete ledger,
+preserving every previous dictionary cell, original-record ambiguity and unknown
+event-time party. Its **1,997** native rows add **161 D / 79 R** observations, giving
+**9,195 D / 4,937 R / 11 unknown** across Washington's 14,143 retained measures.
+This is not party-at-filing certification, and no canonical input is overwritten.
+The ten explicitly titled system-test/training records among the remaining eleven
+require non-policy exclusion rather than invented affiliations. The substantive HB 2379
+gap is followed through its retained official original HTML/PDF links; its first reading
+and printed sponsors are preserved separately from any dated-party or classification
+claim. Full source packets, the copied resolver and independent XML replays are indexed
+in [AUDIT_STATUS.md](AUDIT_STATUS.md).
+
 ---
 
 ---

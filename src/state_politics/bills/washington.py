@@ -27,22 +27,29 @@ BILL_FIELDS = (
     "ShortDescription", "LongDescription", "LegalTitle", "Active",
 )
 MEMBER_FIELDS = ("Id", "Name", "Agency", "Party", "District")
+SPONSOR_FIELDS = ("Id", "Name", "Agency", "Type", "Order", "FirstName", "LastName")
 BASELINE_FIELDS = (
     "bill_id", "state", "session_identifier", "identifier", "title",
     "originating_chamber", "sponsor_party",
 )
 
 
-def parse_records(body: bytes, *, members: bool = False) -> list[dict]:
+def parse_records(
+    body: bytes, *, members: bool = False, sponsors: bool = False,
+) -> list[dict]:
     """Preserve source row positions and reject unexpected publisher response schemas."""
     if b"<!doctype" in body.lower() or b"<!entity" in body.lower():
         raise ValueError("DTD/entity declarations are not legislative evidence")
     root = ET.fromstring(body)
-    kind = "Member" if members else "Legislation"
+    if members and sponsors:
+        raise ValueError("choose one official response kind")
+    kind = "Sponsor" if sponsors else "Member" if members else "Legislation"
     if root.tag != f"{{{NS}}}ArrayOf{kind}":
         raise ValueError(f"unexpected official {kind} response")
-    fields = MEMBER_FIELDS if members else BILL_FIELDS
-    required = ("Id", "Agency") if members else BILL_FIELDS[:8]
+    fields = SPONSOR_FIELDS if sponsors else MEMBER_FIELDS if members else BILL_FIELDS
+    required = ("Id", "Agency", "Type") if sponsors else (
+        ("Id", "Agency") if members else BILL_FIELDS[:8]
+    )
     rows = []
     for index, element in enumerate(root):
         if element.tag != f"{{{NS}}}{kind}":
@@ -55,7 +62,7 @@ def parse_records(body: bytes, *, members: bool = False) -> list[dict]:
             row[field] = (nodes[0].text or "").strip() if nodes else ""
         if any(not row[field] for field in required):
             raise ValueError(f"missing required official fields in row {index}")
-        if members:
+        if members or sponsors:
             if row["Agency"] not in {"House", "Senate"} or not row["Id"].isdigit():
                 raise ValueError(f"invalid official member identity in row {index}")
         else:
@@ -68,6 +75,60 @@ def parse_records(body: bytes, *, members: bool = False) -> list[dict]:
                 raise ValueError(f"invalid original chamber in row {index}")
         rows.append(row)
     return rows
+
+
+def resolve_native_primary(
+    sponsors: list[dict], members: list[dict], *, biennium: str, agency: str,
+) -> dict:
+    """Use every explicit Primary row, never order, cosponsors or another chamber."""
+    if biennium not in BIENNIA or agency not in {"House", "Senate"}:
+        raise ValueError("native sponsorship needs a known biennium and chamber")
+    primary = [row for row in sponsors if row["Type"] == "Primary"]
+    result = {
+        "native_primary_session_roster_party": "unknown",
+        "native_primary_party_reason": "no_explicit_primary_sponsor",
+        "native_primary_resolution": [],
+        "native_primary_duplicate_ids": {
+            identity: count for identity, count in Counter(row["Id"] for row in primary).items()
+            if count > 1
+        },
+        "filing_time_party": "unknown",
+        "analytical_admission": False,
+    }
+    if any(row["Type"] not in {"Primary", "Secondary"} for row in sponsors):
+        result["native_primary_party_reason"] = "unsupported_native_sponsor_type"
+        return result
+    if not primary:
+        return result
+    for row in primary:
+        found = [member for member in members
+                 if (member["Biennium"], member["Id"], member["Agency"])
+                 == (biennium, row["Id"], agency)]
+        party = "unknown"
+        if row["Agency"] != agency:
+            reason = "native_primary_chamber_conflict"
+        elif len(found) != 1:
+            reason = "missing_or_multiple_chamber_scoped_members"
+        elif found[0]["Party"] not in {"D", "R"} or not found[0]["Name"]:
+            reason = "missing_or_unsupported_roster_party"
+        else:
+            reason = "official_biennium_and_chamber_roster"
+            party = found[0]["Party"]
+        result["native_primary_resolution"].append({
+            "sponsor_row_index": row["source_row_index"], "sponsor_id": row["Id"],
+            "roster_row_indices": [member["source_row_index"] for member in found],
+            "party": party, "reason": reason,
+        })
+    parties = {row["party"] for row in result["native_primary_resolution"]}
+    if "unknown" in parties:
+        reason = "unresolved_explicit_primary_sponsor"
+    elif len(parties) != 1:
+        reason = "conflicting_explicit_primary_parties"
+    else:
+        reason = "all_explicit_primary_sponsors_agree_in_session_roster"
+        result["native_primary_session_roster_party"] = parties.pop()
+    result["native_primary_party_reason"] = reason
+    return result
 
 
 def reconcile(baseline: list[dict], legislation: list[dict], members: list[dict]) -> list[dict]:

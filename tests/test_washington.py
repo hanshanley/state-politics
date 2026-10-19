@@ -14,6 +14,7 @@ from state_politics.bills.washington import (
     build_reconciliation,
     parse_records,
     reconcile,
+    resolve_native_primary,
 )
 from state_politics.platforms.recovery import verify_manifest
 from state_politics.provenance import sha256_file
@@ -246,3 +247,64 @@ def test_supplement_rejects_unbound_or_wrong_bill_responses_before_writing(tmp_p
             supplementary_sha256=sha256_file(supplement / "manifest.json"),
         )
     assert not out.exists()
+
+
+def _native(rows):
+    return parse_records(_xml_sponsors(rows), sponsors=True)
+
+
+def _xml_sponsors(rows):
+    root = ET.Element(f"{{{NS}}}ArrayOfSponsor")
+    for row in rows:
+        element = ET.SubElement(root, f"{{{NS}}}Sponsor")
+        for key, value in row.items():
+            ET.SubElement(element, f"{{{NS}}}{key}").text = value
+    return ET.tostring(root)
+
+
+def test_native_primary_uses_explicit_type_not_first_position_or_order():
+    rows = _native([
+        {"Id": "999", "Agency": "House", "Type": "Secondary", "Order": "0"},
+        {"Id": "101", "Agency": "House", "Type": "Primary", "Order": "9"},
+    ])
+    result = resolve_native_primary(rows, _members(), biennium="2019-20", agency="House")
+    assert result["native_primary_session_roster_party"] == "D"
+    assert result["native_primary_resolution"][0]["sponsor_row_index"] == 1
+    assert result["filing_time_party"] == "unknown"
+    assert result["analytical_admission"] is False
+
+
+@pytest.mark.parametrize(("rows", "reason"), [
+    ([("101", "Secondary")], "no_explicit_primary_sponsor"),
+    ([("999", "Primary"), ("101", "Secondary")], "unresolved_explicit_primary_sponsor"),
+    ([("101", "Unspecified")], "unsupported_native_sponsor_type"),
+    ([("101", "Primary"), ("202", "Primary")], "conflicting_explicit_primary_parties"),
+])
+def test_native_primary_preserves_unresolved_and_mixed_party_cases(rows, reason):
+    sponsors = _native([{"Id": identity, "Agency": "House", "Type": kind}
+                        for identity, kind in rows])
+    members = [*_members(), {
+        "Biennium": "2019-20", "Id": "202", "Agency": "House", "Party": "R",
+        "Name": "Another Member", "source_row_index": 2,
+    }]
+    result = resolve_native_primary(sponsors, members, biennium="2019-20", agency="House")
+    assert result["native_primary_session_roster_party"] == "unknown"
+    assert result["native_primary_party_reason"] == reason
+
+
+def test_native_primary_cannot_borrow_another_chamber():
+    sponsors = _native([{"Id": "101", "Agency": "Senate", "Type": "Primary"}])
+    result = resolve_native_primary(sponsors, _members(), biennium="2019-20", agency="House")
+    assert result["native_primary_session_roster_party"] == "unknown"
+    assert result["native_primary_resolution"][0]["reason"] == "native_primary_chamber_conflict"
+
+
+def test_identical_primary_ids_keep_every_row_and_duplicate_flag_without_inventing_disagreement():
+    sponsors = _native([
+        {"Id": "101", "Agency": "House", "Type": "Primary"},
+        {"Id": "101", "Agency": "House", "Type": "Primary"},
+    ])
+    result = resolve_native_primary(sponsors, _members(), biennium="2019-20", agency="House")
+    assert result["native_primary_session_roster_party"] == "D"
+    assert result["native_primary_duplicate_ids"] == {"101": 2}
+    assert [row["sponsor_row_index"] for row in result["native_primary_resolution"]] == [0, 1]

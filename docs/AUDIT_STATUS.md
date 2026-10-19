@@ -8,7 +8,7 @@ replacement classifier or establish complete contemporary coverage.
 |---|---|---|
 | Historical platforms | Recovered 2,091 authoritative archive documents, with publisher checksums and old/new archive reconciliation. | Historical availability must not be substituted for operative modern platforms. |
 | Contemporary platforms | Inventory v8 preserves 1,559 requests, including 1,440 retained responses across all 100 organizations, 119 failures and 1,371 body hashes. Corrected Alaska's stale host and recovered an image-only Massachusetts resolution. | Deferred navigation/images, OCR quality, source/institution/version adjudication and operative coverage remain unresolved. Retained responses are not verified platforms. |
-| Sponsorship | Date-aware attribution remains conservative. Official Washington bill-key and chamber-scoped numeric-ID joins now supply separate historical session-roster D/R evidence for 13,892 measures, without overwriting any filing-time party. | A biennial roster does not establish affiliation at filing. Exact event-date evidence and unresolved primary sponsors still block canonical D/R assignment. |
+| Sponsorship | Date-aware attribution remains conservative. Official Washington original-record and explicit native-primary sponsor evidence now supply separate historical session-roster D/R observations for 14,132 of 14,143 measures, without overwriting any filing-time party. | A biennial roster does not establish affiliation at filing. Ten remaining source rows identify themselves as system tests; one substantive original is recovered but lacks a native primary-sponsor API record. Event-time affiliation and all-state recovery remain open. |
 | Bills | October snapshot extracted: 1,090,369 source-context measures across all 50 states, 5,028,893 sponsorships, 9,002,451 actions and 873,980 vote events. All eleven tables have recorded hashes/counts. | Official-source reconciliation, historical affiliations and filing-time text review. Full extraction is not a certified source universe or analytical denominator. |
 | Classification | Four saved official English ModernBERT-base pilots compared on the same 52 platform references: external-only 41/52, joint 47/52, broader-source 47/52, Republican-expanded 49/52. The fourth run correctly rejects 3/4 mixtures and 6/6 non-policy units. | The fourth run loses one policy decision, still accepts a mixture above 0.999 and regresses on insufficient-evidence and taxonomy-boundary development cases. Both sets are examined diagnostics, not fresh independent tests. Independent review and empirical gates remain required. No candidate is approved. |
 | Labels | External CAP files recovered; split/group/exact-text and reviewed-platform source-body checks plus explicit reviewed-label provenance are implemented. | Source permissions, adapted-topic compatibility, near-duplicate families and reviewed state-domain training/development/test labels. |
@@ -110,8 +110,8 @@ the service requires **billId**. The corrected seven-request probe packet v2 ret
 **seven successful responses**, including a native sponsor list with explicit member
 IDs, chamber and Primary/Secondary type. This repairs the query error rather than
 claiming publisher unavailability or inventing party evidence from names. A follow-up
-native-sponsor recovery for the exact **251** remaining uncertain measures is running
-at this checkpoint; it is not included in these completed results.
+native-sponsor recovery for the exact **251** remaining uncertain measures was planned
+at this checkpoint; its completed successor follows.
 
 - Resolution retrieval manifest: `7dc7dc1ab633ee0e5bb7e9b305fa674156349047e3a191953ab91431d2fbff22`.
 - Reconciliation v2 manifest: `9fed147fe940afc52ae2db77652db0aa6b9d8a0acf99e37fa8d578397621dd8e`.
@@ -122,6 +122,63 @@ Canonical audit **v15** retains the actual return code **1**, the unchanged **34
 failures and all **23** completed research-packet identities. Its report is byte-identical
 to v14; its new wrapper manifest is
 `3908d69b2f96c3305a260436dea380a56c2d85e7660522776bb39dbaeef87550`.
+
+### Native primary sponsorship and a complete source-session ledger
+
+All **251/251** native sponsorship queries succeeded, preserving **1,997** complete
+parsed source rows and their original XML. The requested **original bill identifier**
+binds each list, even when the detailed legislation API has only an amended version
+or duplicate-original metadata. The producer uses explicit **Primary** type, not the
+first returned row or `Order=0`. Unknown primaries cannot be rescued by cosponsors;
+unknown sponsor types, chamber conflicts, conflicting parties and missing/ambiguous
+roster entries remain unresolved.
+
+The first strict replay left six repeated-primary-ID cases unknown. Reading every
+remaining case showed the repeated primary IDs actually agree, with the same chamber
+and source party. The successor retains **every repeated row**, per-row roster proofs
+and explicit duplicate-ID counts rather than silently deduplicating them or inventing
+a disagreement. All six duplicate-original legal-text ambiguities still remain; source
+sponsorship does not certify which original text version is intended.
+
+The frozen successor
+`data/processed/washington-native-sponsorship-reconciliation-v2/` adds **240**
+source-scoped observations (**161 D / 79 R**), preserving every preceding dictionary
+cell in the complete **14,143-row** ledger. Its new `source_session_party` field totals
+**9,195 D / 4,937 R / 11 unknown**. The older `session_roster_party` field remains
+unchanged because its original-record-only evidence contract has not changed.
+All canonical `sponsor_party` and event-time `filing_time_party` values remain unknown.
+The resolver source is copied and checksum-bound alongside the complete parent and
+native-source packets.
+
+An independent native-XML replay checks all **1,997** parsed sponsorship rows, every
+primary-to-roster decision, duplicate flags and all **14,143** original ledger rows.
+The eleven remaining native gaps were individually read: **ten** source titles explicitly
+identify system-testing/training records, and one is the substantive **2023-2024 HB 2379**
+habitat-recovery measure. None has a native sponsor entry. These source-scope dispositions
+are assistant review, not independent gold or analytical admission; a blank API response
+is not evidence that the substantive bill does not exist.
+
+For HB 2379, the retained Open States version-link rows lead to the official original
+HTML and **five-page PDF**, successfully recovered through both recorded HTTP and explicit
+HTTPS alternatives (**four successful receipts, two distinct bodies**). The first-page
+header identifies the bill, 2024 session, sponsors and first reading on **January 15,
+2024**. A first-reading date is not automatically a filing date, and the printed sponsor
+list is not by itself a dated party-membership interval. The document is not automatically
+admitted as classified text or used to fill the remaining event-party gap.
+
+- Native retrieval manifest: `e8e75b4ae23d94d8e05e9673e151610bd45f28e95ee16aded76c700292dea0e1`.
+- Native reconciliation v2 manifest: `3ad36dc8ec8f62a1fd520750b141785272fb6d891c07ce2d4362ce820e2f21d1`.
+- Independent native replay: `1c21d5ef2baf3820af5e00116beeffd74c654608fc0cec82290d13fdcede46ea`.
+- HB 2379 original retrieval: `24550ef32f42d44bbca96b08e7b0889efe20f0fe90bc4657f1759e484adbe443`.
+
+No candidate model, source-session observation or printed sponsor surname is promoted to
+independent filing-time truth. The national canonical **39 D / 21 R** totals remain
+unchanged, and no site integration or deployment has occurred.
+
+Canonical audit **v16** retains return code **1** and the unchanged **34/324** failed
+checks. It records **27** completed research packets without substituting them for
+canonical inputs. The report remains byte-identical to v15; audit manifest:
+`88691252c0eb7c9e935e768d1225c352e33666f855a13b8b34a991d944f3434f`.
 
 ## Training reservation enforcement
 
