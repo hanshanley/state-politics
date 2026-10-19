@@ -384,6 +384,15 @@ not retrieval or semantic validation. A legacy URL without a parsed document ID,
 document absent from this endpoint, remains unresolved rather than being declared a wrong
 attachment or nonexistent document.
 
+Keep native amendments separate from bill-version candidates even when the publisher's
+amendment record contains `BillVersion: Introduced`. In the retained 2021 SD HB1059 example,
+amendment 1059A is document 213785, while the bill's introduced version is document 211321.
+The original amendment field is a verbatim observation, not an inferred amendment-stage
+or document-role certification. Only the bill-ID-bound **versions** response supplies the
+`native_version_note` input to introduced-document planning; amendment metadata uses its
+own category and observation columns. A field value shared across endpoints is not proof
+that the documents have the same role.
+
 All-page embedded extraction can also silently omit visible text. For NM 2026 HB 99's
 23-page amendments-in-context PDF, both pypdf and MuPDF extracted only a 61-character
 session heading. Rendered pages visibly contained policy text; pinned Tesseract 5.5.2

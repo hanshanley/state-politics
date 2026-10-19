@@ -541,6 +541,38 @@ byte-identical to v22: no missing analytical output was substituted or release f
 suppressed. Audit manifest:
 `14ad03079e2ce33b4c3b44e41db9d31bf098c3f752c0aa472521a95627bd22f1`.
 
+### Amendment-category proof and complete-cohort follow-through
+
+A retained publisher-client trace identifies a **separate native amendments endpoint**.
+The frozen `data/processed/south-dakota-amendment-category-review-v1/` binds the retained
+2021 HB1059 reference to native amendment **1059A / document 213785**, under native bill
+**12322**. That reference is absent from the version lists because this publisher category
+is separate; the native amendment response itself contains `BillVersion: Introduced`.
+The actual bill's unique introduced candidate is **document 211321**, not 213785.
+Thus an `Introduced` string outside the bill-versions endpoint must not become an original
+bill-text candidate. The precise semantics of the amendment's `BillVersion` field remain
+uninterpreted; its literal value, result, instruction ID and complete original JSON persist.
+This establishes the category for **one** retained link, not all 1,933 unlisted references,
+and does not certify either PDF's contents or silently alter the original reference replay.
+Category-review manifest:
+`5a95ae7d20d5e2d2865e061409b71c486c02bb43e25f35bc325583a67bf276e2`.
+
+Two paced, resumable complete-cohort jobs now pursue the next evidence layers: introduced
+PDF capture with **both all-page embedded-text extractions**, and separate native amendment
+lists with neutrally named bill-version observations. Each scopes all **5,369** native
+measures, retains receipts/raw bodies, and leaves native-heading, filing-time, training and
+analytical flags false. Empty embedded text is explicit blank-versus-scan triage, not a
+silent extraction success or claimed OCR. **These jobs are not complete frozen packets**
+and are not indexed as completed recovery or analytical inputs. The first amendment
+attempt was stopped before freezing to remove an unsupported stage interpretation; its
+partial responses remain retained, and the successor reuses those cached responses.
+No publication or approved classifier change accompanies this collection.
+
+Canonical audit checkpoint **v24** verifies **50** completed research packets, excluding
+both live collections. The actual canonical **exit 1 / 34 failures among 328 checks**
+remains unchanged; its report is byte-identical to v23. Audit manifest:
+`f10e4dd20804db2974a3fb336943d5c3e0c7e3eedb2d6c83c19ee2abff29dad2`.
+
 ## Training reservation enforcement
 
 The training CLI now accepts an explicit `--source-reservation` pointing to a
