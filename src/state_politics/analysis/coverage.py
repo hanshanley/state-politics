@@ -153,10 +153,15 @@ def build_capability_report(data_dir: Path):
                 bills["originating_chamber"].isin(["upper", "lower", "legislature"])
             ])
     if bill_coverage is not None:
+        test_exclusions = (
+            f" and {int(bill_coverage['n_source_test_excluded'].sum()):,} source-test exclusions"
+            if "n_source_test_excluded" in bill_coverage.columns else ""
+        )
         bill_evidence += (
             f" Legacy classifier coverage reports {int(bill_coverage['n_attributed'].sum()):,} "
             f"attributed rows and {int(bill_coverage['n_procedural_excluded'].sum()):,} "
-            "procedural exclusions; these are not reconciled or certified denominators."
+            f"procedural exclusions{test_exclusions}; "
+            "these are not reconciled or certified denominators."
         )
     actions_path = data_dir / "bill_actions.parquet"
     votes_path = data_dir / "vote_events.parquet"

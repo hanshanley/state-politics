@@ -52,7 +52,7 @@ repository audit fails when a Python file is added without an entry here.
 | `src/state_politics/analysis/gold_sample.py` | Creates the deterministic sampling frame and seeded unlabeled template used for new human-labeling rounds. |
 | `src/state_politics/analysis/validate.py` | Scores historical keyword/embedding baselines against the previously inspected 50-plank snapshot; reviewer provenance remains unresolved. |
 | `src/state_politics/analysis/emphasis.py` | Classifies platform planks, clusters redundant collected/cross-corpus documents, and computes equal-state matched-party topic shares plus pooled sensitivity outputs. |
-| `src/state_politics/analysis/revealed.py` | Classifies bills state-by-state, excludes drafting placeholders/pre-2018 leakage, reports coverage, and computes equal-state matched headline shares plus pooled sensitivity. |
+| `src/state_politics/analysis/revealed.py` | Classifies bills state-by-state, excludes drafting placeholders/pre-2018 leakage and reviewed exact Washington system-test titles, retains source-test reasons/inputs without model calls, reports separate non-substantive coverage counts, and computes equal-state matched shares plus pooled sensitivity. |
 | `src/state_politics/analysis/validate_bills.py` | Measures subject-tag agreement and coverage without assuming source tags are independent truth or universally staff-authored. |
 | `src/state_politics/analysis/profiles.py` | Produces era-matched state summaries and leave-one-out outlier rankings gated by sample floors and multinomial null simulations. |
 | `src/state_politics/analysis/intraparty.py` | Measures within-party dispersion, within-vs-between coherence, divisive topics, centroid distance, and permutation significance. |
@@ -110,7 +110,7 @@ repository audit fails when a Python file is added without an entry here.
 | `tests/test_platform_curriculum.py` | Native-unit scope, ambiguous/absent selectors, complete paragraph context and trailing versus internal PDF page boundaries; source-expansion successors preserve original reference dictionaries, complete source bytes and Unicode spans, quarantine unresolved units, and reject changed inputs/held-out copies before writing. |
 | `tests/test_platform_challenge.py` | Exact native boundaries across PDF page breaks and space-only HTML separators, unmodified entities, and explicit failure on ambiguous, missing or same-line endpoints. |
 | `tests/test_site.py` | Full-text downloads and all-organization coverage reconcile; typed native alternatives preserve original text and review scope, reject invalid scope or mislabeled methods, and retain legacy inventory support; absent search results remain unresolved rather than being labelled platform absence. |
-| `tests/test_emphasis.py` | Gold snapshot existence/coverage, emphasis denominators and classifier score handling. |
+| `tests/test_emphasis.py` | Gold snapshot existence/coverage, emphasis denominators and classifier score handling; publisher tests never reach the model despite sample policy text, genuine testing policy stays eligible, and exclusions remain exported outside substantive coverage denominators. |
 | `tests/test_validate_bills.py` | Subject-tag normalization, no-guess conflict handling, precision/recall and tag replication. |
 | `tests/test_diffusion.py` | Title normalization, duplicate-index safety, clustering, transitive cohesion and ceremonial flags. |
 | `tests/test_intraparty.py` | Cosine behavior, common-state composition, coherence, permutation null/power and centroid/topic spread. |

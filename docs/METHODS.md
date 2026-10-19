@@ -598,12 +598,23 @@ a platform plank. Bills are classified from titles, which are shorter, more proc
 written for a different purpose, so the plank accuracy figure does not transfer to them. That
 left the *revealed* half of the headline resting on a classifier nobody had measured.
 
-Two known state drafting placeholders are excluded before classification because they contain no
-policy description: Illinois titles ending in `-TECH` and New Mexico's standard `PUBLIC PEACE,
-HEALTH, SAFETY & WELFARE` emergency-clause title. They accounted for 13,490 party-attributed
-records and previously created false Illinois technology and New Mexico welfare outliers.
-`bill_classification_coverage.csv` reports attributed, procedural-excluded, classified and
-classification-rate counts for every state-party; those fields are also carried into the atlas.
+Two known state drafting placeholders are excluded when no summary or introduced text supplies
+policy evidence: Illinois titles ending in `-TECH` and New Mexico's standard `PUBLIC PEACE,
+HEALTH, SAFETY & WELFARE` emergency-clause title. In the legacy baseline they accounted for
+13,490 party-attributed records and created false Illinois technology and New Mexico welfare
+outliers; that count is not a certified denominator for the current snapshot.
+
+The source audit additionally identified ten Washington system-test/training records with six
+distinct, explicit test titles. Exact whitespace-normalized, case-insensitive title matches
+are excluded **only for Washington**, even when sample policy summaries or bill bodies are
+attached. This is not a generic `testing` keyword filter: drinking-water testing legislation,
+for example, remains eligible. The prediction ledger retains the complete input, source ID,
+input hash and `source_test_record` exclusion reason without invoking the model.
+`bill_classification_coverage.csv` reports `n_source_test_excluded` separately from procedural
+shells. Both exclusions leave the substantive coverage denominator but remain in source and
+prediction inventories; source-test rows are not counted as substantive model abstentions.
+The separate counts also propagate into the state-party atlas and capability report. Older
+coverage files without this new count are not retroactively given fabricated zero counts.
 
 Roughly half of all bills carry `subject` tags applied by the legislature's own staff. Those
 tags are a genuinely independent signal — a different labeller, a different process, recorded

@@ -133,7 +133,7 @@ first returned row or `Order=0`. Unknown primaries cannot be rescued by cosponso
 unknown sponsor types, chamber conflicts, conflicting parties and missing/ambiguous
 roster entries remain unresolved.
 
-The first strict replay left six repeated-primary-ID cases unknown. Reading every
+The initial strict reconciliation left six repeated-primary-ID cases unknown. Reading every
 remaining case showed the repeated primary IDs actually agree, with the same chamber
 and source party. The successor retains **every repeated row**, per-row roster proofs
 and explicit duplicate-ID counts rather than silently deduplicating them or inventing
@@ -179,6 +179,37 @@ Canonical audit **v16** retains return code **1** and the unchanged **34/324** f
 checks. It records **27** completed research packets without substituting them for
 canonical inputs. The report remains byte-identical to v15; audit manifest:
 `88691252c0eb7c9e935e768d1225c352e33666f855a13b8b34a991d944f3434f`.
+
+### Preventing publisher test records from becoming policy evidence
+
+The classifier now excludes the six exact reviewed Washington system-test/training titles,
+with whitespace/case normalization and a Washington-only scope. It does not use a generic
+testing keyword. The exclusion applies even with attached sample policy summaries or bodies;
+Illinois/New Mexico drafting-shell behavior remains unchanged when substantive evidence exists.
+Every excluded row retains its source record, exact classification input/hash and explicit
+`source_test_record` reason with `classification_status=excluded`; the model is not invoked.
+
+A frozen replay screens all **14,143** Washington baseline titles and flags **exactly the ten
+reviewed source IDs**, with no additional baseline rows flagged. All ten source rows and their
+exclusion outputs are preserved in
+`data/processed/washington-system-test-exclusion-verification-v1/`.
+The substantive HB 2379 title is not excluded. The complete baseline hash remains unchanged.
+This checks the bounded reviewed population, not the absence of all other possible test bills
+or the accuracy of substantive classifications.
+
+Coverage now reports `n_source_test_excluded` separately, removes these records from the
+substantive denominator and does not misreport them as model abstentions. Source/prediction
+inventories retain them, and the separate count reaches the state-party atlas and capability
+report. Existing coverage artifacts are not silently rewritten; no model training, canonical
+analysis or publication admission occurs.
+
+Exclusion verification manifest:
+`07dae8272fdb643c7aea25a2bf51ca47ddab7951814a84a8e749893babb626c7`.
+
+Canonical audit **v17** records **28** completed research packets and still returns **1**
+with the same **34/324** failures. Its manifest is
+`ff2a2f641bd81fc7e59f404fc21d57302a3215e8bb5672215c6e8bd83a50d6af`;
+the canonical report remains unchanged.
 
 ## Training reservation enforcement
 

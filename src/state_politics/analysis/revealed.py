@@ -39,7 +39,7 @@ from .taxonomy import DEFAULT_TOPICS_PATH, MIN_TOPIC_SIMILARITY, load_topics
 
 __all__ = [
     "classify_bills", "count_topics_by_state", "divergence_table",
-    "is_procedural_shell_title", "party_emphasis_from_states",
+    "is_procedural_shell_title", "is_source_test_title", "party_emphasis_from_states",
 ]
 
 #: Bill titles handed to the classifier per pass. Bounds peak memory on a machine whose RAM is
@@ -50,6 +50,20 @@ _NM_EMERGENCY_CLAUSE_RE = re.compile(
     r"^PUBLIC,?\s+PEACE,\s+HEALTH,\s+SAFETY\s+&\s+WELFARE$",
     re.I,
 )
+# Exact reviewed titles, not a "testing" keyword rule; see AUDIT_STATUS.md.
+_WA_SOURCE_TEST_TITLES = frozenset({
+    "bill 4 for system testing",
+    "bill 2 for system testing",
+    "test bill for production testing",
+    "test bill for production system testing",
+    "testing bill for session 2025 testing and training",
+    "training bill for session '25",
+})
+
+
+def is_source_test_title(title: str, state: str) -> bool:
+    """Recognize reviewed publisher system-test records, regardless of sample body text."""
+    return state == "WA" and " ".join((title or "").split()).casefold() in _WA_SOURCE_TEST_TITLES
 
 
 def is_procedural_shell_title(title: str, state: str) -> bool:
@@ -79,7 +93,8 @@ def classify_bills(bills, classifier, *, batch_size: int = 8,
         "taxonomy_sha256": manifest.get("taxonomy_sha256"),
         "calibration_sha256": getattr(classifier, "calibration_sha256", None),
         "n_input_tokens": None, "n_discarded_tokens": None,
-        "record_id": None, "procedural_shell": False, "classification_text": "",
+        "record_id": None, "procedural_shell": False, "source_test_record": False,
+        "classification_text": "",
         "input_tier": None, "classification_status": None,
     }
     for position, row in enumerate(bills.to_dict("records")):
@@ -92,16 +107,18 @@ def classify_bills(bills, classifier, *, batch_size: int = 8,
         shell = is_procedural_shell_title(title, str(row.get("state", ""))) and not (
             summary.strip() or introduced.strip()
         )
-        reason = "procedural_shell" if shell else (
+        source_test = is_source_test_title(title, str(row.get("state", "")))
+        reason = "source_test_record" if source_test else "procedural_shell" if shell else (
             "insufficient_evidence" if len(text.strip()) < min_title_chars else None
         )
         rows.append({
             **defaults,
             "topic": None, "score": None, "margin": None, "abstention_reason": reason,
-            "procedural_shell": shell, "classification_text": text,
+            "procedural_shell": shell, "source_test_record": source_test,
+            "classification_text": text,
             "record_id": row.get("bill_id"),
             "input_sha256": hashlib.sha256(text.encode()).hexdigest(),
-            "classification_status": "excluded" if shell else "abstained",
+            "classification_status": "excluded" if shell or source_test else "abstained",
             "input_tier": (
                 "introduced_text" if introduced.strip()
                 else "official_summary" if summary.strip() else "title_only"
@@ -187,7 +204,9 @@ def count_topics_by_state(
             usable = frame[frame["topic"].notna()]
             classified_total += len(usable)
             for party, party_frame in frame.groupby("party"):
-                substantive = party_frame[~party_frame["procedural_shell"]]
+                substantive = party_frame[
+                    ~(party_frame["procedural_shell"] | party_frame["source_test_record"])
+                ]
                 n_classified = int(substantive["topic"].notna().sum())
                 coverage_rows.append(
                     {
@@ -197,6 +216,7 @@ def count_topics_by_state(
                         "n_procedural_excluded": int(
                             party_frame["procedural_shell"].sum()
                         ),
+                        "n_source_test_excluded": int(party_frame["source_test_record"].sum()),
                         "n_substantive_attributed": len(substantive),
                         "n_classified_total": n_classified,
                         "n_abstained": len(substantive) - n_classified,
@@ -223,7 +243,7 @@ def count_topics_by_state(
                   columns=["state", "party", "year", "topic", "n_bills"]
               ))
     coverage = pd.DataFrame(coverage_rows, columns=[
-        "state", "party", "n_attributed", "n_procedural_excluded",
+        "state", "party", "n_attributed", "n_procedural_excluded", "n_source_test_excluded",
         "n_substantive_attributed", "n_classified_total", "n_abstained", "classification_rate",
     ])
     return counts, {

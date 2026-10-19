@@ -279,6 +279,92 @@ def test_unscored_and_empty_bills_keep_traceable_prediction_schema():
     assert empty.empty and set(empty.columns) == set(result.columns)
 
 
+def test_reviewed_washington_system_tests_are_excluded_even_with_policy_text():
+    from state_politics.analysis.revealed import classify_bills
+
+    class UncalledClassifier:
+        def predict_many(self, *args, **kwargs):
+            raise AssertionError("publisher test records must never reach the model")
+
+    bills = pd.DataFrame({
+        "bill_id": [f"test-{index}" for index in range(6)],
+        "state": "WA",
+        "title": [
+            "Bill 4 for System Testing",
+            "Bill 2 for System Testing",
+            " TEST   BILL FOR PRODUCTION TESTING ",
+            "TEST BILL for Production System Testing",
+            "TESTING BILL for Session 2025 Testing and Training",
+            "TRAINING BILL FOR SESSION '25",
+        ],
+        "summary": "Funding public schools and teacher salaries statewide.",
+        "introduced_text": "The state shall appropriate funding for classroom instruction.",
+    })
+    result = classify_bills(bills, UncalledClassifier())
+
+    assert result["record_id"].tolist() == bills["bill_id"].tolist()
+    assert result["source_test_record"].all()
+    assert result["classification_status"].eq("excluded").all()
+    assert result["abstention_reason"].eq("source_test_record").all()
+    assert result["topic"].isna().all()
+    assert result["score_type"].eq("not_scored").all()
+    assert result["classification_text"].str.contains("classroom instruction", regex=False).all()
+    pd.testing.assert_frame_equal(result[bills.columns], bills)
+
+
+def test_source_test_guard_keeps_real_testing_policy_and_evidenced_shells():
+    from state_politics.analysis.revealed import classify_bills
+
+    class StubClassifier:
+        def predict_many(self, texts, **kwargs):
+            assert len(texts) == 4
+            return [(6, 0.9, 0.3) for _ in texts]
+
+    bills = pd.DataFrame([
+        {"state": "WA", "title": "Testing requirements for safe public drinking water."},
+        {"state": "WA", "title": "Establishing a system testing program for water supplies."},
+        {"state": "TX", "title": "TEST BILL FOR PRODUCTION TESTING"},
+        {"state": "IL", "title": "EDUCATION-TECH",
+         "introduced_text": "Funding public schools and teacher salaries statewide."},
+    ])
+    result = classify_bills(bills, StubClassifier())
+    assert result["topic"].eq(6).all()
+    assert not result["source_test_record"].any()
+    assert not result["procedural_shell"].any()
+
+
+def test_source_test_exclusions_leave_coverage_denominators_but_remain_exported(tmp_path):
+    from state_politics.analysis.revealed import count_topics_by_state
+
+    class StubClassifier:
+        def predict_many(self, texts, **kwargs):
+            assert texts == ["Testing requirements for safe public drinking water."]
+            return [(21, 0.9, 0.3)]
+
+    bills = pd.DataFrame([
+        {"bill_id": "test", "title": "TEST BILL FOR PRODUCTION TESTING"},
+        {"bill_id": "sample", "title": "Bill 4 for System Testing",
+         "introduced_text": "Funding public schools and teacher salaries statewide."},
+        {"bill_id": "policy", "title": "Testing requirements for safe public drinking water."},
+    ]).assign(state="WA", sponsor_party="D", year=2024)
+    path = tmp_path / "bills.parquet"
+    bills.to_parquet(path, index=False)
+    counts, totals, coverage = count_topics_by_state(
+        path, StubClassifier(), progress=None, predictions_dir=tmp_path / "predictions",
+    )
+    assert totals == {"n_bills": 3, "n_attributed": 3, "n_classified": 1}
+    assert counts["n_bills"].tolist() == [1]
+    row = coverage.iloc[0]
+    assert row["n_source_test_excluded"] == 2
+    assert row["n_procedural_excluded"] == 0
+    assert row["n_substantive_attributed"] == 1
+    assert row["n_abstained"] == 0
+    assert row["classification_rate"] == 1.0
+    exported = pd.read_parquet(tmp_path / "predictions" / "WA.parquet")
+    assert exported["bill_id"].tolist() == bills["bill_id"].tolist()
+    assert exported["classification_status"].tolist() == ["excluded", "excluded", "classified"]
+
+
 def test_topic_vectors_recomputes_shares_instead_of_summing_eras():
     """The platform table is split by era and each era's shares sum to 1.
 

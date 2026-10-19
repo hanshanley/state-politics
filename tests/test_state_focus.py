@@ -205,7 +205,7 @@ def test_small_bill_sample_is_descriptive_but_not_a_focus_claim():
             {
                 "state": "ID", "party": "D", "topic": 2,
                 "topic_name": "Civil rights and liberties",
-                "n_bills": 40, "share": 1.0,
+                "n_bills": 40, "share": 1.0, "n_source_test_excluded": 3,
             }
         ]
     )
@@ -214,5 +214,6 @@ def test_small_bill_sample_is_descriptive_but_not_a_focus_claim():
     idaho = atlas[(atlas["state"] == "ID") & (atlas["party"] == "D")].iloc[0]
 
     assert idaho["bill_n_items"] == 40
+    assert idaho["bill_n_source_test_excluded"] == 3
     assert not idaho["bill_focus_reliable"]
     assert idaho["bill_status"] == "available"
