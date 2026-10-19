@@ -317,6 +317,10 @@ versions remain visible. Source URL strings are never rewritten. Schema 2 adds a
 labelled `request_url` when whitespace needs percent-encoding; controls, malformed hosts and
 unsupported schemes remain unresolved. Syntactic usability is not a network or document check.
 An imported original-note hint never certifies native version identity.
+Plural "Amendments" and explicit "Final Version" notes are later-version hints too;
+word boundaries avoid treating unrelated longer tokens as these labels. The v3 successor
+preserves all v2 source fields and request/eligibility decisions, changing only these hints
+and their derived counts. The separate reconciliation retains every changed link identity.
 
 The `collect` subcommand requires an inventory manifest checksum, explicit `--link-id`
 selection and a new `--out`. It retains complete response bytes and physical JSONL receipts,
@@ -334,6 +338,17 @@ This prevents two verified regular-session finals from passing unnoticed under t
 New Mexico special-session bill contexts. The same PDF under its legitimate regular-session
 bill, or changed bytes after a publisher correction, remains **unreviewed**, not automatically
 certified or globally blocked. Older captures are not retroactively described as guarded.
+
+Application shells require native-source tracing rather than guessed PDF/session rewrites.
+The bounded SD/WY successor retains publisher client chunks, configuration, complete API
+responses, request receipts and every recovered version. SD HB 1132 demonstrates that
+a faithfully imported current title can describe a later extensively amended subject,
+not the introduced policy. Preserve version-specific text and the original summary title
+separately. Wyoming's native Senate record explicitly links a House mirror and its veto
+material: related-bill evidence must keep the House identity, not become Senate bill text.
+A filename/chamber mismatch alone does not prove an erroneous source attachment.
+Session sponsor observations, successful downloads and complete page extraction do not
+establish event-time affiliation, enacted status or independent semantic certification.
 
 All-page embedded extraction can also silently omit visible text. For NM 2026 HB 99's
 23-page amendments-in-context PDF, both pypdf and MuPDF extracted only a 61-character

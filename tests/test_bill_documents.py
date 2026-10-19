@@ -71,6 +71,30 @@ def test_missing_version_metadata_is_explicit_not_dropped_or_inferred():
     assert set(unlinked["id"]) == {"plain", "unlinked"}
 
 
+@pytest.mark.parametrize(
+    "note,later",
+    [
+        ("Amendments In Context", True),
+        ("Final Version", True),
+        ("FiNaL   Version 3/04/24", True),
+        ("Final Versioning", False),
+        ("AmendmentsIndex", False),
+    ],
+)
+def test_plural_amendments_and_final_versions_are_retained_as_uncertified_later_hints(note, later):
+    bills, versions, links = _sources()
+    versions.loc[0, "note"] = note
+    candidates, coverage, _ = build_document_inventory(bills, versions, links)
+    row = candidates.iloc[0]
+    assert row["version_note"] == note
+    assert row["version_note_hint"] == ("later_note" if later else "unclassified_note")
+    assert coverage.set_index("bill_id").at["policy", "n_later_note_links"] == 1 + later
+    assert row["collection_eligible"]
+    assert not row["version_identity_certified"]
+    assert not row["filing_time_text_certified"]
+    assert not row["analytical_admission"]
+
+
 @pytest.mark.parametrize("defect", ["duplicate_link", "wrong_bill", "outside_bill", "wrong_schema"])
 def test_conflicting_source_identity_fails_explicitly(defect):
     bills, versions, links = _sources()

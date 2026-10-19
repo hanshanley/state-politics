@@ -391,6 +391,62 @@ retains actual return code **1**, and has the **same 34/326 failures and identic
 canonical report as v19**. The missing certified analytical artifacts remain missing.
 Audit manifest: `d817b4f9d10e752d26f3876f50c2cfb7e9a90c0b7e422e00060458c83cee375a`.
 
+### Native shell resolution, subject changes and mirror-bill evidence
+
+The successor `data/processed/sd-wy-native-document-resolution-v1/` follows retained
+publisher application code and configuration to the actual public APIs and document
+links. Its **23 successful follow-up responses** preserve the client/API provenance,
+**nine PDFs and all 96 pages**, including separate pinned OCR and rasters for all six
+image-only veto pages. This resolves the two bounded application-shell observations;
+it is not a statewide completeness finding.
+
+For **SD 2018 HB 1132**, the native regular-session record and complete four-version
+list recover the introduced PDF and three later engrossed PDFs. The introduced subject
+is the alcohol-consumption age for military service members. All three later versions
+instead concern alcoholic-beverage sponsorship/advertising and explicitly warn of
+extensive amendment ("hoghoused"). The baseline and current native summary title match
+the later subject, not introduction. A title-only classifier can therefore assign the
+wrong filing-time policy even when the source title is faithfully imported. Both subjects,
+every native version and the original title remain retained; no title is overwritten.
+Two native primary-sponsor Republican observations are session-scoped, not certified
+party-at-filing assignments.
+
+For **WY 2020S1 SF 1004**, the native Senate API explicitly records **"S See Mirror Bill
+HB1004"** and itself lists the obsolete House veto link present in the baseline. The
+chamber mismatch is thus publisher-listed related material, **not a demonstrated import
+error**. The Senate introduced text and the separate House introduced, enrolled, veto
+letter and final-veto-summary PDFs are retained under their correct contexts. The House
+bill has its own baseline identity; its documents are not silently reassigned as Senate
+versions or treated as proof of the Senate bill's enacted status. Scanned-veto pages 1
+and 6 were visually inspected, not all six; noisy OCR does not certify amounts, deletions
+or operative provisions. The final summary also warns that its pagination differs from
+the original enrolled act.
+
+The imported-note parser now recognizes plural **"Amendments"** and **"Final Version"**
+as later-version hints, without promoting any source to native-version or filing-time
+certification. Inventory **v3** preserves every original link, version field, URL,
+eligibility decision and row order from v2. Only **15,146** previously unclassified
+link hints change, spanning **11,870** source-context measures in **nine** states;
+all corresponding per-bill and per-state counts reconcile. A separate programmatic
+successor also checks all five bill identity/context/title fields and original row order
+against the unchanged 1,090,369-row source, preserving the preceding full link/version
+reconciliation. These are metadata corrections, not new document recoveries or independent
+semantic validation.
+
+- Native SD/WY resolution manifest: `80d0cb6e40011e256913252ff79a8a592bf71d0dafd4cc7a908b4af97f0e73cb`.
+- Reference inventory v3 manifest: `c8e80fe88c63d861a0d0275950557306074f34cb56d9d7a18bd1d478fea56c5c`.
+- Reference reconciliation v2 manifest: `189e856626049337b96622bdd83f568426a22ed7b78bf3dccf39e18516b06006`.
+
+Original raw bytes, extracted/OCR text and producer scripts remain in immutable,
+Git-ignored local packets; the push backs up code and recorded hashes, not those bytes.
+Canonical classifications, event-time parties, training admission and publication status
+remain unchanged. The companion is still unpublished and unintegrated.
+
+Canonical audit **v21** verifies and indexes **46** completed research packets and retains
+actual return code **1**. Its canonical report is byte-identical to v20: **34/326 failures**
+remain, rather than being hidden by admitting uncertified research artifacts.
+Audit manifest: `056b7a29c0a01ab7b49800cece5913a2865724b604f4f5b8f1c7f94e83ffabef`.
+
 ## Training reservation enforcement
 
 The training CLI now accepts an explicit `--source-reservation` pointing to a

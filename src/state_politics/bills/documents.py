@@ -38,7 +38,7 @@ _ORIGINAL_NOTES = frozenset(
         "introduced senate bill (s)",
     }
 )
-_LATER_NOTE = re.compile(r"\b(substitute|engrossed|enrolled|amendment|passed)\b")
+_LATER_NOTE = re.compile(r"\b(substitute|engrossed|enrolled|amendments?|passed|final\s+version)\b")
 # Bill numbers recur across sessions; quarantine only the reviewed bill/response pair.
 _KNOWN_CONTEXT_CONFLICTS = {
     (
