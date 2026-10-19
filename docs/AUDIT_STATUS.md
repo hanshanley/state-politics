@@ -115,6 +115,45 @@ recorded. Manifest:
 report `02037d3460cb46b5572b401da507d96de6725d4786e8cf63de0ff6475d20a27d`.
 Research-model progress does not make the canonical analytical release reproducible.
 
+## Reserved source-disjoint platform challenge
+
+`data/labels/platform-challenge-reserved-sources-v1/` froze complete original bytes and
+native text for **ID-R, MT-R, WA-R, MN-D, WA-D and VT-D** before new challenge labels or
+predictions. The reservation applies to those organizations' **other document versions
+too**: they must not subsequently become training evidence for an allegedly source-disjoint
+comparison. These five states are outside all existing platform training/development
+states. Availability does not establish contemporary operative adoption or permission.
+Reservation manifest:
+`11d22bd486e2bcd46eaa1171fb1090cea12c682290674c2e6c044b7e00a2deae`.
+
+`data/labels/source-disjoint-platform-challenge-v1/` preserves **52** provisional
+assistant-reviewed references: **42 positives, exactly two in every topic**, four intact
+mixed-policy rejections and six non-policy front-matter/navigation rejections. The
+population is **28 D / 24 R**; positives are **23 D / 19 R**. Both technology references
+and both culture/arts references are Democratic, not evidence of per-topic party balance.
+Source counts are MN-D 15, WA-R 10, MT-R 8, VT-D 8, ID-R 6 and WA-D 5.
+
+All **6,112** preceding training/development records remain unchanged. Exact offsets,
+original text/body/document hashes, complete source parquets, native bytes/text, nearby
+review context and rationales are retained. Explicit native boundaries prevent the
+space-only blank lines in Vermont's HTML extraction from combining unrelated commitments.
+Cross-split identities and close-unit copies are checked; scored source spans do not
+overlap. Three additional units remain unscored: AI infrastructure/federalism, marriage
+recognition/federalism and a combined civil-rights/health paragraph. The packet's **23**
+bound files and every selected/context span independently reconcile. Manifest:
+`b125ba94eb2a77fb2ab48b22ba84e8c3cadef0b286784f603064ee2944796fb8`.
+
+The comparison plan freezes the same three saved models, their actual original training
+labels and checkpoint-file hashes, plus the unchanged research-default policy
+(`temperature=1.0`, confidence floor `0.8`, margin floor `0.2`) **before predictions**.
+Plan: `data/processed/source-disjoint-platform-comparison-v1/evaluation_plan.json`,
+hash `f57b0816620aad8e0f0cf1e57e993970146ed1c3bd6622ee9ac5e7acb9d3a54e`.
+No calibration, further training or model promotion is authorized. This is a purposive
+source-disjoint challenge, **not independent human gold, a random sample, representative
+population accuracy or a release certification**. Two positives per topic and six source
+clusters cannot substantiate stable topic/subgroup performance. Source-family dependence
+and the adapted family/moral rubric remain unresolved.
+
 ## Retired unsupported platform-absence claims
 
 Ten legacy July observations in `conf/platform_gaps.yml` now explicitly distinguish a

@@ -336,6 +336,44 @@ These limitations preclude a certification or population-accuracy claim. Complet
 training/evaluation hashes, the pre-prediction plan and a separate complete row-level
 decision ledger remain available; original gold judgments and thresholds are unchanged.
 
+### Source-disjoint platform challenge
+
+Before new references or predictions, a hash-bound packet reserved six complete
+organizations outside all current platform training/development states: ID-R, MT-R, WA-R,
+MN-D, WA-D and VT-D. That reservation includes alternate versions and passages, not just
+the selected body hashes. Do not later train on those organizations while continuing to
+call this challenge source-disjoint.
+
+```bash
+uv run python -m state_politics.analysis.prepare_platform_challenge \
+  --out data/labels/source-disjoint-platform-challenge-v1
+```
+
+The immutable packet already exists; reproductions require a new output directory.
+It adds 52 challenge rows without altering any of the preceding 6,112 training/development
+records. There are two positives in every topic, four mixed-policy references and six
+non-policy front-matter/navigation references. Explicit native-line endpoints retain
+wrapping, printed line numbers, entities and internal page breaks; space-only HTML
+separators are not mistaken for permission to merge policy items. Complete documents,
+original bytes, review context, rationales and exact offsets/hashes remain available.
+Scored spans do not overlap and are checked against all prior training/development
+text signatures and source identities.
+
+Three ambiguous units remain outside scoring rather than receiving forced labels.
+Both technology and both arts positives come from Democratic documents; the arts
+references do not resolve the family/moral boundary. Labels are purposive assistant
+judgments, not independent human gold, a representative sample or a stable estimate of
+topic or party accuracy. Source-level dependence and byte-distinct source families remain
+limitations.
+
+A separate pre-prediction plan binds all three saved model/checkpoint identities, each
+model's exact original training-label evidence and the unchanged policy (`1.0` temperature,
+`0.8` confidence, `0.2` margin). Each report must independently pass cross-manifest
+isolation; predictions must match the exact same challenge population and text hashes.
+No calibration, threshold selection, training or reference editing is allowed during
+this comparison. Topic/party/source support and correct rejections must be reported
+alongside accepted policy decisions, not hidden in one pooled score.
+
 ### Legacy analytical pipeline (not revalidated)
 
 With both platform corpora in hand, `state_politics.analysis` segments every document into
