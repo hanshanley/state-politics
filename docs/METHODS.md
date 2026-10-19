@@ -257,12 +257,22 @@ remain allowed. A shared legislative snapshot hash is not treated as one bill do
 Both frozen pilot label manifests still pass; their scores and admission status are
 unchanged.
 
+When a reviewed platform row also provides `document_text_sha256`, the loader validates
+that full-document hash and rejects reuse across splits even if the raw source-body
+hashes differ. This covers byte-distinct copies with identical extracted document text,
+not just repeated passages. Same-split passages remain allowed, and legislative snapshot
+metadata is not used to merge distinct bills. Missing full-document hashes remain explicit
+in source-support reports; they are not inferred from a selected span or retroactively
+inserted into original training labels. This optional identity does not establish
+isolation for whitespace-different extractions, paraphrases or unreviewed source families.
+
 Evaluation and development calibration additionally require `--training-manifest` pointing
 to the original checkpoint's `training_manifest.json` and `--training-labels` pointing to
 the complete, byte-exact label manifest recorded during training. The prediction's base
 model-run hash, training-label hash and taxonomy must match. Record IDs, group IDs,
-normalized text and reviewed platform bodies are then checked across both complete
-manifests before metrics or calibration are written. This also prevents reserved original
+normalized text, reviewed platform bodies and supplied full-document text hashes are
+then checked across both complete manifests before metrics or calibration are written.
+This also prevents reserved original
 development evidence becoming a purported independent test. Reusing the same original
 development rows as development remains valid; distinct bills sharing a snapshot remain
 distinct. Reports retain both training evidence hashes and the explicit isolation scope.
@@ -273,9 +283,10 @@ and legislative source families still require separate lineage review.
 
 New training manifests and evaluation reports disaggregate external versus reviewed
 target supervision by split, input domain and topic. They explicitly retain zero-support
-cells, reviewed abstention reasons, platform-body identities and missing organization
-metadata. Original and evaluation support are reported separately rather than double
-counting repeated development rows. These are availability counts, not certification.
+cells, reviewed abstention reasons, platform-body identities, missing full-document hashes
+and missing organization metadata. Original and evaluation support are reported separately
+rather than double counting repeated development rows. These are availability counts,
+not certification.
 The actual joint pilot has six positive platform training spans across five topics,
 all from two Democratic sources, plus nine rejections. Its ten platform development cases
 come from one Republican source; party metadata is repaired only in a separately bound

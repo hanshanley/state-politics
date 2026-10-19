@@ -43,6 +43,8 @@ def validate_split_isolation(rows: list[dict]) -> None:
         ]
         if row["label_origin"] == "reviewed_target" and row["domain"] == "plank":
             identities.append(("platform source", row["source_sha256"]))
+            if row.get("document_text_sha256") is not None:
+                identities.append(("platform document text", row["document_text_sha256"]))
         for kind, key in identities:
             previous = owners.setdefault((kind, key), row["split"])
             if previous != row["split"]:
@@ -71,6 +73,9 @@ def label_support(rows: list[dict], codes: list[int]) -> list[dict]:
                 "parties_recorded": sorted({row.get("party") for row in source_rows}, key=str),
                 "rows_missing_state_or_party": sum(
                     not row.get("state") or not row.get("party") for row in source_rows
+                ),
+                "rows_missing_document_text_sha256": sum(
+                    not row.get("document_text_sha256") for row in source_rows
                 ),
             })
         support.append({
@@ -152,6 +157,12 @@ def load_examples(path: Path | str, codes: list[int]) -> list[dict]:
                 or re.fullmatch(r"[a-f0-9]{64}", source_hash) is None
             ):
                 raise ValueError(f"row {number}: reviewed platform source body hash required")
+            document_hash = row.get("document_text_sha256")
+            if document_hash is not None and (
+                not isinstance(document_hash, str)
+                or re.fullmatch(r"[a-f0-9]{64}", document_hash) is None
+            ):
+                raise ValueError(f"row {number}: invalid platform document-text hash")
         rows.append(row)
     if not rows:
         raise ValueError("label manifest is empty")
@@ -260,7 +271,8 @@ def train(args) -> Path:
         "training_history": [],
         "limitations": [
             "not independently certified; do not publish",
-            "record/group/text/platform-body splits checked; source families need review",
+            "record/group/text/platform-body and supplied document-text hashes checked",
+            "missing document-text hashes and near-duplicate source families need review",
             "development calibration and held-out target-domain evaluation pending",
             "optimizer-state resumption is not implemented; interrupted runs need a new directory",
         ],

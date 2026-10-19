@@ -341,18 +341,42 @@ def test_platform_source_cannot_cross_splits_under_different_urls_or_groups(tmp_
         load_examples(path, [1, 6])
 
 
+@pytest.mark.parametrize("split", ["dev", "test", "challenge"])
+def test_identical_platform_document_text_cannot_cross_distinct_body_splits(tmp_path, split):
+    rows = [
+        _label(
+            "train-span", "Expand public schools with stable funding.", domain="plank",
+            label_origin="reviewed_target", source_sha256="a" * 64,
+            document_text_sha256="d" * 64,
+        ),
+        _label(
+            "held-out-span", "Protect clean drinking water.", split,
+            domain="plank", source_sha256="b" * 64, topic=1,
+            document_text_sha256="d" * 64,
+        ),
+    ]
+    path = tmp_path / "labels.jsonl"
+    path.write_text("".join(json.dumps(row) + "\n" for row in rows))
+    with pytest.raises(ValueError, match="platform document text leakage"):
+        load_examples(path, [1, 6])
+
+
 def test_platform_source_grouping_does_not_merge_shared_bill_snapshots(tmp_path):
     rows = [
         _label("train-span", "Expand public schools with stable funding.",
-               domain="plank", label_origin="reviewed_target", source_sha256="a" * 64),
+               domain="plank", label_origin="reviewed_target", source_sha256="a" * 64,
+               document_text_sha256="d" * 64),
         _label("same-document", "Invest in teacher training programs.",
-               domain="plank", label_origin="reviewed_target", source_sha256="a" * 64),
+               domain="plank", label_origin="reviewed_target", source_sha256="a" * 64,
+               document_text_sha256="d" * 64),
         _label("held-out", "Protect clean drinking water.", "dev",
-               domain="plank", source_sha256="b" * 64, topic=1),
+               domain="plank", source_sha256="b" * 64, topic=1,
+               document_text_sha256="e" * 64),
         _label("bill-train", "An act providing public school funding.",
-               label_origin="reviewed_target", source_sha256="c" * 64),
+               label_origin="reviewed_target", source_sha256="c" * 64,
+               document_text_sha256="f" * 64),
         _label("bill-test", "An act to protect drinking water.", "test",
-               source_sha256="c" * 64, topic=1),
+               source_sha256="c" * 64, topic=1, document_text_sha256="f" * 64),
     ]
     path = tmp_path / "labels.jsonl"
     path.write_text("".join(json.dumps(row) + "\n" for row in rows))
@@ -366,6 +390,18 @@ def test_reviewed_platform_labels_require_a_source_body_hash(tmp_path, source_ha
     path = tmp_path / "labels.jsonl"
     path.write_text(json.dumps(row) + "\n")
     with pytest.raises(ValueError, match="platform source body hash"):
+        load_examples(path, [1, 6])
+
+
+@pytest.mark.parametrize("document_hash", ["", "not-a-document-hash", 42])
+def test_optional_platform_document_text_hash_must_be_valid(tmp_path, document_hash):
+    row = _label(
+        "one", "Invest in public schools.", "dev", domain="plank",
+        source_sha256="a" * 64, document_text_sha256=document_hash,
+    )
+    path = tmp_path / "labels.jsonl"
+    path.write_text(json.dumps(row) + "\n")
+    with pytest.raises(ValueError, match="platform document-text hash"):
         load_examples(path, [1, 6])
 
 
@@ -392,7 +428,8 @@ def test_support_audit_does_not_confuse_external_labels_rejections_or_sources_wi
     rows = [
         _label("external", "External bill policy."),
         _label("target", "State platform policy.", domain="plank",
-               label_origin="reviewed_target", source_sha256="a" * 64, state="CA", party="D"),
+               label_origin="reviewed_target", source_sha256="a" * 64, state="CA", party="D",
+               document_text_sha256="d" * 64),
         _label("reject", "Committee roster.", domain="plank", label_origin="reviewed_target",
                source_sha256="a" * 64, state="CA", party="D",
                topic=None, abstention_reason="non_policy"),
@@ -411,9 +448,11 @@ def test_support_audit_does_not_confuse_external_labels_rejections_or_sources_wi
     assert platform["reviewed_target_abstentions"] == {"non_policy": 1}
     assert len(platform["reviewed_platform_sources"]) == 1
     assert platform["reviewed_platform_sources"][0]["rows_missing_state_or_party"] == 0
+    assert platform["reviewed_platform_sources"][0]["rows_missing_document_text_sha256"] == 1
     heldout = report["dev", "plank"]["reviewed_platform_sources"][0]
     assert heldout["parties_recorded"] == [None]
     assert heldout["rows_missing_state_or_party"] == 1
+    assert heldout["rows_missing_document_text_sha256"] == 1
     assert report["dev", "bill"]["n_rows"] == 0
     assert report["test", "plank"]["n_rows"] == 0
     assert report["test", "plank"]["topics_without_reviewed_target_positives"] == [1, 6]
@@ -485,6 +524,9 @@ def test_evaluation_refuses_predictions_for_changed_or_missing_evidence():
     ("platform", "platform source leakage"),
     ("calibration_platform", "platform source leakage"),
     ("reserved_development", "platform source leakage"),
+    ("platform_document_text", "platform document text leakage"),
+    ("calibration_document_text", "platform document text leakage"),
+    ("reserved_development_document_text", "platform document text leakage"),
     ("shared_bill_snapshot", None),
     ("changed_training_labels", "binding"),
     ("different_model", "binding"),
@@ -516,6 +558,16 @@ def test_separate_evaluation_is_bound_to_original_training_evidence(
             held_out["split"] = "dev"
     elif case == "shared_bill_snapshot":
         held_out["source_sha256"] = prior["source_sha256"]
+    elif case in (
+        "platform_document_text", "calibration_document_text",
+        "reserved_development_document_text",
+    ):
+        prior["domain"] = held_out["domain"] = "plank"
+        prior["document_text_sha256"] = held_out["document_text_sha256"] = "d" * 64
+        if case == "reserved_development_document_text":
+            prior["split"] = "dev"
+        elif case == "calibration_document_text":
+            held_out["split"] = "dev"
     training_labels = tmp_path / "original-labels.jsonl"
     training_labels.write_text("".join(json.dumps(row) + "\n" for row in [
         _label("training", "Separate training evidence."), prior,
@@ -546,7 +598,7 @@ def test_separate_evaluation_is_bound_to_original_training_evidence(
         "--training-labels", str(training_labels), "--split", held_out["split"],
         "--out", str(report),
     ]
-    if case == "calibration_platform":
+    if case in ("calibration_platform", "calibration_document_text"):
         arguments += [
             "--calibrate", "--min-precision", "0.01", "--min-coverage", "0",
             "--min-support", "1",

@@ -56,6 +56,31 @@ observations, not verified coverage gaps. Legacy committee/caucus coverage total
 explicitly unrevalidated, and heuristic `confirmed` flags no longer appear in the source
 methods as adoption certification.
 
+## Full-document text split isolation
+
+Nine reproduced failures exposed a narrower remaining leak: distinct platform body
+hashes could carry identical complete document text into different splits, while malformed
+optional document hashes were accepted. The shared loader now validates provided
+`document_text_sha256` values and checks this additional identity across both complete
+training/evaluation manifests. The same guard applies before development calibration,
+including original development documents later presented as independent tests.
+Same-split platform passages and distinct bills sharing snapshot metadata remain valid.
+All **68** ModernBERT regressions pass after the fix.
+
+Full-document hashes remain optional for historical label compatibility; source-support
+reports explicitly count missing values. This does not certify byte-distinct copies
+without that metadata, differently extracted versions or near-duplicate families.
+It does not infer a full-document identity from one selected passage.
+
+`data/processed/training-evaluation-lineage-v2/` freezes both saved pilots rescored against
+the complete metadata-only development successor and their exact original training evidence.
+Both still make **27/50** decisions under unchanged policies. The ten selected platform
+rows have source-bound full-document hashes; missing hashes in original training-manifest
+development rows remain visible rather than being rewritten.
+No weights, original labels, logits or thresholds changed. This is a provenance safeguard,
+not an accuracy improvement or independent evaluation.
+Manifest: `98952c935fc0553546ce4ddf8dc6dd0fc542b1f229dc3775f136e8266efc6e2c`.
+
 ## Platform-specific support and metadata audit
 
 The pooled **27/50** development result conceals domain differences. Reusing the exact

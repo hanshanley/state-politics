@@ -276,7 +276,10 @@ def main(argv=None):
         "training_labels_sha256": training_labels_hash,
         "split_isolation": {
             "status": "passed",
-            "identities": ["record_id", "group_id", "normalized_text", "platform_source_body"],
+            "identities": [
+                "record_id", "group_id", "normalized_text", "platform_source_body",
+                "platform_document_text_when_provided",
+            ],
             "scope": "complete original training labels and supplied evaluation labels",
         },
         "label_support": {
@@ -287,6 +290,7 @@ def main(argv=None):
         "reviewer_types": dict(Counter(row["reviewer_type"] for row in labels)),
         "limitations": [
             "review provenance and representative sampling require separate audit",
+            "missing document-text hashes limit copied-document isolation",
             "byte-distinct source versions and near-duplicate families need lineage review",
             "Wilson intervals treat rows as independent; clustered uncertainty remains required",
             "development selection is not held-out certification",
