@@ -11,7 +11,7 @@ from pathlib import Path
 from ..provenance import sha256_file
 from .modernbert import checked_output_codes, decide
 from .taxonomy import DEFAULT_TOPICS_PATH, load_topics
-from .train_topics import load_examples
+from .train_topics import load_examples, validate_split_isolation
 
 
 def wilson(successes: int, total: int) -> list[float] | None:
@@ -183,6 +183,14 @@ def main(argv=None):
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--labels", type=Path, required=True)
     parser.add_argument(
+        "--training-manifest", type=Path, required=True,
+        help="original training_manifest.json bound to the prediction's base model run",
+    )
+    parser.add_argument(
+        "--training-labels", type=Path, required=True,
+        help="complete original label manifest with the hash recorded during training",
+    )
+    parser.add_argument(
         "--predictions", type=Path, required=True, help="JSONL with source-bound logits"
     )
     parser.add_argument("--topics", type=Path, default=DEFAULT_TOPICS_PATH)
@@ -204,7 +212,8 @@ def main(argv=None):
     if not args.calibrate and args.policy is None:
         parser.error("evaluation requires a previously frozen --policy")
     codes = [topic.code for topic in load_topics(args.topics)]
-    labels = [row for row in load_examples(args.labels, codes) if row["split"] == args.split]
+    evaluation_rows = load_examples(args.labels, codes)
+    labels = [row for row in evaluation_rows if row["split"] == args.split]
     if not labels:
         parser.error("selected evaluation split has no labels")
     predictions = [json.loads(line) for line in args.predictions.read_text().split("\n") if line]
@@ -214,6 +223,21 @@ def main(argv=None):
     taxonomy_hash = sha256_file(args.topics)
     if {row.get("taxonomy_sha256") for row in predictions} != {taxonomy_hash}:
         parser.error("predictions must identify the requested taxonomy exactly")
+    training_manifest = json.loads(args.training_manifest.read_text())
+    training_manifest_hash = sha256_file(args.training_manifest)
+    training_labels_hash = sha256_file(args.training_labels)
+    base_runs = {row.get("base_model_run", row["model_run"]) for row in predictions}
+    if (
+        base_runs != {training_manifest_hash}
+        or training_manifest.get("taxonomy_sha256") != taxonomy_hash
+        or training_manifest.get("topic_codes") != codes
+        or training_manifest.get("labels_sha256") != training_labels_hash
+    ):
+        parser.error("training evidence differs from the prediction model/taxonomy/labels")
+    training_rows = load_examples(args.training_labels, codes)
+    if not any(row["split"] == "train" for row in training_rows):
+        parser.error("original training evidence has no training rows")
+    validate_split_isolation([*training_rows, *evaluation_rows])
     rows = join_predictions(labels, predictions)
     if args.calibrate:
         policy, result = calibrate(
@@ -223,7 +247,6 @@ def main(argv=None):
     else:
         policy = json.loads(args.policy.read_text())
         if "decision" in policy:
-            base_runs = {row.get("base_model_run", row["model_run"]) for row in predictions}
             if (
                 policy.get("status") != "development_calibrated"
                 or policy.get("split") != "dev"
@@ -249,11 +272,18 @@ def main(argv=None):
         "taxonomy_sha256": taxonomy_hash,
         "labels_sha256": sha256_file(args.labels),
         "predictions_sha256": sha256_file(args.predictions),
+        "training_manifest_sha256": training_manifest_hash,
+        "training_labels_sha256": training_labels_hash,
+        "split_isolation": {
+            "status": "passed",
+            "identities": ["record_id", "group_id", "normalized_text", "platform_source_body"],
+            "scope": "complete original training labels and supplied evaluation labels",
+        },
         "policy_sha256": sha256_file(args.policy) if args.policy is not None else None,
         "reviewer_types": dict(Counter(row["reviewer_type"] for row in labels)),
         "limitations": [
             "review provenance and representative sampling require separate audit",
-            "split checks cover the supplied labels, not separately loaded training evidence",
+            "byte-distinct source versions and near-duplicate families need lineage review",
             "Wilson intervals treat rows as independent; clustered uncertainty remains required",
             "development selection is not held-out certification",
         ],

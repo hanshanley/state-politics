@@ -12,10 +12,31 @@ replacement classifier or establish complete contemporary coverage.
 | Bills | October snapshot extracted: 1,090,369 source-context measures across all 50 states, 5,028,893 sponsorships, 9,002,451 actions and 873,980 vote events. All eleven tables have recorded hashes/counts. | Official-source reconciliation, historical affiliations and filing-time text review. Full extraction is not a certified source universe or analytical denominator. |
 | Classification | Two actual official English ModernBERT-base fine-tuning runs saved and reloaded: external-only policy training, then 6,001-unit joint target/rejection training with 21 policy outputs plus null. | Both candidates still make 27 correct decisions in the same 50 development records. Learned rejection reduces false acceptance but loses correct policy decisions; neither candidate is approved for production. |
 | Labels | External CAP files recovered; split/group/exact-text and reviewed-platform source-body checks plus explicit reviewed-label provenance are implemented. | Source permissions, adapted-topic compatibility, near-duplicate families and reviewed state-domain training/development/test labels. |
-| Evaluation | Development-only temperature/threshold selection, exact evidence joins, abstention accounting, per-topic and subgroup metrics. | Reviewer arrangement, frozen empirical gates, independent target tests and clustered uncertainty. No checkpoint can be certified by changing a status field. |
+| Evaluation | Checkpoint-bound training/evaluation split isolation, development-only temperature/threshold selection, exact evidence joins, abstention accounting, per-topic and subgroup metrics. | Reviewer arrangement, frozen empirical gates, independent target tests and clustered uncertainty. No checkpoint can be certified by changing a status field. |
 | Companion | Local-only preview v7 exposes all 1,559 recovery captures, 119 failures and 60 alternative extraction identities across 55 OCR bodies and three DOCX bodies, alongside the 2,091 historical documents. The source ledger includes the corrected Arizona and Alaska registry rows. All 100 organization rows remain unresolved. | Audited classification/analysis exports, redistribution review and eventual report; no production integration is authorized. |
 
-## Platform-document split guard
+## Checkpoint-bound evaluation lineage
+
+Separate evaluation files can no longer bypass the training split guard. Both evaluation
+and calibration now require the original checkpoint manifest and the complete label file
+whose byte hash it records. The prediction's base-model run, training-label bytes and
+taxonomy must match before the shared isolation check compares both complete manifests.
+It checks record IDs, groups, normalized input and reviewed platform-body hashes, including
+original development sources that must not later become independent test evidence.
+Shared legislative snapshots still do not collapse distinct bills. Missing or mismatched
+training provenance fails closed before a metrics/calibration report is created.
+
+All **58** ModernBERT regressions pass, including ten new separate-file cases covering
+each leakage identity, calibration, development-to-test reuse, altered labels/model/
+taxonomy bindings and the legitimate shared-bill-snapshot exception. The unchanged real
+pilot logits were rescored against their exact original training manifests in
+`data/processed/training-evaluation-lineage-v1/`: both pass lineage checks and remain
+**27/50**, using their unchanged research-default decisions. Original labels, weights,
+logits, reports and thresholds were not rewritten. This verifies provenance isolation,
+not label correctness, improved accuracy, independent gold or publication readiness.
+Packet manifest: `598a88dcd7f050c134840d295a875eb295166243d478f4eb71fbae453c8cd4c7`.
+
+## Initial platform-document split guard
 
 The label loader previously accepted distinct passages from the same platform body in
 different splits when their group IDs differed. A reproduced regression now fails closed:
@@ -27,10 +48,12 @@ one document. Preparation, training and evaluation all use this shared loader.
 Both complete frozen pilot manifests still validate: **5,945** external-only rows and
 **6,051** joint target/rejection rows. No old labels, predictions, scores or weights
 changed, and no new training run was started. The ModernBERT test suite passes **48**
-cases. The check applies only to rows loaded together; it does not establish disjointness
+cases at that checkpoint. The initial check applied only to rows loaded together; it did
+not establish disjointness
 between a separately supplied evaluation file and a checkpoint's training corpus.
 Byte-distinct versions, paraphrases, source-family review and independent gold remain
-unresolved. Evaluation reports now disclose the supplied-manifest scope explicitly.
+unresolved. The checkpoint-bound successor above closes the separate-file gap without
+retroactively changing the original reports.
 
 ## Alaska, image-only evidence and historical OCR checkpoint
 

@@ -1,6 +1,7 @@
 """Decision, source-span, checkpoint and supervised-label safeguards without model downloads."""
 
 import csv
+import hashlib
 import json
 import re
 
@@ -446,6 +447,94 @@ def test_evaluation_refuses_predictions_for_changed_or_missing_evidence():
         }])
 
 
+@pytest.mark.parametrize(("case", "expected_error"), [
+    ("record", "record leakage"),
+    ("group", "group leakage"),
+    ("text", "text leakage"),
+    ("platform", "platform source leakage"),
+    ("calibration_platform", "platform source leakage"),
+    ("reserved_development", "platform source leakage"),
+    ("shared_bill_snapshot", None),
+    ("changed_training_labels", "binding"),
+    ("different_model", "binding"),
+    ("training_taxonomy", "binding"),
+])
+def test_separate_evaluation_is_bound_to_original_training_evidence(
+    tmp_path, case, expected_error,
+):
+    codes = [topic.code for topic in load_topics()]
+    taxonomy_hash = sha256_file(DEFAULT_TOPICS_PATH)
+    prior = _label("reserved", "Original school funding commitment.",
+                   label_origin="reviewed_target", source_sha256="a" * 64)
+    held_out = _label("heldout", "Distinct drinking water commitment.", "test",
+                      source_sha256="b" * 64)
+    if case == "record":
+        held_out["record_id"] = prior["record_id"]
+        held_out["group_id"] = "changed-group"
+    elif case == "group":
+        held_out["group_id"] = prior["group_id"]
+    elif case == "text":
+        held_out["text"] = "ORIGINAL school funding commitment!!!"
+    elif case in ("platform", "calibration_platform", "reserved_development"):
+        prior["domain"] = held_out["domain"] = "plank"
+        held_out["source_sha256"] = prior["source_sha256"]
+        held_out["source_url"] = "https://other.test/copied-platform.pdf"
+        if case == "reserved_development":
+            prior["split"] = "dev"
+        elif case == "calibration_platform":
+            held_out["split"] = "dev"
+    elif case == "shared_bill_snapshot":
+        held_out["source_sha256"] = prior["source_sha256"]
+    training_labels = tmp_path / "original-labels.jsonl"
+    training_labels.write_text("".join(json.dumps(row) + "\n" for row in [
+        _label("training", "Separate training evidence."), prior,
+    ]))
+    labels = tmp_path / "evaluation-labels.jsonl"
+    labels.write_text(json.dumps(held_out) + "\n")
+    training_manifest = tmp_path / "training_manifest.json"
+    training_manifest.write_text(json.dumps({
+        "topic_codes": codes, "labels_sha256": sha256_file(training_labels),
+        "taxonomy_sha256": "wrong" if case == "training_taxonomy" else taxonomy_hash,
+    }))
+    predictions = tmp_path / "predictions.jsonl"
+    predictions.write_text(json.dumps({
+        "record_id": held_out["record_id"], "input_domain": held_out["domain"],
+        "input_sha256": hashlib.sha256(held_out["text"].encode()).hexdigest(),
+        "model_run": "wrong" if case == "different_model" else sha256_file(training_manifest),
+        "taxonomy_sha256": taxonomy_hash,
+        "logits": [[12 if code == 6 else 0 for code in codes]],
+    }) + "\n")
+    policy = tmp_path / "policy.json"
+    policy.write_text(json.dumps(dict(temperature=1, min_confidence=0.8, min_margin=0.2)))
+    if case == "changed_training_labels":
+        training_labels.write_text(training_labels.read_text() + "\n")
+    report = tmp_path / "evaluation.json"
+    arguments = [
+        "--labels", str(labels), "--predictions", str(predictions),
+        "--training-manifest", str(training_manifest),
+        "--training-labels", str(training_labels), "--split", held_out["split"],
+        "--out", str(report),
+    ]
+    if case == "calibration_platform":
+        arguments += [
+            "--calibrate", "--min-precision", "0.01", "--min-coverage", "0",
+            "--min-support", "1",
+        ]
+    else:
+        arguments += ["--policy", str(policy)]
+    if expected_error == "binding":
+        with pytest.raises(SystemExit):
+            evaluate_main(arguments)
+    elif expected_error:
+        with pytest.raises(ValueError, match=expected_error):
+            evaluate_main(arguments)
+    else:
+        assert evaluate_main(arguments) == 0
+        assert json.loads(report.read_text())["metrics"]["n_correct_topic"] == 1
+    if expected_error:
+        assert not report.exists()
+
+
 def test_section_windows_prefer_boundaries_without_losing_long_paragraph_tokens():
     text = "a" * 7 + "\n\n" + "b" * 30 + "\n\n" + "c" * 5
     offsets = [(i, i + 1) for i in range(len(text))]
@@ -518,11 +607,11 @@ def test_checkpoint_rejects_incompatible_input_contract_before_loading_weights(
 
 @pytest.mark.parametrize("separator", ["\u2028", "\u2029", "\u0085"])
 def test_split_export_calibration_and_frozen_evaluation_handoff(tmp_path, monkeypatch, separator):
-    import hashlib
-
     codes = [topic.code for topic in load_topics()]
     taxonomy_hash = sha256_file(DEFAULT_TOPICS_PATH)
     evidence = [
+        _label("training", "Distinct original training evidence."),
+    ] + [
         _label(f"dev-{i}", f"Synthetic development evidence{separator}number {i}", "dev")
         for i in range(40)
     ] + [
@@ -531,6 +620,15 @@ def test_split_export_calibration_and_frozen_evaluation_handoff(tmp_path, monkey
     ]
     labels = tmp_path / "labels.jsonl"
     labels.write_text("".join(json.dumps(row, ensure_ascii=False) + "\n" for row in evidence))
+    training_manifest = tmp_path / "training_manifest.json"
+    training_manifest.write_text(json.dumps({
+        "taxonomy_sha256": taxonomy_hash, "topic_codes": codes,
+        "labels_sha256": sha256_file(labels),
+    }))
+    model_run = sha256_file(training_manifest)
+    training_arguments = [
+        "--training-manifest", str(training_manifest), "--training-labels", str(labels),
+    ]
     called = []
 
     def retain_literal_unicode(path):
@@ -545,8 +643,7 @@ def test_split_export_calibration_and_frozen_evaluation_handoff(tmp_path, monkey
             return [{
                 "input_sha256": hashlib.sha256(text.encode()).hexdigest(),
                 "input_domain": domain, "taxonomy_sha256": taxonomy_hash,
-                "model_run": f"synthetic{separator}run",
-                "base_model_run": f"synthetic{separator}run",
+                "model_run": model_run, "base_model_run": model_run,
                 "logits": [[12 if code == 6 else 0 for code in codes]],
             } for text in texts]
 
@@ -563,6 +660,7 @@ def test_split_export_calibration_and_frozen_evaluation_handoff(tmp_path, monkey
         "--labels", str(labels), "--predictions", str(dev_predictions), "--split", "dev",
         "--calibrate", "--min-precision", "0.8", "--min-coverage", "0.5",
         "--min-support", "20", "--out", str(calibration),
+        *training_arguments,
     ]) == 0
     test_predictions = tmp_path / "test.jsonl"
     assert modernbert_module.main([
@@ -573,12 +671,16 @@ def test_split_export_calibration_and_frozen_evaluation_handoff(tmp_path, monkey
     arguments = [
         "--labels", str(labels), "--predictions", str(test_predictions), "--split", "test",
         "--policy", str(calibration), "--out", str(report),
+        *training_arguments,
     ]
     assert evaluate_main(arguments) == 0
     result = json.loads(report.read_text())
     assert result["metrics"]["n_eligible"] == 4
     assert result["reviewer_types"] == {"assistant": 4}
     assert result["scientific_certification"] == "not_performed"
+    assert result["training_manifest_sha256"] == model_run
+    assert result["training_labels_sha256"] == sha256_file(labels)
+    assert result["split_isolation"]["status"] == "passed"
     original = test_predictions.read_text()
     for field in ("taxonomy_sha256", "base_model_run"):
         predictions = [json.loads(line) for line in original.split("\n") if line]

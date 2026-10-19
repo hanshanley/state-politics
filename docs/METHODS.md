@@ -265,8 +265,20 @@ splits, even when passages, URLs and group IDs differ. This adds a document-leve
 to the existing group and normalized-text checks. Multiple passages in the same split
 remain allowed. A shared legislative snapshot hash is not treated as one bill document.
 Both frozen pilot label manifests still pass; their scores and admission status are
-unchanged. Checks cover records loaded together, not independently supplied evaluation
-files versus a checkpoint's training corpus. Byte-distinct platform versions, paraphrases
+unchanged.
+
+Evaluation and development calibration additionally require `--training-manifest` pointing
+to the original checkpoint's `training_manifest.json` and `--training-labels` pointing to
+the complete, byte-exact label manifest recorded during training. The prediction's base
+model-run hash, training-label hash and taxonomy must match. Record IDs, group IDs,
+normalized text and reviewed platform bodies are then checked across both complete
+manifests before metrics or calibration are written. This also prevents reserved original
+development evidence becoming a purported independent test. Reusing the same original
+development rows as development remains valid; distinct bills sharing a snapshot remain
+distinct. Reports retain both training evidence hashes and the explicit isolation scope.
+The new required arguments intentionally reject old commands that omit training provenance;
+old frozen reports are preserved, not retroactively declared checked. No model weights or
+original label bytes need to be changed. Byte-distinct platform versions, paraphrases
 and legislative source families still require separate lineage review.
 
 ### Legacy analytical pipeline (not revalidated)

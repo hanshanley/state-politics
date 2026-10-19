@@ -30,11 +30,30 @@ LABEL_ORIGINS = {"external_coded", "reviewed_target"}
 TRAINING_ABSTENTIONS = {"non_policy", "mixed_policy", "insufficient_evidence"}
 
 
+def validate_split_isolation(rows: list[dict]) -> None:
+    """Check validated examples together, including separately loaded evidence sets."""
+    owners: dict[tuple[str, str], str] = {}
+    for row in rows:
+        normalized = re.sub(r"\W+", " ", row["text"].casefold()).strip()
+        identities = [
+            ("record", row["record_id"]),
+            ("group", row["group_id"]),
+            ("text", hashlib.sha256(normalized.encode()).hexdigest()),
+        ]
+        if row["label_origin"] == "reviewed_target" and row["domain"] == "plank":
+            identities.append(("platform source", row["source_sha256"]))
+        for kind, key in identities:
+            previous = owners.setdefault((kind, key), row["split"])
+            if previous != row["split"]:
+                raise ValueError(
+                    f"{row['record_id']}: {kind} leakage across {previous}/{row['split']}"
+                )
+
+
 def load_examples(path: Path | str, codes: list[int]) -> list[dict]:
     """Validate the complete split manifest before a model or tokenizer is downloaded."""
     rows = []
     seen_ids = set()
-    owners: dict[tuple[str, str], str] = {}
     for number, line in enumerate(Path(path).read_text().split("\n"), 1):
         if not line.strip():
             continue
@@ -85,8 +104,6 @@ def load_examples(path: Path | str, codes: list[int]) -> list[dict]:
         if row.get("text_sha256", text_hash) != text_hash:
             raise ValueError(f"row {number}: reviewed text hash mismatch")
         row["text_sha256"] = text_hash
-        fingerprint = hashlib.sha256(normalized.encode()).hexdigest()
-        identities = [("group", row["group_id"]), ("text", fingerprint)]
         if row["label_origin"] == "reviewed_target" and row["domain"] == "plank":
             source_hash = row.get("source_sha256")
             if (
@@ -94,14 +111,10 @@ def load_examples(path: Path | str, codes: list[int]) -> list[dict]:
                 or re.fullmatch(r"[a-f0-9]{64}", source_hash) is None
             ):
                 raise ValueError(f"row {number}: reviewed platform source body hash required")
-            identities.append(("platform source", source_hash))
-        for kind, key in identities:
-            previous = owners.setdefault((kind, key), row["split"])
-            if previous != row["split"]:
-                raise ValueError(f"row {number}: {kind} leakage across {previous}/{row['split']}")
         rows.append(row)
     if not rows:
         raise ValueError("label manifest is empty")
+    validate_split_isolation(rows)
     return rows
 
 
@@ -205,7 +218,7 @@ def train(args) -> Path:
         "training_history": [],
         "limitations": [
             "not independently certified; do not publish",
-            "group and normalized-text leakage checked; near-duplicate families need review",
+            "record/group/text/platform-body splits checked; source families need review",
             "development calibration and held-out target-domain evaluation pending",
             "optimizer-state resumption is not implemented; interrupted runs need a new directory",
         ],
