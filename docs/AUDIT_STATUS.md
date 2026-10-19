@@ -525,6 +525,45 @@ inventory and is a diagnostic, not a completed packet. V2 fixes the exact invent
 without modifying v1 or the running campaign. This completed **first-batch archive**
 does not certify the full campaign, filing-time identity or any scientific claim.
 
+### Joint-print header observations and unresolved budget redirects
+
+Offline follow-through on **A 3005–A 3009 and A 3051** identifies a different
+first-page format: each prints **both S. and A. numbers** on one line. The frozen
+collector's single-number/chamber/regular-session test leaves all six
+`unverified_header`. Five budget prints have no regular-session line at all;
+their printed February 1, 2023 date must not be substituted for a missing session
+or treated as filing/version proof. A 3051 prints the regular-session line and
+the distinct counterpart **S. 4044**, not S. 3051.
+
+`bills/new_york.py` now observes this exact base-print preamble, keeping both
+chamber identities, nullable literal session, uninterpreted printed date and
+exact reader-text offsets. It rejects body references, amended-print suffixes
+and other unsupported preambles rather than treating an incidental number as
+identity. This is an additional observation, not a migration of the frozen
+collector or certification of introduced/legal identity. No campaign disposition,
+canonical field or analytical admission is changed; the paired chamber identities
+are not merged.
+
+`data/processed/ny-joint-print-header-observations-v1/` freezes all six complete
+PDFs, both readers' full/page text, original blocks/spans/metadata and terminal
+request/candidate evidence. Independent guarded replay reopens all **996 physical
+pages / 1,992 reader-page texts**, reproducing **4,193,860 PyMuPDF** and
+**4,187,866 pypdf joined-document characters** without equating decoder results.
+All twelve exact header observations and **2,094 packet file hashes** replay
+unchanged with network and original project/session data reads denied.
+Manifest SHA-256:
+`d02be9f76585edde0650e01b067b1daf9a46a32e507fb73872b13fb73845c544`.
+Eleven focused header regressions pass.
+
+The same packet retains the five distinct **HTTP 302** responses for
+**A 3000–A 3004**, their explicit empty bodies and publisher-reported static PDF
+locations. The locations remain unfetched; this packet issued **zero requests**
+and does not silently follow redirects outside the running collector's contract.
+Existing response headers are parsed observations, not raw wire-header bytes.
+These five retrieval failures and all six original header quarantines remain
+visible. No topic labels, inference, legal/filing-time certification or
+training/evaluation/analytical/publication admission occurred.
+
 ## Illinois 103rd-General-Assembly native census and original HTML
 
 The native index retains **13,391 rows**, exactly matching all **13,376**
@@ -609,6 +648,15 @@ Synthetic `[[INSERT:...]]` / `[[DELETE:...]]` remain declared rendering rules,
 not certified legislative semantics. Source retention does not establish
 policy status, legal version, event-time party, classifier accuracy or downstream
 admission. The live campaign is not a completed source archive.
+
+An informational **October 19, 2026, 19:46:13 UTC** progress snapshot reports
+**967 success**, **179 identity-unverified**, **103 unavailable HTML shells**,
+**12,129 pending** and **13 unsupported-source** dispositions, using **1,320
+aggregate exchanges**. These categories are not collapsed into a success count:
+early appointment-message successes do not certify the later source formats.
+The frozen progress JSON is accounting metadata, not an archive or independent
+replay of every subsequently collected original. All negative evidence requires
+review and budgeted alternatives after the pinned campaign's accounting is sealed.
 
 ## Withdrawal-only source inputs: production evidence abstention
 
