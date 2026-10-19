@@ -8,6 +8,61 @@ from collections import Counter, defaultdict
 
 import pandas as pd
 
+_MEASURE_HEADING = (
+    r"(?P<chamber>House|Senate)\s+(?:(?P<modifier>Joint|Concurrent)\s+)?"
+    r"(?P<kind>Bill|Resolution(?:\s+of\s+Disapproval)?|Commemoration)\s+"
+    r"(?:No\.?\s*)?(?P<number>\d+)\b"
+)
+_DOCUMENT_HEADERS = {
+    "modern": re.compile(
+        r"(?P<session>20\d{2}[a-z]*)\s+South\s+Dakota\s+Legislature\s+" + _MEASURE_HEADING,
+        re.IGNORECASE,
+    ),
+    "legacy": re.compile(
+        r"State\s+of\s+South\s+Dakota\s+"
+        r"[A-Z-]+(?:\s+(?:FIRST|SECOND))?(?:\s+SPECIAL)?\s+SESSION\s+"
+        r"LEGISLATIVE\s+ASSEMBLY,\s*(?P<session>20\d{2}[a-z]*)?\s+"
+        r"[A-Z0-9.]+\s+" + _MEASURE_HEADING,
+        re.IGNORECASE,
+    ),
+}
+_MEASURE_SUFFIXES = {
+    "bill": "B",
+    "resolution": "R",
+    "joint resolution": "JR",
+    "concurrent resolution": "CR",
+    "commemoration": "C",
+    "resolution of disapproval": "RD",
+}
+
+
+def parse_document_headers(text: str) -> list[dict]:
+    """Preserve all publisher-header observations and spans, not version certification."""
+    if not isinstance(text, str):
+        raise ValueError("native document header parsing requires text")
+    found = []
+    for layout, pattern in _DOCUMENT_HEADERS.items():
+        for match in pattern.finditer(text):
+            description = " ".join(f"{match['modifier'] or ''} {match['kind']}".lower().split())
+            suffix = _MEASURE_SUFFIXES.get(description)
+            kind = f"{match['chamber'][0].upper()}{suffix}" if suffix else None
+            found.append(
+                {
+                    "layout": layout,
+                    "native_session_identifier_observation": (
+                        match["session"].lower() if match["session"] else None
+                    ),
+                    "native_identifier_observation": (
+                        f"{kind} {int(match['number'])}" if kind else None
+                    ),
+                    "measure_description_observation": description,
+                    "source_start": match.start(),
+                    "source_end": match.end(),
+                    "source_text": match[0],
+                }
+            )
+    return sorted(found, key=lambda row: (row["source_start"], row["source_end"]))
+
 
 def parse_native_sessions(
     sessions: list[dict],

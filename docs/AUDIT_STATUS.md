@@ -9,7 +9,7 @@ replacement classifier or establish complete contemporary coverage.
 | Historical platforms | Recovered 2,091 authoritative archive documents, with publisher checksums and old/new archive reconciliation. | Historical availability must not be substituted for operative modern platforms. |
 | Contemporary platforms | Inventory v8 preserves 1,559 requests, including 1,440 retained responses across all 100 organizations, 119 failures and 1,371 body hashes. Corrected Alaska's stale host and recovered an image-only Massachusetts resolution. | Deferred navigation/images, OCR quality, source/institution/version adjudication and operative coverage remain unresolved. Retained responses are not verified platforms. |
 | Sponsorship | Date-aware attribution remains conservative. Official Washington original-record and explicit native-primary sponsor evidence now supply separate historical session-roster D/R observations for 14,132 of 14,143 measures, without overwriting any filing-time party. | A biennial roster does not establish affiliation at filing. Ten remaining source rows identify themselves as system tests; one substantive original is recovered but lacks a native primary-sponsor API record. Event-time affiliation and all-state recovery remain open. |
-| Bills | October snapshot extracted: 1,090,369 source-context measures across all 50 states, 5,028,893 sponsorships, 9,002,451 actions and 873,980 vote events. All eleven tables have recorded hashes/counts. Native documents now retained for all 241 non-test measures in the bounded Washington metadata-gap cohort. | Official-source reconciliation, historical affiliations and filing-time text review. One recovered resolution has a version-note conflict. Neither this bounded recovery nor snapshot extraction certifies statewide/national original-text completeness or an analytical denominator. |
+| Bills | October snapshot extracted: 1,090,369 source-context measures across all 50 states, 5,028,893 sponsorships, 9,002,451 actions and 873,980 vote events. All eleven tables have recorded hashes/counts. Native documents retained for all 241 non-test measures in the bounded Washington metadata-gap cohort; separately, all 5,369 native SD introduced candidates and 15,308 physical pages captured and exactly replayed in both readers. | Official-source reconciliation, historical affiliations and filing-time text review. One Washington resolution has a version-note conflict; one SD PDF prints no session year. Neither these recoveries nor snapshot extraction certifies statewide/national original-text completeness or an analytical denominator. |
 | Classification | Four saved official English ModernBERT-base pilots compared on the same 52 platform references: external-only 41/52, joint 47/52, broader-source 47/52, Republican-expanded 49/52. The fourth run correctly rejects 3/4 mixtures and 6/6 non-policy units. | The fourth run loses one policy decision, still accepts a mixture above 0.999 and regresses on insufficient-evidence and taxonomy-boundary development cases. Both sets are examined diagnostics, not fresh independent tests. Independent review and empirical gates remain required. No candidate is approved. |
 | Labels | External CAP files recovered; split/group/exact-text and reviewed-platform source-body checks plus explicit reviewed-label provenance are implemented. | Source permissions, adapted-topic compatibility, near-duplicate families and reviewed state-domain training/development/test labels. |
 | Evaluation | Checkpoint-bound training/evaluation split isolation, development-only temperature/threshold selection, exact evidence joins, abstention accounting, per-topic and subgroup metrics. | Reviewer arrangement, frozen empirical gates, independent target tests and clustered uncertainty. No checkpoint can be certified by changing a status field. |
@@ -557,13 +557,13 @@ and does not certify either PDF's contents or silently alter the original refere
 Category-review manifest:
 `5a95ae7d20d5e2d2865e061409b71c486c02bb43e25f35bc325583a67bf276e2`.
 
-Two paced, resumable complete-cohort jobs now pursue the next evidence layers: introduced
+At checkpoint v24, two paced, resumable complete-cohort jobs pursued the next layers: introduced
 PDF capture with **both all-page embedded-text extractions**, and separate native amendment
 lists with neutrally named bill-version observations. Each scopes all **5,369** native
 measures, retains receipts/raw bodies, and leaves native-heading, filing-time, training and
 analytical flags false. Empty embedded text is explicit blank-versus-scan triage, not a
-silent extraction success or claimed OCR. **These jobs are not complete frozen packets**
-and are not indexed as completed recovery or analytical inputs. The first amendment
+silent extraction success or claimed OCR. **These jobs were not yet complete frozen packets**
+and were not indexed as completed recovery or analytical inputs. The first amendment
 attempt was stopped before freezing to remove an unsupported stage interpretation; its
 partial responses remain retained, and the successor reuses those cached responses.
 No publication or approved classifier change accompanies this collection.
@@ -603,8 +603,8 @@ this complete-cohort successor rather than rewritten as though it reviewed all r
 - Amendment recovery manifest: `d4ce70dbbfca259e0ec8b8120ce9006d59ef4e712f6331395e567e8514a688d3`.
 - Independent replay/category comparison manifest: `15b7a6f813b832d8cdce037faa4125ed63f983a9b8dbe5b9b5e28e7e1c3402c4`.
 
-The introduced-PDF job is still separate and incomplete; its partial output is not indexed
-as complete. No new model, event-time party, analytical result or production publication
+At v25 the introduced-PDF job was still separate and incomplete; its partial output was not
+indexed as complete. No new model, event-time party, analytical result or production publication
 is certified by this metadata replay. Raw packets remain Git-ignored local evidence, not
 remotely backed up by pushing these manifest identities.
 
@@ -612,6 +612,54 @@ Canonical audit checkpoint **v25** verifies **52** completed research packets an
 the partial introduced-PDF collection. It retains actual **exit 1**, with **34 failures
 among 328 checks** and a report byte-identical to v24. Audit manifest:
 `9ab5c6a52d14252bc147419653458d80d52c1acbcf9964bf0dc2a1b849044bef`.
+
+### Complete introduced-PDF capture, exact page replay and header-format review
+
+On October 19, 2026, the separate native introduced-document capture completed **all
+5,369 candidates and 15,308 physical pages**. Every PDF, request receipt, original native
+context and complete per-page pypdf/PyMuPDF string remains retained. A separate replay
+reopened every PDF and exactly reproduced both readers' strings, page counts and source
+bindings. Neither reader returned an empty page in this cohort. Nonempty, reproducible
+embedded text does **not** prove complete visible-text extraction, preserved legislative
+styling or introduced-policy fidelity; no OCR or full-document visual review is claimed.
+
+The first narrow header triage is preserved unchanged: **4,095 matches / 1,274 unparsed**.
+The reusable `parse_document_headers()` now retains modern and legacy publisher headings,
+every exact source span, full special-session keys and distinct **SRD** resolution-of-
+disapproval identifiers. It preserves repeated headings rather than selecting the first.
+The separate successor reparses both complete first-page strings for every candidate,
+preserves all earlier fields/order and checks **10,738 exact source spans**. Each reader
+finds **4,109 modern / 1,260 legacy** headings. **5,368** documents match their exact native
+identifier and full session key in both readers; **one** matches its identifier but has
+no printed session year. Thus **1,273** initial parser gaps are resolved without rewriting
+the original triage.
+
+The remaining source is native **2019 HB1191 / bill 9905 / document 52727**. Visual
+inspection of the source-bound 200-DPI header crop confirms that the PDF actually prints
+`LEGISLATIVE ASSEMBLY,` followed by a blank year field, above `HOUSE BILL NO. 1191`.
+The complete five-page PDF and full first-page render are retained alongside that crop.
+Only the crop received visual inspection. Its `NINETY-FOURTH SESSION` title is preserved
+but is **not** converted into a fabricated printed year. The native API's `2019` context
+remains separate from the null printed session-key observation.
+
+| Complete local research packet | Manifest SHA-256 |
+|---|---|
+| `south-dakota-native-introduced-document-recovery-v1` | `992be2e08fcab4b784bdb63d9a744a1a055d18cedfa8e11bc3ad06febc4378ad` |
+| `south-dakota-native-introduced-document-verification-v1` | `6226d5bab577a144eb641415bb220ec7b0084b4b35976f2ff832679082709f9c` |
+| `south-dakota-native-document-header-format-review-v1` | `1404689476c789214883dd7783e199df4d2a6f970e5536b365125aa026ba4395` |
+
+These three immutable successors remain local Git-ignored evidence. Pushing their code
+and recorded identities does **not** remotely back up their PDFs or texts. Structural
+header agreement does not establish document role, filing-time eligibility, semantic
+accuracy, historical party or a trustworthy policy label. All certification/training/
+analytical flags remain false; no canonical classifications, model weights or publication
+integration changed.
+
+Canonical audit checkpoint **v26** verifies **55** completed research packets, including
+these three successors. Its actual **exit 1 / 34 failures among 328 checks** remains
+unchanged, and its canonical report is byte-identical to v25. No research packet replaces
+a missing analytical artifact or suppresses a release failure. Audit manifest:
+`5b623c9621f9eb2836ba6907838e1e6e8922f475065379dd69cabc2f89d12a2f`.
 
 ## Training reservation enforcement
 

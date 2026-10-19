@@ -405,6 +405,25 @@ SD replay resolves all 1,933 formerly unlisted parsed references to amendment me
 their exact bill contexts, while leaving the 3,950 unparsed legacy links and HJR split
 explicit. The introduced-document plan is not expanded using amendment version observations.
 
+Introduced-document capture retains the exact PDF bytes and both readers' complete strings
+for every physical page, not only a prefix or the first page. Independent replay verifies
+bytes, receipts, source context, physical page positions and both exact extractions. Empty
+pages remain explicit; nonempty text alone cannot establish faithful visible-text extraction.
+Header triage uses only the separately retained first-page strings and does not certify the
+remaining document's contents.
+
+`parse_document_headers()` recognizes explicit modern and legacy SD publisher layouts,
+retaining every occurrence, exact source text and Unicode character offsets. Literal
+special-session suffixes remain part of the session observation, and resolution-of-
+disapproval identifiers remain distinct from ordinary resolutions. Duplicate headings stay
+multiple observations. Missing printed years stay null rather than being reconstructed
+from ordinal session titles, API context or introduction dates. The complete-cohort
+successor preserves the original narrow-parser results and compares each reader's unique
+observations against the full native session key and measure identifier. Its one blank
+printed-year finding has a source-bound, visually inspected header crop; the native API
+year is a separate observation. No match confers version, filing-time, policy or party
+certification, training admission or analytical admission.
+
 All-page embedded extraction can also silently omit visible text. For NM 2026 HB 99's
 23-page amendments-in-context PDF, both pypdf and MuPDF extracted only a 61-character
 session heading. Rendered pages visibly contained policy text; pinned Tesseract 5.5.2

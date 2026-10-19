@@ -6,10 +6,86 @@ import pandas as pd
 import pytest
 
 from state_politics.bills.south_dakota import (
+    parse_document_headers,
     parse_native_sessions,
     plan_introduced_documents,
     reconcile,
 )
+
+
+@pytest.mark.parametrize(
+    ("session", "heading", "identifier"),
+    [
+        ("2026", "House Bill 1001", "HB 1001"),
+        ("2025s", "Senate Bill 1", "SB 1"),
+        ("2021i", "House Concurrent Resolution\n6001", "HCR 6001"),
+        ("2021r", "House Bill 1001", "HB 1001"),
+        ("2021", "Senate Resolution of Disapproval\n901", "SRD 901"),
+    ],
+)
+def test_modern_header_preserves_special_session_keys_and_measure_types(
+    session, heading, identifier
+):
+    text = (
+        f"Draft identifier\n{session} South Dakota Legislature\n{heading}\n"
+        "Introduced by: A sponsor\nDate observation: 2022-04-11"
+    )
+    found = parse_document_headers(text)
+    assert len(found) == 1
+    assert found[0]["native_session_identifier_observation"] == session
+    assert found[0]["native_identifier_observation"] == identifier
+    assert found[0]["layout"] == "modern"
+    assert found[0]["source_text"] == text[found[0]["source_start"] : found[0]["source_end"]]
+
+
+@pytest.mark.parametrize(
+    ("session", "title", "draft", "heading", "identifier"),
+    [
+        ("2018", "NINETY-THIRD SESSION", "598Z0296", "HOUSE BILL  NO.  1001", "HB 1001"),
+        ("2018s", "NINETY-THIRD SPECIAL SESSION", "400C0001", "SENATE BILL NO. 1", "SB 1"),
+        ("2019", "NINETY-FOURTH SESSION", "866B0062", "HOUSE BILL NO. 1001", "HB 1001"),
+    ],
+)
+def test_legacy_header_preserves_explicit_publisher_session_and_source_span(
+    session,
+    title,
+    draft,
+    heading,
+    identifier,
+):
+    text = f"State of South Dakota\n{title}\nLEGISLATIVE ASSEMBLY, {session}\n {draft}\n{heading}"
+    found = parse_document_headers(text)
+    assert len(found) == 1
+    assert found[0]["native_session_identifier_observation"] == session
+    assert found[0]["native_identifier_observation"] == identifier
+    assert found[0]["layout"] == "legacy"
+    assert found[0]["source_text"] == text[found[0]["source_start"] : found[0]["source_end"]]
+
+
+def test_repeated_document_headers_retain_each_distinct_source_occurrence():
+    header = "2026 South Dakota Legislature\nHouse Bill 1001"
+    text = f"{header}\nOther material\n{header}"
+    found = parse_document_headers(text)
+    assert len(found) == 2
+    assert found[0]["source_start"] == 0
+    assert found[1]["source_start"] == text.rindex(header)
+    assert all(row["source_text"] == header for row in found)
+
+
+def test_legacy_header_without_a_printed_year_keeps_identity_without_inventing_session():
+    text = (
+        "State of South Dakota\nNINETY-FOURTH SESSION\nLEGISLATIVE ASSEMBLY,\n"
+        "471B0595\nHOUSE BILL NO. 1191\nFOR AN ACT concerning the year 2019."
+    )
+    found = parse_document_headers(text)
+    assert len(found) == 1
+    assert found[0]["native_identifier_observation"] == "HB 1191"
+    assert found[0]["native_session_identifier_observation"] is None
+    assert found[0]["source_text"] == text[found[0]["source_start"] : found[0]["source_end"]]
+
+
+def test_body_bill_reference_is_not_a_publisher_header():
+    assert parse_document_headers("In 2019 the legislature considered House Bill 1001.") == []
 
 
 def _sources():
