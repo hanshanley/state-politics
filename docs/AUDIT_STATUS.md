@@ -707,6 +707,75 @@ the sponsorship inventory and independent replay. It retains actual **exit 1**, 
 evidence does not replace missing canonical analyses or certify a classifier. Audit manifest:
 `4b14ed5d7e8825040cab5d081b51482f4e8ced4c64cf4b0de5b94e9c724dd907`.
 
+### Version-isolated bill inputs and complete SD input replay
+
+The bill classifier previously concatenated current title, available summary and
+introduced text without establishing their version alignment. This is unsafe even
+when all three fields come from the same native bill. **2018 SD HB1132 / BillId 8918 /
+DocumentId 47568** supplies a retained concrete counterexample: its introduced text
+concerns military drinking-age eligibility, but its current native title concerns
+alcohol sponsorship/advertising agreements.
+
+`build_bill_input()` now uses **nonblank introduced text alone**. Title plus available
+summary remains the fallback only when introduced text is absent or whitespace-only.
+Insufficient introduced text abstains rather than being rescued by unrelated metadata.
+The source columns remain unchanged; exact input text/hash, selected fields and
+`introduced_text_only_else_title_summary_v2` construction identify the model input.
+This does not certify timing, native identity, extraction quality or a label.
+Reviewed Washington publisher-test exclusions still apply before inference.
+
+A second repaired traceability defect discarded the model's ordered `output_codes`
+and `rejection_score` while projecting bill predictions into the fixed export schema.
+Both now survive classification and state-partition Parquet export alongside complete
+scores/logits and abstention reasons. Unscored/baseline records keep these unavailable,
+not fabricated. Focused regressions cover version-isolated text, exact whitespace/hashes,
+insufficient introduced evidence, fallback compatibility and end-to-end learned-rejection
+exports; the combined bill/classifier/document checks pass **164 tests**.
+
+The new unlabelled candidate inventory accounts for **all 5,369 native SD introduced
+documents / 15,308 distinct physical pages**. It retains **10,738 alternative inputs**,
+one per document and reader, with complete page text, exact source/input spans, per-page
+hashes, source metadata and shared native-bill groups. Alternatives are not extra bills
+or independent split candidates. No current title/summary is prepended to a PDF input.
+
+| Offline tokenization observation | pypdf | PyMuPDF |
+|---|---:|---:|
+| Complete document inputs | 5,369 | 5,369 |
+| Input characters, including declared page joiners | 28,150,098 | 28,511,400 |
+| Source tokens | 7,262,301 | 8,047,874 |
+| Inputs needing more than one chunk | 1,491 | 1,628 |
+| Planned chunks | 12,190 | 13,022 |
+| Longest input, tokens | 74,133 | 83,869 |
+| Maximum chunks per input | 117 | 117 |
+| Discarded source tokens | 0 | 0 |
+
+These plans use the retained official encoder tokenizer and the existing **1,024-token**
+research budget: four domain-marker tokens, two wrapper tokens, **1,018 source tokens**
+and **128-token overlap**. Full-string tokenization can warn about the encoder's 8,192
+position limit; no full oversized string was passed to a model. The independent replay
+reconstructs every window using a separate ordered-boundary implementation and checks
+all **25,212** wrapped chunks against the actual 1,024-token budget. It also reproduces
+every complete input, **30,616** reader-page spans, source contexts, grouping, exact
+hashes, reader totals and the HB1132 example without invoking the producer's input or
+window helpers.
+
+- Complete input inventory manifest: `0c96ca4701edd487f3e446e26f99a75e155c84b4e0c4050354896943f26df911`.
+- Independent input replay manifest: `e410f4f62d71227d796cf249dc0de06ce2772ad034b8ee21e689d9d4633f3016`.
+
+These are complete source-bound candidate inputs, **not new predictions, labels,
+training admission or evaluation results**. Raw strings retain line numbers, headers,
+sponsors and possible reading-order/strikeout limitations. All source/filing-time
+certification and training/analytical flags remain false. Model weights, references,
+thresholds and canonical analyses remain unchanged; the companion remains unpublished.
+The full local research packets are Git-ignored and are not remotely backed up by pushing
+code, documentation or these hashes.
+
+Canonical audit checkpoint **v28** verifies **59** completed research packets and binds
+the repaired bill-input/export module and its regressions. Its actual **exit 1 /
+34 failures among 328 checks** remains unchanged, with a report byte-identical to v27.
+No unlabelled candidate replaces a missing canonical analytical artifact. Audit manifest:
+`f2acd02de1bb9e9888ca125c9bbdebcad4374325a1f485668b1887d24b23736e`.
+
 ## Training reservation enforcement
 
 The training CLI now accepts an explicit `--source-reservation` pointing to a

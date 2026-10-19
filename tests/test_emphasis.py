@@ -251,6 +251,109 @@ def test_classify_bills_leaves_very_short_titles_unclassified():
     assert out.iloc[1]["topic"] == 1
 
 
+def test_introduced_input_excludes_unaligned_metadata_and_preserves_source_fields():
+    import hashlib
+    import json
+
+    from state_politics.analysis.revealed import BILL_INPUT_CONSTRUCTION, classify_bills
+
+    introduced = (
+        "\nAn Act to fund public school classrooms.\n\nSection 1. Teachers receive grants.\n"
+    )
+
+    class StubClassifier:
+        def predict_many(self, texts, **kwargs):
+            assert texts == [introduced]
+            return [(6, 0.9, 0.3)]
+
+    bills = pd.DataFrame([{
+        "bill_id": "changed-version", "state": "SD",
+        "title": "Revise alcohol advertising agreements.",
+        "summary": "The amended measure regulates alcoholic beverage advertising.",
+        "introduced_text": introduced,
+        "filing_time_text_certified": False,
+    }])
+    result = classify_bills(bills, StubClassifier())
+    row = result.iloc[0]
+    assert row["classification_text"] == introduced
+    assert row["input_sha256"] == hashlib.sha256(introduced.encode()).hexdigest()
+    assert json.loads(row["input_fields"]) == ["introduced_text"]
+    assert row["bill_input_construction"] == BILL_INPUT_CONSTRUCTION
+    assert row["input_tier"] == "introduced_text"
+    pd.testing.assert_frame_equal(result[bills.columns], bills)
+
+
+def test_insufficient_introduced_text_does_not_fall_back_to_unaligned_metadata():
+    import json
+
+    from state_politics.analysis.revealed import classify_bills
+
+    class UncalledClassifier:
+        def predict_many(self, *args, **kwargs):
+            raise AssertionError("later metadata must not mask insufficient introduced evidence")
+
+    bills = pd.DataFrame([{
+        "title": "Provide comprehensive funding for public education statewide.",
+        "summary": "The amended version supports teacher recruitment and classroom grants.",
+        "introduced_text": "Tax.",
+    }])
+    row = classify_bills(bills, UncalledClassifier()).iloc[0]
+    assert row["classification_text"] == "Tax."
+    assert row["classification_status"] == "abstained"
+    assert row["abstention_reason"] == "insufficient_evidence"
+    assert row["input_tier"] == "introduced_text"
+    assert json.loads(row["input_fields"]) == ["introduced_text"]
+
+
+def test_bill_input_retains_title_summary_fallback_and_exact_source_whitespace():
+    from state_politics.analysis.revealed import build_bill_input
+
+    assert build_bill_input(" Title \n", "\n Summary ", " \n") == (
+        " Title \n\n\n\n Summary ", ["title", "summary"],
+    )
+    assert build_bill_input("", "\n Summary ") == ("\n Summary ", ["summary"])
+    assert build_bill_input(" ", "\n") == ("", [])
+
+
+def test_bill_prediction_export_retains_learned_rejection_and_output_map(tmp_path):
+    import json
+
+    from state_politics.analysis.revealed import count_topics_by_state
+
+    class RejectionClassifier:
+        run_id = "rejection-research"
+        manifest = {"status": "provisional"}
+
+        def predict_records(self, texts, **kwargs):
+            assert texts == ["Funding public schools and regulating alcohol advertising."]
+            return [{
+                "topic": None, "candidate_topic": 6, "runner_up": 1,
+                "score": 0.9, "margin": 0.82, "abstention_reason": "learned_rejection",
+                "output_codes": "[1, 6, null]", "rejection_score": 0.9,
+                "scores": "[0.02, 0.08, 0.9]", "logits": "[[-2.0, -0.7, 1.7]]",
+                "n_chunks": 1,
+            }]
+
+    path = tmp_path / "bills.parquet"
+    pd.DataFrame([{
+        "bill_id": "mixed-policy", "state": "SD", "year": 2024, "sponsor_party": "D",
+        "title": "Funding public schools and regulating alcohol advertising.",
+    }]).to_parquet(path, index=False)
+    counts, totals, coverage = count_topics_by_state(
+        path, RejectionClassifier(), predictions_dir=tmp_path / "predictions", progress=None,
+    )
+    assert counts.empty
+    assert totals == {"n_bills": 1, "n_attributed": 1, "n_classified": 0}
+    assert coverage.iloc[0]["n_abstained"] == 1
+    row = pd.read_parquet(tmp_path / "predictions" / "SD.parquet").iloc[0]
+    assert json.loads(row["output_codes"]) == [1, 6, None]
+    assert row["rejection_score"] == 0.9
+    assert json.loads(row["scores"]) == [0.02, 0.08, 0.9]
+    assert json.loads(row["logits"]) == [[-2.0, -0.7, 1.7]]
+    assert row["classification_status"] == "abstained"
+    assert row["abstention_reason"] == "learned_rejection"
+
+
 def test_unscored_and_empty_bills_keep_traceable_prediction_schema():
     import hashlib
 
@@ -275,6 +378,8 @@ def test_unscored_and_empty_bills_keep_traceable_prediction_schema():
     assert result["classification_status"].tolist() == ["excluded", "abstained"]
     assert result.iloc[1]["input_sha256"] == hashlib.sha256(b"Tax.").hexdigest()
     assert result["score_type"].eq("not_scored").all()
+    assert result["output_codes"].isna().all()
+    assert result["rejection_score"].isna().all()
     empty = classify_bills(bills.iloc[:0], UncalledClassifier())
     assert empty.empty and set(empty.columns) == set(result.columns)
 

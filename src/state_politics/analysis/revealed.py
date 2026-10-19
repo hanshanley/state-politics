@@ -16,11 +16,12 @@ Caveats that belong next to any number produced here
 * Both sides are restricted to the same window. The platform side uses 2018-present planks
   only; pooling the full 1990-2026 corpus against a 2018-2026 bill window would compare
   different eras, and most of the plank corpus predates 2018.
-* Bills are classified from their **titles**, which are short and often procedural. That is a
-  noisier signal than a platform plank, and the validation figures reported by
-  :mod:`state_politics.analysis.validate` are measured on planks, not titles.
-* A bill is attributed to a party by its primary sponsors; roughly a fifth cannot be resolved
-  to a party at all and are excluded rather than guessed at.
+* Bill inputs use introduced text alone when present, otherwise title plus available summary.
+  Source metadata can describe a later version and must not be appended to introduced text.
+  These evidence tiers require separate evaluation; input construction does not certify
+  version identity, filing-time eligibility, extraction quality or classifier accuracy.
+* A bill is attributed to a party by its primary sponsors. Unresolved historical affiliations
+  are excluded rather than guessed at; source availability does not certify party at filing.
 * Filing a bill is not passing one. This measures agenda, not achievement.
 """
 
@@ -38,7 +39,7 @@ from .modernbert import add_model_arguments, load_classifier, prediction_rows
 from .taxonomy import DEFAULT_TOPICS_PATH, MIN_TOPIC_SIMILARITY, load_topics
 
 __all__ = [
-    "classify_bills", "count_topics_by_state", "divergence_table",
+    "build_bill_input", "classify_bills", "count_topics_by_state", "divergence_table",
     "is_procedural_shell_title", "is_source_test_title", "party_emphasis_from_states",
 ]
 
@@ -46,6 +47,7 @@ __all__ = [
 #: mostly spoken for; the classifier itself slices again internally.
 _BILL_SLICE = 100_000
 MIN_BILL_YEAR = 2018
+BILL_INPUT_CONSTRUCTION = "introduced_text_only_else_title_summary_v2"
 _NM_EMERGENCY_CLAUSE_RE = re.compile(
     r"^PUBLIC,?\s+PEACE,\s+HEALTH,\s+SAFETY\s+&\s+WELFARE$",
     re.I,
@@ -75,9 +77,23 @@ def is_procedural_shell_title(title: str, state: str) -> bool:
     )
 
 
+def build_bill_input(
+    title: str, summary: str = "", introduced_text: str = "",
+) -> tuple[str, list[str]]:
+    """Keep introduced text separate from metadata with unestablished version alignment."""
+    if not all(isinstance(value, str) for value in (title, summary, introduced_text)):
+        raise ValueError("bill input fields must be strings")
+    parts = (
+        [("introduced_text", introduced_text)] if introduced_text.strip()
+        else [("title", title), ("summary", summary)]
+    )
+    selected = [(field, text) for field, text in parts if text.strip()]
+    return "\n\n".join(text for _, text in selected), [field for field, _ in selected]
+
+
 def classify_bills(bills, classifier, *, batch_size: int = 8,
                    min_similarity: float = MIN_TOPIC_SIMILARITY, min_title_chars: int = 20):
-    """Classify available filing-time evidence, retaining every abstention and exact input."""
+    """Classify candidate evidence without certifying its timing or source identity."""
     import pandas as pd
 
     rows, usable, texts = [], [], []
@@ -86,6 +102,7 @@ def classify_bills(bills, classifier, *, batch_size: int = 8,
         "topic": None, "candidate_topic": None, "runner_up": None,
         "score": None, "margin": None, "abstention_reason": None,
         "n_chunks": 0, "scores": "[]", "logits": "[]", "chunk_spans": "[]",
+        "output_codes": None, "rejection_score": None,
         "input_sha256": None, "input_domain": "bill", "score_type": "not_scored",
         "model_run": getattr(classifier, "run_id", None),
         "base_model_run": getattr(classifier, "base_model_run", None),
@@ -96,6 +113,7 @@ def classify_bills(bills, classifier, *, batch_size: int = 8,
         "record_id": None, "procedural_shell": False, "source_test_record": False,
         "classification_text": "",
         "input_tier": None, "classification_status": None,
+        "bill_input_construction": BILL_INPUT_CONSTRUCTION, "input_fields": "[]",
     }
     for position, row in enumerate(bills.to_dict("records")):
         title = str(row.get("title") or "") if pd.notna(row.get("title")) else ""
@@ -103,7 +121,7 @@ def classify_bills(bills, classifier, *, batch_size: int = 8,
         introduced = row.get("introduced_text", "")
         summary = str(summary) if pd.notna(summary) else ""
         introduced = str(introduced) if pd.notna(introduced) else ""
-        text = "\n\n".join(part for part in (title, summary, introduced) if part.strip())
+        text, input_fields = build_bill_input(title, summary, introduced)
         shell = is_procedural_shell_title(title, str(row.get("state", ""))) and not (
             summary.strip() or introduced.strip()
         )
@@ -116,6 +134,7 @@ def classify_bills(bills, classifier, *, batch_size: int = 8,
             "topic": None, "score": None, "margin": None, "abstention_reason": reason,
             "procedural_shell": shell, "source_test_record": source_test,
             "classification_text": text,
+            "input_fields": json.dumps(input_fields),
             "record_id": row.get("bill_id"),
             "input_sha256": hashlib.sha256(text.encode()).hexdigest(),
             "classification_status": "excluded" if shell or source_test else "abstained",

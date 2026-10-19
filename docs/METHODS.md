@@ -515,6 +515,37 @@ rationales; development documents and labels remain reserved. Independent review
 taxonomy resolution, broader class support and empirical release gates remain necessary.
 No replacement has been approved for production or publication.
 
+Bill evidence assembly now uses
+`introduced_text_only_else_title_summary_v2`: **nonblank introduced text is the entire
+classification input**, without an imported current title or summary prepended. SD's
+2018 HB1132 demonstrates why: its native current title concerns alcohol sponsorship/
+advertising agreements, while the retained introduced PDF concerns military drinking-age
+eligibility. Metadata alignment cannot be inferred from sharing a bill number. The
+original title, summary and introduced text remain unchanged in the source columns;
+`classification_text`, its exact hash, `input_fields` and `bill_input_construction`
+identify what actually reached the classifier. Insufficient introduced text abstains
+rather than silently falling back to a longer potentially later title/summary.
+
+If introduced text is absent or whitespace-only, the previous title-plus-summary input
+remains available as a separately identified lower-evidence tier; this does **not**
+certify that either field was available at filing. Reviewed publisher system-test
+exclusions still apply regardless of substantive sample text. This assembly version is
+separate from the checkpoint's domain-marker/token-wrapper construction. Earlier frozen
+inputs, references, metrics and weights are not rewritten or retroactively described as
+version-isolated. Record-level bill exports also retain the actual learned-rejection
+score and ordered output-code map, including null rejection, alongside scores/logits;
+unscored and historical-baseline rows do not invent those values.
+
+The complete SD input inventory preserves two **alternative reader inputs per native
+document**, not two bills. Both share the same native session/bill group and cannot be
+independent training/evaluation splits. Each input contains every complete source page
+with a declared double-newline joiner, exact source/input character spans and per-page
+hashes. The separately retained source metadata is not prepended. Offline tokenization
+uses the retained official encoder tokenizer; the saved 1,024-token research budget
+includes four domain-marker tokens and two wrapper tokens, leaving 1,018 source tokens
+per chunk with 128-token overlap. Complete token/window replay is not semantic review,
+classifier evaluation or permission to train/classify/admit the candidates.
+
 Primary policy evidence and optional heading/preface context must remain separately
 traceable. A source-native bullet is not automatically single-topic; a section title is not
 a topic label. The unlabelled source-context probe documented in `AUDIT_STATUS.md` changes
