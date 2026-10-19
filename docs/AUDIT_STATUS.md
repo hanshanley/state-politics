@@ -447,6 +447,56 @@ actual return code **1**. Its canonical report is byte-identical to v20: **34/32
 remain, rather than being hidden by admitting uncertified research artifacts.
 Audit manifest: `056b7a29c0a01ab7b49800cece5913a2865724b604f4f5b8f1c7f94e83ffabef`.
 
+### South Dakota native-universe reconciliation
+
+The completed `data/processed/south-dakota-native-universe-reconciliation-v1/` retains
+the publisher's **43-session** inventory and complete bill-list responses for all
+**14** published 2018-2026 sessions: **nine regular and five special**. The new recovery
+has **18 successful retained requests**, with the earlier client-source evidence copied
+separately. All **5,366** South Dakota baseline rows and every original column/order
+survive. The native lists contain **5,369** records: **5,365** exact session/identifier
+matches, **four native-only measures**, and **one unmatched baseline identity**.
+
+The four native-only rows are `2021i` **HR 7002 and SR 701/702/703**, concerning impeachment
+and Senate trial proceedings. Their introduction observations are in **2022**, but the
+publisher explicitly assigns them to **2021i**. They must not be moved to the 2022 regular
+session by a calendar-year join. Across the native universe, **199** introduction-year
+prefixes precede the session year and **four** follow it; missing observations remain
+missing, not inferred event dates. These are native-list observations, not independently
+adjudicated temporal or legal findings.
+
+Following the unmatched **2022 HJR 1** source recovered the actual native bill **22633**,
+its introduced-version record and all **three PDF pages**, whose header identifies
+**HJR 5001**. The baseline already contains a separate HJR 5001 row. Both baseline
+identities explicitly cite the same native overview/API record; the HJR 1 row carries the
+introduced PDF links while HJR 5001 has no retained version links but does have action/vote
+metadata. This is a split/alias identity requiring reconciliation, **not evidence of two
+separate native measures**. Both original records, their different metadata, all four
+overview/API source rows and the document references remain retained without silently
+merging, deleting or renumbering either source identity.
+
+The reusable resolver in `bills/south_dakota.py` uses exact native session keys and
+explicit type/number fields. It retains duplicate native rows, exposes ambiguous source
+or native identities instead of choosing the first match, rejects incomplete/conflicting
+response scope, and keeps every source-only row. A separate raw-response replay checks
+every original native record/position, every baseline decision and the complete source-only
+population. All **5,365** matched current titles are exact matches; this does **not**
+resolve the introduced-versus-later-title problem demonstrated above.
+
+Manifest: `6d104c4c032e3e64daacc7b7ae842ed86adf89578ac9c2c2c598557a4e9ca384`.
+This is retrieval-time native-list reconciliation, not certified analytical completeness,
+filing-time text/party recovery or independent semantic review. Native listed document IDs
+do not establish version identity. New source-only records remain separate, canonical files
+are unchanged, and the companion remains unpublished and unintegrated. Complete bytes,
+tables, receipts and producer scripts are local Git-ignored evidence, not remotely backed
+up by pushing code and manifest identities.
+
+Canonical audit **v22** verifies **47** research packets, retains actual return code **1**
+and reports **34/328 failures**. Only the passing/code-documentation check counts changed
+from v21; the failures and all other report fields are identical. The additional native
+records have not been substituted for missing certified analytical artifacts.
+Audit manifest: `87317470c94494243ec9b7ef2099c3739d862a6fc0851db4cd742f3f0774d414`.
+
 ## Training reservation enforcement
 
 The training CLI now accepts an explicit `--source-reservation` pointing to a

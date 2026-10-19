@@ -350,6 +350,24 @@ A filename/chamber mismatch alone does not prove an erroneous source attachment.
 Session sponsor observations, successful downloads and complete page extraction do not
 establish event-time affiliation, enacted status or independent semantic certification.
 
+The South Dakota universe resolver accepts explicit native session objects and complete
+bill-response arrays keyed by their native `SessionId`, returning baseline coverage, all
+native records and source-only native records separately. It uses native `Year` as the
+session identifier and validates `BillType`, `BillNumberOnly`, `BillNumber` and response
+year together. An introduction timestamp does not select the session: some 2021 impeachment
+session measures have 2022 observations, and regular-session prefilings can occur in the
+preceding calendar year. Missing responses fail explicitly; empty successful arrays remain
+visible without certifying publisher absence. Repeated keys or reused native IDs remain
+ambiguous rather than selecting the first row. Original nested source JSON and physical
+response-row positions survive alongside normalized identity fields.
+
+Native-list equality is not denominator certification. In the bounded 2018-2026 SD
+reconciliation, four source-only native rows coexist with two baseline identifiers that
+cite the same native HJR 5001 overview. One baseline identity supplies document links while
+the other supplies action/vote metadata. Retain both source rows and their references for
+review; do not treat raw row-count differences as a count of missing analytical bills or
+automatically combine their parties, actions, versions or outcomes.
+
 All-page embedded extraction can also silently omit visible text. For NM 2026 HB 99's
 23-page amendments-in-context PDF, both pypdf and MuPDF extracted only a 61-character
 session heading. Rendered pages visibly contained policy text; pinned Tesseract 5.5.2
