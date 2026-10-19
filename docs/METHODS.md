@@ -565,6 +565,41 @@ rows and both responses remain intact. HTTP-200 application shells are not subst
 bill evidence; explicit 404s remain failures. Neither shared LC/title evidence nor a
 complete current API traversal proves a complete historical filing universe.
 
+The separately retained official *History and Final Status* volumes for regular sessions
+2019, 2021, 2023 and 2025 supply another source family, not automatic historical
+adjudication. Every physical page is retained and decoded separately through pypdf and
+PyMuPDF. Detailed `INTRODUCED BY` headers, their LC/introducer/drafter observations,
+the explicitly bounded primary-sponsor/requesting-entity index, and the six introduced
+tallies are separate tables with exact reader-text spans. A sponsor/requestor-index
+mention is not a detailed action history; a reported count is not a list of identities.
+No printed MM/DD action, cover date or name is silently promoted to a filing date,
+operative-version determination or event-time party label.
+
+These distinctions expose actual disagreements within the published source. The 2019
+volume reports 1,309 introductions and its sponsor/requestor index identifies all 1,309
+native formal keys, but detailed headers cover only 1,298: HJ57–HJ66 and SJ33 are absent
+from that detailed census in both readers. The 2021 detailed census covers all 1,313
+native formal keys, while its sponsor/requestor index lacks HB132, HB133, HB194, HB214
+and HB233. The 2023 and 2025 detailed/index censuses match their 1,698 and 1,759 native
+formal keys. Absent detailed entries or index mentions do not establish non-introduction.
+The source's own tallies reconcile with all 6,079 current native formal identities;
+the 6,068 detailed headers are a distinct, smaller evidence population.
+
+Literal source formats remain visible. `BY:` is accepted alongside `BY`, and the 2021
+HB538 header's printed `LC29-1-1` survives verbatim with an explicit unknown normalized
+draft identity, not a guessed correction or a discarded formal entry. Numeric LC
+comparison removes padding only after validating the identifier; original strings
+and reader differences survive. The first census diagnostic is frozen, including its
+omitted format cases and faulty padding comparison; a separate corrected successor
+and independent complete replay supersede those structured observations.
+
+Exact history joins preserve all 18,403 imported source contexts and every native formal
+key. The original four exact-key nonmatches remain unresolved: absence of 2025 SB6/SB85
+and 2023 SR55 from the detailed/index censuses does not adjudicate contrary printed
+Senate documents or authorize merging them with House/SJ records. The volume does not
+classify 2021 LC3368 as a publisher test. Complete decoder/span/join replay establishes
+what was retained and reconstructed, not independent semantic or scientific truth.
+
 The shared `exclude_mt_lc_source_requests_v1` contract now excludes **Montana LC source
 rows as additional independent formal filings**, regardless of imported `bill` or
 `proposed bill` classification. It does not declare their underlying requests unintroduced,

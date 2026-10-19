@@ -957,6 +957,68 @@ v30. The scope fix does not replace missing canonical outputs or pass scientific
 release gates. Audit manifest:
 `d53d0795214c777775770507743856dcb0fe19e7201581c4f1bbe0b55bd03cce`.
 
+### Official Montana histories: separate counts, indexes and detailed entries
+
+All four official regular-session *History and Final Status* volumes are now retained
+with complete publisher responses and receipts: **3,200 physical pages / 6,400 complete
+reader-page records**. Detailed native headers identify **6,068 distinct measures /
+12,136 exact reader-text spans**. Their introducer, drafter and LC observations remain
+separate from actual introduction dates and party-at-filing evidence.
+
+| Regular session | Reported introduced / current native formal keys | Detailed history keys | Primary-sponsor/requestor index keys |
+|---|---:|---:|---:|
+| 2019 | 1,309 | 1,298 | 1,309 |
+| 2021 | 1,313 | 1,313 | 1,308 |
+| 2023 | 1,698 | 1,698 | 1,698 |
+| 2025 | 1,759 | 1,759 | 1,759 |
+
+The agreement on **6,079 current native formal identities** does not erase source
+omissions. The 2019 volume's detailed header census lacks **HJ57–HJ66 and SJ33**;
+its own introduction totals and primary-sponsor/requestor index still include those
+eleven measures. The 2021 index lacks **HB132, HB133, HB194, HB214 and HB233** even though
+all five have detailed histories. Each discrepancy is reproduced in both readers.
+These are observed differences between published source sections, not evidence that
+the measures were never introduced.
+
+The parser preserves the 2021 HB538 header's literal **`LC29-1-1`** rather than guessing
+a valid request number or losing the formal history. All other **6,067** normalized
+detailed LC observations agree with their native formal records. `INTRODUCED BY:`
+headers remain distinct literal observations alongside `INTRODUCED BY`. PDF-reader
+differences in names and punctuation are retained, not silently harmonized as party
+or identity evidence. Cover/session dates, printed MM/DD events and imported metadata
+also remain separate; no filing-time dates were imputed.
+
+The four original exact-key nonmatches are **still unresolved**. The 2025 volume
+records HB117/LC0239 and HB161/LC0442, and the 2023 volume records SJ16/LC3997, but their
+absence of SB6, SB85 and SR55 does not adjudicate contradictory earlier prints or prove
+safe Senate/House/SJ aliases. Absence of LC3368 does not certify its test-record status.
+All **18,403 original source contexts** and **6,079 native formal contexts** survive
+the separate source/history tables; no original record is merged, deleted or admitted.
+
+The first immutable diagnostic retains every page but omitted 75 `BY:` headers and
+the malformed-LC header from structured observations, and its LC comparison mishandled
+leading-zero padding. It is explicitly superseded, not overwritten. The corrected
+successor retains these cases and a separate independent replay reconstructs every
+source page, header/tally/index span, receipt/hash, original source column and exact
+native/source join without importing the producer's parsing or matching helpers.
+This is decoder/provenance replay, not independent semantic or legal adjudication.
+
+- Superseded diagnostic: `0631f7fab28a7454c84e085270b3998703887a30a6d818595e595716cfe0989c`.
+- Corrected complete-volume census: `b2f8caef475230a775f4ab8e0992f3c6dcaa8f611993e41615df3a38dc2f2ef6`.
+- Independent replay: `d8df756ce7bce66195d1054c3436b8d2464a683091c8471021ffa04ef329d1f6`.
+
+Every filing-time, party, training and analytical admission remains false. No model,
+canonical source table or analytical result changed. Complete volumes/text remain
+local and Git-ignored; a tracked-code push does not back them up. The report companion
+remains unpublished and production integration remains unauthorized.
+
+Canonical audit checkpoint **v35** verifies **77** completed bounded packets, including
+the explicitly superseded diagnostic, and archives the history parsers and replay code.
+Its actual result is **exit 1 / 299 passing checks of 333 / the same 34 failures**.
+All authored-input hashes and failure entries match v34; scientific certification
+remains unperformed. Audit manifest:
+`f40ee8a8f93d0504046249e1ac318752575c108f4563e716fdc96d04d8687569`.
+
 ## External state-bill reference recovery
 
 The publisher's Florida and Pennsylvania CAP catalogs, complete CSV responses,

@@ -8,9 +8,86 @@ import pytest
 
 from state_politics.bills.montana import (
     parse_document_headers,
+    parse_history_headers,
+    parse_history_tallies,
     reconcile,
     source_draft_request_mask,
 )
+
+
+@pytest.mark.parametrize("separator", ["\t\n\t\n", "  "])
+@pytest.mark.parametrize("by", ["BY", "BY:"])
+def test_history_headers_preserve_draft_introducer_and_native_spans(separator, by):
+    text = (
+        "Legislation by primary sponsor\nHB 117\n"
+        f"HB 117\tINTRODUCED {by} REGIER, AMY{separator}LC0239 DRAFTER: L. SHERLEY\n"
+        "ESTABLISH CRIMINAL JUSTICE DATA WAREHOUSE PRIORITIES\n12/27 (H) INTRODUCED\n"
+    )
+    [record] = parse_history_headers(text)
+    assert record["identifier_observation"] == "HB 117"
+    assert record["draft_identifier_observation"] == "LC 239"
+    assert record["draft_identifier_raw_observation"] == "LC0239"
+    assert record["draft_identifier_issue"] is None
+    assert record["introducer_observation"] == "REGIER, AMY"
+    assert record["drafter_observation"] == "L. SHERLEY"
+    assert text[record["source_start"]:record["source_end"]] == record["source_text"]
+    assert "12/27" not in record["source_text"]
+    assert parse_history_headers("HB 117 INTRODUCED BY REGIER, AMY\nNo native LC header") == []
+    assert parse_history_headers("Discuss HB 117 INTRODUCED BY A  LC0239 DRAFTER: B") == []
+
+
+def test_history_headers_retain_malformed_printed_lc_without_dropping_or_repairing_formal_entry():
+    text = "HB 538\tINTRODUCED BY DURAM\n\tLC29-1-1 DRAFTER: MOHR\nCREATE MONTANA STANDARD TIME"
+    [record] = parse_history_headers(text)
+    assert record["identifier_observation"] == "HB 538"
+    assert record["draft_identifier_raw_observation"] == "LC29-1-1"
+    assert record["draft_identifier_observation"] is None
+    assert record["draft_identifier_issue"] == "unrecognized_printed_draft_identifier"
+    assert text[record["source_start"]:record["source_end"]] == record["source_text"]
+
+
+def _history_tallies():
+    return (
+        "TOTALS AND TALLIES OF BILLS AND RESOLUTIONS\nINTRODUCED\n"
+        "Senate Bills............366\nSenate Joint Resolutions............33\n"
+        "Senate Resolutions............65\nHouse Bills............774\n"
+        "House Joint Resolutions............66\nHouse Resolutions............       5\n"
+        "Total............1,309\nDIED IN FIRST HOUSE (includes tabled bills)\n"
+        "Senate Bills............124\n"
+    )
+
+
+@pytest.mark.parametrize("year", ["", "2021 "])
+@pytest.mark.parametrize("leader_gap", ["", " "])
+def test_history_tallies_do_not_substitute_detailed_header_counts_or_later_outcomes(
+    year, leader_gap,
+):
+    text = _history_tallies()
+    text = text.replace("OF BILLS", f"OF {year}BILLS").replace(
+        "............", f"{leader_gap}............"
+    )
+    records = parse_history_tallies(text)
+    assert {r["measure_type"]: r["introduced_count_observation"] for r in records} == {
+        "SB": 366, "SJ": 33, "SR": 65, "HB": 774, "HJ": 66, "HR": 5,
+    }
+    for record in records:
+        assert text[record["source_start"]:record["source_end"]] == record["source_text"]
+    assert parse_history_tallies("Senate Bills............366\n") == []
+
+
+@pytest.mark.parametrize("damage", ["missing_family", "duplicate_family", "missing_end"])
+def test_history_tallies_refuse_incomplete_or_ambiguous_source_sections(damage):
+    text = _history_tallies()
+    if damage == "missing_family":
+        text = text.replace("House Resolutions............       5\n", "")
+    elif damage == "duplicate_family":
+        text = text.replace(
+            "Total............1,309", "House Bills............774\nTotal......1,309"
+        )
+    else:
+        text = text.replace("DIED IN FIRST HOUSE", "UNREVIEWED NEXT SECTION")
+    with pytest.raises(ValueError, match="tallies|tally"):
+        parse_history_tallies(text)
 
 
 def test_source_draft_scope_is_state_specific_and_preserves_conflicting_formal_identities():

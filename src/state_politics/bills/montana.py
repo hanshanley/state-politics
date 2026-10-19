@@ -14,6 +14,68 @@ _DOCUMENT_HEADER = re.compile(
     r"(?P<year>20\d{2})\s+(?P<kind>LC|HB|HJ|HR|SB|SJ|SR)\s+"
     r"(?P<number>\d+)(?:\.(?P<version>\d+))?\b"
 )
+_HISTORY_HEADER = re.compile(
+    r"(?m)^[ \t]*(?P<kind>HB|HJ|HR|SB|SJ|SR)[ \t]*(?P<number>\d+)"
+    r"[ \t\r\n]+INTRODUCED[ \t]+BY:?[ \t]+(?P<introducer>[^\r\n]+?)"
+    r"[ \t\r\n]+LC(?P<draft>[^ \t\r\n]+)[ \t]+DRAFTER:[ \t]*(?P<drafter>[^\r\n]+)"
+)
+_HISTORY_KINDS = {
+    "Senate Bills": "SB", "Senate Joint Resolutions": "SJ", "Senate Resolutions": "SR",
+    "House Bills": "HB", "House Joint Resolutions": "HJ", "House Resolutions": "HR",
+}
+
+
+def parse_history_headers(text: str) -> list[dict]:
+    """Observe detailed history headers, not every introduced measure or its filing date."""
+    if not isinstance(text, str):
+        raise ValueError("Montana history headers require text")
+    return [
+        {
+            "identifier_observation": f"{match['kind']} {int(match['number'])}",
+            "draft_identifier_raw_observation": f"LC{match['draft']}",
+            "draft_identifier_observation": (
+                f"LC {int(match['draft'])}" if match["draft"].isascii()
+                and match["draft"].isdigit() else None
+            ),
+            "draft_identifier_issue": (
+                None if match["draft"].isascii() and match["draft"].isdigit()
+                else "unrecognized_printed_draft_identifier"
+            ),
+            "introducer_observation": match["introducer"].strip(),
+            "drafter_observation": match["drafter"].strip(),
+            "source_start": match.start(), "source_end": match.end(), "source_text": match[0],
+        }
+        for match in _HISTORY_HEADER.finditer(text)
+    ]
+
+
+def parse_history_tallies(text: str) -> list[dict]:
+    """Read only the explicitly introduced totals, retaining exact native spans."""
+    if not isinstance(text, str):
+        raise ValueError("Montana history tallies require text")
+    heading = re.search(
+        r"TOTALS AND TALLIES OF (?:20\d{2} )?BILLS AND RESOLUTIONS\s+INTRODUCED\b", text
+    )
+    if heading is None:
+        return []
+    end = re.search(r"(?m)^[ \t]*DIED IN FIRST HOUSE\b", text[heading.end():])
+    if end is None:
+        raise ValueError("Montana introduced tallies lack their closing section")
+    stop = heading.end() + end.start()
+    records = []
+    for label, kind in _HISTORY_KINDS.items():
+        pattern = re.compile(
+            re.escape(label) + r"[ \t]*\.{2,}[ \t]*([\d,]+)[ \t]*(?=\r?\n|\Z)"
+        )
+        matches = list(pattern.finditer(text, heading.end(), stop))
+        if len(matches) != 1:
+            raise ValueError(f"Missing or duplicate Montana introduced tally: {kind}")
+        [match] = matches
+        records.append({
+            "measure_type": kind, "introduced_count_observation": int(match[1].replace(",", "")),
+            "source_start": match.start(), "source_end": match.end(), "source_text": match[0],
+        })
+    return records
 
 
 def parse_document_headers(text: str) -> list[dict]:
