@@ -187,3 +187,103 @@ def reconcile(
         ]
     ].copy()
     return coverage, native_frame, source_only
+
+
+def plan_introduced_documents(native: pd.DataFrame, versions: pd.DataFrame) -> pd.DataFrame:
+    """Keep every native bill and select only a unique, explicitly introduced candidate."""
+    identity = [
+        "native_record_index",
+        "native_bill_id",
+        "native_session_identifier",
+        "native_identifier",
+    ]
+    version_fields = {
+        *identity,
+        "native_version_row_index",
+        "native_document_id",
+        "native_version_note",
+    }
+    if not set(identity).issubset(native.columns) or not version_fields.issubset(versions.columns):
+        raise ValueError("native bill/version planning schema is incomplete")
+    if native.columns.duplicated().any() or versions.columns.duplicated().any():
+        raise ValueError("native bill/version planning columns must be unique")
+    sources = native.to_dict("records")
+    for field in ["native_bill_id", "native_record_index"]:
+        if native[field].duplicated().any():
+            raise ValueError(f"ambiguous native planning identity: {field}")
+    by_id = {}
+    for source in sources:
+        if type(source["native_bill_id"]) is not int or source["native_bill_id"] <= 0:
+            raise ValueError("native planning bill IDs must be positive integers")
+        by_id[source["native_bill_id"]] = source
+    groups = defaultdict(list)
+    for row in versions.to_dict("records"):
+        bill_id = row["native_bill_id"]
+        if type(bill_id) is not int or bill_id not in by_id:
+            raise ValueError("native version belongs to an unknown bill")
+        if any(row[field] != by_id[bill_id][field] for field in identity):
+            raise ValueError("native version and bill context conflict")
+        if (
+            type(row["native_document_id"]) is not int
+            or row["native_document_id"] <= 0
+            or type(row["native_version_row_index"]) is not int
+            or row["native_version_row_index"] < 0
+            or not isinstance(row["native_version_note"], str)
+        ):
+            raise ValueError("native version document/row/note fields are invalid")
+        if row["native_version_note"] == "Introduced":
+            groups[bill_id].append(row)
+    extra_fields = [
+        "native_introduced_candidate_status",
+        "n_native_introduced_candidates",
+        "native_introduced_version_row_indices",
+        "native_introduced_document_ids",
+        "native_introduced_document_id",
+        "native_introduced_request_url",
+        "version_identity_certified",
+        "filing_time_text_certified",
+        "training_admission",
+        "analytical_admission",
+    ]
+    if set(extra_fields) & set(native.columns):
+        raise ValueError("native input already contains document-planning decisions")
+    planned = []
+    for source in sources:
+        found = groups[source["native_bill_id"]]
+        unique = len(found) == 1
+        document_id = found[0]["native_document_id"] if unique else None
+        status = (
+            "unique_native_introduced_candidate"
+            if unique
+            else "ambiguous_native_introduced_candidates"
+            if found
+            else "no_native_introduced_note"
+        )
+        planned.append(
+            {
+                **source,
+                "native_introduced_candidate_status": status,
+                "n_native_introduced_candidates": len(found),
+                "native_introduced_version_row_indices": json.dumps(
+                    [row["native_version_row_index"] for row in found]
+                ),
+                "native_introduced_document_ids": json.dumps(
+                    [row["native_document_id"] for row in found]
+                ),
+                "native_introduced_document_id": document_id,
+                "native_introduced_request_url": (
+                    f"https://mylrc.sdlegislature.gov/api/Documents/{document_id}.pdf"
+                    if unique
+                    else None
+                ),
+                "version_identity_certified": False,
+                "filing_time_text_certified": False,
+                "training_admission": False,
+                "analytical_admission": False,
+            }
+        )
+    return pd.DataFrame(planned, columns=[*native.columns, *extra_fields]).astype(
+        {
+            "native_introduced_document_id": "Int64",
+        }
+    )

@@ -497,6 +497,50 @@ from v21; the failures and all other report fields are identical. The additional
 records have not been substituted for missing certified analytical artifacts.
 Audit manifest: `87317470c94494243ec9b7ef2099c3739d862a6fc0851db4cd742f3f0774d414`.
 
+### Complete South Dakota native version-list recovery
+
+The paced recovery completed successfully for **all 5,369 native measures** in the
+14-session cohort. `data/processed/south-dakota-native-version-recovery-v1/` preserves
+**5,369 successful native API responses and 10,470 version rows**, with no empty version
+arrays. The native notes identify **5,369 Introduced**, **2,810 Enrolled** and **2,291**
+other engrossed-version rows, including six style-and-form-veto engrossments. Every
+original response byte, receipt, field, native bill/session context and physical
+version-row position remains retained. These are version lists, **not 10,470 recovered
+PDFs or certified versions**.
+
+The separate `data/processed/south-dakota-native-version-verification-v1/` independently
+replays all responses, every raw JSON record, dates, hashes, contexts and row positions.
+Its introduced-document plan preserves the complete native bill table and contains
+**one explicit Introduced candidate per bill**, with **5,369 distinct document IDs**.
+The reusable planner does not choose the first version, fall back to enrolled/latest
+text, or resolve repeated introduced rows by first-match/deduplication. Missing and
+ambiguous introduced notes remain explicit and receive no selected request URL.
+No note or planned URL confers native-heading, filing-time or analytical certification.
+
+The replay also retains **all 18,053 baseline SD reference links** alongside separately
+typed native relationships: **12,168** identify a recovered version under the exact
+matched bill context, **3,950** remain unparsed legacy references, **1,933** parsed
+document references are absent from these native version lists, and **two** retain the
+unresolved HJR source identity. Unparsed or unlisted references are not labelled erroneous,
+deleted or counted as failed downloads; other publisher document categories and historical
+versions remain possible. The four native-only measures and original split HJR records
+stay separate from canonical analytical inputs.
+
+- Native version recovery manifest: `db0d1bc61c128678e03c078bb9f5ca31ecf441ca776eacb95da16a0f563c8d5a`.
+- Independent replay/document-plan manifest: `9786b4ec71170ad9fa56179d6edfd7930da8e1ef20ebc0f613fc8aec5ece8458`.
+
+Both complete immutable packets are local Git-ignored evidence, including their producer
+scripts; pushing code and manifest identities is not a remote backup of the responses.
+This step adds **no PDF downloads**, training rows, event-time parties, approved model or
+published companion. Native PDF recovery and source/version/semantic adjudication remain
+separate gates.
+
+Canonical audit checkpoint **v23** verifies **49** completed research packets and retains
+the actual **exit 1**, with **34 failures among 328 checks**. Its canonical report is
+byte-identical to v22: no missing analytical output was substituted or release failure
+suppressed. Audit manifest:
+`14ad03079e2ce33b4c3b44e41db9d31bf098c3f752c0aa472521a95627bd22f1`.
+
 ## Training reservation enforcement
 
 The training CLI now accepts an explicit `--source-reservation` pointing to a

@@ -368,6 +368,22 @@ the other supplies action/vote metadata. Retain both source rows and their refer
 review; do not treat raw row-count differences as a count of missing analytical bills or
 automatically combine their parties, actions, versions or outcomes.
 
+Native version-list recovery follows the publisher's bill-ID-bound versions endpoint for
+every native bill, retaining all introduced, engrossed and enrolled records. A separate
+response replay checks complete raw JSON, source context, physical row positions, optional
+date observations and hashes. `plan_introduced_documents()` retains every native bill and
+selects a request only when exactly one native note is explicitly `Introduced`. Repeated
+introduced rows stay ambiguous even if they repeat the same document ID. Missing originals
+do not fall back to a later version or the first API row. The request URL uses the retained
+publisher client's document-ID construction, not an invented bill-number/session path.
+All candidates remain uncertified until actual bytes and native context are reviewed.
+
+Comparing imported reference IDs with these native version lists does not settle all
+document categories. An exact parsed bill/document relationship is a metadata observation,
+not retrieval or semantic validation. A legacy URL without a parsed document ID, or a
+document absent from this endpoint, remains unresolved rather than being declared a wrong
+attachment or nonexistent document.
+
 All-page embedded extraction can also silently omit visible text. For NM 2026 HB 99's
 23-page amendments-in-context PDF, both pypdf and MuPDF extracted only a 61-character
 session heading. Rendered pages visibly contained policy text; pinned Tesseract 5.5.2

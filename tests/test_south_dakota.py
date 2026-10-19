@@ -5,7 +5,11 @@ import json
 import pandas as pd
 import pytest
 
-from state_politics.bills.south_dakota import parse_native_sessions, reconcile
+from state_politics.bills.south_dakota import (
+    parse_native_sessions,
+    plan_introduced_documents,
+    reconcile,
+)
 
 
 def _sources():
@@ -168,3 +172,78 @@ def test_missing_selected_session_is_distinct_from_missing_bill():
     coverage, _, _ = reconcile(baseline, sessions[:1], {66: responses[66]})
     assert coverage.iloc[0]["native_match_status"] == "unique_native_match"
     assert coverage.iloc[1]["native_match_status"] == "no_native_session_in_selected_scope"
+
+
+def _version_sources():
+    baseline, sessions, responses = _sources()
+    _, native, _ = reconcile(baseline, sessions, responses)
+    rows = []
+    for index, note in enumerate(["Enrolled", "Introduced"]):
+        rows.append(
+            {
+                **native.iloc[0][
+                    [
+                        "native_record_index",
+                        "native_bill_id",
+                        "native_session_identifier",
+                        "native_identifier",
+                    ]
+                ].to_dict(),
+                "native_version_row_index": index,
+                "native_document_id": 30 + index,
+                "native_version_note": note,
+            }
+        )
+    return native, pd.DataFrame(rows)
+
+
+def test_introduced_plan_does_not_select_first_latest_or_missing_version():
+    native, versions = _version_sources()
+    plan = plan_introduced_documents(native, versions)
+    pd.testing.assert_frame_equal(plan[native.columns], native)
+    assert plan["native_introduced_candidate_status"].tolist() == [
+        "unique_native_introduced_candidate",
+        "no_native_introduced_note",
+        "no_native_introduced_note",
+    ]
+    assert plan.iloc[0]["native_introduced_document_id"] == 31
+    assert plan.iloc[0]["native_introduced_request_url"].endswith("/31.pdf")
+    assert pd.isna(plan.iloc[1]["native_introduced_request_url"])
+    assert (
+        not plan[
+            [
+                "version_identity_certified",
+                "filing_time_text_certified",
+                "training_admission",
+                "analytical_admission",
+            ]
+        ]
+        .any()
+        .any()
+    )
+
+
+def test_repeated_introduced_rows_remain_ambiguous_even_with_the_same_document_id():
+    native, versions = _version_sources()
+    versions = pd.concat([versions, versions.iloc[1:]], ignore_index=True)
+    plan = plan_introduced_documents(native, versions)
+    assert plan.iloc[0]["native_introduced_candidate_status"] == (
+        "ambiguous_native_introduced_candidates"
+    )
+    assert json.loads(plan.iloc[0]["native_introduced_document_ids"]) == [31, 31]
+    assert pd.isna(plan.iloc[0]["native_introduced_request_url"])
+
+
+@pytest.mark.parametrize("defect", ["context", "unknown_bill", "ambiguous_bill", "document_id"])
+def test_introduced_plan_rejects_untraceable_native_versions(defect):
+    native, versions = _version_sources()
+    if defect == "context":
+        versions.loc[0, "native_session_identifier"] = "2022"
+    elif defect == "unknown_bill":
+        versions.loc[0, "native_bill_id"] = 999
+    elif defect == "ambiguous_bill":
+        native = pd.concat([native, native.iloc[:1]], ignore_index=True)
+    else:
+        versions.loc[0, "native_document_id"] = 0
+    with pytest.raises(ValueError):
+        plan_introduced_documents(native, versions)
