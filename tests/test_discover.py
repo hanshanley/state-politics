@@ -568,6 +568,7 @@ def test_domain_aliases_point_at_pre_rebrand_domains():
     assert "delawaregop.com" in DOMAIN_ALIASES["degop.gop"]
     assert "rpv.org" in DOMAIN_ALIASES["virginia.gop"]
     assert "azdem.org" in DOMAIN_ALIASES["azdems.org"]
+    assert "alaskagop.org" in DOMAIN_ALIASES["alaskagop.net"]
     assert all(isinstance(v, tuple) and v for v in DOMAIN_ALIASES.values())
 
 

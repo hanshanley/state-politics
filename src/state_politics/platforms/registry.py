@@ -131,6 +131,14 @@ class Override:
 #: These are *candidates*: whether a row is trusted is still decided empirically by
 #: :func:`verify_homepage`, which confirms the live page names the state and the party.
 MANUAL_OVERRIDES: dict[tuple[str, str], Override] = {
+    ("AK", "R"): Override(
+        "https://alaskagop.net/", "Alaska Republican Party",
+        "direct check 2026-10-19 UTC: HTTP 200; retained homepage identifies the Alaska "
+        "Republican Party and links platform, rules and enduring principles. Homepage "
+        "capture stale-gap-primary-source-recovery-v1:0, SHA-256 "
+        "805aae35c954ce5b6904a1a0b469ecce20c8e8101e1c1ed1e70d860ae275a97c. "
+        "The former alaskagop.org host serves an Account Suspended page; that failure "
+        "does not establish absence of a live party website or platform."),
     ("AZ", "D"): Override(
         "https://azdems.org/", "Arizona Democratic Party",
         "direct check 2026-10-19 UTC: HTTP 200; Our Party page identifies the Arizona "

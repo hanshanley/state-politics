@@ -712,10 +712,17 @@ def test_gap_findings_only_describe_parties_in_the_registry():
     assert not unknown, f"gap findings for parties absent from the registry: {sorted(unknown)}"
 
 
-def test_gap_report_attaches_findings_only_to_orgs_with_nothing_found():
+def test_gap_report_attaches_findings_only_to_orgs_with_nothing_found(monkeypatch):
     """A party whose platform was collected should carry no gap explanation."""
+    monkeypatch.setattr(
+        "state_politics.platforms.collect.load_gap_findings",
+        lambda: {
+            ("AK", "R"): {"cause": "broken_site", "finding": "fixture failed request"},
+            ("TX", "R"): {"cause": "broken_site", "finding": "fixture failed request"},
+        },
+    )
     registry = [
-        {"state": "AK", "party": "R", "website": "http://www.alaskagop.org/"},
+        {"state": "AK", "party": "R", "website": "https://alaskagop.net/"},
         {"state": "TX", "party": "R", "website": "https://texasgop.org"},
     ]
     found = CollectedDocument(

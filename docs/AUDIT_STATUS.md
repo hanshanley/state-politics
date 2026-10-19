@@ -7,13 +7,13 @@ replacement classifier or establish complete contemporary coverage.
 | Area | Verified progress | Remaining gate |
 |---|---|---|
 | Historical platforms | Recovered 2,091 authoritative archive documents, with publisher checksums and old/new archive reconciliation. | Historical availability must not be substituted for operative modern platforms. |
-| Contemporary platforms | Inventory v6 preserves 1,503 requests, including 1,389 retained responses across all 100 organizations, 114 failures and 1,339 body hashes. Recovered the remaining Arizona, Illinois and Oklahoma source-response gaps. | Deferred navigation, three older Hawaii extraction gaps, source/institution/version adjudication and operative coverage remain unresolved. Retained responses are not verified platforms. |
+| Contemporary platforms | Inventory v7 preserves 1,559 requests, including 1,440 retained responses across all 100 organizations, 119 failures and 1,371 body hashes. Corrected Alaska's stale host and recovered an image-only Massachusetts resolution. | Deferred navigation/images, OCR quality, source/institution/version adjudication and operative coverage remain unresolved. Retained responses are not verified platforms. |
 | Sponsorship | Party attribution uses validated historical memberships and a first-action date proxy; unresolved primary sponsors block D/R assignment. | Rebuild source bills and quantify attribution changes; the proxy is not an exact filing/sponsorship date. |
 | Bills | October snapshot extracted: 1,090,369 source-context measures across all 50 states, 5,028,893 sponsorships, 9,002,451 actions and 873,980 vote events. All eleven tables have recorded hashes/counts. | Official-source reconciliation, historical affiliations and filing-time text review. Full extraction is not a certified source universe or analytical denominator. |
 | Classification | Two actual official English ModernBERT-base fine-tuning runs saved and reloaded: external-only policy training, then 6,001-unit joint target/rejection training with 21 policy outputs plus null. | Both candidates still make 27 correct decisions in the same 50 development records. Learned rejection reduces false acceptance but loses correct policy decisions; neither candidate is approved for production. |
 | Labels | External CAP files recovered; split/group/exact-text and reviewed-platform source-body checks plus explicit reviewed-label provenance are implemented. | Source permissions, adapted-topic compatibility, near-duplicate families and reviewed state-domain training/development/test labels. |
 | Evaluation | Development-only temperature/threshold selection, exact evidence joins, abstention accounting, per-topic and subgroup metrics. | Reviewer arrangement, frozen empirical gates, independent target tests and clustered uncertainty. No checkpoint can be certified by changing a status field. |
-| Companion | Local-only preview v6 exposes all 1,503 recovery captures, 114 failures, 51 OCR bodies and three DOCX main-document alternatives, alongside the 2,091 historical documents. The source ledger includes the corrected Arizona registry. All 100 organization rows remain unresolved. | Audited classification/analysis exports, redistribution review and eventual report; no production integration is authorized. |
+| Companion | Local-only preview v7 exposes all 1,559 recovery captures, 119 failures and 60 alternative extraction identities across 55 OCR bodies and three DOCX bodies, alongside the 2,091 historical documents. The source ledger includes the corrected Arizona and Alaska registry rows. All 100 organization rows remain unresolved. | Audited classification/analysis exports, redistribution review and eventual report; no production integration is authorized. |
 
 ## Platform-document split guard
 
@@ -32,9 +32,86 @@ between a separately supplied evaluation file and a checkpoint's training corpus
 Byte-distinct versions, paraphrases, source-family review and independent gold remain
 unresolved. Evaluation reports now disclose the supplied-manifest scope explicitly.
 
-## All-organization response recovery and current explorer checkpoint
+## Alaska, image-only evidence and historical OCR checkpoint
 
-The current immutable recovery inventory is **v6**, and the local preview is
+The current immutable inventory is **v7**, with unpublished preview
+`data/preview-recovery-v7/`. Every native field in the **1,503** baseline records and
+every prior alternative is preserved. The successor adds **56 requests**: a bounded
+four-organization recovery with 55 requests, 50 retained responses and five failures,
+plus one explicitly observed image request. The union has **1,559 requests, 1,440
+retained responses, 119 failures and 1,371 distinct body hashes**. Only **32 body hashes**
+are new to the union; repeated captures are not new documents. All 100 organizations
+still have retained responses, not verified operative platforms.
+
+Alaska Republicans' former `.org` host still serves a suspension shell, but the retained
+`.net` homepage identifies the party and links a substantive seven-section platform,
+separate enduring principles and administrative rules. The registry and regeneration
+override now use `alaskagop.net`, retaining `alaskagop.org` as a historical discovery
+alias. The platform's adoption date and operative version remain unverified. Its October
+retrieval does not supply those dates. Only Alaska's registry row was refreshed in this
+checkpoint; the other organizations were not falsely reverified.
+
+Connecticut's mission/principles and Virginia's creed are substantive short statements,
+not certified comprehensive platforms. Massachusetts' resolution index exposes eight
+PDFs **and a ninth resolution embedded only as an image**. Following only download
+anchors missed that ninth text. Its exact observed PNG bytes, request receipt and
+separately reproduced OCR are now retained; its upload directory is not an adoption date.
+Two newly retained PDF captures have empty native text, but their bytes were already in
+the prior inventory: their reproduced OCR is text-identical to the prior alternatives.
+They are repeated extractions, not two newly discovered policy bodies. The four stale
+gap dispositions now cite exact source hashes without asserting exhaustive absence.
+
+The three historical Hawaii volumes now have pinned-runtime OCR independently reproduced
+for **all 663 physical pages**. All three aggregates contain text, but **62 individual
+pages remain empty in the primary OCR**. Contact sheets covered every empty page;
+six readable covers received full-size visual inspection and exact crop/source binding.
+The 2002 volume includes pre-convention program material and a **treasurer's report**:
+it must not be classified wholesale as adopted policy. Several retained denoising and
+segmentation candidates remain noisy; none was selected into canonical text. Separate
+limited assistant cover-role observations are not independent gold, full section review,
+blank-page certification or modern-platform evidence.
+
+Six new OCR extraction identities cover three Hawaii PDFs, the two repeated Massachusetts
+PDF bodies and the image-only resolution. The union therefore has **57 OCR extraction
+identities across 55 distinct OCR bodies**, plus three DOCX alternatives: **60 unique
+alternatives**, not 60 additional documents. Original native text and all failed requests
+remain separate. The four-site crawl reproduces 3,591 observed references and 51 selected
+targets; the extra image is separately bound to its actual `img[src]` observation.
+Other unrequested navigation and preview images remain outside this bounded recovery.
+No topic labels, model weights, analytical cutoff or publication admission changed.
+
+Browser-check **v8** verifies all 100 partitions, all 60 extraction alternatives, all
+119 failures, the refreshed Alaska/Arizona source ledger and both complete byte-exact
+downloads. The image-only resolution correctly displays an empty-native disclosure
+alongside its separate OCR. The temporary loopback server was stopped.
+The connected registry/discovery/collection/coverage/site/authored-input tests pass
+**239 cases**; the separately retained full-artifact audit still fails **34 of 317 checks**
+for missing canonical analytical inputs/results. That failing integration gate was not
+weakened, skipped in the actual full audit or replaced with invented outputs.
+
+| Current local artifact | Manifest SHA-256 |
+|---|---|
+| Four-organization capture | `88a14ce94f70ff22fd6a5f601a589640f7ae802dc3b12333c84b433bc9a99258` |
+| Capture/reference reproduction | `de96f8382ac009065f258225799a760c788253062b872ccbc614873ce7ace4f0` |
+| Historical Hawaii OCR | `f0be236502b47040c7c8f327fe12391995cf81ba8254f80d13738c635b2648c7` |
+| All 663 Hawaii renders/OCR reproduced | `690c84f16e94b1d64659cc394d1e7241b700cfa1c27e2e9d9ae2f0f4b04e5e0b` |
+| Limited visual cover-role review | `f575477c03f379feccaafad7fc5a73328f323b4357ee689546572efcdd06680c` |
+| Image-only Massachusetts resolution / OCR | `d2272d80f254879f5d12bbd18c4a517ab29f8a1ec3c0bcbfda8597f099edb4d3` |
+| Image receipt, source binding and OCR reproduced | `346ac799d443d5a44c0b67f76b97c5ef97478c5abaf3779a07be4e57c6ea05c8` |
+| Recovery inventory v7 | `ec01b7b2dfada6683a9b81d038241c3a44e380a8953e626429520e9c109226f8` |
+| Exact baseline preservation / body-aware reconciliation | `cdaeab7b73568f3186b74ec516e675c7b832c32d82ea77ef9c5278456f7ba684` |
+| Browser-check v8 | `0cd524ca2bf7229fd4536cddc88f21ad41e622b6a15938685cfbcb62fbc8d64a` |
+| Full audit v7 packet/runtime receipt | `32cc56535d524380fa79e23741abbd408f88c24995ba9abc9c4508cdd41ab8d4` |
+| Full audit v7 report | `098d7a4a55b0704a02150d4a13fb7d5816d28907bd8cdb2307067fcbf0161051` |
+
+Raw bodies, packets and previews remain local/Git-ignored. Pushing this checkpoint saves
+code and evidence references, not a remote backup of the source bytes. The two ModernBERT
+candidates remain unapproved at **27/50 development decisions**; no new unsupported
+training run or analytical export was produced. Nothing was added to themarginoferror.com.
+
+## Preserved v6 all-organization response recovery checkpoint
+
+At this checkpoint the immutable recovery inventory was **v6**, and the local preview was
 `data/preview-recovery-v6/`. It preserves every native field in the prior **1,452**
 records and every prior alternative, adds **51 request records** and **31 source-bound
 OCR extractions**, and retains unsuccessful requests alongside subsequent successes.

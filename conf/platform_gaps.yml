@@ -21,10 +21,25 @@
 
 AK:
   R:
-    cause: broken_site
-    checked: 2026-07-29
+    cause: not_confirmed
+    checked: 2026-10-19
     finding: >-
-      site is serving an "Account Suspended" page; the party has no live website
+      the former alaskagop.org host remains suspended, but the retained alaskagop.net
+      homepage identifies the Alaska Republican Party and links a substantive seven-section
+      page explicitly titled its platform. Its adoption date and operative version are
+      unverified; separately retained enduring principles and administrative rules must
+      not be conflated with it. The former claim that the party has no live website
+      is withdrawn. Retrieval in October does not establish adoption in October.
+    evidence:
+      - url: https://alaskagop.net/
+        role: party_homepage_identity_and_document_links
+        content_sha256: 805aae35c954ce5b6904a1a0b469ecce20c8e8101e1c1ed1e70d860ae275a97c
+      - url: https://alaskagop.net/about/platform/
+        role: party_labelled_platform_adoption_and_version_unverified
+        content_sha256: 54fe6198d669da82234ef92fdf75595b711ac5e6b8cec5625caab3420c4b9f5d
+      - url: https://alaskagop.net/about/statement-of-enduring-principles/
+        role: separate_party_principles_not_platform_version
+        content_sha256: 27099a16f10522335365cb9087944192b08c77fa30ea03710f9560ff9096b602
 AL:
   D:
     cause: not_confirmed
@@ -32,9 +47,17 @@ AL:
     finding: candidates fetched but none read as a platform
 CT:
   R:
-    cause: no_platform_published
-    checked: 2026-07-30
-    finding: /platform soft-404s with a 426 KB PNG image; no state platform document found.
+    cause: summary_only
+    checked: 2026-10-19
+    finding: >-
+      the retained official About Your Party page contains a short mission and principles
+      statement, not a verified comprehensive platform. Its adoption date and operative
+      status remain unverified. The earlier failed /platform request does not establish
+      absence of substantive statements or of another published platform.
+    evidence:
+      - url: https://ct.gop/about-your-party/
+        role: short_party_mission_and_principles
+        content_sha256: 2840a19511ed4f85f407f252acdc4b57f430cd3140e063a533e12a1cb7b191d5
 FL:
   R:
     cause: no_platform_published
@@ -89,9 +112,27 @@ LA:
       unrelated hosting-provider page. The party publishes no platform document.
 MA:
   R:
-    cause: no_platform_published
-    checked: 2026-07-30
-    finding: /platform soft-404s with a 426 KB PNG image; no state platform document found.
+    cause: not_confirmed
+    checked: 2026-10-19
+    finding: >-
+      the retained official Resolutions index links separately retained resolutions,
+      including substantive policy statements and commemorative texts. Eight linked
+      PDFs were retained; two have empty native extraction, with separately retained
+      pinned-runtime OCR reproduced for all three physical pages.
+      A ninth resolution is embedded as an image rather than linked as a PDF; its exact
+      source image and separately reproduced OCR are now retained as well. The image has
+      no visible adoption date; its upload directory must not be treated as one.
+      These are not a verified
+      comprehensive platform, and the index alone does not establish each text's
+      adoption date or final adopted version. The earlier failed /platform request
+      does not establish that no platform or other policy text is published.
+    evidence:
+      - url: https://massgop.com/our-party/resolutions/
+        role: official_resolution_index_not_comprehensive_platform
+        content_sha256: a2c89504f29955c9d7d72fcc6d75343cbe3c55e92ce2cf59b98992fbeaeea06b
+      - url: https://massgop.com/wp-content/uploads/2026/06/all-party.png
+        role: image_only_resolution_adoption_and_version_unverified
+        content_sha256: c413378fdaa971916fecaa1592e789976e42b3010d0cc4843ea5c3adcf2db923
 MD:
   D:
     cause: no_platform_published
@@ -188,6 +229,15 @@ PA:
       HTML page on pagop.org was enumerated and tested; none is a platform.
 VA:
   R:
-    cause: no_platform_published
-    checked: 2026-07-30
-    finding: /platform soft-404s with a 426 KB PNG image; no state platform document found.
+    cause: summary_only
+    checked: 2026-10-19
+    finding: >-
+      the retained official Our Party page contains the six-point Virginia Republican
+      Creed. This is a short principles statement, not a verified comprehensive platform;
+      its adoption date and operative status remain unverified. The separately retained
+      administrative Party Plan is not a policy platform. The earlier failed /platform
+      request does not establish absence of substantive statements or another platform.
+    evidence:
+      - url: https://virginia.gop/our-party/
+        role: short_party_creed_not_comprehensive_platform
+        content_sha256: 3d7574d3aa98bf607062f721b8c92b60388f46a664e47764045c7f8bb839ca19

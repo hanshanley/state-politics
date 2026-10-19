@@ -40,9 +40,9 @@ To include an already frozen, reconciled recovery inventory:
 
 ```bash
 uv run python scripts/build_site.py \
-  --coverage data/processed/source-coverage-recovery-v6.json \
-  --recovery data/processed/recovery-source-inventory-v6/inventory.json \
-  --out data/preview-recovery-v6
+  --coverage data/processed/source-coverage-recovery-v7.json \
+  --recovery data/processed/recovery-source-inventory-v7/inventory.json \
+  --out data/preview-recovery-v7
 ```
 
 The builder verifies the packet manifest, complete native/alternative text hashes, source
@@ -76,13 +76,17 @@ The downloaded gzip was decompressed and matched byte-for-byte to the complete r
 JSONL. `data/processed/preview_browser_validation.json` identifies the tested build hash.
 This validates interface behavior, not classifications, scientific findings or publication.
 
-The current recovery build exposes **1,503 capture records, 1,389 retained responses,
-114 failures and 1,339 distinct body hashes across all 100 organizations**. The recovered
+The current recovery build exposes **1,559 capture records, 1,440 retained responses,
+119 failures and 1,371 distinct body hashes across all 100 organizations**. The recovered
 Arizona platform, Illinois short statement, Oklahoma platform and administrative rules are
 not interchangeable source types or certified adopted policy. These are not 1,389 platforms.
-Fifty-one bodies have OCR alternatives; three have separately typed DOCX main-document text.
-All 1,452 prior native records and prior alternatives are preserved; new alternatives can
-be attached without replacing native text. Three older Hawaii scans remain extraction gaps.
+Fifty-five bodies have OCR alternatives; three have separately typed DOCX main-document text.
+There are 57 OCR extraction identities because repeated source bytes can retain multiple
+separate extraction records, plus three DOCX alternatives: 60 total identities.
+All 1,503 prior native records and prior alternatives are preserved. The three older Hawaii
+volumes now have reproduced OCR across 663 pages, with 62 empty primary-OCR pages and
+explicitly unresolved cover transcription. The separately retained image-only Massachusetts
+resolution has OCR but no native text; its empty native field is not a missing response.
 
 Recorded OCR runtime versions are displayed per extraction, including historical 5.5.3
 where retained on the row; missing row-level runtime metadata is explicit, not replaced
@@ -90,10 +94,11 @@ with the current executable's version. The Montana incomplete-font warning is vi
 despite nonempty native text. OCR remains uncertified and does not preserve map geometry
 or spatial ballot-selection marks. DOCX is not labelled OCR.
 
-`data/processed/recovery-preview-browser-check-v7/` binds the exact build/capture hashes,
-screenshots and checker. Chromium reconciled all 100 partitions, all 54 distinct alternatives,
-all 114 failures and complete byte-exact recovery/historical gzip streams. The refreshed
-source ledger includes the corrected Arizona homepage and verification date. It also covers
+`data/processed/recovery-preview-browser-check-v8/` binds the exact build/capture hashes,
+screenshots and checker. Chromium reconciled all 100 partitions, all 60 extraction identities,
+all 119 failures and complete byte-exact recovery/historical gzip streams. The refreshed
+source ledger includes the corrected Arizona and Alaska homepages and verification dates.
+The image-only resolution has explicit empty-native disclosure and separate OCR. It also covers
 runtime/warning disclosures, keyboard/mobile/no-JavaScript behavior, literal markup and
 HTTP/race handling. The zero-capture edge case uses a synthetic empty partition because
 all real organizations now have requests. Neither this check nor a retained homepage
@@ -103,15 +108,16 @@ The current successor is reproducible from saved packets:
 
 ```bash
 uv run python scripts/build_recovery_inventory.py \
-  --baseline data/processed/recovery-source-inventory-v5/inventory.json \
-  --captures data/processed/remaining-organization-source-recovery-v1/captures.jsonl \
-  --captures data/processed/remaining-organization-source-followup-v1/captures.jsonl \
-  --captures data/processed/public-browser-organization-captures-v1/captures.jsonl \
-  --ocr data/processed/deferred-administrative-scans-ocr-v1/extractions.jsonl \
-  --out data/processed/recovery-source-inventory-v6
+  --baseline data/processed/recovery-source-inventory-v6/inventory.json \
+  --captures data/processed/stale-gap-primary-source-recovery-v1/captures.jsonl \
+  --captures data/processed/ma-image-resolution-recovery-v1/captures.jsonl \
+  --ocr data/processed/deferred-historical-hawaii-ocr-v1/extractions.jsonl \
+  --ocr data/processed/stale-gap-primary-source-pinned-ocr-v1/extractions.jsonl \
+  --ocr data/processed/ma-image-resolution-recovery-v1/extractions.jsonl \
+  --out data/processed/recovery-source-inventory-v7
 
 uv run python -m state_politics.analysis.coverage --sources-only \
-  --out data/processed/source-coverage-recovery-v6.json
+  --out data/processed/source-coverage-recovery-v7.json
 ```
 
 Use a fresh version path when the output already exists. Previously retained alternatives

@@ -20,16 +20,21 @@ organizations:
 - state: AK
   party: R
   name: Alaska Republican Party
-  website: http://www.alaskagop.org/
+  website: https://alaskagop.net/
   wikidata_id: Q4708595
-  resolved_by: label
-  candidate_evidence: null
+  resolved_by: manual-override
+  candidate_evidence: >-
+    direct check 2026-10-19 UTC: retained homepage identifies the Alaska Republican
+    Party and links its platform, rules and enduring principles. Homepage capture
+    stale-gap-primary-source-recovery-v1:0, SHA-256
+    805aae35c954ce5b6904a1a0b469ecce20c8e8101e1c1ed1e70d860ae275a97c.
+    The former alaskagop.org host serves an Account Suspended page.
   homepage_status: 200
-  final_url: http://www.alaskagop.org/cgi-sys/suspendedpage.cgi
-  verified_on: '2026-07-29'
-  source_url: https://query.wikidata.org/sparql
-  needs_review: true
-  note: HTTP 200 but visible page text did not identify this state's party
+  final_url: https://alaskagop.net/
+  verified_on: '2026-10-19'
+  source_url: https://alaskagop.net/
+  needs_review: false
+  note: retained visible page text identifies this state's party; platform adoption date remains unverified
 - state: AL
   party: D
   name: Alabama Democratic Party
