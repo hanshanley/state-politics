@@ -220,7 +220,7 @@ Full output maps and logits survive evidence joins, evaluation and development-o
 calibration. Policy-only checkpoints remain supported as frozen research artifacts, never
 as a silent fallback. Neither checkpoint type is automatically certified.
 
-Both the external-only and subsequent target/rejection pilots make 27/50 correct decisions
+Both the earlier external-only and target/rejection pilots make 27/50 correct decisions
 on the same provisional assistant development judgments, matching rather than beating the
 historical baseline. Saved training evidence retains source hashes and individual assistant
 rationales; development documents and labels remain reserved. Independent review, source-quality and
@@ -323,6 +323,18 @@ The New Mexico interleaved summary is withheld as extraction corruption, while c
 arts-chapter units do not adjudicate the full family/moral scope of topic 23.
 The same-settings successor run must be compared under the unchanged policy, separately
 for bills and platforms; broader training coverage alone is not an accuracy finding.
+
+That successor completed three full-encoder epochs and, with no calibration or threshold
+changes, made 30/50 correct development decisions: 23/40 bill and 7/10 platform, compared
+with the joint pilot's 23/40 and 4/10. Correct platform policy accepts rise from two to four
+and correct rejections from two to three. The bill total includes two gains and two
+regressions, not identical decisions. The platform subset contains only five positive
+references in topics 12 and 20 and five rejection references, all from one Texas Republican
+source. Nineteen topics lack positive platform development references. Two mixed-policy
+units are still wrongly accepted, including one with an uncalibrated score above 0.97.
+These limitations preclude a certification or population-accuracy claim. Complete logits,
+training/evaluation hashes, the pre-prediction plan and a separate complete row-level
+decision ledger remain available; original gold judgments and thresholds are unchanged.
 
 ### Legacy analytical pipeline (not revalidated)
 

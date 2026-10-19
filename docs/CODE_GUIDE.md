@@ -44,6 +44,7 @@ repository audit fails when a Python file is added without an entry here.
 | `src/state_politics/analysis/modernbert.py` | Loads hash-bound policy-only or supervised-rejection checkpoints, preserves paragraph/token spans, returns one topic or abstention, and exports evidence-bound logits/output maps. No automatic legacy fallback or implemented certification. |
 | `src/state_politics/analysis/train_topics.py` | Fine-tunes encoder and head on provenance-labelled manifests, optionally with reviewed rejection targets; rejects split leakage, unsupported labels, changed review text and over-budget units; saves provisional weights and run hashes. |
 | `src/state_politics/analysis/prepare_topics.py` | Checksum-binds the three recovered CAP sources, quarantines known taxonomy/encoding/unit conflicts, bounds and deduplicates provisional initialization labels, and keeps target review provenance separate from external codes. |
+| `src/state_politics/analysis/prepare_platform_curriculum.py` | Preserves original training/development semantics while adding source-bound assistant-reviewed native policy units, rejection examples and explicit quarantines; freezes complete source bytes/text, offsets, hashes and topic/source support without certifying labels or adoption. |
 | `src/state_politics/analysis/evaluate_topics.py` | Binds separate evaluation labels to original training-manifest/model/taxonomy hashes and checks cross-manifest isolation. Reports original/evaluation topic/domain support separately, including zero cells and missing platform metadata. Preserves policy/rejection maps, scores abstentions, fits development-only calibration, and never certifies a model. |
 | `src/state_politics/analysis/gold_sample.py` | Creates the deterministic sampling frame and seeded unlabeled template used for new human-labeling rounds. |
 | `src/state_politics/analysis/validate.py` | Scores historical keyword/embedding baselines against the previously inspected 50-plank snapshot; reviewer provenance remains unresolved. |
@@ -103,6 +104,7 @@ repository audit fails when a Python file is added without an entry here.
 | `tests/test_bills.py` | Dump parsing, party attribution, date sanity, PostgreSQL arrays and state filtering. |
 | `tests/test_taxonomy.py` | Topic loading, plank segmentation, threshold behavior, chunked inference equivalence and keyword normalization. |
 | `tests/test_modernbert.py` | Token/paragraph coverage, one-topic/abstention decisions, checkpoint refusal, evidence joins, split leakage, review provenance and development-only calibration. |
+| `tests/test_platform_curriculum.py` | Native-unit scope, ambiguous/absent selectors, complete paragraph context and trailing versus internal PDF page boundaries. |
 | `tests/test_site.py` | Full-text downloads and all-organization coverage reconcile; absent search results remain unresolved rather than being labelled platform absence. |
 | `tests/test_emphasis.py` | Gold snapshot existence/coverage, emphasis denominators and classifier score handling. |
 | `tests/test_validate_bills.py` | Subject-tag normalization, no-guess conflict handling, precision/recall and tag replication. |

@@ -10,7 +10,7 @@ replacement classifier or establish complete contemporary coverage.
 | Contemporary platforms | Inventory v7 preserves 1,559 requests, including 1,440 retained responses across all 100 organizations, 119 failures and 1,371 body hashes. Corrected Alaska's stale host and recovered an image-only Massachusetts resolution. | Deferred navigation/images, OCR quality, source/institution/version adjudication and operative coverage remain unresolved. Retained responses are not verified platforms. |
 | Sponsorship | Party attribution uses validated historical memberships and a first-action date proxy; unresolved primary sponsors block D/R assignment. | Rebuild source bills and quantify attribution changes; the proxy is not an exact filing/sponsorship date. |
 | Bills | October snapshot extracted: 1,090,369 source-context measures across all 50 states, 5,028,893 sponsorships, 9,002,451 actions and 873,980 vote events. All eleven tables have recorded hashes/counts. | Official-source reconciliation, historical affiliations and filing-time text review. Full extraction is not a certified source universe or analytical denominator. |
-| Classification | Two completed official English ModernBERT-base pilots; a third research run uses a source-bound curriculum with 60 platform positives across all 21 topics and 16 rejections. | The earlier pilots make 27/50 pooled decisions and 5/10 then 4/10 platform decisions. The broader curriculum is not validation; successor evaluation, broader Republican sources and independent source-disjoint tests remain required. No candidate is approved. |
+| Classification | Three official English ModernBERT-base pilots saved and reloaded. The broader-source candidate uses 60 platform positives across all 21 topics and 16 rejections; fixed-policy decisions improve to 30/50 pooled and 7/10 platform. | Only five platform policy references cover just two topics, all from one development source. Two mixed-policy units are still wrongly accepted. Broader Republican training sources, independent source-disjoint tests and empirical gates remain required. No candidate is approved. |
 | Labels | External CAP files recovered; split/group/exact-text and reviewed-platform source-body checks plus explicit reviewed-label provenance are implemented. | Source permissions, adapted-topic compatibility, near-duplicate families and reviewed state-domain training/development/test labels. |
 | Evaluation | Checkpoint-bound training/evaluation split isolation, development-only temperature/threshold selection, exact evidence joins, abstention accounting, per-topic and subgroup metrics. | Reviewer arrangement, frozen empirical gates, independent target tests and clustered uncertainty. No checkpoint can be certified by changing a status field. |
 | Companion | Local-only preview v8 exposes all 1,559 recovery captures, 119 failures and 60 alternative extraction identities across 55 OCR bodies and three DOCX bodies, alongside the 2,091 historical documents. The source ledger includes the corrected Arizona and Alaska registry rows. All 100 organization rows remain unresolved. | Audited classification/analysis exports, redistribution review and eventual report; no production integration is authorized. |
@@ -49,14 +49,71 @@ selected/quarantined source span. Manifest:
 Record/group/text/body/document isolation and close-unit overlap checks do not settle all
 source-version families or grant redistribution permission.
 
-A third full-encoder ModernBERT run is underway with the preceding joint pilot's exact
-optimizer settings, seed, three epochs and input construction. Before successor predictions,
-`data/processed/topic-diverse-platform-pilot-v1/evaluation_plan.json` freezes the unchanged
+A third full-encoder ModernBERT run completed all three epochs with the preceding joint
+pilot's exact optimizer settings, seed and input construction. Saved weights/tokenizer
+hashes reconcile, an encoder attention parameter demonstrably changed, and the default
+loader still refuses the provisional checkpoint. Its training-manifest hash is
+`bab1633227c4d689006beb10b67403941b8ddc070a950e856d6e34b26a9024db`.
+Before successor predictions,
+`data/processed/topic-diverse-platform-pilot-v1/evaluation_plan.json` froze the unchanged
 research-default policy and both earlier model/prediction identities. No calibration or
-threshold tuning is authorized for this comparison. The ten platform development cases
-remain from the same Texas Republican source, not a newly independent benchmark.
+threshold tuning occurred.
+
+| Fixed-policy development result | External-only | Joint target/rejection | Broader-source curriculum |
+|---|---:|---:|---:|
+| Bills, correct decisions | 22/40 | 23/40 | 23/40 |
+| Platforms, correct decisions | 5/10 | 4/10 | 7/10 |
+| Platforms, correctly accepted policies | 4 | 2 | 4 |
+| Platforms, correctly rejected cases | 1 | 2 | 3 |
+| Pooled, correct decisions | 27/50 | 27/50 | 30/50 |
+
+Correct decisions include abstentions. The broader-source model makes three newly correct
+platform decisions and no newly incorrect ones relative to the joint pilot. The unchanged
+bill total hides two gains and two regressions. This is a measured provisional development
+gain, not evidence of population accuracy or production readiness.
+
+Only **five** platform references are positive, covering **topics 12 and 20**; the other
+**19 topics have no positive platform development reference**. All ten cases still come
+from one Texas Republican source. Among six accepted platform decisions, only four match
+the provisional policy references. Both remaining false accepts are genuinely mixed
+principle/amendment lists assigned government operations; one receives an uncalibrated
+score above 0.97. A courts/foreign-law policy is still incorrectly rejected. Higher
+training-topic coverage and high model scores do not resolve these failure modes.
+
+The evaluation packet preserves checkpoint verification, complete saved logits, the
+training-bound report, fixed-policy comparison and exact producer. Manifest:
+`c070a2a565eb082c07d07994134e38002cecff21d5e1e8026f1448fc52e95b42`.
+`data/processed/topic-diverse-platform-decision-ledger-v1/` separately preserves all
+50 complete reference rows and all 150 original prediction records/derived decisions,
+reconciling each domain total and individual gain/regression. That replay is not an
+independent semantic review and changes no gold judgments.
+Its manifest is
+`ce8037b7951d500de6f9b090d2eec18f6f3e5d3c98f536abaaecd50e3e1854d2`.
 The label/model/evaluation packets are local ignored artifacts; a code push does not
 remotely back them up. No canonical analytical input or website integration changed.
+
+The separate `data/processed/new-mexico-native-order-review-v1/` packet preserves all
+**37 physical PDF pages** as unsorted native text blocks with bounding boxes, original
+bytes, original extraction and a rendered review of page 3. That page confirms separate
+Arts and Education columns, which the original layout extraction interleaved.
+All seven packet files, page identities, per-page hashes and concatenated text reconcile;
+manifest `c26dc924d6be128d9864799d58f6856b18b7b59630cf39ac8ab4593e9eae50be`.
+This is a separately identified alternative, not OCR or an additional retrieval. It
+preserves native Unicode controls and does not certify the other pages' intended reading
+order. It is not yet imported into the typed inventory or companion, and the original
+source, labels and quarantine remain unchanged.
+
+The fresh full artifact audit first recorded **36/319 failures** in immutable checkpoint
+v9, including two missing code-guide entries introduced by the new producer/test files.
+Those entries are now documented. Checkpoint
+`data/processed/reproducibility-audit-checkpoint-v10/` retains the subsequent actual return
+code **1** and **34/319 failures**. Every remaining failure exactly matches the earlier
+v8 canonical-input/result gaps; none was bypassed with provisional research outputs.
+The pinned Tesseract runtime, source snapshots and four research-packet identities are
+recorded. Manifest:
+`8d8696bc0cc2aba94c8ac2b5be14e8f7bbd435300f168a9724581b1a3acaa136`;
+report `02037d3460cb46b5572b401da507d96de6725d4786e8cf63de0ff6475d20a27d`.
+Research-model progress does not make the canonical analytical release reproducible.
 
 ## Retired unsupported platform-absence claims
 
