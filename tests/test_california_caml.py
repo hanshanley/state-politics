@@ -22,7 +22,7 @@ def document(body: str, *, encoding: str = "UTF-8", body_name: str = "Bill") -> 
     )
 
 
-@pytest.mark.parametrize("body_name", ["Bill", "Resolution"])
+@pytest.mark.parametrize("body_name", ["Bill", "Resolution", "GRP"])
 def test_nested_markup_maps_exact_native_bytes_and_normalized_text(body_name):
     body = (
         'before<h:span class="add" title="a > b">new'
@@ -30,6 +30,7 @@ def test_nested_markup_maps_exact_native_bytes_and_normalized_text(body_name):
     )
     raw = document(body, body_name=body_name).encode()
     result = project_caml_source(raw)
+    assert result.body_name == body_name
     assert result.text == "H \u00e9\n\nbefore new old & stale tail after done"
     nodes = list(ET.fromstring(raw).iter())
     assert len(result.elements) == len(nodes)
@@ -107,6 +108,11 @@ def test_repeated_elements_keep_distinct_source_and_character_locations():
     (
         f'<MeasureDoc xmlns="{_NS}"><Description>H</Description>'
         "<Bill>B</Bill><Resolution>R</Resolution></MeasureDoc>".encode(),
+        "exactly one",
+    ),
+    (
+        f'<MeasureDoc xmlns="{_NS}"><Description>H</Description>'
+        "<GRP>G</GRP><Bill>B</Bill></MeasureDoc>".encode(),
         "exactly one",
     ),
     (document("   ").encode(), "non-whitespace"),

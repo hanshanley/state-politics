@@ -17,7 +17,7 @@ remain explicit; this is not a completed project or a certified classifier.
 | Bills | October snapshot extracted: 1,090,369 source-context measures across all 50 states, 5,028,893 sponsorships, 9,002,451 actions and 873,980 vote events. All eleven tables have recorded hashes/counts. Native documents retained for all 241 non-test measures in the bounded Washington metadata-gap cohort; separately, all 5,369 native SD introduced candidates and 15,308 physical pages captured and exactly replayed in both readers. | Official-source reconciliation, historical affiliations and filing-time text review. One Washington resolution has a version-note conflict; one SD PDF prints no session year. Neither these recoveries nor snapshot extraction certifies statewide/national original-text completeness or an analytical denominator. |
 | Parallel state recovery | Missouri, Pennsylvania and Ohio initial cohorts retain 188 complete PDF candidates / 3,095 pages and 124 corresponding HTML versions from 192 selections. Full Florida replay separately accounts for 2,868 linked contexts, including an explicitly negative corrected-copy disposition. | Four selected PA/OH originals remain unresolved. Missouri withdrawal-only notices are not policy text; historical corroboration does not resolve publisher identity conflicts. These bounded recoveries are not statewide text completeness or classifier certification. |
 | Full-source campaigns | New York, Texas, Illinois and Colorado continuations are running under frozen finite contracts. North Carolina collection has exited; completed-corpus sealing and replay are pending. Ohio and Pennsylvania preparations reuse recovered originals. | Only independently replayed completed checkpoints count as recovered coverage. Actual final-tail closure and full replay remain required; Ohio/Pennsylvania full collections are not launched. |
-| California native archives | Five complete biennial archives spanning 2017–2026 retain 26,798 native introduced candidates and 26,797 normalized texts; all 993,735 ZIP entries pass independent integrity replay. | The 2,980 historical/boundary source-only contexts and 44 special-session candidates are separate, not admitted. GRP1 has Description but no Bill/Resolution body. Archive completeness is not legal filing-time or policy-label certification; normalized text flattens markup and raw XML remains available. |
+| California native archives | Five complete biennial archives spanning 2017–2026 retain 26,798 native introduced candidates and 26,797 original normalized exports; all 993,735 ZIP entries pass independent integrity replay. A separate parent-replayed GRP1 supplement now preserves its complete 320,397-character native body and 4,229 element spans. | The 2,980 historical/boundary source-only contexts and 44 special-session candidates are separate, not admitted. GRP1 has a native GRP body, previously unsupported by the Bill/Resolution mapper; old exports remain unchanged. Archive completeness and structural projection do not certify filing-time identity, legal semantics or policy labels. |
 | Texas native reports | Complete 88R House/Senate filed reports reconcile 11,807 of 11,809 canonical regular contexts. Sixteen introduced PDF+HTML pairs retain 55 physical PDF pages and 16 HTML text blocks. | Literal canonical SB 15247 and SR 1960 remain unmatched. Other originals, historical affiliations, typed markup interpretation and filing-time certification remain open. Special sessions are isolated, not combined with 88R. |
 | New York native index | Official 2023–2024 Assembly search response retains 24,316 rows and 24,268 exact canonical matches. Self-contained first-batch archive preserves 80 PDF candidates / 256 pages / 769,944 joined-document characters / 1,488 extraction blocks. | Canonical J 272, one untyped `00000` row and 47 anomalous source-only identities remain separate. Full collection is running, not complete. Unselected originals, visual markup and legal-version identity remain unresolved; the blocked API was not bypassed. |
 | Illinois native index | Official 103rd-General-Assembly index retains 13,391 rows and matches all 13,376 canonical regular contexts. Self-contained first checkpoint retains 48 HTML candidates / 261,997 characters / 3,034 exact text-bearing blocks. Full listed-source collection is running. | Fifteen source-only entries, 878 canonical introduced-metadata gaps and thirteen unlisted static originals remain explicit, including SR 292. Identity enumeration is not complete original-text recovery or filing-time certification. |
@@ -345,9 +345,10 @@ All **18,230 canonical identities** and all columns of their six filtered input
 tables remain packaged separately. The 2017 archive has **2,980 source-only
 historical/boundary identities**, not automatically eligible 2018-onward filings.
 The 2025 archive includes **24 separate special-session candidates**. Its regular
-**GRP1 / `20250GRP199INT`** candidate has Description but no `Bill`/`Resolution`
-body; the missing supported body remains explicit, with the complete native
-member retained rather than a substituted summary.
+**GRP1 / `20250GRP199INT`** candidate has Description and a native `GRP` body,
+not a `Bill`/`Resolution` body. The original mapper did not support that body
+type; its unsuccessful export remains preserved. This is an extraction-support
+gap, not an absent publisher body or permission to substitute the Description.
 
 Root: `data/processed/california-multisession-official-archive-recovery-v3/`.
 Manifest SHA-256:
@@ -370,6 +371,69 @@ These recoveries used **four new physical requests**:
 request-budget reset. Complete normalized text/raw XML is not certified legal
 markup, operative-version or filing-time evidence, trained labels or approval
 for inference, analysis or publication.
+
+### GRP1 complete-body extraction repair
+
+The production CAML mapper now explicitly accepts native `GRP` bodies alongside
+`Bill` and `Resolution`, preserves the selected native type, and rejects competing
+GRP/Bill bodies rather than silently ignoring one. Generic normalization, nested
+element provenance and existing Bill/Resolution projections are unchanged. Both
+new regression cases distinguish the pre-fix implementation.
+
+The separate immutable
+`data/processed/california-grp1-native-source-projection-supplement-v1/` retains
+the complete **495,961-byte** original and all **4,229 elements**: 25 header,
+4,203 body and one outside-input element. The native GRP has **122 direct
+BillSection children**. Its complete projection contains **5,497 header
+characters + two joiner characters + 320,397 body characters = 325,896**.
+Every native name, attribute, parent, original-byte span/hash and normalized-text
+span is retained. The new projection is separately named; neither old normalized
+exports nor the earlier `unsupported_native_shape` disposition is rewritten.
+
+Parent actually executes the supplement's independent ElementTree/byte-lexer
+replay under the common network/original-data/session guard: all **19 files
+remain unchanged**. Manifest SHA-256:
+`d9889445723262798730dd61f4d07fd0dcd25af6ff70e8615a3f89d034c83b09`.
+Complete local predecessor manifests and source-table bindings support replay;
+the multi-gigabyte original ZIP is not duplicated or silently read externally.
+This supplement is not yet in completed aggregate v52. All model, training,
+evaluation, filing-time, legal, analytical and publication admissions remain false.
+
+## Full-campaign preparation gates: Pennsylvania and Ohio
+
+Pennsylvania's initial immutable preparation and seed-32/seed-30 archives have
+actual parent guarded replays. Native population **4,786** remains distinct from
+**4,788 canonical contexts**. All **62 complete PDF/HTML pairs** are reused;
+the historical **536 exchanges**, **136 over the proposed 400 preparation
+ceiling**, the earlier **24/12 follow-up violation** and **12 lost redirect
+bodies / 101,094 bytes** remain explicit. The proposed full **25,000** ceiling
+includes every inherited exchange, not a new allowance.
+
+Exact-population testing exposed a real v1 grouping defect: restarting after the
+provisional seed-tail 30 produces the remaining population's tail 20 instead of
+the full population's tail **18**. The immutable v2 supplement fixes carry and
+uncheckpointed-completion recovery. Parent guarded replays verify its **580 files**
+and separate **195-file final-18 fixture** unchanged; the positive driver fixture
+records **4,724 new candidates / 9,448 mocked PDF/HTML responses**, no seed
+refetches and genuine dependency-closed final-18 outputs. These are offline
+fixtures, not collected Pennsylvania originals.
+
+Full launch is still withheld. Parent code inspection found further v2 problems:
+midstream transport errors can discard already observed bytes/headers; HTTP 429
+does not stop immediately; a crash between durable reservation append and
+progress save can undercount/reuse a reservation; and exhausted or malformed
+formats can leave partial candidates while still sealing a normal success-only
+tail. A separately versioned successor is being prepared with actual transport
+and write-boundary crash tests. Passing positive-population fixtures do not
+approve these untested failure paths or authorize collection.
+
+Ohio's initial preparation also parent-replays with **1,101 files unchanged**,
+**2,279 native candidates**, **62 reused PDF/HTML originals**, **1,123 pages**
+and **8,248 HTML spans**. Its first checkpoint/tail implementation contained only
+counts/IDs, and the initial tail test fabricated complete statuses without source
+dependencies. A genuine full-population/dependency-closed successor is pending.
+The inherited **201 exchanges** remain counted against proposed preparation
+**400** / full **15,000** ceilings. Neither state has a full collection running.
 
 ## Texas 88R filed-census and bounded original-text recovery
 
@@ -856,6 +920,26 @@ tail archive must resolve and verify those dependencies explicitly. A distinct
 zero-request preparation now targets all 2,004 publisher-native version pages,
 but no full version census is claimed. Any future version collection must inherit
 the independently verified terminal request lineage, not reset its budget.
+
+### Native-version census preparation, not completed collection
+
+The separately frozen zero-HTTP preparation
+`north-carolina-native-version-census-preparation-v1` covers all **2,004 native
+page identities**, reusing the **two retained pages / seven native version rows**
+and leaving **2,002 pages pending**. Parent guarded replay verifies all **1,050
+files unchanged**, manifest
+`eee72fbf1abcdcb0794a23114ed2ce6e87ce4b7e93f0bdf919c932f63cd81933`.
+No canonical version rows are substituted. Full collection must inherit a
+manifest-backed, independently verified terminal source ledger, including all
+**2,007** source exchanges if confirmed by the pending sealed-corpus replay.
+The prospective **15,000** aggregate cap and two-attempt page limit are not reset.
+
+Parent inspection additionally found that the version collector's interrupted
+reservation recovery does not reconcile a durable ledger ordinal with a stale
+state counter after an append-before-state-save crash. A versioned successor
+with actual write-boundary, duplicate/orphan, complete-LF and budget tests is
+pending. The archived preparation replay proves retained evidence consistency,
+not crash-safe collection or permission to launch.
 
 ## Colorado regular-session source census and full continuation
 

@@ -147,10 +147,13 @@ def project_caml_source(raw_xml: bytes) -> CamlProjection:
     ]
     bodies = [
         index for index, element in enumerate(elements)
-        if element.parent_index == 0 and element.tag in {_CAML + "Bill", _CAML + "Resolution"}
+        if element.parent_index == 0
+        and element.tag in {_CAML + "Bill", _CAML + "Resolution", _CAML + "GRP"}
     ]
     if len(headers) != 1 or len(bodies) != 1:
-        raise ValueError("CAML source requires exactly one Description and one Bill or Resolution")
+        raise ValueError(
+            "CAML source requires exactly one Description and one Bill, Resolution or GRP"
+        )
 
     positions: dict[int, tuple[ProjectionScope, int | None, int | None]] = {}
 
