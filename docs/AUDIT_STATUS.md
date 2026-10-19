@@ -22,7 +22,8 @@ remain explicit; this is not a completed project or a certified classifier.
 | New York native index | Official 2023–2024 Assembly search response retains 24,316 rows and 24,268 exact canonical matches. Self-contained first-batch archive preserves 80 PDF candidates / 256 pages / 769,944 joined-document characters / 1,488 extraction blocks. | Canonical J 272, one untyped `00000` row and 47 anomalous source-only identities remain separate. Full collection is running, not complete. Unselected originals, visual markup and legal-version identity remain unresolved; the blocked API was not bypassed. |
 | Illinois native index | Official 103rd-General-Assembly index retains 13,391 rows and matches all 13,376 canonical regular contexts. Self-contained first checkpoint retains 48 HTML candidates / 261,997 characters / 3,034 exact text-bearing blocks. Full listed-source collection is running. | Fifteen source-only entries, 878 canonical introduced-metadata gaps and thirteen unlisted static originals remain explicit, including SR 292. Identity enumeration is not complete original-text recovery or filing-time certification. |
 | Colorado native index | Independent publisher census reconciles all 1,459 regular identities across 2023A/2024A. First checkpoint retains 32 PDFs / 264 pages. The collector has finished with 1,457 successes and two unsupported-reference dispositions; full replay is pending. | Twenty-nine special-session contexts are separate. Two canonical introduced-reference gaps are not publisher-absence findings; the corresponding bill pages remain uninspected. |
-| North Carolina native index | Independent 2023–2024 publisher census reconciles 2,004 of 2,005 canonical contexts. Complete source replay preserves 2,004 PDFs / 6,783 pages per reader, 2,002 observed numeric identities and two unresolved identity negatives. | Canonical HB 311 remains distinct from native HR 311 despite the shared URL. Statewide publisher version enumeration remains incomplete; canonical version rows are separately labelled, not rebranded as native. |
+| North Carolina native index | Independent 2023–2024 publisher census reconciles 2,004 of 2,005 canonical contexts. Complete source replay preserves 2,004 PDFs / 6,783 pages per reader, 2,002 observed numeric identities and two unresolved identity negatives. Actual parent replay now also reconstructs both complete unlabelled inputs: 4,008 reader views / 10,917,908 tokens / 14,520 windows, with zero discarded tokens. | Reader views are not extra bills or approved classifier inputs. Canonical HB 311 remains distinct from native HR 311 despite the shared URL. Statewide publisher version enumeration remains incomplete; canonical version rows are separately labelled, not rebranded as native. |
+| Wisconsin native preparation | A distinct GPT-5.6 Sol worker is preparing the complete 2023–2024 native census, a bounded introduced-source seed and a resumable full-campaign contract, with at most 128 aggregate official-source exchanges including inherited attempts, retries and redirects. | No completed native census, recovered cohort or full continuation is claimed yet. Actual population/tail, crash/access/context/transport tests and independent parent replay must precede a full launch. |
 | Classification | Four saved official English ModernBERT-base pilots compared on the same 52 platform references: external-only 41/52, joint 47/52, broader-source 47/52, Republican-expanded 49/52. The fourth run correctly rejects 3/4 mixtures and 6/6 non-policy units. | The fourth run loses one policy decision, still accepts a mixture above 0.999 and regresses on insufficient-evidence and taxonomy-boundary development cases. Both sets are examined diagnostics, not fresh independent tests. Independent review and empirical gates remain required. No candidate is approved. |
 | Labels | External CAP files and two state-reference CSVs recovered; exact-context Florida candidates and complete bounded overlap witnesses are frozen without label admission. Split/group/text and reviewed-platform source-body checks retain explicit label provenance. | Modern Florida external titles/subtopics are missing; Pennsylvania rows stop in 2016. Annotation provenance, source permissions, adapted-topic compatibility, bill families and independent state-domain references remain unresolved. |
 | Evaluation | Checkpoint-bound training/evaluation split isolation, development-only temperature/threshold selection, exact evidence joins, abstention accounting, per-topic and subgroup metrics. | Reviewer arrangement, frozen empirical gates, independent target tests and clustered uncertainty. No checkpoint can be certified by changing a status field. |
@@ -1176,14 +1177,14 @@ source collector is absent at bridge creation. The next stage must inherit
 The completed source/full-tail packets and bridge are now integrated into actual
 aggregate v53; native-version preparation remains separate and unapproved.
 
-### Complete paired-reader input packet, parent replay running
+### Complete paired-reader inputs, actual parent replay completed
 
 The zero-HTTP worker has returned the immutable
 `north-carolina-full-native-pdf-token-input-inventory-v1` packet, manifest
 `30bfb40f95b53b67f516d2dc49efb9c05efb2935ee1df0f8ad6b042a588d5a42`.
 It retains **2,004 native contexts / 4,008 separate reader views**, not 4,008
-bills, across **12,065 payload / 12,066 total files**. Worker-reported totals
-are **10,917,908 tokens / 14,520 windows / zero discarded tokens**. Neither
+bills, across **12,065 payload / 12,066 total files**. Actual parent replay
+reconstructs **10,917,908 tokens / 14,520 windows / zero discarded tokens**. Neither
 reader is selected as ground truth or hybridized; both unresolved identities
 remain present, with no title/summary replacement or prepending.
 
@@ -1193,15 +1194,28 @@ LF interpage joiners per reader**. The earlier source replay's 20,489,184
 PyMuPDF and 20,174,237 pypdf totals are page characters, not joined model-view
 lengths. Both complete text, token/offset and window exports are retained.
 
-The parent has inspected the frozen verifier and pinned the handoff, manifest,
-verifier and common guard. Actual parent common-guard replay
-`nc-two-reader-parent-actual-v1` is running; Python PID **39834** and the first
-**100 PDFs / 200 views** were observed after launch. Its log is
-`nc_two_reader_parent_actual_v1.log`. Worker direct/guarded replays and five
-focused tests are reported separately, not substituted for the pending parent
-execution. No parent-completed replay, aggregate inclusion or classifier
-admission is claimed yet. This scope is distinct from the publisher-native
-version census below.
+The parent inspected the frozen verifier, pinned the handoff, manifest,
+verifier and common guard, and executed the complete offline replay itself.
+Actual handle `nc-two-reader-parent-actual-v1` has completed with **exit 0**,
+confirmed by the real completion notification and original-handle read.
+Python PID **39834** and the first **100 PDFs / 200 views** were also observed
+while it was running. The replay reopens every PDF with both readers,
+reconstructs all **13,566 page views**, complete text, token offsets, windows
+and both JSONL/Parquet exports, and checks the exact packet inventory unchanged
+before and after. Networking and reads of original project/session data are
+denied throughout; manifest and verifier pins pass again after execution.
+
+The actual log `nc_two_reader_parent_actual_v1.log` has SHA-256
+`3b3642acf1117b630dbba5ca2f2a0c5fa000e406f8c215d5b376cf0e4b71bc0a`.
+Receipt `nc_two_reader_actual_parent_execution_receipt_v1.json`, SHA-256
+`d80a5603d3e6662159b5d66b8c5e6e7206acd6770446a9c27778fc22f8e947d5`,
+binds the actual handle, PID, exit, complete reconstructed result and pinned
+inputs. Its producer validates the completed log and hashes; it does not claim
+to perform another full replay. Worker direct/guarded replays and five focused
+tests remain separate evidence. These inputs and the receipt are supplemental
+to frozen aggregate v53, not retroactive additions. No inference, new labels,
+reader adjudication, classifier/scientific admission or publication is performed.
+This scope is distinct from the publisher-native version census below.
 
 ### Native-version census preparation, not completed collection
 
