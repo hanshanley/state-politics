@@ -672,6 +672,82 @@ The frozen progress JSON is accounting metadata, not an archive or independent
 replay of every subsequently collected original. All negative evidence requires
 review and budgeted alternatives after the pinned campaign's accounting is sealed.
 
+### Offline repair of false native-HTML negatives
+
+Review of the retained responses found three extraction defects: the legacy text
+projection includes head CSS/title text, its bare-number identity gate can miss
+zero-padded printed identifiers, and its required closed `tr` blocks mistake Word
+paragraph-based bills for unavailable HTML. The pinned running collector and its
+original dispositions are preserved, not edited in flight.
+
+The successor `illinois_html.py` preserves complete body characters/entities and
+mapped `br` newlines, with exact decoded-source/output offsets and literal tag
+attributes. It records lexical tokens, not guessed DOM parents: native XSL has
+unmatched child tags, and Word bodies need not contain closed table rows. Head
+CSS/titles stay outside the projection; struck, underlined and CSS-hidden words
+remain present without certified legal or visibility interpretation. Active,
+conditional and non-text bodies fail explicitly. A separate anchored printed
+GA/year/typed-number observer preserves `HB0015` rather than seeking incidental
+bare `15` elsewhere in the bill. This is not legal-version certification.
+
+The immutable diagnostic covers **every negative in the first 51 completed
+32-candidate batches**: **578 identity-unverified** and **103 unavailable-shell**
+records, plus HB2/HB3 positive controls. All **683 complete native responses**
+yield nonempty bodies and matching literal typed headers: **901,346 body
+characters / 375,559 lexical spans**. Independent replay reproduces both the
+old negative observations and the new complete body text, including a separate
+body reader and every source/output span. All **8,991 file hashes** remain
+unchanged with networking and original project/session data reads denied.
+Twenty-four focused cases and 68 combined IL/TX/NY/CA regressions pass.
+
+Root: `data/processed/illinois-native-html-negative-replay-v1/`.
+Manifest SHA-256:
+`6d13422e521cf6d0e440ad328974a05d500541bfbead9e962d5db896658e03ef`.
+This replay makes **zero requests**, preserves all original campaign states and
+does not represent the still-running full campaign as complete. It uses the same
+reversible ISO-8859-1 byte projection as the old collector; actual source encoding
+is **not certified**, and these are not admitted classifier inputs, labels,
+training/evaluation data or analytical/publication evidence.
+
+## Colorado regular-session source census and full continuation
+
+Official publisher bill-search HTML independently enumerates **681 identities
+in 2023A** and **778 in 2024A**, exactly reconciling **1,459 regular-session
+canonical identities** without source-only or canonical-only nonmatches.
+Twenty-nine special-session contexts remain separately excluded: fifteen in
+2023B and fourteen in 2024B. The native census retains exact source-result spans;
+it is not a certified substantive-policy denominator.
+
+The self-contained first checkpoint retains **32 complete introduced PDFs**,
+sixteen per annual session, and **264 physical pages** independently extracted
+by both readers. Parent replay denies networking and original project/session
+data reads and verifies all **887 packet files** unchanged. Root:
+`data/processed/colorado-full-source-campaign-v1/checkpoints/batch_0001/`.
+Manifest SHA-256:
+`6f0799f3890ffa49e68cd9b89114670f071652c9e4f2f85d6e8d457846acf948`.
+
+**1,457 candidates** have explicit introduced references in the frozen canonical
+version/reference extraction. The two remaining identities, **SB 23-214** and
+**HB 24-1430**, are **canonical-reference gaps**, not established publisher
+original-text absences: their publisher bill pages have not been inspected.
+No URL is invented and no later version substituted.
+
+Preparation used **126/128 physical exchanges**: 62 discovery exchanges and
+32 original requests with 32 separately retained redirects. All redirects count.
+Six offline transport tests pass. A separately executed parent supplemental
+harness exercises the actual pinned checkpoint path with **49 candidates =
+32 + 17**, checks all 200 final-tail dependencies, and proves that **48 terminal
+plus one pending** cannot seal a normal-completion tail. These tests leave all
+1,769 frozen campaign/contract/checkpoint files unchanged; actual final-tail
+creation and replay remain obligations after normal collector completion.
+
+After those gates, parent launched the finite **1,425-candidate continuation**
+under the frozen prospective **15,000 aggregate-exchange ceiling including all
+126 preparation exchanges**. Persisted advancement at **20:10:25 UTC on
+October 19, 2026** reports **46 successes / 1,411 pending / two unsupported
+reference gaps**, with **156 physical exchanges**. This is readiness evidence,
+not a completed corpus or scientific/classifier/filing-time certification.
+
 ## Withdrawal-only source inputs: production evidence abstention
 
 The production bill-input path now recognizes the complete reviewed Missouri
