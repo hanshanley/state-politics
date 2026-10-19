@@ -825,8 +825,9 @@ Of the 7,641 no-URL LC rows, **7,488** match native records with no formal ident
 their LC/formal relationships rather than disappearing behind a blanket draft exclusion.
 Native null fields are retrieval-time observations, not a historical proof of
 non-introduction. All 6,079 native formal identities have a corresponding formal
-baseline key; this establishes identity coverage for these retained lists, **not full
-text, correct versions, historical party or policy coverage**.
+baseline key; this establishes identity coverage for these retained lists, **not a
+complete historical introduction universe, full text, correct versions, historical
+party or policy coverage**.
 
 Seven focused Montana cases cover cross-family parsing, source/raw-object retention,
 LC/formal aliases, both kinds of ambiguity, partial pagination, wrong offsets,
@@ -852,6 +853,59 @@ archives the new Montana module/regressions. Its actual result is **exit 1 /
 than the two successful additional checks remain unchanged from v28. No research
 sidecar replaces a missing canonical artifact. Audit manifest:
 `0962df4165ee8b018d9ec9f923b6414e5cb960129b5124a637d9131a70b24e6f`.
+
+### Montana printed identities contradict simple alias merging
+
+Following the original document references changed the interpretation of two nonmatches.
+Official PDF `266373` prints **2025 SB 6.1 / SENATE BILL NO. 6**, with B. Usher named
+as introducer; PDFs `269545` and `269546` print **2025 SB 85.1 / SENATE BILL NO. 85**,
+with M. Yakawich named. Their source overviews reference LC0239 and LC0442, respectively.
+The retained current native records associate those requests with **HB 117** and
+**HB 161**. Separately recovered PDFs `269566` and `270470` actually print those House
+identities, with A. Regier and V. Moore named, respectively. The unnumbered LC0239 and
+LC0442 drafts are retained too.
+
+This is **not proof that either Senate identifier is an erroneous source alias**.
+Nor does a numbered print or an `INTRODUCED BY` line prove an introduction event,
+its date, or continuity with the current House record. Similar policy text, shared LC
+references, PDF metadata dates and current enactment status cannot adjudicate that
+history. All four original exact-key nonmatches remain unchanged; no Senate/House
+record was merged, deleted or admitted to analytical filing counts.
+
+The separate immutable conflict packet retains **seven distinct PDF byte hashes /
+21 physical pages**, with all pages independently extracted by pypdf and PyMuPDF:
+**42 reader-page records and exact printed-header spans**. It binds all original fields
+for seven baseline contexts, ten exact recovered-document reference rows, all their
+other version references and source overviews, and both complete current native objects
+at their original page positions. Both SB85 document IDs produce identical complete
+page text in both readers, but their bytes and PDF modification metadata differ;
+text equality is not byte identity or permission to discard a source version.
+
+The SR55 PDF and LC3368 legacy overview returned explicit **404** failures. The SR55
+overview returned **200**, but only the Bill Explorer application shell with an empty
+root, not bill-specific evidence. These responses do not resolve either identity or
+certify LC3368 as a publisher test record. No visual-layout, operative-version,
+filing-time, party-at-filing or policy-label certification is asserted.
+
+The independent replay reopens every raw PDF through both readers, checks all exact
+header spans without the producer's parser, and rebinds the full source contexts,
+native objects/positions, four original nonmatch decisions and HTTP dispositions.
+The Montana module now exposes printed-header observations without silently substituting
+current metadata; focused regressions distinguish numbered Senate prints from LC drafts
+and unrelated body references.
+
+- Printed-identity conflict manifest: `0bf1e4245f89c0cbb0d6d414fa027a69f8d5b51dd1eecd18aab40baa9bfbd7e0`.
+- Independent replay manifest: `ee320f30d1f432eafcb9fc5c4ece25031d84de34be10d4bdd48c76a24d0dce7f`.
+
+The original universe packet is unchanged. No canonical source, analysis, classifier
+output, training label, threshold or weight changed. Raw evidence remains local and
+Git-ignored; pushing these hashes does not back it up. The companion remains unpublished.
+
+Canonical audit checkpoint **v30** now verifies **63** completed research packets and
+archives the printed-header parser/regressions. Its actual **exit 1 / 34 failures among
+330 checks** is unchanged; the complete audit report is byte-identical to v29. The
+research additions do not substitute for missing canonical inputs or scientific gates.
+Audit manifest: `d3c38230d36692029d9f79d330b406b3700c93141932fa85a66539cbc0d8c406`.
 
 ## Training reservation enforcement
 

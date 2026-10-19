@@ -512,6 +512,18 @@ remain unresolved in the initial sidecar. Filing denominators, evaluation groups
 event-time text/party evidence still require a consistent identity contract; no source
 alias is silently merged or admitted to training/analysis.
 
+The print-identity follow-up makes the historical limitation concrete: retained
+2025 Senate prints identify SB6 and SB85, whereas their LC-linked current native
+records identify HB117 and HB161. Separate House prints and unnumbered drafts survive
+as distinct evidence. Printed headers are retained with exact source spans, year,
+LC/formal kind and printed revision, not replaced with current metadata. They establish
+what a document prints, not when it was introduced or whether two formal records may
+be merged. Both readers reproduce every physical page, including two SB85 documents
+with identical complete extracted text but different byte hashes. Source version/link
+rows and both responses remain intact. HTTP-200 application shells are not substantive
+bill evidence; explicit 404s remain failures. Neither shared LC/title evidence nor a
+complete current API traversal proves a complete historical filing universe.
+
 ---
 
 ---

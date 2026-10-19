@@ -6,7 +6,26 @@ import json
 import pandas as pd
 import pytest
 
-from state_politics.bills.montana import reconcile
+from state_politics.bills.montana import parse_document_headers, reconcile
+
+
+@pytest.mark.parametrize(
+    ("text", "identifier", "kind", "version"),
+    [
+        ("****\n69th Legislature 2025 SB 6.1\nSENATE BILL NO. 6", "SB 6", "formal_measure", 1),
+        ("69th Legislature 2025\nLC 0239\n___ BILL NO. ___", "LC 239", "draft_request", None),
+    ],
+)
+def test_document_headers_preserve_printed_identity_and_exact_source_spans(
+    text, identifier, kind, version,
+):
+    [header] = parse_document_headers(text)
+    assert header["identifier_observation"] == identifier
+    assert header["identity_kind_observation"] == kind
+    assert header["printed_version_observation"] == version
+    assert header["session_year_observation"] == "2025"
+    assert text[header["source_start"]:header["source_end"]] == header["source_text"]
+    assert parse_document_headers("The committee discussed SB 6 in 2025.") == []
 
 
 def _sources():

@@ -9,6 +9,32 @@ from collections import Counter, defaultdict
 import pandas as pd
 
 _IDENTIFIER = re.compile(r"(LC|HB|HJ|HR|SB|SJ|SR)\s*(\d+)")
+_DOCUMENT_HEADER = re.compile(
+    r"(?P<ordinal>\d+)(?:st|nd|rd|th)\s+Legislature\s+"
+    r"(?P<year>20\d{2})\s+(?P<kind>LC|HB|HJ|HR|SB|SJ|SR)\s+"
+    r"(?P<number>\d+)(?:\.(?P<version>\d+))?\b"
+)
+
+
+def parse_document_headers(text: str) -> list[dict]:
+    """Retain printed LC/formal/year/version observations, not historical-identity conclusions."""
+    if not isinstance(text, str):
+        raise ValueError("Montana native document headers require text")
+    return [
+        {
+            "legislature_ordinal_observation": int(match["ordinal"]),
+            "session_year_observation": match["year"],
+            "identifier_observation": f"{match['kind']} {int(match['number'])}",
+            "identity_kind_observation": (
+                "draft_request" if match["kind"] == "LC" else "formal_measure"
+            ),
+            "printed_version_observation": (
+                int(match["version"]) if match["version"] is not None else None
+            ),
+            "source_start": match.start(), "source_end": match.end(), "source_text": match[0],
+        }
+        for match in _DOCUMENT_HEADER.finditer(text)
+    ]
 
 
 def _key(identifier):
