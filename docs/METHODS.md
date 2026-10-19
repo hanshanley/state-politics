@@ -348,6 +348,28 @@ or quarantined selected links. Captures remain research-only: HTTP 200 can retur
 instead of bill text, and a genuine PDF may be an amendment or automatic comparison.
 Native format/version and semantic review remain separate from retrieval.
 
+`bills/florida.py::extract_filed_document` separately extracts complete retained Florida
+regular-session HB/SB responses. Every PDF physical page survives, including explicit
+unreadable-page dispositions; every HTML bill pre block retains full text and exact
+added/deleted character spans. Nested or unbalanced markup is flagged rather than
+silently treated as clean text. Anchored native header lines and matching original
+print codes are required for a positive observation, not a body citation or a Filed
+URL alone. The literal observed Senate `(NP)` marker and leading House U+F020 character
+remain in source text; other unknown prefixes/suffixes are not guessed away.
+Source-context conflicts and missing/unknown prints never receive scientific admission.
+
+Extraction campaigns bind actual source-attempt names, exact planned candidate rows,
+response receipts and parser/runner hashes. Root manifests include completed child
+manifests; interrupted extraction directories are retained and a new attempt is used.
+Unresolved or quarantined responses remain visible and produce nonzero final status.
+Independent replay reconstructs complete pre text/markup and all PDF pages, checks
+every PDF page's native identity with a second decoder, and verifies saved source
+offsets without calling the producer's parsing helpers. Decoder reproduction is not
+semantic review, legal/version adjudication or filing-time certification. A bounded
+replay names its exact completed batch count; it does not claim the full campaign or
+the national bill population has complete text. No canonical classifier input, label
+or analytical admission is changed by these research extractions.
+
 Collection report schema 2 separately records `quarantined_link_ids`. Its small reviewed
 conflict registry matches **both the exact source bill ID and response SHA-256**, not a
 bill number, URL or document hash alone. Complete bytes remain retained, and each matching

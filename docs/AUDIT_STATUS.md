@@ -1080,6 +1080,65 @@ batches are checksum-bound and resumable; incomplete attempt directories and exp
 unresolved/quarantined statuses survive. A running campaign is not evidence that all
 documents have been recovered, reviewed or admitted.
 
+## Florida complete native-text extraction and bounded replay
+
+`bills/florida.py` now retains every physical PDF page and every HTML bill `<pre>`
+block rather than truncating to a title, opening page or token prefix. HTML extraction
+keeps both added and deleted legislative words, with exact character-offset markup
+spans. Native chamber/year/number headers and original-print codes are observed
+separately from source notes. Later prints, mismatches, unreadable pages, malformed
+markup and missing responses remain explicit; no model or canonical source is changed.
+
+The first **17-batch / 1,088-link** extraction remains frozen: **1,081** native-print
+matches and **seven** unrecognized cases. Inspection found a literal Senate `(NP)`
+header marker and a leading House U+F020 extraction character. The successor accepts
+only those observed formats without interpreting their meaning or removing them from
+the saved text. A second bounded snapshot preserves **21 batches / 1,344 matching
+originals**. The current parser additionally rejects unreviewed trailing text on either
+chamber's header line; nested pre markup cannot silently discard trailing source text.
+Both earlier snapshots remain intact, not overwritten or presented as full campaigns.
+
+Independent replay of the current parser's first **22 completed batches**, plus the
+four separately recovered originals, verifies **1,412 distinct canonical bill
+contexts**: **1,408 imported filed links and four recovered PDFs**. It preserves
+**7,038 text units**, comprising **6,231 PDF pages and 807 HTML pre blocks**.
+All PDF pages are reproduced with pypdf and independently checked for native
+header/print agreement with PyMuPDF; complete HTML text and **129,060 added/deleted
+markup spans** are independently reconstructed. Saved header/code offsets recover
+the exact source substrings. Every planned candidate, response checksum and canonical
+join is checked without importing the producer's header/extraction/selection helpers.
+The four supplemental originals retain their full pages without invented imported
+link identifiers.
+
+| Completed bounded packet | Manifest SHA-256 |
+|---|---|
+| `florida-modern-filed-native-text-v1` | `b3b1f2f9c40447842998284ff2206ade07f05ee1f26e00d04e62a80b76777f24` |
+| `florida-modern-filed-native-text-v2` | `38ddb7f464ea6544d07fbcc2337db7789201664430f8de6d6285876f91cc58bf` |
+| `florida-modern-native-text-verification-v1` (19 batches plus four originals) | `7ca8dba10c1e31039f99c1036917a0ecc669dd88b1fef7fb04fac2ce5f8ea0f1` |
+| `florida-modern-native-text-verification-v2` (22 batches plus four originals) | `f9324bacc45fecbb7b15f59baa85401e5d7a370ccaefb7f2ba8d704e45ef3800` |
+
+The exact **2,864-link / 45-batch** capture campaign remains active. Its current
+extraction follower writes `florida-modern-filed-native-text-v3`; neither in-progress
+root is a completed packet. Offline campaign exercises cover interruption recovery,
+later source-attempt names, root binding of child manifests, exact source selections,
+parser identity, terminated collectors and nonzero unresolved/quarantine results.
+Incomplete extraction attempts remain preserved rather than overwritten.
+
+This is complete text accounting only for the stated bounded slice, not national
+full-text coverage, a completed full-cohort collection, independent topic gold or
+filing-time/semantic certification. All training/evaluation/analytical admissions
+remain false. Classifier quality, operative platforms, dated-party attribution and
+downstream analytical artifacts remain unresolved. Production publication is unchanged.
+The retained raw/text/model packets remain local and Git-ignored.
+
+Canonical audit checkpoint **v34** verifies **74** completed research packets,
+including the explicitly bounded snapshots and replays above. Its actual result is
+**exit 1 / 34 failures among 333 checks**; the failure list and authored-input hashes
+are identical to v33. The two new passing checks cover the new Python code-guide
+entries, not scientific certification. No missing canonical output was fabricated
+or replaced with a research packet. Audit manifest:
+`3d2c9658292843b5222f286efb4a1ef2292342a12d3d45c62f74fe829b8d1409`.
+
 ## Training reservation enforcement
 
 The training CLI now accepts an explicit `--source-reservation` pointing to a
