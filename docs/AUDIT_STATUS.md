@@ -4,7 +4,7 @@ The existing figures and analytical conclusions are **legacy, not revalidated fi
 The current changes repair infrastructure and preserve evidence; they do not certify a
 replacement classifier or establish complete contemporary coverage.
 
-**October 19, 2026 checkpoint:** actual audit **v52** binds **118 completed research
+**October 19, 2026 checkpoint:** actual audit **v53** binds **122 completed research
 and accounting packets**. The canonical audit has **308/342 passing checks**
 and **34 missing-artifact failures**. Known source, collection and scientific failures
 remain explicit; this is not a completed project or a certified classifier.
@@ -326,6 +326,32 @@ not another full rehash of every research payload. Live collectors and unfinishe
 Ohio/Pennsylvania preparations are not completed roots. Frozen documentation
 precedes this result paragraph and top-line update.
 
+Actual audit **v53** subsequently completes with **236 audit payload files /
+237 total files** and **122 completed packet bindings**, adding the complete
+California four-biennium structural replay, separate GRP1 supplement, complete
+North Carolina source archive and genuine final-20 archive. Its strict manifest
+adapter accepts North Carolina's explicit `path_bytes_sha256_v1` format without
+changing Colorado's distinct `exact_path_bytes_sha256_v1` contract or either
+source manifest. Both new North Carolina regression cases fail against the old
+adapter; all eight focused cases pass after correction, including same-size
+payload corruption.
+
+The actual producer exits **0**, retaining canonical audit return code **1**.
+Independent parent verification checks the exact audit inventory, all 122
+manifest bindings, four actual guarded source replay logs, predecessor copies,
+all 204 failed-v51 files and North Carolina's two real ledgers: **2,004 + 3**
+unique physical request/result pairs, next ordinal **2,008**. The canonical
+report is **byte-identical to v52**: **308/342 passing**, the same **34
+missing-artifact failures**, and scientific certification **not performed**.
+Manifest SHA-256:
+`3f8dbb6897da4defbe672be34b4e396dc06cf22215243e980e03b435d250a59a`.
+Actual logs: `full_audit_v53.log` and
+`full_audit_v53_parent_verification.log`. As with v52, the additional parent
+wrapper verifies audit inventories/bindings and actual source replay evidence,
+not another full rehash of all research payloads. Later Pennsylvania, Ohio and
+Missouri release-gate evidence below is supplemental, not retroactively inserted
+into v53. No collection-launch or scientific approval follows from this freeze.
+
 ### Four additional complete biennial archives
 
 Independent parent guarded replay now also covers the full **2017–2018,
@@ -391,8 +417,8 @@ the separate supplement below supplies its complete body and element map. The
 canonical contexts** remain distinct and unadmitted. Full unlabelled token/window
 coverage for these 21,234 candidates is being prepared separately, using the
 existing pinned tokenizer/window policy and the GRP supplement, without training,
-inference or new labels. This structural replay is not yet in completed
-aggregate v52 and does not confer scientific or publication approval.
+inference or new labels. This structural replay is now bound by completed
+aggregate v53 and does not confer scientific or publication approval.
 
 ### GRP1 complete-body extraction repair
 
@@ -418,10 +444,10 @@ remain unchanged**. Manifest SHA-256:
 `d9889445723262798730dd61f4d07fd0dcd25af6ff70e8615a3f89d034c83b09`.
 Complete local predecessor manifests and source-table bindings support replay;
 the multi-gigabyte original ZIP is not duplicated or silently read externally.
-This supplement is not yet in completed aggregate v52. All model, training,
+This supplement is now bound by completed aggregate v53. All model, training,
 evaluation, filing-time, legal, analytical and publication admissions remain false.
 
-## Full-campaign preparation gates: Pennsylvania and Ohio
+## Full-campaign preparation gates: Pennsylvania, Ohio and Missouri
 
 Pennsylvania's initial immutable preparation and seed-32/seed-30 archives have
 actual parent guarded replays. Native population **4,786** remains distinct from
@@ -445,17 +471,65 @@ midstream transport errors can discard already observed bytes/headers; HTTP 429
 does not stop immediately; a crash between durable reservation append and
 progress save can undercount/reuse a reservation; and exhausted or malformed
 formats can leave partial candidates while still sealing a normal success-only
-tail. A separately versioned successor is being prepared with actual transport
-and write-boundary crash tests. Passing positive-population fixtures do not
-approve these untested failure paths or authorize collection.
+tail. The immutable v3 supplement corrects these paths and its positive
+full-population fixture retains the genuine final-18 closure. Actual parent
+guarded replays pass for the **658-file supplement / 269-file final-18 archive**,
+manifest
+`2255619fcc1be2d24dccaaf479f787efdf7d00342a5ddc9b8c81671957967eab`.
+These fixture inputs remain synthetic, not publisher-collected full-state text.
+
+Parent then actually reproduces **four further v3 release blockers** with
+networking and child execution denied: a maintenance HTML shell becomes
+`complete` with zero extracted pages; invalid UTF-8 is silently replaced with
+an invented U+FFFD; an HTTPS-to-HTTP redirect is followed; and a crash after
+durable checkpoint/progress writes but before archive construction resumes as
+normal completion with **32 complete candidates / 64 mocked responses / one
+checkpoint record / zero archives**. The last probe uses the real driver and
+stored PDF/HTML dependencies, not fabricated completion counts. Persistent
+evidence is `pa_v3_parent_release_blockers_v1.json` and its actual log; all
+temporary fixtures are removed and the sealed v3 manifest/source remain unchanged.
+The same worker is preparing an immutable zero-HTTP v4 with structural/lossless
+decoding gates, HTTPS-only hops and transactionally recoverable exact-context
+checkpoint sealing. Passing positive fixtures alone does not authorize launch.
 
 Ohio's initial preparation also parent-replays with **1,101 files unchanged**,
 **2,279 native candidates**, **62 reused PDF/HTML originals**, **1,123 pages**
 and **8,248 HTML spans**. Its first checkpoint/tail implementation contained only
 counts/IDs, and the initial tail test fabricated complete statuses without source
-dependencies. A genuine full-population/dependency-closed successor is pending.
-The inherited **201 exchanges** remain counted against proposed preparation
-**400** / full **15,000** ceilings. Neither state has a full collection running.
+dependencies. The immutable v2 successor now passes actual parent guarded replay:
+**3,342 files unchanged**, complete seed-32/partial-30 dependencies and an
+actual **2,279-candidate / 62-reused** driver fixture with genuine **SR93-SR99**
+final-seven dependencies. Manifest:
+`5cbf1553527a836468fe0eb519132161916c5906d28f4401e6f2006df2358562`.
+Actual parent log: `ohio_checkpoint_v2_parent_actual_v1.log`.
+
+Separate executed parent failure probes still withhold Ohio launch: parseable
+HTTP-200 metadata with curl exit 18 is admitted as complete; the first 429 does
+not stop immediately; reservation-file persistence before state save is not
+reconciled and the next reservation collides; and the actual curl argument vector
+does not disable ambient configuration first. Existing checkpoint/context
+validation also requires correction. Evidence:
+`ohio_v2_parent_release_blockers_v1.json` and its actual log. The same worker
+is preparing immutable zero-HTTP v3. The inherited **201 exchanges** remain
+counted against proposed preparation **400** / full **15,000** ceilings.
+
+Missouri's immutable v2 preparation also passes actual parent guarded replay and
+full before/after hashing: **2,075 unchanged files**, manifest
+`ce9dcb6ec30a76833a2c13cab7b063bc1ffe12539480b5d9288b7e6b8de19035`.
+It preserves **4,960 raw contexts / 4,958 distinct keys**, both duplicate
+HR1/HR2 contexts, **64 reused originals / 488 pages per reader**, six canonical
+nonmatches, four source-only SR978-SR981 entries and separate withdrawal notices.
+All **269 inherited exchanges** include incomplete earlier campaigns and
+diagnostic probes; prospective ceilings remain **400 preparation / 25,000 full**,
+not reset allowances. The dependency-closed full-population fixture's real final
+32 covers ordinals **4,928-4,959**. Parent source inspection, not yet executed
+negative probes, finds that nonzero curl results can still reach successful
+PDF/discovery handling and any existing checkpoint directory is returned without
+manifest/context validation. A zero-HTTP immutable v3 is being prepared; the
+positive replay is not full-launch approval. Actual parent log:
+`missouri_preparation_v2_parent_actual_v1.log`.
+
+None of these three states has an authorized full continuation running.
 
 ## Texas 88R filed-census and bounded original-text recovery
 
@@ -985,7 +1059,8 @@ physical reservation IDs/URLs rather than filtering them out. A matching active
 source collector is absent at bridge creation. The next stage must inherit
 **2,007** and begin at ordinal **2,008**. This source-lineage approval does
 **not** authorize native-version collection, classifier use or publication.
-The completed source packet and bridge are not yet integrated into aggregate v52.
+The completed source/full-tail packets and bridge are now integrated into actual
+aggregate v53; native-version preparation remains separate and unapproved.
 
 ### Native-version census preparation, not completed collection
 
