@@ -34,6 +34,7 @@ import json
 import re
 from pathlib import Path
 
+from ..bills.missouri import parse_withdrawal_notice
 from ..bills.montana import source_draft_request_mask
 from ..provenance import sha256_file
 from .modernbert import add_model_arguments, load_classifier, prediction_rows
@@ -115,6 +116,7 @@ def classify_bills(bills, classifier, *, batch_size: int = 8,
         "n_input_tokens": None, "n_discarded_tokens": None,
         "record_id": None, "procedural_shell": False, "source_test_record": False,
         "source_draft_request": False, "filing_scope_contract": BILL_FILING_SCOPE,
+        "source_withdrawal_notice": False, "withdrawal_notice_observation": None,
         "classification_text": "",
         "input_tier": None, "classification_status": None,
         "bill_input_construction": BILL_INPUT_CONSTRUCTION, "input_fields": "[]",
@@ -130,6 +132,9 @@ def classify_bills(bills, classifier, *, batch_size: int = 8,
             summary.strip() or introduced.strip()
         )
         source_test = is_source_test_title(title, str(row.get("state", "")))
+        withdrawal_notice = (
+            parse_withdrawal_notice(introduced) if str(row.get("state", "")) == "MO" else None
+        )
         draft_request = draft_requests[position]
         if draft_request:
             reason = "source_draft_request"
@@ -137,6 +142,8 @@ def classify_bills(bills, classifier, *, batch_size: int = 8,
             reason = "source_test_record"
         elif shell:
             reason = "procedural_shell"
+        elif withdrawal_notice is not None:
+            reason = "withdrawal_notice_no_policy_text"
         else:
             reason = "insufficient_evidence" if len(text.strip()) < min_title_chars else None
         rows.append({
@@ -144,6 +151,10 @@ def classify_bills(bills, classifier, *, batch_size: int = 8,
             "topic": None, "score": None, "margin": None, "abstention_reason": reason,
             "procedural_shell": shell, "source_test_record": source_test,
             "source_draft_request": draft_request,
+            "source_withdrawal_notice": withdrawal_notice is not None,
+            "withdrawal_notice_observation": (
+                json.dumps(withdrawal_notice) if withdrawal_notice is not None else None
+            ),
             "classification_text": text,
             "input_fields": json.dumps(input_fields),
             "record_id": row.get("bill_id"),

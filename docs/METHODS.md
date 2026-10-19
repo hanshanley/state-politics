@@ -735,6 +735,20 @@ original title, summary and introduced text remain unchanged in the source colum
 identify what actually reached the classifier. Insufficient introduced text abstains
 rather than silently falling back to a longer potentially later title/summary.
 
+The reviewed Missouri 2024 Senate withdrawal-only cover is an explicit
+`withdrawal_notice_no_policy_text` abstention, not a topic decision or an exclusion
+of the historical measure from the coverage denominator. Recognition requires the
+complete observed cover grammar: the second regular session of the 102nd General
+Assembly, `[WITHDRAWN]`, the Senate bill header, sponsor, withdrawal print code,
+secretary and terminal withdrawal notice, with no appended policy provisions.
+It is not a general keyword filter or a claim to recognize every publisher format.
+Exact introduced text, hash and native header/code offsets survive record exports,
+separately from unchanged canonical identity fields; a conflicting identifier is
+not repaired. Title/summary metadata cannot rescue the missing original policy
+text. A substantive bill mentioning withdrawals is not rejected by this guard.
+Neither recognition nor abstention certifies an introduction date, source-version
+alignment or filing-time party.
+
 If introduced text is absent or whitespace-only, the previous title-plus-summary input
 remains available as a separately identified lower-evidence tier; this does **not**
 certify that either field was available at filing. Reviewed publisher system-test

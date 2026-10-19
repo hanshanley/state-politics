@@ -4,8 +4,8 @@ The existing figures and analytical conclusions are **legacy, not revalidated fi
 The current changes repair infrastructure and preserve evidence; they do not certify a
 replacement classifier or establish complete contemporary coverage.
 
-**October 19, 2026 checkpoint:** actual audit **v42** binds **99 completed research
-and accounting packets**. The canonical audit still has **299/333 passing checks**
+**October 19, 2026 checkpoint:** actual audit **v43** binds **100 completed research
+and accounting packets**. The canonical audit has **300/334 passing checks**
 and **34 missing-artifact failures**. Known source, collection and scientific failures
 remain explicit; this is not a completed project or a certified classifier.
 
@@ -20,6 +20,49 @@ remain explicit; this is not a completed project or a certified classifier.
 | Labels | External CAP files and two state-reference CSVs recovered; exact-context Florida candidates and complete bounded overlap witnesses are frozen without label admission. Split/group/text and reviewed-platform source-body checks retain explicit label provenance. | Modern Florida external titles/subtopics are missing; Pennsylvania rows stop in 2016. Annotation provenance, source permissions, adapted-topic compatibility, bill families and independent state-domain references remain unresolved. |
 | Evaluation | Checkpoint-bound training/evaluation split isolation, development-only temperature/threshold selection, exact evidence joins, abstention accounting, per-topic and subgroup metrics. | Reviewer arrangement, frozen empirical gates, independent target tests and clustered uncertainty. No checkpoint can be certified by changing a status field. |
 | Companion | Local-only preview v9 exposes all 1,559 recovery captures, 119 failures and 61 alternative extraction identities across 55 OCR bodies, three DOCX bodies and one native-block body, alongside the 2,091 historical documents. The source ledger includes the corrected Arizona and Alaska registry rows. All 100 organization rows remain unresolved. | Audited classification/analysis exports, redistribution review and eventual report; no production integration is authorized. |
+
+## Withdrawal-only source inputs: production evidence abstention
+
+The production bill-input path now recognizes the complete reviewed Missouri
+2024 Senate withdrawal-only cover and returns
+`withdrawal_notice_no_policy_text` before topic inference. These are missing
+policy-text inputs, **not non-policy classifications or exclusions of historical
+measures from the coverage denominator**. No unaligned title/summary fallback is
+allowed. Full introduced-text candidates, hashes, original canonical fields and
+native header/code observations remain in record exports.
+
+Recognition is deliberately narrow: the observed session/assembly, explicit
+withdrawal markers, Senate header, sponsor, W print code and secretary must occupy
+the complete text. Appended policy provisions and ordinary withdrawal-related
+legislation do not match. A differing canonical identifier is retained, not
+silently repaired from the observed header. Other states are outside this parser's
+scope; this is not a claim to detect every non-substantive publisher format.
+
+`data/processed/missouri-withdrawal-input-guard-verification-v1/` independently
+re-extracts all five complete one-page PDFs for SB961, SB1121, SB1122, SB1171 and
+SB1339, matches every character to the retained texts and exercises the production
+input path with the exact canonical contexts. All five abstain without a model
+forward pass. The packet preserves the full parent source snapshot, candidate
+inputs, guard outputs and exact production-source bindings. Its manifest SHA-256
+is `63cc130a8d00d81ce7efffc5bfc18ac53274a2a3a50dabdc922a006b1987bbe0`.
+The separate read-only replay passed without changing packet bytes. Focused
+regressions also retain notices in coverage and full downloads rather than
+inflating the classification rate by removing missing-evidence cases.
+
+These are guard probes, not admitted predictions. No canonical introduced text,
+labels, model weights, measured accuracy, historical affiliations, analytical
+findings or publication files changed. Zero additional substantive original
+policy documents were recovered by this repair.
+
+Actual canonical audit v43 binds this guard packet and its production source,
+tests and replay logs alongside the 99 previously completed packets. Its manifest
+SHA-256 is `37c0b7423abf2659ccd7eb4a36c79f26d02dee48d3a539e7b1cabf758eede812`.
+The audit completed with return code **1**, **300/334** passing checks and the
+same **34** missing-artifact failures. A complete report comparison against v42
+finds only the passing/total check counts changed; artifact results, computed
+results, scientific non-certification and every failure are unchanged.
+The frozen documentation precedes this result paragraph and top-line update.
+The ignored source/probe/audit packets remain local, not backed up by a Git push.
 
 ## Official Washington bill-source recovery
 

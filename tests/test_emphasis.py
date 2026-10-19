@@ -315,6 +315,126 @@ def test_bill_input_retains_title_summary_fallback_and_exact_source_whitespace()
     assert build_bill_input(" ", "\n") == ("", [])
 
 
+def _missouri_withdrawal_notice(number=961, code="3923S.01W", sponsor="BECK"):
+    return (
+        " \nSECOND REGULAR SESSION \n[WITHDRAWN] \n"
+        f"SENATE BILL NO. {number} \n102ND GENERAL ASSEMBLY  \n"
+        f"INTRODUCED BY SENATOR {sponsor}. \n"
+        f"{code} KRISTINA MARTIN, Secretary   \nWITHDRAWN \n\uf0fc "
+    )
+
+
+def test_missouri_withdrawal_observation_requires_the_complete_native_notice():
+    from state_politics.bills.missouri import parse_withdrawal_notice
+
+    text = _missouri_withdrawal_notice()
+    observation = parse_withdrawal_notice(text)
+    assert observation["identifier"] == "SB 961"
+    assert observation["source_text"] == text
+    assert text[observation["source_start"]:observation["source_end"]] == text
+    assert text[
+        observation["print_code_source_start"]:observation["print_code_source_end"]
+    ] == "3923S.01W"
+    assert parse_withdrawal_notice(text.replace(".01W", ".01I")) is None
+    assert parse_withdrawal_notice(text + "\nSection 1. Fund public schools.") is None
+    assert parse_withdrawal_notice(
+        "An Act concerning the circumstances under which a claim may be WITHDRAWN."
+    ) is None
+
+
+def test_withdrawal_only_covers_abstain_without_metadata_fallback_or_source_loss():
+    import hashlib
+    import json
+
+    from state_politics.analysis.revealed import classify_bills
+
+    class UncalledClassifier:
+        def predict_many(self, *args, **kwargs):
+            raise AssertionError("withdrawal-only notices must not reach topic inference")
+
+    cases = [(961, "3923S.01W", "BECK"), (1121, "3268S.01W", "CARTER"),
+             (1122, "3275S.01W", "CARTER"), (1171, "4003S.01W", "CARTER"),
+             (1339, "5203S.01W", "MOON")]
+    bills = pd.DataFrame([{
+        "bill_id": f"notice-{number}", "identifier": f"SB {number}", "state": "MO",
+        "title": "Funding public schools and teacher recruitment statewide.",
+        "summary": "A later description that must not replace missing original wording.",
+        "introduced_text": _missouri_withdrawal_notice(number, code, sponsor),
+    } for number, code, sponsor in cases])
+    result = classify_bills(bills, UncalledClassifier())
+    pd.testing.assert_frame_equal(result[bills.columns], bills)
+    assert result.source_withdrawal_notice.all()
+    assert result.classification_status.eq("abstained").all()
+    assert result.abstention_reason.eq("withdrawal_notice_no_policy_text").all()
+    assert result.topic.isna().all() and result.n_chunks.eq(0).all()
+    assert result.score_type.eq("not_scored").all()
+    for row in result.to_dict("records"):
+        assert row["classification_text"] == row["introduced_text"]
+        assert row["input_sha256"] == hashlib.sha256(row["introduced_text"].encode()).hexdigest()
+        assert json.loads(row["input_fields"]) == ["introduced_text"]
+        assert json.loads(row["withdrawal_notice_observation"])["identifier"] == row["identifier"]
+
+
+def test_withdrawal_guard_is_state_scoped_and_does_not_repair_source_identity():
+    import json
+
+    from state_politics.analysis.revealed import classify_bills
+
+    notice = _missouri_withdrawal_notice()
+    substantive = notice + "\nSection 1. Appropriate funding for public school instruction."
+
+    class StubClassifier:
+        def predict_many(self, texts, **kwargs):
+            assert texts == [substantive, notice]
+            return [(6, 0.9, 0.3)] * 2
+
+    bills = pd.DataFrame([
+        {"state": "MO", "identifier": "SB 961", "introduced_text": substantive},
+        {"state": "TX", "identifier": "SB 961", "introduced_text": notice},
+        {"state": "MO", "identifier": "SB 99999", "introduced_text": notice},
+    ]).assign(title="Unaligned title metadata must not repair an evidence mismatch.")
+    result = classify_bills(bills, StubClassifier())
+    pd.testing.assert_frame_equal(result[bills.columns], bills)
+    assert result.source_withdrawal_notice.tolist() == [False, False, True]
+    assert result.classification_status.tolist() == ["classified", "classified", "abstained"]
+    observation = json.loads(result.iloc[2].withdrawal_notice_observation)
+    assert observation["identifier"] == "SB 961"
+    assert result.iloc[2].identifier == "SB 99999"
+
+
+def test_withdrawal_evidence_abstentions_remain_in_population_and_downloads(tmp_path):
+    from state_politics.analysis.revealed import count_topics_by_state
+
+    policy = "Establish procedures under which benefit claims may be withdrawn."
+
+    class StubClassifier:
+        def predict_many(self, texts, **kwargs):
+            assert texts == [policy]
+            return [(6, 0.9, 0.3)]
+
+    bills = pd.DataFrame([
+        {"bill_id": "notice", "introduced_text": _missouri_withdrawal_notice()},
+        {"bill_id": "policy", "introduced_text": policy},
+    ]).assign(
+        state="MO", year=2024, sponsor_party="D",
+        title="An available title does not replace unavailable original policy text.",
+    )
+    path = tmp_path / "bills.parquet"
+    bills.to_parquet(path, index=False)
+    counts, totals, coverage = count_topics_by_state(
+        path, StubClassifier(), progress=None, predictions_dir=tmp_path / "predictions",
+    )
+    assert totals == {"n_bills": 2, "n_attributed": 2, "n_classified": 1}
+    assert counts["n_bills"].tolist() == [1]
+    assert coverage.iloc[0]["n_substantive_attributed"] == 2
+    assert coverage.iloc[0]["n_abstained"] == 1
+    assert coverage.iloc[0]["classification_rate"] == 0.5
+    exported = pd.read_parquet(tmp_path / "predictions" / "MO.parquet")
+    pd.testing.assert_frame_equal(exported[bills.columns], bills)
+    assert exported.classification_status.tolist() == ["abstained", "classified"]
+    assert exported.source_withdrawal_notice.tolist() == [True, False]
+
+
 def test_bill_prediction_export_retains_learned_rejection_and_output_map(tmp_path):
     import json
 
