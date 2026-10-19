@@ -259,6 +259,16 @@ although none exactly or normalization-matches an existing input. They cannot be
 as a fresh independent test or admitted to training merely because the selected spans
 differ. No taxonomy bytes, frozen references, model weights or thresholds changed.
 
+Reviewed target-platform labels now require the retained source body's SHA-256. Label
+validation rejects a shared platform body across training, development, test or challenge
+splits, even when passages, URLs and group IDs differ. This adds a document-level guard
+to the existing group and normalized-text checks. Multiple passages in the same split
+remain allowed. A shared legislative snapshot hash is not treated as one bill document.
+Both frozen pilot label manifests still pass; their scores and admission status are
+unchanged. Checks cover records loaded together, not independently supplied evaluation
+files versus a checkpoint's training corpus. Byte-distinct platform versions, paraphrases
+and legislative source families still require separate lineage review.
+
 ### Legacy analytical pipeline (not revalidated)
 
 With both platform corpora in hand, `state_politics.analysis` segments every document into

@@ -11,9 +11,26 @@ replacement classifier or establish complete contemporary coverage.
 | Sponsorship | Party attribution uses validated historical memberships and a first-action date proxy; unresolved primary sponsors block D/R assignment. | Rebuild source bills and quantify attribution changes; the proxy is not an exact filing/sponsorship date. |
 | Bills | October snapshot extracted: 1,090,369 source-context measures across all 50 states, 5,028,893 sponsorships, 9,002,451 actions and 873,980 vote events. All eleven tables have recorded hashes/counts. | Official-source reconciliation, historical affiliations and filing-time text review. Full extraction is not a certified source universe or analytical denominator. |
 | Classification | Two actual official English ModernBERT-base fine-tuning runs saved and reloaded: external-only policy training, then 6,001-unit joint target/rejection training with 21 policy outputs plus null. | Both candidates still make 27 correct decisions in the same 50 development records. Learned rejection reduces false acceptance but loses correct policy decisions; neither candidate is approved for production. |
-| Labels | External CAP files recovered; split/group/exact-text checks and explicit reviewed-label provenance are implemented. | Source permissions, adapted-topic compatibility, near-duplicate families and reviewed state-domain training/development/test labels. |
+| Labels | External CAP files recovered; split/group/exact-text and reviewed-platform source-body checks plus explicit reviewed-label provenance are implemented. | Source permissions, adapted-topic compatibility, near-duplicate families and reviewed state-domain training/development/test labels. |
 | Evaluation | Development-only temperature/threshold selection, exact evidence joins, abstention accounting, per-topic and subgroup metrics. | Reviewer arrangement, frozen empirical gates, independent target tests and clustered uncertainty. No checkpoint can be certified by changing a status field. |
 | Companion | Local-only preview v6 exposes all 1,503 recovery captures, 114 failures, 51 OCR bodies and three DOCX main-document alternatives, alongside the 2,091 historical documents. The source ledger includes the corrected Arizona registry. All 100 organization rows remain unresolved. | Audited classification/analysis exports, redistribution review and eventual report; no production integration is authorized. |
+
+## Platform-document split guard
+
+The label loader previously accepted distinct passages from the same platform body in
+different splits when their group IDs differed. A reproduced regression now fails closed:
+reviewed target-platform rows require a source-body SHA-256, and a shared body cannot
+cross train/dev/test/challenge splits, regardless of URL or group alias. Same-split
+passages remain valid; multiple bills in one source snapshot are not collapsed into
+one document. Preparation, training and evaluation all use this shared loader.
+
+Both complete frozen pilot manifests still validate: **5,945** external-only rows and
+**6,051** joint target/rejection rows. No old labels, predictions, scores or weights
+changed, and no new training run was started. The ModernBERT test suite passes **48**
+cases. The check applies only to rows loaded together; it does not establish disjointness
+between a separately supplied evaluation file and a checkpoint's training corpus.
+Byte-distinct versions, paraphrases, source-family review and independent gold remain
+unresolved. Evaluation reports now disclose the supplied-manifest scope explicitly.
 
 ## All-organization response recovery and current explorer checkpoint
 

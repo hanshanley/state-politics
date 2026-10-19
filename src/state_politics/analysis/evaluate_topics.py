@@ -253,6 +253,7 @@ def main(argv=None):
         "reviewer_types": dict(Counter(row["reviewer_type"] for row in labels)),
         "limitations": [
             "review provenance and representative sampling require separate audit",
+            "split checks cover the supplied labels, not separately loaded training evidence",
             "Wilson intervals treat rows as independent; clustered uncertainty remains required",
             "development selection is not held-out certification",
         ],

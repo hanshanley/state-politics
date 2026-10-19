@@ -86,7 +86,16 @@ def load_examples(path: Path | str, codes: list[int]) -> list[dict]:
             raise ValueError(f"row {number}: reviewed text hash mismatch")
         row["text_sha256"] = text_hash
         fingerprint = hashlib.sha256(normalized.encode()).hexdigest()
-        for kind, key in (("group", row["group_id"]), ("text", fingerprint)):
+        identities = [("group", row["group_id"]), ("text", fingerprint)]
+        if row["label_origin"] == "reviewed_target" and row["domain"] == "plank":
+            source_hash = row.get("source_sha256")
+            if (
+                not isinstance(source_hash, str)
+                or re.fullmatch(r"[a-f0-9]{64}", source_hash) is None
+            ):
+                raise ValueError(f"row {number}: reviewed platform source body hash required")
+            identities.append(("platform source", source_hash))
+        for kind, key in identities:
             previous = owners.setdefault((kind, key), row["split"])
             if previous != row["split"]:
                 raise ValueError(f"row {number}: {kind} leakage across {previous}/{row['split']}")

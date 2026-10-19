@@ -321,6 +321,53 @@ def test_label_manifest_does_not_promote_predictions_to_independent_labels(tmp_p
         load_examples(path, [1, 6])
 
 
+@pytest.mark.parametrize("split", ["dev", "test", "challenge"])
+def test_platform_source_cannot_cross_splits_under_different_urls_or_groups(tmp_path, split):
+    rows = [
+        _label(
+            "train-span", "Expand public schools with stable funding.", domain="plank",
+            label_origin="reviewed_target", source_sha256="a" * 64,
+        ),
+        _label(
+            "held-out-span", "Protect clean drinking water for every community.", split,
+            domain="plank", source_url="https://other.test/platform-copy.pdf",
+            source_sha256="a" * 64, topic=1,
+        ),
+    ]
+    path = tmp_path / "labels.jsonl"
+    path.write_text("".join(json.dumps(row) + "\n" for row in rows))
+    with pytest.raises(ValueError, match="platform source leakage"):
+        load_examples(path, [1, 6])
+
+
+def test_platform_source_grouping_does_not_merge_shared_bill_snapshots(tmp_path):
+    rows = [
+        _label("train-span", "Expand public schools with stable funding.",
+               domain="plank", label_origin="reviewed_target", source_sha256="a" * 64),
+        _label("same-document", "Invest in teacher training programs.",
+               domain="plank", label_origin="reviewed_target", source_sha256="a" * 64),
+        _label("held-out", "Protect clean drinking water.", "dev",
+               domain="plank", source_sha256="b" * 64, topic=1),
+        _label("bill-train", "An act providing public school funding.",
+               label_origin="reviewed_target", source_sha256="c" * 64),
+        _label("bill-test", "An act to protect drinking water.", "test",
+               source_sha256="c" * 64, topic=1),
+    ]
+    path = tmp_path / "labels.jsonl"
+    path.write_text("".join(json.dumps(row) + "\n" for row in rows))
+    assert len(load_examples(path, [1, 6])) == 5
+
+
+@pytest.mark.parametrize("source_hash", [None, "", "not-a-source-hash", 42])
+def test_reviewed_platform_labels_require_a_source_body_hash(tmp_path, source_hash):
+    row = _label("one", "Invest in public schools.", "dev",
+                 domain="plank", source_sha256=source_hash)
+    path = tmp_path / "labels.jsonl"
+    path.write_text(json.dumps(row) + "\n")
+    with pytest.raises(ValueError, match="platform source body hash"):
+        load_examples(path, [1, 6])
+
+
 def test_training_rejection_requires_reviewed_evidence_and_an_admissible_reason(tmp_path):
     path = tmp_path / "labels.jsonl"
     valid = _label(
