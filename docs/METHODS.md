@@ -492,6 +492,26 @@ parallel HTML/PDF captures, pages and characters are not unique-bill or policy-v
 denominators. This recovery neither changes the original metadata API's ambiguities nor
 certifies all-state full-text coverage.
 
+Native universe reconciliation must also precede interpreting missing document URLs.
+Montana's official 2024 drafting manual distinguishes an LC drafting-request number
+from the House/Senate identity assigned at introduction. Its native API publishes both
+identities on one record. Consequently, LC rows cannot be treated as additional formal
+filings merely because an imported source labels them `bill`, nor can every LC row be
+declared unintroduced. The retained four-cohort reconciliation preserves all 18,403
+baseline rows and 15,830 native objects, including 4,585 LC/formal baseline aliases.
+Its 7,641 no-URL LC rows comprise 7,488 native null-formal observations, 152 native
+formal matches and one unresolved identity. These categories are not interchangeable
+text-collection failures.
+
+Native pagination is replayed against response metadata rather than inferred from
+the client implementation. For both Montana API families, `offset` denotes a page
+index; row-offset-style enumeration can return empty pages while omitting most of the
+population. Every declared page, raw object, explicit cohort, request body and hash
+is retained, with an independent source/alias replay. Four unmatched source identities
+remain unresolved in the initial sidecar. Filing denominators, evaluation groups and
+event-time text/party evidence still require a consistent identity contract; no source
+alias is silently merged or admitted to training/analysis.
+
 ---
 
 ---

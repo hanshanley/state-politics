@@ -776,6 +776,83 @@ the repaired bill-input/export module and its regressions. Its actual **exit 1 /
 No unlabelled candidate replaces a missing canonical analytical artifact. Audit manifest:
 `f2acd02de1bb9e9888ca125c9bbdebcad4374325a1f485668b1887d24b23736e`.
 
+### Native Montana universe and draft/formal identity reconciliation
+
+The largest apparent no-document-URL population needed an identity audit before more
+text collection: all **7,641** Montana rows without usable retained URLs have LC
+identifiers. The official 2024 drafting manual, physical page 65, distinguishes the
+LC request number used during drafting from the House/Senate number assigned at
+introduction. An LC source record does **not** establish another introduced filing,
+but neither does an LC identifier establish that its underlying request was never
+introduced.
+
+The current statistics and drafting-procedure URLs returned HTTP 200 **maintenance
+pages**, not statistics or procedural evidence. Their complete bodies and receipts
+remain retained with that disposition. The actual Bill Explorer HTML links a public
+client bundle that declares separate archive/current search APIs and session registries.
+Following those exact contracts recovered all **15,830 native records across 18 complete
+pages**, explicitly selecting the 2019, 2021, 2023 and 2025 regular sessions. The registry's
+future 2027 cohort remains in the original response but is not admitted to this window.
+Every POST body, URL, retrieval receipt, native object and page position is preserved.
+
+| Session | Native request/bill records | Native formal measure identities | Baseline source records |
+| --- | ---: | ---: | ---: |
+| 2019 | 3,325 | 1,309 | 1,309 |
+| 2021 | 3,367 | 1,313 | 4,600 |
+| 2023 | 4,643 | 1,698 | 6,335 |
+| 2025 | 4,495 | 1,759 | 6,159 |
+| Total | 15,830 | 6,079 | 18,403 |
+
+The native `offset` parameter is a **page index**, not a row offset. Retained diagnostic
+requests using `limit=100&offset=100` report page 100 and physical offset 10,000 with
+empty content for both API families. Complete collection instead enumerates page
+indices, verifies declared totals, sizes, first/last flags and unique LC identities,
+and uses bounded 1,000-row pages to reduce requests. Copying the client bundle's
+row-offset-style loops would silently skip source records.
+
+The new `bills/montana.py` reconciler preserves every original baseline field/order,
+full native JSON and LC/formal aliases. **18,399** baseline rows have unique native
+matches; four exact source identities remain unmatched: 2021 `LC 3368`, 2023 `SR 55`,
+and 2025 `SB 6` / `SB 85`. Nonmatches remain explicit rather than being guessed from
+similar titles or silently renumbered. **4,585 LC baseline rows** share a native record
+with an already retained formal baseline identity; treating them as independent filings
+would double-count that underlying identity. Another **5,681** LC source rows labelled
+`bill` have native null formal-identity fields. Imported classifications are preserved,
+not treated as a reliable measure-stage contract.
+
+Of the 7,641 no-URL LC rows, **7,488** match native records with no formal identity,
+**152** match native formal identities, and **one** remains unmatched. The 152 retain
+their LC/formal relationships rather than disappearing behind a blanket draft exclusion.
+Native null fields are retrieval-time observations, not a historical proof of
+non-introduction. All 6,079 native formal identities have a corresponding formal
+baseline key; this establishes identity coverage for these retained lists, **not full
+text, correct versions, historical party or policy coverage**.
+
+Seven focused Montana cases cover cross-family parsing, source/raw-object retention,
+LC/formal aliases, both kinds of ambiguity, partial pagination, wrong offsets,
+duplicate drafts and inconsistent half-formal identities. Independent verification
+reconstructs every one of the **15,830** native objects/positions, **18,403** source
+decisions and **7,641** no-URL decisions without the producer's parsing/matching
+helpers, and independently checks the original canonical/reference populations,
+request payloads, methods, URLs and hashes.
+
+- Native reconciliation manifest: `0e922cfdbdfca5c50315fd2c184498fca40a999e0ebfc226536dc52dc34b07d7`.
+- Independent replay manifest: `75d481e71481a714ace888bf74507a40160626c29a0eac72f744d828dfe5c926`.
+
+These are source-bound research sidecars, not deleted records, new filings, classifier
+predictions or scientific admission. Canonical filing/outcome/election denominators
+still need a consistent identity-stage contract and alias adjudication; the existing
+classification-only filters are not sufficient. No canonical analytical table, label,
+model weight or threshold was regenerated. The companion remains unpublished. Full raw
+evidence remains local/Git-ignored and is not backed up by a code/documentation push.
+
+Canonical audit checkpoint **v29** verifies **61** completed research packets and
+archives the new Montana module/regressions. Its actual result is **exit 1 /
+34 failures among 330 checks**; all 34 failure entries and every report field other
+than the two successful additional checks remain unchanged from v28. No research
+sidecar replaces a missing canonical artifact. Audit manifest:
+`0962df4165ee8b018d9ec9f923b6414e5cb960129b5124a637d9131a70b24e6f`.
+
 ## Training reservation enforcement
 
 The training CLI now accepts an explicit `--source-reservation` pointing to a
