@@ -55,6 +55,7 @@ __all__ = [
 #: statements of position; a legislative-priorities agenda is the narrower "what we intend to
 #: pass this session" list. They are kept distinct so they can be analysed together or apart.
 DOC_TYPES = ("platform", "resolutions", "principles", "legislative_priorities")
+GAP_CAUSES = frozenset({"broken_site", "client_rendered", "summary_only", "not_confirmed"})
 
 #: Phrases characteristic of a platform's prose. A platform declares positions; a news post
 #: about a platform does not.
@@ -79,7 +80,7 @@ _DESPACED_PHRASE_RE = re.compile("|".join(_DESPACED_PHRASES), re.I)
 #: this excludes landing pages that merely link to one.
 MIN_CHARS = 2500
 
-#: Hand-checked explanations for the parties with no platform, joined into the gap report.
+#: Dated reviewed/legacy observations for unresolved coverage, joined into the gap report.
 _GAP_FINDINGS_PATH = Path(__file__).resolve().parents[3] / "conf" / "platform_gaps.yml"
 
 _BLOCK_TAGS = ("script", "style", "nav", "header", "footer")
@@ -698,13 +699,11 @@ def gap_report(
 
 
 def load_gap_findings(path: Path | str | None = None) -> dict[tuple[str, str], dict]:
-    """Hand-checked explanations for why a party has no platform, keyed by (state, party).
+    """Load dated coverage observations without converting bounded searches into absence.
 
-    The pipeline can report that nothing was collected but not why, and the three reasons that
-    matter - publishes nothing, site is broken, platform exists but needs a JS runtime - are
-    not distinguishable from the outside. Those verdicts come from probing each site directly,
-    so they live in version-controlled config and are joined in here. Keeping them in the
-    generated CSV instead would delete them on the next run.
+    Observed failures, short statements and unresolved versions remain distinct. Their
+    recorded dates and source evidence survive report regeneration; none establishes
+    that an organization publishes no platform.
     """
     import yaml
 
@@ -712,11 +711,19 @@ def load_gap_findings(path: Path | str | None = None) -> dict[tuple[str, str], d
     if not path.exists():
         return {}
     raw = yaml.safe_load(path.read_text(encoding="utf-8")) or {}
-    return {
+    findings = {
         (state, party): entry
         for state, parties in raw.items()
         for party, entry in (parties or {}).items()
     }
+    for (state, party), entry in findings.items():
+        cause = entry.get("cause") if isinstance(entry, dict) else None
+        if not isinstance(cause, str) or cause not in GAP_CAUSES:
+            raise ValueError(
+                f"{state}-{party}: unsupported gap cause {cause!r}; "
+                "a bounded search cannot establish platform absence; use not_confirmed"
+            )
+    return findings
 
 
 def _load_candidates(path: Path, *, rescore: bool = True

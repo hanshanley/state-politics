@@ -18,6 +18,7 @@ import pytest
 from state_politics.platforms.collect import (
     _BLOCK_TAGS,
     DOC_TYPES,
+    GAP_CAUSES,
     MIN_CHARS,
     CollectedDocument,
     _load_candidates,
@@ -41,9 +42,6 @@ from state_politics.platforms.collect import (
 )
 from state_politics.platforms.discover import STRONG_SCORE, Candidate
 from state_politics.provenance import ProvenanceLog, sha256_bytes, sha256_file
-
-_GAP_CAUSES = {"no_platform_published", "broken_site", "client_rendered",
-               "summary_only", "not_confirmed"}
 
 PLATFORM_PROSE = (
     "We believe in limited government. We support the right of every citizen to vote. "
@@ -695,8 +693,19 @@ def test_gap_findings_are_version_controlled_not_generated():
         assert len(state) == 2 and party in {"D", "R"}, f"bad key {(state, party)}"
         assert entry.get("finding"), f"{state}-{party} has no prose finding"
         cause = entry.get("cause")
-        assert cause in _GAP_CAUSES, f"{state}-{party} has cause {cause!r}"
+        assert cause in GAP_CAUSES, f"{state}-{party} has cause {cause!r}"
         assert entry.get("checked"), f"{state}-{party} has no checked date"
+
+
+@pytest.mark.parametrize("cause", ["no_platform_published", "healthy_site", None])
+def test_gap_loader_rejects_absence_claims_and_unknown_dispositions(tmp_path, cause):
+    path = tmp_path / "gaps.yml"
+    path.write_text(json.dumps({"FL": {"R": {
+        "cause": cause, "checked": "2026-07-29",
+        "finding": "A bounded search did not locate a platform.",
+    }}}))
+    with pytest.raises(ValueError, match="bounded search cannot establish platform absence"):
+        load_gap_findings(path)
 
 
 def test_gap_findings_only_describe_parties_in_the_registry():

@@ -11,13 +11,14 @@
 # explanation survives regeneration and can be reviewed and re-checked like any other input.
 #
 # `finding` is prose shown in the gap report. `cause` is a coarse machine-readable bucket:
-#   no_platform_published  - the site is healthy; it simply has no platform document
 #   broken_site            - the site is down, suspended, or serving errors
 #   client_rendered        - a platform page exists but its text requires a JS runtime
 #   summary_only           - the party publishes a short position blurb, not a platform
 #   not_confirmed          - source review has not established an operative platform
 #
 # `checked` is the UTC date the probe was run, so a stale explanation is visible as stale.
+# A bounded search cannot establish "no_platform_published"; that legacy bucket is retired.
+# Rewording a July observation does not constitute a new source probe or change its date.
 
 AK:
   R:
@@ -44,7 +45,10 @@ AL:
   D:
     cause: not_confirmed
     checked: 2026-07-29
-    finding: candidates fetched but none read as a platform
+    finding: >-
+      the July 29 probe recorded candidate retrievals without identifying a platform.
+      This legacy observation does not establish present source coverage or absence of
+      a published platform; operative text and version remain unverified.
 CT:
   R:
     cause: summary_only
@@ -60,13 +64,14 @@ CT:
         content_sha256: 2840a19511ed4f85f407f252acdc4b57f430cd3140e063a533e12a1cb7b191d5
 FL:
   R:
-    cause: no_platform_published
+    cause: not_confirmed
     checked: 2026-07-29
     finding: >-
-      /platform soft-404s to the site home page ("Home - Florida GOP", 360 words of
-      navigation); the party's own WordPress index lists 54 pages and no platform among them,
-      and a full-text search of pages, posts and media for "platform", "principles" and
-      "party-platform" returns nothing. The party publishes no platform document.
+      the July 29 probe reported that /platform redirected to homepage navigation,
+      a 54-page WordPress index did not list a platform, and selected keyword searches
+      found none. These bounded, legacy observations do not establish that no platform
+      is published or determine the present operative version. The prior categorical
+      absence claim is withdrawn; no new retrieval is implied by this correction.
 IL:
   D:
     cause: summary_only
@@ -97,19 +102,22 @@ KY:
         role: short_party_position_statement
         content_sha256: f42ae8e71a85d7e3d1df91edb9debbd10026bdb44d1a95fd41b88a3776eb36a4
   R:
-    cause: summary_only
+    cause: not_confirmed
     checked: 2026-07-31
     finding: >-
-      publishes a 453-word "Our Party" statement, but no platform document. Every archived PDF
-      and HTML page on rpk.org and known former domains was enumerated and tested.
+      the July 31 probe reported a 453-word Our Party statement and an archive search.
+      It did not establish exhaustive archive coverage or absence of another platform.
+      This statement's current content, adoption and operative version remain unverified;
+      the former universal enumeration and absence claims are withdrawn.
 LA:
   D:
-    cause: no_platform_published
+    cause: not_confirmed
     checked: 2026-07-29
     finding: >-
-      /issues is an archive listing, not a platform. The party's own WordPress index lists no
-      platform page, and searching pages, posts and media for "platform" returns only an
-      unrelated hosting-provider page. The party publishes no platform document.
+      the July 29 probe reported an /issues archive listing and selected WordPress
+      index/search results without identifying a platform. These bounded, legacy
+      observations do not establish absence of a published platform or its present
+      operative version. The prior categorical absence claim is withdrawn.
 MA:
   R:
     cause: not_confirmed
@@ -135,9 +143,12 @@ MA:
         content_sha256: c413378fdaa971916fecaa1592e789976e42b3010d0cc4843ea5c3adcf2db923
 MD:
   D:
-    cause: no_platform_published
+    cause: not_confirmed
     checked: 2026-07-29
-    finding: no substantial platform page found
+    finding: >-
+      the July 29 probe did not identify a substantial platform page. That legacy search
+      outcome does not establish absence of published policy text or determine a
+      platform's current adoption and operative version.
   R:
     cause: not_confirmed
     checked: 2026-10-18
@@ -155,24 +166,35 @@ MD:
         content_sha256: b07578241edc5f29bde6e876a85e78581f663000c3aeadb0467c1882c15a4c87
 MI:
   R:
-    cause: summary_only
+    cause: not_confirmed
     checked: 2026-07-29
     finding: >-
-      /platform soft-404s; /where-we-stand is a 2.5 KB mission statement, not a platform
+      the July 29 probe reported a /platform soft-404 and a 2.5 KB mission statement at
+      /where-we-stand. This legacy observation is not a current source/version review
+      and does not establish absence of another platform.
 NJ:
   D:
-    cause: summary_only
+    cause: not_confirmed
     checked: 2026-07-29
-    finding: /platform is a 1.4 KB summary page, not a platform document
+    finding: >-
+      the July 29 probe described /platform as a 1.4 KB summary page. Its current text,
+      adoption and operative version have not been established by that legacy note;
+      another platform's existence or absence remains unresolved.
   R:
-    cause: no_platform_published
+    cause: not_confirmed
     checked: 2026-07-29
-    finding: no substantial platform page found
+    finding: >-
+      the July 29 probe did not identify a substantial platform page. That bounded,
+      legacy search does not establish absence of a published platform or determine
+      current operative policy.
 NY:
   R:
-    cause: no_platform_published
+    cause: not_confirmed
     checked: 2026-07-29
-    finding: no substantial platform page found
+    finding: >-
+      the July 29 probe did not identify a substantial platform page. That bounded,
+      legacy search does not establish absence of a published platform or determine
+      current operative policy.
 PA:
   D:
     cause: not_confirmed
@@ -221,12 +243,14 @@ PA:
         role: byte_identical_copy_not_verified_adopted_version
         content_sha256: da1a9a818e55861436546f91ce4f2b5c7e196eb67e2db67ba7cb9b1aa975f5be
   R:
-    cause: summary_only
+    cause: not_confirmed
     checked: 2026-07-30
     finding: >-
-      publishes a 509-word "Our Party" statement at /home/about -- which is what Ballotpedia
-      links to as this party's platform -- but no platform document. Every archived PDF and
-      HTML page on pagop.org was enumerated and tested; none is a platform.
+      the July 30 probe reported a 509-word Our Party statement at /home/about and
+      a secondary-source link to it, plus an archive search. Neither a short statement,
+      that link nor the bounded search establishes absence of another platform.
+      Current text, adoption and operative version remain unverified; the former
+      exhaustive-enumeration and absence claims are withdrawn.
 VA:
   R:
     cause: summary_only

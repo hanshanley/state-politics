@@ -13,7 +13,41 @@ replacement classifier or establish complete contemporary coverage.
 | Classification | Two actual official English ModernBERT-base fine-tuning runs saved and reloaded: external-only policy training, then 6,001-unit joint target/rejection training with 21 policy outputs plus null. | Both make 27/50 pooled development decisions, but 40 cases are bills. Platform-only decisions worsen from 5/10 to 4/10; only six target-platform training positives span five topics and two Democratic sources. Neither candidate is approved. |
 | Labels | External CAP files recovered; split/group/exact-text and reviewed-platform source-body checks plus explicit reviewed-label provenance are implemented. | Source permissions, adapted-topic compatibility, near-duplicate families and reviewed state-domain training/development/test labels. |
 | Evaluation | Checkpoint-bound training/evaluation split isolation, development-only temperature/threshold selection, exact evidence joins, abstention accounting, per-topic and subgroup metrics. | Reviewer arrangement, frozen empirical gates, independent target tests and clustered uncertainty. No checkpoint can be certified by changing a status field. |
-| Companion | Local-only preview v7 exposes all 1,559 recovery captures, 119 failures and 60 alternative extraction identities across 55 OCR bodies and three DOCX bodies, alongside the 2,091 historical documents. The source ledger includes the corrected Arizona and Alaska registry rows. All 100 organization rows remain unresolved. | Audited classification/analysis exports, redistribution review and eventual report; no production integration is authorized. |
+| Companion | Local-only preview v8 exposes all 1,559 recovery captures, 119 failures and 60 alternative extraction identities across 55 OCR bodies and three DOCX bodies, alongside the 2,091 historical documents. The source ledger includes the corrected Arizona and Alaska registry rows. All 100 organization rows remain unresolved. | Audited classification/analysis exports, redistribution review and eventual report; no production integration is authorized. |
+
+## Retired unsupported platform-absence claims
+
+Ten legacy July observations in `conf/platform_gaps.yml` now explicitly distinguish a
+bounded search from proof of absence. Five `no_platform_published` dispositions and four
+unrevalidated `summary_only` dispositions become `not_confirmed`; Alabama's existing
+unresolved disposition is retained with qualified prose. Unsupported exhaustive archive
+enumeration claims are withdrawn. All **18** recorded probe dates are unchanged, and the
+other **eight** source-bound reviews are unchanged. Editing an observation is not a new
+retrieval, adoption determination or finding that no platform exists.
+
+The collector now rejects retired or unknown causes before generating a gap report,
+rather than silently carrying an unsupported absence assertion into a new output.
+The reviewed configuration hash is
+`73dfa05189703925f9ef6b14f3007c1b9e3a579240dd0dd3a01e742bd1e81064`.
+The connected collector, registry, discovery, coverage, companion, reproducibility and
+ModernBERT checks pass **301** cases; the separate full artifact audit remains red.
+
+The source-only companion never consumed this catalogue or presented its absence claims:
+all 100 ledger rows remain unresolved. Refreshed preview `data/preview-recovery-v8/`
+uses the unchanged inventory v7, not newly collected evidence. Browser packet
+`data/processed/recovery-preview-browser-check-v9/` reconciles all organization
+partitions and complete byte-exact downloads; its manifest is
+`0ad81c6a5356de5ffd114909560e93967890d94899a3f20e2deec511962f17f3`.
+The refreshed ledger hash is
+`157ef7cbb5fc148ee5fc56922cb746d2f8e3551c629a1cf58ec414331d12ab84`.
+
+`data/processed/reproducibility-audit-checkpoint-v8/` preserves the actual full audit
+return code **1**, with **34 of 317 checks failing** for missing canonical analytical
+inputs/results. No replacement analytical exports were fabricated and no release gate
+was weakened. Its manifest is
+`5a4de7d595931535942115b41983b3fee02e5680a26bc1bdbd50e9c901f3f61c`;
+report `831028faa66a7c8894084da932f1d336b152763adf918a88c8b3aa1e8bd45359`.
+The companion remains local-only and unpublished.
 
 ## Platform-specific support and metadata audit
 

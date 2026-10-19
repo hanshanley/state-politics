@@ -40,9 +40,9 @@ To include an already frozen, reconciled recovery inventory:
 
 ```bash
 uv run python scripts/build_site.py \
-  --coverage data/processed/source-coverage-recovery-v7.json \
+  --coverage data/processed/source-coverage-recovery-v8.json \
   --recovery data/processed/recovery-source-inventory-v7/inventory.json \
-  --out data/preview-recovery-v7
+  --out data/preview-recovery-v8
 ```
 
 The builder verifies the packet manifest, complete native/alternative text hashes, source
@@ -79,7 +79,8 @@ This validates interface behavior, not classifications, scientific findings or p
 The current recovery build exposes **1,559 capture records, 1,440 retained responses,
 119 failures and 1,371 distinct body hashes across all 100 organizations**. The recovered
 Arizona platform, Illinois short statement, Oklahoma platform and administrative rules are
-not interchangeable source types or certified adopted policy. These are not 1,389 platforms.
+not interchangeable source types or certified adopted policy. The 1,440 retained responses
+are not 1,440 verified platforms.
 Fifty-five bodies have OCR alternatives; three have separately typed DOCX main-document text.
 There are 57 OCR extraction identities because repeated source bytes can retain multiple
 separate extraction records, plus three DOCX alternatives: 60 total identities.
@@ -94,10 +95,13 @@ with the current executable's version. The Montana incomplete-font warning is vi
 despite nonempty native text. OCR remains uncertified and does not preserve map geometry
 or spatial ballot-selection marks. DOCX is not labelled OCR.
 
-`data/processed/recovery-preview-browser-check-v8/` binds the exact build/capture hashes,
+`data/processed/recovery-preview-browser-check-v9/` binds the exact build/capture hashes,
 screenshots and checker. Chromium reconciled all 100 partitions, all 60 extraction identities,
 all 119 failures and complete byte-exact recovery/historical gzip streams. The refreshed
 source ledger includes the corrected Arizona and Alaska homepages and verification dates.
+Preview v8 retains inventory v7 unchanged. Its source-only ledger does not consume the
+collector's gap-observation catalogue; all 100 operative-platform statuses remain unresolved
+after the separate retirement of unsupported legacy absence claims.
 The image-only resolution has explicit empty-native disclosure and separate OCR. It also covers
 runtime/warning disclosures, keyboard/mobile/no-JavaScript behavior, literal markup and
 HTTP/race handling. The zero-capture edge case uses a synthetic empty partition because
