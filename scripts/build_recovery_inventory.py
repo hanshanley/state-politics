@@ -17,13 +17,19 @@ def main(argv=None):
     parser.add_argument("--captures", action="append", type=Path, default=[])
     parser.add_argument("--ocr", action="append", type=Path, default=[])
     parser.add_argument("--docx", action="append", type=Path, default=[])
+    parser.add_argument(
+        "--native-blocks", action="append", type=Path, default=[],
+        help="Source-bound PDF native-block alternatives with explicit visual-review scope",
+    )
     parser.add_argument("--out", required=True, type=Path)
     args = parser.parse_args(argv)
     if not args.out.resolve().is_relative_to((ROOT / "data").resolve()):
         parser.error("inventory output must remain under this project's ignored data/ directory")
     summary = build_inventory(
         args.baseline, args.captures,
-        [("ocr", path) for path in args.ocr] + [("docx_main_document", path) for path in args.docx],
+        [("ocr", path) for path in args.ocr]
+        + [("docx_main_document", path) for path in args.docx]
+        + [("pdf_native_blocks", path) for path in args.native_blocks],
         args.out,
     )
     print(json.dumps({

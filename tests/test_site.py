@@ -12,7 +12,7 @@ import yaml
 
 from state_politics.analysis.coverage import build_source_ledger
 from state_politics.analysis.coverage import main as coverage_main
-from state_politics.platforms.recovery import build_inventory
+from state_politics.platforms.recovery import NATIVE_BLOCK_METHOD, build_inventory
 from state_politics.provenance import sha256_file
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -233,17 +233,20 @@ def write_source_packet(packet, rows, filename):
     }}))
 
 
-def successor_fixture(tmp_path, separator="\u2028", *, failed_text=None):
+def successor_fixture(
+    tmp_path, separator="\u2028", *, failed_text=None, kind="docx_main_document",
+):
     coverage, history, baseline, original = recovery_fixture(
         tmp_path, separator, failed_text=failed_text
     )
     source_packet = tmp_path / "additional"
     source_packet.mkdir()
-    body = source_packet / "source.docx"
-    body.write_bytes(b"Retained DOCX bytes for source-binding fixture")
+    extension = "pdf" if kind == "pdf_native_blocks" else "docx"
+    body = source_packet / f"source.{extension}"
+    body.write_bytes(b"Retained source bytes for source-binding fixture")
     source = {
         "capture_id": "additional:0", "state": "TX", "party": "D",
-        "url": "https://example.org/template.docx", "ok": True,
+        "url": f"https://example.org/template.{extension}", "ok": True,
         "stored_path": str(body), "content_sha256": sha256_file(body),
         "content_bytes": body.stat().st_size, "extracted_text": "",
         "text_sha256": hashlib.sha256(b"").hexdigest(),
@@ -251,7 +254,7 @@ def successor_fixture(tmp_path, separator="\u2028", *, failed_text=None):
         "training_admission": False, "analytical_admission": False,
     }
     write_source_packet(source_packet, [source], "captures.jsonl")
-    text = f"DOCX paragraphs{separator}<script>literal template, not executed</script>"
+    text = f"Native paragraphs\u202d{separator}<script>literal template, not executed</script>"
     alternate = {
         "capture_id": source["capture_id"], "state": "TX", "party": "D",
         "source_sha256": source["content_sha256"],
@@ -259,6 +262,11 @@ def successor_fixture(tmp_path, separator="\u2028", *, failed_text=None):
         "extracted_text": text, "text_sha256": hashlib.sha256(text.encode()).hexdigest(),
         "training_admission": False, "analytical_admission": False,
     }
+    if kind == "pdf_native_blocks":
+        alternate.update({
+            "extraction_method": NATIVE_BLOCK_METHOD, "page_count": 37,
+            "visually_checked_pages": [3], "reading_order_certified": False,
+        })
     derivative = tmp_path / "docx-alternative"
     write_source_packet(derivative, [alternate], "extractions.jsonl")
     return coverage, history, baseline, original, source_packet, derivative, source, alternate
@@ -266,11 +274,12 @@ def successor_fixture(tmp_path, separator="\u2028", *, failed_text=None):
 
 @pytest.mark.parametrize("separator", ["\u2028", "\u2029", "\u0085"])
 @pytest.mark.parametrize("failed_text", [None, ""])
+@pytest.mark.parametrize("kind", ["docx_main_document", "pdf_native_blocks"])
 def test_successor_preserves_sources_failures_and_typed_derivatives(
-    tmp_path, separator, failed_text,
+    tmp_path, separator, failed_text, kind,
 ):
     coverage, history, baseline, original, sources, derivative, source, alt = successor_fixture(
-        tmp_path, separator, failed_text=failed_text
+        tmp_path, separator, failed_text=failed_text, kind=kind,
     )
     old_bytes = {name: (baseline / name).read_bytes() for name in (
         "inventory.json", "manifest.json", "captures.jsonl", "organizations.csv",
@@ -278,14 +287,15 @@ def test_successor_preserves_sources_failures_and_typed_derivatives(
     packet = tmp_path / "successor"
     result = build_inventory(
         baseline / "inventory.json", [sources / "captures.jsonl"],
-        [("docx_main_document", derivative / "extractions.jsonl")], packet,
+        [(kind, derivative / "extractions.jsonl")], packet,
     )
     assert result["n_selected_capture_attempts"] == 4
     assert result["n_retained_response_captures"] == 3
     assert result["n_failed_retrieval_attempts"] == 1
     assert result["n_distinct_response_body_hashes"] == 2
     assert result["n_distinct_bodies_with_alternate_ocr"] == 1
-    assert result["n_distinct_bodies_with_docx_main_document"] == 1
+    assert result["n_distinct_bodies_with_docx_main_document"] == (kind == "docx_main_document")
+    assert result["n_distinct_bodies_with_pdf_native_blocks"] == (kind == "pdf_native_blocks")
     assert result["analysis_cutoff"] is None
     assert len(result["rows"]) == 100
     out = tmp_path / "preview"
@@ -298,14 +308,94 @@ def test_successor_preserves_sources_failures_and_typed_derivatives(
                 assert row[key] == value
     assert captures[0]["alternate_extractions"][0]["kind"] == "ocr"
     assert captures[-1]["extracted_text"] == ""
-    assert captures[-1]["alternate_extractions"][0]["kind"] == "docx_main_document"
+    assert captures[-1]["alternate_extractions"][0]["kind"] == kind
     assert captures[-1]["alternate_extractions"][0]["extracted_text"] == alt["extracted_text"]
     assert captures[-1]["input_disposition"] == source
+    assert captures[-1]["alternate_extractions"][0]["input_disposition"] == alt
     with gzip.open(out / "downloads/recovery_captures.jsonl.gz", "rb") as handle:
         assert handle.read() == (packet / "captures.jsonl").read_bytes()
     assert all((baseline / name).read_bytes() == value for name, value in old_bytes.items())
     with pytest.raises(FileExistsError, match="refusing to overwrite"):
         build_inventory(baseline / "inventory.json", [], [], packet)
+
+
+@pytest.mark.parametrize("field,value", [
+    ("page_count", 0),
+    ("visually_checked_pages", [38]),
+    ("visually_checked_pages", [3, 3]),
+    ("visually_checked_pages", [True]),
+    ("reading_order_certified", True),
+])
+def test_native_blocks_reject_invalid_review_scope_before_output(tmp_path, field, value):
+    _, _, baseline, _, sources, derivative, _, alt = successor_fixture(
+        tmp_path, kind="pdf_native_blocks",
+    )
+    alt[field] = value
+    write_source_packet(derivative, [alt], "extractions.jsonl")
+    out = tmp_path / "successor"
+    with pytest.raises(ValueError, match="uncertified review scope"):
+        build_inventory(
+            baseline / "inventory.json", [sources / "captures.jsonl"],
+            [("pdf_native_blocks", derivative / "extractions.jsonl")], out,
+        )
+    assert not out.exists()
+
+
+@pytest.mark.parametrize("kind", ["ocr", "docx_main_document"])
+def test_native_block_method_cannot_be_mislabeled(tmp_path, kind):
+    _, _, baseline, _, sources, derivative, _, _ = successor_fixture(
+        tmp_path, kind="pdf_native_blocks",
+    )
+    out = tmp_path / "successor"
+    with pytest.raises(ValueError, match="kind/method mismatch"):
+        build_inventory(
+            baseline / "inventory.json", [sources / "captures.jsonl"],
+            [(kind, derivative / "extractions.jsonl")], out,
+        )
+    assert not out.exists()
+
+
+def test_preview_revalidates_native_review_scope(tmp_path):
+    coverage, history, baseline, _, sources, derivative, _, _ = successor_fixture(
+        tmp_path, kind="pdf_native_blocks",
+    )
+    packet = tmp_path / "successor"
+    build_inventory(
+        baseline / "inventory.json", [sources / "captures.jsonl"],
+        [("pdf_native_blocks", derivative / "extractions.jsonl")], packet,
+    )
+    with (packet / "captures.jsonl").open() as handle:
+        captures = [json.loads(line) for line in handle]
+    captures[-1]["alternate_extractions"][0]["input_disposition"]["visually_checked_pages"] = [38]
+    write_source_packet(packet, captures, "captures.jsonl")
+    refresh_recovery_manifest(packet)
+    out = tmp_path / "preview"
+    with pytest.raises(ValueError, match="uncertified review scope"):
+        build_preview(coverage, history, out, recovery_path=packet / "inventory.json")
+    assert not out.exists()
+
+
+def test_preview_retains_legacy_v2_inventory_support(tmp_path):
+    coverage, history, baseline, _, sources, derivative, _, _ = successor_fixture(tmp_path)
+    packet = tmp_path / "successor"
+    inventory = build_inventory(
+        baseline / "inventory.json", [sources / "captures.jsonl"],
+        [("docx_main_document", derivative / "extractions.jsonl")], packet,
+    )
+    inventory["schema"] = "bounded_recovery_inventory_v2"
+    del inventory["n_distinct_bodies_with_pdf_native_blocks"]
+    for row in inventory["rows"]:
+        del row["n_distinct_bodies_with_pdf_native_blocks"]
+    (packet / "inventory.json").write_text(json.dumps(inventory))
+    with (packet / "organizations.csv").open("w", newline="") as handle:
+        writer = csv.DictWriter(handle, fieldnames=list(inventory["rows"][0]))
+        writer.writeheader()
+        writer.writerows(inventory["rows"])
+    refresh_recovery_manifest(packet)
+    result = build_preview(
+        coverage, history, tmp_path / "preview", recovery_path=packet / "inventory.json",
+    )
+    assert result["recovery_capture_attempts"] == 4
 
 
 @pytest.mark.parametrize("defect,match", [

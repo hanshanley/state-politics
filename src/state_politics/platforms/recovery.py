@@ -16,9 +16,14 @@ from state_politics.bills.openstates_dump import STATE_CODES
 from state_politics.provenance import sha256_file, utc_now_iso
 
 ROOT = Path(__file__).resolve().parents[3]
-SCHEMAS = {"bounded_recovery_inventory_v1", "bounded_recovery_inventory_v2"}
-ALTERNATE_KINDS = {"ocr", "docx_main_document"}
+SCHEMAS = {
+    "bounded_recovery_inventory_v1", "bounded_recovery_inventory_v2",
+    "bounded_recovery_inventory_v3",
+}
+ALTERNATE_KINDS = {"ocr", "docx_main_document", "pdf_native_blocks"}
 DOCX_METHOD = "stdlib_zipfile_elementtree_word_document_xml_paragraphs"
+NATIVE_BLOCK_METHOD = "pymupdf_native_blocks_content_order_sort_false"
+NATIVE_METHODS = {"docx_main_document": DOCX_METHOD, "pdf_native_blocks": NATIVE_BLOCK_METHOD}
 
 
 def load_json(path: Path):
@@ -99,9 +104,25 @@ def validate_capture(row: dict, expected: set, *, typed: bool) -> None:
             if alternate.get("kind") not in ALTERNATE_KINDS:
                 raise ValueError("unknown recovery alternate extraction kind")
             method = alternate.get("extraction_method")
-            if ((alternate["kind"] == "docx_main_document" and method != DOCX_METHOD)
-                    or (alternate["kind"] == "ocr" and method == DOCX_METHOD)):
-                raise ValueError("recovery alternate kind/method mismatch: DOCX is not OCR")
+            kind = alternate["kind"]
+            if ((kind in NATIVE_METHODS and method != NATIVE_METHODS[kind])
+                    or (kind == "ocr" and method in NATIVE_METHODS.values())):
+                raise ValueError("recovery alternate kind/method mismatch: native text is not OCR")
+            if kind == "pdf_native_blocks":
+                provenance = alternate.get("input_disposition", {})
+                if not isinstance(provenance, dict):
+                    raise ValueError("native-block alternative requires explicit review provenance")
+                count = provenance.get("page_count")
+                reviewed = provenance.get("visually_checked_pages")
+                if (type(count) is not int or count < 1
+                        or not isinstance(reviewed, list)
+                        or any(type(page) is not int or not 1 <= page <= count
+                               for page in reviewed)
+                        or len(set(reviewed)) != len(reviewed)
+                        or provenance.get("reading_order_certified") is not False):
+                    raise ValueError(
+                        "native-block alternative requires explicit uncertified review scope"
+                    )
             identity = alternate.get("extraction_id")
             if not isinstance(identity, str) or not identity or identity in identities:
                 raise ValueError("missing or duplicate recovery alternate extraction identity")
@@ -128,13 +149,16 @@ def validate_capture(row: dict, expected: set, *, typed: bool) -> None:
             raise ValueError("recovery OCR source/text hash mismatch")
 
 
-def alternate_body_counts(captures: list[dict]) -> dict:
+def alternate_body_counts(captures: list[dict], *, include_native_blocks: bool = True) -> dict:
+    kinds = [("ocr", "alternate_ocr"), ("docx_main_document", "docx_main_document")]
+    if include_native_blocks:
+        kinds.append(("pdf_native_blocks", "pdf_native_blocks"))
     return {
         f"n_distinct_bodies_with_{label}": len({
             row["source_sha256"] for row in captures
             if any(alt["kind"] == kind for alt in row["alternate_extractions"])
         })
-        for kind, label in (("ocr", "alternate_ocr"), ("docx_main_document", "docx_main_document"))
+        for kind, label in kinds
     }
 
 
@@ -146,7 +170,8 @@ def load_recovery(path: Path, expected: set) -> tuple[dict, list]:
     inventory = load_json(path)
     if inventory.get("schema") not in SCHEMAS:
         raise ValueError("incompatible bounded recovery inventory")
-    typed = inventory["schema"] == "bounded_recovery_inventory_v2"
+    typed = inventory["schema"] != "bounded_recovery_inventory_v1"
+    native_blocks = inventory["schema"] == "bounded_recovery_inventory_v3"
     captures = load_jsonl(root / "captures.jsonl")
     if len({row["capture_id"] for row in captures}) != len(captures):
         raise ValueError("duplicate recovery capture identity")
@@ -154,6 +179,10 @@ def load_recovery(path: Path, expected: set) -> tuple[dict, list]:
     bodies = defaultdict(list)
     for row in captures:
         validate_capture(row, expected, typed=typed)
+        if typed and not native_blocks and any(
+            alt["kind"] == "pdf_native_blocks" for alt in row["alternate_extractions"]
+        ):
+            raise ValueError("native-block alternatives require recovery inventory v3")
         groups[row["state"], row["party"]].append(row)
         if row["retrieval_status"] == "response_retained":
             bodies[row["source_sha256"]].append(row)
@@ -174,7 +203,7 @@ def load_recovery(path: Path, expected: set) -> tuple[dict, list]:
             "n_distinct_response_body_hashes": len({r["source_sha256"] for r in retained}),
         }
         if typed:
-            counts.update(alternate_body_counts(org))
+            counts.update(alternate_body_counts(org, include_native_blocks=native_blocks))
         if any(row[key] != value for key, value in counts.items()):
             raise ValueError("recovery organization counts do not reconcile")
         if (row["operative_platform_status"] != "unresolved"
@@ -194,7 +223,7 @@ def load_recovery(path: Path, expected: set) -> tuple[dict, list]:
         }),
     }
     if typed:
-        totals.update(alternate_body_counts(captures))
+        totals.update(alternate_body_counts(captures, include_native_blocks=native_blocks))
     if any(inventory[key] != value for key, value in totals.items()):
         raise ValueError("recovery inventory totals do not reconcile")
     if inventory["analysis_cutoff"] is not None:
@@ -381,7 +410,7 @@ def build_inventory(
             "training_admission": False, "analytical_admission": False,
         })
     summary = {
-        "generated_at": utc_now_iso(), "schema": "bounded_recovery_inventory_v2",
+        "generated_at": utc_now_iso(), "schema": "bounded_recovery_inventory_v3",
         "analysis_cutoff": None, "expected_organizations": 100,
         "n_selected_capture_attempts": len(captures),
         "n_retained_response_captures": sum(map(len, bodies.values())),
@@ -406,8 +435,11 @@ def build_inventory(
             "Capture records count logical retrievals, not individual HTTP retry attempts.",
             "Retained responses and nonempty text do not establish operative adopted policy.",
             "Identical body hashes are not independent semantic documents or commitments.",
-            "OCR and DOCX main-document text are alternatives, never additional source captures.",
+            "OCR, DOCX and PDF native-block text are alternatives, "
+            "never additional source captures.",
             "DOCX alternatives exclude layout, other XML parts and images; they are not OCR.",
+            "PDF native-block alternatives are not OCR; "
+            "full-document reading order is uncertified.",
             "No adoption dates, analytical cutoff, classifications or analytical claims certified.",
             "Original captures, native text and historical evidence remain unchanged.",
             "Ignored local evidence bytes are not backed up by a Git push.",

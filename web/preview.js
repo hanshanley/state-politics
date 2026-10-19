@@ -53,15 +53,28 @@ function render() {
       for (const alternate of alternatives) {
         const detail = document.createElement("details");
         const label = document.createElement("summary");
-        label.textContent = alternate.kind === "docx_main_document"
-          ? "Read alternate DOCX main-document text (no layout, images or other XML parts; original extraction preserved above)"
-          : "Read alternate OCR (uncertified transcription; original extraction preserved above)";
+        const labels = {
+          docx_main_document: "Read alternate DOCX main-document text (no layout, images or other XML parts; original extraction preserved above)",
+          pdf_native_blocks: "Read alternate native PDF blocks (not OCR; reading order uncertified; original extraction preserved above)",
+          ocr: "Read alternate OCR (uncertified transcription; original extraction preserved above)",
+        };
+        if (!Object.hasOwn(labels, alternate.kind)) {
+          throw new Error(`Unsupported alternate extraction kind: ${alternate.kind}`);
+        }
+        label.textContent = labels[alternate.kind];
         const transcription = document.createElement("div");
         transcription.className = "source-text";
         transcription.tabIndex = 0;
         transcription.textContent = alternate.extracted_text;
         detail.append(label);
         const provenance = alternate.input_disposition || alternate;
+        if (alternate.kind === "pdf_native_blocks") {
+          const warning = document.createElement("p");
+          warning.className = "note";
+          const reviewed = provenance.visually_checked_pages.join(", ") || "none";
+          warning.textContent = `${provenance.page_count} physical PDF pages. Visually checked physical pages: ${reviewed}. Visual checks do not certify full-document reading order. No original text was replaced.`;
+          detail.append(warning);
+        }
         if (alternate.kind === "ocr"
             && provenance.selection_reason === "native_extraction_reported_incomplete_font") {
           const warning = document.createElement("p");

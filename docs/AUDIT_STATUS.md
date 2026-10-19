@@ -100,8 +100,9 @@ All seven packet files, page identities, per-page hashes and concatenated text r
 manifest `c26dc924d6be128d9864799d58f6856b18b7b59630cf39ac8ab4593e9eae50be`.
 This is a separately identified alternative, not OCR or an additional retrieval. It
 preserves native Unicode controls and does not certify the other pages' intended reading
-order. It is not yet imported into the typed inventory or companion, and the original
-source, labels and quarantine remain unchanged.
+order. At that checkpoint it was not yet imported into the typed inventory or companion;
+the subsequent source-preserving import is documented below. Original source, labels and
+quarantine remain unchanged.
 
 The fresh full artifact audit first recorded **36/319 failures** in immutable checkpoint
 v9, including two missing code-guide entries introduced by the new producer/test files.
@@ -206,6 +207,54 @@ research-packet identities without substituting their provisional outputs for ca
 inputs. Manifest:
 `10aa093a52d97da69c558bebff0485c5240bf3e7dbc3ba136d5129c745065820`;
 report `955876d44031781cd937da6f5dee41f217c8852898e6625fb3967998d031d2c3`.
+
+## Native-block alternative available in the local companion
+
+`data/processed/new-mexico-native-block-import-v1/` imports the previously preserved
+**37-page NM-D** alternative as `pdf_native_blocks`, not OCR, an additional retrieval or
+a replacement for the original extraction. It binds the existing source-body/capture
+identity and copies the original PDF, original native text, complete native-block text,
+all page/block coordinates and hashes, rendered page-3 review and exact prior producer.
+The full derivative record also includes all 37 page records, so the companion's complete
+capture download retains this provenance rather than only local metadata pointers.
+Manifest: `2b36e2db46c29465e5e568e0630f4d295a3b9892b2e978bad57443721358e900`.
+
+Inventory `data/processed/recovery-source-inventory-v8/` uses typed schema v3.
+It preserves **1,559 attempts, 1,440 retained responses, 119 failures and 1,371 distinct
+body hashes**, all preceding capture fields and OCR/DOCX alternatives, and all 100
+organization rows. The new counter covers **one** body with native-block text, alongside
+the unchanged **55** bodies with OCR and **three** with DOCX alternatives. These counters
+are extraction-type coverage, not independent-document totals. Manifest:
+`d43fc58064db30716628d653773f34af2056992cfa47a11f94f0040cc8a9244d`.
+Older v1/v2 inventories remain readable. The new kind requires an explicit uncertified
+review scope, an exact native method, and in-range, unique physical-page numbers;
+mislabeling it OCR or DOCX is rejected before writing.
+
+Preview `data/preview-recovery-v9/` uses the preceding corrected source ledger
+(`157ef7cbb5fc148ee5fc56922cb746d2f8e3551c629a1cf58ec414331d12ab84`),
+not the stale legacy default. Its build manifest is
+`d62f1a9e511d5caa9331bb592a059ad38242dfe1d22c159eeb7acd9e1ec1993b`.
+Browser packet `data/processed/recovery-preview-browser-check-v10/` reconciles all 100
+organization partitions, all **61** extraction identities (57 OCR, three DOCX, one native
+block), unchanged original text, explicit failed captures and byte-exact full downloads
+of all recovery records and **2,091** historical documents. It also checks literal text,
+keyboard/mobile/no-JavaScript access and HTTP/stale-response failure handling. Manifest:
+`5853037592feea4b174ecf332afe6ca28f02f559b6cb1abb15db538b49f53d74`.
+
+Only physical page **3** was visually reviewed. The other pages' intended reading order
+is not certified; native Unicode controls and page delimiters remain unchanged. The
+original mixed Arts/Education quarantine and all training labels remain unchanged.
+Training/analytical admission is false, all 100 operative-platform statuses remain
+unresolved, and no website integration or deployment occurred. Local evidence packets
+are ignored by Git and are not remotely backed up by the code push.
+
+The subsequent full audit, `data/processed/reproducibility-audit-checkpoint-v12/`,
+binds all **11** research/evidence packets and the unpublished preview build manifest.
+Every bound file reconciles. Actual audit return code remains **1**: **34/321 failures**,
+with a failure list exactly identical to v11 and no canonical-output substitution.
+Manifest: `f036dc93cfefce8ce4e703ab13dcd8d6e651286eb36828772dea325b22489c3b`.
+The canonical report is byte-identical to v11:
+`955876d44031781cd937da6f5dee41f217c8852898e6625fb3967998d031d2c3`.
 
 ## Retired unsupported platform-absence claims
 

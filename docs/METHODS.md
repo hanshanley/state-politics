@@ -63,6 +63,15 @@ documents and 424 failed retrievals. Those totals are not a reconstructed canoni
 contemporary corpus or current coverage certification. The separate retained recovery
 inventory and its explicit failures are documented in [AUDIT_STATUS.md](AUDIT_STATUS.md).
 
+The source-only companion keeps original extraction text and separately typed alternatives:
+OCR, DOCX main-document text, and PDF native text blocks. Typed recovery inventory v3
+adds `pdf_native_blocks` and a distinct-body counter without inflating source-retrieval
+counts; v1/v2 inventories remain supported. The source-bound NM-D alternative includes
+all 37 physical pages and block coordinates in the complete capture download. Only page
+3 was visually checked, which does not certify full-document reading order. Original
+bytes/text, Unicode controls, labels and mixed-unit quarantine are preserved. Alternatives
+are not admitted to training or analytical results, and the companion remains unpublished.
+
 ## Committee-document observations and withdrawn absence claims
 
 The previous claim that 82 organizations had platforms and the other 18 had established
