@@ -300,6 +300,30 @@ pilot, despite both having pooled 27/50 results dominated by 40 bill cases. All 
 remain provisional. Representative source-disjoint target labels and an independent
 evaluation arrangement are needed before another run can substantiate a replacement.
 
+The source-bound curriculum producer adds 54 assistant-reviewed policy units spanning all
+21 topics and seven reviewed rejections from four additional retained platform documents.
+It preserves the original training rows and uses only the metadata-only successor of the
+same development population. Full original bytes, complete native extractions, selected
+offsets/hashes, rationales and three quarantines remain in the output packet. Native
+numbered units can inherit stance from a parent heading; the topic task does not infer
+stance. Paragraph selection preserves preceding sentences and headings rather than
+extracting only a convenient anchor sentence.
+
+```bash
+uv run python -m state_politics.analysis.prepare_platform_curriculum \
+  --out data/labels/diverse-platform-curriculum-v1
+```
+
+That packet already exists; reruns require a new output directory rather than overwriting
+its evidence. Combined target-platform support is 60 positives and 16 rejections from six
+organizations in five states, with all Republican training positives still from one Iowa
+source. These are purposive provisional reviews, not independently validated gold.
+Both marriage-rights stances remain quarantined at the same unresolved scope boundary.
+The New Mexico interleaved summary is withheld as extraction corruption, while coherent
+arts-chapter units do not adjudicate the full family/moral scope of topic 23.
+The same-settings successor run must be compared under the unchanged policy, separately
+for bills and platforms; broader training coverage alone is not an accuracy finding.
+
 ### Legacy analytical pipeline (not revalidated)
 
 With both platform corpora in hand, `state_politics.analysis` segments every document into

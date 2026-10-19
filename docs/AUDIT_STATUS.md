@@ -10,10 +10,53 @@ replacement classifier or establish complete contemporary coverage.
 | Contemporary platforms | Inventory v7 preserves 1,559 requests, including 1,440 retained responses across all 100 organizations, 119 failures and 1,371 body hashes. Corrected Alaska's stale host and recovered an image-only Massachusetts resolution. | Deferred navigation/images, OCR quality, source/institution/version adjudication and operative coverage remain unresolved. Retained responses are not verified platforms. |
 | Sponsorship | Party attribution uses validated historical memberships and a first-action date proxy; unresolved primary sponsors block D/R assignment. | Rebuild source bills and quantify attribution changes; the proxy is not an exact filing/sponsorship date. |
 | Bills | October snapshot extracted: 1,090,369 source-context measures across all 50 states, 5,028,893 sponsorships, 9,002,451 actions and 873,980 vote events. All eleven tables have recorded hashes/counts. | Official-source reconciliation, historical affiliations and filing-time text review. Full extraction is not a certified source universe or analytical denominator. |
-| Classification | Two actual official English ModernBERT-base fine-tuning runs saved and reloaded: external-only policy training, then 6,001-unit joint target/rejection training with 21 policy outputs plus null. | Both make 27/50 pooled development decisions, but 40 cases are bills. Platform-only decisions worsen from 5/10 to 4/10; only six target-platform training positives span five topics and two Democratic sources. Neither candidate is approved. |
+| Classification | Two completed official English ModernBERT-base pilots; a third research run uses a source-bound curriculum with 60 platform positives across all 21 topics and 16 rejections. | The earlier pilots make 27/50 pooled decisions and 5/10 then 4/10 platform decisions. The broader curriculum is not validation; successor evaluation, broader Republican sources and independent source-disjoint tests remain required. No candidate is approved. |
 | Labels | External CAP files recovered; split/group/exact-text and reviewed-platform source-body checks plus explicit reviewed-label provenance are implemented. | Source permissions, adapted-topic compatibility, near-duplicate families and reviewed state-domain training/development/test labels. |
 | Evaluation | Checkpoint-bound training/evaluation split isolation, development-only temperature/threshold selection, exact evidence joins, abstention accounting, per-topic and subgroup metrics. | Reviewer arrangement, frozen empirical gates, independent target tests and clustered uncertainty. No checkpoint can be certified by changing a status field. |
 | Companion | Local-only preview v8 exposes all 1,559 recovery captures, 119 failures and 60 alternative extraction identities across 55 OCR bodies and three DOCX bodies, alongside the 2,091 historical documents. The source ledger includes the corrected Arizona and Alaska registry rows. All 100 organization rows remain unresolved. | Audited classification/analysis exports, redistribution review and eventual report; no production integration is authorized. |
+
+## Expanded source-bound platform curriculum
+
+`data/labels/diverse-platform-curriculum-v1/` adds **54 positive policy units across all
+21 topics**, three intact mixed-policy rejections and four non-policy front-matter
+rejections. The complete native sources are retained Iowa Republican, Arizona Democratic,
+Iowa Democratic and New Mexico Democratic documents. These are new reviewed uses of
+existing evidence, not new retrievals or findings of operative platform adoption.
+
+All **6,001** original training rows and every original cell are preserved. The **50**
+development rows use the separately reviewed metadata-only successor, without changing
+their population, text, policy topics, abstention judgments or source identities. The
+combined corpus has **6,062 training rows**. Its target-platform training support is now
+**60 positives and 16 rejections across six documents/organizations in five states**,
+rather than the earlier six positives across five topics. Positive counts are **34 D and
+26 R**, but all Republican training examples still come from **one organization**.
+Counts do not establish party, geographic, source or subtopic balance.
+
+Labels are provisional assistant semantic reviews of complete native numbered units or
+paragraphs, with rationales, original offsets, exact text/body/document hashes and full
+source context. Selection is purposive topic coverage, not random sampling or independent
+gold. Units can inherit support/opposition from parent headings; topic labels do not
+predict stance. Both affirming and opposing marriage-recognition units are quarantined
+at the unresolved civil-rights/family boundary. A third quarantine preserves a New Mexico
+summary whose two columns were interleaved during extraction; this is extraction
+corruption, not an authorial mixed-policy commitment. Coherent detailed arts-chapter units
+support topic 23, not its unresolved family/moral subcategories.
+
+The packet independently reconciles its 17 manifest-bound files, every preserved original
+training/development cell, all four source bodies and full native extractions, and every
+selected/quarantined source span. Manifest:
+`b2fed54f76c59184cf91eda6df258b97318ad5fb58b00d44a66ce0db350c9e12`.
+Record/group/text/body/document isolation and close-unit overlap checks do not settle all
+source-version families or grant redistribution permission.
+
+A third full-encoder ModernBERT run is underway with the preceding joint pilot's exact
+optimizer settings, seed, three epochs and input construction. Before successor predictions,
+`data/processed/topic-diverse-platform-pilot-v1/evaluation_plan.json` freezes the unchanged
+research-default policy and both earlier model/prediction identities. No calibration or
+threshold tuning is authorized for this comparison. The ten platform development cases
+remain from the same Texas Republican source, not a newly independent benchmark.
+The label/model/evaluation packets are local ignored artifacts; a code push does not
+remotely back them up. No canonical analytical input or website integration changed.
 
 ## Retired unsupported platform-absence claims
 
