@@ -4,12 +4,18 @@ The existing figures and analytical conclusions are **legacy, not revalidated fi
 The current changes repair infrastructure and preserve evidence; they do not certify a
 replacement classifier or establish complete contemporary coverage.
 
+**October 19, 2026 checkpoint:** actual audit **v42** binds **99 completed research
+and accounting packets**. The canonical audit still has **299/333 passing checks**
+and **34 missing-artifact failures**. Known source, collection and scientific failures
+remain explicit; this is not a completed project or a certified classifier.
+
 | Area | Verified progress | Remaining gate |
 |---|---|---|
 | Historical platforms | Recovered 2,091 authoritative archive documents, with publisher checksums and old/new archive reconciliation. | Historical availability must not be substituted for operative modern platforms. |
 | Contemporary platforms | Inventory v8 preserves 1,559 requests, including 1,440 retained responses across all 100 organizations, 119 failures and 1,371 body hashes. Corrected Alaska's stale host and recovered an image-only Massachusetts resolution. | Deferred navigation/images, OCR quality, source/institution/version adjudication and operative coverage remain unresolved. Retained responses are not verified platforms. |
 | Sponsorship | Date-aware attribution remains conservative. Official Washington evidence supplies separate session-roster D/R observations for 14,132 of 14,143 measures. Separately, 1,481 native SD roster rows identify all 7,086 prime-sponsor references; 205 mixed-party cases remain explicit. No filing-time party is overwritten. | A session roster does not establish affiliation at filing. Washington retains ten source-identified tests and one substantive original without a native primary-sponsor API record. SD cross-session cosponsor IDs, institutional sponsorship and event-time affiliations remain separately accounted for; all-state recovery is open. |
 | Bills | October snapshot extracted: 1,090,369 source-context measures across all 50 states, 5,028,893 sponsorships, 9,002,451 actions and 873,980 vote events. All eleven tables have recorded hashes/counts. Native documents retained for all 241 non-test measures in the bounded Washington metadata-gap cohort; separately, all 5,369 native SD introduced candidates and 15,308 physical pages captured and exactly replayed in both readers. | Official-source reconciliation, historical affiliations and filing-time text review. One Washington resolution has a version-note conflict; one SD PDF prints no session year. Neither these recoveries nor snapshot extraction certifies statewide/national original-text completeness or an analytical denominator. |
+| Parallel state recovery | Missouri, Pennsylvania and Ohio initial cohorts retain 188 complete PDF candidates / 3,095 pages and 124 corresponding HTML versions from 192 selections. Full Florida replay separately accounts for 2,868 linked contexts, including an explicitly negative corrected-copy disposition. | Four selected PA/OH originals remain unresolved. Missouri withdrawal-only notices are not policy text; historical corroboration does not resolve publisher identity conflicts. These bounded recoveries are not statewide text completeness or classifier certification. |
 | Classification | Four saved official English ModernBERT-base pilots compared on the same 52 platform references: external-only 41/52, joint 47/52, broader-source 47/52, Republican-expanded 49/52. The fourth run correctly rejects 3/4 mixtures and 6/6 non-policy units. | The fourth run loses one policy decision, still accepts a mixture above 0.999 and regresses on insufficient-evidence and taxonomy-boundary development cases. Both sets are examined diagnostics, not fresh independent tests. Independent review and empirical gates remain required. No candidate is approved. |
 | Labels | External CAP files and two state-reference CSVs recovered; exact-context Florida candidates and complete bounded overlap witnesses are frozen without label admission. Split/group/text and reviewed-platform source-body checks retain explicit label provenance. | Modern Florida external titles/subtopics are missing; Pennsylvania rows stop in 2016. Annotation provenance, source permissions, adapted-topic compatibility, bill families and independent state-domain references remain unresolved. |
 | Evaluation | Checkpoint-bound training/evaluation split isolation, development-only temperature/threshold selection, exact evidence joins, abstention accounting, per-topic and subgroup metrics. | Reviewer arrangement, frozen empirical gates, independent target tests and clustered uncertainty. No checkpoint can be certified by changing a status field. |
@@ -1373,6 +1379,277 @@ including all seven authored-input hashes, is identical. Its manifest is
 `112d03feec3d0fc3e76f1cfc9c6130c6027e3f523e259fb58c3a1341738b7b07`.
 The frozen snapshot precedes this result paragraph. No provisional packet substitutes
 for missing canonical scientific outputs.
+
+The corrected-copy follow-up retained the exact official SB186 index, its indexed
+Filed HTML and PDF, and its earliest indexed analysis: four successful responses.
+Independent replay preserves all **16 PDF pages / 32 reader texts**, **five version
+rows** and **21 history rows**, with exact index-source spans. Both published Filed
+formats explicitly print Corrected Copy. The new HTML response bytes differ from
+the earlier capture, but its entire **13,226-character pre / 160 markup spans** are
+identical. The index distinguishes **January 28, 2019 filing** from **March 5, 2019
+introduction**; neither its history nor PDF metadata establishes a correction time
+or recovers the uncorrected text. The four later versions are not substituted.
+The source packet is `florida-corrected-copy-official-followup-v1`
+(`2568d19f67ff61f8acbd22cf5cdc9c8083dd5a4a38b1a3b1dc430f625dc98fc3`);
+its independent replay is `florida-corrected-copy-official-verification-v1`
+(`c036d1bd601b58b08ee7e775186717ed249c17ac943ab51006624577d34f9fdf`).
+The original-version gap remains explicitly unresolved.
+
+### Initial parallel Missouri recovery
+
+The Missouri worker completed a separate official-source reconciliation of the
+**4,960 canonical 2023/2024 regular-session contexts**: **4,952 unique exact matches**,
+**six nonmatches**, **two ambiguous rows**, and **four official-only records**.
+The official index also has **4,960 rows**, but only **4,958 distinct keys**: equal
+aggregate totals do not establish equivalent populations. The retained evidence
+includes **25,415 House actions** and **7,052 sponsor/handler/conferee role rows**,
+not 7,052 complete primary-sponsorship or event-time affiliation observations.
+
+The six exact canonical nonmatches are **2023 SR371** and **2024 SB961, SB1121,
+SB1122, SB1171 and SB1339**. The five SBs are labelled `WITHDRAWN` in the canonical
+source but absent from the current official index; their legacy endpoints returned
+404, not proof that the measures never existed. The current index lists **SR978**
+with SR371's title/sponsor, but that does not authorize renaming or merging them.
+Official-only **SR978-SR981** remain outside the canonical source population.
+Two 2023 House archive entries each repeat **HR1** and **HR2**, so their corresponding
+canonical matches remain ambiguous rather than choosing an arbitrary duplicate.
+
+The frozen initial cohort contains **64 introduced PDFs**, 16 per session/chamber:
+16 metadata-gap-priority selections and 48 ordinary deterministic selections.
+All **488 physical pages / 14,774,712 response bytes** are retained and independently
+replayed. This is an initial bounded text batch, not complete Missouri text recovery
+or a probability sample supporting accuracy estimates. Universe-wide Senate action
+histories/co-sponsors remain outside this packet. All canonical, topic-label,
+filing-time affiliation and analytical admissions remain unchanged.
+
+Completed packet: `missouri-official-parallel-recovery-v3`, manifest
+`53f6f4572186bbcec300568c0d387ef3973343edff7162022f389d9cb7daf7d9`.
+Its **138 receipts** account for **132 HTTP 200** responses and **six retained HTTP
+404** bodies; passing replay does not relabel failed retrievals as success. Complete
+House archives preserve 3,284 `Sponsor`, 1,935 `Co-Sponsor`, seven `Handler` and
+150 conferee nodes. The complete Senate index supplies 1,676 list-level sponsors,
+not statewide co-sponsors. Action modals cover only the 32 selected Senate bills;
+the other 1,644 indexed Senate records lack native action blocks in this packet.
+
+Earlier v1/v2 attempts are **incomplete diagnostics without manifests**. v1 stopped
+on an expected negative HTTP response. v2 retained 35 PDFs/323 pages but a cross-archive
+record-index collision left 29 false multiple-candidate dispositions. The fresh v3
+packet corrects that indexing and independently replays all 64 PDFs/488 pages;
+the failed attempts are not overwritten or counted as completed recovery. Pennsylvania
+and Ohio are independently owned; only their completed, verified packets can enter
+the aggregate audit.
+
+Parent post-manifest replay independently reran the Missouri verifier read-only:
+all **4,960 canonical records**, **4,960 native index rows**, **138 receipts**,
+**64 document records** and **488 pages** reproduce, with the same explicit
+nonmatch/duplicate dispositions and **219 manifest entries**. Its manifest uses
+path/hash/byte records rather than the repository helper's hash mapping. The audit
+wrapper verifies every record's bytes/hash, rejects duplicate or escaping paths,
+and checks the exact retained inventory; it does not rewrite the frozen manifest.
+
+### Initial parallel Ohio recovery
+
+The Ohio worker reconciled the official **135th General Assembly / 2023-2024**
+context against **2,281 canonical measures**, preserving all 4,562 source rows,
+4,572 version records, 4,575 links and 5,077 actions. The official index contains
+**2,279 exact measure matches** and **one nonmeasure journal artifact**, not 2,280
+matched bills. Its stray `journal_h_20231005.html` row lacks a bill number/chamber
+and remains in an index-only table. Exact nonmatches **HB45** and **HB412** remain
+canonical contexts without invented native identities.
+
+The frozen **64-measure** cohort covers both chambers and all eight measure types.
+It recovers **62 PDFs plus their 62 substantive HTML versions**, not 62 files split
+across formats. All **1,123 physical PDF pages** are independently replayed with
+both pypdf and PyMuPDF, alongside **8,248 exact HTML text-node source spans**.
+Neither reader has a textless page. Payloads comprise **5,445,494 PDF bytes** and
+**4,484,818 HTML bytes**; visible HTML spans retain 1,761,640 decoded characters.
+The frozen report's misleadingly named `n_recovered_pdf_bytes` and
+`n_recovered_html_bytes` fields hold **document counts (62 each)**, not byte totals;
+the actual byte accounting above must not be read from those fields.
+
+HB45/HB412 version-list requests each return HTTP 200 with literal `[]`, not a
+successful document recovery. Their current detail and canonical legacy PDF routes
+return four HTTP 404 responses; initial overview attempts and verified-CA retries
+have four explicit TLS-chain failures. The initial packet therefore preserves
+**199 receipts: 191 HTTP 200, four HTTP 404 and four transport failures**, including
+all negative dispositions, rather than counting 64 recovered originals. No 404 or
+local certificate-chain failure proves either measure did not exist. A separately
+bounded follow-up is trying the exact overview routes with another normally
+certificate-verified client; it does not disable TLS checks or alter this packet.
+
+Completed initial packet: `ohio-official-parallel-recovery-v1`, manifest
+`2bc3e0fa17ecc634dd02869caa206e5c2357e83fc51e397196264e26bd0dd590`.
+All **740 manifested files** are hash-verified. The independent core and nonmatch
+replays passed while retaining the two unresolved original-text gaps. This is
+bounded recovery, not complete Ohio text coverage, party-affiliation certification
+or classifier validation. All scientific/canonical admission flags remain false.
+
+Actual aggregate audit checkpoint v39 now binds **93 completed research packets**,
+including the Missouri/Ohio initial packets and the two new Florida follow-up
+packets. Its entire report matches v38: actual exit **1**, **299/333 checks passing**,
+the same **34 failures**, and unchanged authored-input hashes. Manifest:
+`3979fb06bf68ee3a81918d34d7af11c825af9ddae052124a3b5cb1ce2b3428d8`.
+Its frozen documentation snapshot precedes this result paragraph. At that checkpoint,
+Pennsylvania work and the new Ohio blocker follow-up were not counted as completed packets.
+
+### Initial parallel Pennsylvania recovery
+
+The Pennsylvania worker completed the **4,788 canonical 2023-2024 regular-session
+contexts**: **4,786 exact official matches**, **two nonmatches** and **zero ambiguous
+matches**. **Eight special-session records** remain separately isolated rather than
+joining regular-session bill numbers. Canonical **HB18** and **HB2205** retain explicit
+unmatched dispositions, not fabricated native identities or guessed printer numbers.
+The complete native archive has **4,786 regular identities**, with **zero official-only
+records**. HB18 is `ocd-bill/5239dfc4-63ff-4c9d-9614-07143b1baa2d`; HB2205 is
+`ocd-bill/b2e7b39f-fe07-4421-99b0-a8e4aebc435e`. Both canonical contexts lack actions,
+versions and a first-action date; the presence of legacy source references alone
+does not prove a filed original.
+
+Of **64 frozen selections** (43 House / 21 Senate), **62** have complete original
+PDF and HTML candidates; the two nonmatches remain blocked. All **1,484 PDF pages**
+and **1,484 corresponding HTML page blocks** are preserved and independently
+replayed. All **128 receipts** are HTTP-successful, which does not turn the two
+unmatched bill contexts into recovered documents. The cohort includes **12
+corrective-reprint histories**; successfully downloading an indexed first-print
+candidate does not itself settle operative/version identity. Current/final texts
+and party fields are not filing-time evidence.
+All **39 archive corrective-reprint histories** are retained, with retrieval limited
+to the explicitly observed first-action printer, not the corrective or final text.
+Independent replay re-extracts the complete text of all 1,484 PDF pages with `pypdf`
+and separately reproduces every HTML page block/hash. Twelve representative page-one
+prefix checks are additional, not the extent of full-text replay.
+
+Completed packet: `pennsylvania-official-parallel-recovery-v4`, manifest
+`f3ec442b89da9a5569b2271f1a8e5adfbc035185b2ef5675e3215bc804ca786b`.
+Parent read-only replay passes all **12 checks**, including all **3,119 manifest
+hashes**. Incomplete v1-v3 attempts remain separate without manifests, not counted
+as completed recovery. A narrow official-reference follow-up is pursuing HB18/HB2205;
+it does not overwrite this packet, merge sessions or substitute current text.
+
+Across the three initial state cohorts, **192 selections yield 188 complete PDFs /
+3,095 physical PDF pages**; Pennsylvania and Ohio additionally retain **124 full HTML
+bill versions**, with their different page-block/text-node span formats kept explicit.
+The **four unresolved selected originals** remain in the denominators. This is not
+complete text coverage of the three states, a representative evaluation set or a
+classifier-accuracy result. Separate bounded follow-ups were authorized for the
+already-identified identity/retrieval gaps, without presuming those gaps are closed.
+
+Actual audit **v40** binds all **94 completed packets**, including Pennsylvania v4.
+The canonical audit still exits **1**: **299/333 passing** and the same **34 missing
+artifact failures**. Its entire report, including authored-input hashes, equals v39.
+Manifest: `41b589ca345c3d0e3daa59af4cf9b78323be242e124837982f9b671d8704e85a`.
+Its frozen documentation snapshot precedes this result paragraph; subsequent
+blocker-follow-up packets are not retrospectively added to v40.
+
+### Ohio normal-trust overview follow-up
+
+The two exact HB45/HB412 overview routes were retried with **system curl and normal
+certificate/hostname verification**, preserving the initial Python trust-chain
+failures as separate observations. Both new requests complete TLS verification
+successfully, with **HTTP 404**, no redirects and no original-document links.
+Each retained body is **7,355 bytes** with SHA-256
+`edde5d5deabb1abdcb2cfb73560e2e92ab6d641a26296aaa583446cc0afaa1f5`;
+the observed request-start interval is **1.0026785 seconds**. No TLS verification
+bypass or guessed version route was used.
+
+Completed successor: `ohio-official-nonmatch-overview-followup-v1`, manifest
+`0986e854ed0bde91f8a0548fe876b14975af01b3239d67f6bd368a2f23acf649`.
+This establishes a distinct normally verified retrieval outcome, **not nonexistence
+of either bill**, and recovers **zero additional originals**. The initial packet
+and its four HTTP 404/four certificate-chain failures remain unchanged. Both
+canonical contexts remain unmatched; no topic, party or analytical admission changes.
+
+### Missouri historical evidence and withdrawal-only notices
+
+A bounded successor retained **11 HTTP-successful responses**, **nine PDFs / 125
+complete pages** and **two HTML sources**, with **247 exact source spans**.
+Parent read-only replay verifies all **34 manifested files** and every page/span.
+Packet: `missouri-official-nonmatch-history-followup-v1`, manifest
+`06c82d1c4c5ce057d282c9521658b21cbfaa059e144a392f79003fb7d579892a`.
+
+Five official `/24info/pdf-bill/intro/` URLs return **one-page withdrawal-only
+notices**, not substantive introduced policy wording: SB961 (`3923S.01W`), SB1121
+(`3268S.01W`), SB1122 (`3275S.01W`), SB1171 (`4003S.01W`) and SB1339
+(`5203S.01W`). Each prints its identifier, sponsor and WITHDRAWN status, with no
+policy provisions. The folder name and verifier's `original_print_results` field
+must **not** be interpreted as recovery of original policy text. These five notices
+do not add substantive introduced wording to the 188 initial bill/measure PDF
+candidates above and cannot serve as policy-topic inputs.
+
+Four Senate journals account for the other **120 pages**. They corroborate SB961's
+withdrawal on **January 4, 2024**, and SB1339's on **January 23, 2024**, with exact
+event/date spans. No dated withdrawal journal was recovered for the other three.
+The journals also record SR371 offered on **April 20, 2023**, and adopted on
+**April 24, 2023**. Current BillID `10825890` still resolves to SR978; historical
+corroboration does not establish an alias or repair the current-index join.
+All six initial current-index nonmatches remain explicit, and no sponsor-party,
+filing-time, topic or analytical certification is conferred.
+
+### Pennsylvania negative follow-up and cross-attempt collection failures
+
+The completed two-bill route packet is
+`pennsylvania-official-nonmatch-followup-v2`, manifest
+`a575d44e54db18178738fdfef9b535ff7205b120548a64759e2e457afec7b271`.
+Its **four logical routes / 12 transport requests** end in four HTTP 404 responses
+after four 301/four 302 redirects. Neither bill gains an affirmative official
+identity or guessed printer number. Parent read-only replay reproduces all nine
+packet-local checks. Its flat filename/hash manifest is validated against the exact
+file inventory through an explicit compatibility case, not rewritten.
+
+**The packet-local pass does not certify the overall collection protocol.** The
+interrupted v1 already consumed **12 transport requests**, and v2 incorrectly
+started a new allowance rather than reusing verified responses. The actual total
+is **24**, exceeding the authorized aggregate cap of 12 by **12 requests**. V1
+remains an incomplete diagnostic without its own manifest. Its receipts and all
+retained files are preserved, not erased to make the final attempt appear compliant.
+Redirect body hashes/counts in receipts also must not be represented as retained
+redirect payloads; complete-body coverage is audited separately across both attempts.
+No further network requests are authorized by an attempt restart. Future retries
+must reuse retained evidence and share one aggregate request budget across roots.
+
+The independent cross-attempt accounting packet
+`pennsylvania-followup-request-budget-audit-v1` preserves **all nine v1 diagnostic
+files** and the complete v2 packet byte-for-byte. Its report records both failures:
+**24 requests / 12 excess**, and **12 nonempty redirect bodies / 101,094 bytes**
+present only as receipt hashes/counts, not retained payloads. All **eight final 404
+bodies** are retained; **four empty redirect bodies** are exactly reconstructable.
+The receipt-reported total is **224,230 response bytes**. Parent reconstruction
+confirms these counts without new requests. Manifest:
+`88b5c60b26e7480a6cce5dae17caaed2a4989ac04116c388d4a3307a763be2bd`.
+This is completed **negative accounting**, not a compliant collection or recovery
+of the absent redirect bytes.
+
+### Immutable Ohio follow-up replay
+
+The original Ohio follow-up verifier always rewrites its report and manifest and
+therefore was **not rerun against the frozen source**. A separate offline verifier
+instead replays full bodies/headers, exact bill contexts and routes, curl TLS
+options/results, pacing, 404/link dispositions, admission flags and initial Python
+error context, with a genuinely read-only subsequent mode.
+Packet: `ohio-official-nonmatch-overview-replay-v1`, manifest
+`decd463c88a2738a93dc1655847a6a76f13869d7ca3f1b0aea63d373d0516fe2`.
+Parent read-only semantic replay succeeds; the original 24-file source manifest
+remains `0986e854ed0bde91f8a0548fe876b14975af01b3239d67f6bd368a2f23acf649`.
+No new requests, document recovery, source rewrites or scientific admission result.
+
+The first aggregate successor, **v41**, stopped while binding the Missouri follow-up:
+its manifest maps filenames to **both SHA-256 and byte count**, whereas the generic
+helper expects a bare hash. This is a schema incompatibility, **not changed source
+bytes**. The incomplete v41 directory remains without a final manifest and is not
+counted as a completed checkpoint. The wrapper now validates the exact nested
+path/hash/byte inventory explicitly, preserving the original manifest; its failed
+wrapper and error log are archived with the next actual checkpoint.
+
+Actual audit **v42** completes that schema-aware binding for **99 research/accounting
+packets**. All referenced packet bytes verify, including the deliberately negative
+Pennsylvania accounting and separate read-only Ohio replay. The canonical audit
+still exits **1**, with **299/333 passing** and the same **34 missing-artifact
+failures**. Its entire report, including authored-input hashes and scientific
+non-certification, equals v40. Manifest:
+`b1613aea3dba2ae0ffe7ecd616753f602c1f6dfd8818e02b990015be8bac39a5`.
+The frozen documentation snapshot precedes this result paragraph and top summary.
+No canonical labels, model weights, analytical outputs or publication files changed;
+ignored source packets remain local rather than being backed up by a Git push.
 
 ## Training reservation enforcement
 
