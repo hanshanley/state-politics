@@ -640,9 +640,22 @@ unchanged checkpoint. The probe denies networking/children, confines writes and
 cleanup to private fixtures and its exclusive report, removes those fixtures
 and verifies all **2,308 frozen files unchanged**. Evidence:
 `missouri_v3_parent_release_blockers_v1.json` and its actual log. The same worker
-is preparing immutable zero-HTTP v4 with access-stop recovery and immutable
+has returned immutable zero-HTTP v4 with access-stop recovery and immutable
 initialization/checkpoint-context gates. Mutable later progress counters are
 not immutable source context and must not invalidate a legitimate earlier seal.
+
+The v4 preparation passes actual independent parent common-guard replay:
+**2,316 files unchanged**, manifest
+`5feca7de302864d13d30ba5fcec4874f5f256f09ef2e30c6ce5d3b971e17305d`.
+The replay reconstructs the native census, all 64 originals and both readers'
+488 pages, inherited 269-exchange evidence and the genuine final-32 fixture.
+Actual parent log: `missouri_preparation_v4_parent_actual_v1.log`.
+This verifier checks saved test results; it does not itself execute the driver's
+nine tests. A separate actual parent suite is now running against a byte-copied
+private preparation with all test paths rebound. Networking, children and
+outside-private mutations are denied; the frozen packet's original destructive
+test teardown is not used. Its result remains pending, not a passing release
+gate. Worker test logs are separate evidence, not parent execution.
 
 None of these three states has an authorized full continuation running.
 
@@ -1326,6 +1339,22 @@ the matching collector process is absent. New York, Texas and Illinois processes
 are still present in that snapshot. Their respective reported successes are
 7,880, 1,979 and 5,193; these are progress observations, not completed corpora.
 Snapshot: `source_campaign_progress_checkpoint_v7.json`, checksum-bound to v6.
+
+A later read-only snapshot at **23:51:39 UTC on October 19, 2026** confirms
+the same New York, Texas and Illinois collector commands still present:
+
+| Campaign | Reported success | Other terminal dispositions | Pending | Physical exchanges including inherited |
+|---|---:|---|---:|---:|
+| New York | 8,438 | 571 unverified headers; 12 failures | 15,296 | 9,027 |
+| Texas | 2,259 | One unverified header | 9,547 | 2,285 |
+| Illinois | 5,519 | 1,641 unverified identities; 562 unavailable shells; 13 unsupported sources | 5,656 | 7,793 |
+
+`source_campaign_progress_checkpoint_v8.json` binds v7 and retains each exact
+UTF-8 progress response, its byte count and SHA-256, read times and process
+observation. These reads are nontransactional; success is the collector's
+reported disposition, not independent source or filing-time certification.
+No collector is restarted, no request allowance is reset and no source request
+is made by the snapshot. It is supplemental, not a retroactive v53 input.
 
 A separate GPT-5.6 Sol worker now owns zero-HTTP immutable Colorado whole-corpus
 and real final-17 sealing, both-reader replay and closure of all referenced
