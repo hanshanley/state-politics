@@ -629,6 +629,24 @@ conventions differ. Neither agreement nor disagreement certifies filing eligibil
 or event-time party. The first null-guard diagnostic and its seven false comparisons
 remain frozen separately from the corrected successor and independent full replay.
 
+A separate complete-volume cross-check retains every printed standalone `INTRODUCED`
+action and its exact reader/page span, bounded by the active detailed formal header.
+The introduced-tally heading on each volume's ninth page is retained as frontmatter,
+not counted as a bill action. Bare and explicitly chamber-labelled actions remain
+distinct: the three older volumes omit action chambers, as do 119 actions in 2025.
+Unprinted chambers remain null rather than inheriting the formal header's chamber.
+Dates are literal month/day observations with no year inference or date carry from
+another action. Compatible native positions remain a list; repeated actions are not
+arbitrarily paired with one of multiple native events.
+
+The 6,061 unique comparable printed/native contexts agree on month/day under both
+readers. This does not validate an unprinted calendar year, prove filing eligibility,
+or make the publisher's two potentially related source families independent factual
+witnesses. The printed histories reproduce the two missing and five repeated 2025
+native origin-event cases; they do not repair them. All 6,400 reader pages, 12,146 body
+action spans, eight excluded frontmatter lines and original native/source joins are
+separately replayed from reopened PDFs without producer parsing/matching helpers.
+
 The shared `exclude_mt_lc_source_requests_v1` contract now excludes **Montana LC source
 rows as additional independent formal filings**, regardless of imported `bill` or
 `proposed bill` classification. It does not declare their underlying requests unintroduced,

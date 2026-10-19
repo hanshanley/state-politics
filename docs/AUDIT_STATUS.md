@@ -1080,6 +1080,48 @@ The snapshot precedes this result paragraph; it does not certify these source ev
 or substitute research sidecars for missing canonical artifacts. Audit manifest:
 `18c894c674ea2143b12a297be5f4c47785f9f6556e874388f74ef8e1342f1b36`.
 
+### Printed/native Montana introduction concordance
+
+The complete-volume action cross-check freezes **12,146** exact body-action spans
+across both readers, or **6,073 per reader**. Each action is bound to its active
+detailed formal header, retaining literal month/day and optional printed chamber.
+The three older volumes omit action chambers; **119** 2025 actions also use the bare
+`INTRODUCED` label. These chambers remain null. Eight ninth-page tally headings are
+retained separately as frontmatter, not mistaken for bill actions.
+
+All **6,061** unique comparable detailed/native contexts agree on month/day under
+both readers: 1,298 in 2019, 1,313 in 2021, 1,698 in 2023 and 1,752 in 2025.
+No calendar year is inferred. Every retained body action has compatible native
+event positions, but duplicate-compatible positions remain many-to-many. The
+2025 volume reproduces **both missing introductions and all five duplicate-origin
+cases**; it cannot fill those seven selected-date gaps. Its two explicit opposite-
+chamber events remain separate. The eleven absent 2019 detailed histories still
+have no invented printed body actions.
+
+Inventory: `montana-printed-introduction-concordance-v1`, manifest
+`97c62c2a0524a4cb4e56ebe818a86a907cd72c46d32732fa454acf9f23c3771b`.
+Eight focused literal-format checks cover unlabelled/chamber-labelled and wrapped
+actions, exact offsets, missing-date non-carry, invalid month/day, a leap day without
+an assumed year, repeated locations and the standalone heading.
+
+Independent replay reopens all four complete PDFs through both decoders, reproduces
+every **6,400** reader-page text and **12,146** body span with a separate line-oriented
+parser, rebuilds all **6,084** native introduction events from raw JSON, reconstructs
+exact identity joins and preserves all **15,830 native / 18,403 source** original
+contexts. It reproduces every contextual count, optional chamber and compatible-position
+list. Verification passed at `montana-printed-introduction-verification-v1`, manifest
+`03a6e05fc90a8992fc5a5eb22e69f6674beca46bf1254dd1d80505c68891b9a0`.
+Publisher families may derive from shared data: agreement is not independent factual,
+semantic or legal certification. Historical identity, filing-time, party, training,
+analytical and publication gates remain unchanged.
+
+Canonical audit checkpoint **v37** binds **82** completed bounded packets, including
+the printed-action inventory and independent replay. Its actual result is **exit 1 /
+299 of 333 checks passing / the same 34 failures**, with authored-input hashes and
+failure entries unchanged from v36. It does not substitute research sidecars for
+missing canonical artifacts. The snapshot precedes this result paragraph. Manifest:
+`0a31ee7a7c628ffee2238501ea31ebf5477ac5eaa1e69ba94d46a32267198f3e`.
+
 ## External state-bill reference recovery
 
 The publisher's Florida and Pennsylvania CAP catalogs, complete CSV responses,
