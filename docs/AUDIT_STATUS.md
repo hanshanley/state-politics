@@ -224,6 +224,63 @@ actual-campaign launch failure or authorization to collect.
 The initial startup observer's assertion failed before saving its unfiltered
 process matches; that observer failure is not a source or collection failure.
 
+A separate narrow parent probe now executes the exact frozen collector's
+`Response`, `atomic_json` and `curl_transport` definitions twice, with subprocess
+dispatch mocked and real private response persistence. Child **4728** exits zero
+at **21:17:11 UTC on October 20, 2026**. The two actual mocked-call observations
+are at **21:17:11.062972** and **21:17:11.093596 UTC**; the separately assigned
+observer values **100.0** and **100.001** are synthetic, not native-clock or wire
+measurements. Both commands and all ten private payload files are retained; all
+six selected original nodes remain unchanged. Receipt
+`nc_native_version_transport_pacing_parent_actual_v1.json`, SHA-256
+`39aaa08e4880bf570bc7f0f7587398555247795131cd373a848d965e8bb816b1`,
+records this **unpaced transport observation only**, not a historical traffic
+violation or a request-loop/full-driver/launcher execution.
+
+The exact transport contains no pacing, and source inspection finds none in the
+request/full loop or v4 launcher. The original controls owner therefore has a
+distinct immutable **zero-HTTP v5** remediation scope: monotonic spacing of at
+least ten seconds between actual single-exchange dispatch starts, including
+retry/hop/error paths; rechecked undersleep; conservative first/restart handling;
+and a genuine complete private final-wrapper driver with rebound lifecycle,
+freshness, callback, matcher, Popen and timeout controls. Collector/parser bytes
+must remain unchanged. Function-entry waits alone are insufficient when
+pre-dispatch persistence delays vary. The original driver's default transport
+binding also requires explicit wiring, not merely replacing a module attribute.
+The **14,400-second** finite timeout is shorter than the **20,010 seconds** of
+minimum spacing alone for 2,002 pending dispatches; that arithmetic is not an
+observed live timeout. No actual campaign access or collection authorization
+is claimed. The Oregon/NC combined raw/current binding below also
+reconciles this probe's exact AST, receipt, stdout, private files and six selected
+current original nodes.
+
+**V5 now returns blocked, not launch-ready:** the original owner reports thirteen
+private pacing cases, seven rebound suites and both pinned verifiers, but does
+not run or fabricate the required normal-2,004/final-20/no-refetch gate because
+the expressly permitted inputs lacked genuine seed pages. The immutable v5
+manifest is
+`878b2c4da759cde18f5bba0105931d07341336692996123e6c57060dc854762e`;
+launcher SHA-256
+`1994412bfcda47a9e075ac0d573c7046d3aa90a2f237c540460cd1c3542d13bc`.
+These worker controls are **not independent parent v5 acceptance**.
+
+That input gap is subsequently resolved without accessing actual campaign
+roots. At **21:34:34 UTC**, a parent authenticates all **1,279 payloads / 1,565
+file-directory records** in the already accepted immutable genuine-readiness
+packet against its original `17f1948d...` manifest; all content/eight-field
+records remain unchanged. Its complete seed has 2,004 candidates, two terminal
+and 2,002 pending, but is explicitly **not yet lineage-initialized**.
+Receipt `nc_finite_successor_readonly_seed_allowance_parent_actual_v1.json`
+contains the complete fresh map. The same original owner is allowed to consume
+only this offline packet, including its copied lineage evidence, to initialize
+a distinct **private v6 proof fixture** with the original helper and correctly
+rebased copies. No manual lineage-flag promotion or substitute synthetic lineage
+is authorized. V5 remains sealed; v6 must complete the final-wrapper full driver
+and retain/rebind source-dependent controls, strict freshness, budget and timing
+limits. Actual terminal/target/campaign access, live initialization,
+authorization, release creation and HTTP remain forbidden. No v6 return or
+normal-full-driver success is claimed.
+
 Illinois returned an immutable v4 full-context synthetic packet. Source inspection
 confirms its builder invokes the optimized 13,391-context driver rather than its
 retained, unused shard helper. Parent execution of the exact installed inner
@@ -553,11 +610,27 @@ later final-source whole/tail reconstruction and zero-pending resume do not
 establish a fresh complete final-source driver. Four semantic-mutant rejections
 remain worker evidence. Historical physical requests remain unknown, with a
 known floor of 125; the prospective 25,000 ceiling does not authorize collection.
-The independent saved whole/tail parent started at **20:59:16 UTC on October
-20, 2026**, parent **1058**; exact command and startup were observed once.
-Full original content/eight-field inventories are required before either child
-runs. This records a launch, **not child readiness, completed reconstruction
-or independent acceptance**.
+The independent saved whole/tail parent now completes with enclosing exit zero
+at **21:16:20 UTC on October 20, 2026**, parent **1058**. Whole and tail execute
+in distinct children **1665** and **1666**, reproducing the worker's exact saved
+results. Both retain 6,395 bytes of stderr rather than claiming empty stderr.
+All **62,116 original file/directory content/eight-field records** remain
+unchanged: preparation 60,704, initial v1 683 and initial v2 729. Full before/after
+maps have SHA-256
+`f4eb8591e7eec96735f7929ef1cfc650f8cea2b5cd28e31cd82bf54da139e5b1`.
+The original installed guards execute before stronger outer controls. This
+accepts **saved mocked packet reconstruction only**, not a fresh final-source
+full driver, official collection or four parent semantic-mutant reruns.
+
+An additional independent binding finishes at **21:27:17 UTC**, reconciling raw
+commands/proofs, actual child PIDs/chronology, original map bytes, exact worker
+results and a fresh content/eight-field scan of **every current original node**.
+It separately binds the NC transport probe's exact AST, six selected original
+nodes and ten private files. Receipt
+`oregon_saved_packet_and_nc_pacing_parent_raw_binding_v1.json`, SHA-256
+`8687afa837ef47f5d47f2bf6cb55cfd726b7bc729647a0015ee5321208295d51`.
+The scan is nontransactional; no historical acquisition-compliance, full fresh
+driver, actual initialization, authorization or scientific-admission claim follows.
 
 A separate private parent probe now reproduces a **monotonic pacing defect** in
 the exact final driver source `129acba9fed78b6f00b4a47dad702d32800b62e3c5e7b8685f757c7c22236917`.
@@ -701,6 +774,8 @@ No collector or HTTP ran during these checks.
 | North Carolina native-version preparation | V5 strict replay, four exact parser regressions and all fifteen original parent release tests pass, including the actual 2,004-population/final-20 fake-transport driver. Genuine readiness/private initializer gates and actual zero-HTTP initialization pass. Independent reconciliation v3 accepts all 44,342 initialized files, all 56,761 unchanged original file/directory records, sixteen exact inherited transport files and zero new requests. Finite-launch controls v4 now passes all seven fresh independent private behavioral suites, with full preflight before first freshness issuance, strict 120-second parent/child gates, and all 642 packet nodes unchanged. Raw proofs/commands/current nodes independently bind. Separate guarded and source-inspected inventory-only measurements finish in 576.53 and 661.20 seconds respectively, preserving all original/target records. | Both earlier reconciliation failures, old timeout defects, the v2 child-self-match counterexample and the first v4 parent fixture-cleanup failure remain preserved. Different cache/load conditions prevent attributing timing differences to audit overhead; neither run measures the complete launcher or proves infeasibility. Private synthetic clocks, process fixtures and mocked curl dispatch do not certify real campaign timing/transport. Fresh actual maps, pins, duplicate absence, strict freshness and exclusive finite authorization remain required. No collection is authorized. Historical original-path replacement/metadata failures remain unreconciled; restored bytes do not restore historical immutability. |
 | Tennessee blocked native recovery | Independent parent replay reconstructs the single retained official robots exchange and frozen canonical populations: 9,665 regular, 474 extraordinary-session and 32,407 outside-target rows. All 38 packet file/directory records remain unchanged; raw proof, generated source and complete map bytes reconcile. | Robots disallows all crawling; no bypass or continuation is authorized. Native boundaries/counts and introduced originals remain unknown; zero bill originals recovered. Canonical rows are not an official native census. Acquisition-time immutability and upstream history-scan completeness are not certified. |
 | Classification | Four saved official English ModernBERT-base pilots compared on the same 52 platform references: external-only 41/52, joint 47/52, broader-source 47/52, Republican-expanded 49/52. The fourth run correctly rejects 3/4 mixtures and 6/6 non-policy units. | The fourth run loses one policy decision, still accepts a mixture above 0.999 and regresses on insufficient-evidence and taxonomy-boundary development cases. Both sets are examined diagnostics, not fresh independent tests. Independent review and empirical gates remain required. No candidate is approved. |
+| Training-label second review | Two GPT-6.1 Sol reviewers examine all 122 target-platform training rows and five separate quarantines. Parent source/population/quote/physical-line bindings complete. Two complete unlabelled CA source-unit proposals independently reconstruct all eighteen native children. | 115 provisionally consistent, one suspected mislabel, four unresolved boundaries and two source-scope defects are advisory findings, not accuracy. No canonical label/input changes or training admission; independent gold, rubric adjudication and release gates remain missing. |
+| Native-version dispatch pacing | NC's exact frozen transport is unpaced in a narrow mocked parent probe. The finite-launch-controls v5 worker returns bounded pacing/control proofs but explicitly blocked on missing genuine seed inputs. Parent authenticates the immutable offline readiness packet and grants the same owner a read-only/private-only v6 continuation to close that input gap. Oregon's saved whole/tail packet also independently reconstructs, with all 62,116 original file/directory records freshly rebound. | NC v5 is not independently accepted and v6 has not returned. Minimum spacing alone exceeds the unchanged finite timeout; no live timeout is observed or timeout increased. Oregon still lacks a fresh final-source full-driver pacing proof. Neither state is authorized for actual collection. |
 | Labels | External CAP files and two state-reference CSVs recovered; exact-context Florida candidates and complete bounded overlap witnesses are frozen without label admission. Split/group/text and reviewed-platform source-body checks retain explicit label provenance. | Modern Florida external titles/subtopics are missing; Pennsylvania rows stop in 2016. Annotation provenance, source permissions, adapted-topic compatibility, bill families and independent state-domain references remain unresolved. |
 | Evaluation | Checkpoint-bound training/evaluation split isolation, development-only temperature/threshold selection, exact evidence joins, abstention accounting, per-topic and subgroup metrics. | Reviewer arrangement, frozen empirical gates, independent target tests and clustered uncertainty. No checkpoint can be certified by changing a status field. |
 | Comparison accounting | Missing samples and explicitly unknown shares no longer become zero-valued gaps. Party-specific state counts and three-stream matched-state replication are repaired; unavailable verdicts remain separate in exports, reports and plots. | Legacy analytical outputs have not been regenerated or certified. Correct missingness accounting does not supply missing source evidence, historical affiliations or independent classifier validation. |
@@ -6826,6 +6901,86 @@ for missing canonical analytical inputs. Audit packet manifest:
 `547fbf00dfb4ab7b817bbb7d8b3f2e33ac82b78103221c7a70c3f61dab15f49c`;
 report: `c022104276e70013f4eaa486487d3573ac9e4a4d08ef5ac2e16aca2074ecdc07`.
 The model remains unapproved and production integration remains unauthorized.
+
+## Advisory semantic second review of all target-platform training rows
+
+Two separate **GPT-6.1 Sol** reviewers complete actual offline semantic reading of
+the exact **122 train/plank/reviewed_target records** in the unchanged 6,158-row
+curriculum: 46 native-expansion and 76 inherited records. Five unlabelled
+quarantines are reviewed separately, with no promotion. The findings are
+**115 provisionally consistent, one suspected mislabel, four unresolved boundaries
+and two source-unit scope defects**. These are advisory assistant judgments of
+familiar training data, not independent human gold, blind evaluation or a
+115/122 accuracy estimate.
+
+| Organization / exact source location | Disposition | Unresolved evidence or repair |
+|---|---|---|
+| KS-R, `republican-curriculum-v1:KS-R:2935:3074` | Boundary unresolved | Judicial selection/accountability: courts versus government structure/election administration. |
+| NE-R, `republican-curriculum-v1:NE-R:6946:7532` | Suspected mislabel | Mixed rejection may over-reject a coherent business-development package; business versus general-tax precedence remains unsettled. |
+| HI-R, `republican-curriculum-v1:HI-R:27853:28089` | Boundary unresolved | Family-formation objective versus tax, housing and business instruments; multiple instruments do not automatically establish mixed policy. |
+| CA-D, `bf724caa...`, `63326:64076` | Boundary unresolved | Energy/environment mixture rejection remains unresolved. |
+| CA-D, `bf724caa...`, `64910:65102` | Unit-scope issue | Clean-power preface omits its operative native list. |
+| CA-D, `bf724caa...`, `68538:68835` | Unit-scope issue | Environmental-justice preface omits its operative native list. |
+| TX-D, `8b373fed...`, `70114:70338` | Boundary unresolved | Rural-policy insufficient-evidence rejection remains unresolved. |
+
+The CA-D document body hash is
+`bf724caa3afb7be40d2427e312b36ee3fd0f17baaea419d7fa42d7852e737ba5`;
+the TX-D hash is
+`8b373fedd51f3849238c405cf9c209abe10dbbb475a3ffaa06e823b70948afcc`.
+Their complete record identities, exact source/context spans, quotes, rationales
+and dispositions remain in the immutable review packets:
+
+- `data/processed/platform-training-native-expansion-semantic-review-v1/`,
+  manifest `ecd1a54ea7043f5796b3a6ddbb180ad82ab49b2f542df29a9a0cc06882663602`;
+- `data/processed/platform-training-inherited-semantic-review-v1/`,
+  manifest `50e50e1b504575f9d51a1c469c66bab7f042db6dcdbe0d8d81fab30831953ec8`.
+
+Separate read-only parent verification finishes at **21:25:10 UTC on October 20,
+2026**. It reconciles exact population/complement/multiplicity, original labels,
+all **207 training evidence quotes plus fourteen quarantine quotes**, source
+offsets/hashes, exact root-only manifest exclusions, single-link inode-disjoint
+frozen copies and unchanged packet content/eight-field inventories. All 39
+consumed sealed original nodes still equal the reviewers' persisted baselines.
+A supplementary parent finishes at **21:28:39 UTC**, binding native
+text/Parquet/raw-body joins, inherited raw bodies and original physical label
+lines, all review source metadata, taxonomy IDs and alternate-topic IDs.
+Actual stdout equals each durable receipt. Receipts:
+`platform_training_second_reviews_parent_actual_v1.json`, SHA-256
+`42799d4c0cdaef167cd64c3f07b4dbb4da70701727126824dfc2803f262d33a7`;
+`platform_training_second_reviews_parent_supplement_actual_v1.json`, SHA-256
+`8d23fc4ac031411046c621809e4f5063c2fa66bfc96f9a7ca7e722211d8297fe`.
+These programmatic bindings do not replace semantic review or adjudicate topics.
+
+All 76 inherited records lack original contextual-span metadata. Their original
+training-unit joins do reconcile; the reviewers' new contextual spans are
+explicitly distinct, not retroactively supplied original model inputs.
+The inherited preservation baseline begins **after** its disclosed incomplete
+initial freeze. Live `docs/AUDIT_STATUS.md` is excluded mutable progress context;
+the exact consulted copy remains frozen. No historical pre-freeze preservation,
+complete-document visual/legal certification or source-version approval is inferred.
+
+The inherited reviewer then produces two distinct **unlabelled source-scope
+proposals**, not replacement labels: clean power **64910:65993**, including all
+**eight** native bullets, and environmental justice **68538:70021**, including
+all **ten**. The whole authored sections and eighteen separately located native
+child units are retained, with primary/context spans separated. PDF text/layout
+evidence on physical pages 22-24 supports the heading/list boundaries; no arbitrary
+paragraph prefix, footer or next heading is silently absorbed.
+Packet `data/processed/platform-training-inherited-unit-scope-proposals-v1/`,
+manifest `2380e285c2201c02cbb12f93cc64d50351e01b73d835b89e6d84741f33451460`.
+The original verifier independently executes read-only at **21:29:39 UTC**,
+reconstructing PDF text/layout, all two section/eighteen child spans, full
+nonwhitespace coverage and boundary exclusions. All nineteen payloads and consumed
+originals remain unchanged from the disclosed post-reconnaissance baseline;
+frozen copies are byte-identical, single-link and inode-disjoint.
+Receipt `platform_training_inherited_unit_scope_proposals_parent_actual_v1.json`,
+SHA-256 `ed07d6e7016e07cfbc4e56242cce7db30456d71c62537f1cffe9df3938a2c31f`.
+
+**No proposed input is adopted, no canonical label or model changes, and all five
+quarantines remain excluded.** The source-scope proposals do not settle final
+topic/rejection judgments. Rubric-boundary adjudication, independent evaluation
+and empirical release gates still block classifier certification. No HTTP,
+campaign execution, production-site change or publication occurs.
 
 ## Expanded source-bound platform curriculum
 
