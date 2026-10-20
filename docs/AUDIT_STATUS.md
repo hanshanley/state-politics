@@ -34,6 +34,7 @@ remain explicit; this is not a completed project or a certified classifier.
 | Comparison accounting | Missing samples and explicitly unknown shares no longer become zero-valued gaps. Party-specific state counts and three-stream matched-state replication are repaired; unavailable verdicts remain separate in exports, reports and plots. | Legacy analytical outputs have not been regenerated or certified. Correct missingness accounting does not supply missing source evidence, historical affiliations or independent classifier validation. |
 | Trend accounting | Empty and one-period populations preserve export schemas; fewer than two paired states leave inference unavailable. Party slopes include topic zeros in observed party-years without inventing missing years. Missing source-tag comparisons remain unavailable; chart sample counts come from each supplied series. | Legacy trend outputs are not regenerated or certified. Model/tag samples may differ, supplied labels and tag provenance remain unvalidated, and a direction match is not independent accuracy evidence. |
 | Language accounting | Empty caucus-unit selections and empty/sparse term populations now preserve readable export schemas. Fixed-filter vocabulary unavailability is explicitly reported; invalid configuration still raises. Supported numerical results and both CLI CSV exports remain byte-identical to the saved baseline in an actual synthetic differential. | Term highlights describe supplied text, not certified operative platforms or policy positions. Legacy research outputs are not regenerated; unavailable comparisons are not observed zero concentration. |
+| Title-reuse accounting | Exact-match clusters without any supplied D/R affiliations now retain an unavailable party skew instead of implying balance. Empty/filtered exact-match exports preserve the supported party-count schema; observed balance stays zero. Supported helper results and both actual CLI CSV exports remain byte-identical to the saved baseline. | Title similarity remains a source-review candidate, not evidence of shared legislative text, common authorship or coordination. Party skew is conditional on supplied resolved D/R affiliations; the repair does not recover missing historical affiliations or regenerate actual research outputs. |
 | Intra-party accounting | Empty and insufficient shared-state populations now export readable schemas and replace stale results. Undefined within/between ratios remain unavailable while observed zero distances stay zero; undefined cosine distances cannot produce permutation significance. The CLI and figure report distinguish unavailable evidence from chance results. | Supported synthetic helper results and all eight actual CLI CSV exports are unchanged against the saved baseline. No real research outputs, party-coherence conclusions, classifier labels or empirical release gates are regenerated or certified. |
 | Outcome inference | Fewer than two paired states now leave sign-flip inference unavailable instead of returning 1.0; reports and charts also suppress legacy one-state defaults. Empty/nullable eligibility exports remain readable, new output directories are created, and unavailable probabilities fail the artifact check without crashing it. | Recorded-stage rates, all-filing denominators and coverage floors are unchanged. Supported synthetic results and all four CSV/comparison-JSON exports remain byte-identical to the saved baseline; actual research results and scientific gates are not regenerated or certified. |
 | Organization profiles | Empty and peerless outlier populations now retain readable export schemas. Gap-only organizations remain visible; unknown document counts/status stay unknown. Invalid counts, undefined topic-share vectors and nonpositive null draws raise explicitly. The CLI discloses unavailable within-party comparisons. | Supported profiles, distances, null filtering and all three actual CLI exports remain byte-identical to the saved baseline on a nonempty synthetic fixture. No actual research outputs, source coverage, classifier labels or scientific gates are regenerated or certified. |
@@ -174,6 +175,31 @@ original source/policy records or access the original campaign/archive.
 No HTTP, labels, model forward passes, training/evaluation, filing-time,
 scientific or publication admission follows.
 
+## Title-reuse missingness and stable empty exports
+
+Actual pre-fix execution records **six failures and two passing controls** in
+`diffusion_missingness_before_v1.log`. A title cluster with no supplied D/R
+affiliations previously exported `party_skew = 0`, falsely implying measured
+balance. Empty inputs, titles filtered as too short/generic, and insufficient
+state populations also exported a different exact-match schema: the D/R counts
+and party-skew columns disappeared, replaced by an inapplicable near-match
+similarity column.
+
+Exact-match empty exports now retain the supported columns, and a zero D/R
+denominator leaves party skew unavailable. Observed D/R balance remains **0**;
+defined skew, unknown-party retention, source-draft exclusions, title matching,
+thresholds, clustering and CLI counts are unchanged. Both actual CLI exports
+remain readable and replace stale files. All **37 focused regressions**, targeted
+Ruff and diff checks pass in `diffusion_missingness_complete_v1.log`.
+
+Separate saved-baseline execution on **37 synthetic records**, including an
+excluded Montana draft request, reproduces four helper configurations with
+exact values/dtypes/column order/CSV bytes and both actual CLI exports/stdout
+identical. Receipt `diffusion_missingness_supported_differential_v1.json`, SHA
+`5d6bf762b5a519c93243a3c0ea0f9cde74145397b92ac467ed8cb54ab4491ae9`,
+records the comparison and cleaned private fixture. No actual research output,
+source, affiliation, label, model, scientific or publication admission changes.
+
 ## Michigan initial packet: independent v3 reconstruction accepted
 
 Worker packet `michigan-2023-2024-native-source-recovery-v1` reports **4,043
@@ -269,6 +295,15 @@ claims. V1's original-input comparisons still cover exact consumed files, not
 surrounding shared directories. The remaining allowance is **not further
 authorization**; no new HTTP, full campaign, labels, model, scientific or
 publication admission is authorized.
+
+After that initial acceptance, a **distinct zero-HTTP full-preparation worker**
+owns the real 4,043-native plan, genuine 32-seed reuse, proposed 4,011 pending
+documents and actual mocked-transport normal-driver/checkpoint/crash gates.
+The expected normal partition is 126 full groups of 32 plus a true final eleven;
+counts must be reconstructed, not forced. All 68 inherited exchanges remain
+counted. No returned preparation, full-driver result or parent acceptance is
+claimed. Actual initialization/collection remains unauthorized; no labels,
+model, scientific or publication admission follows.
 
 ## Intra-party missingness, undefined ratios and empty exports
 

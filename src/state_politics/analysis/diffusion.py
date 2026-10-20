@@ -58,14 +58,17 @@ _GENERIC_RE = re.compile(
 
 
 _CLUSTER_COLUMNS = ["n_states", "n_bills", "states", "first_year", "last_year",
-                    "example_title", "min_similarity"]
+                    "example_title"]
 
 
 def _empty_clusters(*, with_normalized: bool = False):
     """Empty frame carrying the full column set, so callers can drop/select without KeyError."""
     import pandas as pd
 
-    columns = (["normalized"] if with_normalized else []) + _CLUSTER_COLUMNS
+    columns = (
+        ["normalized"] + _CLUSTER_COLUMNS + ["n_D", "n_R", "party_skew"]
+        if with_normalized else _CLUSTER_COLUMNS + ["min_similarity"]
+    )
     return pd.DataFrame(columns=columns)
 
 
@@ -89,6 +92,7 @@ def find_reuse_clusters(
 
     Returns the shared normalized title, counts of states and bill contexts, and supplied
     sponsor-party composition. None of these fields establishes shared legislative text.
+    Party skew is conditional on supplied D/R affiliations and unavailable when none exist.
     """
 
     frame = bills.loc[
@@ -123,8 +127,10 @@ def find_reuse_clusters(
     )
     summary = summary.merge(parties, on="normalized", how="left")
     summary[["n_D", "n_R"]] = summary[["n_D", "n_R"]].fillna(0).astype(int)
-    total = (summary["n_D"] + summary["n_R"]).replace(0, 1)
-    summary["party_skew"] = ((summary["n_D"] - summary["n_R"]) / total).round(3)
+    total = summary["n_D"] + summary["n_R"]
+    summary["party_skew"] = (
+        (summary["n_D"] - summary["n_R"]) / total.where(total > 0)
+    ).round(3)
     return summary.sort_values(["n_states", "n_bills"], ascending=False)
 
 

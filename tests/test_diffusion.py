@@ -149,6 +149,77 @@ def test_empty_input_returns_empty_frames():
     assert find_near_duplicates(empty).empty
 
 
+@pytest.mark.parametrize("population", ["empty", "short_titles", "one_state"])
+def test_empty_exact_clusters_preserve_supported_export_schema(population):
+    title = "Establishing comprehensive interstate aquatic wildlife management agreements"
+    supported = _bills([(state, 2024, title, "D") for state in ("TX", "OH", "GA")])
+    expected = find_reuse_clusters(supported).columns.tolist()
+    if population == "empty":
+        source = supported.iloc[:0]
+    elif population == "short_titles":
+        source = supported.assign(title="Budget")
+    else:
+        source = supported.assign(state="TX")
+
+    result = find_reuse_clusters(source)
+
+    assert result.empty
+    assert result.columns.tolist() == expected
+
+
+@pytest.mark.parametrize(
+    ("parties", "expected"),
+    [
+        ([None, "I", "unknown"], None),
+        (["D", "R", None], 0.0),
+        (["D", "D", "R", None], 0.333),
+    ],
+)
+def test_exact_party_skew_distinguishes_unknown_from_observed_balance(parties, expected):
+    title = "Establishing comprehensive interstate aquatic wildlife management agreements"
+    frame = _bills([
+        (("TX", "OH", "GA", "IA")[index], 2024, title, party)
+        for index, party in enumerate(parties)
+    ])
+    row = find_reuse_clusters(frame).iloc[0]
+
+    assert row["n_D"] == parties.count("D")
+    assert row["n_R"] == parties.count("R")
+    if expected is None:
+        assert pd.isna(row["party_skew"])
+    else:
+        assert row["party_skew"] == expected
+
+
+@pytest.mark.parametrize("empty", [False, True])
+def test_cli_exact_export_preserves_unknown_skew_and_empty_headers(tmp_path, empty):
+    title = "Establishing comprehensive interstate aquatic wildlife management agreements"
+    frame = _bills([(state, 2024, title, None) for state in ("TX", "OH", "GA")])
+    frame["identifier"] = ["HB 1", "HB 2", "HB 3"]
+    if empty:
+        frame = frame.iloc[:0]
+    source = tmp_path / "bills.parquet"
+    frame.to_parquet(source, index=False)
+    output = tmp_path / "exports"
+    output.mkdir()
+    exact_path = output / "text_reuse_clusters.csv"
+    near_path = output / "text_reuse_near_duplicates.csv"
+    exact_path.write_text("stale\n1\n", encoding="utf-8")
+    near_path.write_text("stale\n1\n", encoding="utf-8")
+
+    assert main(["--bills", str(source), "--out-dir", str(output)]) == 0
+
+    exact, near = pd.read_csv(exact_path), pd.read_csv(near_path)
+    assert {"n_D", "n_R", "party_skew"}.issubset(exact.columns)
+    assert "min_similarity" not in exact.columns
+    assert "stale" not in exact.columns and "stale" not in near.columns
+    assert exact["party_skew"].isna().all()
+    assert exact.empty == near.empty == empty
+    if not empty:
+        assert exact["n_bills"].tolist() == [3]
+        assert exact["n_D"].tolist() == exact["n_R"].tolist() == [0]
+
+
 def test_cohesion_exposes_transitive_chaining():
     """A chain A~B~C clusters all three even when A and C are dissimilar.
 
