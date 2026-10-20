@@ -2109,6 +2109,46 @@ budget, preserve forensic evidence and still report the incomplete population.
 Any original-root resume requires separate parent authorization. Complete-corpus
 and genuine final-32 sealing remain prohibited while 4,960 contexts are unfinished.
 
+#### Returned recovery and sealing packets: independent gates in progress
+
+The worker returns two immutable, zero-HTTP packets:
+`missouri-2023-2024-v4-stopped-prefix-recovery-readiness-v1`, **30,717 files**,
+manifest `ad387aa6ac42a2a16878d7427d5efa2581739c680a1ceee978f1e7314fdc983d`;
+and `missouri-2023-2024-post-exit-sealing-preparation-v1`, **412 files**,
+manifest `b373f534cd0461ccc1f32ef59edb2cd746ed99fac93a5d893082dd455e99c6e2`.
+Handoffs: `missouri_v4_stopped_prefix_recovery_handoff_v1.json` and
+`missouri_postexit_sealing_preparation_handoff_v1.json`.
+
+The recovery handoff reports a **private** zero-refetch recovery of 1,152
+candidates, 36 checkpoints, 6,029 pages per reader and **1,408 aggregate physical
+exchanges: 269 historical plus 1,139 new**. It retains 3,808 pending candidates
+and the unresolved original transient failure cause. The sealing handoff
+separately reports an executed mocked-transport 4,960-candidate fixture, with
+64 reused, 4,896 newly collected, 155 checkpoints and final full-32 ordinals
+4,928–4,959. These remain **worker execution claims**, not independent parent
+execution or actual production recovery.
+
+Parent independently launches the two original archived verifiers in distinct
+read-only guarded processes, plus a third process running the ten original
+helper regressions against an inode-disjoint private `copy2` packet. Only test
+input/scratch globals are rebound; tiny staging-fault tests retain their
+disclosed mocked completed-campaign validator. Harness:
+`replay_missouri_returned_packets_parent_v1.py`, SHA
+`f983eff86d97a3b94f79444eeddee29ba86529909c6e592acc377846ca8024cd`;
+original handle `missouri-returned-packets-parent-v1`.
+One-time startup observation verifies exact parent PID **70813** at
+**2026-10-20T13:21:02.462744+00:00**. The initial launch-record lookup occurred
+before child startup and found no record; that is not a completed gate or source
+failure. No completed parent result is claimed yet.
+
+The enclosing gate requires complete before/after packet file-and-directory
+metadata and content equality, pinned sources and retained raw child output.
+Even a successful result would verify the archived private prefix and selected
+helpers, **not freshly recover the actual stopped root or rerun the full
+4,960-candidate driver**. No original campaign access, HTTP, production resume,
+budget reset, actual completion seal or scientific/publication admission is
+authorized by this replay.
+
 ## Texas 88R filed-census and bounded original-text recovery
 
 `data/processed/texas-official-parallel-recovery-v3/` retains complete official
@@ -2275,6 +2315,52 @@ No toolkit may seal the live
 Texas root without original collector exit, zero pending candidates and a
 genuine parent exit receipt. Earlier failures and all physical allowances remain
 preserved; no source, classifier or publication admission follows.
+
+#### Returned v6r2: guard repair accepted, full-driver gate still open
+
+The worker returns immutable toolkit
+`texas-full-source-postexit-toolkit-v6r2`, manifest
+`65a12497081dc8044ebcde1b975ed0261871a99795d049f9159e848d578359fc`.
+Its separate **synthetic** materialized complete/final-15 archives have manifests
+`da0b93db203cea18b56627852359c37776f9f7220ce8e7af64c309c4feb919bc`
+and `83580a9d8771e6b37d0ff6a4f24fa49dc993acd904785d903566285885cc8f52`.
+The handoff reports 11,807 native identities, 16 reused, 11,791 fake fetches,
+368 checkpoints, final 15 and 11,831 aggregate physical exchanges including
+40 historical. It preserves HB1's shell and leaves its PDF unfetched.
+Those archive/driver results remain worker evidence, not parent replay.
+
+Parent actually executes the exact returned `build_offline_audit_callback`
+under a separate read-only outer guard: **31 required harmless synthetic
+denials and two allowed controls pass**, including the six previously omitted
+socket/DNS/fork/exec cases. Child **72363** exits zero with empty stderr and no
+timeout; finish **2026-10-20T13:23:04.579024+00:00**. All **1,928 toolkit payloads**
+match the original manifest. All **2,346 original file-and-directory records**
+(1,929 files and 417 directories, including root) retain exact content and
+metadata; raw before/after maps are byte-identical, SHA
+`dbcba8ce618beb1c0b1e220888f3233ea7bb64d7cf5b459d8c4fd210fea0f3ba`.
+The original callback source SHA is
+`b46f601d307799ffc1456956cd4149a34901421662faac419474c3a74d86f89e`.
+Report `tx_v6r2_callbacks_parent_actual_v1.json`, SHA
+`2a23964b013e5df577bf9f71d7008337c2fd0517a733665a44d005636a4e4a3b`.
+Raw child proof, stderr, maps and source pins are independently reconciled.
+Actual target mutations/network operations, archive-verifier executions and
+full-driver executions are all **zero** in this narrow observation.
+
+Static inspection of the packaged `tx_full_postexit_v6_materialized_fixture.py`
+establishes a remaining limitation: `build_campaign` replaces `update_progress`
+and `freeze_batches` with deferred/no-op functions during `collect`, then
+restores and calls the original helpers only after the entire stream finishes.
+This materially improves on v5r1 by retaining real documents, transport and
+end-of-stream checkpoints, but does **not** prove the original normal
+checkpoint/progress/interruption/resume boundaries. The same worker owns a
+distinct immutable successor with an honest native full-driver gate; any
+necessary collector optimization must disclose changed source and demonstrate
+supported-behavior and crash-boundary invariants. V6r2 remains unchanged.
+
+The accepted callback/toolkit-integrity result does not lift this full-driver
+gate, independently verify the synthetic whole/final-15 archives, certify the
+actual Texas corpus or authorize real sealing. The original collector and
+production source root remain untouched.
 
 ## New York 2023–2024 native census and bounded original prints
 
