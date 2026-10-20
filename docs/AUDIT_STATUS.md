@@ -959,6 +959,39 @@ This accepts **genuine read-only preseal inspection**, not completed archive
 sealing or scientific admission. The original full-driver/focused-gate parent
 execution remains pending; earlier running descriptions are historical.
 
+The full-driver execution subsequently **fails with enclosing exit one**.
+The original `wisconsin-postexit-full-parent-v1` handle is read after its
+completion notification. Its retained state records **2,631 terminal failures**,
+each with `PermissionError:All hard links denied in private full fixture`:
+the outer harness prohibited the unchanged collector's link from a newly
+generated private transport body to its private document PDF. This is an
+executed harness-policy conflict, not evidence that genuine PDFs failed.
+The driver stopped at its status assertion; standalone verification and the
+eight focused gates **did not execute**, despite the v1 report's unconditional
+`original_full_driver_and_focused_tests_executed` field. All **33,039 original
+files retain unchanged metadata**, with snapshot SHA
+`6820e1594f91e69ea20f4769b42561c93916f72dd7294539a3190c7893a0e58a`.
+Report, log and failed private work remain preserved.
+
+A distinct `wisconsin-postexit-full-parent-v2` execution is launched from a
+SHA-pinned transformation of the retained v1 harness. Original driver,
+collector, extraction, persistence, producer and verifier bodies remain
+unchanged. The revised link policy permits only a new private driver's
+`transport/exchanges/NNNNNN/body.bin` to its `documents/IDENTITY/source.pdf`,
+for ordinals 94-25,000, a single-link source and an absent destination.
+Original-file and frozen-seed links remain forbidden. The child must exercise
+one actual private-link positive control and five rejection controls before
+readiness, then require exactly **2,631 generated-body links** on successful
+completion. The inherited report field is corrected to require all original
+bodies to return. This new launch is **not a completed PASS**; v1 failure and
+the separately accepted genuine-source inspection remain unchanged.
+Guarded readiness is subsequently observed from child **299**, with parent
+**242** and both exact process commands present. Harness SHA:
+`caf0d77770b4f5911462b3fe41a4ce44ed0e0c83a57ef15d868f6bc4285994a3`.
+The readiness response occurs after the actual positive/five negative link
+controls; full execution results remain pending.
+No HTTP, genuine exit receipt, real sealing or scientific admission is authorized.
+
 ## Full-campaign preparation gates: Pennsylvania, Ohio and Missouri
 
 Pennsylvania's initial immutable preparation and seed-32/seed-30 archives have
