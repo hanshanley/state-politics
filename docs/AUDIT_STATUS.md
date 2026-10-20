@@ -992,6 +992,36 @@ The readiness response occurs after the actual positive/five negative link
 controls; full execution results remain pending.
 No HTTP, genuine exit receipt, real sealing or scientific admission is authorized.
 
+The v2 full-driver execution subsequently **completes with enclosing exit zero /
+PASS** at **2026-10-20T08:52:59.724310+00:00**; the original
+`wisconsin-postexit-full-parent-v2` handle is read after its completion
+notification. The unchanged original driver actually processes **2,631 pending
+identities**, reuses **24 genuine seeds without refetch**, persists **2,631
+redirects plus 2,631 PDF responses**, extracts every new PDF with both readers,
+and produces **82 full 32-row checkpoints plus the true final 31**.
+The producer, standalone final-31 verifier including whole verification, and all
+**eight original focused gates** return PASS. The final range is
+**[2,624, 2,655)** within the full **2,655-identity** population, not an invented
+31-identity world. Fixture accounting is **93 inherited + 5,262 fake = 5,355
+physical exchanges**, next ordinal **5,356**, unchanged **25,000 cap**.
+
+Report: `wisconsin_postexit_full_parent_actual_v2.json`.
+All **33,039 original files' metadata remain unchanged**, with before/after
+snapshot SHA `6820e1594f91e69ea20f4769b42561c93916f72dd7294539a3190c7893a0e58a`.
+Copy2 input proof SHA:
+`a675f81f420eed34cda07607cb465135e0c7f43cef141d0ad6277c6c2ca6948f`.
+The private-link positive/five negative controls and exactly **2,631 private
+generated-body links** pass; successful private work is removed. There is no
+actual-source access or HTTP. The v1 failure remains preserved, not relabelled.
+This accepts the **actual offline driver and release gates**, not a genuine
+exit receipt, real-source sealing or scientific admission.
+
+A separate `wisconsin-postexit-callbacks-parent-v1` run is launched to execute
+the unchanged **40 harmless synthetic audit-hook callback cases** under the
+accepted read-only outer guard. Its verifier dispatch is mocked; activation
+stdout is not actual verifier execution evidence. That enclosing result remains
+pending and is not included in the accepted full-driver gate count.
+
 ## Full-campaign preparation gates: Pennsylvania, Ohio and Missouri
 
 Pennsylvania's initial immutable preparation and seed-32/seed-30 archives have
