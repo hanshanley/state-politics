@@ -24,7 +24,8 @@ remain explicit; this is not a completed project or a certified classifier.
 | Colorado native index | Independent publisher census reconciles all 1,459 regular identities across 2023A/2024A. First checkpoint retains 32 PDFs / 264 pages. The collector has finished with 1,457 successes and two unsupported-reference dispositions; independent final-17 replay passes with both readers and all 2,976 physical requests resolved, while whole replay remains pending. | Twenty-nine special-session contexts are separate. Two canonical introduced-reference gaps are not publisher-absence findings; the corresponding bill pages remain uninspected. |
 | North Carolina native index | Independent 2023–2024 publisher census reconciles 2,004 of 2,005 canonical contexts. Complete source replay preserves 2,004 PDFs / 6,783 pages per reader, 2,002 observed numeric identities and two unresolved identity negatives. Actual parent replay now also reconstructs both complete unlabelled inputs: 4,008 reader views / 10,917,908 tokens / 14,520 windows, with zero discarded tokens. | Reader views are not extra bills or approved classifier inputs. Canonical HB 311 remains distinct from native HR 311 despite the shared URL. Statewide publisher version enumeration remains incomplete; canonical version rows are separately labelled, not rebranded as native. |
 | Wisconsin native campaign | Original collector exit zero is followed by independent genuine inspection, offline toolkit/driver/callback gates and genuine archive production. Independent whole/final-31 verification and fresh two-reader reopening now also pass: 2,655 PDFs / 18,880 pages per reader / 5,355 exchanges / 83 checkpoints, with all 40,482 archive file/directory metadata records unchanged. A distinct full unlabelled paired-reader input inventory is delegated, not yet returned or accepted. | Source-archive closure is accepted, not classifier, filing-time or scientific certification. The 25,000 ceiling includes all 93 inherited exchanges. Historical canonical-join, guard and full-fixture harness failures remain preserved; no scientific admission follows. |
-| Ohio full unlabelled inputs | Worker returns 2,279 contexts / 6,811 source views / 93,161,481 source tokens / 118,663 windows, with zero discarded tokens, in an immutable 16,003-file packet. A separate original-verifier parent replay is running. | Worker direct/guarded passes are not parent acceptance. Views are not bills; HTML views include exact source markup. Five PDF-only and seven unsupported contexts remain, as do 1,007 absent HTML session headers. No labels, forward passes, training or scientific admission. |
+| Ohio full unlabelled inputs | Independent original-verifier parent replay now passes: 2,279 contexts / 6,811 source views / 93,161,481 source tokens / 118,663 windows, zero discarded tokens and all 18,290 packet file/directory content and metadata records unchanged. Raw readiness, all 45 progress lines, final proof, empty stderr, source pins and full before/after maps are independently reconciled. | Views are not bills; HTML views include exact source markup. Five PDF-only and seven unsupported contexts remain, as do 1,007 absent HTML session headers. Runtime preload precedes the guard; the original verifier runs entirely afterward. No labels, forward passes, training or scientific admission. |
+| Missouri archived printed headers | A distinct immutable supplement returns first-page observations for all 1,152 archived PDFs in both readers, preserving the original 1,152 false flags. Independent original-verifier replay and joins to all 4,608 copied source dependencies are launched separately. | Worker-reported matching House/First Regular Session/102nd General Assembly headers are not yet parent-accepted. Unprinted session years stay unknown; no original identity/status, filing-time or scientific certification is promoted. The full 4,960-context corpus remains unfinished. |
 | North Carolina native-version preparation | V5 strict replay, four exact parser regressions and all fifteen original parent release tests pass, including the actual 2,004-population/final-20 fake-transport driver. Genuine readiness replay and the separate five original tests/private once-only initialization/promotion/rejection now pass independently, with all 45,587 readiness/terminal originals unchanged. | Private initialization produced 44,341 payload files; a second initialization was rejected without changing its target. Actual target, staging and authorization remain absent; no version collection is authorized. Earlier original-path replacement/metadata failures remain unreconciled; restored payload bytes do not restore historical immutability. |
 | Classification | Four saved official English ModernBERT-base pilots compared on the same 52 platform references: external-only 41/52, joint 47/52, broader-source 47/52, Republican-expanded 49/52. The fourth run correctly rejects 3/4 mixtures and 6/6 non-policy units. | The fourth run loses one policy decision, still accepts a mixture above 0.999 and regresses on insufficient-evidence and taxonomy-boundary development cases. Both sets are examined diagnostics, not fresh independent tests. Independent review and empirical gates remain required. No candidate is approved. |
 | Labels | External CAP files and two state-reference CSVs recovered; exact-context Florida candidates and complete bounded overlap witnesses are frozen without label admission. Split/group/text and reviewed-platform source-body checks retain explicit label provenance. | Modern Florida external titles/subtopics are missing; Pennsylvania rows stop in 2016. Annotation provenance, source permissions, adapted-topic compatibility, bill families and independent state-domain references remain unresolved. |
@@ -1933,8 +1934,8 @@ retain their HTML failure evidence. The 1,007 absent HTML session headers remain
 absent. The full PDF inventory contains 41,884 pages per reader.
 
 The worker reports direct and guarded exhaustive replays passing, with all
-60,324 accepted-source file/directory records unchanged. These are **worker
-results**, not independent parent acceptance. Failed build attempts and the
+60,324 accepted-source file/directory records unchanged. These initial **worker
+results alone** are not independent parent acceptance. Failed build attempts and the
 first guard failure remain preserved; that failure occurred during runtime
 temporary-directory probing, before verifier execution. The successful guarded
 run explicitly preloads runtime modules before installing the write-denying
@@ -1949,9 +1950,35 @@ handle `ohio-full-token-inventory-parent-v1`; startup
 This requires every PDF reader/HTML view, JSONL/Parquet row, token and window
 to reconstruct, along with full packet content and file/directory metadata
 equality before/after. The guard is installed after disclosed runtime preloading;
-the verifier runs entirely afterward. **No completed parent result or child
-readiness is claimed yet.** Original campaign/source archive access, new HTTP,
-model inference, new labels and scientific/publication admission remain excluded.
+the verifier runs entirely afterward.
+
+The original completion notification is received and the original handle is
+read: **exit zero**. The independent parent finishes at
+**2026-10-20T13:54:08.100881+00:00**, with child **77309** exiting zero, no timeout
+and empty stderr. Report `ohio_full_token_inventory_parent_actual_v1.json`, SHA
+`b059f7865537d08ff9427bfcd2e4d7e37f41486512a4b9446b376a8ac8155dde`,
+records **PASS_FULL_UNLABELLED_INPUT_REPLAY**. All 30 harmless denial controls
+and two allowed controls pass. The original readiness, all **45** progress
+records at 50 through 2,250 contexts, and final proof are independently
+reconciled against the saved raw stdout, SHA
+`14728f03e1d1c769300678d4465dbe03fc5547bb74177cd67ebe3186a54642c0`.
+
+All **18,290 packet entries** remain content/metadata-identical: **16,003 files /
+2,287 directories including root / 3,518,311,500 file bytes**. The raw full
+before/after maps are byte-identical, SHA
+`8563be64aec3d1b1d08660edf7a3ccada6b93c804ebccd39ea2f93594aa94488`.
+The exact original verifier, shared source, packet report, manifest and generated
+child source pins match. Both PDF readers reproduce **41,884 physical pages**
+and all source/text/token/window and physical-LF JSONL/Parquet coverage.
+Reconciliation receipt `ohio_full_token_inventory_parent_reconciliation_v1.json`,
+SHA `e3b559981da9b962c31d004167fcee5b9de6aabc26f96bb867626864a9e0b085`,
+binds the actual completed execution, not a new replay or worker log.
+
+This accepts **complete unlabelled input reconstruction only**. Views remain
+unadjudicated evidence, not certified classifier inputs, and exact HTML source
+includes markup. Original campaign/source archive access, new HTTP, model
+inference, new labels and scientific/publication admission remain excluded.
+This result is supplemental to, not retroactively part of, frozen v54.
 
 **Illinois actual service-stop observation.**
 
@@ -2190,8 +2217,8 @@ physical exchanges**, with **3,808 pending**. This confirms saved extraction
 and source-plan joins, **not printed identity certification**: the frozen
 observer reproduces `printed_identity_observations: {"False": 1152}`. Its
 abbreviated-number search does not establish a printed header. The same worker
-now owns a distinct zero-HTTP, full-prefix printed-header observation supplement,
-retaining the original negatives, exact spans and missing/conflicting outcomes.
+subsequently returns a distinct zero-HTTP, full-prefix printed-header observation
+supplement, described below, retaining original negatives and exact spans.
 No original status or canonical identity is promoted.
 
 All **484 sealing-packet entries** (412 files, 72 directories) and **35,647
@@ -2207,6 +2234,45 @@ the 4,960-candidate driver; the prefix verifier checks the saved recovery receip
 rather than executing recovery again. No actual original campaign access,
 fresh recovery, HTTP, production resume, budget reset, actual completion seal
 or scientific/publication admission occurs in that completed replay.
+
+#### Printed-header supplement: returned; independent replay in progress
+
+The same worker returns
+`missouri-2023-2024-v4-stopped-prefix-printed-header-observation-supplement-v1`,
+**4,624 files / 498,674,414 payload bytes excluding manifest**, manifest
+`900ab07b87ec6054801cc221b5f181304102b14e7ebe63e1b6b15b167621f2b8`.
+Handoff `missouri_printed_header_supplement_handoff_v1.json`, SHA
+`cf58c228c32c454da89945bef633e19bde38a6b62c60880c06ffd7c317aa294c`.
+The worker reports freshly reopening **1,152 first pages per reader**, all with
+matching typed House Bill/chamber, **First Regular Session** and **102nd General
+Assembly** headers. Literal session years are absent, not inferred from the
+assembly, requested year or source route. The original `{"False": 1152}` flags,
+1,139 collected/13 reused dispositions and 3,808 pending candidates remain.
+This is first-page observation, not fresh extraction of all 6,029 source pages,
+an original-print/legal determination or identity certification.
+
+The worker reports ten actual focused tests and direct/common-guard verifier
+passes. Tests include real headers, wrong number/chamber, reader session
+disagreement, body citations, missing headers, interdigit spacing and literal
+Unicode physical-LF preservation. No Parquet export is produced or claimed.
+Those worker results are **not parent acceptance**.
+
+Parent launches a distinct original-verifier replay:
+`replay_missouri_printed_header_supplement_parent_v1.py`, SHA
+`cbe712e4a12de604a51de9e4ac2e94dc0be09831bee1f93b1ac7c94c98f3c052`;
+original handle `missouri-header-supplement-parent-v1`; startup
+**2026-10-20T13:55:58.666437+00:00**, exact parent **82165** observed once.
+The gate requires 30 harmless denial controls and two allowed controls,
+fresh original-verifier reconstruction of every first-page observation and
+all ten embedded tests, plus independent joins from **4,608 source copies**
+back to the accepted archived originals. Copies must be single-link and
+inode-disjoint. Both original packet maps must equal the already accepted
+35,647-entry prefix and 484-entry sealing baselines, and every supplement and
+original file/directory content/metadata record must remain unchanged afterward.
+**No completed parent result or child readiness is claimed yet.**
+The verifier cannot read the original campaign or original archived packets;
+only parent performs the read-only source joins. No HTTP, original writes,
+recovery, production resume, labels, model or scientific/publication admission.
 
 #### Fresh actual-root private recovery: separate parent execution in progress
 
