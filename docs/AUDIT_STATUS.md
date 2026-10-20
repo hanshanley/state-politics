@@ -2136,9 +2136,40 @@ case does not prove literal Unicode separator handling. An independent
 read-only replay of the saved full synthetic archive is launched as
 `ny-v15-readonly-parent-v1`, responsive parent PID **28053**, harness SHA
 `3bb1d4869b640232c816870522d382d859219ca2a6202ece56c9fa11cd75d7b2`.
-No completed parent replay or fresh parent full-driver execution is claimed.
+At startup, no completed parent replay or fresh parent full-driver execution
+was claimed.
 
-The parent then **actually reproduces a release blocker** in pinned optimized
+The original read-only replay handle subsequently **completes with exit
+zero**. Actual report `ny_v15_readonly_parent_actual_v1.json` is **PASS**,
+finished **2026-10-20T11:25:27.098791+00:00**, SHA
+`4e70747b8aba6df7ca7a43c45d8953f0a25586ce01b16c977f6af6c94526bd85`.
+Guarded child PID **31224** executes the unchanged original standalone
+whole verifier with its nested final-43 check; it is not two independent
+verifier executions. The child returns zero without timeout or stderr,
+and its original saved stdout exactly reproduces the pinned worker proof.
+
+The proof confirms the **synthetic** fixture's **24,315 typed identities /
+24,317 dispositions / 16 inherited successes / 24,299 additional terminal
+records / 379 normal checkpoints / final 43 / 24,300 new physical lifecycles /
+24,324 aggregate exchanges**. Both readers reopen **398 PDFs / 818 pages**;
+397 successful dispositions and one unverified-header disposition remain
+distinct. The **23,915 missing and four failure dispositions** belong to
+the synthetic fixture, not evidence about official-source availability.
+All **319,603 original archive files' metadata** remain unchanged; both
+physical-LF snapshot files contain that exact number of records, digest
+`009c2686b3a7264dcb368e17fab38b878e5a582355d39d152f4ac8f55be65200`.
+This is a file-metadata comparison, not a directory-metadata claim.
+The private root is removed and the cache prefix remains absent; no real
+HTTP requests or actual campaign reads occur.
+
+This accepts only the saved synthetic archive's **read-only replay gate**.
+The parent does not execute the pending driver in this run. V15's stale
+handoff and the separately reproduced durable-outcome recovery failure
+remain release blockers; neither the actual New York corpus nor scientific
+or publication eligibility is certified. The result remains supplemental
+to the frozen v54 inputs.
+
+Separately, the parent **actually reproduces a release blocker** in pinned optimized
 collector `caf6a9eb96d229d2896bc074304ef5c061191e4d923aa0e07856dfcb006e6ad4`.
 In a copy2-disjoint private 64-candidate fixture, the real saved outcome for
 **A 86 / `00065_a86_attempt1`** remains durable while its final ledger-result
