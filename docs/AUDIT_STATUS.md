@@ -16,14 +16,15 @@ remain explicit; this is not a completed project or a certified classifier.
 | Sponsorship | Date-aware attribution remains conservative. Official Washington evidence supplies separate session-roster D/R observations for 14,132 of 14,143 measures. Separately, 1,481 native SD roster rows identify all 7,086 prime-sponsor references; 205 mixed-party cases remain explicit. No filing-time party is overwritten. | A session roster does not establish affiliation at filing. Washington retains ten source-identified tests and one substantive original without a native primary-sponsor API record. SD cross-session cosponsor IDs, institutional sponsorship and event-time affiliations remain separately accounted for; all-state recovery is open. |
 | Bills | October snapshot extracted: 1,090,369 source-context measures across all 50 states, 5,028,893 sponsorships, 9,002,451 actions and 873,980 vote events. All eleven tables have recorded hashes/counts. Native documents retained for all 241 non-test measures in the bounded Washington metadata-gap cohort; separately, all 5,369 native SD introduced candidates and 15,308 physical pages captured and exactly replayed in both readers. | Official-source reconciliation, historical affiliations and filing-time text review. One Washington resolution has a version-note conflict; one SD PDF prints no session year. Neither these recoveries nor snapshot extraction certifies statewide/national original-text completeness or an analytical denominator. |
 | Parallel state recovery | Missouri, Pennsylvania and Ohio initial cohorts retain 188 complete PDF candidates / 3,095 pages and 124 corresponding HTML versions from 192 selections. Full Florida replay separately accounts for 2,868 linked contexts, including an explicitly negative corrected-copy disposition. | Four selected PA/OH originals remain unresolved. Missouri withdrawal-only notices are not policy text; historical corroboration does not resolve publisher identity conflicts. These bounded recoveries are not statewide text completeness or classifier certification. |
-| Full-source campaigns | New York and Texas continuations remain open under frozen finite contracts; Illinois has exited one after five connection failures, with 1,925 pending and two terminal-partial dispositions. Wisconsin's genuine whole/final-31 archive and fresh two-reader replay of all 2,655 PDFs pass independently, with all 40,482 archive file/directory metadata records unchanged. Ohio's genuine whole/final-seven archive and fresh extraction of all 2,267 recovered HTML originals now pass in three distinct guarded processes, with all 60,324 archive file/directory metadata records unchanged: 2,279 terminal dispositions, comprising 2,267 PDF/HTML pairs, five PDF-only/HTML-failed cases and seven unsupported originals; 6,843 physical exchanges remain counted. Pennsylvania's actual zero-HTTP initialization remains accepted, but its separately authorized collector has exited one on a noncontiguous checkpoint buffer: 98 newly complete, 62 seeds, ten incomplete and 4,616 pending. All 226 new transport lifecycles reconcile, for 762 aggregate exchanges including 536 inherited; all 20,069 stopped-root file/directory metadata records remain unchanged during offline incident inspection. Missouri's collector exited with a checkpoint-context error: 1,152 retained candidate records, not a completed 4,960-context corpus. Colorado's genuine final-17 archive passes independent parent replay; its whole-archive replay remains pending. North Carolina's entire 2,004-document corpus and separate final-20 archive pass independent replay. | Wisconsin's and Ohio's source-archive closure does not establish filing-time eligibility, policy labels or scientific admission. Ohio's twelve non-full dispositions remain explicit; terminal does not mean complete source pairs, and 1,007 recovered HTML originals have no printed session header. Pennsylvania requires immutable parser/checkpoint repair, actual-prefix recovery readiness and separate authorization before any resume; no genuine completion seal or whole/final-18 acceptance exists. Its historical budget and missing-body incidents remain unresolved. Illinois requires retained-prefix verification and safe recovery readiness before any resume; observed connection failures do not establish their network or publisher cause. Missouri requires offline prefix verification and recovery readiness before any resume; its original failure cause is not established. Colorado still requires completed parent whole-archive replay; worker source nlink changes remain disclosed. North Carolina's identity negatives and native-version census remain unresolved. |
+| Full-source campaigns | New York and Texas continuations remain open under frozen finite contracts; Illinois has exited one after five connection failures, with 1,925 pending and two terminal-partial dispositions. Wisconsin's genuine whole/final-31 archive and fresh two-reader replay of all 2,655 PDFs pass independently, with all 40,482 archive file/directory metadata records unchanged. Ohio's genuine whole/final-seven archive and fresh extraction of all 2,267 recovered HTML originals now pass in three distinct guarded processes, with all 60,324 archive file/directory metadata records unchanged: 2,279 terminal dispositions, comprising 2,267 PDF/HTML pairs, five PDF-only/HTML-failed cases and seven unsupported originals; 6,843 physical exchanges remain counted. Pennsylvania's actual zero-HTTP initialization remains accepted, but its separately authorized collector has exited one on a noncontiguous checkpoint buffer: 98 newly complete, 62 seeds, ten incomplete and 4,616 pending. All 226 new transport lifecycles reconcile, for 762 aggregate exchanges including 536 inherited; all 20,069 stopped-root file/directory metadata records remain unchanged during offline incident inspection. Missouri's collector exited with a checkpoint-context error: 1,152 retained candidate records, not a completed 4,960-context corpus. Colorado's genuine final-17 archive passes independent parent replay; its whole-archive replay remains pending. North Carolina's entire 2,004-document corpus and separate final-20 archive pass independent replay. | Wisconsin's and Ohio's source-archive closure does not establish filing-time eligibility, policy labels or scientific admission. Ohio's twelve non-full dispositions remain explicit; terminal does not mean complete source pairs, and 1,007 recovered HTML originals have no printed session header. Pennsylvania requires immutable parser/checkpoint repair, actual-prefix recovery readiness and separate authorization before any resume; no genuine completion seal or whole/final-18 acceptance exists. Its historical budget and missing-body incidents remain unresolved. Illinois's read-only retained-prefix reconstruction now passes, but blind resume remains unsafe; observed connection failures do not establish their network or publisher cause. Missouri's archived-prefix reconstruction and ten helper tests pass; fresh actual-root private recovery is running separately, and all 1,152 original printed-identity flags remain false. Its original failure cause is not established. No production resume is authorized. Colorado still requires completed parent whole-archive replay; worker source nlink changes remain disclosed. North Carolina's identity negatives and native-version census remain unresolved. |
 | California native archives | Five complete biennial archives spanning 2017–2026 retain 26,798 native introduced candidates and 26,797 original normalized exports; all 993,735 ZIP entries pass independent integrity replay. A separate parent-replayed GRP1 supplement now preserves its complete 320,397-character native body and 4,229 element spans. | The 2,980 historical/boundary source-only contexts and 44 special-session candidates are separate, not admitted. GRP1 has a native GRP body, previously unsupported by the Bill/Resolution mapper; old exports remain unchanged. Archive completeness and structural projection do not certify filing-time identity, legal semantics or policy labels. |
 | Texas native reports | Complete 88R House/Senate filed reports reconcile 11,807 of 11,809 canonical regular contexts. Sixteen introduced PDF+HTML pairs retain 55 physical PDF pages and 16 HTML text blocks. | Literal canonical SB 15247 and SR 1960 remain unmatched. Other originals, historical affiliations, typed markup interpretation and filing-time certification remain open. Special sessions are isolated, not combined with 88R. |
 | New York native index | Official 2023–2024 Assembly search response retains 24,316 rows and 24,268 exact canonical matches. Self-contained first-batch archive preserves 80 PDF candidates / 256 pages / 769,944 joined-document characters / 1,488 extraction blocks. | Canonical J 272, one untyped `00000` row and 47 anomalous source-only identities remain separate. Full collection is running, not complete. Unselected originals, visual markup and legal-version identity remain unresolved; the blocked API was not bypassed. |
-| Illinois native index | Official 103rd-General-Assembly index retains 13,391 rows and matches all 13,376 canonical regular contexts. The original full collector has stopped with exit one: 7,889 success, 2,811 identity-unverified, 751 unavailable-shell, thirteen unsupported, two partial and 1,925 pending dispositions. All 11,440 new request lifecycles are closed; 11,527 exchanges include the 87 inherited. Returned closure and stopped-prefix packets pass parent integrity replay; a separate read-only parent inspection of the actual stopped root is running. | Five retained curl exit-7 connection failures triggered the stop. Original resume skips terminal partials; blind restart is not a repair. A missing timestamp-mutation guard and reduced-population shard fixture block full-driver acceptance; safe recovery remains open. Fifteen source-only entries and 878 canonical introduced-metadata gaps remain explicit. Identity enumeration is not complete original-text recovery or filing-time certification. |
+| Illinois native index | Official 103rd-General-Assembly index retains 13,391 rows and matches all 13,376 canonical regular contexts. The original full collector has stopped with exit one: 7,889 success, 2,811 identity-unverified, 751 unavailable-shell, thirteen unsupported, two partial and 1,925 pending dispositions. All 11,440 new request lifecycles are closed; 11,527 exchanges include the 87 inherited. Returned packets pass integrity replay, and separate read-only parent inspection now reconstructs the actual stopped prefix with all 343,745 original file/directory metadata records unchanged. | Five retained curl exit-7 connection failures triggered the stop. Original resume skips terminal partials; blind restart is not a repair. A missing timestamp-mutation guard and reduced-population shard fixture block full-driver acceptance; safe recovery remains open. Fifteen source-only entries and 878 canonical introduced-metadata gaps remain explicit. Identity enumeration is not complete original-text recovery or filing-time certification. |
 | Colorado native index | Independent publisher census reconciles all 1,459 regular identities across 2023A/2024A. First checkpoint retains 32 PDFs / 264 pages. The collector has finished with 1,457 successes and two unsupported-reference dispositions; independent final-17 replay passes with both readers and all 2,976 physical requests resolved, while whole replay remains pending. | Twenty-nine special-session contexts are separate. Two canonical introduced-reference gaps are not publisher-absence findings; the corresponding bill pages remain uninspected. |
 | North Carolina native index | Independent 2023–2024 publisher census reconciles 2,004 of 2,005 canonical contexts. Complete source replay preserves 2,004 PDFs / 6,783 pages per reader, 2,002 observed numeric identities and two unresolved identity negatives. Actual parent replay now also reconstructs both complete unlabelled inputs: 4,008 reader views / 10,917,908 tokens / 14,520 windows, with zero discarded tokens. | Reader views are not extra bills or approved classifier inputs. Canonical HB 311 remains distinct from native HR 311 despite the shared URL. Statewide publisher version enumeration remains incomplete; canonical version rows are separately labelled, not rebranded as native. |
-| Wisconsin native campaign | Original collector exit zero is followed by independent genuine inspection, offline toolkit/driver/callback gates and genuine archive production. Independent whole/final-31 verification and fresh two-reader reopening now also pass: 2,655 PDFs / 18,880 pages per reader / 5,355 exchanges / 83 checkpoints, with all 40,482 archive file/directory metadata records unchanged. | Source-archive closure is accepted, not classifier, filing-time or scientific certification. The 25,000 ceiling includes all 93 inherited exchanges. Historical canonical-join, guard and full-fixture harness failures remain preserved; no scientific admission follows. |
+| Wisconsin native campaign | Original collector exit zero is followed by independent genuine inspection, offline toolkit/driver/callback gates and genuine archive production. Independent whole/final-31 verification and fresh two-reader reopening now also pass: 2,655 PDFs / 18,880 pages per reader / 5,355 exchanges / 83 checkpoints, with all 40,482 archive file/directory metadata records unchanged. A distinct full unlabelled paired-reader input inventory is delegated, not yet returned or accepted. | Source-archive closure is accepted, not classifier, filing-time or scientific certification. The 25,000 ceiling includes all 93 inherited exchanges. Historical canonical-join, guard and full-fixture harness failures remain preserved; no scientific admission follows. |
+| Ohio full unlabelled inputs | Worker returns 2,279 contexts / 6,811 source views / 93,161,481 source tokens / 118,663 windows, with zero discarded tokens, in an immutable 16,003-file packet. A separate original-verifier parent replay is running. | Worker direct/guarded passes are not parent acceptance. Views are not bills; HTML views include exact source markup. Five PDF-only and seven unsupported contexts remain, as do 1,007 absent HTML session headers. No labels, forward passes, training or scientific admission. |
 | North Carolina native-version preparation | V5 strict replay, four exact parser regressions and all fifteen original parent release tests pass, including the actual 2,004-population/final-20 fake-transport driver. Genuine readiness replay and the separate five original tests/private once-only initialization/promotion/rejection now pass independently, with all 45,587 readiness/terminal originals unchanged. | Private initialization produced 44,341 payload files; a second initialization was rejected without changing its target. Actual target, staging and authorization remain absent; no version collection is authorized. Earlier original-path replacement/metadata failures remain unreconciled; restored payload bytes do not restore historical immutability. |
 | Classification | Four saved official English ModernBERT-base pilots compared on the same 52 platform references: external-only 41/52, joint 47/52, broader-source 47/52, Republican-expanded 49/52. The fourth run correctly rejects 3/4 mixtures and 6/6 non-policy units. | The fourth run loses one policy decision, still accepts a mixture above 0.999 and regresses on insufficient-evidence and taxonomy-boundary development cases. Both sets are examined diagnostics, not fresh independent tests. Independent review and empirical gates remain required. No candidate is approved. |
 | Labels | External CAP files and two state-reference CSVs recovered; exact-context Florida candidates and complete bounded overlap witnesses are frozen without label admission. Split/group/text and reviewed-platform source-body checks retain explicit label provenance. | Modern Florida external titles/subtopics are missing; Pennsylvania rows stop in 2016. Annotation provenance, source permissions, adapted-topic compatibility, bill families and independent state-domain references remain unresolved. |
@@ -1245,6 +1246,23 @@ party attribution, policy labels or model accuracy; scientific and publication
 admissions remain false. It is supplemental to the frozen v54 audit, whose
 34 missing-artifact failures are not retroactively changed.
 
+A distinct GPT-5.6 Sol worker,
+`0ca454c5-5d33-43e4-80a5-bed2393bac85`, now owns a **zero-HTTP, full-native
+unlabelled paired-reader input inventory** derived only from this accepted
+genuine Wisconsin archive. Parent freshly rehashes its original outer manifest
+before delegation: `59c8ac0b3f25bfc0916940f61e729e1a412f2ee445854b7795fcda8b74cff1a1`.
+Expected scope is **2,655 contexts / 5,310 separate reader views / 18,880 pages
+per reader**, subject to actual source joins, not invented counts. Existing
+negative identities and historical failures remain attached.
+
+The worker must reuse the already frozen official ModernBERT tokenizer/window
+policy, preserve all source tokens and physical-LF JSONL/Parquet parity, and
+produce a new self-contained immutable packet with actual full direct and
+guarded replays. Original source and policy-input file/directory content and
+metadata must stay unchanged; no source links, HTTP, labels, inference,
+training or admissions are authorized. **No completed packet, token total,
+worker PASS or parent acceptance is claimed yet.**
+
 ## Full-campaign preparation gates: Pennsylvania, Ohio and Missouri
 
 Pennsylvania's initial immutable preparation and seed-32/seed-30 archives have
@@ -1900,18 +1918,40 @@ source-archive closure only**, not filing-time identity, temporal party
 attribution, classifier accuracy, scientific or publication admission, or
 retroactive inclusion in the already-frozen v54 aggregate.
 
-A distinct **zero-HTTP unlabelled token/window inventory** for this accepted
-Ohio archive is now delegated to one GPT-5.6 Sol worker,
-`4c847166-0fe2-4d89-8f21-cfca54816c32`. Its planned population retains all
-**2,279 candidate contexts**, two separate PDF-reader views for each of the
-**2,272 retained PDFs**, one separate structural-text view for each of the
-**2,267 recovered HTML originals**, and explicit zero-view unsupported
-dispositions: **6,811 planned source views, not 6,811 bills**. It must preserve
-reader differences and identity caveats, reuse the existing pinned tokenizer
-and demonstrated window policy, account for every source token, and provide
-a self-contained independent replay. No completed packet, token count or
-worker/parent PASS is claimed. This does not authorize labels, inference,
-training, source requests or analytical/publication admission.
+The distinct **zero-HTTP unlabelled token/window inventory** worker,
+`4c847166-0fe2-4d89-8f21-cfca54816c32`, returns immutable packet
+`ohio-135th-full-native-token-input-inventory-v1`: **16,003 files**, manifest
+`943bfdb0e45f2c243f92d3639a4189074f15843007c5d53ad0e67a7cd52308d5`.
+Handoff `ohio_token_inventory_handoff_v1.json`, SHA
+`e1cc6ff643916f459f22f33ceeb3ee6e8274c0ad5989d7176706d613e69591ed`.
+The worker reports **2,279 contexts / 6,811 source views / 93,161,481 tokens /
+118,663 windows / zero discarded tokens**. Views are not bills: each of 2,272
+PDFs has two separate reader views, and 2,267 HTML originals have one exact
+strict-UTF-8 source view, **including markup**, not newly admitted cleaned bill
+text. Seven unsupported contexts retain zero views; five PDF-only contexts
+retain their HTML failure evidence. The 1,007 absent HTML session headers remain
+absent. The full PDF inventory contains 41,884 pages per reader.
+
+The worker reports direct and guarded exhaustive replays passing, with all
+60,324 accepted-source file/directory records unchanged. These are **worker
+results**, not independent parent acceptance. Failed build attempts and the
+first guard failure remain preserved; that failure occurred during runtime
+temporary-directory probing, before verifier execution. The successful guarded
+run explicitly preloads runtime modules before installing the write-denying
+hook. No labels, forward passes, training, source requests or admissions occur.
+
+Parent launches the original source-only verifier in a separate read-only
+guarded child, using only the packet and locked runtime, with local-only pinned
+ModernBERT tokenizer assets. Harness `replay_ohio_full_token_inventory_parent_v1.py`,
+SHA `54db8e7eee36302e13a3038688c3b9f79b6b86011781d835e2f229d657831458`;
+handle `ohio-full-token-inventory-parent-v1`; startup
+**2026-10-20T13:38:10.131869+00:00**, exact parent **77245** observed once.
+This requires every PDF reader/HTML view, JSONL/Parquet row, token and window
+to reconstruct, along with full packet content and file/directory metadata
+equality before/after. The guard is installed after disclosed runtime preloading;
+the verifier runs entirely afterward. **No completed parent result or child
+readiness is claimed yet.** Original campaign/source archive access, new HTTP,
+model inference, new labels and scientific/publication admission remain excluded.
 
 **Illinois actual service-stop observation.**
 
@@ -2109,9 +2149,9 @@ budget, preserve forensic evidence and still report the incomplete population.
 Any original-root resume requires separate parent authorization. Complete-corpus
 and genuine final-32 sealing remain prohibited while 4,960 contexts are unfinished.
 
-#### Returned recovery and sealing packets: independent gates in progress
+#### Returned recovery and sealing packets: archived replay accepted
 
-The worker returns two immutable, zero-HTTP packets:
+The worker returned two immutable, zero-HTTP packets:
 `missouri-2023-2024-v4-stopped-prefix-recovery-readiness-v1`, **30,717 files**,
 manifest `ad387aa6ac42a2a16878d7427d5efa2581739c680a1ceee978f1e7314fdc983d`;
 and `missouri-2023-2024-post-exit-sealing-preparation-v1`, **412 files**,
@@ -2125,29 +2165,70 @@ exchanges: 269 historical plus 1,139 new**. It retains 3,808 pending candidates
 and the unresolved original transient failure cause. The sealing handoff
 separately reports an executed mocked-transport 4,960-candidate fixture, with
 64 reused, 4,896 newly collected, 155 checkpoints and final full-32 ordinals
-4,928–4,959. These remain **worker execution claims**, not independent parent
-execution or actual production recovery.
+4,928–4,959. The **full fixture execution and private recovery execution** remain
+worker claims; parent separately reconstructs the returned archived prefix below.
 
-Parent independently launches the two original archived verifiers in distinct
-read-only guarded processes, plus a third process running the ten original
-helper regressions against an inode-disjoint private `copy2` packet. Only test
-input/scratch globals are rebound; tiny staging-fault tests retain their
-disclosed mocked completed-campaign validator. Harness:
+Parent actually completes both original archived verifiers in distinct
+read-only guarded processes, plus a third process executing all ten original
+helper regressions against an inode-disjoint private `copy2` packet, without
+skips. Children **70984 / 70985 / 70986** exit zero without timeout; both verifier
+stderr streams are empty, and helper stderr records the actual ten passing
+tests. Finish: **2026-10-20T13:30:53.611061+00:00**. Only test input/scratch globals
+are rebound; tiny staging-fault tests retain their disclosed mocked
+completed-campaign validator. Harness:
 `replay_missouri_returned_packets_parent_v1.py`, SHA
 `f983eff86d97a3b94f79444eeddee29ba86529909c6e592acc377846ca8024cd`;
 original handle `missouri-returned-packets-parent-v1`.
-One-time startup observation verifies exact parent PID **70813** at
-**2026-10-20T13:21:02.462744+00:00**. The initial launch-record lookup occurred
-before child startup and found no record; that is not a completed gate or source
-failure. No completed parent result is claimed yet.
+Report `missouri_returned_packets_parent_actual_v1.json`, SHA
+`77bf0b181899d943066db90d6fd4f4ea476bb50262623b20b65c33fd588e2ac5`.
+Original readiness/proof bytes, stderr, exits, harness pin and raw metadata maps
+are independently reconciled after completion.
 
-The enclosing gate requires complete before/after packet file-and-directory
-metadata and content equality, pinned sources and retained raw child output.
-Even a successful result would verify the archived private prefix and selected
-helpers, **not freshly recover the actual stopped root or rerun the full
-4,960-candidate driver**. No original campaign access, HTTP, production resume,
-budget reset, actual completion seal or scientific/publication admission is
-authorized by this replay.
+The archived prefix freshly reproduces **1,152 candidates / 6,029 pages per
+reader / 36 privately recovered checkpoints / 1,139 new plus 269 historical
+physical exchanges**, with **3,808 pending**. This confirms saved extraction
+and source-plan joins, **not printed identity certification**: the frozen
+observer reproduces `printed_identity_observations: {"False": 1152}`. Its
+abbreviated-number search does not establish a printed header. The same worker
+now owns a distinct zero-HTTP, full-prefix printed-header observation supplement,
+retaining the original negatives, exact spans and missing/conflicting outcomes.
+No original status or canonical identity is promoted.
+
+All **484 sealing-packet entries** (412 files, 72 directories) and **35,647
+prefix-packet entries** (30,717 files, 4,930 directories) retain identical full
+content and file/directory metadata. Raw before/after map hashes respectively:
+`37ab2e052f3a980a0942e94b244c3609b4c9ba904d99fe0bff3544f35f3f4b00`
+and `e777632f965badadd41b38c8ad5e2a4fa316f026c291bcb9b1d91fc7999c9664`.
+The private test copy is removed only after the enclosing gate passes.
+
+This accepts **archived-prefix reconstruction and selected helper behavior**.
+The sealing verifier checks the saved full-driver receipt, rather than rerunning
+the 4,960-candidate driver; the prefix verifier checks the saved recovery receipt,
+rather than executing recovery again. No actual original campaign access,
+fresh recovery, HTTP, production resume, budget reset, actual completion seal
+or scientific/publication admission occurs in that completed replay.
+
+#### Fresh actual-root private recovery: separate parent execution in progress
+
+Only after the archived gate is accepted, parent launches a distinct zero-HTTP
+gate against a **fresh `copy2` of the actual stopped source root**, preparation
+and original recovery helper. The original collector is absent before startup.
+Harness `recover_missouri_actual_prefix_private_parent_v1.py`, SHA
+`3d1736f1227ba547e798f509d11f8c1c620d4e9a921dd00d590ae633ebfa75b5`;
+handle `missouri-actual-prefix-private-parent-v1`; startup
+**2026-10-20T13:36:03.646453+00:00**, exact parent **76748** observed once.
+No completed result or child-readiness claim is made yet.
+
+Before recovery, all 29,806 actual files must match the worker's stopped-source
+snapshot in path, size, hash, inode, mtime and link count; full original
+file-and-directory metadata/content maps must remain unchanged afterward.
+All private copies must be single-link, inode-disjoint and content/mtime-identical.
+The unchanged recovery helper and collector run only against private paths with
+`ForbiddenTransport` and `max_candidates=0`, requiring the genuine 34-to-36
+checkpoint repair, preserved transport/candidate/forensic evidence and the same
+1,152/1,408/3,808 accounting. The child cannot read or mutate the original roots.
+This is **private recovery only**, not authorization to recover/resume the
+production root, make requests or seal a completed corpus.
 
 ## Texas 88R filed-census and bounded original-text recovery
 
@@ -2901,18 +2982,38 @@ establish the required unchanged full-context driver/checkpoint/resume proof.
 The worker owns a distinct immutable guard/full-driver repair; originals,
 failed attempts and the narrowly passing packet observations remain preserved.
 
-Separately, the parent launches the **unchanged returned actual-prefix
+Separately, parent actually completes the **unchanged returned actual-prefix
 inspector** under a stronger source-read-only outer guard. Original parent
-handle: `il-actual-stopped-prefix-parent-reinspection-v1`; exact parent PID
-**67578** and child **67831** are observed once, and the new isolated evidence
-root exists. Harness SHA:
+handle: `il-actual-stopped-prefix-parent-reinspection-v1`; child **67831**
+exits zero without timeout or stderr, finishing
+**2026-10-20T13:37:28.867618+00:00**. Harness SHA:
 `7e59ec061d47e77c6b7ce30ee66445272a6852d66729c296aef3fac42a1f2906`.
-It requires the complete **343,745-entry** original metadata map to match
-the worker's retained map before inspection and remain identical afterward,
-and rechecks retained transport, document and checkpoint dependencies. This
-is a **running parent replay**, not a completed result. No source mutation,
-linking, recovery, new HTTP, full-completion seal or scientific/publication
-admission is authorized.
+Report `il_v3_actual_stopped_prefix_parent_reinspection_actual_v1.json`, SHA
+`653fb2cc51d4e032b271e3773ccc000864d961faf4988229df4bb9fef29c574d`.
+The exact readiness/proof bytes, empty stderr, source pins and raw metadata
+maps are independently reconciled. All **343,745 original metadata records**
+(288,712 files / 55,033 directories / 20,387,660,940 file bytes) equal the
+worker map before inspection and remain unchanged afterward; both raw maps
+are byte-identical, SHA
+`b3ce0c55f2306906b0eb9b844dfe4966749f7938b5f91f483ab50dd97ebbb400`.
+
+The actual retained ledger/document/checkpoint joins reconstruct **11,440 new
+reservation/start/result lifecycles**, **357 checkpoints**, **1,925 pending**
+and **two terminal partials**. Referenced transport artifacts account for
+800,829,891 bytes hashed; checkpoint manifests account for **162,435 dependency
+references / 17,429,938,307 bytes hashed**. These are dependency-specific
+checks, **not a unique whole-root 20 GB content-hash proof**.
+All 50 new evidence payloads / 180,062,496 bytes independently match their
+manifest, SHA
+`1ec1f1e29678d38ef9a992f3c2c3f32e262cf772c8ff6837d44a113afd18428e`.
+
+This accepts **read-only actual-prefix reconstruction only**. Blind resume
+remains unsafe: SB3501/SB3502 are exhausted terminal partials that the original
+collector would skip; SB3503 is pending with one attempt remaining. Any future
+recovery needs a separately reviewed dependency-closed successor preserving
+all attempts, global ordinals and the 11,527 consumed exchanges including 87
+historical. No source mutation, linking, recovery, new HTTP, full-completion
+seal or scientific/publication admission occurs or is authorized by this pass.
 
 ## North Carolina publisher census and full original-source continuation
 
