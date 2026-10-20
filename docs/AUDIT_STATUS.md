@@ -4,7 +4,7 @@ The existing figures and analytical conclusions are **legacy, not revalidated fi
 The current changes repair infrastructure and preserve evidence; they do not certify a
 replacement classifier or establish complete contemporary coverage.
 
-**October 20, 2026 continuation:** latest completed audit **v53** binds **122 research
+**October 20, 2026 continuation:** latest completed audit **v54** binds **126 research
 and accounting packets**. The canonical audit has **308/342 passing checks**
 and **34 missing-artifact failures**. Known source, collection and scientific failures
 remain explicit; this is not a completed project or a certified classifier.
@@ -414,6 +414,35 @@ not another full rehash of all research payloads. Later Pennsylvania, Ohio and
 Missouri release-gate evidence below is supplemental, not retroactively inserted
 into v53. No collection-launch or scientific approval follows from this freeze.
 
+Actual audit **v54** now completes and independently parent-verifies with
+**275 audit payload files / 276 total files** and **126 completed packet
+bindings**. It preserves all **237 v53 files** and adds the complete California
+four-biennium token inventory, North Carolina paired-reader token inventory,
+New York's fixed 848-negative header supplement and Missouri's strict first-32
+archive v3. The source archive is pinned to saved commit
+`28ed678fe8b934311acd52c8fc077e3dc2ab3844`; independent verification regenerates
+that Git archive and checks its exact hash.
+
+The actual producer exits **0** while retaining canonical audit exit **1**.
+The entire canonical report remains **byte-identical to v53**: **308/342
+passing**, the same **34 missing-artifact failures**, scientific certification
+**not performed**. The independently checked evidence retains Pennsylvania's
+synthetic-suite PASS without converting it into native-identity or launch
+approval, and North Carolina's enclosing core-suite metadata FAIL without
+retrospectively promoting its successful unit tests. All predecessor and audit
+paths, bytes, hashes, inodes, mtimes and link counts remain unchanged.
+
+Manifest SHA-256:
+`9eee066b9e517919ea0e81cf862450a7c8dcfeedb093930d3625126f5fe30068`.
+Frozen producer SHA-256:
+`e110b6019fc6b09e4cba15fdb6721e69d233196e49900f88f2a4ac10cdab2c90`.
+Actual logs: `full_audit_v54.log` and
+`full_audit_v54_parent_verification_v1.log`. The latter verifies the exact audit
+inventory, all 126 source-manifest bindings, actual completion log and parent
+receipts; it does not repeat all PDF/token replays or rehash every research
+payload already checked by the actual producer and source replays. Source
+packets remain local-only; a code/documentation push does not back them up.
+
 ### Four additional complete biennial archives
 
 Independent parent guarded replay now also covers the full **2017–2018,
@@ -644,13 +673,20 @@ all **776 supplement and 18 handoff files** remain unchanged in every recorded
 field, and private fixtures are removed. Actual receipt:
 `pa_v4_parent_isolated_suite_v1.json`.
 
-The handoff's proposed full successor root does not yet exist. The same worker
-now prepares a distinct **zero-HTTP real-source initialization readiness** gate:
-exact real native identities, ordered selected-source plans, 62 genuine reused
-originals, the carried seed partial checkpoint, inherited transport and the
-unchanged 25,000 aggregate ceiling. Neither the synthetic fixture nor the passed
-artifact replays substitute for that real-context check. No actual full-root
-initialization or Pennsylvania collection is authorized yet.
+The handoff's proposed full successor root does not yet exist. The distinct
+**zero-HTTP real-source initialization readiness** packet has returned, manifest
+`a2c029a750228ca8405c813fdb8166af8440b2946cd19f89f44059527a4ea546`.
+Actual independent common-guard replay preserves all **27 handoff files**
+unchanged. The returned dry initialization contains 12,701 files and claims the
+real ordered 4,786 population, 62 reused originals, 4,724 pending candidates and
+closed seed-32/carry-30 dependencies; its separate independent parent replay is
+still running. The new genuine-source collector's hash differs from the actual
+full-suite-tested source, so the same worker must establish the precise
+semantic differences and corresponding regression evidence before release.
+The synthetic fixture and handoff replay do not clear that gate. All 536
+historical exchanges, prior excesses and missing bodies remain explicit within
+the unchanged 25,000 ceiling. No actual full-root initialization or Pennsylvania
+collection is authorized yet.
 
 Ohio's initial preparation also parent-replays with **1,101 files unchanged**,
 **2,279 native candidates**, **62 reused PDF/HTML originals**, **1,123 pages**
@@ -709,15 +745,26 @@ paths, bytes, hashes, inodes, mtimes and link counts. Manifest:
 `70764a72733fc0f8adea57dd7506b0164e9020a8922eeeb031fdcdd5042a36eb`;
 actual log: `ohio_v4_parent_actual_guard_v1.log`.
 
-The worker reports 18 successful regressions, including durable fifth-transient
-recovery and requested-source substitutions. Parent has separately launched the
-**actual 18-test execution**, including the real 2,279-identity fixture and
-SR93-SR99 tail. Its five path globals are rebound before imports and setup;
-networking, children, links and outside-private writes are denied. This actual
-parent suite is still running, not a completed result. The archive verifier does
-not itself rerun that suite. Initialization and full collection remain withheld;
-the positive v3 replay, older failures and all 201 inherited exchanges remain
-preserved.
+The separate **actual parent 18-test execution now completes successfully**:
+zero failures, errors or skips, the exact 2,279-identity fixture, 62 reused
+originals, 2,217 fixture collections and no seed or resumed refetches. Genuine
+SR93-SR99 final-seven closure retains **154 dependencies** and passes standalone
+tail replay. Its five path globals are rebound before imports and setup;
+networking, children, links and outside-private writes are denied. All **7,964
+original files** remain unchanged in path, bytes, SHA, inode, mtime and link
+count; private fixtures are removed. Actual report/log:
+`ohio_v4_parent_isolated_suite_v1.json` and its matching log.
+
+The same worker has returned a distinct genuine-source readiness packet,
+manifest
+`61751a70e79956b3b0ec7817cd6d6d113f9727d3e11370573fd32cc8263763fc`.
+It uses the **unchanged, parent-tested collector** and reports a zero-HTTP
+copy2 dry initialization of 2,356 files: exact ordered native plans, 62 genuine
+cached sources, 2,217 pending candidates, closed seed-32/carry-30 dependencies,
+history 201, next exchange 202 and the original 15,000 aggregate ceiling.
+Independent parent genuine-readiness replay is running; the actual target
+remains absent and collection withheld. This later readiness evidence is not
+retroactively part of v54. Earlier failures and positive replays remain preserved.
 
 Missouri's immutable v2 preparation also passes actual parent guarded replay and
 full before/after hashing: **2,075 unchanged files**, manifest
@@ -996,6 +1043,27 @@ diagnostic: its verifier assumed Parquet nullable strings deserialize as Python
 `None`. V2 normalizes record nulls for replay; both complete input exports and
 both provenance JSONLs are byte-identical across v1/v2, not reconstructed text
 or changed labels. Its original failed verifier/log/manifest are archived.
+
+### Post-exit closure-tool release blockers
+
+Actual bounded parent probes reproduce **six v4 tool failures**: valid
+physical-LF JSONL containing literal U+2028, U+2029 or U+0085 breaks its
+`splitlines()` parser; same-count forged text and markup Parquet fields are
+accepted; and a pathlib write bypasses its declared read-only guard. All
+**1,887 original toolkit files** remain unchanged, including metadata and link
+counts; private fixtures are removed and zero HTTP requests made. Evidence:
+`tx_postexit_v4_parent_release_blockers_v1.json` and its matching actual log.
+
+An immutable v5r1 successor has returned, manifest
+`1633c4087396aa56c12c1740741d14a5fcdf356674ea14cc2f548cdfc314d7a5`.
+Its reported 14 passing tests are **worker results, not completed parent
+execution**. Source inspection establishes that its 11,807-population driver
+test mocks physical persistence and checkpoint freezing: this is routing/count
+evidence, not a materialized full archive or dependency-complete final-15 replay.
+Independent parent release gates remain open. No toolkit may seal the live
+Texas root without original collector exit, zero pending candidates and a
+genuine parent exit receipt. Earlier failures and all physical allowances remain
+preserved; no source, classifier or publication admission follows.
 
 ## New York 2023–2024 native census and bounded original prints
 
@@ -1674,6 +1742,21 @@ and again matches all three original collector commands:
 `source_campaign_progress_checkpoint_v10.json` retains exact raw progress bytes,
 hashes, read intervals and process observations. These remain nontransactional
 progress reports, not completed corpora or inputs retroactively added to v53.
+
+The next read-only snapshot, **02:06:45 UTC on October 20, 2026**, binds v10
+and again matches all three exact original collector commands:
+
+| Campaign | Reported success | Other terminal dispositions | Pending | Physical exchanges including inherited |
+|---|---:|---|---:|---:|
+| New York | 8,438 | 1,589 unverified headers; 12 failures | 14,278 | 10,045 |
+| Texas | 2,538 | One unverified header | 9,268 | 2,564 |
+| Illinois | 5,548 | 2,688 unverified identities; 588 unavailable shells; 13 unsupported sources | 4,554 | 8,895 |
+
+`source_campaign_progress_checkpoint_v11.json` preserves raw bytes, hashes,
+read intervals and process observations. It makes no HTTP requests, restarts or
+budget resets. These nontransactional observations are not completed corpora
+or inputs retroactively added to v53 or v54.
+
 The original three state workers now prepare distinct **zero-HTTP post-exit
 closure tools** in parallel: whole-corpus and genuine final 43/15/18 archives
 with dependency-closed transport prefixes. They may not seal active roots,
