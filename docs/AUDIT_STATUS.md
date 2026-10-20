@@ -593,8 +593,35 @@ reconciled and the next reservation collides; and the actual curl argument vecto
 does not disable ambient configuration first. Existing checkpoint/context
 validation also requires correction. Evidence:
 `ohio_v2_parent_release_blockers_v1.json` and its actual log. The same worker
-is preparing immutable zero-HTTP v3. The inherited **201 exchanges** remain
+has returned immutable zero-HTTP v3. The inherited **201 exchanges** remain
 counted against proposed preparation **400** / full **15,000** ceilings.
+
+Ohio v3 passes actual independent parent common-guard replay with **5,589 files
+unchanged**, manifest
+`3f3b6e1907c8856570c84d6bbbe632279a0e522a159ff4030c446db779ff1547`.
+Actual parent log: `ohio_v3_parent_actual_guard_v1.log`. A separate parent
+14-test suite is running with writable paths confined to private fixtures;
+worker results are not represented as completed parent execution.
+
+Two further actual parent negatives still withhold launch. First, the genuine
+driver receives five consecutive mocked HTTP 503 responses; the fifth outcome
+is durably saved before an injected state-save interruption. Ordinary recovery
+sends a **sixth request** before stopping, because the persisted transient count
+is four and the recovered fifth response is not applied to that count. All
+five prior exchanges, including earlier checkpoint-sealed responses, must inform
+the recovery stop decision without double counting on another restart.
+Second, changing only the requested HR106 metadata URL under the same population,
+ordered identities and dependency entries returns the existing 30-record
+seed-partial checkpoint with its manifest unchanged. Dependency equality alone
+does not bind the requested current source context.
+
+Both cases execute the frozen collector, not a reimplementation. Evidence:
+`ohio_v3_parent_release_gates_v1.json` and its actual log. The probe denies
+networking, children and outside-private writes, removes its fixtures and
+verifies all **5,589 original paths, sizes, hashes, inodes and modification times
+unchanged**. It makes zero real HTTP requests and no live initialization.
+The same Ohio worker is preparing immutable zero-HTTP v4; the positive v3 replay,
+older failures and all 201 inherited exchanges remain preserved.
 
 Missouri's immutable v2 preparation also passes actual parent guarded replay and
 full before/after hashing: **2,075 unchanged files**, manifest
