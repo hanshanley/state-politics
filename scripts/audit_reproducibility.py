@@ -449,8 +449,9 @@ def audit_artifacts(audit: Audit) -> dict:
         rollcalls["mean_yes_share"].between(0, 1).all(),
         "roll-call yes share is not a proportion",
     )
+    p_value = comparison["sign_flip_p_value"]
     audit.require(
-        0 <= comparison["sign_flip_p_value"] <= 1,
+        p_value is not None and 0 <= p_value <= 1,
         "outcome sign-flip p-value is not a probability",
     )
     audit.require(len(atlas) == 100, "state focus atlas is not 100 rows")

@@ -23,7 +23,7 @@ remain explicit; this is not a completed project or a certified classifier.
 | Illinois native index | Official 103rd-General-Assembly index retains 13,391 rows and matches all 13,376 canonical regular contexts. The original full collector has stopped with exit one: 7,889 success, 2,811 identity-unverified, 751 unavailable-shell, thirteen unsupported, two partial and 1,925 pending dispositions. All 11,440 new request lifecycles are closed; 11,527 exchanges include the 87 inherited. Returned packets pass integrity replay, and separate read-only parent inspection now reconstructs the actual stopped prefix with all 343,745 original file/directory metadata records unchanged. | Five retained curl exit-7 connection failures triggered the stop. Original resume skips terminal partials; blind restart is not a repair. A missing timestamp-mutation guard and reduced-population shard fixture block full-driver acceptance; safe recovery remains open. Fifteen source-only entries and 878 canonical introduced-metadata gaps remain explicit. Identity enumeration is not complete original-text recovery or filing-time certification. |
 | Colorado native index | Independent publisher census reconciles all 1,459 regular identities across 2023A/2024A. Genuine whole/final-17 parent replay now passes: 1,457 PDFs / 14,857 pages per reader / 238,834,961 raw PDF bytes, with all 2,976 physical requests resolved and all 614,630 whole-archive file metadata records unchanged. A distinct complete unlabelled paired-reader token/window inventory is delegated, not yet returned or accepted. | Twenty-nine special-session contexts are separate. Two canonical introduced-reference gaps are not publisher-absence findings; the corresponding bill pages remain uninspected. Neither reader is ground truth; file-only metadata comparisons do not cover directories or undo historical source-link changes. No model, filing-time or scientific admission follows. |
 | North Carolina native index | Independent 2023–2024 publisher census reconciles 2,004 of 2,005 canonical contexts. Complete source replay preserves 2,004 PDFs / 6,783 pages per reader, 2,002 observed numeric identities and two unresolved identity negatives. Actual parent replay now also reconstructs both complete unlabelled inputs: 4,008 reader views / 10,917,908 tokens / 14,520 windows, with zero discarded tokens. | Reader views are not extra bills or approved classifier inputs. Canonical HB 311 remains distinct from native HR 311 despite the shared URL. Statewide publisher version enumeration remains incomplete; canonical version rows are separately labelled, not rebranded as native. |
-| Wisconsin native campaign | Original collector exit zero is followed by independent genuine inspection, offline toolkit/driver/callback gates and genuine archive production. Independent whole/final-31 verification and fresh two-reader reopening now also pass: 2,655 PDFs / 18,880 pages per reader / 5,355 exchanges / 83 checkpoints, with all 40,482 archive file/directory metadata records unchanged. A distinct full unlabelled paired-reader input inventory is delegated, not yet returned or accepted. | Source-archive closure is accepted, not classifier, filing-time or scientific certification. The 25,000 ceiling includes all 93 inherited exchanges. Historical canonical-join, guard and full-fixture harness failures remain preserved; no scientific admission follows. |
+| Wisconsin native campaign | Original collector exit zero is followed by independent genuine inspection, offline toolkit/driver/callback gates and genuine archive production. Independent whole/final-31 verification and fresh two-reader reopening now also pass: 2,655 PDFs / 18,880 pages per reader / 5,355 exchanges / 83 checkpoints, with all 40,482 archive file/directory metadata records unchanged. The distinct unlabelled input packet has returned with 5,310 reader views / 18,783,518 tokens / 27,214 windows and zero discarded tokens; worker direct/guarded replays pass, and a separate parent replay is launched, not yet accepted. | Reader views are not additional bills or certified inputs. Source-archive closure is accepted, not classifier, filing-time or scientific certification. The 25,000 ceiling includes all 93 inherited exchanges. Historical canonical-join, guard and full-fixture harness failures remain preserved; no scientific admission follows. |
 | Ohio full unlabelled inputs | Independent original-verifier parent replay now passes: 2,279 contexts / 6,811 source views / 93,161,481 source tokens / 118,663 windows, zero discarded tokens and all 18,290 packet file/directory content and metadata records unchanged. Raw readiness, all 45 progress lines, final proof, empty stderr, source pins and full before/after maps are independently reconciled. | Views are not bills; HTML views include exact source markup. Five PDF-only and seven unsupported contexts remain, as do 1,007 absent HTML session headers. Runtime preload precedes the guard; the original verifier runs entirely afterward. No labels, forward passes, training or scientific admission. |
 | Missouri archived printed headers | Independent original-verifier replay accepts first-page observations for all 1,152 archived PDFs in both readers, plus ten focused regressions and joins to all 4,608 copied source dependencies. All 41,914 supplement/original file-directory records remain unchanged. | Matching House/First Regular Session/102nd General Assembly observations are accepted only as literal first-page evidence. The original 1,152 false flags remain; unprinted session years stay unknown. No original identity/status, filing-time or scientific certification is promoted. The full 4,960-context corpus remains unfinished. |
 | North Carolina native-version preparation | V5 strict replay, four exact parser regressions and all fifteen original parent release tests pass, including the actual 2,004-population/final-20 fake-transport driver. Genuine readiness replay and the separate five original tests/private once-only initialization/promotion/rejection now pass independently, with all 45,587 readiness/terminal originals unchanged. | Private initialization produced 44,341 payload files; a second initialization was rejected without changing its target. Actual target, staging and authorization remain absent; no version collection is authorized. Earlier original-path replacement/metadata failures remain unreconciled; restored payload bytes do not restore historical immutability. |
@@ -34,7 +34,84 @@ remain explicit; this is not a completed project or a certified classifier.
 | Trend accounting | Empty and one-period populations preserve export schemas; fewer than two paired states leave inference unavailable. Party slopes include topic zeros in observed party-years without inventing missing years. Missing source-tag comparisons remain unavailable; chart sample counts come from each supplied series. | Legacy trend outputs are not regenerated or certified. Model/tag samples may differ, supplied labels and tag provenance remain unvalidated, and a direction match is not independent accuracy evidence. |
 | Language accounting | Empty caucus-unit selections and empty/sparse term populations now preserve readable export schemas. Fixed-filter vocabulary unavailability is explicitly reported; invalid configuration still raises. Supported numerical results and both CLI CSV exports remain byte-identical to the saved baseline in an actual synthetic differential. | Term highlights describe supplied text, not certified operative platforms or policy positions. Legacy research outputs are not regenerated; unavailable comparisons are not observed zero concentration. |
 | Intra-party accounting | Empty and insufficient shared-state populations now export readable schemas and replace stale results. Undefined within/between ratios remain unavailable while observed zero distances stay zero; undefined cosine distances cannot produce permutation significance. The CLI and figure report distinguish unavailable evidence from chance results. | Supported synthetic helper results and all eight actual CLI CSV exports are unchanged against the saved baseline. No real research outputs, party-coherence conclusions, classifier labels or empirical release gates are regenerated or certified. |
+| Outcome inference | Fewer than two paired states now leave sign-flip inference unavailable instead of returning 1.0; reports and charts also suppress legacy one-state defaults. Empty/nullable eligibility exports remain readable, new output directories are created, and unavailable probabilities fail the artifact check without crashing it. | Recorded-stage rates, all-filing denominators and coverage floors are unchanged. Supported synthetic results and all four CSV/comparison-JSON exports remain byte-identical to the saved baseline; actual research results and scientific gates are not regenerated or certified. |
 | Companion | Local-only preview v9 exposes all 1,559 recovery captures, 119 failures and 61 alternative extraction identities across 55 OCR bodies, three DOCX bodies and one native-block body, alongside the 2,091 historical documents. The source ledger includes the corrected Arizona and Alaska registry rows. All 100 organization rows remain unresolved. | Audited classification/analysis exports, redistribution review and eventual report; no production integration is authorized. |
+
+## Outcome inference availability and nullable eligibility
+
+Actual pre-fix execution records **eleven failures and four passing controls** in
+`outcome_inference_missingness_before_v1.log`. Zero or one paired state returns
+1.0 as though inference were available; zero permutations also produces 1.0.
+Nullable classifications raise an ambiguous-truth-value error, a fresh CLI
+output directory is not created, and the artifact auditor crashes on a null
+probability. Existing report/chart formatting cannot represent unavailable
+inference consistently.
+
+Sign-flip inference now returns JSON **null** for fewer than two paired states,
+and nonpositive permutation counts raise an explicit configuration error.
+Observed one-state differences, including zero, remain descriptive values;
+their unavailable inference is not replaced with a chance result. A shared
+formatter serves the chart and figure report and suppresses legacy one-state
+1.0 values even when reading an older comparison file. The auditor records a
+failed probability check for null instead of raising a TypeError.
+
+Missing classifications do not become ordinary bills. An explicit boolean mask
+preserves columns for empty eligible populations, the CLI creates its output
+directory, and all four CSVs remain header-readable. Comparison JSON uses strict
+serialization. The recorded-stage estimand, all-eligible filing denominators,
+numerators, coverage floors, seed and supported permutation calculation are
+unchanged.
+
+All **85 targeted outcome/plotting/report/null-auditor tests**, Ruff and diff
+checks pass in `outcome_inference_missingness_complete_v1.log`. An actual
+old/new differential against saved revision
+`d0fb7388c5d038323696268e6a82098e7b4f0e4b` executes a 6,005-row synthetic
+bill fixture, 24 vote events, 96 party-count rows and ten supported sign-flip
+arrays. All four frames, dtypes, column order and CSV bytes match exactly.
+Both real CLI executions also produce identical stdout, all four CSVs and the
+comparison JSON. Receipt: `outcome_inference_supported_differential_v1.json`,
+SHA `d25dcefad38183786ac4b30d0a378c5f02762b9cfa89f33c166d92bb4612bd1e`.
+The temporary fixture is removed. No actual research outputs, source evidence,
+labels, model weights, scientific admission or publication files change.
+
+## Wisconsin full unlabelled input packet: returned, parent replay pending
+
+The distinct worker packet
+`wisconsin-2023-2024-full-native-token-input-inventory-v1` has returned with
+**2,655 contexts/PDFs, 5,310 unadjudicated reader views, 18,880 pages per reader,
+18,783,518 source tokens and 27,214 windows**, with zero discarded tokens.
+Neither reader is selected as ground truth. All 5,355 archived physical
+exchanges are accounted for, including fifteen unassigned exchanges that must
+not become additional candidate contexts. A failed earlier packet that omitted
+those fifteen exchanges, its logs and its explicit failure disposition remain
+retained.
+
+Parent raw rehash confirms manifest
+`b29a95168a63acfd096597c15654fa74ae5c111c8303e4a4b160677871d79313`,
+report `4e4b49e79e44a07e07f58b7f6fa5574375db7c5f9bf17e48788e3d3fc6688148`,
+verifier `f1bb65eb1e642b6c03c085db0ed9dde35641a623888290940b88fa565b5eb706`
+and handoff `ab49d12db11ca5ab634ed897e812a38120774f9a2529052cce97351e4a1d99b4`.
+The differing manifest in the worker's chat summary was explicitly corrected
+as erroneous chat text only; no packet, handoff or log was rewritten.
+
+Worker direct and guarded replays pass, with 58,774 original input file/directory
+records reported unchanged. These are **worker results, not independent parent
+acceptance**. The first parent attempt fails before any verifier execution
+because it parses the worker log's timing footer as JSON; the original harness
+and failure receipt are preserved, not represented as a source failure.
+
+A distinct parent v2 is launched under original handle
+`wisconsin-full-token-inventory-parent-v2`, parent PID 844, at
+2026-10-20T14:57:42.803401UTC. Its exact command is observed once. Harness
+`replay_wisconsin_full_token_inventory_parent_v2.py`, SHA
+`bb6af644c99f71a2865b1c4df790a08f02869083971f7d1a8d7f8f8de57943ce`,
+reuses the pinned accepted Ohio parent guard/snapshot mechanism and requires
+the actual unchanged Wisconsin verifier, thirty harmless denial controls and
+two allowed controls, all 53 progress records, exact worker-proof equality and
+full packet file/directory content/metadata equality. Runtime preload precedes
+the guard; the verifier runs afterward. No completed parent replay, model
+inference, labels, training/evaluation, filing-time, scientific or publication
+admission is claimed.
 
 ## Intra-party missingness, undefined ratios and empty exports
 

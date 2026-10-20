@@ -19,6 +19,7 @@ import pandas as pd  # noqa: E402
 ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(ROOT / "src"))
 
+from state_politics.analysis.outcomes import format_outcome_p_value  # noqa: E402
 from state_politics.plotting import charts, theme  # noqa: E402
 
 
@@ -82,7 +83,7 @@ def build_outcome_figure(
         subtitle = (
             f"Paired states: {n_paired}; "
             f"D−R enactment gap {comparison['mean_d_minus_r_enactment_rate']:+.1%}, "
-            f"paired p = {comparison['sign_flip_p_value']:.3f}"
+            f"paired p = {format_outcome_p_value(comparison)}"
         )
     else:
         subtitle = "Comparison unavailable: no paired states meet the coverage floors"

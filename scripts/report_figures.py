@@ -22,6 +22,7 @@ import yaml
 
 from state_politics.analysis.elections import format_title_validation
 from state_politics.analysis.intraparty import format_coherence
+from state_politics.analysis.outcomes import format_outcome_p_value
 
 ROOT = Path(__file__).resolve().parent.parent
 DATA = ROOT / "data" / "processed"
@@ -172,7 +173,7 @@ def main() -> int:
             print(
                 f"  D-R enactment gap    "
                 f"{comparison['mean_d_minus_r_enactment_rate']:+.1%}, "
-                f"p={comparison['sign_flip_p_value']:.3f} "
+                f"p={format_outcome_p_value(comparison)} "
                 f"({comparison['n_paired_states']} paired states)"
             )
         if rollcalls is not None:

@@ -157,7 +157,10 @@ def test_gold_template_sampling_is_deterministic_and_seeded():
     assert first["gold_topic"].eq("").all()
 
 
-def test_artifact_audit_reports_undefined_election_metrics(tmp_path, monkeypatch):
+@pytest.mark.parametrize("outcome_p_value", [None, 0.5])
+def test_artifact_audit_reports_undefined_election_metrics(
+    tmp_path, monkeypatch, outcome_p_value,
+):
     import json
 
     sys.path.insert(0, str(ROOT / "scripts"))
@@ -209,7 +212,7 @@ def test_artifact_audit_reports_undefined_election_metrics(tmp_path, monkeypatch
         json.dumps({"precision": None, "recall": None}),
     )
     (data / "bill_outcome_comparison.json").write_text(
-        json.dumps({"sign_flip_p_value": 0.5}),
+        json.dumps({"n_paired_states": 2, "sign_flip_p_value": outcome_p_value}),
     )
     (tmp_path / "conf").mkdir()
     (tmp_path / "conf" / "official_document_registry.yml").write_text("sources: []\n")
@@ -220,3 +223,6 @@ def test_artifact_audit_reports_undefined_election_metrics(tmp_path, monkeypatch
 
     assert "election precision is unavailable or not a proportion" in audit.failures
     assert "election recall is unavailable or not a proportion" in audit.failures
+    assert ("outcome sign-flip p-value is not a probability" in audit.failures) == (
+        outcome_p_value is None
+    )

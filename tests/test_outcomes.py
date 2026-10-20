@@ -212,6 +212,71 @@ def test_outcome_tables_use_recorded_actions_and_reliability_floor():
     assert set(chamber["originating_chamber"]) == {"lower"}
 
 
+@pytest.mark.parametrize("n_paired", [0, 1])
+def test_outcome_inference_is_unavailable_with_fewer_than_two_paired_states(n_paired):
+    bills = pd.DataFrame([
+        {
+            "bill_id": f"{party}-{index}", "state": "TX", "sponsor_party": party,
+            "year": 2024, "classification": "bill", "n_actions": 1,
+            "recorded_outcome": "introduced_or_pending", "n_vote_events": 0,
+            "originating_chamber": "lower",
+        }
+        for party in ("D", "R")
+        for index in range(500 if party == "D" or n_paired else 1)
+    ])
+    _, _, _, comparison = build_outcome_tables(bills)
+    assert comparison["n_paired_states"] == n_paired
+    assert comparison["mean_d_minus_r_enactment_rate"] == (0.0 if n_paired else None)
+    assert comparison["sign_flip_p_value"] is None
+
+
+@pytest.mark.parametrize("permutations", [0, -1])
+def test_outcome_inference_rejects_nonpositive_permutation_count(monkeypatch, permutations):
+    from state_politics.analysis import outcomes
+
+    monkeypatch.setattr(outcomes, "OUTCOME_PERMUTATIONS", permutations)
+    with pytest.raises(ValueError, match="positive"):
+        outcomes._sign_flip_p_value([0.1, 0.2])
+
+
+@pytest.mark.parametrize("eligibility", ["empty", "nullable_classification"])
+def test_outcome_cli_exports_empty_eligibility_to_new_directory(tmp_path, eligibility):
+    from state_politics.analysis.outcomes import main
+
+    bills = pd.DataFrame([{
+        "bill_id": "b1", "state": "TX", "sponsor_party": "D", "year": 2024,
+        "classification": "bill", "n_actions": 0, "n_vote_events": 0,
+        "recorded_outcome": "no_action_data", "originating_chamber": "lower",
+    }])
+    if eligibility == "empty":
+        bills = bills.iloc[:0]
+    else:
+        bills["classification"] = pd.Series([pd.NA], dtype="string")
+    bills.to_parquet(tmp_path / "bills.parquet", index=False)
+    pd.DataFrame(columns=[
+        "motion_classification", "vote_id", "bill_id", "state", "result", "chamber",
+    ]).to_parquet(tmp_path / "events.parquet", index=False)
+    pd.DataFrame(columns=[
+        "sponsor_party", "voter_party", "option", "vote_event_id", "bill_id", "state", "n_votes",
+    ]).to_parquet(tmp_path / "counts.parquet", index=False)
+    out = tmp_path / "new" / "outcomes"
+    assert main([
+        "--bills", str(tmp_path / "bills.parquet"),
+        "--vote-events", str(tmp_path / "events.parquet"),
+        "--vote-party-counts", str(tmp_path / "counts.parquet"),
+        "--out-dir", str(out),
+    ]) == 0
+    for name in (
+        "bill_outcomes_by_state_party.csv", "bill_outcomes_by_party.csv",
+        "bill_outcomes_by_chamber_party.csv", "rollcall_party_support.csv",
+    ):
+        assert pd.read_csv(out / name).empty
+    comparison = json.loads((out / "bill_outcome_comparison.json").read_bytes())
+    assert comparison["n_paired_states"] == 0
+    assert comparison["mean_d_minus_r_enactment_rate"] is None
+    assert comparison["sign_flip_p_value"] is None
+
+
 def test_rollcall_support_separates_sponsor_and_voter_party():
     events = pd.DataFrame(
         [

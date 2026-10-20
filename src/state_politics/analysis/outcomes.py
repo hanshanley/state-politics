@@ -21,6 +21,7 @@ OUTCOME_RANDOM_SEED = 20_260_801
 
 __all__ = [
     "build_outcome_tables",
+    "format_outcome_p_value",
     "is_law_eligible",
     "party_rollcall_support",
 ]
@@ -28,6 +29,8 @@ __all__ = [
 
 def is_law_eligible(classification: str | None) -> bool:
     """True for ordinary bills, excluding resolutions and constitutional amendments."""
+    if not isinstance(classification, str):
+        return False
     values = {
         value.strip().lower()
         for value in str(classification or "").split("|")
@@ -38,12 +41,14 @@ def is_law_eligible(classification: str | None) -> bool:
     )
 
 
-def _sign_flip_p_value(differences) -> float:
+def _sign_flip_p_value(differences) -> float | None:
     import numpy as np
 
+    if OUTCOME_PERMUTATIONS <= 0:
+        raise ValueError("outcome permutation count must be positive")
     values = np.asarray(differences, dtype=float)
     if len(values) < 2:
-        return 1.0
+        return None
     rng = np.random.default_rng(OUTCOME_RANDOM_SEED)
     signs = rng.choice((-1, 1), size=(OUTCOME_PERMUTATIONS, len(values)))
     observed = abs(float(values.mean()))
@@ -53,12 +58,22 @@ def _sign_flip_p_value(differences) -> float:
     )
 
 
+def format_outcome_p_value(comparison: dict) -> str:
+    """Do not turn absent inference or legacy one-state defaults into chance results."""
+    import math
+
+    value = comparison["sign_flip_p_value"]
+    if comparison["n_paired_states"] < 2 or value is None or not math.isfinite(value):
+        return "unavailable"
+    return f"{value:.3f}"
+
+
 def build_outcome_tables(bills):
     """State and party summaries for explicitly recorded bill outcomes."""
     frame = bills[
         bills["sponsor_party"].isin(("D", "R"))
         & bills["year"].ge(2018)
-        & bills["classification"].map(is_law_eligible)
+        & bills["classification"].map(is_law_eligible).astype(bool)
         & ~source_draft_request_mask(bills)
     ].copy()
     frame["has_action_data"] = frame["n_actions"].fillna(0).gt(0)
@@ -258,12 +273,13 @@ def main(argv: list[str] | None = None) -> int:
         pd.read_parquet(args.vote_party_counts),
     )
     out = Path(args.out_dir)
+    out.mkdir(parents=True, exist_ok=True)
     state.to_csv(out / "bill_outcomes_by_state_party.csv", index=False)
     party.to_csv(out / "bill_outcomes_by_party.csv", index=False)
     chamber.to_csv(out / "bill_outcomes_by_chamber_party.csv", index=False)
     votes.to_csv(out / "rollcall_party_support.csv", index=False)
     (out / "bill_outcome_comparison.json").write_text(
-        json.dumps(comparison, indent=2),
+        json.dumps(comparison, indent=2, allow_nan=False),
         encoding="utf-8",
     )
 

@@ -480,7 +480,7 @@ def test_figure_report_handles_unavailable_outcome_evidence(
         assert "explicit actions     unavailable" in output
         assert "vote events          unavailable" in output
     if paired:
-        assert "D-R enactment gap    +0.0%, p=1.000 (1 paired states)" in output
+        assert "D-R enactment gap    +0.0%, p=unavailable (1 paired states)" in output
     else:
         assert "D-R enactment gap    unavailable (0 paired states)" in output
         assert "p=1.000" not in output
@@ -553,12 +553,46 @@ def test_outcome_chart_uses_actual_paired_coverage_and_full_rate_range(
     assert "2026-07" not in captured["source"]
     if paired:
         assert "Paired states: 1" in text
+        assert "paired p = unavailable" in text
         assert captured["ax"].get_xlim()[1] >= 100
         assert [bar.get_width() for bar in captured["ax"].patches] == [100] * 4
     else:
         assert "unavailable" in text.lower()
         assert "paired p" not in text
         assert not captured["ax"].patches
+
+
+def test_outcome_chart_does_not_reuse_legacy_one_state_p_value(tmp_path, monkeypatch):
+    from pathlib import Path
+
+    import pandas as pd
+
+    monkeypatch.syspath_prepend(str(Path(__file__).resolve().parents[1] / "scripts"))
+    import plot_outcomes as script
+
+    outcomes = pd.DataFrame({
+        "party": ["D", "R"], "n_states": [1, 1],
+        "mean_advancement_rate": [0.5, 0.5], "mean_enactment_rate": [0.25, 0.25],
+    })
+    comparison = {
+        "n_paired_states": 1, "mean_d_minus_r_enactment_rate": 0.0,
+        "sign_flip_p_value": 1.0,
+    }
+    captured = {}
+    original_finish = script.charts.finish
+
+    def finish(fig, ax, out_path, **kwargs):
+        captured["fig"] = fig
+        return original_finish(fig, ax, out_path, **kwargs)
+
+    monkeypatch.setattr(script.charts, "finish", finish)
+    script.build_outcome_figure(outcomes, comparison, tmp_path / "legacy.png")
+    text = " ".join(
+        label.get_text() for label in captured["fig"].findobj() if hasattr(label, "get_text")
+    )
+    assert "paired p = unavailable" in text
+    assert "paired p = 1.000" not in text
+    plt.close(captured["fig"])
 
 
 @pytest.mark.parametrize("available_pairs,yes_votes", [(0, 10), (2, 10), (4, 10), (4, 0)])
