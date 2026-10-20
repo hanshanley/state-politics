@@ -1,4 +1,4 @@
-"""Tests for cross-state text-reuse detection.
+"""Tests for candidate cross-state bill-title reuse.
 
 The risk in this analysis is the opposite of the rest of the project: not missing evidence, but
 manufacturing it. Two states can name a bill "An Act relating to the state budget" without ever
@@ -15,6 +15,7 @@ from state_politics.analysis.diffusion import (
     find_near_duplicates,
     find_reuse_clusters,
     is_ceremonial,
+    main,
     normalize_title,
     significant_tokens,
 )
@@ -177,3 +178,41 @@ def test_cohesion_is_one_for_an_exact_repeat():
     clusters = find_near_duplicates(frame, min_states=3, threshold=0.8)
 
     assert clusters["min_similarity"].iloc[0] == 1.0
+
+
+@pytest.mark.parametrize(
+    ("democrats", "republicans", "unknown"),
+    [
+        (2, 1, 0),
+        (3, 1, 0),
+        (1, 2, 0),
+        (2, 2, 0),
+        (0, 0, 3),
+        (2, 1, 2),
+        (5002, 5001, 0),
+    ],
+)
+def test_cli_party_counts_preserve_mixed_and_unknown_affiliations(
+    tmp_path, capsys, democrats, republicans, unknown
+):
+    title = "Establishing comprehensive interstate aquatic wildlife management agreements"
+    parties = ["D"] * democrats + ["R"] * republicans + [None] * unknown
+    states = ("TX", "OH", "GA", "IA")
+    frame = _bills([
+        (states[index % len(states)], 2024, title, party)
+        for index, party in enumerate(parties)
+    ])
+    frame["identifier"] = [f"HB {index + 1}" for index in range(len(frame))]
+    path = tmp_path / "bills.parquet"
+    frame.to_parquet(path, index=False)
+
+    assert main(["--bills", str(path), "--out-dir", str(tmp_path / "exports")]) == 0
+
+    line = next(
+        line for line in capsys.readouterr().out.splitlines()
+        if title in line and "[" in line
+    )
+    assert (
+        f"[D:{democrats:,} R:{republicans:,} other/unknown:{unknown:,}]"
+        in line
+    )

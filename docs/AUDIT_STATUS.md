@@ -23,12 +23,46 @@ remain explicit; this is not a completed project or a certified classifier.
 | Illinois native index | Official 103rd-General-Assembly index retains 13,391 rows and matches all 13,376 canonical regular contexts. Self-contained first checkpoint retains 48 HTML candidates / 261,997 characters / 3,034 exact text-bearing blocks. Full listed-source collection is running. | Fifteen source-only entries, 878 canonical introduced-metadata gaps and thirteen unlisted static originals remain explicit, including SR 292. Identity enumeration is not complete original-text recovery or filing-time certification. |
 | Colorado native index | Independent publisher census reconciles all 1,459 regular identities across 2023A/2024A. First checkpoint retains 32 PDFs / 264 pages. The collector has finished with 1,457 successes and two unsupported-reference dispositions; full replay is pending. | Twenty-nine special-session contexts are separate. Two canonical introduced-reference gaps are not publisher-absence findings; the corresponding bill pages remain uninspected. |
 | North Carolina native index | Independent 2023–2024 publisher census reconciles 2,004 of 2,005 canonical contexts. Complete source replay preserves 2,004 PDFs / 6,783 pages per reader, 2,002 observed numeric identities and two unresolved identity negatives. Actual parent replay now also reconstructs both complete unlabelled inputs: 4,008 reader views / 10,917,908 tokens / 14,520 windows, with zero discarded tokens. | Reader views are not extra bills or approved classifier inputs. Canonical HB 311 remains distinct from native HR 311 despite the shared URL. Statewide publisher version enumeration remains incomplete; canonical version rows are separately labelled, not rebranded as native. |
-| Wisconsin native preparation | Actual parent replay preserves 3,738 files, 2,655 retained native identities, 24 original PDFs / 85 physical pages and all 93 inherited exchanges. | An executed fresh-manifest contradiction proves the verifier reports saved canonical-match counts without reconstructing the join. Immutable v2 repair, complete-index accounting and actual full-driver/24-exact-seed reuse gates remain pending; no full launch is authorized. |
+| Wisconsin native preparation | V2 strict parent replay, seven original release tests and the genuine full 2,655-population/24-exact-seed reuse driver pass with all 3,757 original metadata records unchanged. An unchanged positive plus six freshly manifested semantic contradictions also pass their exact acceptance/rejection expectations. Genuine dry-readiness data also pass strict independent parent replay. | Actual harmless callback checks find seventeen omitted denials in the readiness packet's own guard; strong outer replay does not repair that inner guard. An immutable readiness successor is being prepared. The v1 canonical-join failure remains preserved; no live initialization or full launch is authorized. |
+| North Carolina native-version preparation | V5 strict replay, four exact parser regressions and all fifteen original parent release tests pass, including the actual 2,004-population/final-20 fake-transport driver. All 1,257 original metadata records remain unchanged. | Genuine initialization readiness and exact inherited 2,007-exchange lineage must precede any version collection. Earlier original-path replacement/metadata failures remain unreconciled; restored payload bytes do not restore historical immutability. |
 | Classification | Four saved official English ModernBERT-base pilots compared on the same 52 platform references: external-only 41/52, joint 47/52, broader-source 47/52, Republican-expanded 49/52. The fourth run correctly rejects 3/4 mixtures and 6/6 non-policy units. | The fourth run loses one policy decision, still accepts a mixture above 0.999 and regresses on insufficient-evidence and taxonomy-boundary development cases. Both sets are examined diagnostics, not fresh independent tests. Independent review and empirical gates remain required. No candidate is approved. |
 | Labels | External CAP files and two state-reference CSVs recovered; exact-context Florida candidates and complete bounded overlap witnesses are frozen without label admission. Split/group/text and reviewed-platform source-body checks retain explicit label provenance. | Modern Florida external titles/subtopics are missing; Pennsylvania rows stop in 2016. Annotation provenance, source permissions, adapted-topic compatibility, bill families and independent state-domain references remain unresolved. |
 | Evaluation | Checkpoint-bound training/evaluation split isolation, development-only temperature/threshold selection, exact evidence joins, abstention accounting, per-topic and subgroup metrics. | Reviewer arrangement, frozen empirical gates, independent target tests and clustered uncertainty. No checkpoint can be certified by changing a status field. |
 | Comparison accounting | Missing samples and explicitly unknown shares no longer become zero-valued gaps. Party-specific state counts and three-stream matched-state replication are repaired; unavailable verdicts remain separate in exports, reports and plots. | Legacy analytical outputs have not been regenerated or certified. Correct missingness accounting does not supply missing source evidence, historical affiliations or independent classifier validation. |
 | Companion | Local-only preview v9 exposes all 1,559 recovery captures, 119 failures and 61 alternative extraction identities across 55 OCR bodies, three DOCX bodies and one native-block body, alongside the 2,091 historical documents. The source ledger includes the corrected Arizona and Alaska registry rows. All 100 organization rows remain unresolved. | Audited classification/analysis exports, redistribution review and eventual report; no production integration is authorized. |
+
+## Claim-language and title-cluster reporting
+
+The README now labels the retained substantive sections as **legacy, not
+revalidated findings**, and withdraws unsupported assurances of source-tag
+authorship/independence, verified human gold, property-tax miscoding, current
+operative coverage and geographic causation. Its old source table is identified
+as a legacy inventory, not the October snapshot. Reproduction commands are
+entry points, not a claim that missing artifacts or scientific gates now pass.
+No analytical values or figures are regenerated.
+
+Title-reuse scope is corrected consistently in the README, methods, analysis
+module and figure-report CLI: the implementation compares **titles**, not
+legislative bodies. Connected-component state counts are neither verified
+template-adoption counts nor validated bounds on adoption. Neither title
+similarity nor a high cohesion score proves shared substantive text,
+authorship, copying or coordination.
+
+The exact-title CLI previously compressed supplied sponsor-party counts into
+`D`/`R`/`mixed` using a rounded skew and a fixed ±0.5 cutoff. In particular, no
+known D/R observations appeared as `mixed`. It now prints exact **D, R and
+other/unknown counts**, without changing clustering, saved skew, export schemas
+or historical affiliations. Seven actual Parquet/CLI regressions fail before
+the change; all **29 title-clustering tests** pass afterward, including narrow
+5,002:5,001 counts and known-party records mixed with missing affiliations.
+Evidence: `diffusion_party_counts_before_v2.log` and
+`diffusion_party_counts_complete_v1.log`. An earlier majority-label diagnostic
+is retained separately; it was not adopted as a reason to redefine the
+existing skew threshold.
+Actual differential execution against the pinned pre-fix source also confirms
+**all fourteen export pairs are byte-identical** across the seven cases:
+`diffusion_party_counts_differential_v1.json`. This is a reporting correction,
+not regenerated research or revised party attribution.
 
 ## Classifier numerical decision safeguards
 
@@ -627,12 +661,60 @@ execution: **seven pass, no skips, in 590.961 seconds**. Report:
 files retain the identical complete metadata-map SHA above; private inputs are
 inode-disjoint `copy2` copies and the successful private root is removed.
 The separate original complete **2,655-candidate / 24 genuine sparse-seed reuse /
-2,631 mocked PDF** driver remains running, not an accepted completed pass.
-It must actually extract both readers, verify all **82 full checkpoints plus
-final 31**, and prove no refetch on complete resume.
+2,631 mocked PDF** driver now also completes actual independent parent execution,
+exit zero. It performs both-reader extraction on all 2,631 new PDFs, verifies
+**82 full checkpoints plus final 31**, reaches next ordinal **2,725** and proves
+**zero refetch on complete resume**. Report:
+`wisconsin_v2_parent_full_actual_v1.json`; actual proof:
+`wisconsin_v2_parent_full_actual_v1_proof.json`, SHA
+`f6add8d442c3ae27378d7aef1c2e12a748c5046672f48bc388507108248d3370`.
+All 3,757 original complete metadata records and before/after snapshot files
+remain identical; the successful private root is removed. This is genuine
+driver execution with fake transport, not actual statewide source collection.
 The guard permits the unchanged collector's
 new-body hard links **only when both endpoints are inside that private test
 root**; it does not claim all links are denied or link test inputs to originals.
+
+The separate whole-verifier semantic run also completes actual independent
+parent execution, exit zero: **one unchanged positive and six freshly
+manifested negatives**. Each negative reaches its required substantive
+`ValueError`, not a guard or inventory failure: contradictory canonical
+chamber, reconstructed canonical join, changed source, changed order, changed
+candidate context and changed immutable source context.
+Report: `wisconsin_v2_parent_semantic_negatives_actual_v1.json` and its actual
+log. Executed harness SHA:
+`cba68534d3f7ee646a23c7fa9d44314c0c83488fb77b8619d107c8361727d4b4`.
+All seven fixtures retain complete metadata during replay; inputs are
+inode-disjoint `copy2` copies, every fresh manifest inventory is validated and
+the successful private root is removed. All 3,757 original records and
+before/after snapshot files remain identical, with the same map SHA above.
+The run issues zero HTTP requests and denies all child mutations, networking
+and child execution.
+
+A distinct genuine dry-initialization/readiness packet has returned with
+manifest `f2375772779bf5b0c38a136366cbed84d86b64eca26605b56d51b72f53d5b576`.
+Strict independent source-only read-only parent replay now **passes**, with all
+**1,267 readiness files unchanged**, including complete metadata; before/after
+map SHA `203a9d3b028fda62ef41d1bd7364b4847b465af1e98384c954e2f9e8d74438ad`.
+Report: `wisconsin_readiness_parent_replay_actual_v1.json`, enclosing exit zero.
+The independent outer guard denies all socket/child operations, mutations and
+unrelated project/session inputs, and forces source-only archive imports.
+
+That pass does not certify the packet's **own inner guard**. A separate actual
+capture of its exact installed callback submits **23 harmless synthetic events**:
+five required-denial controls and one legitimate archive-read control pass, but
+**seventeen required denials are omitted**. These cover socket creation/name
+lookup/send events, system/fork/exec/spawn events, non-open filesystem mutations
+and an unrelated original-project README read.
+Report: `wisconsin_readiness_inner_callback_parent_actual_v1.json`.
+No target OS operation, verifier execution or network call occurs in this probe;
+the guard's printed activation message is not verifier evidence. All 1,267
+original metadata records remain unchanged. The guard also does not establish an
+absent bytecode prefix itself; the packet contains no archived bytecode, so no
+actual stale-bytecode selection is alleged.
+The same worker is preparing a distinct immutable zero-HTTP readiness successor.
+The future actual target and authorization remain absent; readiness acceptance
+remains withheld despite the completed full-driver gate and outer replay.
 No Wisconsin live initialization or collection is authorized, no original packet
 is rewritten, and neither v1 nor v2 confers scientific admission.
 
@@ -1883,14 +1965,23 @@ inputs are denied; imports select source, not archived bytecode.
 
 A separate pinned parent environment also completes its own strict read-only
 replay with the same complete metadata maps:
-`nc_v5_parent_replay_actual_v1.json`. All **fifteen original release tests** are
-now running in a private inode-disjoint `copy2` copy, with every hard link and
-symlink denied. This includes the actual **2,004-page / two genuine reuses /
-2,002 mocked responses / final-20** driver. Its running execution is not a
-completed parent pass; the worker's fifteen passes remain separate evidence.
+`nc_v5_parent_replay_actual_v1.json`. All **fifteen original release tests now
+pass actual independent parent execution**, no skips, in **1,345.527 seconds**;
+the enclosing child and parent both exit zero. This includes the actual
+**2,004-page / two genuine reuses / 2,002 mocked responses / final-20** driver.
+Report: `nc_v5_parent_gates_actual_v1.json` and its actual log. Executed adapter:
+`771c6dced31973dcef59aed8f059b511bad99673936a7ecfdec8d0fcc8a9a2d6`.
+The private inputs are inode-disjoint `copy2` copies, with every hard link and
+symlink denied; the successful private root is removed. All 1,257 original
+metadata records and complete before/after snapshot files remain identical,
+with the same map SHA above. No real HTTP or live initialization occurs.
+An initial additional receipt check used the wrong manifest/verifier
+filenames; using the exact names from the pinned adapter passes. That path
+lookup failure is not an original-test or source-verifier failure.
 Earlier result/checkpoint/lineage/transport positives and failures, including
 the v3 enclosing metadata failure, remain preserved. Initialization and full
-collection remain withheld pending independent release gates; no classifier,
+collection remain withheld pending genuine readiness and inherited-lineage
+checks; no classifier,
 scientific or publication admission follows.
 
 ## Colorado regular-session source census and full continuation

@@ -1,31 +1,22 @@
-"""Detect text reuse across states -- the signature of model legislation.
-
-State legislatures do not draft in isolation. Advocacy groups and legislative-exchange
-organisations circulate template bills, and the same text surfaces in a dozen capitols in the
-same session. That reuse is visible in the data: it looks like a bill title appearing, near
-verbatim, in states that share nothing but a sponsor's party.
+"""Find candidate cross-state reuse of normalized bill titles, not legislative bodies.
 
 Method
 ------
-Two passes, both over titles normalised by lowercasing and stripping bill numbers, years and
-ordinals -- exactly the parts two states running one template differ on.
+Two passes use titles normalised by lowercasing and stripping bill numbers, years and ordinals.
 
 1. :func:`find_reuse_clusters` groups by *exact* match on the normalised form. Conservative, and
-   finds only templates adopted verbatim.
-2. :func:`find_near_duplicates` clusters by Jaccard similarity over content words, which is what
-   the published headline figures come from, because real model legislation is edited in
-   transit. Candidates are blocked by their rarest content words; clusters are connected
-   components, so ``n_states`` is an upper bound on the spread of one template rather than a
-   count of titles that each passed the threshold pairwise.
+   does not verify that bill bodies match.
+2. :func:`find_near_duplicates` clusters by Jaccard similarity over content words.
+   Candidates are blocked by their rarest content words; clusters are connected components,
+   so some member pairs may fall below the matching threshold.
 
-Generic administrative titles are excluded and a length floor applies, because every state files
-a budget bill and that is not evidence of copying.
+Generic administrative titles are excluded and length floors apply. Filtering and blocking
+can miss candidates; component state counts are not validated bounds on template adoption.
 
 What this does and does not show
 --------------------------------
-It shows *text reuse*, not authorship or coordination -- two states can independently name a
-bill "An Act relating to the state budget", which is why generic administrative titles are
-excluded and a length floor is applied. A group is evidence worth looking at, not proof.
+Title matches identify candidates for source review. No legislative-body comparison,
+copying, common authorship, coordination or shared policy position is established.
 """
 
 from __future__ import annotations
@@ -81,8 +72,7 @@ def _empty_clusters(*, with_normalized: bool = False):
 def normalize_title(title: str) -> str:
     """Reduce a bill title to a comparable form.
 
-    Strips bill numbers, years and ordinals -- the parts guaranteed to differ between two
-    states running the same template -- then punctuation and casing.
+    Strips bill numbers, years and ordinals, then punctuation and casing.
     """
     text = (title or "").lower()
     text = _BILL_NUMBER_RE.sub(" ", text)
@@ -97,10 +87,8 @@ def find_reuse_clusters(
 ):
     """Group bills whose normalised titles match across several states.
 
-    Returns one row per cluster: the shared text, how many states and bills it spans, and the
-    party composition of its sponsors -- which is the interesting part, since a template
-    circulating through one party's legislators looks very different from a technical
-    uniform-law adoption that both parties file.
+    Returns the shared normalized title, counts of states and bill contexts, and supplied
+    sponsor-party composition. None of these fields establishes shared legislative text.
     """
 
     frame = bills.loc[
@@ -166,8 +154,8 @@ def find_near_duplicates(
                          block_keys: int = 3):
     """Cluster bills whose titles are near-identical, allowing for rewording.
 
-    Exact matching finds only templates adopted verbatim, and real model legislation is edited
-    in transit. This compares content-word sets with Jaccard similarity.
+    Exact matching misses reworded titles. This compares content-word sets with Jaccard
+    similarity; it does not compare legislative bodies.
 
     Comparing a million titles pairwise is impossible, so candidates are blocked by their
     *rarest* content word: two near-identical titles must share their rare vocabulary, while a
@@ -231,10 +219,8 @@ def find_near_duplicates(
     frame["cluster"] = [find(index) for index in frame.index]
 
     # Clusters are connected components, so membership is transitive: A~B and B~C puts A and C
-    # together even if they are not themselves similar. Measured on the real corpus the minimum
-    # intra-cluster similarity falls as low as 0.17 against a 0.80 threshold. Reporting that
-    # minimum lets a reader see how tight a cluster actually is, instead of `n_states` being
-    # read as "this many states filed near-identical text".
+    # together even if they are not themselves similar. Report the minimum pairwise title
+    # similarity so component membership is not mistaken for an all-pairs match.
     cohesion: dict[int, float] = {}
     for cluster, members in frame.groupby("cluster").groups.items():
         variants = {token_map[index] for index in members}
@@ -302,12 +288,13 @@ def main(argv: list[str] | None = None) -> int:
     if not clusters.empty:
         print(f"bills in clusters:  {int(clusters['n_bills'].sum()):,}")
         print(f"widest cluster:     {int(clusters['n_states'].max())} states")
-        print("\nmost widely reused bill text:")
+        print("\nmost widely matched normalized bill titles (supplied sponsor-party counts):")
         for _, row in clusters.head(12).iterrows():
-            skew = ("D" if row["party_skew"] > 0.5 else
-                    "R" if row["party_skew"] < -0.5 else "mixed")
+            n_d, n_r = int(row["n_D"]), int(row["n_R"])
+            n_other = int(row["n_bills"]) - n_d - n_r
             print(f"  {int(row['n_states']):>2} states, {int(row['n_bills']):>3} bills "
-                  f"[{skew:<5}] {row['example_title'][:78]}")
+                  f"[D:{n_d:,} R:{n_r:,} other/unknown:{n_other:,}] "
+                  f"{row['example_title'][:78]}")
     print(f"\nwrote {path}")
 
     near = find_near_duplicates(bills, min_states=args.min_states)
@@ -321,7 +308,7 @@ def main(argv: list[str] | None = None) -> int:
         substantive = near[~near["ceremonial"]]
         print(f"substantive:             {len(substantive):,} "
               f"({int(near['ceremonial'].sum()):,} ceremonial, flagged separately)")
-        print("\nmost widely reused substantive bill text:")
+        print("\nmost widely matched nonceremonial bill-title candidates:")
         for _, row in substantive.head(12).iterrows():
             print(f"  {int(row['n_states']):>2} states, {int(row['n_bills']):>3} bills, "
                   f"cohesion {row['min_similarity']:.2f}  {row['example_title'][:56]}")

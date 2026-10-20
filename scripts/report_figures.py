@@ -184,7 +184,7 @@ def main() -> int:
 
     reuse = _load("text_reuse_near_duplicates.csv")
     if reuse is not None and not reuse.empty:
-        print("\nText reuse (model legislation)")
+        print("\nCandidate bill-title reuse (not verified model legislation)")
         print(f"  clusters             {len(reuse):,}")
         print(f"  bills in clusters    {int(reuse['n_bills'].sum()):,}")
         print(f"  widest cluster       {int(reuse['n_states'].max())} states")

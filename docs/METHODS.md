@@ -25,7 +25,7 @@ in [REPRODUCIBILITY.md](REPRODUCIBILITY.md).
 - [State focus atlas](#state-focus-atlas)
 - [Election and voting focus](#election-and-voting-focus)
 - [TF-IDF and log2 concentration](#tf-idf-and-log2-concentration)
-- [Model legislation](#model-legislation)
+- [Candidate bill-title reuse](#candidate-bill-title-reuse)
 - [Per-state profiles and outliers](#per-state-profiles-and-outliers)
 - [Repository layout](#repository-layout)
 - [Provenance](#provenance)
@@ -1067,7 +1067,7 @@ plank and each topic description and assigns the nearest topic. A transparent ke
 runs alongside it, not as a fallback but so the model's output can be checked against something
 a human can read and argue with.
 
-**Validation configuration, applied to 49,575 planks from 1,221 documents
+**Legacy reported validation configuration, applied to 49,575 planks from 1,221 documents
 (43,971 classified):**
 
 | Classifier | Top-1 | Top-2 |
@@ -1075,12 +1075,11 @@ a human can read and argue with.
 | Keyword baseline | 56% | — |
 | Embedding (MPS) | **62%** | **78%** |
 
-Scored against `data/gold/plank_topics_gold.csv` — 50 planks drawn at random (seed 20260729)
-from the **2018-present** corpus and hand-labelled by the author. Accuracy is therefore measured
-on modern planks; the 1990–2017 era supplies most of the plank corpus and is not sampled. It is small and single-annotator, so it supports claims about
-broad aggregate emphasis and not about any individual plank; some planks are genuinely ambiguous
-between two defensible topics, which is why top-2 is reported alongside top-1. Chance on this
-21-way task is about 5%.
+The legacy scores use `data/gold/plank_topics_gold.csv`, containing 50 supplied labels whose
+metadata reports sampling seed 20260729 and a 2018-present source pool. Reviewer identity,
+decision rationales and adjudication are not sufficiently preserved to verify human gold.
+This small, previously examined diagnostic does not certify broad aggregate emphasis or
+individual labels. Top-2 matching also does not validate the single topic counted in analysis.
 
 ![What Democratic and Republican state parties talk about](../outputs/party_emphasis.png)
 
@@ -1090,10 +1089,9 @@ between two defensible topics, which is why top-2 is reported alongside top-1. C
 
 ## Validating the bill classifier
 
-The plank classifier is scored against a hand-labelled gold set — but every item in that set is
-a platform plank. Bills are classified from titles, which are shorter, more procedural and
-written for a different purpose, so the plank accuracy figure does not transfer to them. That
-left the *revealed* half of the headline resting on a classifier nobody had measured.
+The legacy plank diagnostic uses supplied platform labels with unresolved reviewer provenance.
+Its results do not transfer to title-only bills, which are different evidence units.
+Neither diagnostic establishes the validity of the legacy stated-versus-filed headline.
 
 Two known state drafting placeholders are excluded when no summary or introduced text supplies
 policy evidence: Illinois titles ending in `-TECH` and New Mexico's standard `PUBLIC PEACE,
@@ -1113,33 +1111,33 @@ prediction inventories; source-test rows are not counted as substantive model ab
 The separate counts also propagate into the state-party atlas and capability report. Older
 coverage files without this new count are not retroactively given fabricated zero counts.
 
-Roughly half of all bills carry `subject` tags applied by the legislature's own staff. Those
-tags are a genuinely independent signal — a different labeller, a different process, recorded
-before this project existed. `conf/subject_topic_map.yml` maps the unambiguous ones onto the
-project's topic scheme, and `analysis/validate_bills.py` compares the two.
+The legacy analysis compared model predictions with source `subject` tags mapped through
+`conf/subject_topic_map.yml`. Authorship, independence and compatibility with the adapted
+taxonomy remain unverified source by source. `analysis/validate_bills.py` measures agreement
+with this authored crosswalk, not accuracy against independently established policy truth.
 
 ```bash
 uv run python -m state_politics.analysis.validate_bills
 ```
 
-The mapping covers **181 tags** out of 88,716 distinct normalised tag strings. That sounds
-tiny and is the point: only tags whose policy area is determined by the tag name alone are
-included. Procedural tags (`memorials`, `subject index`, `rules`), money tags that say nothing
+The legacy mapping selected **181 tags** out of a reported 88,716 distinct normalised strings,
+with the intention of retaining tag names that identify one policy area. That intention is
+not proof of an unambiguous or rubric-compatible assignment.
+Procedural tags (`memorials`, `subject index`, `rules`), money tags that say nothing
 about the policy being funded (`appropriations`, `bonds`, `fees`), unit-of-government tags
 (`counties`, `municipalities`), and genuinely two-topic tags are all excluded — the last group
 including tags that name a regulated *commodity* rather than a policy area, since
 `alcoholic beverages` covers both liquor licensing and prohibition. Bills whose tags map to two
-different topics are dropped rather than scored, because there is no single right answer. The
-mapping is written from tag names and the CAP codebook, never from classifier output, and does
-not reuse the keyword seeds in `conf/topics.yml` — doing so would test the seeds against
-themselves.
+different topics are excluded from the legacy agreement set; that filtering choice does not
+establish that their substantive evidence lacks a dominant topic. An authored mapping does
+not by itself establish label independence or compatibility with the project's adapted rubric.
 
-**Overall agreement: 63.2% on 46,657 bills across 35 states** — close to the 62% the same model
-scores on hand-labelled planks. But the aggregate hides a lot, and the useful measure is
-**precision** rather than recall, because every headline number is a *share of bills assigned to
-a topic*:
+**Legacy classified-only agreement: 63.2% on 46,657 bills across 35 states**, not recomputed
+here. The following precision/recall values are relative to mapped tags, not independently
+verified policy accuracy, and are not directly comparable to the 50-plank diagnostic.
+Coverage, abstentions and all-eligible accounting must remain separate.
 
-| Topic | Recall | Precision | Chiefly contaminated by |
+| Topic | Legacy tag-relative recall | Legacy tag-relative precision | Main mapped-tag disagreement |
 |---|---|---|---|
 | Education | 79.0% | **88.1%** | Macroeconomics |
 | Transportation | 61.9% | **79.3%** | Education |
@@ -1150,21 +1148,21 @@ a topic*:
 | Public lands and water | 68.8% | **31.2%** | Environment |
 | Civil rights and liberties | 46.5% | **16.4%** | Law, crime and justice |
 
-One failure mode explains almost all of the damage: **the classifier reads a tax bill by the
-thing being taxed rather than by the tax.** Macroeconomics recall is 18.1% — the model finds
-fewer than one tax bill in five — and those bills do not vanish, they land in housing (property
-tax), public lands (land tax) and social welfare (income-tax credits). That simultaneously
-deflates Macroeconomics and inflates whatever the tax was levied on.
+The earlier interpretation blamed taxation disagreements for misclassification and inflated
+housing/public-lands shares. That conclusion is withheld: the adapted tax-versus-substantive
+policy boundary and source-tag crosswalk require review. The reported 18.1% Macroeconomics
+recall is a disagreement diagnostic, not proof that fewer than one in five tax bills is
+correctly classified or that a particular topic's share is biased in a known direction.
 
 ### The replication
 
-Because the tags are independent of the model, they can be used to re-derive the headline
-outright, replacing the classifier entirely. The headline comparison uses **84,330
-tag-labelled bills across the same 24-state comparison sample**. A row "holds" when both labellings put the
-filed share on the same side of the stated share — which is the claim the headline actually
-makes.
+The legacy replication substituted mapped tags for model predictions, using a reported
+**84,330 tag-labelled bills across a 24-state comparison sample**. It is not independent
+certification. A legacy row "holds" when the two assignments put filed shares on the same
+side of stated shares; matching direction does not validate either assignment. Current
+accounting preserves unavailable comparisons rather than treating them as contradictions.
 
-**34 of 42 topic-party rows hold.** The eight that do not are:
+**Legacy report: 34 of 42 topic-party rows hold**, not regenerated. Its eight other rows are:
 
 | Topic | Party | Said | Model | Tags |
 |---|---|---|---|---|
@@ -1333,9 +1331,9 @@ bills in both periods, and tests the mean paired state change with 10,000 determ
 flips. Benjamini-Hochberg q-values cover all 42 party-topic tests. One odd and one even year in
 each period reduces session-cycle confounding; incomplete 2026 data are excluded.
 
-The same calculation is repeated after replacing model topics with unambiguous
-legislative-staff subject tags. Only ten states clear the tag-based period floor, so this is a
-directional replication rather than an equally powered second test. Three FDR-significant model
+The legacy calculation was repeated using mapped source tags, whose authorship, independence
+and rubric compatibility remain unresolved. Its reported ten-state comparison is a
+directional diagnostic, not independent validation. Three legacy FDR-significant model
 increases keep their direction under tags: Democratic housing/community development (+2.9pp;
 tags +2.4pp), Republican civil rights/liberties (+0.7pp; tags +0.2pp), and Republican
 immigration (+0.5pp; tags +0.2pp). Democratic social welfare and Republican environment reverse
@@ -1353,7 +1351,7 @@ Outputs:
 ## Election and voting focus
 
 Elections sit inside CAP's broad Government Operations topic, so
-`analysis/elections.py` applies a separate high-precision title rule covering:
+`analysis/elections.py` applies a separate title-based rule covering:
 
 * voting, voters, ballots, polling places, absentee and mail voting;
 * campaign finance and political committees;
@@ -1365,7 +1363,9 @@ Cross-state shares use title matches only, keeping coverage comparable where leg
 not publish subject tags. Both numerator and denominator exclude resolutions, proclamations,
 appointments, nominations and memorials, whose share of a state's records ranges from 0% to
 58%; otherwise the result partly measures chamber procedure. In the 37 states that do publish
-tags, human-assigned tags provide an independent check: **85.6% precision and 75.6% recall**.
+tags, the legacy mapped-tag check reported **85.6% precision and 75.6% recall**.
+These are tag-replication values, not independently verified policy accuracy; tag authorship
+and independence remain unresolved.
 The output reports total election bills, share of substantive bills, top subtype and a
 leave-one-state-out same-party baseline. Public rankings require at least 500 substantive bills.
 
@@ -1406,30 +1406,30 @@ agenda sentence, not the surrounding session bill index or committee-assignment 
 
 ---
 
-## Model legislation
+## Candidate bill-title reuse
 
-State legislatures do not draft in isolation. Advocacy groups circulate template bills, and the
-same text surfaces in many capitols in the same session — visible in the data as a title
-appearing near-verbatim in states that share nothing but a sponsor's party.
+This is a title-similarity candidate search, not a verified model-legislation inventory.
+It does not compare legislative bodies or establish template adoption.
 
 ```bash
 uv run python -m state_politics.analysis.diffusion
 ```
 
-Titles are normalised (bill numbers, years and ordinals stripped — exactly what two states
-running one template differ on), reduced to content words, and clustered by Jaccard similarity.
+This analysis compares **bill titles, not legislative bodies**. Titles are normalised
+(bill numbers, years and ordinals stripped), reduced to content words, and clustered by
+Jaccard similarity.
 Comparing a million titles pairwise is impossible, so candidates are blocked by their **rarest**
-content words; blocking on several rather than one matters, because two versions of a template
-often differ in precisely which rare word they keep.
+content words. Blocking on several rather than one can retain candidates whose titles share
+some selected rare words but differ in others.
 
 The candidate-block ceiling is 3,500, above the largest observed block (3,333). The earlier
 400-row ceiling left 17.2% of eligible bills in no searched block and is no longer used.
 
-**302 clusters spanning 3+ states, 3,480 bills, the widest reaching 19 states.** Ceremonial
-resolutions ("recognizing National Donate Life Month") circulate just as widely as policy but
-say nothing about an agenda, so they are flagged separately — 98 of the 302.
+The retained **legacy**, not regenerated, result is **302 title-similarity clusters spanning
+3+ states, 3,480 bill contexts, the widest reaching 19 states**. The old output separately
+flags 98 of the 302 clusters as ceremonial; these flags are not independent topic labels.
 
-| States | Bills | Cohesion | Template |
+| States | Bills | Cohesion | Illustrative title |
 |---|---|---|---|
 | 19 | 37 | 0.57 | Audiology and speech-language pathology interstate compact |
 | 12 | 81 | 0.54 | Agreement Among the States to Elect the President by National Popular Vote |
@@ -1440,22 +1440,26 @@ say nothing about an agenda, so they are flagged separately — 98 of the 302.
 | 6 | 38 | 0.36 | Applying for an Article V convention to amend the U.S. Constitution |
 | 6 | 26 | 0.50 | Forming Open and Robust University Minds (FORUM) Act |
 
-The recovered set is face-valid: interstate professional-licensure compacts, the National
-Popular Vote campaign, Article V convention applications, and the FORUM Act all circulate as
-named model bills.
-
-**Read the state counts as an upper bound.** Clusters are connected components, so membership
+**Read the state counts as component membership, not verified template adoption.**
+Clusters are connected components, so membership
 is transitive: if A resembles B and B resembles C, all three land in one cluster even when A
 and C are not themselves similar. Every cluster therefore reports `min_similarity`, the lowest
 pairwise score between any two of its members. Across the 302 clusters that runs 0.31–1.00
-(median 0.71), and **228 of 302 contain at least one pair below the 0.80 pairing threshold** —
-the 19-state compact cluster sits at 0.57, because states retitle the same compact freely
-("enacting the...", "adopting the...", "...licensure compact act"). Treat a cluster as one
-tight template when that value is high, and as a family of related bills when it is not.
+(median 0.71), and **228 of 302 contain at least one pair below the 0.80 pairing threshold**;
+these are legacy statistics, not fresh results. The 19-state title cluster has a reported
+minimum of 0.57. Neither high nor low title cohesion establishes a common legislative body.
+Filtering and candidate blocking can also miss matches, so the component state count is not
+a validated upper or lower bound on actual template adoption.
 
-**This shows text reuse, not authorship or coordination.** Two states can independently choose
-the same words, which is why generic administrative titles are excluded, a length floor applies,
-and each cluster is evidence worth examining rather than proof of copying.
+**These are candidate title matches, not verified legislative-text reuse.** Full source
+comparison is needed before claiming shared substantive text; copying, authorship,
+coordination and policy agreement require their own evidence. Generic-title exclusions and
+length floors do not supply that evidence.
+
+The CLI displays exact supplied `D`, `R` and `other/unknown` counts rather than a
+categorical label derived from rounded skew. These count bill contexts, not
+people or verified filing-time party affiliations. Exported `party_skew` values
+and both CSV schemas are unchanged by this display repair.
 
 ---
 
@@ -1516,7 +1520,7 @@ state-politics/
 │   ├── platform_gaps.yml        # dated coverage observations, not proof of platform absence
 │   └── subject_topic_map.yml    # Open States subject tags -> topic codes, for validation
 ├── data/gold/
-│   └── plank_topics_gold.csv    # 50 hand-labelled planks; authored input, not an artifact
+│   └── plank_topics_gold.csv    # 50 supplied labels; reviewer provenance unresolved
 ├── src/state_politics/
 │   ├── provenance.py            # url, http_status, sha256, retrieved_at, source_org
 │   ├── compute.py               # local device selection + hosted-LLM guard
