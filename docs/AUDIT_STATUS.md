@@ -108,11 +108,24 @@ records** match the accepted baselines. Recomputing those full maps took
 every baseline map record and source hashes independently reconcile. This is not
 the actual launcher's timing and does not prove that launcher infeasible.
 A distinct measurement of only the pinned original `sha`/`inventory` functions
-is running without an audit hook to separate that overhead. It is explicitly
-source-inspected read-only execution, **not guard-enforced or sandboxed**, and
-does not execute launcher top level, a collector or an authorization gate.
-Its one startup observation verifies the exact parent/child and genuine readiness;
-no completed uninstrumented timing is claimed.
+now completes without an audit hook: **661.20 seconds**, with all 56,761 original
+and 55,240 target records unchanged. Raw child proof, every accepted baseline row,
+source pins and the generated harness transformation independently reconcile.
+This is source-inspected read-only execution, **not guard-enforced or sandboxed**;
+it does not execute launcher top level, a collector or an authorization gate.
+Different cache/load conditions mean the two runs do not isolate guard overhead.
+Neither measures the complete launcher or proves universal launch infeasibility.
+
+Source inspection identifies a freshness-lifecycle issue: v3 requires an external
+acceptance before its expensive parent map scans, then checks the same 120-second
+acceptance again in its child. Those intervening scans can exhaust freshness.
+The same GPT-6.1 Sol controls worker now owns an immutable zero-new-HTTP v4:
+complete the required new preflight before first issuing fresh acceptance, retain
+the strict parent/child age gates, and never refresh existing receipts to bypass
+expiry or exclusive-authorization failure. Actual target access and authorization
+remain forbidden to that worker; private entrypoint/clock controls must establish
+the lifecycle before independent parent acceptance. This is not a reproduced
+actual-campaign launch failure or authorization to collect.
 The initial startup observer's assertion failed before saving its unfiltered
 process matches; that observer failure is not a source or collection failure.
 
