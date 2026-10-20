@@ -22,9 +22,20 @@ file/directory records unchanged: no native census or original was recovered.
 Its late original-metadata capture and construction-phase byte-restoration incidents
 remain disclosed; current equality does not establish acquisition-time immutability.
 
-The new **GPT-6.1 Sol** Minnesota worker retains its bounded recovery assignment,
-limited to 128 aggregate physical official exchanges including all discovered
-history, retries, redirects and failures. New Jersey's separate worker returned
+Minnesota's **GPT-6.1 Sol** worker returned a bounded initial packet, now
+independently replayed and accepted within that scope: 11,146 publisher-listed
+identities exactly match the frozen canonical session population; 31 of 32 selected
+original HTML/PDF pairs and 267 pages per PDF reader are retained. This is not
+11,146 recovered originals or a verified introduced-bill universe. The latter
+remains unknown; SR61's original pair is unavailable at the 128-exchange ceiling.
+Only 21 selected contexts have both printed PDF identity and session support;
+official HTML/link evidence does not invent missing printed headers. All 955
+packet file/directory records remain unchanged. Complete raw maps and replay proof
+independently reconcile. Six worker semantic-negative executions were not rerun
+by the parent; original external canonical metadata and acquisition-time runtime
+immutability were not independently rechecked. No continuation is authorized.
+
+New Jersey's separate worker returned
 an access-stop packet: six exchanges, with HTTP 403 on the last exchange and no
 further dispatch. Independent parent replay accepts **blocked evidence only**:
 all 136 packet file/directory records remain unchanged, with fresh reconstruction
@@ -39,7 +50,10 @@ A separate GPT-6.1 Sol worker now owns North Carolina's corrected finite-launch
 controls packet: genuine accepted initialization-v3 binding, verified-positive-PID
 timeout cleanup, timeout-as-failure accounting, and successor-bound offline controls.
 This assignment permits no actual campaign access, collector execution or HTTP;
-it does not authorize a finite launch. Pennsylvania's narrower offline-verification
+it does not authorize a finite launch. Two fresh GPT-6.1 Sol agents own separate
+Arizona and Tennessee bounded native-source packets, each capped at 128 aggregate
+physical official exchanges including any history. Neither has returned a packet
+or received parent acceptance. Pennsylvania's narrower offline-verification
 worker remains responsible for its distinct immutable successor. Its exact v6 parser
 independently rejects the three numeric-whitespace errors, but nine required-denial
 omissions still block readiness acceptance. All 32 payloads and 36 original
