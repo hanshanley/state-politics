@@ -479,6 +479,35 @@ source recovery or wire-timing guarantee. The prior preparation and disabled
 transport remain unchanged. Actual collection remains unauthorized, with no
 label, model or production-site changes. Ignored evidence remains local-only.
 
+**The separate Michigan saved whole/tail reconstruction now also passes.**
+The original parent handle completes with exit zero at **22:43:31 UTC on
+October 20, 2026**. Distinct whole and tail children **37397 and 37398**
+finish at **22:39:25 and 22:37:17 UTC**, respectively. The original verifiers
+reconstruct all **4,043 saved PDF contexts / 8,342 combined reader-pages**
+and the standalone **eleven-context tail / 22 combined reader-pages**.
+Both join all **4,011 reservations, starts and results**, with zero new HTTP.
+Each original installed readonly guard completes **43 denials and eight owned
+allows before** additional outer containment. Whole stderr retains **781 bytes**
+of PDF parser warnings; tail stderr is empty.
+
+Receipt `michigan_readiness_saved_parent_actual_v1.json`, SHA-256
+`b9fb35095b7d612b302a864e9e1b74f1c4e7586467094cfe6d2156b8c0e31f39`,
+binds a complete **123,361-payload manifest match** and byte-identical full
+before/after eight-field maps for **148,280 nodes**, including packet files,
+directories and two external files. Map SHA-256:
+`d7942a9d2018e38f6f1e1d18e1305f25ed083d725a157a50b3dd39b5d4643c50`.
+Independent raw binding at **22:45:21 UTC** reconciles the enclosing log,
+actual child PIDs/argv/timestamps, both raw proofs/stderr and every archived
+map row against the manifest:
+`michigan_readiness_saved_parent_actual_v1_raw_binding_v1.json`, SHA-256
+`13f30558a097054ef4fe8decb817ae8aa66b074697212e9da08edfc8b2842f96`.
+That subsequent binding freshly rehashes **ten selected current nodes**, not
+the whole packet a second time. This accepts saved mocked reconstruction only:
+**not a fresh parent normal-driver execution, genuine full source recovery,
+live wire timing, OS/native-C confinement or scientific admission**.
+The full prior preparation and actual campaign are not inventoried by this
+execution. No collection, label, model or production-site change is authorized.
+
 The Pennsylvania original handle `pa-offline-successor-parent-v1` was read after
 its completion notification. At **19:53:49 UTC**, independent raw-proof binding
 reconciled actual PIDs/timestamps, physical-LF stdout, captured original verifier
