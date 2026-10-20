@@ -1378,7 +1378,7 @@ zero, and scientific/publication admission remains false. Historical
 over-budget exchanges and missing redirect bodies are not repaired by this
 success; the result remains supplemental to frozen v54.
 
-A distinct private-only initializer gate is now actually launched under original
+A distinct private-only initializer gate was actually launched under original
 handle `pa-genuine-v2-private-initialization-parent-v1`, parent PID **47584**,
 with startup response observed at **2026-10-20T11:45:34.477626+00:00** and the
 exact Python command present. Harness SHA:
@@ -1392,6 +1392,37 @@ wrong seed-count rejection. This startup observation is not child readiness or
 completed PASS. The actual target and future actual receipt must remain absent;
 no actual source initialization, collection, HTTP or scientific admission is
 authorized by the private test.
+
+The original private-gate handle subsequently **completes with exit zero**.
+Actual report `pa_genuine_v2_private_initialization_parent_actual_v1.json`,
+SHA `bb0a7d6db57fdca401ae644e2c2c9dc7f4d8120e3f8d6314e659a766d3c7a6ee`,
+finishes **2026-10-20T11:59:45.885814+00:00** with **PASS**.
+Guarded child **47783** executes the original initializer and original standalone
+readiness verifier, not mocked internals. Its actual stdout proof matches the
+enclosing report; stderr is empty and no timeout occurs.
+
+The new **private** successor contains **12,701 files**, all single-link and
+inode-disjoint from every original input root. The original readiness verifier
+reproduces **4,786 native / 62 seeded complete / 4,724 pending**, seed checkpoints
+of **32 and 30**, **536 inherited physical exchanges** and **zero prospective
+exchanges**. All **62 seed metadata records** receive the original initializer's
+enrichment. The duplicate-destination and existing-receipt controls reject with
+their exact expected errors and preserve all private target/receipt metadata.
+The one-checkpoint control rejects before creating a destination or receipt;
+none of these negative controls silently mutates the initialized private tree.
+
+All **26,634 original file/directory metadata records** remain unchanged across
+the five source roots: **25,299 files and 1,335 directories**. Raw before/after
+maps independently compare byte-for-byte, with SHA
+`b0d1e261d80b3043ea0742f1d96cc47de74ec237612d67182710c74267f9ff5c`.
+Original initializer/readiness/handoff/guard pins and all thirty handoff
+payload hashes are independently reconciled. The private fixture is removed.
+The actual successor, its incomplete sibling and future actual receipt remain
+absent. This accepts **private initialization and once-only rejection gates
+only**; actual initialization requires a separate guarded execution and
+collection still requires its own finite launch authorization. No HTTP,
+scientific or publication admission follows, and the historical Pennsylvania
+budget and missing-body incidents remain unresolved.
 
 Ohio's initial preparation also parent-replays with **1,101 files unchanged**,
 **2,279 native candidates**, **62 reused PDF/HTML originals**, **1,123 pages**
