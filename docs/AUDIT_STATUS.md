@@ -1022,6 +1022,26 @@ accepted read-only outer guard. Its verifier dispatch is mocked; activation
 stdout is not actual verifier execution evidence. That enclosing result remains
 pending and is not included in the accepted full-driver gate count.
 
+The callback execution subsequently **completes with enclosing exit zero /
+PASS** at **2026-10-20T08:57:18.762782+00:00**. The original
+`wisconsin-postexit-callbacks-parent-v1` handle is read after its completion
+notification. All **40 original harmless synthetic callbacks meet their
+expectations**, with zero failed expectations, one captured hook and one
+mocked verifier dispatch. There are **zero actual verifier executions and
+zero target OS or network operations**; guard activation stdout is not
+verifier evidence. Report:
+`wisconsin_postexit_callbacks_parent_actual_v1.json`.
+Harness SHA:
+`12ca0639cddbbada78b464efd4a86f848451389388b7a956e36d7dd2654e4ce4`.
+All **33,039 original files' metadata remain unchanged**, with before/after
+snapshot SHA `6820e1594f91e69ea20f4769b42561c93916f72dd7294539a3190c7893a0e58a`.
+Both cache prefixes remain absent and the empty private directory is removed.
+This accepts the callback controls separately from the previously accepted
+actual driver and genuine preseal inspection. A bound genuine parent exit
+receipt, narrowly authorized real-source sealing, and independent whole/final-31
+replay of the resulting genuine archive remain outstanding. No new source
+collection, training, scientific admission or publication is authorized.
+
 ## Full-campaign preparation gates: Pennsylvania, Ohio and Missouri
 
 Pennsylvania's initial immutable preparation and seed-32/seed-30 archives have
