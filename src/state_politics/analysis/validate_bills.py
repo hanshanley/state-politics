@@ -53,11 +53,13 @@ def load_subject_map(path: Path | str | None = None) -> dict[str, int]:
 def tag_topic(subject: str | None, subject_map: dict[str, int]) -> int | None:
     """The single topic a bill's tags agree on, or None.
 
-    Returns None when no tag is mappable *and* when the mappable tags disagree. A bill tagged
-    both "education" and "taxation" has no single right answer, so scoring the classifier
-    against either one would be measuring coin flips.
+    Returns None for missing subjects, when no tag is mappable, and when the mappable tags
+    disagree. A bill tagged both "education" and "taxation" has no single right answer, so
+    scoring the classifier against either one would be measuring coin flips.
     """
-    if not subject:
+    import pandas as pd
+
+    if pd.isna(subject) or not subject:
         return None
     codes = {subject_map[tag] for tag in
              (normalize_tag(part) for part in str(subject).split("|") if part.strip())

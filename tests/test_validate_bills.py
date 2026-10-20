@@ -88,8 +88,9 @@ def test_headline_replication_rejects_inconsistent_topic_names():
 
 @pytest.mark.parametrize("have_model_r", [True, False])
 @pytest.mark.parametrize("prediction_only", [False, True])
+@pytest.mark.parametrize("missing_subject", [False, True])
 def test_tag_replication_cli_matches_model_states_too(
-    tmp_path, monkeypatch, capsys, have_model_r, prediction_only,
+    tmp_path, monkeypatch, capsys, have_model_r, prediction_only, missing_subject,
 ):
     from state_politics.analysis import revealed, validate_bills
 
@@ -98,6 +99,12 @@ def test_tag_replication_cli_matches_model_states_too(
         "identifier": ["HB 1", "HB 2", "HB 3", "HB 4"], "year": [2024] * 4,
         "subject": ["Education"] * 4,
     })
+    if missing_subject:
+        bills.loc[len(bills)] = {
+            "state": "TX", "sponsor_party": "D", "identifier": "HB 5",
+            "year": 2024, "subject": pd.NA,
+        }
+        bills["subject"] = bills["subject"].astype("string")
     bills_path = tmp_path / "bills.parquet"
     bills.to_parquet(bills_path, index=False)
     platform = pd.DataFrame({
@@ -188,6 +195,38 @@ def test_tag_topic_returns_none_for_absent_or_unmapped_tags():
     assert tag_topic("", SUBJECT_MAP) is None
     assert tag_topic(None, SUBJECT_MAP) is None
     assert tag_topic("Memorials|Rules", SUBJECT_MAP) is None
+
+
+@pytest.mark.parametrize("subject", [pd.NA, float("nan")], ids=["nullable", "nan"])
+def test_tag_topic_does_not_convert_missing_values_into_tag_strings(subject):
+    assert tag_topic(subject, {"nan": 6}) is None
+
+
+@pytest.mark.parametrize("subject_dtype", ["object", "string"])
+@pytest.mark.parametrize(
+    "report", [agreement_report, tag_replication, tag_replication_by_state],
+)
+def test_tag_reports_exclude_nullable_subjects_without_changing_eligible_rows(
+    subject_dtype, report,
+):
+    frame = pd.DataFrame({
+        "state": ["TX"] * 5, "sponsor_party": ["D", "R", "R", "D", "D"],
+        "identifier": [f"HB {number}" for number in range(1, 6)],
+        "subject": pd.Series(
+            ["Education", pd.NA, "Schools", "Education|Taxation", "Memorials"],
+            dtype=subject_dtype,
+        ),
+        "topic": pd.Series([6, 12, pd.NA, 6, 6], dtype="Int64"),
+    })
+    result = report(frame, SUBJECT_MAP, TOPIC_NAMES)
+    expected = report(frame.loc[frame["subject"].notna()], SUBJECT_MAP, TOPIC_NAMES)
+    pd.testing.assert_frame_equal(result, expected)
+    count_column = "n" if report is agreement_report else "n_bills"
+    assert result[count_column].sum() == 2
+    assert set(result["topic"]) == {6}
+    if report is agreement_report:
+        assert result["n_abstained"].sum() == 1
+        assert result["agreed"].sum() == 1
 
 
 def test_agreement_report_separates_precision_from_recall():
