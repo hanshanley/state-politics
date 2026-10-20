@@ -87,7 +87,10 @@ def test_headline_replication_rejects_inconsistent_topic_names():
 
 
 @pytest.mark.parametrize("have_model_r", [True, False])
-def test_tag_replication_cli_matches_model_states_too(tmp_path, monkeypatch, have_model_r):
+@pytest.mark.parametrize("prediction_only", [False, True])
+def test_tag_replication_cli_matches_model_states_too(
+    tmp_path, monkeypatch, capsys, have_model_r, prediction_only,
+):
     from state_politics.analysis import revealed, validate_bills
 
     bills = pd.DataFrame({
@@ -115,7 +118,8 @@ def test_tag_replication_cli_matches_model_states_too(tmp_path, monkeypatch, hav
     monkeypatch.setattr(validate_bills, "load_classifier", lambda *args: None)
     monkeypatch.setattr(validate_bills, "load_subject_map", lambda *args: SUBJECT_MAP)
     monkeypatch.setattr(
-        revealed, "classify_bills", lambda frame, classifier: frame.assign(topic=6),
+        revealed, "classify_bills",
+        lambda frame, classifier: frame.assign(topic=12 if prediction_only else 6),
     )
     assert validate_bills.main([
         "--bills", str(bills_path), "--platform-by-org", str(platform_path),
@@ -123,6 +127,12 @@ def test_tag_replication_cli_matches_model_states_too(tmp_path, monkeypatch, hav
     ]) == 0
     comparison = pd.read_csv(tmp_path / "headline_tag_replication.csv")
     replication = pd.read_csv(tmp_path / "bill_emphasis_by_tag.csv")
+    agreement = pd.read_csv(tmp_path / "agreement.csv").set_index("topic")
+    assert "nan%" not in capsys.readouterr().out
+    if prediction_only:
+        assert agreement.loc[12, "n_predicted"] == 4
+        assert agreement.loc[12, "precision"] == 0.0
+        assert pd.isna(agreement.loc[12, "agreement"])
     if have_model_r:
         assert set(comparison["n_states"]) == {1}
         assert set(replication["n_states"]) == {1}
@@ -199,6 +209,37 @@ def test_agreement_report_separates_precision_from_recall():
     assert round(report.loc[6, "precision"], 3) == round(2 / 3, 3)
     assert report.loc[6, "top_contaminant"].startswith("Macroeconomics")
     assert report.loc[1, "agreement"] == 0.5
+
+
+@pytest.mark.parametrize("nullable", [False, True])
+def test_agreement_retains_prediction_only_topics_without_inventing_reference_support(nullable):
+    frame = pd.DataFrame({
+        "state": ["TX", "TX", "TX", "TX", "MT"],
+        "identifier": ["HB 1", "HB 2", "HB 3", "HB 4", "LC 123"],
+        "subject": ["Education", "Education", "Taxation", "Unmapped", "Education"],
+        "topic": [12, 12, None, 1, 1],
+    })
+    if nullable:
+        frame["topic"] = frame["topic"].astype("Int64")
+
+    report = agreement_report(frame, SUBJECT_MAP, TOPIC_NAMES).set_index("topic")
+
+    assert set(report.index) == {1, 6, 12}
+    assert report["n"].sum() == 3
+    assert report["n_predicted"].sum() == 2
+    assert report["agreed"].sum() == 0
+    assert report.loc[12, "n"] == 0
+    assert report.loc[12, "n_classified"] == report.loc[12, "n_abstained"] == 0
+    assert report.loc[12, "n_predicted"] == 2
+    assert report.loc[12, "precision"] == 0.0
+    assert report.loc[12, "top_contaminant"] == "Education (2)"
+    assert report.loc[12, ["agreement", "coverage", "agreement_when_classified"]].isna().all()
+    assert report.loc[6, "agreement"] == 0.0
+    assert report.loc[6, "coverage"] == 1.0
+    assert pd.isna(report.loc[6, "precision"])
+    assert report.loc[1, "n_abstained"] == 1
+    assert report.loc[1, "coverage"] == 0.0
+    assert pd.isna(report.loc[1, "agreement_when_classified"])
 
 
 def test_tag_replication_uses_tags_not_the_model():

@@ -69,6 +69,8 @@ def agreement_report(frame, subject_map: dict[str, int], topic_names: dict[int, 
     """Per-topic and overall agreement between predicted topic and tag-derived topic.
 
     ``frame`` must carry ``subject`` and a predicted ``topic`` column.
+    Prediction-only topics retain their false positives; zero-denominator rates
+    remain unavailable rather than implying measured support.
     """
     import pandas as pd
 
@@ -84,7 +86,9 @@ def agreement_report(frame, subject_map: dict[str, int], topic_names: dict[int, 
         ])
 
     rows = []
-    for code, group in scored.groupby("reference"):
+    codes = sorted(set(scored["reference"]) | set(scored["topic"].dropna()))
+    for code in codes:
+        group = scored[scored["reference"] == code]
         agreed = int((group["topic"] == code).sum())
         # Precision matters more than recall here. Every headline number is a *share of bills
         # assigned to a topic*, so what governs its interpretation is how many bills the
@@ -96,10 +100,10 @@ def agreement_report(frame, subject_map: dict[str, int], topic_names: dict[int, 
             "topic_name": topic_names.get(int(code), str(code)),
             "n": len(group),
             "agreed": agreed,
-            "agreement": round(agreed / len(group), 4),
+            "agreement": round(agreed / len(group), 4) if len(group) else None,
             "n_classified": int(group["topic"].notna().sum()),
             "n_abstained": int(group["topic"].isna().sum()),
-            "coverage": round(group["topic"].notna().mean(), 4),
+            "coverage": round(group["topic"].notna().mean(), 4) if len(group) else None,
             "agreement_when_classified": (
                 round(agreed / group["topic"].notna().sum(), 4)
                 if group["topic"].notna().any() else None
@@ -293,8 +297,9 @@ def main(argv: list[str] | None = None) -> int:
           "precision = model's picks the tag confirms):")
     print(f"  {'topic':<38} {'recall':>7} {'prec':>7}  {'n':>6}  most common contaminant")
     for _, row in report.sort_values("precision").iterrows():
-        precision = f"{row['precision'] * 100:5.1f}%" if row["precision"] is not None else "    -"
-        print(f"  {row['topic_name']:<38} {row['agreement'] * 100:5.1f}%  {precision}  "
+        precision = f"{row['precision'] * 100:5.1f}%" if pd.notna(row["precision"]) else "    -"
+        agreement = f"{row['agreement'] * 100:5.1f}%" if pd.notna(row["agreement"]) else "    -"
+        print(f"  {row['topic_name']:<38} {agreement}  {precision}  "
               f"{int(row['n']):>6,}  {row['top_contaminant'] or '-'}")
 
     out = Path(args.out)

@@ -35,6 +35,7 @@ remain explicit; this is not a completed project or a certified classifier.
 | Trend accounting | Empty and one-period populations preserve export schemas; fewer than two paired states leave inference unavailable. Party slopes include topic zeros in observed party-years without inventing missing years. Missing source-tag comparisons remain unavailable; chart sample counts come from each supplied series. | Legacy trend outputs are not regenerated or certified. Model/tag samples may differ, supplied labels and tag provenance remain unvalidated, and a direction match is not independent accuracy evidence. |
 | Language accounting | Empty caucus-unit selections and empty/sparse term populations now preserve readable export schemas. Fixed-filter vocabulary unavailability is explicitly reported; invalid configuration still raises. Supported numerical results and both CLI CSV exports remain byte-identical to the saved baseline in an actual synthetic differential. | Term highlights describe supplied text, not certified operative platforms or policy positions. Legacy research outputs are not regenerated; unavailable comparisons are not observed zero concentration. |
 | Title-reuse accounting | Exact-match clusters without any supplied D/R affiliations now retain an unavailable party skew instead of implying balance. Empty/filtered exact-match exports preserve the supported party-count schema; observed balance stays zero. Supported helper results and both actual CLI CSV exports remain byte-identical to the saved baseline. | Title similarity remains a source-review candidate, not evidence of shared legislative text, common authorship or coordination. Party skew is conditional on supplied resolved D/R affiliations; the repair does not recover missing historical affiliations or regenerate actual research outputs. |
+| Bill-tag diagnostic support | Per-topic agreement now includes prediction-only classes, preserving their false positives and measured zero tag precision. Classes with no reference support retain unavailable recall/coverage, and classes with no predictions retain unavailable precision. CLI and figure reporting no longer render undefined precision as `nan%`. | These are agreement diagnostics on a selected, unambiguously mapped source-tag subsample, not independent accuracy or national performance. No new labels, actual inference, model selection or empirical certification results are claimed. |
 | Intra-party accounting | Empty and insufficient shared-state populations now export readable schemas and replace stale results. Undefined within/between ratios remain unavailable while observed zero distances stay zero; undefined cosine distances cannot produce permutation significance. The CLI and figure report distinguish unavailable evidence from chance results. | Supported synthetic helper results and all eight actual CLI CSV exports are unchanged against the saved baseline. No real research outputs, party-coherence conclusions, classifier labels or empirical release gates are regenerated or certified. |
 | Outcome inference | Fewer than two paired states now leave sign-flip inference unavailable instead of returning 1.0; reports and charts also suppress legacy one-state defaults. Empty/nullable eligibility exports remain readable, new output directories are created, and unavailable probabilities fail the artifact check without crashing it. | Recorded-stage rates, all-filing denominators and coverage floors are unchanged. Supported synthetic results and all four CSV/comparison-JSON exports remain byte-identical to the saved baseline; actual research results and scientific gates are not regenerated or certified. |
 | Organization profiles | Empty and peerless outlier populations now retain readable export schemas. Gap-only organizations remain visible; unknown document counts/status stay unknown. Invalid counts, undefined topic-share vectors and nonpositive null draws raise explicitly. The CLI discloses unavailable within-party comparisons. | Supported profiles, distances, null filtering and all three actual CLI exports remain byte-identical to the saved baseline on a nonempty synthetic fixture. No actual research outputs, source coverage, classifier labels or scientific gates are regenerated or certified. |
@@ -174,6 +175,36 @@ reconstruction only**. The parent does not independently reread all 58,774
 original source/policy records or access the original campaign/archive.
 No HTTP, labels, model forward passes, training/evaluation, filing-time,
 scientific or publication admission follows.
+
+## Bill-tag diagnostics: prediction-only classes and unavailable rates
+
+Actual pre-fix synthetic execution records **six failures and two passing
+controls** in `tag_agreement_zero_support_before_v1.log`. The report previously
+iterated only over tag-reference classes: predictions assigned exclusively to
+another class disappeared from its per-topic false-positive/precision accounting.
+The figure report also printed `nan%` for classes with no predictions.
+
+The diagnostic now retains the union of reference and predicted classes within
+the same eligible mapped-tag population. Prediction-only classes retain their
+predicted counts, **zero measured tag precision** and contaminants; their absent
+reference denominators yield unavailable recall/coverage, not invented zeros.
+Reference-only classes retain their measured recall and unavailable precision.
+Abstentions, Montana source-draft exclusions and unmapped-tag exclusions remain
+unchanged. Overall eligible counts and agreement numerators do not increase.
+The CLI renders unavailable rates without `nan%`; the figure report ranks only
+defined precision and explicitly discloses an entirely unavailable ranking.
+
+All **71 targeted bill-tag/plot/report regressions**, targeted Ruff and diff checks
+pass in `tag_agreement_zero_support_complete_v1.log`. A separate actual
+saved-baseline differential uses **38 synthetic records**, four helpers, all
+three CLI CSV exports and both actual report commands. Values, dtypes, columns,
+CSV bytes and supported stdout remain identical; fixed prediction/loader and
+fixture taxonomy stubs are explicit, with **zero model forward passes**.
+Receipt `tag_agreement_supported_differential_v1.json`, SHA
+`8189fd58ad8d4ea34339f6bbc472f1f729d31f9d9d7f3f3f1dddde230807d355`,
+records the comparison and cleaned private fixture. This does not regenerate
+actual research outputs or establish source-tag independence, model accuracy,
+scientific certification or publication approval.
 
 ## Title-reuse missingness and stable empty exports
 

@@ -400,6 +400,40 @@ def test_stated_vs_revealed_flags_rows_an_independent_labelling_contradicts(tmp_
     assert (6, "R") not in flagged, "missing comparisons cannot be replication failures"
 
 
+@pytest.mark.parametrize("prediction", [None, 12])
+def test_figure_report_preserves_zero_tag_precision_and_discloses_unavailable(
+    tmp_path, monkeypatch, capsys, prediction,
+):
+    from pathlib import Path
+
+    import pandas as pd
+
+    from state_politics.analysis.validate_bills import agreement_report
+
+    monkeypatch.syspath_prepend(str(Path(__file__).resolve().parents[1] / "scripts"))
+    import report_figures as script
+
+    frame = pd.DataFrame({
+        "subject": ["Education", "Education"], "topic": [prediction, None],
+    })
+    tags = agreement_report(frame, {"education": 6}, {6: "Education", 12: "Law"})
+    tags.to_csv(tmp_path / "bill_tag_agreement.csv", index=False)
+    monkeypatch.setattr(script, "ROOT", tmp_path)
+    monkeypatch.setattr(script, "DATA", tmp_path)
+
+    assert script.main() == 0
+
+    output = capsys.readouterr().out
+    assert "nan%" not in output
+    assert "overall agreement    0.0%" in output
+    if prediction is None:
+        assert "lowest precision     unavailable (no classified tagged bills)" in output
+    else:
+        lines = [line for line in output.splitlines() if "lowest precision" in line]
+        assert len(lines) == 1
+        assert "Law" in lines[0] and "0.0%" in lines[0]
+
+
 @pytest.mark.parametrize("all_missing", [False, True])
 def test_figure_report_excludes_unknown_replication_verdicts(
     tmp_path, monkeypatch, capsys, all_missing,

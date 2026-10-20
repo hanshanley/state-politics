@@ -219,11 +219,15 @@ def main() -> int:
         total, agreed = int(tags["n"].sum()), int(tags["agreed"].sum())
         print("\nBill classifier vs statehouse subject tags")
         print(f"  scored               {total:,}")
-        print(f"  overall agreement    {100 * agreed / total:.1f}%")
-        worst = tags.nsmallest(3, "precision")
-        for _, row in worst.iterrows():
-            print(f"  lowest precision     {row['topic_name']:<38} "
-                  f"{row['precision'] * 100:.1f}%")
+        rate = f"{100 * agreed / total:.1f}%" if total else "unavailable"
+        print(f"  overall agreement    {rate}")
+        worst = tags.loc[tags["precision"].notna()].nsmallest(3, "precision")
+        if worst.empty:
+            print("  lowest precision     unavailable (no classified tagged bills)")
+        else:
+            for _, row in worst.iterrows():
+                print(f"  lowest precision     {row['topic_name']:<38} "
+                      f"{row['precision'] * 100:.1f}%")
 
     replication = _load("headline_tag_replication.csv")
     if replication is not None:
