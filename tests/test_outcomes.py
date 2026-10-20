@@ -251,3 +251,44 @@ def test_rollcall_support_separates_sponsor_and_voter_party():
 
     assert result.loc[("D", "D"), "mean_yes_share"] == 1.0
     assert result.loc[("D", "R"), "mean_yes_share"] == 0.25
+
+
+@pytest.mark.parametrize("missingness", [
+    "no_events", "no_party_counts", "no_passage", "below_floor",
+])
+def test_outcome_cli_exports_consistent_empty_vote_coverage(tmp_path, missingness):
+    from state_politics.analysis.outcomes import main
+
+    bills = pd.DataFrame([{
+        "bill_id": "b1", "state": "TX", "sponsor_party": "D", "year": 2024,
+        "classification": "bill", "n_actions": 1,
+        "n_vote_events": 0 if missingness == "no_events" else 1,
+        "recorded_outcome": "introduced_or_pending", "originating_chamber": "lower",
+    }])
+    events = pd.DataFrame([{
+        "vote_id": "v1", "bill_id": "b1", "state": "TX", "result": "pass",
+        "chamber": "lower",
+        "motion_classification": "amendment" if missingness == "no_passage" else "passage",
+    }])
+    counts = pd.DataFrame([{
+        "vote_event_id": "v1", "bill_id": "b1", "state": "TX",
+        "sponsor_party": "D", "voter_party": "R", "option": "yes",
+        "n_votes": 1 if missingness == "below_floor" else 20,
+    }])
+    if missingness == "no_events":
+        events = events.iloc[:0]
+    if missingness == "no_party_counts":
+        counts = counts.iloc[:0]
+    bills.to_parquet(tmp_path / "bills.parquet", index=False)
+    events.to_parquet(tmp_path / "events.parquet", index=False)
+    counts.to_parquet(tmp_path / "counts.parquet", index=False)
+    assert main([
+        "--bills", str(tmp_path / "bills.parquet"),
+        "--vote-events", str(tmp_path / "events.parquet"),
+        "--vote-party-counts", str(tmp_path / "counts.parquet"),
+        "--out-dir", str(tmp_path),
+    ]) == 0
+    summary = pd.read_csv(tmp_path / "rollcall_party_support.csv")
+    assert summary.empty
+    assert "n_states" in summary.columns
+    assert "mean_yes_share" in summary.columns

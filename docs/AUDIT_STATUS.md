@@ -24,7 +24,7 @@ remain explicit; this is not a completed project or a certified classifier.
 | Colorado native index | Independent publisher census reconciles all 1,459 regular identities across 2023A/2024A. First checkpoint retains 32 PDFs / 264 pages. The collector has finished with 1,457 successes and two unsupported-reference dispositions; full replay is pending. | Twenty-nine special-session contexts are separate. Two canonical introduced-reference gaps are not publisher-absence findings; the corresponding bill pages remain uninspected. |
 | North Carolina native index | Independent 2023–2024 publisher census reconciles 2,004 of 2,005 canonical contexts. Complete source replay preserves 2,004 PDFs / 6,783 pages per reader, 2,002 observed numeric identities and two unresolved identity negatives. Actual parent replay now also reconstructs both complete unlabelled inputs: 4,008 reader views / 10,917,908 tokens / 14,520 windows, with zero discarded tokens. | Reader views are not extra bills or approved classifier inputs. Canonical HB 311 remains distinct from native HR 311 despite the shared URL. Statewide publisher version enumeration remains incomplete; canonical version rows are separately labelled, not rebranded as native. |
 | Wisconsin native campaign | V2 strict parent replay, seven release tests, the genuine 2,655-population/24-seed driver and six semantic contradictions pass. Readiness-v2 passes independent replay, all 23 callback expectations, original initializer negatives and fresh dry initialization. Actual once-only initialization copies 620 files with all 1,284 source metadata records unchanged; the finite 2,631-candidate continuation is now running under the unchanged collector. | Startup confirms new retained PDF responses, not a completed corpus. The 25,000 ceiling includes all 93 inherited exchanges. Actual completion, whole-corpus/final-31 closure and independent replay remain required. The v1 canonical-join and guard failures remain preserved; no scientific admission follows. |
-| North Carolina native-version preparation | V5 strict replay, four exact parser regressions and all fifteen original parent release tests pass, including the actual 2,004-population/final-20 fake-transport driver. All 1,257 original metadata records remain unchanged. | Genuine initialization readiness and exact inherited 2,007-exchange lineage must precede any version collection. Earlier original-path replacement/metadata failures remain unreconciled; restored payload bytes do not restore historical immutability. |
+| North Carolina native-version preparation | V5 strict replay, four exact parser regressions and all fifteen original parent release tests pass, including the actual 2,004-population/final-20 fake-transport driver. All 1,257 original metadata records remain unchanged. A distinct genuine readiness-v1 packet has returned; independent source-only parent replay is underway, not yet accepted. | Actual target, staging and authorization remain absent. Accepted initialization readiness and exact inherited 2,007-exchange lineage must precede any version collection. Earlier original-path replacement/metadata failures remain unreconciled; restored payload bytes do not restore historical immutability. |
 | Classification | Four saved official English ModernBERT-base pilots compared on the same 52 platform references: external-only 41/52, joint 47/52, broader-source 47/52, Republican-expanded 49/52. The fourth run correctly rejects 3/4 mixtures and 6/6 non-policy units. | The fourth run loses one policy decision, still accepts a mixture above 0.999 and regresses on insufficient-evidence and taxonomy-boundary development cases. Both sets are examined diagnostics, not fresh independent tests. Independent review and empirical gates remain required. No candidate is approved. |
 | Labels | External CAP files and two state-reference CSVs recovered; exact-context Florida candidates and complete bounded overlap witnesses are frozen without label admission. Split/group/text and reviewed-platform source-body checks retain explicit label provenance. | Modern Florida external titles/subtopics are missing; Pennsylvania rows stop in 2016. Annotation provenance, source permissions, adapted-topic compatibility, bill families and independent state-domain references remain unresolved. |
 | Evaluation | Checkpoint-bound training/evaluation split isolation, development-only temperature/threshold selection, exact evidence joins, abstention accounting, per-topic and subgroup metrics. | Reviewer arrangement, frozen empirical gates, independent target tests and clustered uncertainty. No checkpoint can be certified by changing a status field. |
@@ -107,6 +107,17 @@ checks pass. The original five-case failures remain in
 `outcome_plot_evidence_complete_v2.log`. The first post-fix test run remains
 in the v1 log; a subsequent test-line-length lint failure was corrected before
 the final validation. No research figures or analytical exports are regenerated.
+
+The outcome-analysis CLI also now handles an actually empty vote-event table:
+its passage predicate retains boolean row-selection semantics rather than
+accidentally selecting away every column. All empty vote summaries include the
+same `n_states` field as nonempty summaries, with zero rows rather than invented
+zero-valued party cells. Three pre-fix CLI/Parquet regressions fail; a
+below-voter-floor empty-summary control passes. All **67 plotting and outcome
+tests** and targeted Ruff/diff checks pass after the two-line repair.
+Evidence: `outcome_empty_votes_before_v1.log` and
+`outcome_empty_votes_complete_v2.log`. Nonempty vote calculations, matching
+rules, coverage floors and scientific status are unchanged.
 
 ## Classifier numerical decision safeguards
 
@@ -1604,6 +1615,20 @@ pending** driver, including **379 full batches plus final 43** and both
 standalone verifiers. The live campaign remains off limits to that work.
 No genuine parent exit receipt exists and no real post-exit sealing is
 authorized; synthetic receipts cannot establish original campaign completion.
+
+The worker's returned **v13** successor (manifest
+`9eed18ef1017a0618000a64eb803e95dee6f3805b51276d0e0a0a2f8b839d070`)
+reports repaired callback coverage and an actual frozen-`collect()` prefix,
+not a full-driver acceptance result: **3,331 terminal / 20,968 pending**,
+16 inherited originals without refetch, 3,332 complete physical lifecycles
+and 52 checkpoints. These are worker fixture results, not independent parent
+replay or actual live-source counts. Full-population state rewrites/rescans
+prevented completion of that attempt; the genuine final-43 proof is absent.
+A bounded offline continuation will profile the bottleneck and try a clearly
+labelled mixed mocked-transport shard while preserving genuine positive PDFs
+and all error bodies. Original driver persistence/extraction/freezing may not
+be replaced with fixture writers. No partial prefix is promoted to full proof,
+and no new source requests or actual campaign access are authorized.
 
 ## Illinois 103rd-General-Assembly native census and original HTML
 

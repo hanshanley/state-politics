@@ -152,7 +152,7 @@ def party_rollcall_support(vote_events, party_counts):
     passage = vote_events[
         vote_events["motion_classification"].fillna("").str.split("|").map(
             lambda values: "passage" in values
-        )
+        ).astype(bool)
     ][["vote_id", "bill_id", "state", "result", "chamber"]]
     votes = party_counts[
         party_counts["sponsor_party"].isin(("D", "R"))
@@ -171,6 +171,7 @@ def party_rollcall_support(vote_events, party_counts):
                 "sponsor_party",
                 "voter_party",
                 "n_vote_events",
+                "n_states",
                 "n_person_votes",
                 "mean_yes_share",
             ]
