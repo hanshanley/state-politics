@@ -423,9 +423,44 @@ original content/eight-field nodes**:
 This is not whole-packet preservation or an OS/native-C sandbox.
 A separate GPT-6.1 Sol worker owns a new zero-HTTP transport-readiness successor:
 artifact-preserving single-hop transport, conservative monotonic pacing and
-source-dependent normal-driver/checkpoint proofs. No successor result or parent
-acceptance exists yet; the prior preparation and disabled transport remain
-unchanged. Actual collection remains unauthorized.
+source-dependent normal-driver/checkpoint proofs. That worker has now returned
+`michigan-2023-2024-native-transport-readiness-v1`, manifest SHA-256
+`693e5fa9bac5b8b270ffe4f6d037127e7f70026b5075c0d0437fbb192ad96504`.
+Handoff `michigan_native_transport_readiness_handoff_v1.json`, SHA-256
+`cf53f77c8afe237590df643e72860cc2cd6833bda41286825d47ec5563d2a06c`,
+reports a fresh final-source normal driver: 4,043 contexts, 32 genuine seeds,
+4,011 mocked dispatches, 126 full checkpoints plus the true eleven-tail,
+and zero dispatches on completed resume. Worker whole and standalone-tail
+verification passed; their original PDF/parser warnings remain retained.
+The minimum mocked transport-return-to-next-start gap is ten seconds.
+The 3,131 consumed original records reportedly remain unchanged; that scope
+does not include a new rehash of the entire prior full-preparation packet.
+
+**Independent focused replay now passes**, completing at **22:27:57 UTC on
+October 20, 2026**, child PID 29606, exit zero with empty stderr. The exact
+returned 33-case suite executes from inode-disjoint private copies using the
+new collector's real adapter parsing, lifecycle persistence and pacing; only
+kernel dispatch and clocks are mocked. Cases cover partial transfers, durable
+access/transient stops, retries and redirects, undersleep, UTC jumps/restarts,
+invalid clocks, filesystem failures at five persistence boundaries, stale
+receivers, inherited-budget enforcement and literal physical-LF JSONL.
+The suite also compares native parsing/checkpoint ASTs with the copied original.
+The installed original inner guard passes **38 denials and eight owned allows
+before** the additional parent network/process/link hook. Synthetic xattr
+events are not actual unavailable-API coverage or OS/native-C confinement.
+
+Receipt `michigan_readiness_focused_parent_actual_v1.json`, SHA-256
+`bfdb717a4b0973f961511098dfca19f2fa6e761fcba4a76c17f458fdf9af9d77`,
+binds executed source, raw stdout/stderr, fresh focused result and byte-identical
+before/after eight-field inventories of **47 selected original nodes**. Raw child
+JSON independently matches the separately saved focused result and actual child
+PID. Selected source hashes, handoff/manifest and all ten pairs of worker
+packet/external execution logs bind; the successful private workspace is removed.
+This accepts the fresh focused observations only: **not** a parent full normal
+driver, whole/tail reconstruction, complete 123,361-payload inventory, genuine
+source recovery or wire-timing guarantee. The prior preparation and disabled
+transport remain unchanged. Actual collection remains unauthorized, with no
+label, model or production-site changes. Ignored evidence remains local-only.
 
 The Pennsylvania original handle `pa-offline-successor-parent-v1` was read after
 its completion notification. At **19:53:49 UTC**, independent raw-proof binding
