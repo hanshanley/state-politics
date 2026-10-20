@@ -24,7 +24,7 @@ remain explicit; this is not a completed project or a certified classifier.
 | Colorado native index | Independent publisher census reconciles all 1,459 regular identities across 2023A/2024A. First checkpoint retains 32 PDFs / 264 pages. The collector has finished with 1,457 successes and two unsupported-reference dispositions; full replay is pending. | Twenty-nine special-session contexts are separate. Two canonical introduced-reference gaps are not publisher-absence findings; the corresponding bill pages remain uninspected. |
 | North Carolina native index | Independent 2023–2024 publisher census reconciles 2,004 of 2,005 canonical contexts. Complete source replay preserves 2,004 PDFs / 6,783 pages per reader, 2,002 observed numeric identities and two unresolved identity negatives. Actual parent replay now also reconstructs both complete unlabelled inputs: 4,008 reader views / 10,917,908 tokens / 14,520 windows, with zero discarded tokens. | Reader views are not extra bills or approved classifier inputs. Canonical HB 311 remains distinct from native HR 311 despite the shared URL. Statewide publisher version enumeration remains incomplete; canonical version rows are separately labelled, not rebranded as native. |
 | Wisconsin native campaign | V2 strict parent replay, seven release tests, the genuine 2,655-population/24-seed driver and six semantic contradictions pass. Readiness-v2 passes independent replay, all 23 callback expectations, original initializer negatives and fresh dry initialization. Actual once-only initialization copies 620 files with all 1,284 source metadata records unchanged; the finite 2,631-candidate continuation is now running under the unchanged collector. | Startup confirms new retained PDF responses, not a completed corpus. The 25,000 ceiling includes all 93 inherited exchanges. Actual completion, whole-corpus/final-31 closure and independent replay remain required. The v1 canonical-join and guard failures remain preserved; no scientific admission follows. |
-| North Carolina native-version preparation | V5 strict replay, four exact parser regressions and all fifteen original parent release tests pass, including the actual 2,004-population/final-20 fake-transport driver. Distinct genuine readiness-v1 also passes actual strict source-only parent replay, with all 45,587 readiness/terminal originals unchanged. | The five readiness tests and actual private once-only initialization/promotion/rejection are now running independently, not yet accepted. Actual target, staging and authorization remain absent; no version collection is authorized. Earlier original-path replacement/metadata failures remain unreconciled; restored payload bytes do not restore historical immutability. |
+| North Carolina native-version preparation | V5 strict replay, four exact parser regressions and all fifteen original parent release tests pass, including the actual 2,004-population/final-20 fake-transport driver. Genuine readiness replay and the separate five original tests/private once-only initialization/promotion/rejection now pass independently, with all 45,587 readiness/terminal originals unchanged. | Private initialization produced 44,341 payload files; a second initialization was rejected without changing its target. Actual target, staging and authorization remain absent; no version collection is authorized. Earlier original-path replacement/metadata failures remain unreconciled; restored payload bytes do not restore historical immutability. |
 | Classification | Four saved official English ModernBERT-base pilots compared on the same 52 platform references: external-only 41/52, joint 47/52, broader-source 47/52, Republican-expanded 49/52. The fourth run correctly rejects 3/4 mixtures and 6/6 non-policy units. | The fourth run loses one policy decision, still accepts a mixture above 0.999 and regresses on insufficient-evidence and taxonomy-boundary development cases. Both sets are examined diagnostics, not fresh independent tests. Independent review and empirical gates remain required. No candidate is approved. |
 | Labels | External CAP files and two state-reference CSVs recovered; exact-context Florida candidates and complete bounded overlap witnesses are frozen without label admission. Split/group/text and reviewed-platform source-body checks retain explicit label provenance. | Modern Florida external titles/subtopics are missing; Pennsylvania rows stop in 2016. Annotation provenance, source permissions, adapted-topic compatibility, bill families and independent state-domain references remain unresolved. |
 | Evaluation | Checkpoint-bound training/evaluation split isolation, development-only temperature/threshold selection, exact evidence joins, abstention accounting, per-topic and subgroup metrics. | Reviewer arrangement, frozen empirical gates, independent target tests and clustered uncertainty. No checkpoint can be certified by changing a status field. |
@@ -1688,11 +1688,22 @@ not a full-driver acceptance result: **3,331 terminal / 20,968 pending**,
 and 52 checkpoints. These are worker fixture results, not independent parent
 replay or actual live-source counts. Full-population state rewrites/rescans
 prevented completion of that attempt; the genuine final-43 proof is absent.
-A bounded offline continuation will profile the bottleneck and try a clearly
-labelled mixed mocked-transport shard while preserving genuine positive PDFs
-and all error bodies. Original driver persistence/extraction/freezing may not
-be replaced with fixture writers. No partial prefix is promoted to full proof,
-and no new source requests or actual campaign access are authorized.
+The worker has now returned immutable **v14**, manifest
+`db6476d1d571488313e5ca634bf147d86215be171b0c21d66c36de432ef97f56`.
+Its bounded original-driver continuation reports **512 additional terminal
+candidates**, moving the fixture to **3,843 terminal / 20,456 pending** and
+**60 checkpoints**. The mixed mocked transport retained **503 nonempty HTTP
+404 bodies** and nine genuine-format successful PDFs reopened with both
+readers. These fixture responses are not evidence of actual-source absence.
+The reported **2,299.17-second** shard spent **2,056.393 cumulative seconds**
+in 1,029 `all_candidate_results` scans versus **0.255 seconds** extracting
+nine PDFs; extraction is not the dominant bottleneck. Phase timings overlap
+and must not be summed. The copy2-isolated resumable state is retained at
+`test_evidence/profiled_continuation_after_512` inside v14.
+These are worker-reported bounded fixture results, not independent parent
+execution, whole-driver acceptance or a final-43 verifier PASS. Original driver
+persistence/extraction/freezing remain required. No partial prefix is promoted
+to full proof, and no new source requests or actual campaign access are authorized.
 
 ## Illinois 103rd-General-Assembly native census and original HTML
 
@@ -2203,12 +2214,26 @@ worker dry-initialization evidence; it does **not** itself run a new initializer
 Its separately bound ledgers preserve **2,004 document + three publisher
 exchanges**, next ordinal **2,008**, not a reset budget.
 
-The unchanged five readiness tests and an actual private once-only
-initialization/promotion/second-initialization rejection are now running under
-`run_nc_genuine_readiness_parent_gates_v1.py`; no result is yet claimed.
-Only a private path-bound authorization may be created. Actual target, staging
-and collection authorization remain absent, with no HTTP, live initialization
-or collection authorized. Historical immutability failures remain unreconciled.
+The separate original handle `nc-genuine-readiness-parent-gates-v1` now
+completes **exit zero / PASS** at **2026-10-20T05:41:41.672217+00:00**.
+`nc_genuine_readiness_parent_gates_actual_v1.json` records all **five unchanged
+original readiness tests passing, zero skips**, and actual execution of the
+original once-only initializer, private atomic promotion and second-call
+rejection. Executed harness SHA:
+`6e5e9c4d37e843fe78944e7608f7920101340d473342aa85ec5de1459fdca425`.
+The private initialized target contains **44,341 payload files**, or **44,342
+with its private path-bound authorization**. All private inodes are distinct
+and nlink one; the second call rejects exactly
+`Once-only target or staging path already exists`, leaving the target unchanged.
+The actual initialized state preserves **2,004 native contexts / two reused
+pages / seven reused versions / 2,002 pending**, **2,007 inherited exchanges**,
+next ordinal **2,008**, aggregate cap **15,000** and prospective nonredirect
+aggregate **6,011**. New source requests: **zero**.
+All **45,587 original metadata records remain unchanged**, with the same
+before/after map SHA above; the source-only cache prefix stays absent and the
+private fixture is removed. Actual target, staging and collection authorization
+remain absent. This accepts private release-gate execution only, not live
+initialization or collection. Historical immutability failures remain unreconciled.
 
 ## Colorado regular-session source census and full continuation
 
