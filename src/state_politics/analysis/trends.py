@@ -2,10 +2,11 @@
 
 Cross-sectional averages can hide whether an issue is rising or falling. This module compares
 an early period (2018-2019) with a late period (2024-2025). The periods each contain one
-odd-year and one even-year legislative cycle; the incomplete 2026 year is excluded. Inference
+odd-year and one even-year legislative cycle; years after 2025 are outside this window. Inference
 uses paired state-level changes and a sign-flip permutation test rather than treating hundreds
-of thousands of bills as independent observations. Benjamini-Hochberg q-values control the
-false discovery rate across all party-topic tests.
+of thousands of bills as independent observations. Benjamini-Hochberg adjustment is applied
+across available party-topic tests. Fewer than two paired states
+leave inference unavailable.
 
 It also estimates simple yearly slopes for transparency. The period comparison is the primary
 result because it is less sensitive to a single unusual session than an endpoint difference.
@@ -31,16 +32,20 @@ __all__ = ["party_topic_trends", "state_topic_trends", "benjamini_hochberg"]
 
 
 def benjamini_hochberg(p_values):
-    """Benjamini-Hochberg q-values in original row order."""
+    """Benjamini-Hochberg q-values in original row order, preserving unavailable tests."""
     import numpy as np
 
     values = np.asarray(p_values, dtype=float)
-    order = np.argsort(values)
-    ranked = values[order]
-    adjusted = ranked * len(values) / np.arange(1, len(values) + 1)
+    available = ~np.isnan(values)
+    defined = values[available]
+    order = np.argsort(defined)
+    ranked = defined[order]
+    adjusted = ranked * len(defined) / np.arange(1, len(defined) + 1)
     adjusted = np.minimum.accumulate(adjusted[::-1])[::-1].clip(0, 1)
-    result = np.empty_like(adjusted)
-    result[order] = adjusted
+    defined_result = np.empty_like(adjusted)
+    defined_result[order] = adjusted
+    result = np.full_like(values, np.nan)
+    result[available] = defined_result
     return result
 
 
@@ -68,6 +73,7 @@ def _paired_state_shares(frame, party, topic):
         .groupby(["state", "period"])["n_bills"]
         .sum()
         .unstack()
+        .reindex(columns=["early", "late"])
     )
     eligible = totals.dropna()
     eligible = eligible[
@@ -105,7 +111,7 @@ def _sign_flip_p_value(differences, *, seed):
     import numpy as np
 
     if len(differences) < 2:
-        return 1.0
+        return float("nan")
     observed = abs(float(np.mean(differences)))
     rng = np.random.default_rng(seed)
     signs = rng.choice((-1, 1), size=(TREND_PERMUTATIONS, len(differences)))
@@ -125,7 +131,11 @@ def party_topic_trends(frame):
     late = _period_counts(frame, LATE_YEARS, ["party"]).rename(
         columns={"topic_n": "late_n"}
     )
-    merged = early.merge(late, on=["party", "topic"], how="outer")
+    merged = (
+        frame[["party", "topic"]].drop_duplicates().sort_values(["party", "topic"])
+        .merge(early, on=["party", "topic"], how="left")
+        .merge(late, on=["party", "topic"], how="left")
+    )
     merged[["early_n", "late_n"]] = merged[["early_n", "late_n"]].fillna(0)
     early_totals = frame[frame["year"].isin(EARLY_YEARS)].groupby("party")[
         "n_bills"
@@ -135,6 +145,8 @@ def party_topic_trends(frame):
     ].sum()
     merged["early_total"] = merged["party"].map(early_totals)
     merged["late_total"] = merged["party"].map(late_totals)
+    merged["early_n"] = merged["early_n"].where(merged["early_total"].notna())
+    merged["late_n"] = merged["late_n"].where(merged["late_total"].notna())
     merged["pooled_early_share"] = merged["early_n"] / merged["early_total"]
     merged["pooled_late_share"] = merged["late_n"] / merged["late_total"]
     merged["pooled_change"] = (
@@ -180,22 +192,28 @@ def party_topic_trends(frame):
                 ),
             }
         )
-    merged = merged.merge(pd.DataFrame(inference), on=["party", "topic"])
+    merged = merged.merge(
+        pd.DataFrame(inference, columns=[
+            "party", "topic", "paired_state_count", "early_share", "late_share",
+            "change", "state_change_se", "p_value",
+        ]),
+        on=["party", "topic"],
+    )
     merged["q_value"] = benjamini_hochberg(merged["p_value"])
 
-    yearly = frame.copy()
-    totals = yearly.groupby(["year", "party"])["n_bills"].transform("sum")
-    yearly["share"] = yearly["n_bills"] / totals
+    totals = frame.groupby(["party", "year"])["n_bills"].sum()
     slope_rows = []
-    for (party, topic), group in yearly.groupby(["party", "topic"]):
-        by_year = group.groupby("year")["share"].sum().sort_index()
+    for (party, topic), group in frame.groupby(["party", "topic"]):
+        party_totals = totals.loc[party]
+        counts = group.groupby("year")["n_bills"].sum().reindex(party_totals.index, fill_value=0)
+        by_year = (counts / party_totals.where(party_totals > 0)).dropna().sort_index()
         if len(by_year) < 2:
             continue
         x = by_year.index.to_numpy(dtype=float)
         y = by_year.to_numpy(dtype=float)
         slope = float(((x - x.mean()) @ (y - y.mean())) / ((x - x.mean()) @ (x - x.mean())))
         slope_rows.append({"party": party, "topic": topic, "slope_per_year": slope})
-    slopes = pd.DataFrame(slope_rows)
+    slopes = pd.DataFrame(slope_rows, columns=["party", "topic", "slope_per_year"])
     return merged.merge(slopes, on=["party", "topic"], how="left")
 
 
@@ -249,7 +267,10 @@ def state_topic_trends(frame):
                     "last_share": float(y[-1]),
                 }
             )
-    return pd.DataFrame(rows)
+    return pd.DataFrame(rows, columns=[
+        "state", "party", "topic", "n_years", "first_year", "last_year",
+        "slope_per_year", "first_share", "last_share",
+    ])
 
 
 def main(argv: list[str] | None = None) -> int:
@@ -311,9 +332,10 @@ def main(argv: list[str] | None = None) -> int:
         how="left",
         suffixes=("_model", "_tags"),
     )
+    direction_available = comparison["change_model"].notna() & comparison["change_tags"].notna()
     comparison["direction_replicates_with_tags"] = (
         comparison["change_model"].mul(comparison["change_tags"]) > 0
-    )
+    ).astype("boolean").where(direction_available)
     out = Path(args.out_dir)
     out.mkdir(parents=True, exist_ok=True)
     party.to_csv(out / "bill_topic_trends_by_party.csv", index=False)
@@ -321,28 +343,43 @@ def main(argv: list[str] | None = None) -> int:
     tag_party.to_csv(out / "bill_topic_trends_by_party_tags.csv", index=False)
     comparison.to_csv(out / "bill_topic_trend_replication.csv", index=False)
 
-    print("largest early-to-late changes (FDR-adjusted):")
+    def display(value, spec):
+        return "unavailable" if pd.isna(value) else format(value, spec)
+
+    print("Supplied topic labels, source coverage and subject tags have not been revalidated.")
+    print("largest early-to-late changes (FDR-adjusted where inference is available):")
     for party_code in ("D", "R"):
         top = party[party["party"] == party_code].reindex(
             party[party["party"] == party_code]["change"].abs()
             .sort_values(ascending=False).index
         ).head(5)
         print(f"\n  {party_code}:")
+        if top.empty:
+            print("    unavailable: no party-topic estimates")
         for row in top.itertuples():
             print(
-                f"    {row.topic_name}: {row.early_share:.1%} -> {row.late_share:.1%} "
-                f"({row.change:+.1%}, q={row.q_value:.3g})"
+                f"    {row.topic_name}: {display(row.early_share, '.1%')} -> "
+                f"{display(row.late_share, '.1%')} "
+                f"({display(row.change, '+.1%')}, q={display(row.q_value, '.3g')}, "
+                f"paired states={row.paired_state_count})"
             )
     print(f"\nwrote {out / 'bill_topic_trends_by_party.csv'}")
     print(f"wrote {out / 'bill_topic_trends_by_state.csv'}")
     significant = comparison[comparison["q_value_model"] < 0.05]
     if not significant.empty:
-        print("\nFDR-significant model changes checked against staff tags:")
+        print("\nFDR-significant model changes compared with supplied subject-tag directions:")
         for row in significant.itertuples():
-            verdict = "replicates" if row.direction_replicates_with_tags else "does not replicate"
+            if pd.isna(row.direction_replicates_with_tags):
+                verdict = "tag comparison unavailable"
+            else:
+                verdict = (
+                    "same direction" if row.direction_replicates_with_tags else "not same direction"
+                )
             print(
-                f"  {row.party} {row.topic_name}: model {row.change_model:+.1%}, "
-                f"tags {row.change_tags:+.1%} ({verdict})"
+                f"  {row.party} {row.topic_name}: model {display(row.change_model, '+.1%')}, "
+                f"tags {display(row.change_tags, '+.1%')} ({verdict}; "
+                f"model n={row.paired_state_count_model}, "
+                f"tags n={display(row.paired_state_count_tags, '.0f')}; samples may differ)"
             )
     print(f"\nwrote {out / 'bill_topic_trend_replication.csv'}")
     return 0

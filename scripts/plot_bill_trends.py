@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Plot robust bill-topic changes that survive model and staff-tag direction checks."""
+"""Plot FDR-significant supplied bill-topic changes with source-tag direction concordance."""
 
 from __future__ import annotations
 
@@ -21,13 +21,13 @@ from state_politics.plotting import charts, theme  # noqa: E402
 
 
 def build_figure(trends: pd.DataFrame, out_path: Path):
-    """Render only FDR-significant changes whose direction replicates with staff tags."""
+    """Render available, direction-concordant changes without certifying supplied labels."""
     subset = trends[
         trends["q_value_model"].lt(0.05)
         & trends["direction_replicates_with_tags"].fillna(False)
     ].copy()
     subset = subset.sort_values("change_model")
-    fig, ax = charts.new_figure(figsize=(12.8, 6.8))
+    fig, ax = charts.new_figure(figsize=(12.8, max(6.8, 3 + 0.55 * len(subset))))
     y_positions = range(len(subset))
 
     for y, row in zip(y_positions, subset.itertuples(), strict=True):
@@ -55,9 +55,15 @@ def build_figure(trends: pd.DataFrame, out_path: Path):
         )
 
     labels = [
-        f"{'Democratic' if row.party == 'D' else 'Republican'} · {row.topic_name}"
+        f"{'Democratic' if row.party == 'D' else 'Republican'} · {row.topic_name}\n"
+        f"model n={row.paired_state_count_model:.0f}; tags n={row.paired_state_count_tags:.0f}"
         for row in subset.itertuples()
     ]
+    if subset.empty:
+        ax.text(
+            0.5, 0.5, "No comparable direction-concordant changes available",
+            ha="center", va="center", transform=ax.transAxes, color=theme.MUTED,
+        )
     ax.set_yticks(list(y_positions))
     ax.set_yticklabels(labels, fontsize=10)
     ax.set_xlabel("Equal-state share of classified bills (%)")
@@ -79,7 +85,7 @@ def build_figure(trends: pd.DataFrame, out_path: Path):
         frameon=False,
     )
     fig.suptitle(
-        "How state-party filing priorities changed",
+        "Changes in supplied state-party topic shares",
         fontweight="bold",
         fontsize=18,
         y=0.985,
@@ -94,12 +100,13 @@ def build_figure(trends: pd.DataFrame, out_path: Path):
         color=theme.MUTED,
     )
     source = (
-        "Source: Open States / Plural Policy, 2026-07 public PostgreSQL dump. Shares are "
+        "Source: supplied Open States / Plural Policy exports. Source snapshot, topic labels "
+        "and subject tags have not been revalidated. Shares are "
         "equal-state means over states with at least 100 classified bills in both periods. "
         "Only changes passing model-based FDR correction and moving in the same direction under "
-        "independently assigned legislative-staff tags are shown. Staff-tag direction uses the "
-        "ten states clearing the same floor with unambiguously mapped tags. Incomplete 2026 data "
-        "are excluded."
+        "unambiguously mapped source tags are shown; this is not independent accuracy validation. "
+        "Model and tag samples may differ; paired-state counts are shown per row. "
+        "The analysis window is 2018–2025, not a claim of complete source coverage."
     )
     note = theme.source_note(fig, source)
     theme.layout_with_note(fig, note, top=0.92)

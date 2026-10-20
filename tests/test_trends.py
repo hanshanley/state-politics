@@ -142,3 +142,110 @@ def test_cli_subject_replication_excludes_drafts_before_counting(tmp_path):
     row = result.query("party == 'D' and topic == 1").iloc[0]
     assert row.early_share == pytest.approx(0.20)
     assert row.late_share == pytest.approx(0.40)
+
+
+def test_benjamini_hochberg_keeps_unavailable_tests_out_of_defined_adjustments():
+    q = benjamini_hochberg([0.01, float("nan"), 0.04])
+    assert q[0] == pytest.approx(0.02)
+    assert pd.isna(q[1])
+    assert q[2] == pytest.approx(0.04)
+
+
+@pytest.mark.parametrize("years", [(2018, 2019), (2024, 2025)])
+def test_party_trends_preserve_missing_period_as_unavailable(years):
+    trends = party_topic_trends(_rows().query("year in @years"))
+    missing = "late" if years[0] == 2018 else "early"
+    assert not trends.empty
+    assert trends[f"{missing}_n"].isna().all()
+    assert trends[f"pooled_{missing}_share"].isna().all()
+    assert trends["paired_state_count"].eq(0).all()
+    assert trends[["early_share", "late_share", "change", "p_value", "q_value"]].isna().all().all()
+
+
+def test_one_paired_state_has_a_point_estimate_but_no_inferential_p_value():
+    frame = _rows().query("state == 'AK'")
+    trends = party_topic_trends(frame)
+    assert trends["paired_state_count"].eq(1).all()
+    assert trends["change"].notna().all()
+    assert trends[["state_change_se", "p_value", "q_value"]].isna().all().all()
+
+
+def test_party_slope_includes_zero_topic_counts_in_observed_years():
+    rows = []
+    for year in range(2018, 2026):
+        rows.append({"state": "AK", "party": "D", "year": year, "topic": 2,
+                     "n_bills": 100 if year == 2018 else 80})
+        if year != 2018:
+            rows.append({"state": "AK", "party": "D", "year": year, "topic": 1,
+                         "n_bills": 20})
+    row = party_topic_trends(pd.DataFrame(rows)).query("topic == 1").iloc[0]
+    assert row.slope_per_year == pytest.approx(1 / 60)
+
+
+@pytest.mark.parametrize("years", [(2018,), (2018, 2025)])
+def test_party_slope_does_not_invent_unobserved_party_years(years):
+    rows = [
+        {"state": "AK", "party": "D", "year": year, "topic": topic, "n_bills": n}
+        for year in years
+        for topic, n in [(1, 20 if year == 2018 else 40), (2, 80 if year == 2018 else 60)]
+    ]
+    row = party_topic_trends(pd.DataFrame(rows)).query("topic == 1").iloc[0]
+    if len(years) == 1:
+        assert pd.isna(row.slope_per_year)
+    else:
+        assert row.slope_per_year == pytest.approx(0.2 / 7)
+
+
+def test_topic_observed_only_between_endpoints_retains_both_observed_zeros():
+    frame = _rows()
+    frame = pd.concat([
+        frame,
+        frame.query("year == 2022 and topic == 1").assign(topic=3, n_bills=10),
+    ], ignore_index=True)
+    trends = party_topic_trends(frame)
+    middle = trends.query("topic == 3")
+    assert len(middle) == 2
+    assert middle["paired_state_count"].eq(8).all()
+    assert middle[["early_share", "late_share", "change"]].eq(0).all().all()
+    assert middle["p_value"].eq(1).all()
+
+
+@pytest.mark.parametrize("case", ["empty", "sparse", "missing_tags", "one_period"])
+def test_cli_exports_sparse_populations_without_false_tag_replication(
+    tmp_path, capsys, case,
+):
+    counts = _rows()
+    if case == "empty":
+        counts = counts.iloc[:0]
+    elif case == "sparse":
+        counts["n_bills"] = 1
+    elif case == "one_period":
+        counts = counts.query("year >= 2024")
+    counts = counts.assign(topic_name=counts.topic.map({1: "Macroeconomics", 2: "Education"}))
+    counts.to_csv(tmp_path / "counts.csv", index=False)
+    pd.DataFrame([
+        {"state": "AK", "identifier": "HB 1", "year": 2024,
+         "subject": "unmapped", "sponsor_party": "D"},
+    ]).to_parquet(tmp_path / "bills.parquet", index=False)
+    (tmp_path / "tags.yml").write_text("tags:\n  taxation: 1\n")
+    assert main([
+        "--by-state-year", str(tmp_path / "counts.csv"),
+        "--bills", str(tmp_path / "bills.parquet"),
+        "--subject-map", str(tmp_path / "tags.yml"),
+        "--out-dir", str(tmp_path / "out"),
+    ]) == 0
+    party = pd.read_csv(tmp_path / "out/bill_topic_trends_by_party.csv")
+    state = pd.read_csv(tmp_path / "out/bill_topic_trends_by_state.csv")
+    tags = pd.read_csv(tmp_path / "out/bill_topic_trends_by_party_tags.csv")
+    comparison = pd.read_csv(tmp_path / "out/bill_topic_trend_replication.csv")
+    assert {"state", "party", "topic", "n_years", "slope_per_year"} <= set(state.columns)
+    assert {"party", "topic", "p_value", "q_value", "slope_per_year"} <= set(tags.columns)
+    assert tags.empty and comparison["direction_replicates_with_tags"].isna().all()
+    if case == "empty":
+        assert party.empty and comparison.empty
+    if case in {"sparse", "one_period"}:
+        assert party["paired_state_count"].eq(0).all()
+        assert party[["p_value", "q_value"]].isna().all().all()
+    output = capsys.readouterr().out
+    assert "staff tags" not in output and "does not replicate" not in output
+    assert "unavailable" in output

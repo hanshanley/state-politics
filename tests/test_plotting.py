@@ -17,6 +17,43 @@ import pytest  # noqa: E402
 from state_politics.plotting import charts, theme  # noqa: E402
 
 
+@pytest.mark.parametrize("case", ["available", "empty", "unavailable"])
+def test_trend_chart_discloses_actual_samples_and_unavailable_results(
+    tmp_path, monkeypatch, case,
+):
+    from pathlib import Path
+
+    import pandas as pd
+
+    monkeypatch.syspath_prepend(str(Path(__file__).resolve().parents[1] / "scripts"))
+    import plot_bill_trends as script
+
+    frame = pd.DataFrame([{
+        "party": "D", "topic_name": "Education", "q_value_model": 0.01,
+        "direction_replicates_with_tags": True, "change_model": 0.1,
+        "early_share_model": 0.2, "late_share_model": 0.3,
+        "paired_state_count_model": 8, "paired_state_count_tags": 3,
+    }])
+    if case == "empty":
+        frame = frame.iloc[:0]
+    elif case == "unavailable":
+        frame["direction_replicates_with_tags"] = pd.Series([pd.NA], dtype="boolean")
+        frame["paired_state_count_tags"] = float("nan")
+    out = tmp_path / "trends.png"
+    script.build_figure(frame, out)
+    fig = plt.gcf()
+    text = " ".join(item.get_text() for item in fig.texts)
+    assert out.is_file()
+    assert "2026-07" not in text and "legislative-staff" not in text
+    assert "ten states" not in text and "not been revalidated" in text
+    if case != "available":
+        assert any("available" in item.get_text() for item in fig.axes[0].texts)
+    else:
+        labels = " ".join(item.get_text() for item in fig.axes[0].get_yticklabels())
+        assert "model n=8" in labels and "tags n=3" in labels
+    plt.close(fig)
+
+
 def test_palette_matches_portfolio():
     """Hard-coded so a drift in the shared palette is caught, not silently accepted."""
     assert theme.BG == "#F7F5F0"

@@ -29,7 +29,48 @@ remain explicit; this is not a completed project or a certified classifier.
 | Labels | External CAP files and two state-reference CSVs recovered; exact-context Florida candidates and complete bounded overlap witnesses are frozen without label admission. Split/group/text and reviewed-platform source-body checks retain explicit label provenance. | Modern Florida external titles/subtopics are missing; Pennsylvania rows stop in 2016. Annotation provenance, source permissions, adapted-topic compatibility, bill families and independent state-domain references remain unresolved. |
 | Evaluation | Checkpoint-bound training/evaluation split isolation, development-only temperature/threshold selection, exact evidence joins, abstention accounting, per-topic and subgroup metrics. | Reviewer arrangement, frozen empirical gates, independent target tests and clustered uncertainty. No checkpoint can be certified by changing a status field. |
 | Comparison accounting | Missing samples and explicitly unknown shares no longer become zero-valued gaps. Party-specific state counts and three-stream matched-state replication are repaired; unavailable verdicts remain separate in exports, reports and plots. | Legacy analytical outputs have not been regenerated or certified. Correct missingness accounting does not supply missing source evidence, historical affiliations or independent classifier validation. |
+| Trend accounting | Empty and one-period populations preserve export schemas; fewer than two paired states leave inference unavailable. Party slopes include topic zeros in observed party-years without inventing missing years. Missing source-tag comparisons remain unavailable; chart sample counts come from each supplied series. | Legacy trend outputs are not regenerated or certified. Model/tag samples may differ, supplied labels and tag provenance remain unvalidated, and a direction match is not independent accuracy evidence. |
 | Companion | Local-only preview v9 exposes all 1,559 recovery captures, 119 failures and 61 alternative extraction identities across 55 OCR bodies, three DOCX bodies and one native-block body, alongside the 2,091 historical documents. The source ledger includes the corrected Arizona and Alaska registry rows. All 100 organization rows remain unresolved. | Audited classification/analysis exports, redistribution review and eventual report; no production integration is authorized. |
+
+## Trend missingness, observed zeros and source-tag directions
+
+Twelve actual pre-fix regressions and six passing controls reproduce crashes
+on empty, one-period and sparse populations; unavailable inference incorrectly
+reported as p=1; omission of observed zero-topic years from party slopes; loss
+of topics observed only between the endpoint periods; and unsupported chart
+provenance/sample claims. Evidence: `trend_missingness_before_v1.log`.
+The empty mapped-tag population previously crashed before its comparison
+could be exported; the former direction expression also converted a missing
+tag change into false rather than unavailable.
+
+All four trend CSVs now retain stable headers with no eligible rows. A missing
+party-period stays unavailable, including its count, rather than becoming
+an observed zero. Fewer than two paired states leave p-values, standard errors
+and q-values unavailable; a one-state point estimate remains visible.
+Benjamini-Hochberg adjustment excludes unavailable tests from its family and
+preserves their missing q-values without contaminating defined adjustments.
+Party slopes expand topic zeros only across observed, positive-denominator
+party-years; missing years remain absent. Intermediate-only topics retain
+their observed zero endpoint shares.
+
+Source-tag direction verdicts are nullable, not false contradictions when
+evidence is missing. CLI and chart disclose unvalidated supplied labels,
+remove unsupported staff authorship/independence and July-snapshot claims,
+and show actual per-series paired-state counts. Model and tag samples may
+differ; sign concordance is not independent classifier validation. Empty
+charts explicitly report unavailable comparisons, not unchanged priorities.
+
+All **77 targeted trend, plotting and coverage tests pass**, with targeted
+Ruff and diff checks: `trend_missingness_complete_v1.log`. Additional cases
+cover an entirely missing party-year, a single observed year and a nullable
+tag verdict in a nonempty chart input. Actual old/new execution of the
+288-row supported synthetic fixture confirms identical values, column order,
+dtypes and CSV bytes for all four party-topic and 32 state-party-topic rows:
+`trend_missingness_differential_v1.json`. That execution also retains the
+baseline single-year `KeyError: 'late'` and verifies unavailable successor
+inference/slopes. These are helper/CLI/rendering repairs, not new research
+results: no actual analytical export, source corpus, label, model weight,
+scientific admission or publication file is regenerated.
 
 ## Claim-language and title-cluster reporting
 
