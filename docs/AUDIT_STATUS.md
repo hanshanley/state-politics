@@ -891,6 +891,41 @@ for that scope only. Toolkit acceptance, a genuine sealer exit receipt,
 real-source sealing, whole/final-31 completed-archive replay and scientific
 admission remain outstanding; no resume or additional collection is authorized.
 
+The worker subsequently returns immutable
+`wisconsin-2023-2024-full-preseal-inspection-v1`, root manifest
+`491ee49c9b459e7ad5b84b85f3676644db851f62b55ebb89119602deaabd77db`.
+Its report claims **2,655 PDFs reopened with both readers / 18,880 physical
+pages per reader**, **5,355 closed exchange lifecycles / 21,420 response
+artifacts**, **83 checkpoints / 1,378,992 dependency references checked**,
+and the genuine **SJR110-SJR135 plus SR1-SR5 final 31**. The report preserves
+**26 historical curl-52 results and eight negative seed dispositions** despite
+complete terminal documents; these historical negatives are not erased.
+Its unchanged source inventory contains **40,707 entries: 32,441 files and
+8,266 directories**, not 40,707 files. Worker executions are not independent
+parent acceptance.
+
+Three distinct independent parent executions are now launched:
+`wisconsin-genuine-preseal-parent-v1` runs the unchanged inspector
+`aa1d9ea1d27c78ba3b0c1c96207fcb3e9f350d0a614c7b5ad961b4b49d43fff8`
+against the actual completed source and its retained baseline;
+`wisconsin-postexit-toolkit-parent-v1` runs the unchanged final-31 verifier,
+including its nested whole verifier, against the immutable offline toolkit;
+`wisconsin-postexit-full-parent-v1` executes the original full redirect driver,
+then the standalone final-31/whole verification and eight focused gates, in
+copy2-only private inputs. The latter must actually process **2,631 pending
+candidates**, retain **24 genuine seeds**, persist **5,262 fake exchanges**
+and create all **83 checkpoints**, rather than fabricate terminal rows.
+Guarded readiness responses were observed from children **93049**, **93126**
+and **93920**, respectively. Their session harness hashes are
+`c8da7eca9b1db74bca2f5555958888526bc9479703c5a651b780c3063e1abdfc`,
+`8cfbb0520a09c077e25b7f71d51596b744e0aa58b2850701266aa23277ec22cf`
+and `119ea9cc1d313e84c36dc8fc5fa00aa4ce4b1f42f47d1edee616c0d813cf511c`.
+Readiness proves activation, **not completed parent PASS**. The parent guards
+deny networking, child processes, all links and original mutations; only the
+genuine preseal inspector may read the completed source root. Before/after
+metadata, actual stdout and enclosing exits must pass before acceptance.
+No genuine sealer receipt, real sealing or scientific admission is authorized.
+
 ## Full-campaign preparation gates: Pennsylvania, Ohio and Missouri
 
 Pennsylvania's initial immutable preparation and seed-32/seed-30 archives have
