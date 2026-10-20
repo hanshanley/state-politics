@@ -128,6 +128,29 @@ A separate original whole/final-18 saved-archive replay is running; no completed
 parent result or fresh full pending-driver execution is claimed. Even a passing
 saved synthetic replay would not repair the inner guard or close actual sources.
 
+Texas's distinct **v7r1** toolkit returned a disclosed incremental successor:
+unlike the prior deferred hooks, its source freezes completed 32-candidate
+boundaries during the original collection loop and runs the heavyweight exporter
+at finalization. Worker evidence reports the genuine 11,807-context synthetic plan,
+16 reused sources, 11,791 terminal candidates, 368 normal checkpoints and final
+fifteen, with 11,832 physical exchanges including forty inherited. Those are
+worker results, not new parent full-driver or archive acceptance. The full driver
+finished collection but its enclosing post-collection assertion failed; a separate
+postvalidation receipt does not erase that failed execution.
+
+Parent execution of the exact installed callback reproduces four read-policy
+omissions: an unknown readable integer descriptor and unrelated directory
+listing/scanning/extended-attribute-list events are accepted; ten other denial
+controls pass. The focused test's exact native-driver import also fails with
+`ModuleNotFoundError` under isolated toolkit/runtime-only module paths: the required
+driver module is not packaged under its imported name. These narrow probes leave
+all fifteen selected source/manifest/handoff file/directory records unchanged;
+they do not execute the whole verifier or driver or compare the complete packet.
+The same worker owns a distinct immutable zero-new-HTTP completion, including
+self-contained entrypoints and actual changed-source controls. Prior packets,
+failed attempts and the unavailable HB1 HTML shell remain preserved; its native
+PDF is still unfetched. No actual campaign resume or source closure is accepted.
+
 Pennsylvania's narrower offline-verification
 worker remains responsible for its distinct immutable successor. Its exact v6 parser
 independently rejects the three numeric-whitespace errors, but nine required-denial
