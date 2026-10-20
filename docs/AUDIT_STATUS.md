@@ -46,11 +46,17 @@ boundaries remain unknown. The 10,931 and 12,127 canonical rows are separate
 2022-2023 and 2024-2025 biennial comparison populations, not native counts or
 2023/2024 introduction counts. No new HTTP or continuation is authorized.
 
-A separate GPT-6.1 Sol worker now owns North Carolina's corrected finite-launch
-controls packet: genuine accepted initialization-v3 binding, verified-positive-PID
-timeout cleanup, timeout-as-failure accounting, and successor-bound offline controls.
-This assignment permits no actual campaign access, collector execution or HTTP;
-it does not authorize a finite launch. Two fresh GPT-6.1 Sol agents own separate
+North Carolina's GPT-6.1 Sol worker returned a distinct offline finite-launch
+controls v2 packet binding accepted initialization-v3, verified-positive-PID cleanup
+and timeout-as-failure accounting. Parent execution of the exact source functions
+on a synthetic process listing found an integration blocker: the new entry gate
+also runs in the child and mistakes that same child's PID for a duplicate.
+An otherwise accepted synthetic child rejects before collection; the no-matching-
+process control accepts. This is not an actual campaign failure or a parent
+acceptance. The same worker now owns an immutable v3 correction with explicit
+self/other-child integration controls and all changed-source proofs rebound.
+Actual campaign access, collector execution, HTTP and launch authorization remain
+prohibited during that offline work. Two fresh GPT-6.1 Sol agents own separate
 Arizona and Tennessee bounded native-source packets, each capped at 128 aggregate
 physical official exchanges including any history. Neither has returned a packet
 or received parent acceptance. Pennsylvania's narrower offline-verification
@@ -77,8 +83,11 @@ and a timed-out child can exit zero and satisfy the enclosing success condition.
 A candidate cleanup using verified, explicitly owned positive PIDs now passes
 the bounded local fixtures, including descendant termination and graceful exit.
 Two earlier process-group-signal permission failures remain preserved. This is a
-local cleanup proof, not an accepted replacement launcher: receipt rebinding,
-timeout-failure status and source-dependent launch controls still need integration.
+local cleanup proof, not an accepted replacement launcher. The worker's v2
+integrates receipt rebinding, timeout-failure status and source-dependent controls,
+but the independently reproduced child-self-match blocker above prevents acceptance.
+Fresh actual original/target maps, pins, duplicate absence and exclusive finite
+authorization remain separate future gates.
 No collector or HTTP ran during these checks.
 
 | Area | Verified progress | Remaining gate |
