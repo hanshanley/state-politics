@@ -234,27 +234,85 @@ The Pennsylvania original parent reconstruction was launched at
 No completion receipt or accepted result has yet been received; the active
 harness must not be edited, relaunched or interpreted as a fresh full-driver run.
 
-Oregon's **GPT-6.1 Sol** worker has returned an initial packet and immutable
-offline v2 successor, **pending parent source review and replay**. Worker evidence
-reports 3,263 native/canonical identities, 32 selected PDFs / 98 pages per reader,
-93 HTML projections, 125 identified physical exchanges and eight substantive
-semantic-negative rejections. Historical introduced universes, adjournment
-boundaries and initial metadata timing remain unresolved. These are worker
-results, not parent acceptance or full-source closure.
+Oregon v2, Alaska v2 and Delaware v1 have now passed **independent exact archived
+guarded reconstruction**, completing at **19:30 UTC on October 20, 2026**.
+All three original verifier entrypoints executed in separate isolated locked-runtime
+children. Each additionally denied seventeen genuine `sys.audit` dispatches through
+the installed original inner policy **before** the stronger outer policy. Oregon's
+boundary follows its original `install` return; Alaska's follows its original guard
+exercise; Delaware's precedes its original second-hook registration. The archived
+source files were not edited. Explicit source compilation excludes cached-bytecode
+execution; this is Python audit enforcement, **not** an OS/native-extension sandbox.
 
-Alaska's **GPT-6.1 Sol** worker has returned an immutable v2 blocked-evidence
-packet, **pending independent parent replay**. One retained robots exchange
-contains explicit PDF/journal exclusions, prompting a conservative immediate stop.
-Its 812 frozen canonical rows are not a native census; publisher boundaries and
-the introduced/original universe remain unknown. Worker direct/guarded verification
-and three substantive semantic negatives are not parent acceptance. The failed
-pre-acquisition v1 remains preserved; no collection continuation is authorized.
+| Packet | Parent reconstruction | Complete owned FILE/DIR records unchanged | Parent receipt SHA-256 |
+|---|---|---:|---|
+| Oregon v2 plus preserved v1 | Bounded initial source observations only | 1,412 | `770f9e1d4e9a51c53f436150149b751680a462d6b0954e9bd6573126ae6e23a3` |
+| Alaska v2 plus failed pre-acquisition v1 | Blocked evidence only | 70 | `d9db8ec25a679dc688b9198625ae8341d47d8525128365e9b1c5195667180c9d` |
+| Delaware v1 | Blocked evidence only | 113 | `8e1eeef4b6ad199845e62dfad2d25f518d34b069e4789ba43ff87ae664348516` |
 
-The separate **GPT-6.1 Sol** Delaware worker retains its bounded initial scope;
-no returned or accepted packet is claimed. These aggregate 128-exchange ceilings
-include discovery, robots, retries, redirects, errors and discovered inherited
-history; missing historical evidence is not zero history. Publisher access
-restrictions require an immediate stop, not an alternate route around them.
+The parent source is
+`dcfe25f2bcd61fde7d881b84d96a9fe9499298941f3b2461e47e8b49a31174e0`.
+A separate binding execution at **19:32:41 UTC** reconciled both physical-LF raw
+child records, actual PIDs/timestamps, source/manifest/handoff pins, stderr and every
+byte of all before/after maps, then freshly recomputed **every current mapped node's
+content and all eight metadata fields**. Binding:
+`more_initial_packets_parent_actual_v1_raw_binding_v1.json`,
+SHA-256 `744bd02f31259cb48d9beb29ade2de6fe2966bb058402510c9b6b388b295a75e`.
+
+Oregon's original verifier freshly reconstructs **3,263 current publisher-listed
+native/canonical identities**, 32 selected introduced PDFs / 98 pages per reader,
+93 whole-response HTML projections and 125 identified physical exchanges.
+Its 52 original installed-inner denial controls also ran before the parent outer
+policy. The exact retained stderr contains **32 pypdf duplicate-dictionary warnings /
+2,177 bytes**, not an empty log. The listed census is not a historical introduced
+census; actual adjournment boundaries, unrecorded history and initial metadata timing
+remain unresolved. Its eight worker semantic negatives were **not** independently
+rerun by the parent. This accepts bounded reconstruction, not full-state text closure.
+
+Alaska's one retained robots exchange contains **explicit PDF/journal exclusions**,
+prompting a conservative immediate stop; it does not establish that every publisher
+path is forbidden. Its 812 frozen canonical rows are not a native census.
+Publisher boundaries and the introduced/original universe remain unknown.
+The original guard exercise has 58 entries; the parent child stderr is empty.
+Three worker semantic negatives were not parent-rerun. No PDF was acquired, so reader
+imports/version checks do not establish dual-reader extraction success.
+
+Delaware's three retained robots exchanges are **302 to 301 to 200 "Page not found"**.
+This is a policy-indeterminate conservative stop, not a native census, bill text,
+actual session boundaries or an observed 401/403/429 restriction. The 221 original
+guard controls include direct callback cases and actual descriptor-open cases;
+the parent's seventeen additional controls separately dispatch through the installed
+inner hook before either stronger outer hook. Parent stderr is empty; no PDF was
+acquired. Eight worker semantic negatives remain worker-only evidence. The initial
+direct failure from in-packet logging is preserved. Initial filename-only directory
+reconnaissance lacked full metadata instrumentation; concurrent changes to the shared
+processed-data parent directory are disclosed, not mislabelled original-file changes.
+Browser/search transport and differently named historical exchanges remain unknown.
+
+These acceptances do not independently reread every original external canonical
+input's current metadata or retrospectively prove acquisition-time immutability.
+They authorize no further HTTP, initialization, continuation, analytical/classifier
+admission or publication. The source packets and session receipts remain local-only.
+
+Two further **GPT-6.1 Sol** workers independently own Connecticut and Massachusetts
+2023/2024 initial native-source recovery. Immediate-level processed-root and SQL
+ownership checks found no conflicting owner; those checks do **not** prove zero
+historical HTTP. Each scope has a 128-aggregate-physical-exchange ceiling including
+discovery, robots, retries, redirects, errors and discovered inherited history,
+up to 32 publisher-supported originals, immediate access stops, immutable source
+evidence and whole offline reconstruction. No returned or accepted packet is claimed.
+Existing party-platform packets are outside these legislative scopes; publication,
+canonical labels, model weights and tracked code remain unchanged.
+
+Missouri's stopped-prefix successor-readiness **v2 has returned**, but **parent
+source review and independent gates remain pending**. Its worker reports 1,184
+PDFs / 6,061 pages per reader, the unchanged original ledger prefix followed by
+ordinals 1409-1440, five semantic-fault cases and three real initializer crash
+boundaries. Manifest:
+`be9bc5e0c1396cb9bd696707a327b96737ff574286892a09f4a0fbb609bdf24f`.
+This is private next-32 readiness, not a full 4,960-context driver or permission
+to initialize/resume the actual successor. Earlier v1 guard omissions remain
+historical facts, not superseded by an unexecuted parent review.
 
 Texas's distinct **v7r1** toolkit returned a disclosed incremental successor:
 unlike the prior deferred hooks, its source freezes completed 32-candidate
