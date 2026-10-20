@@ -599,9 +599,15 @@ counted against proposed preparation **400** / full **15,000** ceilings.
 Ohio v3 passes actual independent parent common-guard replay with **5,589 files
 unchanged**, manifest
 `3f3b6e1907c8856570c84d6bbbe632279a0e522a159ff4030c446db779ff1547`.
-Actual parent log: `ohio_v3_parent_actual_guard_v1.log`. A separate parent
-14-test suite is running with writable paths confined to private fixtures;
-worker results are not represented as completed parent execution.
+Actual parent log: `ohio_v3_parent_actual_guard_v1.log`. The separate parent
+suite has now **completed with all 14 tests passing**, including the actual
+2,279-context driver, 62 reused originals, 2,217 fixture collections, no seed or
+resumed refetches, and genuine SR93-SR99 final-seven closure with 147 dependencies.
+Its 6,651 mocked new exchanges plus 201 inherited exchanges total 6,852.
+Writable paths were confined to private fixtures, networking and children denied,
+all 5,589 original paths/bytes/hashes/inodes/mtimes unchanged, and private fixtures
+removed. Report: `ohio_v3_parent_isolated_suite_v1.json`. This positive suite
+does **not** cover or clear the two separately reproduced failures below.
 
 Two further actual parent negatives still withhold launch. First, the genuine
 driver receives five consecutive mocked HTTP 503 responses; the fifth outcome
@@ -703,6 +709,40 @@ The complete 4,960-context corpus and genuine final full-32 checkpoint still
 require post-exit independent replay. The same worker now prepares zero-HTTP
 closure tooling and a distinct first-32 archive without mutating the active
 collector. Ohio and Pennsylvania full continuations remain withheld.
+
+The distinct immutable first-32 archive v2 has now passed actual parent
+common-guard replay: **32 contexts / 527 pages per reader / 903 unchanged files**,
+including standalone historical 1-269 and selected 270-299 transport closure.
+Manifest:
+`c38d4b6cd6f32539d932a91cc8ca33dbfb38234cbbcf95c509c077519dec8350`.
+Actual log: `missouri_first32_v2_parent_actual_guard_v1.log`.
+Historical gaps remain explicit: 269 missing commands, 269 missing reservations
+and eight missing URLs; none were reconstructed as historical facts.
+
+That frozen verifier normalizes PyMuPDF whitespace and does not compare its
+reconstructed blocks exactly. A separate **actual strict parent differential**
+under the project Python instead reproduces exact text, all word fields and all
+block fields on **all 527 pages**, with three identical fresh reopens per PDF.
+All 903 paths/bytes/hashes/inodes/mtimes remain unchanged; zero HTTP requests.
+Report: `missouri_first32_exact_reader_replay_parent_v1.json`.
+A subsequent immutable **strict v3** has now passed actual independent parent
+common-guard replay under project Python **3.12.13**, PyMuPDF **1.28.0** /
+MuPDF **1.29.0** and pypdf **6.14.2**. Exact text, all eight word fields and all
+seven block fields reproduce on every page across three fresh PDF opens; all
+**921 paths/bytes/hashes/inodes/mtimes/link counts** remain unchanged.
+Manifest:
+`5463d0f0eb4e5f34c412d577658bd1449df83aa9301be68143f8aee1d4624d9f`.
+Actual log: `missouri_first32_v3_parent_actual_guard_v1.log`.
+
+A separate actual parent two-page differential reproduces text/word/block
+differences under the non-project CommandLineTools Python **3.9.6** /
+PyMuPDF **1.26.5** / MuPDF **1.26.10** stack, while the locked project runtime
+matches all fields. Reports: `missouri_runtime_prior_parent_v1.json` and
+`missouri_runtime_locked_parent_v1.json`. This is bounded runtime evidence,
+not a full old-runtime corpus replay or proof of unavoidable layout volatility.
+The earlier failure log does not itself record interpreter versions. V1/v2
+remain preserved. Prepared whole-corpus/final-32 sealing tools must not run
+until the original collector actually exits.
 
 ## Texas 88R filed-census and bounded original-text recovery
 
@@ -984,6 +1024,32 @@ Existing response headers are parsed observations, not raw wire-header bytes.
 These five retrieval failures and all six original header quarantines remain
 visible. No topic labels, inference, legal/filing-time certification or
 training/evaluation/analytical/publication admission occurred.
+
+### Single-chamber prints without a regular-session line
+
+Retained completed batch 0145 exposes another source-observation limitation:
+**A 9438, A 9439 and A 9440** explicitly print their number, `IN ASSEMBLY` and
+**March 14, 2024**, but omit the regular-session heading required by the frozen
+collector. Their original `unverified_header` dispositions remain unchanged.
+
+The production module now also observes this exact single-chamber base-print
+preamble. It derives an A/S prefix only from the printed chamber and preserves
+separate number/chamber spans, nullable session and literal date with exact
+reader offsets. It rejects body quotes, amendments and unsupported headers;
+neither the requested route nor the date supplies a missing session.
+Twenty focused single/joint-header cases pass. Actual replay against all three
+retained PDFs matches **both readers' exact saved first-page text**, observes all
+six expected identifiers with null sessions, and leaves all **32 original files**
+unchanged. Receipt: `ny_single_header_actual_three_v1.log`, pinned production
+source `bd86d52bd81fae04c7e717e4a10841b327b0811058926aec62e673eb7ed3d495`.
+This is a three-source repair, not statewide negative-header recovery or
+introduced-version, legal, model or scientific certification. The active
+collector, its statuses, budget and canonical data are not modified.
+
+A distinct zero-HTTP worker now owns immutable replay of **every original
+header-negative candidate in the sealed prefix through batch 0145**, not just
+these three examples. That complete fixed-prefix cohort and independent parent
+replay are still pending; later growing campaign progress is outside its scope.
 
 ## Illinois 103rd-General-Assembly native census and original HTML
 
@@ -1385,16 +1451,16 @@ are still present in that snapshot. Their respective reported successes are
 7,880, 1,979 and 5,193; these are progress observations, not completed corpora.
 Snapshot: `source_campaign_progress_checkpoint_v7.json`, checksum-bound to v6.
 
-A later read-only snapshot at **23:51:39 UTC on October 19, 2026** confirms
+A later read-only snapshot at **00:24:23 UTC on October 20, 2026** confirms
 the same New York, Texas and Illinois collector commands still present:
 
 | Campaign | Reported success | Other terminal dispositions | Pending | Physical exchanges including inherited |
 |---|---:|---|---:|---:|
-| New York | 8,438 | 571 unverified headers; 12 failures | 15,296 | 9,027 |
-| Texas | 2,259 | One unverified header | 9,547 | 2,285 |
-| Illinois | 5,519 | 1,641 unverified identities; 562 unavailable shells; 13 unsupported sources | 5,656 | 7,793 |
+| New York | 8,438 | 884 unverified headers; 12 failures | 14,983 | 9,340 |
+| Texas | 2,342 | One unverified header | 9,464 | 2,368 |
+| Illinois | 5,540 | 1,960 unverified identities; 563 unavailable shells; 13 unsupported sources | 5,315 | 8,134 |
 
-`source_campaign_progress_checkpoint_v8.json` binds v7 and retains each exact
+`source_campaign_progress_checkpoint_v9.json` binds v8 and retains each exact
 UTF-8 progress response, its byte count and SHA-256, read times and process
 observation. These reads are nontransactional; success is the collector's
 reported disposition, not independent source or filing-time certification.
