@@ -1926,6 +1926,49 @@ execution, whole-driver acceptance or a final-43 verifier PASS. Original driver
 persistence/extraction/freezing remain required. No partial prefix is promoted
 to full proof, and no new source requests or actual campaign access are authorized.
 
+Immutable **v15** returns a measured scan/progress-write optimization, manifest
+`3bb838b55cc1e9f8acb7a2ed945531d4851117c7d4c6497269490130c97a7514`.
+Its inventory contains **319,602 payload files / 319,603 including the manifest**,
+with 1,395,953,210 logical payload bytes. Worker execution reports the actual
+changed driver completes **24,299 additional terminal / zero pending** in
+**1,636.25 seconds**, retaining 16 inherited originals without refetch,
+379 normal 64-candidate checkpoints and the genuine final 43. The fixture has
+**24,300 new physical lifecycles / 24,324 including the 24 inherited**.
+Both-reader replay reports 398 PDFs / 818 pages per reader; synthetic transport
+produces 397 successful dispositions plus one unverified-header PDF, not 398
+verified identities. Nonempty mocked 404 bodies do not establish real absence.
+The standalone whole verifier also checks the tail internally; this is not two
+independent standalone executions.
+
+V15 is **not parent release accepted**. Its `handoff.json` still contains v14's
+partial counts/status/commands; the immutable discrepancy is preserved.
+Its focused Unicode test also uses default escaped JSON, so that particular
+case does not prove literal Unicode separator handling. An independent
+read-only replay of the saved full synthetic archive is launched as
+`ny-v15-readonly-parent-v1`, responsive parent PID **28053**, harness SHA
+`3bb1d4869b640232c816870522d382d859219ca2a6202ece56c9fa11cd75d7b2`.
+No completed parent replay or fresh parent full-driver execution is claimed.
+
+The parent then **actually reproduces a release blocker** in pinned optimized
+collector `caf6a9eb96d229d2896bc074304ef5c061191e4d923aa0e07856dfcb006e6ad4`.
+In a copy2-disjoint private 64-candidate fixture, the real saved outcome for
+**A 86 / `00065_a86_attempt1`** remains durable while its final ledger-result
+row and candidate state are removed to model that write boundary.
+Unchanged `reconcile()` overwrites the saved **HTTP 404 / nine-byte** outcome
+with **null status / `InterruptedUnknown`**, despite retained body and header
+bytes. This is lost durable outcome metadata, not a real source retrieval
+failure or a consequence proved specific to caching.
+`ny_v15_durable_outcome_parent_actual_v1.json` records actual child exit zero,
+the counterexample and **all 581 original input metadata records unchanged**,
+before/after map
+`561376950ebcc1650b3da9583ccab766a268a72e0afab96fd1ac98c23a6b55d1`.
+The same actual parent execution verifies literal UTF-8 U+2028/U+2029/U+0085
+bytes remain one JSONL record. No network, child transport or live campaign
+access occurs; the private counterexample is retained.
+The same worker now owns a distinct immutable v16 durability repair,
+write-boundary regressions, corrected handoff and real full-driver proof.
+Even a passing v15 read-only archive replay cannot close this recovery blocker.
+
 ## Illinois 103rd-General-Assembly native census and original HTML
 
 The native index retains **13,391 rows**, exactly matching all **13,376**
