@@ -852,9 +852,22 @@ process, **66 new complete + 24 inherited / 2,564 pending + one redirect-pending
 Five sampled new nonempty HTTP-200/curl-0 PDFs and all preceding HTTP-302
 response bodies/headers are independently hashed. Report:
 `wisconsin_v2_full_launch_actual_readiness_v1.json`. This is a nontransactional
-startup observation, not corpus closure. The same worker prepares a distinct
-zero-HTTP whole/final-31 toolkit without accessing the active root; no duplicate,
-resume, original-packet rewrite or scientific admission is authorized.
+startup observation, not corpus closure. The same worker has returned the
+distinct zero-HTTP whole/final-31 toolkit:
+`data/processed/wisconsin-2023-2024-full-postexit-toolkit-v1`, root manifest
+`493a9e151ef471478ae6eecca8e6b6f50cda5cb2c332b3231d3c72cd8e63c46f`.
+Its handoff, `wisconsin_postexit_toolkit_handoff_v1.json` (SHA
+`a7d85da8222734ddfb0514a0f9d30dad908c8f74e69c2fb5fde55825aa16d2d2`),
+reports **33,039 files**, actual offline original-driver processing of
+**2,655 measures / 24 genuine seed reuses / 2,631 redirect-to-PDF continuations**,
+**5,355 fixture exchanges**, **83 checkpoints** and final-31 closure.
+Worker direct/guarded whole and tail replays, focused negatives and 40 callback
+cases report PASS; predecessor metadata maps are reported unchanged.
+These are **worker execution results awaiting independent parent replay**,
+not completed live-source evidence. The fixture's exchange count and
+all-success dispositions must not be imposed on the actual corpus. No genuine
+exit receipt, real-source sealing, duplicate collection, resume, original-packet
+rewrite or scientific admission is authorized.
 
 ## Full-campaign preparation gates: Pennsylvania, Ohio and Missouri
 
@@ -1084,9 +1097,25 @@ parent's subsequent sibling `input_copy2_proof.json` bookkeeping write.
 `ohio_postexit_toolkit_parent_full_actual_v1.json` records FAIL, with all
 **8,000 toolkit/preparation/readiness original metadata records unchanged**.
 The failed harness, log and private tree are preserved. A distinct v2 changes
-only proof delivery to child stdout plus a parent-side save; the original full
-test body is actually rerunning, not promoted from the failed enclosing run.
-No completed independent full-fixture PASS is yet claimed.
+only proof delivery to child stdout plus a parent-side save. The original full
+test body actually reran, not promoted from the failed enclosing run.
+Original handle `ohio-postexit-toolkit-parent-full-v2` now completes
+**enclosing exit zero / PASS** at **2026-10-20T06:08:32.525380+00:00**.
+Report: `ohio_postexit_toolkit_parent_full_actual_v2.json`; executed harness SHA:
+`0fa4a7c7efb487adeccf4a2e6ce07e9e489e34f97fba1e91ab9d8145353d6482`.
+The unchanged original test body (SHA
+`0b149b74aa9d8c4b1e8aaf0cb6821363d66ef6cab961090fca58446490fc932b`)
+executes the **2,279-population / 62 genuine reused / 2,217 mocked-collected**
+fixture, whole archive and actual SR93-SR99 final seven, plus standalone replay.
+It verifies **72 checkpoints / 6,852 fixture exchanges / 154 tail dependencies**
+and rejects invalid exit, pending state, stop state and tampered final-seven
+evidence. Copy2 proof covers **2,356 isolated seed files** with exact bytes,
+hashes and mtimes, disjoint inodes and nlink one. All **8,000 original metadata
+records remain unchanged**, before/after map SHA:
+`000fca71af350d7eb28a66bc1e78f2344eefd7b045fa1193a94e48e9d7a353bf`.
+The strong source-only guard denies networking, children, links, original
+mutations and unrelated inputs; no live-root access or HTTP occurs, and the
+private fixture is removed. The v1 enclosing failure remains preserved.
 An initial fixture-state readiness lookup found no state file; subsequent
 exact-PID checks confirm both fixture processes and the private work directory.
 That readiness lookup is not a test failure or source-corruption finding.
@@ -1111,10 +1140,11 @@ The strong source-only guard denies all links, sockets, children and original
 writes; the import cache prefix remains absent and the private root is removed.
 The accepted genuine preseal replay preserves **2,267 pairs / five PDF-only
 cases / seven unsupported-original dispositions**, **6,843 exchanges** and
-the actual **175-dependency** final seven. This is not completed archive
-sealing: the full-fixture v2 enclosing result remains pending. Actual
-whole-corpus sealing, exit-receipt recording, recovery requests and resume
-remain withheld pending the separate gates.
+the actual **175-dependency** final seven. Both the independent genuine
+preseal replay and separate enclosing v2 fixture gate now pass, but this is
+not completed real-source archive sealing. Actual whole-corpus sealing and
+exit-receipt recording still require separately bound authorization and
+completed-archive replay; recovery requests and resume remain withheld.
 The actual 6,843 exchanges must not be replaced by the offline fixture's 6,852.
 None of this later evidence is retroactively part of v54; earlier failures and
 positive replays remain preserved, and scientific admission remains false.
