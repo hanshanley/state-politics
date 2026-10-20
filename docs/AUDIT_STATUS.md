@@ -217,22 +217,38 @@ does not make this a pass; no semantic source failure or timeout cause is
 established. No fresh full pending-driver execution is claimed. Even a passing
 saved synthetic replay would not repair the inner guard or close actual sources.
 
-Pennsylvania's separate offline-verification successor and Michigan's full-source
-preparation v3 have returned but are **pending independent parent acceptance**.
-Pennsylvania worker evidence reports direct/guarded reconstruction across 20,342
-retained PDF paths / 4,894 distinct byte payloads, repaired callback controls and
-four resealed semantic negatives. It does not execute a new full collector driver.
+Pennsylvania's separate offline-verification successor has now passed independent
+saved-evidence reconstruction; Michigan's full-source preparation v3 remains
+**pending independent parent acceptance**.
+The original Pennsylvania parent execution completed at **19:39:29 UTC on
+October 20, 2026**, child **70442**, exit zero, with all **307,981 file/directory
+records unchanged**. Its 42 original and seventeen additional installed-inner
+denials ran before stronger containment. The original source reconstructs 4,786
+native contexts, 62 genuine seeds, 4,723 mocked complete contexts and one terminal
+gap, including 9,449 new physical lifecycles, all 151 checkpoints and the true
+final eighteen. It reopens 20,342 retained PDF paths / 4,894 distinct byte payloads.
+Receipt: `pa_offline_successor_parent_actual_v1.json`, SHA-256
+`52fd428f83610181477a7645380844424d039f62c4f2297b65aa2e92bcfeaa5e`.
+This is reconstruction of **saved mocked transport**, not a new full driver or
+actual source recovery/resume. Four worker semantic negatives were not parent-rerun.
 Michigan worker evidence reports a 4,043-context mocked driver with 32 genuine
 seeds, 4,011 pending contexts, 127 checkpoints and the true final eleven. That
 driver executed in preserved v2; its evidence is copy2-bound into v3, not a new v3
 driver execution. Its 434,142-payload verification is worker-side evidence, not
 another parent rehash. Neither returned packet authorizes actual initialization,
 resume, collection, source-closure promotion or scientific admission.
-The Pennsylvania original parent reconstruction was launched at
-**19:04:44 UTC on October 20, 2026**, with parent PID 70278 and original handle
-`pa-offline-successor-parent-v1`. Its exact command was observed once.
-No completion receipt or accepted result has yet been received; the active
-harness must not be edited, relaunched or interpreted as a fresh full-driver run.
+The Pennsylvania original handle `pa-offline-successor-parent-v1` was read after
+its completion notification. At **19:53:49 UTC**, independent raw-proof binding
+reconciled actual PIDs/timestamps, physical-LF stdout, captured original verifier
+return, stderr, executed sources/pins and byte-identical complete before/after maps.
+Binding `pa_mo_parent_actual_raw_binding_v1.json`, SHA-256
+`172faac14cc35f157079de67b1a2fb71a340ad836cd106216f95e6de6ec0464e`,
+also freshly enumerates and stats every current Pennsylvania and Missouri v2 node
+with traversal errors propagated. Every path and seven non-digest stat fields match.
+The original inventories lacked explicit `os.walk` error callbacks; this fresh
+census establishes current path/stat completeness, not a new full-content rehash
+or retrospective acquisition immutability. The actual Pennsylvania stopped source
+remains unresumed; its 136 historical excess exchanges and twelve lost bodies remain.
 
 Oregon v2, Alaska v2 and Delaware v1 have now passed **independent exact archived
 guarded reconstruction**, completing at **19:30 UTC on October 20, 2026**.
@@ -294,25 +310,78 @@ input's current metadata or retrospectively prove acquisition-time immutability.
 They authorize no further HTTP, initialization, continuation, analytical/classifier
 admission or publication. The source packets and session receipts remain local-only.
 
-Two further **GPT-6.1 Sol** workers independently own Connecticut and Massachusetts
-2023/2024 initial native-source recovery. Immediate-level processed-root and SQL
-ownership checks found no conflicting owner; those checks do **not** prove zero
-historical HTTP. Each scope has a 128-aggregate-physical-exchange ceiling including
-discovery, robots, retries, redirects, errors and discovered inherited history,
-up to 32 publisher-supported originals, immediate access stops, immutable source
-evidence and whole offline reconstruction. No returned or accepted packet is claimed.
-Existing party-platform packets are outside these legislative scopes; publication,
-canonical labels, model weights and tracked code remain unchanged.
+Connecticut v1 and Massachusetts v2 have returned. Independent execution of each
+**exact original verifier** succeeds under stronger containment, but actual
+installed-inner observations **before any outer hook** expose remaining policy
+omissions; neither original inner policy is accepted.
 
-Missouri's stopped-prefix successor-readiness **v2 has returned**, but **parent
-source review and independent gates remain pending**. Its worker reports 1,184
+| Packet | Actual parent result, October 20, 2026 UTC | Original FILE/DIR records unchanged | Installed-inner omissions |
+|---|---|---:|---|
+| Connecticut v1 | Child 83218, exit zero, 19:49:21 | 312 | Six: unrelated `os.listxattr` string/bytes/FD/Path arguments and actual-signature `Path.glob`/`rglob` events |
+| Massachusetts v2 plus v1 | Child 83217, exit zero, 19:49:27 | 144 | The same six plus `os.posix_spawn` |
+
+Each parent dispatches 22 harmless denial cases and two allowed controls through
+the installed original inner hook. Connecticut denies sixteen; Massachusetts denies
+fifteen. Stronger parent containment is installed only after these observations,
+before each original outer hook, without editing archived source. These are synthetic
+audit dispatches, not actual forbidden OS/DNS/HTTP operations or actual `listxattr`
+API coverage. The original genuine descriptor/directory controls still execute.
+Source-only compilation excludes archived bytecode execution, not bytecode data
+inventory. Both exact original source reconstructions complete; stderr is empty.
+Executed parent source:
+`dd6ca9758e39a4f0fc76fa921671c5b2a1cbddad83cf23cbe161555b4dad210d`.
+
+At **19:54:43 UTC**, raw streams, clocks/PIDs, original stdout, source/manifest pins
+and every before/after map row independently reconcile, and **every current owned
+node's content and all eight fields are freshly recomputed unchanged**.
+Binding `ct_ma_initial_parent_actual_v1_raw_binding_v1.json`, SHA-256
+`25e046a524223bc9c61898e87e158c6f8b4527c2f6c487d377f7eaef3e1bb47c`.
+The initial process observer found only the still-running Massachusetts parent
+and failed its two-parent assertion; that observer failure is preserved, not
+mislabelled source failure. Both original completion receipts independently pass.
+
+Connecticut retains one robots exchange and zero originals; native population and
+actual session closure remain unknown. Its 21,543 canonical rows / 5,099 target
+comparisons are **not** a native census. Massachusetts retains eight known physical
+exchanges, fifty observed native listings and 16,826 canonical comparison rows,
+with zero PDF originals. HD/SD drafts are not formal H/S bills; incidental
+registration CAPTCHA markup is not an established active challenge. Neither is
+full historical introduced-source coverage, acquisition-immutability certification,
+or permission for more HTTP. Worker semantic negatives were not parent-rerun.
+
+The **same GPT-6.1 Sol owners** now repair distinct immutable zero-HTTP successors:
+Connecticut v2 and Massachusetts v3. Full source reconstruction and rebound
+whole-verifier semantic negatives are required; sealed predecessors remain unchanged.
+Two additional GPT-6.1 Sol owners independently handle bounded Iowa and Kansas
+initial recovery, with the same 128-aggregate-physical-exchange ceiling including
+history, robots, discovery, retries, hops and errors, ten-second pacing, at most
+32 originals, and immediate access stops. Immediate-root/SQL ownership checks
+found no collision, **not** proof of zero historical traffic. Neither new state
+has returned a packet or received parent acceptance. Oregon and Kentucky have
+separate zero-HTTP full-source preparation owners; their initial bounded
+acceptances do not authorize actual full collection. No publication, canonical
+labels, model weights, actual campaign initialization/resume or tracked code changes.
+
+Missouri's stopped-prefix successor-readiness **v2 has returned**, but actual parent
+installed-inner dispatch reproduces **ten read-scope omissions**: an unknown
+readable integer descriptor and unrelated directory-list/scan/attribute-list
+string/bytes/FD arguments. Eleven other denials and two allows pass. No stronger
+outer policy precedes those observations, no actual forbidden operations occur,
+and the original verifier is **not** executed. All **36,166 file/directory records**
+remain unchanged. The **19:41:16 UTC** parent receipt is
+`missouri_successor_v2_read_scope_parent_actual_v1.json`, SHA-256
+`2f55291df56f9fd2e2f0adafc9de940c1be9389add41d86ab429ece505906df6`.
+Its raw proof, source/pins, PID/chronology and complete maps independently bind
+with Pennsylvania at 19:53:49 UTC as described above.
+The same original worker owns distinct immutable zero-HTTP **v3** remediation;
+there is no returned v3 or parent readiness acceptance yet. V2 worker evidence reports 1,184
 PDFs / 6,061 pages per reader, the unchanged original ledger prefix followed by
 ordinals 1409-1440, five semantic-fault cases and three real initializer crash
 boundaries. Manifest:
 `be9bc5e0c1396cb9bd696707a327b96737ff574286892a09f4a0fbb609bdf24f`.
 This is private next-32 readiness, not a full 4,960-context driver or permission
-to initialize/resume the actual successor. Earlier v1 guard omissions remain
-historical facts, not superseded by an unexecuted parent review.
+to initialize/resume the actual successor. Earlier v1 omissions and v2's ten
+executed omissions remain preserved; neither is erased by a future successor.
 
 Texas's distinct **v7r1** toolkit returned a disclosed incremental successor:
 unlike the prior deferred hooks, its source freezes completed 32-candidate
@@ -3795,10 +3864,24 @@ This is one original whole verifier with a nested tail, **not two independent
 processes, a fresh pending-driver execution, genuine full-source closure or
 release acceptance**. Both independently reproduced lifecycle blockers remain.
 
-The same worker now owns a distinct immutable **v17** shared lifecycle
+The same worker has returned a distinct immutable **v17** shared lifecycle
 preflight repair, both exact parent counterexamples, regression/differential
-gates and a new bounded full changed-driver proof. There is no returned v17
-packet or parent acceptance yet. V15, v16 and all failed evidence remain
+gates and a new bounded full changed-driver proof. The exact returned root is
+`data/processed/ny-full-source-postexit-closure-tooling-v17`; its
+`handoff.json` is `READY_FOR_PARENT_INDEPENDENT_REVIEW`, not parent acceptance.
+The parent independently hashes that handoff as
+`73aadd5d613bba46ffa57fa8ae6ba5fcf950e127333e44c2f67e6d8cd333de58`,
+the root manifest as
+`c8bf651fe41176c33375fb06e7f81be38f73e018f51d17f4907edf845e7ab21b`,
+and the optimized collector as
+`4aa69a3bfcd92b3b1085e1db5a14ab3deb4e4681d7d71c8ce644c4c1033a1320`.
+This limited pin check is not rehashing all 400,699 worker-reported files.
+The saved synthetic archive is
+`test_evidence/actual_v17_full_archive_v2`; its worker-reported manifest is
+`f123d396a7b407bebe68cbfc10b70f8d4bebf5f840fdaf5360eb9bbb04f7cdfe`.
+Parent source review and actual reservation/start-URL, result-before-start and
+durable A86 outcome tests at both recovery boundaries remain pending.
+V15, v16 and all failed evidence remain
 immutable; no actual campaign access, new HTTP requests, live recovery,
 genuine completion seal, model/scientific admission or publication is authorized.
 
