@@ -22,11 +22,24 @@ file/directory records unchanged: no native census or original was recovered.
 Its late original-metadata capture and construction-phase byte-restoration incidents
 remain disclosed; current equality does not establish acquisition-time immutability.
 
-Two fresh **GPT-6.1 Sol** agents now own bounded Minnesota and New Jersey recovery,
-each limited to 128 aggregate physical official exchanges including all discovered
-history, retries, redirects and failures. New Jersey must preserve the publisher's
-actual biennial boundaries rather than invent a 2023-2024 native session. Neither
-packet has returned or been accepted. Pennsylvania's narrower offline-verification
+The new **GPT-6.1 Sol** Minnesota worker retains its bounded recovery assignment,
+limited to 128 aggregate physical official exchanges including all discovered
+history, retries, redirects and failures. New Jersey's separate worker returned
+an access-stop packet: six exchanges, with HTTP 403 on the last exchange and no
+further dispatch. Independent parent replay accepts **blocked evidence only**:
+all 136 packet file/directory records remain unchanged, with fresh reconstruction
+of the complete retained HTML, transport lifecycle and canonical reconciliation.
+Raw proof, generated source, hashes and complete before/after map bytes reconcile.
+Zero bill originals were recovered; native populations and publisher session
+boundaries remain unknown. The 10,931 and 12,127 canonical rows are separate
+2022-2023 and 2024-2025 biennial comparison populations, not native counts or
+2023/2024 introduction counts. No new HTTP or continuation is authorized.
+
+A separate GPT-6.1 Sol worker now owns North Carolina's corrected finite-launch
+controls packet: genuine accepted initialization-v3 binding, verified-positive-PID
+timeout cleanup, timeout-as-failure accounting, and successor-bound offline controls.
+This assignment permits no actual campaign access, collector execution or HTTP;
+it does not authorize a finite launch. Pennsylvania's narrower offline-verification
 worker remains responsible for its distinct immutable successor. Its exact v6 parser
 independently rejects the three numeric-whitespace errors, but nine required-denial
 omissions still block readiness acceptance. All 32 payloads and 36 original
