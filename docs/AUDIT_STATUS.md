@@ -301,6 +301,35 @@ that fixture context, the full packet and fresh behavioral replay remains open.
 The 20,010-second spacing lower bound still exceeds the unchanged 14,400-second
 timeout; neither a real timeout nor a successful live launch has been observed.
 
+**Subsequent independent saved-packet reconstruction passes.** On October 20,
+the original parent finishes at **22:53:20 UTC**, with verifier child **46890**
+finishing at **22:52:21 UTC**; exit zero, no timeout and empty stderr. The exact
+standalone v6 verifier reconstructs the saved 2,004-context fixture and its
+62 full checkpoints/final twenty, validates all **58,015 manifested file/directory
+records** (including **127 nested manifests**, excluding only the root manifest),
+and binds **21 reused raw runs plus three v6 raw runs**. This does not freshly run
+the normal full driver or the reused pacing/behavioral suites. All **61,281
+selected original file/directory records** remain content/eight-field identical:
+the complete packet including its root manifest, all **3,263 external original
+records**, the parent harness and standalone verifier.
+
+Receipt `nc_v6_saved_parent_actual_v1.json`, SHA-256
+`25b48adf5e9b4b24768b186027bcb589454076d639d425604c3cad93ed962bba`,
+retains the exact child proof and before/after maps, both map SHA-256
+`d540f0ad7e471405684b40fd7b9e151227629e4274d65c597e008bfe612a0263`.
+A separate raw binding finishes at **22:55:39 UTC**, reconciling every archived
+map row against the root manifest and external-original map, physical-LF
+enclosing-log records, actual PIDs/argv/clocks, stdout and empty stderr.
+Receipt `nc_v6_saved_parent_actual_v1_raw_binding_v1.json`, SHA-256
+`6afd315ab11a4919109108acb5a87102ac235faacf4531d195c9949c660e33c3`,
+also freshly checks four selected current nodes, **not a second full current
+rehash**. The stronger parent boundary precedes the original verifier's controls;
+this run therefore **does not independently accept the original inner guard**.
+Localized lineage remains distinct from the complete historical terminal corpus
+and its original validator. Fresh behavioral admission remains open; the
+20,010-second/14,400-second arithmetic blocker and lack of actual collection
+authorization are unchanged. No HTTP, scientific or publication admission occurs.
+
 Illinois returned an immutable v4 full-context synthetic packet. Source inspection
 confirms its builder invokes the optimized 13,391-context driver rather than its
 retained, unused shard helper. Parent execution of the exact installed inner
@@ -986,7 +1015,7 @@ No collector or HTTP ran during these checks.
 | Tennessee blocked native recovery | Independent parent replay reconstructs the single retained official robots exchange and frozen canonical populations: 9,665 regular, 474 extraordinary-session and 32,407 outside-target rows. All 38 packet file/directory records remain unchanged; raw proof, generated source and complete map bytes reconcile. | Robots disallows all crawling; no bypass or continuation is authorized. Native boundaries/counts and introduced originals remain unknown; zero bill originals recovered. Canonical rows are not an official native census. Acquisition-time immutability and upstream history-scan completeness are not certified. |
 | Classification | Four saved official English ModernBERT-base pilots compared on the same 52 platform references: external-only 41/52, joint 47/52, broader-source 47/52, Republican-expanded 49/52. The fourth run correctly rejects 3/4 mixtures and 6/6 non-policy units. | The fourth run loses one policy decision, still accepts a mixture above 0.999 and regresses on insufficient-evidence and taxonomy-boundary development cases. Both sets are examined diagnostics, not fresh independent tests. Independent review and empirical gates remain required. No candidate is approved. |
 | Training-label second review | Two GPT-6.1 Sol reviewers examine all 122 target-platform training rows and five separate quarantines. Parent source/population/quote/physical-line bindings complete. Two complete unlabelled CA source-unit proposals independently reconstruct all eighteen native children. | 115 provisionally consistent, one suspected mislabel, four unresolved boundaries and two source-scope defects are advisory findings, not accuracy. No canonical label/input changes or training admission; independent gold, rubric adjudication and release gates remain missing. |
-| Native-version dispatch pacing | NC's exact frozen transport is unpaced in a narrow mocked parent probe. V6 now returns a private normal-2,004/final-20/no-refetch proof using the unchanged v5 paced wrapper and two genuine seed pages; selected handoff/source/manifest/proof pins bind. Earlier pacing and behavioral suites are explicitly reused source-bound proofs. Oregon's saved whole/tail packet independently reconstructs, with all 62,116 original file/directory records freshly rebound. | NC v6 awaits independent full-packet, behavioral and localized-lineage admission review. Synthetic clocks and kernel dispatch do not establish actual wire timing. Minimum spacing alone exceeds the unchanged finite timeout; no live timeout is observed or timeout increased. Oregon still lacks a fresh final-source full-driver pacing proof. Neither state is authorized for actual collection. |
+| Native-version dispatch pacing | NC's exact frozen transport is unpaced in a narrow mocked parent probe. V6 returns a private normal-2,004/final-20/no-refetch proof using the unchanged v5 paced wrapper and two genuine seed pages. Independent saved-packet/checkpoint reconstruction now passes, with all 61,281 packet/external/verifier/harness records unchanged and complete archived maps/raw process proofs separately bound. Earlier pacing and behavioral suites are explicitly reused source-bound proofs, not fresh executions. Oregon's saved whole/tail packet independently reconstructs, with all 62,116 original file/directory records freshly rebound. | NC's fresh behavioral and original-inner-guard admission remain open; localized lineage is not the full terminal archive or a fresh original terminal-validator execution. Synthetic clocks and kernel dispatch do not establish actual wire timing. Minimum spacing alone exceeds the unchanged finite timeout; no live timeout is observed or timeout increased. Oregon still lacks a fresh final-source full-driver pacing proof. Neither state is authorized for actual collection. |
 | Labels | External CAP files and two state-reference CSVs recovered; exact-context Florida candidates and complete bounded overlap witnesses are frozen without label admission. Split/group/text and reviewed-platform source-body checks retain explicit label provenance. | Modern Florida external titles/subtopics are missing; Pennsylvania rows stop in 2016. Annotation provenance, source permissions, adapted-topic compatibility, bill families and independent state-domain references remain unresolved. |
 | Evaluation | Checkpoint-bound training/evaluation split isolation, development-only temperature/threshold selection, exact evidence joins, abstention accounting, per-topic and subgroup metrics. | Reviewer arrangement, frozen empirical gates, independent target tests and clustered uncertainty. No checkpoint can be certified by changing a status field. |
 | Comparison accounting | Missing samples and explicitly unknown shares no longer become zero-valued gaps. Party-specific state counts and three-stream matched-state replication are repaired; unavailable verdicts remain separate in exports, reports and plots. | Legacy analytical outputs have not been regenerated or certified. Correct missingness accounting does not supply missing source evidence, historical affiliations or independent classifier validation. |
