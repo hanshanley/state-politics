@@ -9,20 +9,50 @@ and accounting packets**. The canonical audit has **308/342 passing checks**
 and **34 missing-artifact failures**. Known source, collection and scientific failures
 remain explicit; this is not a completed project or a certified classifier.
 
-Three new **GPT-6.1 Sol** assignments now cover Virginia's and Georgia's separate
-official-source recovery and Pennsylvania's narrower offline-verification repair.
-Neither new state packet has been returned or accepted. Pennsylvania's exact v6
-parser now independently rejects all three previously reproduced numeric-whitespace
-errors while preserving the genuine unspaced control. However, harmless probes of
-its archived verification callback reproduce nine required-denial omissions;
-the returned readiness packet is not accepted. All 32 payloads and 36 original
+Virginia's bounded initial source packet now passes independent original-verifier
+reconstruction: **6,458 distinct introduced identities**, 6,698 raw rows including
+240 duplicates, twelve original HTML contexts and two PDFs / four pages per reader.
+All 125 physical exchanges and all 697 packet file/directory metadata records
+reconcile unchanged. **166 canonical-only 2023 identities remain unresolved**;
+the introduced observations are not certification of the complete carryover/pending
+business universe, and 6,446 native originals remain unrecovered. Georgia stopped
+after four exchanges when its official sessions endpoint returned HTTP 401.
+Independent replay accepts its blocked-evidence archive only, with all 64 packet
+file/directory records unchanged: no native census or original was recovered.
+Its late original-metadata capture and construction-phase byte-restoration incidents
+remain disclosed; current equality does not establish acquisition-time immutability.
+
+Two fresh **GPT-6.1 Sol** agents now own bounded Minnesota and New Jersey recovery,
+each limited to 128 aggregate physical official exchanges including all discovered
+history, retries, redirects and failures. New Jersey must preserve the publisher's
+actual biennial boundaries rather than invent a 2023-2024 native session. Neither
+packet has returned or been accepted. Pennsylvania's narrower offline-verification
+worker remains responsible for its distinct immutable successor. Its exact v6 parser
+independently rejects the three numeric-whitespace errors, but nine required-denial
+omissions still block readiness acceptance. All 32 payloads and 36 original
 file/directory metadata records remain unchanged. No actual campaign resumed.
 
-North Carolina's first independent initialization reconciliation exited one because
-the parent constructed proof-copy filenames in a different role order from the
-original initializer. Its source and failure log are preserved. A distinct v2
-reconciliation corrects that ordering and is running; no independent acceptance
-or native-version collection authorization is claimed.
+North Carolina's first independent initialization reconciliation failed on the
+parent's proof-copy role ordering. Corrected v2 passed those copy checks but failed
+on another parent assumption: initialization legitimately inherits sixteen transport
+artifacts from two reused listing-page exchanges, so zero new HTTP does not imply
+an empty transport directory. Both failed sources and logs are preserved. Distinct
+v3 now passes independent reconciliation: all 44,342 initialized files match,
+all 56,761 original file/directory records remain unchanged, and the sixteen
+inherited transport files match their frozen paths and hashes with no new HTTP.
+Raw proof, generated source, receipt and complete original map bytes also reconcile.
+Native-version collection remains unauthorized; the unlaunched finite wrapper still
+references the superseded v1 receipt rather than this accepted successor.
+
+Local timeout fixtures independently reproduce three problems in that old finite
+wrapper: an absent-group signal race raises, a TERM-ignoring descendant survives,
+and a timed-out child can exit zero and satisfy the enclosing success condition.
+A candidate cleanup using verified, explicitly owned positive PIDs now passes
+the bounded local fixtures, including descendant termination and graceful exit.
+Two earlier process-group-signal permission failures remain preserved. This is a
+local cleanup proof, not an accepted replacement launcher: receipt rebinding,
+timeout-failure status and source-dependent launch controls still need integration.
+No collector or HTTP ran during these checks.
 
 | Area | Verified progress | Remaining gate |
 |---|---|---|
@@ -41,10 +71,12 @@ or native-version collection authorization is claimed.
 | North Carolina native index | Independent 2023–2024 publisher census reconciles 2,004 of 2,005 canonical contexts. Complete source replay preserves 2,004 PDFs / 6,783 pages per reader, 2,002 observed numeric identities and two unresolved identity negatives. Actual parent replay now also reconstructs both complete unlabelled inputs: 4,008 reader views / 10,917,908 tokens / 14,520 windows, with zero discarded tokens. | Reader views are not extra bills or approved classifier inputs. Canonical HB 311 remains distinct from native HR 311 despite the shared URL. Statewide publisher version enumeration remains incomplete; canonical version rows are separately labelled, not rebranded as native. |
 | Wisconsin native campaign | Original collector exit zero is followed by independent genuine inspection, offline toolkit/driver/callback gates and genuine archive production. Independent whole/final-31 verification and fresh two-reader reopening pass: 2,655 PDFs / 18,880 pages per reader / 5,355 exchanges / 83 checkpoints, with all 40,482 archive file/directory metadata records unchanged. Independent original-verifier replay now also accepts the distinct unlabelled input packet: 5,310 reader views / 18,783,518 tokens / 27,214 windows, zero discarded tokens and all 37,777 packet file/directory content and metadata records unchanged. Actual raw proof, progress, source pins and complete maps are independently reconciled. | Reader views are not additional bills or certified classifier inputs. Source-archive closure and unlabelled input fidelity are accepted, not classifier, filing-time or scientific certification. The input parent does not independently reread the worker's 58,774 original source/policy records. The 25,000 ceiling includes all 93 inherited exchanges. Historical collection and harness failures remain preserved; no scientific admission follows. |
 | Michigan initial native recovery | Independent original-verifier replay now accepts v3's 4,043 native/canonical exact joins and 32 selected PDFs / 160 pages per reader / 64 printed observations, with all 68 physical exchanges reconstructed. All five actual fresh-manifest negative packets fail for their intended substantive reasons; all 2,819 payload files and 41 nested manifests are bound. All 4,081 v1/v2/v3 file/directory content and metadata records remain unchanged, and separate raw-proof/mutation reconciliation passes. | This is an accepted initial source packet, not full native-document recovery. Special-session completeness and unprinted session years remain unknown. A worker handoff's estimated completion timestamp is explicitly withdrawn as chronology evidence without rewriting it. No additional HTTP, full collection, labels, model or scientific admission is authorized. |
+| Virginia initial native recovery | Independent source-only/read-only original-verifier replay reconstructs 6,698 raw native rows / 6,458 distinct introduced identities, twelve original HTML contexts, two PDFs / four pages per reader and all 125 physical exchanges. All 697 packet file/directory records remain unchanged; raw proof, source pins and full map files independently reconcile. | Initial bounded source acceptance only: 166 canonical-only 2023 identities and 6,446 unrecovered native originals remain. Introduced-session observations do not certify all carryover/pending business. The parent verifies the packet's canonical snapshot, not the external original canonical table's historical metadata. No more HTTP, filing-time, model or scientific admission follows. |
+| Georgia blocked source recovery | Independent original-verifier replay accepts four retained exchanges, including the terminal official sessions HTTP 401, and all 64 unchanged packet file/directory records. | Blocked-evidence acceptance only: native census unknown and zero originals recovered. The 4,723 regular and 67 special canonical candidates are comparison inputs, not native counts. No authentication bypass or further request is authorized. Late metadata capture and construction byte-restoration incidents prevent acquisition-time immutability claims. |
 | Ohio full unlabelled inputs | Independent original-verifier parent replay now passes: 2,279 contexts / 6,811 source views / 93,161,481 source tokens / 118,663 windows, zero discarded tokens and all 18,290 packet file/directory content and metadata records unchanged. Raw readiness, all 45 progress lines, final proof, empty stderr, source pins and full before/after maps are independently reconciled. | Views are not bills; HTML views include exact source markup. Five PDF-only and seven unsupported contexts remain, as do 1,007 absent HTML session headers. Runtime preload precedes the guard; the original verifier runs entirely afterward. No labels, forward passes, training or scientific admission. |
 | Missouri archived printed headers | Independent original-verifier replay accepts first-page observations for all 1,152 archived PDFs in both readers, plus ten focused regressions and joins to all 4,608 copied source dependencies. All 41,914 supplement/original file-directory records remain unchanged. | Matching House/First Regular Session/102nd General Assembly observations are accepted only as literal first-page evidence. The original 1,152 false flags remain; unprinted session years stay unknown. No original identity/status, filing-time or scientific certification is promoted. The full 4,960-context corpus remains unfinished. |
 | Missouri successor readiness | V1 returns a worker-reported private initializer and next-32 continuation packet; parent hashes its manifest, handoff and guard source, then executes fourteen harmless required-event probes against the exact callback. | Five required denials are absent. Parent has not accepted initialization or continuation. The same worker owns immutable zero-HTTP v2 guard, fresh-reader and actual initializer crash-gate completion; actual successor/staging/authorization remain absent. |
-| North Carolina native-version preparation | V5 strict replay, four exact parser regressions and all fifteen original parent release tests pass, including the actual 2,004-population/final-20 fake-transport driver. Genuine readiness and private initializer gates pass. The distinct actual zero-HTTP initializer exits successfully: 44,342 initialized files, with all 56,761 fresh original file/directory records unchanged. | First independent reconciliation failed on the parent's proof-copy filename ordering, not an established source corruption; distinct corrected v2 is running, not yet accepted. Version collection remains unauthorized. Earlier original-path replacement/metadata failures remain unreconciled; restored payload bytes do not restore historical immutability. |
+| North Carolina native-version preparation | V5 strict replay, four exact parser regressions and all fifteen original parent release tests pass, including the actual 2,004-population/final-20 fake-transport driver. Genuine readiness/private initializer gates and actual zero-HTTP initialization pass. Independent reconciliation v3 now accepts all 44,342 initialized files, all 56,761 unchanged original file/directory records, sixteen exact inherited transport files and zero new requests. Raw proof/source generation/map-file bindings also pass. | Both earlier parent reconciliation failures remain preserved. Local fixtures expose an absent-group race, a surviving descendant and a false-success timeout path in the old unlaunched finite wrapper. Candidate exact-PID cleanup passes locally, but successor integration, timeout-failure accounting and fresh source-bound controls remain open. Collection is unauthorized. Historical original-path replacement/metadata failures remain unreconciled; restored bytes do not restore historical immutability. |
 | Classification | Four saved official English ModernBERT-base pilots compared on the same 52 platform references: external-only 41/52, joint 47/52, broader-source 47/52, Republican-expanded 49/52. The fourth run correctly rejects 3/4 mixtures and 6/6 non-policy units. | The fourth run loses one policy decision, still accepts a mixture above 0.999 and regresses on insufficient-evidence and taxonomy-boundary development cases. Both sets are examined diagnostics, not fresh independent tests. Independent review and empirical gates remain required. No candidate is approved. |
 | Labels | External CAP files and two state-reference CSVs recovered; exact-context Florida candidates and complete bounded overlap witnesses are frozen without label admission. Split/group/text and reviewed-platform source-body checks retain explicit label provenance. | Modern Florida external titles/subtopics are missing; Pennsylvania rows stop in 2016. Annotation provenance, source permissions, adapted-topic compatibility, bill families and independent state-domain references remain unresolved. |
 | Evaluation | Checkpoint-bound training/evaluation split isolation, development-only temperature/threshold selection, exact evidence joins, abstention accounting, per-topic and subgroup metrics. | Reviewer arrangement, frozen empirical gates, independent target tests and clustered uncertainty. No checkpoint can be certified by changing a status field. |
