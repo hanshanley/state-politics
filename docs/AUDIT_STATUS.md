@@ -4,7 +4,7 @@ The existing figures and analytical conclusions are **legacy, not revalidated fi
 The current changes repair infrastructure and preserve evidence; they do not certify a
 replacement classifier or establish complete contemporary coverage.
 
-**October 19, 2026 checkpoint:** actual audit **v53** binds **122 completed research
+**October 20, 2026 continuation:** latest completed audit **v53** binds **122 research
 and accounting packets**. The canonical audit has **308/342 passing checks**
 and **34 missing-artifact failures**. Known source, collection and scientific failures
 remain explicit; this is not a completed project or a certified classifier.
@@ -670,8 +670,21 @@ Both cases execute the frozen collector, not a reimplementation. Evidence:
 networking, children and outside-private writes, removes its fixtures and
 verifies all **5,589 original paths, sizes, hashes, inodes and modification times
 unchanged**. It makes zero real HTTP requests and no live initialization.
-The same Ohio worker is preparing immutable zero-HTTP v4; the positive v3 replay,
-older failures and all 201 inherited exchanges remain preserved.
+The same Ohio worker has returned immutable zero-HTTP v4. Actual independent
+parent common-guard replay passes with **7,964 files unchanged**, including
+paths, bytes, hashes, inodes, mtimes and link counts. Manifest:
+`70764a72733fc0f8adea57dd7506b0164e9020a8922eeeb031fdcdd5042a36eb`;
+actual log: `ohio_v4_parent_actual_guard_v1.log`.
+
+The worker reports 18 successful regressions, including durable fifth-transient
+recovery and requested-source substitutions. Parent has separately launched the
+**actual 18-test execution**, including the real 2,279-identity fixture and
+SR93-SR99 tail. Its five path globals are rebound before imports and setup;
+networking, children, links and outside-private writes are denied. This actual
+parent suite is still running, not a completed result. The archive verifier does
+not itself rerun that suite. Initialization and full collection remain withheld;
+the positive v3 replay, older failures and all 201 inherited exchanges remain
+preserved.
 
 Missouri's immutable v2 preparation also passes actual parent guarded replay and
 full before/after hashing: **2,075 unchanged files**, manifest
@@ -1131,10 +1144,29 @@ This is a three-source repair, not statewide negative-header recovery or
 introduced-version, legal, model or scientific certification. The active
 collector, its statuses, budget and canonical data are not modified.
 
-A distinct zero-HTTP worker now owns immutable replay of **every original
-header-negative candidate in the sealed prefix through batch 0145**, not just
-these three examples. That complete fixed-prefix cohort and independent parent
-replay are still pending; later growing campaign progress is outside its scope.
+The distinct zero-HTTP fixed-prefix supplement has now completed actual
+independent parent common-guard replay: **all 848 original header negatives**
+among **9,280 candidates / 145 sealed batches**, not a three-example selection.
+Both readers reopen every selected PDF: **3,721 pages per reader**, 12,873,963
+PyMuPDF / 12,853,707 pypdf page characters, and 14,359 PyMuPDF blocks. There are
+823 single-print and 25 joint-print observations per reader. All 823 single
+prints and twelve joint prints retain null sessions rather than inferring them.
+The three A9438-A9440 sentinels are included.
+
+Manifest:
+`77324c3219d2449c0193803de3c4dc8e7603ce1841dbae11436448ca7b6fe181`.
+Actual parent log: `ny_negative_header_0145_parent_actual_v1.log`.
+All **17,366 packet files** remain unchanged in paths, bytes, hashes, inodes,
+mtimes and link counts. Networking and original project/session data reads are
+denied. An additional parent reconciliation independently verifies **1,696
+unique identifier/reader pairs**, exactly one of each reader per candidate, all
+848 parser-result agreements, and the parser/missing-session censuses:
+`ny_header_0145_parent_observation_accounting_v1.json`.
+
+This is complete **selected-response evidence for the fixed sealed prefix**,
+not full-campaign transport-prefix closure or the growing campaign's later
+negative cohort. Original dispositions, absent sessions and all admission
+exclusions remain unchanged.
 
 ## Illinois 103rd-General-Assembly native census and original HTML
 
@@ -1495,9 +1527,26 @@ or skips: all genuine fifth-response persistence boundaries stop before a sixth
 mocked request, including result-file, ledger, runtime-state and curl-28 cases.
 All 1,122 original files remain unchanged and private fixtures are removed.
 Report: `nc_native_v3_parent_isolated_transient_v1.json`. The distinct parent
-core 12-test shard remains running at this checkpoint; the worker's successful
-13-test shards are separate evidence, not a substitute for that pending result.
-The worker's interrupted combined-suite log is preserved as nonrelease evidence.
+core shard now finishes **all twelve tests successfully in 944.247 seconds**,
+but its enclosing **original-file immutability gate fails**, producing actual
+exit one. It is not an accepted overall PASS. Report:
+`nc_native_v3_parent_isolated_core_v1.json`; the failed private root and log are
+preserved, without cleanup or retrospective promotion. The worker's successful
+13-test shards and interrupted combined-suite log remain separate evidence.
+
+An executed read-only diagnostic confirms that both the current original and
+retained private copy still exactly match the pinned manifest: no missing,
+extra or changed payload bytes/hashes. Six `native_versions.jsonl` mtimes differ
+between them: HR1 and HR311 in v3 and in each embedded v2/v1 predecessor.
+Current metadata no longer matches the earlier parent guarded inventory.
+Substituting only those six mtimes **in memory** does not recover its digest;
+the failed harness did not retain its complete pre-execution inventory, so the
+other original metadata differences and the responsible operation remain
+unestablished. Actual diagnostic/reconciliation receipts:
+`nc_v3_original_immutability_parent_probe_v1.json` and
+`nc_v3_retained_metadata_reconciliation_parent_v1.json`. No original timestamps,
+files or links are restored. The same worker has the evidence and must preserve
+the incident while completing the separate v4 parser repair.
 
 Parent then executes **three additional v3 parser failures** against exact frozen
 source, with an independent standard-library HTML parser observing the anchors.
@@ -1579,6 +1628,24 @@ observation. These reads are nontransactional; success is the collector's
 reported disposition, not independent source or filing-time certification.
 No collector is restarted, no request allowance is reset and no source request
 is made by the snapshot. It is supplemental, not a retroactive v53 input.
+
+The next exact read-only snapshot, **01:18:02 UTC on October 20, 2026**, binds v9
+and again matches all three original collector commands:
+
+| Campaign | Reported success | Other terminal dispositions | Pending | Physical exchanges including inherited |
+|---|---:|---|---:|---:|
+| New York | 8,438 | 1,398 unverified headers; 12 failures | 14,469 | 9,854 |
+| Texas | 2,474 | One unverified header | 9,332 | 2,500 |
+| Illinois | 5,548 | 2,481 unverified identities; 588 unavailable shells; 13 unsupported sources | 4,761 | 8,688 |
+
+`source_campaign_progress_checkpoint_v10.json` retains exact raw progress bytes,
+hashes, read intervals and process observations. These remain nontransactional
+progress reports, not completed corpora or inputs retroactively added to v53.
+The original three state workers now prepare distinct **zero-HTTP post-exit
+closure tools** in parallel: whole-corpus and genuine final 43/15/18 archives
+with dependency-closed transport prefixes. They may not seal active roots,
+restart collectors or reset budgets. Real sealing remains gated on original
+collector exit, no pending candidates and independent parent tool replay.
 
 A separate GPT-5.6 Sol worker now owns zero-HTTP immutable Colorado whole-corpus
 and real final-17 sealing, both-reader replay and closure of all referenced
