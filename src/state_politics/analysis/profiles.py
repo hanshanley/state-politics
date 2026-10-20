@@ -5,7 +5,7 @@ Two questions the national averages cannot answer:
 * **What does *this* state party emphasize?** A one-page profile per organization, giving its
   top platform topics, its top filing topics, and where the two diverge.
 * **Which state parties are unlike their own national party?** Emphasis is compared against the
-  pooled average for that party across all states, so a state party that is an outlier on some
+  mean of the other states for that party, so a state party that is an outlier on some
   topic is identifiable rather than lost in the mean.
 
 Distance measure
@@ -24,12 +24,28 @@ from pathlib import Path
 
 __all__ = ["build_profiles", "cross_state_outliers", "topic_vectors"]
 
-#: A state party needs at least this many classified planks (or bills) before its emphasis
-#: vector means anything. Below it, one plank moves a share by tens of percentage points.
+#: Diagnostic sample floors, not classification or source-coverage certification.
 MIN_OBSERVATIONS = 30
 MIN_BILL_OBSERVATIONS = 500
 OUTLIER_NULL_DRAWS = 2_000
 OUTLIER_RANDOM_SEED = 20_260_731
+PROFILE_COLUMNS = [
+    "state", "party", "top_platform_topics", "top_bill_topics",
+    "platform_status", "n_platform_documents", "latest_platform_year",
+]
+OUTLIER_COLUMNS = [
+    "state", "party", "cosine_distance", "most_distinctive_topic",
+    "topic_share", "party_average_share", "difference",
+]
+OUTLIER_NULL_COLUMNS = ["n_observations", "null_distance_p95", "null_p_value"]
+
+
+def _validate_counts(table, count_column):
+    import numpy as np
+
+    values = table[count_column].to_numpy(dtype=float, na_value=np.nan)
+    if not np.isfinite(values).all() or (values < 0).any():
+        raise ValueError(f"Topic counts ({count_column}) must be known, finite and nonnegative")
 
 
 def topic_vectors(table, *, count_column: str = "n_planks",
@@ -45,9 +61,10 @@ def topic_vectors(table, *, count_column: str = "n_planks",
     """
     import pandas as pd
 
+    _validate_counts(table, count_column)
     counts = table.groupby(["state", "party", "topic"])[count_column].sum().reset_index()
     totals = counts.groupby(["state", "party"])[count_column].transform("sum")
-    counts = counts[totals >= min_observations].copy()
+    counts = counts[(totals > 0) & (totals >= min_observations)].copy()
     if counts.empty:
         return pd.DataFrame()
     counts["share"] = counts[count_column] / counts.groupby(["state", "party"])[
@@ -64,17 +81,25 @@ def cross_state_outliers(
     sample_sizes=None,
     null_draws: int = OUTLIER_NULL_DRAWS,
 ):
-    """Distance from each state party to its own national party average.
+    """Distance from each state party to its own party's leave-one-out state mean.
 
-    The comparison is within party: a Democratic state party is measured against the pooled
+    The comparison is within party: a Democratic state party is measured against the equal-state
     Democratic average, not against all parties, so the result is "unusual for a Democrat"
     rather than the trivial finding that Democrats differ from Republicans.
     """
     import numpy as np
     import pandas as pd
 
+    if null_draws <= 0:
+        raise ValueError("null_draws must be positive")
+    columns = OUTLIER_COLUMNS + (OUTLIER_NULL_COLUMNS if sample_sizes is not None else [])
     if vectors.empty:
-        return pd.DataFrame()
+        return pd.DataFrame(columns=columns)
+
+    values = vectors.to_numpy(dtype=float, na_value=np.nan)
+    if (not np.isfinite(values).all() or (values < 0).any() or (values > 1).any()
+            or not np.isclose(values.sum(axis=1), 1).all()):
+        raise ValueError("Topic-share vectors must be finite, nonnegative and sum to one")
 
     named = {topic.code: topic.name for topic in topics}
     rows = []
@@ -87,7 +112,7 @@ def cross_state_outliers(
             mean = peers.mean(axis=0)
             mean_norm = np.linalg.norm(mean)
             norm = np.linalg.norm(vector)
-            similarity = float(vector @ mean / (norm * mean_norm)) if norm and mean_norm else 0.0
+            similarity = float(vector @ mean / (norm * mean_norm))
             distance = 1 - similarity
             difference = vector - mean
             # Largest absolute departure, breaking ties toward the topic the state emphasizes
@@ -141,7 +166,7 @@ def cross_state_outliers(
                     }
                 )
             rows.append(record)
-    result = pd.DataFrame(rows)
+    result = pd.DataFrame(rows, columns=columns)
     if result.empty:
         return result
     return result.sort_values(["party", "cosine_distance"], ascending=[True, False])
@@ -161,6 +186,8 @@ def build_profiles(platform_emphasis, bill_emphasis, gap_report, topics, *, top_
     named = {topic.code: topic.name for topic in topics}
     if era and "era" in platform_emphasis.columns:
         platform_emphasis = platform_emphasis[platform_emphasis["era"] == era]
+    _validate_counts(platform_emphasis, "n_planks")
+    _validate_counts(bill_emphasis, "n_bills")
 
     def top_topics(table, group, count_column):
         # Re-derive shares from counts: the platform table is split by era and each era's
@@ -180,6 +207,7 @@ def build_profiles(platform_emphasis, bill_emphasis, gap_report, topics, *, top_
     organizations = sorted(
         set(map(tuple, platform_emphasis[["state", "party"]].drop_duplicates().values))
         | set(map(tuple, bill_emphasis[["state", "party"]].drop_duplicates().values))
+        | set(map(tuple, gap_report[["state", "party"]].drop_duplicates().values))
     )
 
     status = gap_report.set_index(["state", "party"])
@@ -194,10 +222,11 @@ def build_profiles(platform_emphasis, bill_emphasis, gap_report, topics, *, top_
         if (state, party) in status.index:
             entry = status.loc[(state, party)]
             record["platform_status"] = entry["status"]
-            record["n_platform_documents"] = int(entry["n_confirmed"])
+            confirmed = entry["n_confirmed"]
+            record["n_platform_documents"] = None if pd.isna(confirmed) else int(confirmed)
             record["latest_platform_year"] = entry["latest_year"]
         rows.append(record)
-    return pd.DataFrame(rows)
+    return pd.DataFrame(rows, columns=PROFILE_COLUMNS)
 
 
 def main(argv: list[str] | None = None) -> int:
@@ -229,20 +258,20 @@ def main(argv: list[str] | None = None) -> int:
         else platform
     )
     platform_sizes = current_platform.groupby(["state", "party"])["n_planks"].sum()
+    platform_vectors = topic_vectors(current_platform, count_column="n_planks")
     platform_outliers = cross_state_outliers(
-        topic_vectors(current_platform, count_column="n_planks"),
+        platform_vectors,
         topics,
         sample_sizes=platform_sizes,
     )
     platform_outliers.to_csv(out_dir / "platform_outliers.csv", index=False)
 
     bill_sizes = bills.groupby(["state", "party"])["n_bills"].sum()
+    bill_vectors = topic_vectors(
+        bills, count_column="n_bills", min_observations=MIN_BILL_OBSERVATIONS,
+    )
     bill_outliers = cross_state_outliers(
-        topic_vectors(
-            bills,
-            count_column="n_bills",
-            min_observations=MIN_BILL_OBSERVATIONS,
-        ),
+        bill_vectors,
         topics,
         sample_sizes=bill_sizes,
     )
@@ -251,6 +280,13 @@ def main(argv: list[str] | None = None) -> int:
     print(f"profiles:          {len(profiles)} organizations")
     print(f"platform outliers: {len(platform_outliers)} organizations scored")
     print(f"bill outliers:     {len(bill_outliers)} organizations scored")
+
+    for label, vectors in (("platform", platform_vectors), ("bill filing", bill_vectors)):
+        sizes = vectors.index.get_level_values("party").value_counts() if not vectors.empty else {}
+        for party in ("D", "R"):
+            if sizes.get(party, 0) < 2:
+                print(f"{label} {party} outlier comparison unavailable: "
+                      "fewer than two eligible states")
 
     for label, table in (("platform", platform_outliers), ("bill filing", bill_outliers)):
         if table.empty:

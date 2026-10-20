@@ -24,7 +24,7 @@ remain explicit; this is not a completed project or a certified classifier.
 | Colorado native index | Independent publisher census reconciles all 1,459 regular identities across 2023A/2024A. Genuine whole/final-17 parent replay now passes: 1,457 PDFs / 14,857 pages per reader / 238,834,961 raw PDF bytes, with all 2,976 physical requests resolved and all 614,630 whole-archive file metadata records unchanged. A distinct complete unlabelled paired-reader token/window inventory is delegated, not yet returned or accepted. | Twenty-nine special-session contexts are separate. Two canonical introduced-reference gaps are not publisher-absence findings; the corresponding bill pages remain uninspected. Neither reader is ground truth; file-only metadata comparisons do not cover directories or undo historical source-link changes. No model, filing-time or scientific admission follows. |
 | North Carolina native index | Independent 2023–2024 publisher census reconciles 2,004 of 2,005 canonical contexts. Complete source replay preserves 2,004 PDFs / 6,783 pages per reader, 2,002 observed numeric identities and two unresolved identity negatives. Actual parent replay now also reconstructs both complete unlabelled inputs: 4,008 reader views / 10,917,908 tokens / 14,520 windows, with zero discarded tokens. | Reader views are not extra bills or approved classifier inputs. Canonical HB 311 remains distinct from native HR 311 despite the shared URL. Statewide publisher version enumeration remains incomplete; canonical version rows are separately labelled, not rebranded as native. |
 | Wisconsin native campaign | Original collector exit zero is followed by independent genuine inspection, offline toolkit/driver/callback gates and genuine archive production. Independent whole/final-31 verification and fresh two-reader reopening pass: 2,655 PDFs / 18,880 pages per reader / 5,355 exchanges / 83 checkpoints, with all 40,482 archive file/directory metadata records unchanged. Independent original-verifier replay now also accepts the distinct unlabelled input packet: 5,310 reader views / 18,783,518 tokens / 27,214 windows, zero discarded tokens and all 37,777 packet file/directory content and metadata records unchanged. Actual raw proof, progress, source pins and complete maps are independently reconciled. | Reader views are not additional bills or certified classifier inputs. Source-archive closure and unlabelled input fidelity are accepted, not classifier, filing-time or scientific certification. The input parent does not independently reread the worker's 58,774 original source/policy records. The 25,000 ceiling includes all 93 inherited exchanges. Historical collection and harness failures remain preserved; no scientific admission follows. |
-| Michigan initial native recovery | The returned worker packet reports 4,043 native/canonical exact identities and 32 introduced PDFs / 160 pages per reader, using 68 of 128 aggregate physical exchanges. Parent rehash confirms its manifest, report, verifier and handoff pins. | Parent source review finds stored-text self-consistency checks, not fresh PDF-reader or printed-header reconstruction; native-record, transport-lifecycle and guard controls also need strengthening. A distinct immutable zero-HTTP successor is assigned to the same worker, with the original packet preserved. No source-closure acceptance, full collection authorization, special-session completeness or scientific admission is claimed. |
+| Michigan initial native recovery | The returned packets report 4,043 native/canonical exact identities and 32 introduced PDFs / 160 pages per reader, using 68 of 128 aggregate physical exchanges. Parent rehash confirms v1/v2 pins; v2 source review now finds fresh PDF-reader, header, native-record and lifecycle reconstruction. | V2 still omits nested manifests from its outer inventory and substitutes in-memory assertions for some claimed fresh-manifest negative replays. The same worker owns an immutable zero-HTTP v3 completion; both predecessors remain preserved. No independent parent reconstruction acceptance, full collection authorization, special-session completeness or scientific admission is claimed. |
 | Ohio full unlabelled inputs | Independent original-verifier parent replay now passes: 2,279 contexts / 6,811 source views / 93,161,481 source tokens / 118,663 windows, zero discarded tokens and all 18,290 packet file/directory content and metadata records unchanged. Raw readiness, all 45 progress lines, final proof, empty stderr, source pins and full before/after maps are independently reconciled. | Views are not bills; HTML views include exact source markup. Five PDF-only and seven unsupported contexts remain, as do 1,007 absent HTML session headers. Runtime preload precedes the guard; the original verifier runs entirely afterward. No labels, forward passes, training or scientific admission. |
 | Missouri archived printed headers | Independent original-verifier replay accepts first-page observations for all 1,152 archived PDFs in both readers, plus ten focused regressions and joins to all 4,608 copied source dependencies. All 41,914 supplement/original file-directory records remain unchanged. | Matching House/First Regular Session/102nd General Assembly observations are accepted only as literal first-page evidence. The original 1,152 false flags remain; unprinted session years stay unknown. No original identity/status, filing-time or scientific certification is promoted. The full 4,960-context corpus remains unfinished. |
 | North Carolina native-version preparation | V5 strict replay, four exact parser regressions and all fifteen original parent release tests pass, including the actual 2,004-population/final-20 fake-transport driver. Genuine readiness replay and the separate five original tests/private once-only initialization/promotion/rejection now pass independently, with all 45,587 readiness/terminal originals unchanged. | Private initialization produced 44,341 payload files; a second initialization was rejected without changing its target. Actual target, staging and authorization remain absent; no version collection is authorized. Earlier original-path replacement/metadata failures remain unreconciled; restored payload bytes do not restore historical immutability. |
@@ -36,7 +36,45 @@ remain explicit; this is not a completed project or a certified classifier.
 | Language accounting | Empty caucus-unit selections and empty/sparse term populations now preserve readable export schemas. Fixed-filter vocabulary unavailability is explicitly reported; invalid configuration still raises. Supported numerical results and both CLI CSV exports remain byte-identical to the saved baseline in an actual synthetic differential. | Term highlights describe supplied text, not certified operative platforms or policy positions. Legacy research outputs are not regenerated; unavailable comparisons are not observed zero concentration. |
 | Intra-party accounting | Empty and insufficient shared-state populations now export readable schemas and replace stale results. Undefined within/between ratios remain unavailable while observed zero distances stay zero; undefined cosine distances cannot produce permutation significance. The CLI and figure report distinguish unavailable evidence from chance results. | Supported synthetic helper results and all eight actual CLI CSV exports are unchanged against the saved baseline. No real research outputs, party-coherence conclusions, classifier labels or empirical release gates are regenerated or certified. |
 | Outcome inference | Fewer than two paired states now leave sign-flip inference unavailable instead of returning 1.0; reports and charts also suppress legacy one-state defaults. Empty/nullable eligibility exports remain readable, new output directories are created, and unavailable probabilities fail the artifact check without crashing it. | Recorded-stage rates, all-filing denominators and coverage floors are unchanged. Supported synthetic results and all four CSV/comparison-JSON exports remain byte-identical to the saved baseline; actual research results and scientific gates are not regenerated or certified. |
+| Organization profiles | Empty and peerless outlier populations now retain readable export schemas. Gap-only organizations remain visible; unknown document counts/status stay unknown. Invalid counts, undefined topic-share vectors and nonpositive null draws raise explicitly. The CLI discloses unavailable within-party comparisons. | Supported profiles, distances, null filtering and all three actual CLI exports remain byte-identical to the saved baseline on a nonempty synthetic fixture. No actual research outputs, source coverage, classifier labels or scientific gates are regenerated or certified. |
 | Companion | Local-only preview v9 exposes all 1,559 recovery captures, 119 failures and 61 alternative extraction identities across 55 OCR bodies, three DOCX bodies and one native-block body, alongside the 2,091 historical documents. The source ledger includes the corrected Arizona and Alaska registry rows. All 100 organization rows remain unresolved. | Audited classification/analysis exports, redistribution review and eventual report; no production integration is authorized. |
+
+## Organization profiles: missing evidence and undefined outlier comparisons
+
+Actual pre-fix execution records **16 failing regressions**, including real CLI
+exports that cannot be read back because they contain no headers. The expanded
+20-case suite also fails against the actual SHA-pinned saved baseline
+`a09d63b`, not a reimplementation of it. Logs:
+`profile_missingness_before_v1.log` and
+`profile_missingness_saved_baseline_before_v2.log`.
+
+All three profile/outlier CSVs now retain their schemas, including empty,
+single-state, below-floor and entirely null-filtered populations; new runs
+replace stale outputs. Gap-only organizations are included rather than silently
+dropped. Missing gap metadata and unknown document counts remain nullable,
+distinct from an observed zero. The CLI identifies each D/R comparison with
+fewer than two eligible states as **unavailable**, not evidence of conformity.
+
+Unknown, nonfinite or negative topic counts raise explicitly instead of being
+silently summed into a profile. A zero-total group is not a topic-share vector,
+even with a zero sample floor. Outlier inputs must be finite, nonnegative
+topic-share distributions summing to one; undefined inputs no longer manufacture
+distance 1 or NaN results. Nonpositive null-draw configuration also raises.
+The existing leave-one-out equal-state peer mean, sample floors, multinomial
+null calculation, random seeds, tie handling and rounding are unchanged.
+
+All **92 targeted emphasis/intra-party/state-focus tests**, Ruff and diff
+checks pass in `profile_missingness_complete_v2.log`. An actual old/new
+differential executes 36 synthetic platform rows, 18 bill rows and six gap rows.
+Current-era and pooled-era profiles, three topic-vector populations, and six
+raw/null-filtered outlier comparisons agree exactly, including dtypes, column
+order and CSV bytes. Both real CLIs produce identical supported stdout after
+normalizing only their distinct output paths, and all three CSV exports match
+byte-for-byte. Receipt `profile_missingness_supported_differential_v1.json`,
+SHA `ab970efb06c3c94ad8a9c3272f19484fdff64ebdb6f699f81a812f55143b64b4`.
+Temporary synthetic inputs/outputs are removed. No actual research outputs,
+source evidence, labels, model weights, scientific admission or publication
+files change.
 
 ## Outcome inference availability and nullable eligibility
 
@@ -161,16 +199,34 @@ result rows without enforcing each complete lifecycle. Several guard controls
 unconditionally call a denial function instead of exercising installed paths.
 These are source-review findings, not claims of executed corrupt-source cases.
 
-The same worker is completing the original deliverable in a **distinct
-immutable zero-HTTP v2**, preserving every original v1 payload and full
-file/directory metadata map. Required gates include fresh complete PDF/reader/
-header reconstruction, exact native/canonical/selection/transport joins,
-actual installed-guard callbacks and fresh-manifest semantic negatives. V1's
-original-input comparisons cover the exact consumed files, not surrounding
-shared directories. No successor result or parent source-closure acceptance
-exists yet. The remaining request allowance is **not further authorization**;
-no new HTTP, full campaign, labels, model, scientific or publication admission
-is authorized.
+The distinct **zero-HTTP v2 has returned**. Fresh parent hashes confirm manifest
+`596beaf08c72f1849876b5528268853dce674a3e92d279a7b6dea273e87ccdec`,
+verifier `109a082f578c3fe1c36eb8f3c92e03ea9d5d8139fa3bfc4002b5bdab5c452601`,
+report `fea7af7821c51531e736fb07d53946b4a3cdb5bf6284fffcae5fcc25dd5018a9`,
+handoff `eff56518be11fd63108f07c48684d89d58690d5f431618bfdd3b8b1c5c63e0a8`
+and guard `bce931fbd87657e52e78a868e3ff61f6455b1bceff9f5136e617285df7d47089`.
+Source inspection now finds actual reopening of all selected PDFs with both
+readers, fresh page/header reconstruction and detailed native/canonical/
+selection/physical-lifecycle joins. Worker direct/guarded successes retain
+716 bytes of pypdf warnings; stderr is **not empty**. These are worker results,
+not independent parent reconstruction executions.
+
+Two remaining deliverable gaps are identified directly in v2 source: the outer
+inventory excludes every basename `manifest.json`, not just the root manifest;
+and some semantic-negative fixtures mutate in-memory objects and reject them
+with separate inline assertions rather than exercising actual mutated,
+fresh-manifest packets through the verifier. The wrong-URL and event-order
+mutations are combined, so they do not separately establish both checks.
+These are source-review findings, not executed corruption counterexamples.
+The same worker owns an immutable **zero-HTTP v3**, preserving v1/v2, binding
+nested manifests and executing separate actual payload-mutation replays.
+Exact document/printed-observation multiplicity must also be enforced rather
+than silently deduplicated through dictionaries.
+
+V1's original-input comparisons cover exact consumed files, not surrounding
+shared directories. No parent source-closure acceptance exists yet. The
+remaining request allowance is **not further authorization**; no new HTTP,
+full campaign, labels, model, scientific or publication admission is authorized.
 
 ## Intra-party missingness, undefined ratios and empty exports
 

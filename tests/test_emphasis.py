@@ -7,6 +7,7 @@ order of magnitude in length, so counting planks would measure verbosity rather 
 from __future__ import annotations
 
 import pandas as pd
+import pytest
 
 from state_politics.analysis.emphasis import (
     _drop_duplicate_documents,
@@ -816,3 +817,166 @@ def test_cross_state_outliers_report_sample_noise_threshold():
     texas = outliers[outliers["state"] == "TX"].iloc[0]
     assert texas["cosine_distance"] > texas["null_distance_p95"]
     assert texas["n_observations"] == 1_000
+
+
+@pytest.mark.parametrize("population", ["empty", "single", "below_floor", "identical"])
+def test_profiles_cli_exports_readable_empty_outliers(tmp_path, capsys, population):
+    from state_politics.analysis.profiles import main
+
+    states = {
+        "empty": [], "single": ["TX"], "below_floor": ["TX", "OH"],
+        "identical": ["TX", "OH"],
+    }[population]
+    platform = pd.DataFrame([
+        {"state": state, "party": "D", "era": "2018-present", "topic": 5,
+         "n_planks": 15 if population == "below_floor" else 30}
+        for state in states
+    ], columns=["state", "party", "era", "topic", "n_planks"])
+    bills = pd.DataFrame([
+        {"state": state, "party": "D", "topic": 5,
+         "n_bills": 300 if population == "below_floor" else 500}
+        for state in states
+    ], columns=["state", "party", "topic", "n_bills"])
+    gaps = pd.DataFrame([
+        {"state": state, "party": "D", "status": "unresolved",
+         "n_confirmed": 0, "latest_year": None}
+        for state in states
+    ], columns=["state", "party", "status", "n_confirmed", "latest_year"])
+    for name, table in (("platform", platform), ("bills", bills), ("gaps", gaps)):
+        table.to_csv(tmp_path / f"{name}.csv", index=False)
+    out = tmp_path / "results"
+    out.mkdir()
+    for name in ("state_party_profiles", "platform_outliers", "bill_outliers"):
+        (out / f"{name}.csv").write_text("stale\nold\n")
+
+    assert main([
+        "--platform", str(tmp_path / "platform.csv"),
+        "--bills", str(tmp_path / "bills.csv"),
+        "--gaps", str(tmp_path / "gaps.csv"), "--out-dir", str(out),
+    ]) == 0
+    output = capsys.readouterr().out
+    assert ("platform D outlier comparison unavailable" in output) == (population != "identical")
+    assert "platform R outlier comparison unavailable" in output
+    assert ("bill filing D outlier comparison unavailable" in output) == (population != "identical")
+    assert "bill filing R outlier comparison unavailable" in output
+
+    profiles = pd.read_csv(out / "state_party_profiles.csv")
+    assert len(profiles) == len(states)
+    assert list(profiles) == [
+        "state", "party", "top_platform_topics", "top_bill_topics",
+        "platform_status", "n_platform_documents", "latest_platform_year",
+    ]
+    for name in ("platform_outliers", "bill_outliers"):
+        result = pd.read_csv(out / f"{name}.csv")
+        assert result.empty
+        assert list(result) == [
+            "state", "party", "cosine_distance", "most_distinctive_topic",
+            "topic_share", "party_average_share", "difference", "n_observations",
+            "null_distance_p95", "null_p_value",
+        ]
+
+
+def test_profiles_retain_gap_only_organizations_and_unknown_status():
+    from state_politics.analysis.profiles import build_profiles
+
+    platform = pd.DataFrame(columns=["state", "party", "era", "topic", "n_planks"])
+    bills = pd.DataFrame([{"state": "TX", "party": "R", "topic": 5, "n_bills": 600}])
+    gaps = pd.DataFrame([{
+        "state": "OH", "party": "D", "status": "missing",
+        "n_confirmed": 0, "latest_year": None,
+    }])
+
+    profiles = build_profiles(platform, bills, gaps, TOPICS).set_index(["state", "party"])
+
+    assert set(profiles.index) == {("OH", "D"), ("TX", "R")}
+    assert profiles.loc[("OH", "D"), "platform_status"] == "missing"
+    assert profiles.loc[("OH", "D"), "n_platform_documents"] == 0
+    assert profiles.loc[("OH", "D"), "top_platform_topics"] == ""
+    assert profiles.loc[("OH", "D"), "top_bill_topics"] == ""
+    assert pd.isna(profiles.loc[("TX", "R"), "platform_status"])
+    assert pd.isna(profiles.loc[("TX", "R"), "n_platform_documents"])
+    assert profiles.loc[("TX", "R"), "top_bill_topics"] == "Labor (100%)"
+
+
+@pytest.mark.parametrize("sample_sizes", [None, pd.Series(dtype=int)])
+def test_profiles_peerless_outliers_preserve_schema(sample_sizes):
+    from state_politics.analysis.profiles import cross_state_outliers
+
+    vectors = pd.DataFrame(
+        [[1.0, 0.0]],
+        index=pd.MultiIndex.from_tuples([("TX", "D")], names=["state", "party"]),
+        columns=[5, 6],
+    )
+    result = cross_state_outliers(vectors, TOPICS, sample_sizes=sample_sizes)
+
+    assert result.empty
+    assert list(result.columns[:7]) == [
+        "state", "party", "cosine_distance", "most_distinctive_topic",
+        "topic_share", "party_average_share", "difference",
+    ]
+    assert ("null_p_value" in result.columns) == (sample_sizes is not None)
+
+
+@pytest.mark.parametrize("draws", [0, -1])
+def test_profiles_reject_nonpositive_null_draws(draws):
+    from state_politics.analysis.profiles import cross_state_outliers
+
+    with pytest.raises(ValueError, match="null_draws"):
+        cross_state_outliers(pd.DataFrame(), TOPICS, null_draws=draws)
+
+
+@pytest.mark.parametrize("bad", [[0.0, 0.0], [float("nan"), 1.0],
+                                [float("inf"), 0.0], [-0.1, 1.1],
+                                [1e308, 1e308], [1e-300, 0.0]])
+def test_profiles_reject_undefined_outlier_vectors(bad):
+    from state_politics.analysis.profiles import cross_state_outliers
+
+    vectors = pd.DataFrame(
+        [bad, [0.5, 0.5]],
+        index=pd.MultiIndex.from_tuples([("TX", "D"), ("OH", "D")],
+                                       names=["state", "party"]),
+        columns=[5, 6],
+    )
+    with pytest.raises(ValueError, match="Topic-share vectors"):
+        cross_state_outliers(vectors, TOPICS)
+
+
+@pytest.mark.parametrize("bad", [None, float("inf"), -1])
+def test_profiles_reject_unknown_or_invalid_topic_counts(bad):
+    from state_politics.analysis.profiles import build_profiles, topic_vectors
+
+    platform = pd.DataFrame({
+        "state": ["TX", "TX"], "party": ["D", "D"], "topic": [5, 6],
+        "n_planks": [30, bad],
+    })
+    with pytest.raises(ValueError, match="counts"):
+        topic_vectors(platform)
+    with pytest.raises(ValueError, match="counts"):
+        build_profiles(
+            platform, pd.DataFrame(columns=["state", "party", "topic", "n_bills"]),
+            pd.DataFrame(columns=["state", "party", "status", "n_confirmed", "latest_year"]),
+            TOPICS,
+        )
+
+
+def test_profiles_preserve_unknown_document_count():
+    from state_politics.analysis.profiles import build_profiles
+
+    platform = pd.DataFrame(columns=["state", "party", "topic", "n_planks"])
+    bills = pd.DataFrame([{"state": "TX", "party": "D", "topic": 5, "n_bills": 600}])
+    gaps = pd.DataFrame([{
+        "state": "TX", "party": "D", "status": "unresolved",
+        "n_confirmed": None, "latest_year": None,
+    }])
+    profiles = build_profiles(platform, bills, gaps, TOPICS)
+
+    assert profiles.iloc[0]["platform_status"] == "unresolved"
+    assert pd.isna(profiles.iloc[0]["n_platform_documents"])
+    assert pd.isna(profiles.iloc[0]["latest_platform_year"])
+
+
+def test_profiles_zero_counts_are_not_vectors_even_without_sample_floor():
+    from state_politics.analysis.profiles import topic_vectors
+
+    table = pd.DataFrame([{"state": "TX", "party": "D", "topic": 5, "n_planks": 0}])
+    assert topic_vectors(table, min_observations=0).empty
