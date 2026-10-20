@@ -938,6 +938,27 @@ removed and no HTTP request or actual-source access occurs. This accepts the
 **offline archive replay only**: genuine preseal inspection and original
 full-driver/focused-gate executions remain separate pending parent gates.
 
+The genuine preseal inspection subsequently **completes with enclosing exit
+zero / PASS** at **2026-10-20T07:21:14.938331+00:00**. The original
+`wisconsin-genuine-preseal-parent-v1` handle is read after its completion
+notification. The unchanged inspector exactly reproduces the worker JSON,
+independently reopening **2,655 PDFs with both readers / 18,880 physical pages
+per reader**, verifying **5,355 reservation/completion pairs / 21,420 response
+artifacts**, and checking **83 checkpoints / 1,378,992 dependency references**.
+The final 31 retain their full-population context: **SJR110-SJR135 and SR1-SR5**.
+All **40,707 source entries (32,441 files and 8,266 directories)** and the
+inspection packet retain unchanged metadata; the combined before/after snapshot
+SHA is `ecdef22966703839c11432cb40ded00ed050a5669517e9a56a3011913ab1e009`.
+Report: `wisconsin_genuine_preseal_parent_actual_v1.json`.
+All **26 historical curl-52 outcomes and eight negative seed dispositions**
+remain visible. The source-only cache prefix stays absent, private cleanup
+completes, and no HTTP request, recovery, source write, exit receipt or sealing
+occurs. Printed-identity booleans remain saved observations bound to verified
+source/text, not new independent legal or filing-time certification.
+This accepts **genuine read-only preseal inspection**, not completed archive
+sealing or scientific admission. The original full-driver/focused-gate parent
+execution remains pending; earlier running descriptions are historical.
+
 ## Full-campaign preparation gates: Pennsylvania, Ohio and Missouri
 
 Pennsylvania's initial immutable preparation and seed-32/seed-30 archives have
