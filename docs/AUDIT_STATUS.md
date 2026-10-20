@@ -31,7 +31,50 @@ remain explicit; this is not a completed project or a certified classifier.
 | Comparison accounting | Missing samples and explicitly unknown shares no longer become zero-valued gaps. Party-specific state counts and three-stream matched-state replication are repaired; unavailable verdicts remain separate in exports, reports and plots. | Legacy analytical outputs have not been regenerated or certified. Correct missingness accounting does not supply missing source evidence, historical affiliations or independent classifier validation. |
 | Trend accounting | Empty and one-period populations preserve export schemas; fewer than two paired states leave inference unavailable. Party slopes include topic zeros in observed party-years without inventing missing years. Missing source-tag comparisons remain unavailable; chart sample counts come from each supplied series. | Legacy trend outputs are not regenerated or certified. Model/tag samples may differ, supplied labels and tag provenance remain unvalidated, and a direction match is not independent accuracy evidence. |
 | Language accounting | Empty caucus-unit selections and empty/sparse term populations now preserve readable export schemas. Fixed-filter vocabulary unavailability is explicitly reported; invalid configuration still raises. Supported numerical results and both CLI CSV exports remain byte-identical to the saved baseline in an actual synthetic differential. | Term highlights describe supplied text, not certified operative platforms or policy positions. Legacy research outputs are not regenerated; unavailable comparisons are not observed zero concentration. |
+| Intra-party accounting | Empty and insufficient shared-state populations now export readable schemas and replace stale results. Undefined within/between ratios remain unavailable while observed zero distances stay zero; undefined cosine distances cannot produce permutation significance. The CLI and figure report distinguish unavailable evidence from chance results. | Supported synthetic helper results and all eight actual CLI CSV exports are unchanged against the saved baseline. No real research outputs, party-coherence conclusions, classifier labels or empirical release gates are regenerated or certified. |
 | Companion | Local-only preview v9 exposes all 1,559 recovery captures, 119 failures and 61 alternative extraction identities across 55 OCR bodies, three DOCX bodies and one native-block body, alongside the 2,091 historical documents. The source ledger includes the corrected Arizona and Alaska registry rows. All 100 organization rows remain unresolved. | Audited classification/analysis exports, redistribution review and eventual report; no production integration is authorized. |
+
+## Intra-party missingness, undefined ratios and empty exports
+
+Direct execution exposes **eleven initial regression failures**, with one passing
+numeric control, in `intraparty_missingness_before_v1.log`. Empty vectors lack
+named result schemas; no shared states or only one shared state cause sorting
+failures before exports finish. Empty runs skip writing outputs, allowing old
+results to survive a new unsupported population. When between-party distance is
+exactly zero, the ratio is undefined and CLI formatting raises rather than
+preserving the observed zero distances.
+
+A separate failure is substantive: undefined cosine distances produce an
+undefined observed dispersion gap, but every NaN comparison is false and the
+permutation formula still returns a small numeric p-value. The repaired test
+requires finite, nonzero organization vectors before reporting a permutation
+result and rejects zero permutations as invalid configuration. This does not
+change the permutation design or its computation on supported vectors.
+
+All four table-producing helpers now retain their existing column schemas for
+empty results. The CLI always writes all eight CSV artifacts, including readable
+empty replacements for stale files, and explicitly reports insufficient shared
+samples. A shared formatter preserves observed zero distances and displays
+undefined ratios as **unavailable** in both the CLI and figure report. The
+report also treats a legacy null gap/p-value as unavailable, not a finding
+indistinguishable from chance; that additional pre-fix failure is preserved in
+`intraparty_missingness_report_gap_before_v1.log`.
+
+The final **68 targeted intra-party/plotting/report tests**, Ruff and diff checks
+pass: `intraparty_missingness_complete_v3.log`. Earlier successful v1/v2 logs
+remain retained. Regression cases include empty, one-party, one-shared-state,
+zero-between-distance and wholly/partially undefined vector populations, plus
+replacement of stale output files.
+
+Actual old/new execution against saved revision
+`5d96f883c5dcae62314ce9257ba38002f1aa5c50` checks a **36-row synthetic
+emphasis table**, ten helper comparisons across full/restricted state samples,
+and both actual CLI executions. Every supported frame, dtype, column order and
+all **eight CSV byte sequences** are identical. Evidence:
+`intraparty_missingness_supported_differential_v1.json`, SHA
+`631a99990d1b44fde029d827778128409437853f5e18223e4eac66987cb3c7a9`.
+The private fixture is removed; no actual research outputs, evidence sources,
+labels, model weights, inference, scientific admission or publication change.
 
 ## Language-analysis missingness and empty exports
 

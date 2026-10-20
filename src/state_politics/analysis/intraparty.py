@@ -54,10 +54,26 @@ __all__ = [
     "common_states",
     "dispersion_gap_pvalue",
     "coherence",
+    "format_coherence",
 ]
 
 DEFAULT_PERMUTATIONS = 5000
 RANDOM_SEED = 20260729
+DISPERSION_COLUMNS = [
+    "party", "n_states", "n_pairs", "mean_distance", "median_distance", "p90_distance",
+]
+COHERENCE_COLUMNS = [
+    "within_D", "within_R", "mean_within", "between", "within_over_between", "n_states",
+]
+TOPIC_SPREAD_COLUMNS = [
+    "party", "topic", "topic_name", "n_states", "mean_share", "sd_share",
+    "max_state", "max_share", "min_share",
+]
+CENTROID_COLUMNS = [
+    "state", "party", "distance_to_centroid", "most_distinctive_topic", "share",
+    "party_mean_share",
+]
+PERMUTATION_COLUMNS = ["stream", "parties", "observed_gap", "p_value", "n_permutations"]
 
 
 def cosine_distance(left, right) -> float:
@@ -103,6 +119,8 @@ def dispersion(vectors, *, states: list[str] | None = None):
     import numpy as np
     import pandas as pd
 
+    if vectors.empty:
+        return pd.DataFrame(columns=DISPERSION_COLUMNS)
     rows = []
     for party in sorted(vectors.index.get_level_values("party").unique()):
         block = vectors.xs(party, level="party")
@@ -123,7 +141,7 @@ def dispersion(vectors, *, states: list[str] | None = None):
             "median_distance": round(float(np.median(distances)), 4),
             "p90_distance": round(float(np.percentile(distances, 90)), 4),
         })
-    return pd.DataFrame(rows)
+    return pd.DataFrame(rows, columns=DISPERSION_COLUMNS)
 
 
 def coherence(vectors, *, states: list[str] | None = None):
@@ -141,9 +159,11 @@ def coherence(vectors, *, states: list[str] | None = None):
     import numpy as np
     import pandas as pd
 
+    if vectors.empty:
+        return pd.DataFrame(columns=COHERENCE_COLUMNS)
     parties = sorted(vectors.index.get_level_values("party").unique())
     if len(parties) != 2:
-        return pd.DataFrame()
+        return pd.DataFrame(columns=COHERENCE_COLUMNS)
     blocks = {}
     for party in parties:
         block = vectors.xs(party, level="party")
@@ -151,7 +171,7 @@ def coherence(vectors, *, states: list[str] | None = None):
             block = block.loc[block.index.intersection(states)]
         blocks[party] = block
     if min(len(b) for b in blocks.values()) < 2:
-        return pd.DataFrame()
+        return pd.DataFrame(columns=COHERENCE_COLUMNS)
 
     def clean(values):
         values = [v for v in values if not np.isnan(v)]
@@ -181,6 +201,25 @@ def coherence(vectors, *, states: list[str] | None = None):
     }])
 
 
+def format_coherence(row) -> str:
+    """Display undefined ratios as unavailable without losing observed zero distances."""
+    import math
+
+    import pandas as pd
+
+    def display(value, precision):
+        if pd.isna(value) or not math.isfinite(float(value)):
+            return "unavailable"
+        return format(value, precision)
+
+    return (
+        f"within {display(row['mean_within'], '.3f')}  "
+        f"between {display(row['between'], '.3f')}  "
+        f"ratio {display(row['within_over_between'], '.2f')}  "
+        f"({int(row['n_states'])} states)"
+    )
+
+
 def dispersion_gap_pvalue(vectors, *, states: list[str] | None = None,
                           n_permutations: int = DEFAULT_PERMUTATIONS,
                           seed: int = RANDOM_SEED) -> dict:
@@ -198,6 +237,10 @@ def dispersion_gap_pvalue(vectors, *, states: list[str] | None = None,
     """
     import numpy as np
 
+    if n_permutations < 1:
+        raise ValueError("n_permutations must be positive")
+    if vectors.empty:
+        return {}
     parties = sorted(vectors.index.get_level_values("party").unique())
     if len(parties) != 2:
         return {}
@@ -211,6 +254,8 @@ def dispersion_gap_pvalue(vectors, *, states: list[str] | None = None,
         return {}
 
     pooled = np.vstack([blocks[p].to_numpy() for p in parties])
+    if not np.isfinite(pooled).all() or not (np.linalg.norm(pooled, axis=1) > 0).all():
+        return {}
     sizes = [len(blocks[p]) for p in parties]
 
     def mean_pairwise(matrix) -> float:
@@ -246,6 +291,8 @@ def divisive_topics(vectors, topic_names, *, states: list[str] | None = None):
     """
     import pandas as pd
 
+    if vectors.empty:
+        return pd.DataFrame(columns=TOPIC_SPREAD_COLUMNS)
     rows = []
     for party in sorted(vectors.index.get_level_values("party").unique()):
         block = vectors.xs(party, level="party")
@@ -267,7 +314,7 @@ def divisive_topics(vectors, topic_names, *, states: list[str] | None = None):
                 "max_share": round(float(column.max()), 4),
                 "min_share": round(float(column.min()), 4),
             })
-    frame = pd.DataFrame(rows)
+    frame = pd.DataFrame(rows, columns=TOPIC_SPREAD_COLUMNS)
     return frame.sort_values(["party", "sd_share"], ascending=[True, False])
 
 
@@ -280,6 +327,8 @@ def distance_to_centroid(vectors, *, states: list[str] | None = None):
     """
     import pandas as pd
 
+    if vectors.empty:
+        return pd.DataFrame(columns=CENTROID_COLUMNS)
     rows = []
     for party in sorted(vectors.index.get_level_values("party").unique()):
         block = vectors.xs(party, level="party")
@@ -299,7 +348,7 @@ def distance_to_centroid(vectors, *, states: list[str] | None = None):
                 "share": round(float(vector[topic]), 4),
                 "party_mean_share": round(float(centroid[topic]), 4),
             })
-    frame = pd.DataFrame(rows)
+    frame = pd.DataFrame(rows, columns=CENTROID_COLUMNS)
     return frame.sort_values(["party", "distance_to_centroid"], ascending=[True, False])
 
 
@@ -337,15 +386,17 @@ def main(argv: list[str] | None = None) -> int:
                                  min_observations=args.min_observations)
 
     results = {}
+    tests = []
     for label, vectors in (("platform", platform_vectors), ("bill", bill_vectors)):
         if vectors.empty:
             print(f"{label}: no organization met the {args.min_observations}-observation floor")
-            continue
         shared = common_states(vectors)
         spread = dispersion(vectors, states=shared)
         results[label] = spread
         print(f"\n=== {label} agendas: how far apart are a party's own state organizations? ===")
         print(f"compared over the {len(shared)} states where both parties qualify")
+        if len(shared) < 2:
+            print("  comparison unavailable (fewer than two shared states)")
         for _, row in spread.iterrows():
             print(f"  {row['party']}  mean pairwise distance {row['mean_distance']:.3f}  "
                   f"median {row['median_distance']:.3f}  "
@@ -357,15 +408,15 @@ def main(argv: list[str] | None = None) -> int:
                        else "NOT distinguishable from chance")
             print(f"  gap {test['observed_gap']:+.3f} ({test['parties']}), "
                   f"permutation p={test['p_value']:.3f} -- {verdict}")
-            results.setdefault("_tests", []).append({"stream": label, **test})
+            tests.append({"stream": label, **test})
+        else:
+            print("  dispersion gap unavailable (requires two comparable party samples)")
 
         blocs = coherence(vectors, states=shared)
         if not blocs.empty:
-            row = blocs.iloc[0]
-            print(f"  within-party {row['mean_within']:.3f} vs between-party "
-                  f"{row['between']:.3f}  ->  ratio {row['within_over_between']:.2f}")
-            blocs.assign(stream=label).to_csv(
-                out_dir / f"intraparty_{label}_coherence.csv", index=False)
+            print(f"  {format_coherence(blocs.iloc[0])}")
+        blocs.assign(stream=label).to_csv(
+            out_dir / f"intraparty_{label}_coherence.csv", index=False)
 
         divisive = divisive_topics(vectors, topic_names, states=shared)
         divisive.to_csv(out_dir / f"intraparty_{label}_topic_spread.csv", index=False)
@@ -378,14 +429,12 @@ def main(argv: list[str] | None = None) -> int:
         centroid = distance_to_centroid(vectors, states=shared)
         centroid.to_csv(out_dir / f"intraparty_{label}_distance.csv", index=False)
 
-    tests = results.pop("_tests", [])
-    if tests:
-        pd.DataFrame(tests).to_csv(out_dir / "intraparty_dispersion_tests.csv", index=False)
-    if results:
-        combined = pd.concat([frame.assign(stream=label) for label, frame in results.items()],
-                             ignore_index=True)
-        combined.to_csv(out_dir / "intraparty_dispersion.csv", index=False)
-        print(f"\nwrote {out_dir / 'intraparty_dispersion.csv'}")
+    pd.DataFrame(tests, columns=PERMUTATION_COLUMNS).to_csv(
+        out_dir / "intraparty_dispersion_tests.csv", index=False)
+    combined = pd.concat([frame.assign(stream=label) for label, frame in results.items()],
+                         ignore_index=True)
+    combined.to_csv(out_dir / "intraparty_dispersion.csv", index=False)
+    print(f"\nwrote {out_dir / 'intraparty_dispersion.csv'}")
     return 0
 
 

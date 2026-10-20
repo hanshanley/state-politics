@@ -21,6 +21,7 @@ import pandas as pd
 import yaml
 
 from state_politics.analysis.elections import format_title_validation
+from state_politics.analysis.intraparty import format_coherence
 
 ROOT = Path(__file__).resolve().parent.parent
 DATA = ROOT / "data" / "processed"
@@ -246,12 +247,13 @@ def main() -> int:
         blocs = _load(f"intraparty_{stream}_coherence.csv")
         if blocs is None or blocs.empty:
             continue
-        row = blocs.iloc[0]
-        print(f"  {stream:<9} within {row['mean_within']:.3f}  between {row['between']:.3f}  "
-              f"ratio {row['within_over_between']:.2f}  ({int(row['n_states'])} states)")
+        print(f"  {stream:<9} {format_coherence(blocs.iloc[0])}")
     tests = _load("intraparty_dispersion_tests.csv")
     if tests is not None and not tests.empty:
         for _, row in tests.iterrows():
+            if pd.isna(row["p_value"]) or pd.isna(row["observed_gap"]):
+                print(f"  {row['stream']:<9} dispersion gap unavailable")
+                continue
             verdict = "significant" if row["p_value"] < 0.05 else "not distinguishable from chance"
             print(f"  {row['stream']:<9} D-R dispersion gap {row['observed_gap']:+.3f}, "
                   f"p={row['p_value']:.3f} ({verdict})")

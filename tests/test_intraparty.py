@@ -10,6 +10,7 @@ from __future__ import annotations
 
 import numpy as np
 import pandas as pd
+import pytest
 
 from state_politics.analysis.intraparty import (
     coherence,
@@ -19,6 +20,7 @@ from state_politics.analysis.intraparty import (
     dispersion_gap_pvalue,
     distance_to_centroid,
     divisive_topics,
+    main,
 )
 
 TOPIC_NAMES = {1: "Macroeconomics", 3: "Health", 6: "Education"}
@@ -144,3 +146,86 @@ def test_coherence_excludes_same_state_pairs_from_between():
     cross_only = (cosine_distance(vectors.loc[("TX", "D")], vectors.loc[("OH", "R")])
                   + cosine_distance(vectors.loc[("OH", "D")], vectors.loc[("TX", "R")])) / 2
     assert abs(between - cross_only) < 1e-3  # coherence() rounds to 4 dp
+
+
+@pytest.mark.parametrize(
+    ("function", "columns"),
+    [
+        (dispersion, {"party", "n_states", "n_pairs", "mean_distance"}),
+        (coherence, {"mean_within", "between", "within_over_between", "n_states"}),
+        (distance_to_centroid, {"state", "party", "distance_to_centroid"}),
+        (
+            lambda vectors: divisive_topics(vectors, TOPIC_NAMES),
+            {"party", "topic", "n_states", "mean_share", "sd_share"},
+        ),
+    ],
+)
+def test_empty_intraparty_results_keep_readable_schemas(function, columns):
+    result = function(pd.DataFrame())
+    assert result.empty
+    assert columns <= set(result.columns)
+
+
+@pytest.mark.parametrize("case", ["empty", "one_party", "one_shared_state", "zero_between"])
+def test_intraparty_cli_exports_unavailable_comparisons(tmp_path, capsys, case):
+    organizations = {
+        "empty": [],
+        "one_party": [("TX", "D"), ("OH", "D")],
+        "one_shared_state": [("TX", "D"), ("TX", "R")],
+        "zero_between": [("TX", "D"), ("TX", "R"), ("OH", "D"), ("OH", "R")],
+    }[case]
+    platform = pd.DataFrame(
+        [
+            {
+                "state": state, "party": party, "era": "2018-present",
+                "topic": topic, "n_planks": 40 if topic == 1 else 0,
+            }
+            for state, party in organizations for topic in TOPIC_NAMES
+        ],
+        columns=["state", "party", "era", "topic", "n_planks"],
+    )
+    platform.to_csv(tmp_path / "platform.csv", index=False)
+    platform.rename(columns={"n_planks": "n_bills"}).to_csv(tmp_path / "bills.csv", index=False)
+    output = tmp_path / "output"
+    output.mkdir()
+    for stream in ("platform", "bill"):
+        for suffix in ("coherence", "topic_spread", "distance"):
+            (output / f"intraparty_{stream}_{suffix}.csv").write_text("stale\n1\n")
+    for filename in ("intraparty_dispersion.csv", "intraparty_dispersion_tests.csv"):
+        (output / filename).write_text("stale\n1\n")
+    assert main([
+        "--platform-emphasis", str(tmp_path / "platform.csv"),
+        "--bill-emphasis", str(tmp_path / "bills.csv"), "--out-dir", str(output),
+        "--permutations", "4",
+    ]) == 0
+    for stream in ("platform", "bill"):
+        for suffix in ("coherence", "topic_spread", "distance"):
+            frame = pd.read_csv(output / f"intraparty_{stream}_{suffix}.csv")
+            if case != "zero_between":
+                assert frame.empty
+            elif suffix == "coherence":
+                assert frame.iloc[0]["between"] == 0
+                assert pd.isna(frame.iloc[0]["within_over_between"])
+    for filename in ("intraparty_dispersion.csv", "intraparty_dispersion_tests.csv"):
+        frame = pd.read_csv(output / filename)
+        assert frame.empty == (case != "zero_between")
+    text = capsys.readouterr().out
+    assert "unavailable" in text.lower()
+    assert "nan" not in text.lower()
+
+
+@pytest.mark.parametrize("all_zero", [False, True])
+def test_dispersion_gap_does_not_turn_undefined_distances_into_significance(all_zero):
+    vectors = _vectors([
+        (state, party, [0, 0, 0] if all_zero or state == "TX" else [1, 0, 0])
+        for state in ("TX", "OH", "VT") for party in ("D", "R")
+    ])
+    assert dispersion_gap_pvalue(vectors, n_permutations=4) == {}
+
+
+def test_dispersion_gap_rejects_an_empty_permutation_run():
+    vectors = _vectors([
+        (state, party, [1, 0, 0]) for state in ("TX", "OH") for party in ("D", "R")
+    ])
+    with pytest.raises(ValueError, match="permutations"):
+        dispersion_gap_pvalue(vectors, n_permutations=0)

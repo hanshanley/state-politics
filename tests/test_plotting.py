@@ -67,6 +67,31 @@ def test_palette_matches_portfolio():
     assert theme.GRID == "#D6D3CC"
 
 
+def test_figure_report_preserves_undefined_intraparty_ratio(tmp_path, monkeypatch, capsys):
+    from pathlib import Path
+
+    import pandas as pd
+
+    monkeypatch.syspath_prepend(str(Path(__file__).resolve().parents[1] / "scripts"))
+    import report_figures as script
+
+    pd.DataFrame([{
+        "mean_within": 0.0, "between": 0.0, "within_over_between": None, "n_states": 2,
+    }]).to_csv(tmp_path / "intraparty_platform_coherence.csv", index=False)
+    pd.DataFrame([{
+        "stream": "platform", "observed_gap": None, "p_value": None, "n_permutations": 4,
+    }]).to_csv(tmp_path / "intraparty_dispersion_tests.csv", index=False)
+    monkeypatch.setattr(script, "ROOT", tmp_path)
+    monkeypatch.setattr(script, "DATA", tmp_path)
+    assert script.main() == 0
+    text = capsys.readouterr().out
+    assert "within 0.000" in text and "between 0.000" in text
+    assert "ratio unavailable" in text
+    assert "ratio nan" not in text
+    assert "dispersion gap unavailable" in text
+    assert "not distinguishable from chance" not in text
+
+
 def test_party_colors_follow_convention():
     assert theme.PARTY_COLORS["D"] == theme.BLUE
     assert theme.PARTY_COLORS["R"] == theme.ACCENT
