@@ -447,6 +447,147 @@ def test_figure_report_does_not_claim_verified_human_gold(tmp_path, monkeypatch,
     assert "keyword top-1        1/3 (33%)" in output
 
 
+@pytest.mark.parametrize("paired", [False, True])
+def test_outcome_chart_uses_actual_paired_coverage_and_full_rate_range(
+    tmp_path, monkeypatch, paired,
+):
+    from pathlib import Path
+
+    import pandas as pd
+
+    from state_politics.analysis.outcomes import build_outcome_tables
+
+    monkeypatch.syspath_prepend(str(Path(__file__).resolve().parents[1] / "scripts"))
+    import plot_outcomes as script
+
+    bills = pd.DataFrame([
+        {
+            "bill_id": f"{party}-{index}", "state": "TX", "sponsor_party": party,
+            "year": 2024, "classification": "bill", "n_actions": 1,
+            "recorded_outcome": "signed", "recorded_enacted": True,
+            "n_vote_events": 0, "originating_chamber": "lower",
+        }
+        for party in ("D", "R")
+        for index in range(500 if paired else 1)
+    ])
+    _, outcomes, _, comparison = build_outcome_tables(bills)
+    path = tmp_path / "outcomes.csv"
+    outcomes.to_csv(path, index=False)
+    captured = {}
+    original_finish = script.charts.finish
+
+    def finish(fig, ax, out_path, **kwargs):
+        captured.update(fig=fig, ax=ax, source=kwargs["source"])
+        return original_finish(fig, ax, out_path, **kwargs)
+
+    monkeypatch.setattr(script.charts, "finish", finish)
+    output = tmp_path / "stages.png"
+    assert script.build_outcome_figure(pd.read_csv(path), comparison, output) == output
+    assert output.stat().st_size > 0
+    text = " ".join(
+        label.get_text() for label in captured["fig"].findobj() if hasattr(label, "get_text")
+    )
+    assert "41 states" not in text
+    assert "2026-07" not in captured["source"]
+    if paired:
+        assert "Paired states: 1" in text
+        assert captured["ax"].get_xlim()[1] >= 100
+        assert [bar.get_width() for bar in captured["ax"].patches] == [100] * 4
+    else:
+        assert "unavailable" in text.lower()
+        assert "paired p" not in text
+        assert not captured["ax"].patches
+
+
+@pytest.mark.parametrize("available_pairs,yes_votes", [(0, 10), (2, 10), (4, 10), (4, 0)])
+def test_rollcall_chart_preserves_unavailable_cells_and_cell_coverage(
+    tmp_path, monkeypatch, available_pairs, yes_votes,
+):
+    from pathlib import Path
+
+    import pandas as pd
+
+    from state_politics.analysis.outcomes import party_rollcall_support
+
+    monkeypatch.syspath_prepend(str(Path(__file__).resolve().parents[1] / "scripts"))
+    import plot_outcomes as script
+
+    pairs = [("D", "D"), ("D", "R"), ("R", "D"), ("R", "R")]
+    events = pd.DataFrame([
+        {
+            "vote_id": f"vote-{index}", "bill_id": f"bill-{index}", "state": "TX",
+            "result": "pass", "chamber": "lower", "motion_classification": "passage",
+        }
+        for index in range(4)
+    ])
+    counts = pd.DataFrame([
+        {
+            "vote_event_id": f"vote-{index}", "bill_id": f"bill-{index}", "state": "TX",
+            "sponsor_party": sponsor, "voter_party": voter, "option": option,
+            "n_votes": yes_votes if option == "yes" else 20 - yes_votes,
+        }
+        for index, (sponsor, voter) in enumerate(pairs[:available_pairs])
+        for option in ("yes", "no")
+    ], columns=[
+        "vote_event_id", "bill_id", "state", "sponsor_party", "voter_party", "option", "n_votes",
+    ])
+    summary = party_rollcall_support(events, counts)
+    path = tmp_path / "rollcalls.csv"
+    summary.to_csv(path, index=False)
+    captured = {}
+    original_new_figure = script.charts.new_figure
+
+    def new_figure(**kwargs):
+        fig, ax = original_new_figure(**kwargs)
+        captured.update(fig=fig, ax=ax)
+        return fig, ax
+
+    monkeypatch.setattr(script.charts, "new_figure", new_figure)
+    output = tmp_path / "votes.png"
+    assert script.build_rollcall_figure(pd.read_csv(path), output) == output
+    assert output.stat().st_size > 0
+    labels = [label.get_text() for label in captured["ax"].texts]
+    assert sum(label == "Unavailable" for label in labels) == 4 - available_pairs
+    assert sum(label == f"{yes_votes * 5:.1f}%" for label in labels) == available_pairs
+    assert captured["ax"].images[0].get_clim() == (0, 100)
+    text = " ".join(
+        label.get_text() for label in captured["fig"].findobj() if hasattr(label, "get_text")
+    )
+    assert "same 40 states" not in text
+    assert "2026-07" not in text
+    if available_pairs:
+        assert any("1 state" in label and "1 roll call" in label for label in labels)
+    import matplotlib.pyplot as plt
+
+    plt.close(captured["fig"])
+
+
+@pytest.mark.parametrize("n_paired", [0, 2])
+def test_outcome_chart_rejects_conflicting_coverage(tmp_path, monkeypatch, n_paired):
+    from pathlib import Path
+
+    import pandas as pd
+
+    monkeypatch.syspath_prepend(str(Path(__file__).resolve().parents[1] / "scripts"))
+    import plot_outcomes as script
+
+    outcomes = pd.DataFrame([
+        {
+            "party": party, "n_states": 1,
+            "mean_advancement_rate": 0.5, "mean_enactment_rate": 0.25,
+        }
+        for party in ("D", "R")
+    ])
+    comparison = {
+        "n_paired_states": n_paired,
+        "mean_d_minus_r_enactment_rate": 0,
+        "sign_flip_p_value": 1,
+    }
+    with pytest.raises(ValueError, match="paired-state count"):
+        script.build_outcome_figure(outcomes, comparison, tmp_path / "invalid.png")
+    assert not (tmp_path / "invalid.png").exists()
+
+
 def test_all_state_focus_matrix_has_every_state_and_explicit_nebraska_gap():
     import sys
     from pathlib import Path

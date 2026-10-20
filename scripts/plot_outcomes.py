@@ -27,7 +27,16 @@ def build_outcome_figure(
     comparison: dict,
     out_path: Path,
 ):
-    """Render two explicit recorded bill stages for the same 41 states."""
+    """Render recorded stages with the supplied paired-state coverage."""
+    n_paired = comparison["n_paired_states"]
+    expected_parties = {"D", "R"} if n_paired else set()
+    if (
+        n_paired < 0
+        or len(outcomes) != len(expected_parties)
+        or set(outcomes["party"]) != expected_parties
+        or not outcomes["n_states"].eq(n_paired).all()
+    ):
+        raise ValueError("Outcome rows do not match the paired-state count and D/R coverage")
     fig, ax = charts.new_figure(figsize=(10.8, 5.8))
     outcome_labels = [
         "Passed ≥1 chamber\nor reached executive action",
@@ -36,6 +45,8 @@ def build_outcome_figure(
     y = np.arange(len(outcome_labels))
     height = 0.32
     for offset, party in ((height / 2, "D"), (-height / 2, "R")):
+        if outcomes.empty:
+            break
         row = outcomes.set_index("party").loc[party]
         values = [
             row["mean_advancement_rate"] * 100,
@@ -48,39 +59,49 @@ def build_outcome_figure(
             color=theme.PARTY_COLORS[party],
         )
         for bar, value in zip(bars, values, strict=True):
+            inside = value >= 30
             ax.text(
-                value - 0.5,
+                value - 1 if inside else value + 1,
                 bar.get_y() + bar.get_height() / 2,
                 f"{'Democratic' if party == 'D' else 'Republican'}  {value:.1f}%",
-                ha="right",
+                ha="right" if inside else "left",
                 va="center",
                 fontsize=10,
                 fontweight="bold",
-                color="white",
+                color="white" if inside else theme.TEXT,
             )
     ax.set_yticks(y)
     ax.set_yticklabels(outcome_labels, fontsize=11)
     ax.invert_yaxis()
-    ax.set_xlim(0, 35)
+    ax.set_xlim(0, 100)
     ax.set_xlabel("Equal-state mean share of law-eligible bills (%)")
     ax.grid(axis="x", linestyle="-", linewidth=0.5)
     ax.grid(axis="y", visible=False)
     ax.set_axisbelow(True)
+    if n_paired:
+        subtitle = (
+            f"Paired states: {n_paired}; "
+            f"D−R enactment gap {comparison['mean_d_minus_r_enactment_rate']:+.1%}, "
+            f"paired p = {comparison['sign_flip_p_value']:.3f}"
+        )
+    else:
+        subtitle = "Comparison unavailable: no paired states meet the coverage floors"
+        ax.text(
+            0.5, 0.5, "Recorded outcome comparison unavailable",
+            transform=ax.transAxes, ha="center", va="center", color=theme.MUTED,
+        )
     charts.style_axes(
         ax,
         "How often filed bills reach recorded legislative stages",
         "Equal-state mean share of law-eligible bills (%)",
         "",
-        subtitle=(
-            "Same 41 states for both parties; "
-            f"D−R enactment gap {comparison['mean_d_minus_r_enactment_rate']:+.1%}, "
-            f"paired p = {comparison['sign_flip_p_value']:.3f}"
-        ),
+        subtitle=subtitle,
     )
     source = (
-        "Source: Open States / Plural Policy, 2026-07 public PostgreSQL dump. Ordinary bills "
-        "sponsored by D/R legislators; each party has at least 500 filings and 80% action "
-        "coverage in every included state. The first stage means passage in at least one chamber "
+        "Source: supplied Open States / Plural Policy outcome exports; this figure does not "
+        "establish their snapshot identity or revalidate the findings. Ordinary D/R-sponsored "
+        "bills, with paired-state coverage floors recorded in the comparison metadata. "
+        "The first stage means passage in at least one chamber "
         "or a later executive action, including a veto. 'Recorded as enacted' requires "
         "became-law, executive-signature, or veto-override-passage. These are descriptive "
         "associations, not causal party-performance estimates."
@@ -90,38 +111,49 @@ def build_outcome_figure(
 
 def build_rollcall_figure(rollcalls: pd.DataFrame, out_path: Path):
     """Render a 2×2 sponsor-party by voter-party yes-share matrix."""
-    indexed = rollcalls.set_index(["sponsor_party", "voter_party"])
-    values = np.array(
-        [
-            [
-                indexed.loc[("D", "D"), "mean_yes_share"] * 100,
-                indexed.loc[("D", "R"), "mean_yes_share"] * 100,
-            ],
-            [
-                indexed.loc[("R", "D"), "mean_yes_share"] * 100,
-                indexed.loc[("R", "R"), "mean_yes_share"] * 100,
-            ],
-        ]
+    pairs = pd.MultiIndex.from_product(
+        [("D", "R"), ("D", "R")], names=["sponsor_party", "voter_party"],
     )
+    indexed = rollcalls.set_index(["sponsor_party", "voter_party"]).reindex(pairs)
+    values = indexed["mean_yes_share"].to_numpy(dtype=float).reshape(2, 2) * 100
     theme.apply()
     fig, ax = charts.new_figure(figsize=(8.8, 5.8))
     cmap = mcolors.LinearSegmentedColormap.from_list(
         "rollcall-support",
         [theme.BG, theme.tint(theme.GREEN, 0.55), theme.GREEN, theme.shade(theme.GREEN, 0.35)],
     )
-    image = ax.imshow(values, cmap=cmap, vmin=60, vmax=100, aspect="auto")
+    image = ax.imshow(np.ma.masked_invalid(values), cmap=cmap, vmin=0, vmax=100, aspect="auto")
     for row in range(2):
         for column in range(2):
             value = values[row, column]
+            if np.isnan(value):
+                ax.text(
+                    column, row, "Unavailable", ha="center", va="center",
+                    fontsize=13, color=theme.MUTED,
+                )
+                continue
+            color = "white" if value >= 88 else theme.TEXT
             ax.text(
                 column,
-                row,
+                row - 0.08,
                 f"{value:.1f}%",
                 ha="center",
                 va="center",
                 fontsize=18,
                 fontweight="bold",
-                color="white" if value >= 88 else theme.TEXT,
+                color=color,
+            )
+            cell = indexed.iloc[row * 2 + column]
+            n_states = cell.get("n_states")
+            state_label = (
+                f"{int(n_states)} state{'s' if n_states != 1 else ''}"
+                if pd.notna(n_states) else "state count unavailable"
+            )
+            n_events = int(cell["n_vote_events"])
+            ax.text(
+                column, row + 0.2,
+                f"{state_label}; {n_events:,} roll call{'s' if n_events != 1 else ''}",
+                ha="center", va="center", fontsize=9, color=color,
             )
     ax.set_xticks([0, 1])
     ax.set_xticklabels(["Democratic legislators", "Republican legislators"], fontsize=11)
@@ -139,7 +171,7 @@ def build_rollcall_figure(rollcalls: pd.DataFrame, out_path: Path):
     fig.text(
         0.5,
         0.925,
-        "Mean yes share on recorded passage roll calls in the same 40 states",
+        "Event-weighted passage-vote means; coverage shown separately for each cell",
         ha="center",
         va="top",
         fontsize=11,
@@ -149,11 +181,11 @@ def build_rollcall_figure(rollcalls: pd.DataFrame, out_path: Path):
     colorbar.set_label("Mean yes share (%)")
     colorbar.outline.set_visible(False)
     source = (
-        "Source: Open States / Plural Policy, 2026-07 public PostgreSQL dump. Each cell averages "
-        "recorded passage-vote events rather than states. Voter party is resolved on the vote "
-        "date; each party-vote cell requires at least 10 resolved Democratic/Republican voters. "
-        "The matrix describes motions that received roll calls, not all bills or causal party "
-        "effects."
+        "Source: supplied Open States / Plural Policy roll-call exports; this figure does not "
+        "establish their snapshot identity or revalidate attribution. Each cell averages "
+        "recorded passage-vote events rather than states; counts describe that cell's supplied "
+        "coverage, not necessarily a common state sample. Missing cells are unavailable, not "
+        "zero. These are motions that received roll calls, not all bills or causal party effects."
     )
     note = theme.source_note(fig, source)
     theme.layout_with_note(fig, note, top=0.88)

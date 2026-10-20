@@ -87,6 +87,27 @@ afterward, with targeted Ruff and diff checks passing. Evidence:
 `outcome_report_missingness_complete_v1.log`. No original extraction,
 prediction, threshold, model weight or analytical export is rewritten.
 
+The separate outcome-chart renderer also had five reproduced failures on
+saved summaries from the actual analysis helpers: empty paired outcomes and
+empty/partial vote matrices crashed, a one-state comparison advertised 41
+states, and the vote scale clipped values below 60%. Its stage axis also
+clipped valid rates above 35%. The renderer now uses the supplied paired-state
+count, rejects conflicting D/R coverage, and displays the complete 0–100%
+range. Missing vote cells are explicitly unavailable; observed zero remains
+zero. Each observed vote cell displays its own state/event counts, without
+claiming a shared 40-state sample. Both charts remove the unsupported fixed
+July snapshot assertion and disclose that supplied exports are not revalidated
+findings. Empty comparisons show no placeholder significance result.
+
+All **63 plotting and outcome tests** pass after this chart repair, including
+eight new cases covering empty/partial/full summaries, observed zero, valid
+100% rates and conflicting paired-state metadata. Targeted Ruff and diff
+checks pass. The original five-case failures remain in
+`outcome_plot_evidence_before_v1.log`; the completed run is
+`outcome_plot_evidence_complete_v2.log`. The first post-fix test run remains
+in the v1 log; a subsequent test-line-length lint failure was corrected before
+the final validation. No research figures or analytical exports are regenerated.
+
 ## Classifier numerical decision safeguards
 
 Five executed regressions expose a shared decision-path failure: individually
