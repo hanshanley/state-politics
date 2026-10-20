@@ -603,10 +603,38 @@ requirement before verifier execution; that is not a semantic rejection.
 The existing full-population test premarks all candidates terminal and uses
 fake PDF bytes; its separate no-refetch case collects only one pending candidate.
 Neither is an actual 2,655-candidate driver/24-exact-original reuse proof.
-The same worker is preparing a distinct immutable zero-HTTP v2 with reconstructed
-canonical/native joins, complete-index link accounting and genuine full-driver,
-final-31, crash/access/context/transport gates. No original packet is rewritten,
-no full collection is authorized and no scientific admission follows from v1.
+The same worker has returned a distinct immutable zero-HTTP v2 with reconstructed
+canonical/native joins, complete-index link accounting and full-driver,
+final-31, crash/access/context/transport tests. Its worker reports are not
+independent parent execution.
+
+Actual strict read-only parent replay of v2 now **passes**, with all **3,757
+original paths, bytes, hashes, inodes, mtimes and link counts unchanged**.
+Root-manifest SHA:
+`dbdc48a150270f68210190d3b334c739aeb4f98df2b1e00ac19fc2a315a24caa`.
+Verifier SHA:
+`d82f25ab36827121bf5c6cda5c6cbb523d4e0eef2d95aba33947ff7689d56aa2`.
+Evidence: `wisconsin_v2_parent_replay_actual_v1.json` and its actual log.
+Complete before/after metadata maps have the identical SHA
+`b77ebeff9e10cb58e0f83c96a859b9fb183d60568bb78cf53d163341a9a53a96`.
+Networking, child execution, every original-root mutation and unrelated
+project/session inputs were denied. Imports selected source rather than
+the packet's archived bytecode.
+
+The original seven release-gate tests now complete actual independent parent
+execution: **seven pass, no skips, in 590.961 seconds**. Report:
+`wisconsin_v2_parent_gates_actual_v1.json` and its actual log. All 3,757 original
+files retain the identical complete metadata-map SHA above; private inputs are
+inode-disjoint `copy2` copies and the successful private root is removed.
+The separate original complete **2,655-candidate / 24 genuine sparse-seed reuse /
+2,631 mocked PDF** driver remains running, not an accepted completed pass.
+It must actually extract both readers, verify all **82 full checkpoints plus
+final 31**, and prove no refetch on complete resume.
+The guard permits the unchanged collector's
+new-body hard links **only when both endpoints are inside that private test
+root**; it does not claim all links are denied or link test inputs to originals.
+No Wisconsin live initialization or collection is authorized, no original packet
+is rewritten, and neither v1 nor v2 confers scientific admission.
 
 ## Full-campaign preparation gates: Pennsylvania, Ohio and Missouri
 
@@ -1107,11 +1135,35 @@ counts; private fixtures are removed and zero HTTP requests made. Evidence:
 
 An immutable v5r1 successor has returned, manifest
 `1633c4087396aa56c12c1740741d14a5fcdf356674ea14cc2f548cdfc314d7a5`.
-Its reported 14 passing tests are **worker results, not completed parent
-execution**. Source inspection establishes that its 11,807-population driver
+Its reported 14 passing tests are worker results. Actual independent parent
+execution now **passes 13 selected original tests**, with all **1,890 original
+files and their metadata unchanged**, zero HTTP and private cleanup completed.
+Evidence: `tx_v5r1_parent_selected_suite_v2.json` and its actual log.
+This deliberately excludes the one subprocess-based inner-guard test:
+outer child-process denial must not masquerade as proof of the inner guard.
+The first parent harness failed because its read guard misresolved
+directory-FD-relative cleanup opens; its log, source, maps and private failure
+tree remain preserved. The distinct v2 harness normalizes those read paths
+and first demonstrates private nested-directory cleanup.
+
+The 13 selected passes cover literal Unicode physical-LF parsing, exact saved
+Parquet/native identity checks, frozen production body projection and selected
+exit/transport/crash/access gates. They are **not an all-14 parent-suite pass**.
+Source inspection establishes that the 11,807-population driver
 test mocks physical persistence and checkpoint freezing: this is routing/count
 evidence, not a materialized full archive or dependency-complete final-15 replay.
-Independent parent release gates remain open. No toolkit may seal the live
+
+A separate actual parent probe safely captures and invokes the exact installed
+inner audit callback with synthetic event arguments. It incorrectly permits
+`socket.getaddrinfo`, `socket.getnameinfo`, `socket.__new__`, `os.fork`,
+`os.forkpty` and `os.exec`; connect, subprocess, spawn, write-open and mkdir
+controls correctly deny. **No real DNS, socket, fork, exec or child operation
+is performed.** All 1,890 original files remain unchanged, with complete maps
+embedded in `tx_v5r1_guard_events_parent_actual_v1.json`. Registration capture
+and synthetic callback invocation are not a claim of complete OS enforcement.
+The same worker owns an immutable materialized full-population successor and
+these guard-coverage repairs. Independent parent release gates remain open.
+No toolkit may seal the live
 Texas root without original collector exit, zero pending candidates and a
 genuine parent exit receipt. Earlier failures and all physical allowances remain
 preserved; no source, classifier or publication admission follows.
@@ -1320,6 +1372,40 @@ not full-campaign transport-prefix closure or the growing campaign's later
 negative cohort. Original dispositions, absent sessions and all admission
 exclusions remain unchanged.
 
+### Post-exit tooling: executed guard omissions and driver-proof limitation
+
+The returned immutable **v10** toolkit has **239 payloads / 240 total files**,
+manifest
+`b2462b9efc7e1b254bfa49f2734589ddc8824c5a04b4214aa6417e3abfa21691`.
+An actual parent probe captures the exact inner audit callback registered by
+the frozen guard, suppresses verifier dispatch, and invokes harmless synthetic
+audit events directly. Ten forbidden categories are incorrectly allowed:
+`socket.getnameinfo`, `socket.__new__`, `socket.sendto`, `socket.sendmsg`,
+`subprocess.Popen`, `os.system`, `os.fork`, `os.forkpty`, `os.exec` and
+`os.posix_spawn`. Six denial controls pass. Report:
+`ny_v10_guard_events_parent_actual_v2.json` and its actual log.
+All 240 originals remain unchanged in paths, bytes, hashes, inodes, mtimes and
+link counts; complete before/after maps are retained. This is callback-coverage
+evidence, not an actual DNS, network, child-process or system-call execution.
+**No archive verifier executes**; guard activation's success-shaped output is
+explicitly recorded as not a verifier pass.
+
+The preserved parent v1 harness failed before activation because it confused
+239 payloads with 239 total files. Distinct v2 pins/reuses that harness and
+corrects the exact manifest inventory; this initial parent error is not a
+semantic rejection or a toolkit-source defect.
+
+Source inspection also establishes that the full fixture manually writes
+request and terminal-candidate records, calling original extraction/progress/
+freezing helpers but not the production pending-candidate collection driver.
+It is materialized sealer-input evidence, not the required actual-driver proof.
+The same worker owns an immutable successor covering the omitted audit events
+and the actual **24,315 typed / 24,317 dispositions / 16 inherited / 24,299
+pending** driver, including **379 full batches plus final 43** and both
+standalone verifiers. The live campaign remains off limits to that work.
+No genuine parent exit receipt exists and no real post-exit sealing is
+authorized; synthetic receipts cannot establish original campaign completion.
+
 ## Illinois 103rd-General-Assembly native census and original HTML
 
 The native index retains **13,391 rows**, exactly matching all **13,376**
@@ -1460,6 +1546,29 @@ ASCII/declared-Windows-1252 decoding reproduces **every complete source string,
 saved body, lexical span and header** without replacement or a guessed codec.
 All 8,991 files remain unchanged on both runs. This resolves decoding equivalence
 for this fixed cohort, not actual charset ground truth or future responses.
+
+### Post-exit handoff and actual-driver proof still withheld
+
+The returned zero-HTTP v1 closure packet has **27 payloads / 28 total files**,
+manifest
+`1c4802ca01698eac61319a617e804cc063f0f994aa3ed213b2c5cb9faa96072b`.
+Its reported full-population and final-18 passes are worker executions, not
+independent parent passes. Parent inspection of the pinned test source
+`83e3700efd306335c41c63b028db914827a06915c64ec3dee0bec83acc849b85`
+finds that `build_actual_fixture` manually constructs reservation/start/result
+records and response files, calls `record_candidate_attempt` in its own loop,
+then updates progress and creates a synthetic receipt. It does not execute the
+original pending-candidate collection driver or all original checkpoint paths.
+This materialized full-cardinality sealer fixture must not be presented as that
+driver's full-population/no-refetch proof.
+
+The same worker owns a distinct immutable successor executing the unchanged
+driver with **13,391 native identities / 16 genuine inherited / 13 unsupported /
+13,362 pending**, all **417 full 32-candidate checkpoints plus final 18**, and
+independent whole/tail verifier outputs. Only transport, clocks and pacing may
+be mocked; reservation, persistence, terminalization, extraction and checkpoint
+production remain real. The original live root is not read, polled, modified or
+sealed. No genuine exit receipt or completed real corpus is claimed.
 
 ## North Carolina publisher census and full original-source continuation
 
@@ -1692,13 +1801,14 @@ extra or changed payload bytes/hashes. Six `native_versions.jsonl` mtimes differ
 between them: HR1 and HR311 in v3 and in each embedded v2/v1 predecessor.
 Current metadata no longer matches the earlier parent guarded inventory.
 Substituting only those six mtimes **in memory** does not recover its digest;
-the failed harness did not retain its complete pre-execution inventory, so the
-other original metadata differences and the responsible operation remain
-unestablished. Actual diagnostic/reconciliation receipts:
+the failed harness did not retain its complete pre-execution inventory. At that
+point the other original metadata differences and responsible operation remained
+unestablished; the subsequent worker disclosure below supplies an operation
+history, not a complete reconciliation of that digest. Actual receipts:
 `nc_v3_original_immutability_parent_probe_v1.json` and
-`nc_v3_retained_metadata_reconciliation_parent_v1.json`. No original timestamps,
-files or links are restored. The same worker has the evidence and must preserve
-the incident while completing the separate v4 parser repair.
+`nc_v3_retained_metadata_reconciliation_parent_v1.json`. The parent does not
+restore original timestamps, files or links. The same worker has the evidence
+and must preserve the incident while completing the separate parser repair.
 
 Parent then executes **three additional v3 parser failures** against exact frozen
 source, with an independent standard-library HTML parser observing the anchors.
@@ -1711,11 +1821,77 @@ actual log. These are synthetic format counterexamples, not claims about the
 still-uncaptured real publisher pages. All 1,122 originals remain unchanged;
 networking, children and non-report writes are denied, with zero HTTP.
 
-The same worker now owns immutable zero-HTTP **v4**, addressing HTML-aware
-anchor observation and exact-byte-span reconciliation rather than another
-supported-pair regex patch. Earlier result/checkpoint/lineage/transport positives
-and failures remain preserved. Initialization and full collection remain
-withheld pending the successor's independent release gates.
+The returned zero-HTTP **v4** archive uses copy2-only construction and contains
+**1,186 payloads / 1,187 total files**, all with link count one. Manifest:
+`6fd27f84f1edb7c01e054c0f7ef8493fca5f565297da73ed2a4a7bfc3a027f3a`.
+Its reported fourteen passing tests are **worker executions**, not a parent
+rerun of that suite. The parent separately executes the pinned packaged verifier
+under a stricter guard denying all writes, mutations, networking, children and
+unrelated project/session inputs. That replay passes; all **1,187 original v4
+paths, bytes, hashes, inodes, mtimes and link counts remain unchanged**.
+Complete before/after maps are persisted and have the same SHA-256,
+`c482df4afc1e34a88d7a9fcddc38283c6e599f777552a6c259ec4921ab91cb55`.
+This is the immutability result for this new execution, not a reversal of the
+earlier v3 enclosing failure.
+
+The worker now explicitly discloses that an earlier v4 builder used hard links
+and directly rewrote the two retained `native_versions.jsonl` files. Subsequent
+build diagnostics found changes at six embedded v3/v2/v1 paths; the worker
+reports restoring the exact pinned payload bytes by atomically replacing twelve
+linked paths across those source roots. That is **not original-source
+immutability**: matching bytes after replacement do not restore inode, mtime or
+link topology. Diagnostic
+`nc_v4_preparation_hardlink_write_through_diagnostic_v1.json`, SHA-256
+`b54f881d9b2f7fc5af46239ce508eedf9e8d1de284ad0d39c00af147298c459f`,
+preserves the disclosed operations and earlier failed build attempts. The
+exact earlier failed-parent inventory digest remains unreconciled; a plausible,
+disclosed mechanism is not proof of its complete before/after metadata history.
+No further original-path or metadata restoration is authorized.
+
+The same strictly guarded parent execution also reproduces **four new v4 parser
+counterexamples**. A complete fake Edition region inside a comment, script or
+style element, before the real region, produces a phantom v9 edition instead of
+the independently observed v0 edition. A commented-out end marker inside the
+real region truncates enumeration before an additional real, unpaired PDF
+anchor; the parser still reports `success`. The whole-document HTML observer
+sees respectively two actual v0 anchors, or three actual anchors in the
+truncation case. The cause is literal byte-marker region extraction **before**
+HTML-aware anchor observation, which loses the surrounding document context.
+These are synthetic source-format counterexamples, not observed errors in
+uncollected publisher pages.
+
+Exact fixture HTML, independent href observations, actual frozen-parser outputs,
+entrypoint pins and both complete source snapshots are retained in
+`nc_v4_region_context_parent_actual_v1.json` and its matching actual log. The
+replay/probe makes zero HTTP requests and creates no real campaign target.
+The returned immutable, copy2-only **v5** has **1,256 payloads / 1,257 total
+files**, all with link count one. Manifest:
+`98f792a92815f29feeb12428f659c14f154f13ca30c44e88d77f216d300b3496`.
+Actual independent parent strict read-only packaged replay passes, and the same
+four exact earlier fixtures now pass their corrected expectations. Fake regions
+inside comments/scripts/styles no longer invent v9; each returns the actual v0
+edition. The commented false end marker no longer clips the region: all three
+anchors are observed and the unpaired PDF explicitly returns `parse_error` /
+`unaccounted_edition_anchors`, with one unmatched edition anchor.
+
+Evidence: `nc_v5_region_context_parent_actual_v1.json` and its actual log.
+All 1,257 original paths, bytes, hashes, inodes, mtimes and link counts remain
+unchanged. Complete before/after maps have identical SHA
+`1353d132ddfd25e7a50053a800cb52fef30e8c6b4e3b5cec41f80c097215b292`.
+Networking, children, all original mutations and unrelated project/session
+inputs are denied; imports select source, not archived bytecode.
+
+A separate pinned parent environment also completes its own strict read-only
+replay with the same complete metadata maps:
+`nc_v5_parent_replay_actual_v1.json`. All **fifteen original release tests** are
+now running in a private inode-disjoint `copy2` copy, with every hard link and
+symlink denied. This includes the actual **2,004-page / two genuine reuses /
+2,002 mocked responses / final-20** driver. Its running execution is not a
+completed parent pass; the worker's fifteen passes remain separate evidence.
+Earlier result/checkpoint/lineage/transport positives and failures, including
+the v3 enclosing metadata failure, remain preserved. Initialization and full
+collection remain withheld pending independent release gates; no classifier,
+scientific or publication admission follows.
 
 ## Colorado regular-session source census and full continuation
 
