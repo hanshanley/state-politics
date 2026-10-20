@@ -29,7 +29,7 @@ remain explicit; this is not a completed project or a certified classifier.
 | Ohio full unlabelled inputs | Independent original-verifier parent replay now passes: 2,279 contexts / 6,811 source views / 93,161,481 source tokens / 118,663 windows, zero discarded tokens and all 18,290 packet file/directory content and metadata records unchanged. Raw readiness, all 45 progress lines, final proof, empty stderr, source pins and full before/after maps are independently reconciled. | Views are not bills; HTML views include exact source markup. Five PDF-only and seven unsupported contexts remain, as do 1,007 absent HTML session headers. Runtime preload precedes the guard; the original verifier runs entirely afterward. No labels, forward passes, training or scientific admission. |
 | Missouri archived printed headers | Independent original-verifier replay accepts first-page observations for all 1,152 archived PDFs in both readers, plus ten focused regressions and joins to all 4,608 copied source dependencies. All 41,914 supplement/original file-directory records remain unchanged. | Matching House/First Regular Session/102nd General Assembly observations are accepted only as literal first-page evidence. The original 1,152 false flags remain; unprinted session years stay unknown. No original identity/status, filing-time or scientific certification is promoted. The full 4,960-context corpus remains unfinished. |
 | Missouri successor readiness | V1 returns a worker-reported private initializer and next-32 continuation packet; parent hashes its manifest, handoff and guard source, then executes fourteen harmless required-event probes against the exact callback. | Five required denials are absent. Parent has not accepted initialization or continuation. The same worker owns immutable zero-HTTP v2 guard, fresh-reader and actual initializer crash-gate completion; actual successor/staging/authorization remain absent. |
-| North Carolina native-version preparation | V5 strict replay, four exact parser regressions and all fifteen original parent release tests pass, including the actual 2,004-population/final-20 fake-transport driver. Genuine readiness replay and the separate five original tests/private once-only initialization/promotion/rejection now pass independently, with all 45,587 readiness/terminal originals unchanged. | Private initialization produced 44,341 payload files; a second initialization was rejected without changing its target. Actual target, staging and authorization remain absent; no version collection is authorized. Earlier original-path replacement/metadata failures remain unreconciled; restored payload bytes do not restore historical immutability. |
+| North Carolina native-version preparation | V5 strict replay, four exact parser regressions and all fifteen original parent release tests pass, including the actual 2,004-population/final-20 fake-transport driver. Genuine readiness replay and the separate five original tests/private once-only initialization/promotion/rejection pass independently, with all 45,587 readiness/terminal originals unchanged. A distinct parent zero-HTTP actual-initialization execution has now started. | Private initialization produced 44,341 payload files; a second initialization was rejected without changing its target. The new actual execution has no accepted completed result yet; version collection remains unauthorized. Earlier original-path replacement/metadata failures remain unreconciled; restored payload bytes do not restore historical immutability. |
 | Classification | Four saved official English ModernBERT-base pilots compared on the same 52 platform references: external-only 41/52, joint 47/52, broader-source 47/52, Republican-expanded 49/52. The fourth run correctly rejects 3/4 mixtures and 6/6 non-policy units. | The fourth run loses one policy decision, still accepts a mixture above 0.999 and regresses on insufficient-evidence and taxonomy-boundary development cases. Both sets are examined diagnostics, not fresh independent tests. Independent review and empirical gates remain required. No candidate is approved. |
 | Labels | External CAP files and two state-reference CSVs recovered; exact-context Florida candidates and complete bounded overlap witnesses are frozen without label admission. Split/group/text and reviewed-platform source-body checks retain explicit label provenance. | Modern Florida external titles/subtopics are missing; Pennsylvania rows stop in 2016. Annotation provenance, source permissions, adapted-topic compatibility, bill families and independent state-domain references remain unresolved. |
 | Evaluation | Checkpoint-bound training/evaluation split isolation, development-only temperature/threshold selection, exact evidence joins, abstention accounting, per-topic and subgroup metrics. | Reviewer arrangement, frozen empirical gates, independent target tests and clustered uncertainty. No checkpoint can be certified by changing a status field. |
@@ -4019,6 +4019,43 @@ before/after map SHA above; the source-only cache prefix stays absent and the
 private fixture is removed. Actual target, staging and collection authorization
 remain absent. This accepts private release-gate execution only, not live
 initialization or collection. Historical immutability failures remain unreconciled.
+
+**Subsequent actual-initialization execution, not a completed result:** at
+**2026-10-20T16:39:41.860069+00:00**, the distinct parent harness
+`initialize_nc_native_version_actual_parent_v1.py`, SHA-256
+`40209eea93fa4abc4daaff1341ad8c6f62bfae3bf21a5aedcfffd77dfba5c4b7`,
+records genuine input-validation startup for
+`north-carolina-native-version-census-campaign-v1`. Parent PID **35104** and
+its exact command are observed once; this is not a child-readiness or
+initializer-success receipt. No matching native-version full collector is
+observed in that same bounded check. Original accepted file records must
+match again; additional fresh file/directory snapshots include ctime, mode
+and device, without retroactively expanding the older file-only baseline.
+The original initializer is required to run under a source-only child guard
+that denies networking, children, links and original mutations. Writes are
+limited to the new actual target/staging paths; failed evidence is preserved.
+The unchanged authorization schema requires a legacy launch-true field;
+the new authorization must explicitly limit its scope to zero-HTTP
+initialization and require a distinct finite collection-launch receipt.
+Neither a completed actual initialization nor collection is yet accepted.
+
+While that separate execution runs, the prepared finite-launch wrapper's exact
+callbacks pass **34 required denials and four allowed controls**, with no
+installed guard, collector execution, target mutation or HTTP:
+`nc_native_version_finite_guard_actual_v1.json`. This includes writable flags in
+the actual third `open` audit argument, DNS/socket/fork/exec/link operations,
+inherited-copy mutations and rejection of curlrc-enabled, insecure,
+automatic-redirect, wrong-host and unretained-output curl commands. The exact
+pinned system-curl argument list is allowed as a **callback-only** control;
+this does not claim an actual transport dispatch. The prepared wrapper permits
+only HTTPS hosts present in the frozen publisher lookup plan, a narrower
+transport boundary than the collector's generic HTTPS redirect handling.
+Launch source SHA:
+`2c8b4ef5d81f05135921a086d87a4720493242d4308cf94fb60ec481c050b441`.
+The wrapper has not been launched; a successful actual-initialization receipt,
+independent full-state reconciliation, fresh metadata equality and a distinct
+finite authorization remain prerequisites. Its **15,000** cap includes all
+**2,007** inherited exchanges; it is not a reset allowance.
 
 ## Colorado regular-session source census and full continuation
 
