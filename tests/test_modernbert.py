@@ -158,6 +158,36 @@ def test_decision_returns_one_topic_or_accounted_for_abstention():
         decide([[float("nan"), 0]], [1, 2], **policy)
 
 
+@pytest.mark.parametrize(
+    ("logits", "codes", "temperature", "scores", "topic", "reason"),
+    [
+        ([[10.0, 9.0]], [1, 2], 5e-324, [1.0, 0.0], 1, None),
+        ([[1e308, 1e308]], [1, 2], 0.5, [0.5, 0.5], None, "low_confidence"),
+        ([[-1e308, -1e308]], [1, 2], 0.5, [0.5, 0.5], None, "low_confidence"),
+        (
+            [[10.0, 0.0], [0.0, 10.0]], [1, 2], 5e-324,
+            [0.5, 0.5], None, "mixed_chunk_topics",
+        ),
+        (
+            [[0.0, 0.0, 10.0]], [1, 2, None], 5e-324,
+            [0.0, 0.0, 1.0], None, "supervised_rejection",
+        ),
+    ],
+)
+def test_decision_keeps_finite_scores_when_temperature_scaling_overflows(
+    logits, codes, temperature, scores, topic, reason,
+):
+    result = decide(
+        logits, codes, temperature=temperature, min_confidence=0.8, min_margin=0.2,
+    )
+    assert result.scores == pytest.approx(scores)
+    assert result.score == pytest.approx(max(scores))
+    assert sum(result.scores) == pytest.approx(1.0)
+    assert result.topic == topic
+    assert result.abstention_reason == reason
+    json.dumps(result.__dict__, allow_nan=False)
+
+
 def test_supervised_rejection_is_not_counted_as_an_additional_topic():
     policy = dict(temperature=1, min_confidence=0.8, min_margin=0.2)
     rejected = decide([[0, 0, 12]], [1, 2, None], **policy)

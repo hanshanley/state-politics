@@ -196,8 +196,12 @@ def decide(
         if len(logits) != len(codes) or not all(math.isfinite(x) for x in logits):
             raise ValueError("invalid or non-finite model logits")
         scaled = [x / temperature for x in logits]
-        maximum = max(scaled)
-        values = [math.exp(x - maximum) for x in scaled]
+        if all(math.isfinite(x) for x in scaled):
+            maximum = max(scaled)
+            values = [math.exp(x - maximum) for x in scaled]
+        else:
+            maximum = max(logits)
+            values = [math.exp((x - maximum) / temperature) for x in logits]
         total = sum(values)
         probabilities.append([x / total for x in values])
     means = [sum(row[i] for row in probabilities) / len(probabilities)

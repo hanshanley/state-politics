@@ -30,6 +30,26 @@ remain explicit; this is not a completed project or a certified classifier.
 | Comparison accounting | Missing samples and explicitly unknown shares no longer become zero-valued gaps. Party-specific state counts and three-stream matched-state replication are repaired; unavailable verdicts remain separate in exports, reports and plots. | Legacy analytical outputs have not been regenerated or certified. Correct missingness accounting does not supply missing source evidence, historical affiliations or independent classifier validation. |
 | Companion | Local-only preview v9 exposes all 1,559 recovery captures, 119 failures and 61 alternative extraction identities across 55 OCR bodies, three DOCX bodies and one native-block body, alongside the 2,091 historical documents. The source ledger includes the corrected Arizona and Alaska registry rows. All 100 organization rows remain unresolved. | Audited classification/analysis exports, redistribution review and eventual report; no production integration is authorized. |
 
+## Classifier numerical decision safeguards
+
+Five executed regressions expose a shared decision-path failure: individually
+finite logits and an allowed positive finite temperature can overflow during
+scaling, yielding NaN scores. Comparisons against confidence and margin gates
+then fail to reject them; a mixed or supervised-rejection input can incorrectly
+receive a policy topic. These are synthetic numerical counterexamples, not
+evidence that any saved pilot prediction encountered overflow.
+
+The shared decision path now centers the original logits before scaling **only
+when the normal scaled values are non-finite**. This produces finite normalized
+scores and preserves the mixed-chunk and learned-rejection decisions. The
+ordinary finite-scaling calculation is unchanged, as are source inputs,
+weights, labels, thresholds, calibration files and scientific status.
+All **87 ModernBERT safeguard tests** and targeted Ruff checks pass. The actual
+five-case pre-fix failures and completed run remain in
+`modernbert_finite_scores_before_v1.log` and
+`modernbert_finite_scores_complete_v1.log`. This repairs invalid decisions; it
+does not improve measured pilot accuracy or certify the classifier.
+
 ## Comparison missingness and matched-state accounting
 
 Direct production inspection and five executed pre-fix regressions reproduced
@@ -612,12 +632,25 @@ Actual logs: `pa_release_v4_parent_actual_v1.log`,
 `pa_handoff_v4_parent_actual_v1.log`.
 
 Those replays verify retained artifacts, not a new execution of the producer.
-A distinct actual parent full-population/regression execution is now running
+A distinct actual parent full-population/regression execution has now passed
 from private byte-copied code, with networking, children and outside-private
 mutations denied: handle `pa-v4-parent-isolated-suite-v1`, log
 `pa_v4_parent_isolated_suite_v1.log`. Its synthetic HB1-HB4786 identities prove
-population-count/checkpoint behavior, not exact publisher identities. No parent
-suite success or Pennsylvania full launch is claimed while that run is pending.
+population-count/checkpoint behavior, not exact publisher identities. Actual
+execution completes **4,786 candidates / 62 reused / 4,724 mocked collections /
+9,448 physical mock responses / 151 checkpoints / final tail 18**, without a
+seed refetch. The producer and both generated verifiers return successfully;
+all **776 supplement and 18 handoff files** remain unchanged in every recorded
+field, and private fixtures are removed. Actual receipt:
+`pa_v4_parent_isolated_suite_v1.json`.
+
+The handoff's proposed full successor root does not yet exist. The same worker
+now prepares a distinct **zero-HTTP real-source initialization readiness** gate:
+exact real native identities, ordered selected-source plans, 62 genuine reused
+originals, the carried seed partial checkpoint, inherited transport and the
+unchanged 25,000 aggregate ceiling. Neither the synthetic fixture nor the passed
+artifact replays substitute for that real-context check. No actual full-root
+initialization or Pennsylvania collection is authorized yet.
 
 Ohio's initial preparation also parent-replays with **1,101 files unchanged**,
 **2,279 native candidates**, **62 reused PDF/HTML originals**, **1,123 pages**
