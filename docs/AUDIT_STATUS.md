@@ -1100,10 +1100,21 @@ SR408/458/459/460/471 have only adopted-version metadata records, no explicit
 introduced `IN` record; this does not establish source nonexistence.
 Worker report SHA:
 `8a52d46f3a7d15e3cbcf5d648a857cca511ae938b06a4116b00ee6b065eb7ff3`.
-A separate actual parent replay of that unchanged inspector has started under
-the strong source-only, all-links-denying guard; no parent result is yet
-claimed. Actual whole-corpus sealing, exit-receipt recording, recovery requests
-and resume remain withheld pending independent gates.
+A separate actual parent replay of that unchanged inspector now completes
+**exit zero / PASS**, original handle `ohio-actual-preseal-parent-v1`.
+`ohio_v4_actual_preseal_parent_replay_actual_v1.json` records exact reproduction
+of the worker's inspector output and all **121,722 original metadata records
+unchanged**, including the **113,715 genuine source files**. Complete
+before/after map SHA:
+`415d95f0f99ea1669904aba4704c7fcd2c554738d0f5621c1cb7c57b8cbaede7`.
+The strong source-only guard denies all links, sockets, children and original
+writes; the import cache prefix remains absent and the private root is removed.
+The accepted genuine preseal replay preserves **2,267 pairs / five PDF-only
+cases / seven unsupported-original dispositions**, **6,843 exchanges** and
+the actual **175-dependency** final seven. This is not completed archive
+sealing: the full-fixture v2 enclosing result remains pending. Actual
+whole-corpus sealing, exit-receipt recording, recovery requests and resume
+remain withheld pending the separate gates.
 The actual 6,843 exchanges must not be replaced by the offline fixture's 6,852.
 None of this later evidence is retroactively part of v54; earlier failures and
 positive replays remain preserved, and scientific admission remains false.
