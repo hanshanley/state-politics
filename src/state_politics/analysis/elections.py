@@ -4,11 +4,10 @@ The shared CAP taxonomy puts elections inside the broad Government Operations to
 budgets, agencies and public administration. That is too coarse to answer whether a state
 party focuses specifically on elections.
 
-This module applies a deliberately high-precision title rule to every D/R-attributed bill and
-reports each state party's election-bill share against a leave-one-state-out same-party
-baseline. Human-assigned Open States subject tags provide an independent validation on the 37
-states that publish them; tags are used to score the detector, not to define cross-state shares,
-because tag availability is uneven.
+This module applies a title rule to supplied D/R-attributed bills and reports title-match
+shares against a leave-one-state-out same-party baseline. Supplied Open States subject tags
+provide a separate agreement diagnostic, not independently verified policy labels or accuracy.
+Tags are not used to define cross-state shares because tag availability is uneven.
 """
 
 from __future__ import annotations
@@ -19,7 +18,7 @@ from pathlib import Path
 
 from ..bills.montana import source_draft_request_mask
 
-__all__ = ["election_subtype", "election_focus", "validate_title_rule"]
+__all__ = ["election_subtype", "election_focus", "validate_title_rule", "format_title_validation"]
 
 MIN_COMPARABLE_BILLS = 500
 
@@ -80,7 +79,7 @@ _SUBTYPES = (
 
 
 def election_subtype(title: str | None) -> str | None:
-    """High-precision election subtype for a bill title, or ``None``."""
+    """Rule-based election subtype for a bill title, or ``None``."""
     title = title or ""
     if not _ELECTION_RE.search(title):
         return None
@@ -91,7 +90,7 @@ def election_subtype(title: str | None) -> str | None:
 
 
 def validate_title_rule(frame) -> dict:
-    """Precision/recall against legislature-assigned subject tags where available."""
+    """Agreement with supplied subject tags; undefined denominators remain unavailable."""
     subject = frame["subject"].fillna("").astype(str)
     has_subject = subject.str.len() > 0
     title_match = frame["election_subtype"].notna()
@@ -103,12 +102,22 @@ def validate_title_rule(frame) -> dict:
         "n_title_election": int(tagged_title.sum()),
         "n_subject_election": int(tagged_subject.sum()),
         "precision": (
-            float(subject_match[tagged_title].mean()) if tagged_title.any() else 0.0
+            float(subject_match[tagged_title].mean()) if tagged_title.any() else None
         ),
         "recall": (
-            float(title_match[tagged_subject].mean()) if tagged_subject.any() else 0.0
+            float(title_match[tagged_subject].mean()) if tagged_subject.any() else None
         ),
     }
+
+
+def format_title_validation(validation: dict) -> str:
+    """Describe tag-comparison metrics without turning missing evidence into zero."""
+    parts = []
+    for key in ("precision", "recall"):
+        value = validation[key]
+        formatted = "unavailable" if value is None else f"{value:.1%}"
+        parts.append(f"tag {key} {formatted}")
+    return ", ".join(parts)
 
 
 def election_focus(frame):
@@ -157,14 +166,23 @@ def election_focus(frame):
                     "party": party,
                     "peer_share": round(peer_share, 6),
                     "overemphasis": round(float(row["election_share"]) - peer_share, 6),
-                    "focus_reliable": int(row["n_bills"]) >= MIN_COMPARABLE_BILLS,
+                    "focus_reliable": (
+                        not peers.empty and int(row["n_bills"]) >= MIN_COMPARABLE_BILLS
+                    ),
                     "top_subtype": (
                         top_subtype.loc[key, "election_subtype"]
                         if key in top_subtype.index else None
                     ),
                 }
             )
-    return pd.DataFrame(rows), subtype, validate_title_rule(major)
+    focus = pd.DataFrame(rows, columns=[
+        "party", "n_bills", "n_election_bills", "election_share", "state",
+        "peer_share", "overemphasis", "focus_reliable", "top_subtype",
+    ]).astype({
+        "n_bills": int, "n_election_bills": int, "election_share": float,
+        "peer_share": float, "overemphasis": float, "focus_reliable": bool,
+    })
+    return focus, subtype, validate_title_rule(major)
 
 
 def main(argv: list[str] | None = None) -> int:
@@ -188,14 +206,12 @@ def main(argv: list[str] | None = None) -> int:
     focus.to_csv(out / "election_focus_by_state_party.csv", index=False)
     subtypes.to_csv(out / "election_focus_subtypes.csv", index=False)
     (out / "election_title_validation.json").write_text(
-        json.dumps(validation, indent=2), encoding="utf-8"
+        json.dumps(validation, indent=2, allow_nan=False), encoding="utf-8"
     )
 
     print(f"election-related bills: {int(focus['n_election_bills'].sum()):,}")
-    print(
-        f"title rule vs subject tags: precision {validation['precision']:.1%}, "
-        f"recall {validation['recall']:.1%}"
-    )
+    print(f"title rule vs supplied subject tags: {format_title_validation(validation)}")
+    print("Tag agreement is not independently verified classifier accuracy.")
     for party in ("D", "R"):
         print(f"\nHighest election focus among {party} state caucuses:")
         eligible = focus[

@@ -664,6 +664,95 @@ def test_election_focus_axis_ignores_unreliable_outlier(tmp_path):
     assert out.exists()
 
 
+def test_election_focus_plot_preserves_negative_comparisons(tmp_path):
+    import sys
+    from pathlib import Path
+
+    import pandas as pd
+
+    sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "scripts"))
+    import plot_election_focus as script
+
+    focus = pd.DataFrame([{
+        "state": "TX", "party": "D", "focus_reliable": True,
+        "overemphasis": -0.02, "top_subtype": "voting_and_administration",
+        "election_share": 0.02, "peer_share": 0.04,
+    }])
+    script.build_figure(focus, {"precision": 0.0, "recall": 0.0}, tmp_path / "negative.png")
+    figure = plt.gcf()
+    try:
+        assert figure.axes[0].get_xlim()[0] < -2
+        assert any("unavailable" in text.get_text().lower() for text in figure.axes[1].texts)
+    finally:
+        plt.close(figure)
+
+
+def test_empty_election_exports_render_as_unavailable(tmp_path):
+    import sys
+    from pathlib import Path
+
+    import pandas as pd
+
+    from state_politics.analysis.elections import election_focus
+
+    sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "scripts"))
+    import plot_election_focus as script
+
+    focus, _, validation = election_focus(pd.DataFrame({
+        "state": [], "sponsor_party": [], "title": [], "subject": [],
+    }))
+    focus.to_csv(tmp_path / "focus.csv", index=False)
+    restored = pd.read_csv(tmp_path / "focus.csv")
+    script.build_figure(restored, validation, tmp_path / "empty.png")
+    figure = plt.gcf()
+    try:
+        assert all(
+            any("unavailable" in text.get_text().lower() for text in ax.texts)
+            for ax in figure.axes
+        )
+        note = " ".join(text.get_text() for text in figure.texts).lower()
+        assert "unavailable" in note and "nan" not in note
+        assert "2026-07" not in note and "legislature-assigned" not in note
+    finally:
+        plt.close(figure)
+
+
+@pytest.mark.parametrize("population", ["empty", "single_party", "below_floor"])
+def test_election_report_handles_missing_metrics_and_rankings(
+    tmp_path, monkeypatch, capsys, population,
+):
+    import json
+    import sys
+    from pathlib import Path
+
+    import pandas as pd
+
+    sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "scripts"))
+    import report_figures as script
+
+    rows = [] if population == "empty" else [{
+        "state": "TX", "party": "D", "n_election_bills": 0, "n_bills": 500,
+        "election_share": 0.0, "peer_share": 0.1, "overemphasis": -0.1,
+        "focus_reliable": population == "single_party",
+    }]
+    pd.DataFrame(rows, columns=[
+        "state", "party", "n_election_bills", "n_bills", "election_share",
+        "peer_share", "overemphasis", "focus_reliable",
+    ]).to_csv(tmp_path / "election_focus_by_state_party.csv", index=False)
+    (tmp_path / "election_title_validation.json").write_text(
+        json.dumps({"precision": None, "recall": 0.0}),
+    )
+    monkeypatch.setattr(script, "DATA", tmp_path)
+    monkeypatch.setattr(script, "ROOT", tmp_path)
+
+    assert script.main() == 0
+    output = capsys.readouterr().out.lower()
+    assert "unavailable" in output and "nan" not in output
+    assert "0.0%" in output
+    if population != "empty":
+        assert "0.00%" in output
+
+
 def test_stated_vs_revealed_panels_have_equal_row_counts():
     """Sharing a row order is not enough; the panels must have the same number of rows.
 

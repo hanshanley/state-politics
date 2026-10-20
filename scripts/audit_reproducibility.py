@@ -470,8 +470,12 @@ def audit_artifacts(audit: Audit) -> dict:
         int(elections["n_election_bills"].sum()) <= int(elections["n_bills"].sum()),
         "election bill numerator exceeds denominator",
     )
-    audit.require(0 <= validation["precision"] <= 1, "election precision is not a proportion")
-    audit.require(0 <= validation["recall"] <= 1, "election recall is not a proportion")
+    for metric in ("precision", "recall"):
+        value = validation[metric]
+        audit.require(
+            value is not None and 0 <= value <= 1,
+            f"election {metric} is unavailable or not a proportion",
+        )
     audit.require(
         terms.loc[terms["peer_absent"], "log2_concentration"].isna().all(),
         "peer-absent term has a fabricated numeric concentration",

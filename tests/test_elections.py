@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import pandas as pd
+import pytest
 
 from state_politics.analysis.elections import (
     election_focus,
@@ -86,3 +87,68 @@ def test_draft_requests_do_not_change_election_shares_or_tag_validation():
     assert montana["n_bills"] == 2 and montana["n_election_bills"] == 1
     assert montana["election_share"] == 0.5
     assert validation["n_tagged_bills"] == 1
+
+
+@pytest.mark.parametrize(
+    ("subject", "subtype", "precision", "recall"),
+    [
+        ("", "voting_and_administration", None, None),
+        ("Education", "voting_and_administration", 0.0, None),
+        ("Elections", None, None, 0.0),
+    ],
+)
+def test_tag_comparison_distinguishes_undefined_metrics_from_observed_zero(
+    subject, subtype, precision, recall,
+):
+    scores = validate_title_rule(pd.DataFrame({
+        "subject": [subject], "election_subtype": [subtype],
+    }))
+
+    assert scores["precision"] == precision
+    assert scores["recall"] == recall
+
+
+def test_single_state_cannot_have_a_reliable_peer_comparison():
+    frame = pd.DataFrame({
+        "state": ["TX"] * 500, "sponsor_party": ["D"] * 500,
+        "title": ["Election administration"] * 500, "subject": ["Elections"] * 500,
+    })
+    focus, _, _ = election_focus(frame)
+    row = focus.iloc[0]
+
+    assert row["n_bills"] == 500
+    assert row["election_share"] == 1.0
+    assert pd.isna(row["peer_share"]) and pd.isna(row["overemphasis"])
+    assert not row["focus_reliable"]
+
+
+@pytest.mark.parametrize("population", ["empty", "no_major_party", "resolutions_only"])
+def test_election_cli_exports_empty_coverage(tmp_path, capsys, population):
+    import json
+
+    from state_politics.analysis.elections import main
+
+    frame = pd.DataFrame({
+        "state": ["TX"], "identifier": ["HB 1"], "sponsor_party": ["D"],
+        "title": ["Election administration"], "subject": ["Elections"],
+        "classification": ["bill"],
+    })
+    if population == "empty":
+        frame = frame.iloc[:0]
+    elif population == "no_major_party":
+        frame["sponsor_party"] = None
+    else:
+        frame["classification"] = "resolution"
+    source = tmp_path / "bills.parquet"
+    frame.to_parquet(source, index=False)
+    out = tmp_path / "exports"
+
+    assert main(["--bills", str(source), "--out-dir", str(out)]) == 0
+    focus = pd.read_csv(out / "election_focus_by_state_party.csv")
+    subtypes = pd.read_csv(out / "election_focus_subtypes.csv")
+    validation = json.loads((out / "election_title_validation.json").read_text())
+    assert focus.empty and subtypes.empty
+    assert {"state", "party", "n_bills", "n_election_bills", "focus_reliable"} <= set(focus)
+    assert validation["n_tagged_bills"] == 0
+    assert validation["precision"] is None and validation["recall"] is None
+    assert "unavailable" in capsys.readouterr().out.lower()

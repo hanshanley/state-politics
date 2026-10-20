@@ -17,6 +17,7 @@ import pandas as pd  # noqa: E402
 ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(ROOT / "src"))
 
+from state_politics.analysis.elections import format_title_validation  # noqa: E402
 from state_politics.plotting import charts, theme  # noqa: E402
 
 SUBTYPE_LABELS = {
@@ -34,15 +35,23 @@ def build_figure(focus: pd.DataFrame, validation: dict, out_path: Path, *, top_n
     fig, axes = charts.new_figure(figsize=(13, 8.2))
     fig.clf()
     axes = fig.subplots(1, 2, sharex=True)
+    plotted_min = 0.0
     plotted_max = 0.0
     for ax, party in zip(axes, ("D", "R"), strict=True):
-        subset = (
-            focus[
-                (focus["party"] == party) & focus["focus_reliable"].fillna(False)
-            ].nlargest(top_n, "overemphasis")
-            .sort_values("overemphasis")
-        )
-        plotted_max = max(plotted_max, float(subset["overemphasis"].max()))
+        subset = focus[
+            (focus["party"] == party) & focus["focus_reliable"].fillna(False).astype(bool)
+            & focus["peer_share"].notna() & focus["overemphasis"].notna()
+        ]
+        if not subset.empty:
+            subset = subset.nlargest(top_n, "overemphasis").sort_values("overemphasis")
+        if subset.empty:
+            ax.text(
+                0.5, 0.5, "Peer comparison unavailable",
+                ha="center", va="center", transform=ax.transAxes, color=theme.MUTED,
+            )
+        else:
+            plotted_min = min(plotted_min, float(subset["overemphasis"].min()))
+            plotted_max = max(plotted_max, float(subset["overemphasis"].max()))
         y = range(len(subset))
         values = subset["overemphasis"] * 100
         ax.barh(y, values, color=theme.PARTY_COLORS[party], alpha=0.88, height=0.56)
@@ -53,8 +62,9 @@ def build_figure(focus: pd.DataFrame, validation: dict, out_path: Path, *, top_n
             ax.annotate(
                 f"{subtype}\n{row.election_share:.1%} vs {row.peer_share:.1%}",
                 xy=(row.overemphasis * 100, position),
-                xytext=(5, 0),
+                xytext=(-5 if row.overemphasis < 0 else 5, 0),
                 textcoords="offset points",
+                ha="right" if row.overemphasis < 0 else "left",
                 va="center",
                 fontsize=8.5,
             )
@@ -64,9 +74,12 @@ def build_figure(focus: pd.DataFrame, validation: dict, out_path: Path, *, top_n
         ax.grid(axis="y", visible=False)
         ax.set_axisbelow(True)
 
-    axes[0].set_xlim(0, plotted_max * 100 * 1.75)
+    axes[0].set_xlim(
+        (plotted_min * 100 * 1.75, plotted_max * 100 * 1.75)
+        if plotted_min != plotted_max else (-1, 1)
+    )
     fig.suptitle(
-        "Where elections take an unusual share of legislative attention",
+        "Election-title matches relative to same-party peers",
         fontweight="bold",
         fontsize=18,
         y=0.985,
@@ -74,20 +87,20 @@ def build_figure(focus: pd.DataFrame, validation: dict, out_path: Path, *, top_n
     fig.text(
         0.5,
         0.945,
-        "Election and voting bills as a share of each state party caucus's filings",
+        "Title-rule matches as a share of supplied D/R-attributed substantive measures",
         ha="center",
         va="top",
         fontsize=11,
         color=theme.MUTED,
     )
     source = (
-        "Source: Open States / Plural Policy, 2026-07 public PostgreSQL dump. Election bills "
-        "are identified from a high-precision title rule covering voting, ballots, election "
-        "administration, campaign finance, redistricting, candidate rules and election "
-        f"security. Against legislature-assigned subject tags: {validation['precision']:.1%} "
-        f"precision, {validation['recall']:.1%} recall. Peer values are leave-one-state-out "
-        "means within the same party. Rankings require at least 500 substantive bills. "
-        "Nebraska is absent because its legislature is formally nonpartisan."
+        "Source: supplied Open States / Plural Policy artifacts; snapshot and findings "
+        "not revalidated. Title-rule matches are not verified policy labels. Supplied "
+        f"subject-tag agreement: {format_title_validation(validation)}. Tag authorship "
+        "and independence are unverified; these metrics are not audited accuracy. Peer "
+        "values are leave-one-state-out same-party means. Rankings require at least "
+        "500 substantive bills and an observed same-party peer state. Supplied D/R "
+        "attribution is not verified filing-time affiliation."
     )
     note = theme.source_note(fig, source)
     theme.layout_with_note(fig, note, top=0.925)

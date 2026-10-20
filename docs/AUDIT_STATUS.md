@@ -119,6 +119,42 @@ Evidence: `outcome_empty_votes_before_v1.log` and
 `outcome_empty_votes_complete_v2.log`. Nonempty vote calculations, matching
 rules, coverage floors and scientific status are unchanged.
 
+## Election-lens missing evidence and reporting
+
+Twelve actual pre-fix regressions and two passing controls reproduce empty
+CLI/export crashes, undefined tag metrics incorrectly reported as zero,
+peerless rows marked reliable, clipped negative chart values and report
+failures with absent metrics/rankings:
+`election_missingness_before_v1.log`. A separate actual execution of the
+unchanged baseline artifact auditor also raises `TypeError` on null tag metrics;
+`election_missingness_nonempty_differential_v1.json` retains that failure.
+
+Election-focus exports now preserve their schema with no eligible records.
+Undefined tag precision/recall serialize as JSON null and display as
+**unavailable**, while observed zero agreement remains zero. The artifact
+auditor records unavailable metrics as failed evidence checks rather than
+crashing or accepting them. A state without a same-party peer cannot pass the
+comparison-availability flag. Empty party panels/rankings are explicit,
+negative comparisons remain visible, and the chart no longer asserts an
+unverified July snapshot or independently human-authored tags. A shared metric
+formatter keeps the CLI, report and chart consistent.
+
+All **95 targeted election, plotting, outcome, state-focus and null-metric
+artifact-audit tests pass**, with targeted Ruff and diff checks. Actual log:
+`election_missingness_complete_v1.log`. An initial successor exposed one
+additional empty-CSV dtype/ranking failure; its log
+`election_missingness_targeted_v1.log` is preserved and the round-trip is now
+covered by the passing tests. A separate execution of old and new helpers on a
+**3,600-row synthetic fixture** verifies byte-identical supported nonempty
+focus/subtype CSVs and identical defined tag metrics. This is arithmetic/export
+evidence, not recovered legislative data or policy-label validation.
+
+The title rule, supported comparison arithmetic and sample floor are unchanged.
+No research exports/figures, source corpus, labels or model weights were
+regenerated. Tag agreement is not independently verified classifier accuracy;
+filing-time attribution, classifier certification and publication remain
+unapproved. This later supplemental work is not retroactively part of v54.
+
 ## Classifier numerical decision safeguards
 
 Five executed regressions expose a shared decision-path failure: individually

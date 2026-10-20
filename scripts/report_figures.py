@@ -20,6 +20,8 @@ from pathlib import Path
 import pandas as pd
 import yaml
 
+from state_politics.analysis.elections import format_title_validation
+
 ROOT = Path(__file__).resolve().parent.parent
 DATA = ROOT / "data" / "processed"
 
@@ -275,14 +277,25 @@ def main() -> int:
         validation = json.loads(validation_path.read_text(encoding="utf-8"))
         print("\nElection and voting bills")
         print(f"  election bills       {int(elections['n_election_bills'].sum()):,}")
-        print(f"  detector validation  {validation['precision']:.1%} precision, "
-              f"{validation['recall']:.1%} recall")
+        print(f"  supplied tag agreement  {format_title_validation(validation)}")
+        print("  interpretation       not independently verified classifier accuracy")
         for party in ("D", "R"):
             block = elections[elections["party"] == party]
-            share = block["n_election_bills"].sum() / block["n_bills"].sum()
-            top = block[block["focus_reliable"]].nlargest(1, "overemphasis").iloc[0]
-            print(f"  {party} pooled share       {share:.2%}; highest {top['state']} "
-                  f"{top['election_share']:.1%} vs {top['peer_share']:.1%} peers")
+            n_bills = block["n_bills"].sum()
+            share = (
+                f"{block['n_election_bills'].sum() / n_bills:.2%}"
+                if n_bills > 0 else "unavailable"
+            )
+            eligible = block[
+                block["focus_reliable"].fillna(False).astype(bool)
+                & block["peer_share"].notna() & block["overemphasis"].notna()
+            ]
+            if eligible.empty:
+                print(f"  {party} pooled share       {share}; peer comparison unavailable")
+            else:
+                top = eligible.nlargest(1, "overemphasis").iloc[0]
+                print(f"  {party} pooled share       {share}; highest {top['state']} "
+                      f"{top['election_share']:.1%} vs {top['peer_share']:.1%} peers")
 
     terms = _load("state_party_terms.csv")
     if terms is not None:

@@ -155,3 +155,68 @@ def test_gold_template_sampling_is_deterministic_and_seeded():
     pdt.assert_frame_equal(first, second)
     assert first["text"].tolist() != other["text"].tolist()
     assert first["gold_topic"].eq("").all()
+
+
+def test_artifact_audit_reports_undefined_election_metrics(tmp_path, monkeypatch):
+    import json
+
+    sys.path.insert(0, str(ROOT / "scripts"))
+    import audit_reproducibility as script
+
+    data = tmp_path / "data" / "processed"
+    data.mkdir(parents=True)
+    frames = {
+        "platforms_2018_present.parquet": pd.DataFrame({
+            "confirmed": [False], "state": ["TX"], "party": ["D"], "year": [2026],
+            "source": ["html"],
+        }),
+        "platform_gap_report.csv": pd.DataFrame(columns=[
+            "state", "party", "n_confirmed", "gap_finding",
+        ]),
+        "caucus_priorities.parquet": pd.DataFrame(columns=["state"]),
+        "bills.parquet": pd.DataFrame(columns=[
+            "state", "sponsor_party", "originating_chamber", "recorded_outcome",
+            "recorded_enacted", "n_actions", "n_vote_events",
+        ]),
+        "planks_classified.parquet": pd.DataFrame(columns=["document_index", "topic"]),
+        "state_party_focus.csv": pd.DataFrame(columns=[
+            "state", "party", "stated_source", "bill_n_items", "bill_status",
+        ]),
+        "election_focus_by_state_party.csv": pd.DataFrame(columns=[
+            "n_bills", "n_election_bills",
+        ]),
+        "state_party_terms.csv": pd.DataFrame({
+            "peer_absent": [False], "log2_concentration": [0.0],
+            "count": [1], "feature_total": [1], "peer_count": [1],
+            "peer_feature_total": [1],
+        }),
+        "bill_actions.parquet": pd.DataFrame(columns=["bill_id"]),
+        "vote_events.parquet": pd.DataFrame(columns=["bill_id"]),
+        "bill_outcomes_by_state_party.csv": pd.DataFrame({
+            "reliable": pd.Series(dtype=bool),
+            **{column: pd.Series(dtype=float) for column in (
+                "action_coverage", "advancement_rate", "enactment_rate", "vote_coverage",
+            )},
+        }),
+        "rollcall_party_support.csv": pd.DataFrame(columns=["mean_yes_share"]),
+    }
+    for name, frame in frames.items():
+        if name.endswith(".parquet"):
+            frame.to_parquet(data / name, index=False)
+        else:
+            frame.to_csv(data / name, index=False)
+    (data / "election_title_validation.json").write_text(
+        json.dumps({"precision": None, "recall": None}),
+    )
+    (data / "bill_outcome_comparison.json").write_text(
+        json.dumps({"sign_flip_p_value": 0.5}),
+    )
+    (tmp_path / "conf").mkdir()
+    (tmp_path / "conf" / "official_document_registry.yml").write_text("sources: []\n")
+    monkeypatch.setattr(script, "ROOT", tmp_path)
+    audit = script.Audit()
+
+    script.audit_artifacts(audit)
+
+    assert "election precision is unavailable or not a proportion" in audit.failures
+    assert "election recall is unavailable or not a proportion" in audit.failures
