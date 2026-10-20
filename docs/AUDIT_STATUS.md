@@ -30,7 +30,38 @@ remain explicit; this is not a completed project or a certified classifier.
 | Evaluation | Checkpoint-bound training/evaluation split isolation, development-only temperature/threshold selection, exact evidence joins, abstention accounting, per-topic and subgroup metrics. | Reviewer arrangement, frozen empirical gates, independent target tests and clustered uncertainty. No checkpoint can be certified by changing a status field. |
 | Comparison accounting | Missing samples and explicitly unknown shares no longer become zero-valued gaps. Party-specific state counts and three-stream matched-state replication are repaired; unavailable verdicts remain separate in exports, reports and plots. | Legacy analytical outputs have not been regenerated or certified. Correct missingness accounting does not supply missing source evidence, historical affiliations or independent classifier validation. |
 | Trend accounting | Empty and one-period populations preserve export schemas; fewer than two paired states leave inference unavailable. Party slopes include topic zeros in observed party-years without inventing missing years. Missing source-tag comparisons remain unavailable; chart sample counts come from each supplied series. | Legacy trend outputs are not regenerated or certified. Model/tag samples may differ, supplied labels and tag provenance remain unvalidated, and a direction match is not independent accuracy evidence. |
+| Language accounting | Empty caucus-unit selections and empty/sparse term populations now preserve readable export schemas. Fixed-filter vocabulary unavailability is explicitly reported; invalid configuration still raises. Supported numerical results and both CLI CSV exports remain byte-identical to the saved baseline in an actual synthetic differential. | Term highlights describe supplied text, not certified operative platforms or policy positions. Legacy research outputs are not regenerated; unavailable comparisons are not observed zero concentration. |
 | Companion | Local-only preview v9 exposes all 1,559 recovery captures, 119 failures and 61 alternative extraction identities across 55 OCR bodies, three DOCX bodies and one native-block body, alongside the 2,091 historical documents. The source ledger includes the corrected Arizona and Alaska registry rows. All 100 organization rows remain unresolved. | Audited classification/analysis exports, redistribution review and eventual report; no production integration is authorized. |
+
+## Language-analysis missingness and empty exports
+
+Twelve actual pre-fix regressions and seven passing controls establish crashes
+when caucus evidence yields no extracted units, or when the term population is
+empty, has only one/two documents, or has no vocabulary surviving the unchanged
+frequency filters. A valid fitted population with no terms clearing the highlight
+count also lost all fourteen output columns. The real Parquet-input CLI failed
+before it could write its empty exports. Evidence: `term_missingness_before_v1.log`.
+
+The stated-document builder now retains available committee evidence without
+requiring any extracted caucus units. Both CSVs retain headers when no comparisons
+are supported. The three specifically observed vocabulary-availability errors
+produce explicit warnings; other errors, including invalid feature configuration,
+still propagate. The CLI labels empty comparisons unavailable, not unchanged
+priorities or zero concentration. The module description now matches the existing
+unsmoothed rate calculation and categorical peer-absent treatment; its pooled
+modern/undated selection is not described as operative-platform certification.
+
+All **19 focused tests**, targeted Ruff and diff checks pass:
+`term_missingness_complete_v2.log`. Actual old/new execution against saved baseline
+`c730222552f328d2c52233e4b812f23b3b2b4743` preserves exact values, dtypes,
+column order and CSV bytes for both twelve-document streams, each with 72 term
+rows and twelve highlights, at feature caps 100 and 30,000. Both actual CLI CSV
+outputs are byte-identical and nonempty:
+`term_missingness_supported_differential_v2.json`. The initial differential's
+all-common synthetic vocabulary was itself excluded by the unchanged filters;
+its failure log and script remain preserved, not counted as a production failure
+or a successful supported differential. No actual research export, source corpus,
+label, model weight, scientific admission or publication file is regenerated.
 
 ## Trend missingness, observed zeros and source-tag directions
 
@@ -1346,6 +1377,21 @@ initialization and launch remain unauthorized, real HTTP requests remain
 zero, and scientific/publication admission remains false. Historical
 over-budget exchanges and missing redirect bodies are not repaired by this
 success; the result remains supplemental to frozen v54.
+
+A distinct private-only initializer gate is now actually launched under original
+handle `pa-genuine-v2-private-initialization-parent-v1`, parent PID **47584**,
+with startup response observed at **2026-10-20T11:45:34.477626+00:00** and the
+exact Python command present. Harness SHA:
+`27f1a5828b6d642cb0cb2fff05bd481137e6bcaa91eda2b9c2017b277cfdf6a3`.
+It must execute the original initializer and original readiness verifier against
+the genuine source and two seed-checkpoint inputs, with destination and receipt
+confined to a new private fixture. Required gates include all-original
+file/directory metadata preservation, private inode isolation, unchanged-target
+duplicate rejection, existing-receipt rejection before destination creation, and
+wrong seed-count rejection. This startup observation is not child readiness or
+completed PASS. The actual target and future actual receipt must remain absent;
+no actual source initialization, collection, HTTP or scientific admission is
+authorized by the private test.
 
 Ohio's initial preparation also parent-replays with **1,101 files unchanged**,
 **2,279 native candidates**, **62 reused PDF/HTML originals**, **1,123 pages**

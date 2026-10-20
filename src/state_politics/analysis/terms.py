@@ -8,8 +8,8 @@ Log2 concentration answers the stricter within-party question:
     log2((term rate in this state party) / (term rate in other states of the same party))
 
 So +1 means twice as concentrated as same-party peers, +2 means four times, and -1 means half
-as concentrated. Rates use additive smoothing, and terms must clear a minimum raw count before
-they are eligible for highlights.
+as concentrated. Terms absent from peers are reported categorically, not assigned a numeric
+ratio. Terms must clear a minimum raw count before they are eligible for highlights.
 
 The analysis runs separately on (1) bill titles and (2) stated agenda text. Party-committee
 documents are preferred for the stated stream; the separately labelled caucus supplement is
@@ -19,6 +19,7 @@ used only where committee evidence is absent.
 from __future__ import annotations
 
 import argparse
+import warnings
 from pathlib import Path
 
 from ..bills.montana import source_draft_request_mask
@@ -34,6 +35,11 @@ TOP_TERMS_PER_METHOD = 12
 BILL_MIN_TERM_COUNT = 25
 STATED_MIN_TERM_COUNT = 5
 HIGHLIGHT_TERMS = 6
+_TERM_COLUMNS = [
+    "state", "party", "stream", "evidence_type", "term", "count", "peer_count",
+    "feature_total", "peer_feature_total", "tfidf", "log2_concentration",
+    "peer_absent", "tfidf_rank", "concentration_rank",
+]
 
 _EXTRA_STOP_WORDS = {
     "act", "acts", "amend", "amending", "bill", "bills", "chapter", "code", "concerning",
@@ -128,7 +134,7 @@ def _clean_text(text: str) -> str:
 
 
 def build_stated_documents(platforms, caucuses):
-    """One current stated-agenda document per state party, preserving source type."""
+    """Pool selected modern/undated evidence per state party; not operative certification."""
     import pandas as pd
 
     from .state_focus import caucus_units
@@ -150,8 +156,11 @@ def build_stated_documents(platforms, caucuses):
     )
     committee["evidence_type"] = "party_committee"
 
-    keys = set(map(tuple, committee[["state", "party"]].values))
     supplement_rows = caucus_units(caucuses)
+    if supplement_rows.empty:
+        committee["stream"] = "stated"
+        return committee
+    keys = set(map(tuple, committee[["state", "party"]].values))
     supplement = (
         supplement_rows[
             ~supplement_rows[["state", "party"]].apply(tuple, axis=1).isin(keys)
@@ -189,11 +198,14 @@ def distinctive_terms(
     max_features: int = MAX_TERM_FEATURES,
     top_n: int = TOP_TERMS_PER_METHOD,
 ):
-    """Top TF-IDF and within-party concentration terms for every state party."""
+    """Top terms, or an empty export schema when the fixed filters yield no comparison."""
     import numpy as np
     import pandas as pd
     from sklearn.feature_extraction.text import ENGLISH_STOP_WORDS, CountVectorizer, TfidfVectorizer
 
+    if documents.empty:
+        warnings.warn("Term comparison unavailable: no supplied documents", stacklevel=2)
+        return pd.DataFrame(columns=_TERM_COLUMNS)
     stop_words = sorted(set(ENGLISH_STOP_WORDS) | _EXTRA_STOP_WORDS | _STATE_WORDS)
     options = {
         "lowercase": True,
@@ -207,7 +219,20 @@ def distinctive_terms(
         "sublinear_tf": True,
     }
     tfidf_vectorizer = TfidfVectorizer(**options)
-    tfidf = tfidf_vectorizer.fit_transform(documents["text"].fillna(""))
+    try:
+        tfidf = tfidf_vectorizer.fit_transform(documents["text"].fillna(""))
+    except ValueError as exc:
+        if str(exc) not in {
+            "empty vocabulary; perhaps the documents only contain stop words",
+            "max_df corresponds to < documents than min_df",
+            "After pruning, no terms remain. Try a lower min_df or a higher max_df.",
+        }:
+            raise
+        warnings.warn(
+            f"Term comparison unavailable under fixed vocabulary filters: {exc}",
+            stacklevel=2,
+        )
+        return pd.DataFrame(columns=_TERM_COLUMNS)
     vocabulary = tfidf_vectorizer.vocabulary_
     counter = CountVectorizer(
         lowercase=options["lowercase"],
@@ -299,7 +324,7 @@ def distinctive_terms(
                     "concentration_rank": concentration_rank.get(feature),
                 }
             )
-    return pd.DataFrame(rows)
+    return pd.DataFrame(rows, columns=_TERM_COLUMNS)
 
 
 def _highlights(terms, *, top_n: int = HIGHLIGHT_TERMS):
@@ -372,7 +397,10 @@ def main(argv: list[str] | None = None) -> int:
     print(f"distinctive term rows:        {len(terms):,}")
     for stream in ("bills", "stated"):
         print(f"\nExamples from {stream}:")
-        for row in highlights[highlights["stream"] == stream].head(6).itertuples():
+        examples = highlights[highlights["stream"] == stream]
+        if examples.empty:
+            print("  unavailable: no eligible same-party term comparisons")
+        for row in examples.head(6).itertuples():
             print(f"  {row.state}-{row.party}: {row.distinctive_terms}")
     print(f"\nwrote {out / 'state_party_terms.csv'}")
     return 0
