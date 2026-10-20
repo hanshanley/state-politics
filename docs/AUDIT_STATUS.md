@@ -926,6 +926,18 @@ genuine preseal inspector may read the completed source root. Before/after
 metadata, actual stdout and enclosing exits must pass before acceptance.
 No genuine sealer receipt, real sealing or scientific admission is authorized.
 
+The toolkit replay subsequently **completes with enclosing exit zero / PASS**.
+The original `wisconsin-postexit-toolkit-parent-v1` handle is read after its
+completion notification. The unchanged final-31 verifier and its nested whole
+verifier reproduce the worker's direct JSON exactly, with all **33,039 original
+files' metadata unchanged**. Before/after snapshot SHA:
+`6820e1594f91e69ea20f4769b42561c93916f72dd7294539a3190c7893a0e58a`.
+Report: `wisconsin_postexit_toolkit_parent_actual_v1.json`.
+The source-only cache prefix remains absent, the empty private directory is
+removed and no HTTP request or actual-source access occurs. This accepts the
+**offline archive replay only**: genuine preseal inspection and original
+full-driver/focused-gate executions remain separate pending parent gates.
+
 ## Full-campaign preparation gates: Pennsylvania, Ohio and Missouri
 
 Pennsylvania's initial immutable preparation and seed-32/seed-30 archives have
