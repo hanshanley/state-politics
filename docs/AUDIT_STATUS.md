@@ -965,10 +965,28 @@ log. All **22 differential and 12,701 dry-root files** remain unchanged in
 path, bytes, hash, inode, mtime and link count; complete before/after maps and
 private failing fixtures are preserved, with zero HTTP requests.
 
-The same worker owns an immutable genuine-source successor, focused identity
-repairs and a materialized real-native 4,786/62-reuse/full-driver/final-18
-regression. No synthetic prior suite or read-only replay clears these failures.
-All 536
+The same worker has returned the immutable genuine-source v2 successor,
+collector SHA
+`a52ba39c827b6747e444bee9ea801e8d2c42d1b5b12976e5bb3317cebad11d66`,
+with focused title-range/stage-header repairs and a materialized real-native
+full-driver/final-18 regression. Handoff:
+`data/processed/pennsylvania-full-original-genuine-v2-handoff-v2`;
+manifest SHA:
+`5ba4476edff1ee9c7f46750303851221aae82ff46becf5b69d699ad35fc1ea6c`.
+The worker reports **4,786 native identities / 62 genuine seed reuses /
+4,724 fake-transport completions / 9,448 responses / 151 checkpoints**, with
+both standalone verifiers and focused regressions passing.
+Full-proof manifest:
+`9a4138c951c80eddc8099929cb7eead8b75cd18d481ca73a3661f66f2c49d48e`;
+final-18 manifest:
+`32e4227caed917d6e639e76d993034cf1125a4b65ec8e73ef1043dc57c1427ff`;
+distinct readiness manifest:
+`111955667f81361a90ad2fcd5ec02ad67f0bd632f715156d3170998ec9fb7439`.
+These are **worker-reported successor results awaiting independent parent
+execution**, not accepted closure of the two counterexamples or authorization
+to initialize or launch. The handoff's future commands are instructions only;
+the actual target remains absent. No prior-source suite or read-only replay
+establishes the changed collector's behavior. All 536
 historical exchanges, prior excesses and missing bodies remain explicit within
 the unchanged 25,000 ceiling. No actual full-root initialization or Pennsylvania
 collection is authorized yet.
