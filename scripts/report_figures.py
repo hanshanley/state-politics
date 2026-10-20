@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Print the canonical figures for this project, computed from the committed artifacts.
+"""Print figures from locally available artifacts, without certifying their findings.
 
 Every number quoted in the README or in a figure caption should be reproducible from here.
 The counts in this project have drifted more than once as the pipeline was corrected, so this
@@ -40,7 +40,7 @@ def _parquet_rows(name: str) -> int | None:
 
 def main() -> int:
     print("=" * 72)
-    print("CANONICAL FIGURES  (recompute before quoting any number in the docs)")
+    print("ARTIFACT FIGURES  (not revalidated findings; recompute before quoting)")
     print("=" * 72)
 
     historical = _load("platforms_historical.parquet")
@@ -112,8 +112,8 @@ def main() -> int:
             else None
         )
         key = int((scores["keyword_topic"] == scores["gold_topic"]).sum())
-        print("\nClassifier validation (hand-labelled gold set)")
-        print(f"  gold planks          {n}")
+        print("\nLegacy classifier diagnostic (supplied labels; reviewer provenance unresolved)")
+        print(f"  reference planks     {n}")
         print(f"  embedding top-1      {top1}/{n} ({top1 / n:.0%})")
         if top2 is not None:
             print(f"  embedding top-2      {top2}/{n} ({top2 / n:.0%})")
@@ -147,20 +147,31 @@ def main() -> int:
     if outcomes is not None and comparison_path.exists():
         comparison = json.loads(comparison_path.read_text(encoding="utf-8"))
         print("\nRecorded bill outcomes")
-        print(f"  explicit actions     {_parquet_rows('bill_actions.parquet'):,}")
-        print(f"  vote events          {_parquet_rows('vote_events.parquet'):,}")
+        for label, name in (
+            ("explicit actions", "bill_actions.parquet"),
+            ("vote events", "vote_events.parquet"),
+        ):
+            count = _parquet_rows(name)
+            display = f"{count:,}" if count is not None else "unavailable"
+            print(f"  {label:<21}{display}")
         for row in outcomes.itertuples():
             print(
                 f"  {row.party} equal-state      advanced {row.mean_advancement_rate:.1%}; "
                 f"enacted {row.mean_enactment_rate:.1%} "
                 f"({int(row.n_states)} reliable states)"
             )
-        print(
-            f"  D-R enactment gap    "
-            f"{comparison['mean_d_minus_r_enactment_rate']:+.1%}, "
-            f"p={comparison['sign_flip_p_value']:.3f} "
-            f"({comparison['n_paired_states']} paired states)"
-        )
+        if comparison["mean_d_minus_r_enactment_rate"] is None:
+            print(
+                f"  D-R enactment gap    unavailable "
+                f"({comparison['n_paired_states']} paired states)"
+            )
+        else:
+            print(
+                f"  D-R enactment gap    "
+                f"{comparison['mean_d_minus_r_enactment_rate']:+.1%}, "
+                f"p={comparison['sign_flip_p_value']:.3f} "
+                f"({comparison['n_paired_states']} paired states)"
+            )
         if rollcalls is not None:
             for row in rollcalls.itertuples():
                 print(

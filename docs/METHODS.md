@@ -1190,7 +1190,9 @@ why agreement between two independent ones is worth more than either alone.
 ## Recorded passage, enactment and roll calls
 
 `bills/outcomes.py` streams the action and vote tables from the same checksum-verified Open
-States dump used for bills. The processed data now retain 8,954,085 bill actions, 869,001
+States dump used for bills. The counts and estimates in this section are retained legacy
+results, not revalidated findings from the October extraction or the stricter attribution
+and missingness repairs. The legacy outputs contain 8,954,085 bill actions, 869,001
 bill-linked vote events, official vote counts, and 2,982,703 vote × voter-party × option
 aggregate rows.
 

@@ -373,6 +373,80 @@ def test_figure_report_excludes_unknown_replication_verdicts(
         assert "Law" not in output
 
 
+@pytest.mark.parametrize("paired", [False, True])
+@pytest.mark.parametrize("source_counts_available", [False, True])
+def test_figure_report_handles_unavailable_outcome_evidence(
+    tmp_path, monkeypatch, capsys, paired, source_counts_available,
+):
+    import json
+    from pathlib import Path
+
+    import pandas as pd
+
+    from state_politics.analysis.outcomes import build_outcome_tables
+
+    monkeypatch.syspath_prepend(str(Path(__file__).resolve().parents[1] / "scripts"))
+    import report_figures as script
+
+    bills = pd.DataFrame([
+        {
+            "bill_id": f"{party}-{index}", "state": "TX", "sponsor_party": party,
+            "year": 2024, "classification": "bill", "n_actions": 1,
+            "recorded_outcome": "introduced_or_pending", "recorded_enacted": False,
+            "n_vote_events": 0, "originating_chamber": "lower",
+        }
+        for party in ("D", "R")
+        for index in range(500 if paired else 1)
+    ])
+    _, outcomes, _, comparison = build_outcome_tables(bills)
+    outcomes.to_csv(tmp_path / "bill_outcomes_by_party.csv", index=False)
+    (tmp_path / "bill_outcome_comparison.json").write_text(json.dumps(comparison))
+    if source_counts_available:
+        bills[["bill_id"]].to_parquet(tmp_path / "bill_actions.parquet", index=False)
+        pd.DataFrame(columns=["vote_id"]).to_parquet(
+            tmp_path / "vote_events.parquet", index=False,
+        )
+    monkeypatch.setattr(script, "ROOT", tmp_path)
+    monkeypatch.setattr(script, "DATA", tmp_path)
+
+    assert script.main() == 0
+    output = capsys.readouterr().out
+    if source_counts_available:
+        assert f"explicit actions     {len(bills):,}" in output
+        assert "vote events          0" in output
+    else:
+        assert "explicit actions     unavailable" in output
+        assert "vote events          unavailable" in output
+    if paired:
+        assert "D-R enactment gap    +0.0%, p=1.000 (1 paired states)" in output
+    else:
+        assert "D-R enactment gap    unavailable (0 paired states)" in output
+        assert "p=1.000" not in output
+
+
+def test_figure_report_does_not_claim_verified_human_gold(tmp_path, monkeypatch, capsys):
+    from pathlib import Path
+
+    import pandas as pd
+
+    monkeypatch.syspath_prepend(str(Path(__file__).resolve().parents[1] / "scripts"))
+    import report_figures as script
+
+    pd.DataFrame({
+        "embedding_topic": [1, 2, 3], "gold_topic": [1, 3, 2],
+        "keyword_topic": [1, 2, 3],
+    }).to_csv(tmp_path / "plank_classifier_scores.csv", index=False)
+    monkeypatch.setattr(script, "ROOT", tmp_path)
+    monkeypatch.setattr(script, "DATA", tmp_path)
+
+    assert script.main() == 0
+    output = capsys.readouterr().out
+    assert "supplied labels; reviewer provenance unresolved" in output
+    assert "hand-labelled gold" not in output
+    assert "embedding top-1      1/3 (33%)" in output
+    assert "keyword top-1        1/3 (33%)" in output
+
+
 def test_all_state_focus_matrix_has_every_state_and_explicit_nebraska_gap():
     import sys
     from pathlib import Path
