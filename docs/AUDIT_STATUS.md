@@ -310,10 +310,10 @@ input's current metadata or retrospectively prove acquisition-time immutability.
 They authorize no further HTTP, initialization, continuation, analytical/classifier
 admission or publication. The source packets and session receipts remain local-only.
 
-Connecticut v1 and Massachusetts v2 have returned. Independent execution of each
+The predecessor Connecticut v1 and Massachusetts v2 packets have returned. Independent execution of each
 **exact original verifier** succeeds under stronger containment, but actual
 installed-inner observations **before any outer hook** expose remaining policy
-omissions; neither original inner policy is accepted.
+omissions; neither predecessor inner policy is accepted.
 
 | Packet | Actual parent result, October 20, 2026 UTC | Original FILE/DIR records unchanged | Installed-inner omissions |
 |---|---|---:|---|
@@ -349,9 +349,41 @@ registration CAPTCHA markup is not an established active challenge. Neither is
 full historical introduced-source coverage, acquisition-immutability certification,
 or permission for more HTTP. Worker semantic negatives were not parent-rerun.
 
-The **same GPT-6.1 Sol owners** now repair distinct immutable zero-HTTP successors:
-Connecticut v2 and Massachusetts v3. Full source reconstruction and rebound
-whole-verifier semantic negatives are required; sealed predecessors remain unchanged.
+The same GPT-6.1 Sol owners have returned distinct immutable zero-HTTP successors,
+**Connecticut v2 and Massachusetts v3**. Both now pass independent execution of
+their exact archived source and full raw-evidence reconstruction:
+
+| Successor | Actual parent completion, October 20, 2026 UTC | All successor/predecessor FILE/DIR records unchanged | Genuine installed-inner observations before stronger outer |
+|---|---|---:|---|
+| Connecticut v2 plus v1 | Child 88169, exit zero, 20:08:28 | 815 | 42 original denials; all 22 additional parent denials and two allowed controls pass |
+| Massachusetts v3 plus v2/v1 | Child 88170, exit zero, 20:08:34 | 228 | 47 original denials; all 22 additional parent denials and two allowed controls pass |
+
+No previously observed omission remains in those dispatched cases. The original
+owned-descriptor/directory, source-only execution and sourceless-execution controls
+also run; both stderr streams are empty. Executed successor parent source:
+`25bc38c6603af04765feb776e97e2ec7c2dcb0850b4b2af7279106e076766317`.
+Connecticut's receipt is
+`870def9727e2d827bccb9aa7c2accd30ead608fc107de14c52a5e71a7725fc49`;
+Massachusetts's is
+`639a5a9616a76a94298e2fc2c3c7efc504fd91f0e05f55aa82bf4b17cee0115d`.
+Independent binding `ct_ma_successor_parent_actual_v1_raw_binding_v2.json`, SHA-256
+`bc8abf3a93110bcf04bb25c3a8d260eafd420e063c1d1fb5b97535b1a1633ff2`,
+reconciles raw streams, actual PIDs/clocks, handoff/source/manifest pins and all
+raw map bytes; **every current node's content and eight fields are freshly
+recomputed unchanged**, including every earlier parent predecessor-baseline row.
+The first successor binder failed its incorrect two-record Connecticut stdout
+assumption; the original actually emits controls, reconstruction and completion
+as three records. Its immutable source and failure are preserved, and v2 reruns
+the complete binding with the actual schema. This was not an original-verifier
+failure.
+
+Acceptance is limited to source reconstruction and the observed installed-audit
+controls, not an OS/native-C sandbox, actual `listxattr` API coverage, acquisition
+immutability or full introduced-source coverage. Worker whole-verifier semantic
+negatives are retained but **not independently parent-rerun**. The conservative
+source gaps and physical-exchange counts above remain unchanged; no additional
+HTTP, collection or publication is authorized.
+
 Two additional GPT-6.1 Sol owners independently handle bounded Iowa and Kansas
 initial recovery, with the same 128-aggregate-physical-exchange ceiling including
 history, robots, discovery, retries, hops and errors, ten-second pacing, at most
@@ -469,9 +501,9 @@ No collector or HTTP ran during these checks.
 | California native archives | Five complete biennial archives spanning 2017–2026 retain 26,798 native introduced candidates and 26,797 original normalized exports; all 993,735 ZIP entries pass independent integrity replay. A separate parent-replayed GRP1 supplement now preserves its complete 320,397-character native body and 4,229 element spans. | The 2,980 historical/boundary source-only contexts and 44 special-session candidates are separate, not admitted. GRP1 has a native GRP body, previously unsupported by the Bill/Resolution mapper; old exports remain unchanged. Archive completeness and structural projection do not certify filing-time identity, legal semantics or policy labels. |
 | Texas native reports | Complete 88R House/Senate filed reports reconcile 11,807 of 11,809 canonical regular contexts. Sixteen introduced PDF+HTML pairs retain 55 physical PDF pages and 16 HTML text blocks. | Literal canonical SB 15247 and SR 1960 remain unmatched. Other originals, historical affiliations, typed markup interpretation and filing-time certification remain open. Special sessions are isolated, not combined with 88R. |
 | New York native index | Official 2023–2024 Assembly search response retains 24,316 rows and 24,268 exact canonical matches. Self-contained first-batch archive preserves 80 PDF candidates / 256 pages / 769,944 joined-document characters / 1,488 extraction blocks. | Canonical J 272, one untyped `00000` row and 47 anomalous source-only identities remain separate. Full collection is running, not complete. Unselected originals, visual markup and legal-version identity remain unresolved; the blocked API was not bypassed. |
-| New York saved synthetic archive | Original v16 whole/nested-tail verifier replay now passes independently; actual raw proof, generated child, source pins and all 320,782 before/after file/directory records are reconciled, including all 265,185 files. | This replays a saved synthetic archive in one verifier process, not a new pending-driver execution or genuine full-source completion. Two independently reproduced lifecycle blockers remain; v17 repair is not yet accepted. |
+| New York saved synthetic archive | Original v16 whole/nested-tail verifier replay passes independently, with all 320,782 file/directory records reconciled. V17's independent focused recovery suite now passes both prior lifecycle counterexamples, all six durable-outcome boundary positives and its negative controls, with all 781 selected original records unchanged. Independent full v17 saved-archive replay has started, not completed. | Focused recovery acceptance does not certify the full archive or a fresh changed-driver execution. Saved synthetic archives are not genuine full-source completion. V15/v16 failures and all actual-source, filing-time and scientific exclusions remain preserved. |
 | Illinois native index | Official 103rd-General-Assembly index retains 13,391 rows and matches all 13,376 canonical regular contexts. The original full collector has stopped with exit one: 7,889 success, 2,811 identity-unverified, 751 unavailable-shell, thirteen unsupported, two partial and 1,925 pending dispositions. All 11,440 new request lifecycles are closed; 11,527 exchanges include the 87 inherited. Returned packets pass integrity replay, and separate read-only parent inspection reconstructs the actual stopped prefix with all 343,745 original file/directory metadata records unchanged. V4 now invokes its optimized full-context driver; independent saved synthetic whole/final-18 replay is running. | Five retained curl exit-7 connection failures triggered the stop. Original resume skips terminal partials; blind restart is not a repair. V4 fixes the earlier timestamp callback but parent execution reproduces two writable integer-descriptor callback omissions; immutable v5 repair remains assigned. No parent fresh full-driver acceptance, actual resume or genuine completion seal exists. Fifteen source-only entries and 878 canonical introduced-metadata gaps remain explicit. Identity enumeration is not complete original-text recovery or filing-time certification. |
-| Colorado native index | Independent publisher census reconciles all 1,459 regular identities across 2023A/2024A. Genuine whole/final-17 parent replay now passes: 1,457 PDFs / 14,857 pages per reader / 238,834,961 raw PDF bytes, with all 2,976 physical requests resolved and all 614,630 whole-archive file metadata records unchanged. A distinct complete unlabelled paired-reader token/window inventory is delegated, not yet returned or accepted. | Twenty-nine special-session contexts are separate. Two canonical introduced-reference gaps are not publisher-absence findings; the corresponding bill pages remain uninspected. Neither reader is ground truth; file-only metadata comparisons do not cover directories or undo historical source-link changes. No model, filing-time or scientific admission follows. |
+| Colorado native index | Independent publisher census reconciles all 1,459 regular identities across 2023A/2024A. Genuine whole/final-17 parent replay passes: 1,457 PDFs / 14,857 pages per reader / 238,834,961 raw PDF bytes, with all 2,976 physical requests resolved and all 614,630 whole-archive file metadata records unchanged. The distinct complete unlabelled input packet has returned: worker reports 2,914 reader views / 13,831,286 tokens / 16,581 windows, zero discarded tokens and direct/guarded reconstruction. Its manifest is `afb9ffcb8647981bde30862d376e9342f527ab2149dc90550c1285836ff4b401`; independent input-packet parent acceptance remains pending. | Reader views are not additional bills; worker results are not parent execution. Twenty-nine special-session contexts are separate. Two canonical introduced-reference gaps are not publisher-absence findings; the corresponding bill pages remain uninspected. Neither reader is ground truth; the earlier source file-only metadata comparisons do not cover directories or undo historical source-link changes. No model, filing-time or scientific admission follows. |
 | North Carolina native index | Independent 2023–2024 publisher census reconciles 2,004 of 2,005 canonical contexts. Complete source replay preserves 2,004 PDFs / 6,783 pages per reader, 2,002 observed numeric identities and two unresolved identity negatives. Actual parent replay now also reconstructs both complete unlabelled inputs: 4,008 reader views / 10,917,908 tokens / 14,520 windows, with zero discarded tokens. | Reader views are not extra bills or approved classifier inputs. Canonical HB 311 remains distinct from native HR 311 despite the shared URL. Statewide publisher version enumeration remains incomplete; canonical version rows are separately labelled, not rebranded as native. |
 | Wisconsin native campaign | Original collector exit zero is followed by independent genuine inspection, offline toolkit/driver/callback gates and genuine archive production. Independent whole/final-31 verification and fresh two-reader reopening pass: 2,655 PDFs / 18,880 pages per reader / 5,355 exchanges / 83 checkpoints, with all 40,482 archive file/directory metadata records unchanged. Independent original-verifier replay now also accepts the distinct unlabelled input packet: 5,310 reader views / 18,783,518 tokens / 27,214 windows, zero discarded tokens and all 37,777 packet file/directory content and metadata records unchanged. Actual raw proof, progress, source pins and complete maps are independently reconciled. | Reader views are not additional bills or certified classifier inputs. Source-archive closure and unlabelled input fidelity are accepted, not classifier, filing-time or scientific certification. The input parent does not independently reread the worker's 58,774 original source/policy records. The 25,000 ceiling includes all 93 inherited exchanges. Historical collection and harness failures remain preserved; no scientific admission follows. |
 | Michigan initial native recovery | Independent original-verifier replay now accepts v3's 4,043 native/canonical exact joins and 32 selected PDFs / 160 pages per reader / 64 printed observations, with all 68 physical exchanges reconstructed. All five actual fresh-manifest negative packets fail for their intended substantive reasons; all 2,819 payload files and 41 nested manifests are bound. All 4,081 v1/v2/v3 file/directory content and metadata records remain unchanged, and separate raw-proof/mutation reconciliation passes. | This is an accepted initial source packet, not full native-document recovery. Special-session completeness and unprinted session years remain unknown. A worker handoff's estimated completion timestamp is explicitly withdrawn as chronology evidence without rewriting it. No additional HTTP, full collection, labels, model or scientific admission is authorized. |
@@ -3875,12 +3907,51 @@ the root manifest as
 `c8bf651fe41176c33375fb06e7f81be38f73e018f51d17f4907edf845e7ab21b`,
 and the optimized collector as
 `4aa69a3bfcd92b3b1085e1db5a14ab3deb4e4681d7d71c8ce644c4c1033a1320`.
-This limited pin check is not rehashing all 400,699 worker-reported files.
+That limited pin check is not a full packet inventory. The immutable manifest
+lists 400,699 payload files, or 400,700 files including the manifest itself.
 The saved synthetic archive is
 `test_evidence/actual_v17_full_archive_v2`; its worker-reported manifest is
 `f123d396a7b407bebe68cbfc10b70f8d4bebf5f840fdaf5360eb9bbb04f7cdfe`.
-Parent source review and actual reservation/start-URL, result-before-start and
-durable A86 outcome tests at both recovery boundaries remain pending.
+The independent **focused recovery parent v3 now actually passes**, child 86680,
+enclosing exit zero at **20:03:56 UTC on October 20, 2026**. It executes the
+unchanged archived recovery suite: six HTTP 200/404/503 positives across both
+recovery boundaries, five forged-outcome negatives, nine invalid-lifecycle
+negatives, reservation cancellation/idempotence and literal Unicode physical-LF
+controls. An additional parent-created wrong reservation URL before both ledger
+result and candidate is rejected without mutation. The two v16 lifecycle
+counterexamples and A86's durable HTTP 404/nine-byte body now pass at this
+**focused scope**, not as full release acceptance.
+
+All **781 selected original file/directory records** remain unchanged.
+Parent source `1b7902cd9190199bb875d05c9895e9933094defd11761f9c1b12bd00bd5970fc`
+normalizes only proven privately owned `dir_fd`-relative opens to absolute paths
+before the audit event, which omits that descriptor. Seven such private opens,
+an actual owned-directory positive and an unknown-descriptor negative pass;
+archived collector source is unchanged. This is parent fixture instrumentation,
+not an arbitrary relative-read allowance or an OS/native-C sandbox.
+The original parent v1 wrong-donor failure and v2 private-cleanup guard failure
+remain preserved; neither establishes a collector semantic failure.
+
+Independent binding `ny_v17_focused_parent_v3_raw_binding_v1.json`, SHA-256
+`5fa9f4f7b99ede75f53104a0d7516a28909cfccc04b60842526175b805781f93`,
+reconciles raw proof, actual PID/clocks and source/map pins, freshly recomputes
+every selected original content/eight-field row, and compares all six recovered
+result rows plus all four response artifacts exactly against their original
+populated donor. All 16,123 retained private FILE/DIR records are inventoried;
+private files are single-link, unique-inode and disjoint from consumed originals.
+
+A distinct full saved-archive parent **started at 20:14:57 UTC**, parent 89888,
+original handle `ny-v17-saved-archive-parent-v1`, source
+`499b4225eda7953f54913c523424b6437952388ed268760fad1948edea2aecae`.
+Its startup receipt and exact running command were observed once while the full
+original inventory was in progress; this is **not completed verifier readiness
+or acceptance**. It requires every manifested payload plus all directory metadata
+unchanged, source-only execution of the original whole verifier with nested
+final-43 verification, and metadata equality for its consumed external sources
+and session-local worker proof. The latter is explicitly located by `report.json`
+at `ny_v17_guarded_whole_nested_tail_v2.log`, not the empty, separately retained
+failed-cardinality-invocation log. No fresh parent full changed-driver execution
+or full saved-archive acceptance is claimed yet.
 V15, v16 and all failed evidence remain
 immutable; no actual campaign access, new HTTP requests, live recovery,
 genuine completion seal, model/scientific admission or publication is authorized.
