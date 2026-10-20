@@ -16,14 +16,14 @@ remain explicit; this is not a completed project or a certified classifier.
 | Sponsorship | Date-aware attribution remains conservative. Official Washington evidence supplies separate session-roster D/R observations for 14,132 of 14,143 measures. Separately, 1,481 native SD roster rows identify all 7,086 prime-sponsor references; 205 mixed-party cases remain explicit. No filing-time party is overwritten. | A session roster does not establish affiliation at filing. Washington retains ten source-identified tests and one substantive original without a native primary-sponsor API record. SD cross-session cosponsor IDs, institutional sponsorship and event-time affiliations remain separately accounted for; all-state recovery is open. |
 | Bills | October snapshot extracted: 1,090,369 source-context measures across all 50 states, 5,028,893 sponsorships, 9,002,451 actions and 873,980 vote events. All eleven tables have recorded hashes/counts. Native documents retained for all 241 non-test measures in the bounded Washington metadata-gap cohort; separately, all 5,369 native SD introduced candidates and 15,308 physical pages captured and exactly replayed in both readers. | Official-source reconciliation, historical affiliations and filing-time text review. One Washington resolution has a version-note conflict; one SD PDF prints no session year. Neither these recoveries nor snapshot extraction certifies statewide/national original-text completeness or an analytical denominator. |
 | Parallel state recovery | Missouri, Pennsylvania and Ohio initial cohorts retain 188 complete PDF candidates / 3,095 pages and 124 corresponding HTML versions from 192 selections. Full Florida replay separately accounts for 2,868 linked contexts, including an explicitly negative corrected-copy disposition. | Four selected PA/OH originals remain unresolved. Missouri withdrawal-only notices are not policy text; historical corroboration does not resolve publisher identity conflicts. These bounded recoveries are not statewide text completeness or classifier certification. |
-| Full-source campaigns | New York, Texas, Illinois and Missouri continuations are running under frozen finite contracts. Missouri's 4,960-context collection started after independent parent replay and actual full-population driver checks. Colorado's collector has exited successfully; full-corpus and actual final-17 closure are being archived. North Carolina's entire 2,004-document corpus and separate final-20 archive pass independent replay. | Colorado still requires completed archive replay. North Carolina's two identity negatives and native-version census remain unresolved; source replay is not scientific certification. Ohio/Pennsylvania full collections remain withheld. Running campaigns are not completed corpora. |
+| Full-source campaigns | New York, Texas and Illinois continuations remain open under frozen finite contracts. Missouri's collector exited with a checkpoint-context error: 1,152 retained candidate records, not a completed 4,960-context corpus. Colorado's collector exited successfully; full-corpus and actual final-17 closure are being archived. North Carolina's entire 2,004-document corpus and separate final-20 archive pass independent replay. | Missouri requires offline prefix verification and recovery readiness before any resume; its original failure cause is not established. Colorado still requires completed archive replay. North Carolina's identity negatives and native-version census remain unresolved. Ohio/Pennsylvania full collections remain withheld. |
 | California native archives | Five complete biennial archives spanning 2017–2026 retain 26,798 native introduced candidates and 26,797 original normalized exports; all 993,735 ZIP entries pass independent integrity replay. A separate parent-replayed GRP1 supplement now preserves its complete 320,397-character native body and 4,229 element spans. | The 2,980 historical/boundary source-only contexts and 44 special-session candidates are separate, not admitted. GRP1 has a native GRP body, previously unsupported by the Bill/Resolution mapper; old exports remain unchanged. Archive completeness and structural projection do not certify filing-time identity, legal semantics or policy labels. |
 | Texas native reports | Complete 88R House/Senate filed reports reconcile 11,807 of 11,809 canonical regular contexts. Sixteen introduced PDF+HTML pairs retain 55 physical PDF pages and 16 HTML text blocks. | Literal canonical SB 15247 and SR 1960 remain unmatched. Other originals, historical affiliations, typed markup interpretation and filing-time certification remain open. Special sessions are isolated, not combined with 88R. |
 | New York native index | Official 2023–2024 Assembly search response retains 24,316 rows and 24,268 exact canonical matches. Self-contained first-batch archive preserves 80 PDF candidates / 256 pages / 769,944 joined-document characters / 1,488 extraction blocks. | Canonical J 272, one untyped `00000` row and 47 anomalous source-only identities remain separate. Full collection is running, not complete. Unselected originals, visual markup and legal-version identity remain unresolved; the blocked API was not bypassed. |
 | Illinois native index | Official 103rd-General-Assembly index retains 13,391 rows and matches all 13,376 canonical regular contexts. Self-contained first checkpoint retains 48 HTML candidates / 261,997 characters / 3,034 exact text-bearing blocks. Full listed-source collection is running. | Fifteen source-only entries, 878 canonical introduced-metadata gaps and thirteen unlisted static originals remain explicit, including SR 292. Identity enumeration is not complete original-text recovery or filing-time certification. |
 | Colorado native index | Independent publisher census reconciles all 1,459 regular identities across 2023A/2024A. First checkpoint retains 32 PDFs / 264 pages. The collector has finished with 1,457 successes and two unsupported-reference dispositions; full replay is pending. | Twenty-nine special-session contexts are separate. Two canonical introduced-reference gaps are not publisher-absence findings; the corresponding bill pages remain uninspected. |
 | North Carolina native index | Independent 2023–2024 publisher census reconciles 2,004 of 2,005 canonical contexts. Complete source replay preserves 2,004 PDFs / 6,783 pages per reader, 2,002 observed numeric identities and two unresolved identity negatives. Actual parent replay now also reconstructs both complete unlabelled inputs: 4,008 reader views / 10,917,908 tokens / 14,520 windows, with zero discarded tokens. | Reader views are not extra bills or approved classifier inputs. Canonical HB 311 remains distinct from native HR 311 despite the shared URL. Statewide publisher version enumeration remains incomplete; canonical version rows are separately labelled, not rebranded as native. |
-| Wisconsin native preparation | A distinct GPT-5.6 Sol worker is preparing the complete 2023–2024 native census, a bounded introduced-source seed and a resumable full-campaign contract, with at most 128 aggregate official-source exchanges including inherited attempts, retries and redirects. | No completed native census, recovered cohort or full continuation is claimed yet. Actual population/tail, crash/access/context/transport tests and independent parent replay must precede a full launch. |
+| Wisconsin native preparation | Actual parent replay preserves 3,738 files, 2,655 retained native identities, 24 original PDFs / 85 physical pages and all 93 inherited exchanges. | An executed fresh-manifest contradiction proves the verifier reports saved canonical-match counts without reconstructing the join. Immutable v2 repair, complete-index accounting and actual full-driver/24-exact-seed reuse gates remain pending; no full launch is authorized. |
 | Classification | Four saved official English ModernBERT-base pilots compared on the same 52 platform references: external-only 41/52, joint 47/52, broader-source 47/52, Republican-expanded 49/52. The fourth run correctly rejects 3/4 mixtures and 6/6 non-policy units. | The fourth run loses one policy decision, still accepts a mixture above 0.999 and regresses on insufficient-evidence and taxonomy-boundary development cases. Both sets are examined diagnostics, not fresh independent tests. Independent review and empirical gates remain required. No candidate is approved. |
 | Labels | External CAP files and two state-reference CSVs recovered; exact-context Florida candidates and complete bounded overlap witnesses are frozen without label admission. Split/group/text and reviewed-platform source-body checks retain explicit label provenance. | Modern Florida external titles/subtopics are missing; Pennsylvania rows stop in 2016. Annotation provenance, source permissions, adapted-topic compatibility, bill families and independent state-domain references remain unresolved. |
 | Evaluation | Checkpoint-bound training/evaluation split isolation, development-only temperature/threshold selection, exact evidence joins, abstention accounting, per-topic and subgroup metrics. | Reviewer arrangement, frozen empirical gates, independent target tests and clustered uncertainty. No checkpoint can be certified by changing a status field. |
@@ -530,6 +530,35 @@ token plan. This packet is later than frozen aggregate v53, not retroactively
 inserted into it. No inference, training, label, analytical or publication
 admission is performed.
 
+## Wisconsin native preparation and canonical replay gate
+
+The immutable v1 preparation retains **2,655 typed native identities**:
+AB 1,229; AJR 144; AR 29; SB 1,113; SJR 135; SR five. Its original-source
+seed has **24 PDFs / 85 physical pages / 48 reader views**, from 32 attempts
+including eight curl-52 failures. All **93 physical exchanges** remain counted,
+with next ordinal 94. Actual independent parent common-guard replay passes
+with **3,738 paths, sizes, hashes, inodes, mtimes and link counts unchanged**:
+`wisconsin_v1_parent_actual_guard_v1.log`. Root-manifest SHA:
+`5ec8a17ffacc1dcd5df6f10785bbd1494d9e0af56aa0a8866f8558bcac503827`.
+
+A separate **executed parent negative** changes only one archived canonical
+context from SB168 to AB999999 in a private copy, then freshly rebuilds the
+root inventory. The unchanged verifier exits zero and reports **2,655 matches**,
+although the actual native/canonical intersection is **2,654**. It trusts saved
+reconciliation flags instead of rebuilding the source join. Evidence:
+`wisconsin_v1_canonical_replay_parent_v2.json` and its actual log. All 3,738
+original files remain unchanged; the private copy is removed, with zero HTTP.
+The preserved first harness attempt failed the common guard's archive-location
+requirement before verifier execution; that is not a semantic rejection.
+
+The existing full-population test premarks all candidates terminal and uses
+fake PDF bytes; its separate no-refetch case collects only one pending candidate.
+Neither is an actual 2,655-candidate driver/24-exact-original reuse proof.
+The same worker is preparing a distinct immutable zero-HTTP v2 with reconstructed
+canonical/native joins, complete-index link accounting and genuine full-driver,
+final-31, crash/access/context/transport gates. No original packet is rewritten,
+no full collection is authorized and no scientific admission follows from v1.
+
 ## Full-campaign preparation gates: Pennsylvania, Ohio and Missouri
 
 Pennsylvania's initial immutable preparation and seed-32/seed-30 archives have
@@ -571,9 +600,24 @@ checkpoint record / zero archives**. The last probe uses the real driver and
 stored PDF/HTML dependencies, not fabricated completion counts. Persistent
 evidence is `pa_v3_parent_release_blockers_v1.json` and its actual log; all
 temporary fixtures are removed and the sealed v3 manifest/source remain unchanged.
-The same worker is preparing an immutable zero-HTTP v4 with structural/lossless
+The same worker has returned immutable zero-HTTP v4 with structural/lossless
 decoding gates, HTTPS-only hops and transactionally recoverable exact-context
-checkpoint sealing. Passing positive fixtures alone does not authorize launch.
+checkpoint sealing. Actual independent parent common-guard replays pass for
+the **776-file supplement / 325-file final-18 / 18-file handoff**, with all
+paths, sizes, hashes, inodes, mtimes and link counts unchanged. Supplement
+manifest:
+`6c34abc89aaebceefb60b7a698720d83d3bee737b023ec1f97b1ee7c1593a313`.
+Actual logs: `pa_release_v4_parent_actual_v1.log`,
+`pa_release_final18_v4_parent_actual_v1.log` and
+`pa_handoff_v4_parent_actual_v1.log`.
+
+Those replays verify retained artifacts, not a new execution of the producer.
+A distinct actual parent full-population/regression execution is now running
+from private byte-copied code, with networking, children and outside-private
+mutations denied: handle `pa-v4-parent-isolated-suite-v1`, log
+`pa_v4_parent_isolated_suite_v1.log`. Its synthetic HB1-HB4786 identities prove
+population-count/checkpoint behavior, not exact publisher identities. No parent
+suite success or Pennsylvania full launch is claimed while that run is pending.
 
 Ohio's initial preparation also parent-replays with **1,101 files unchanged**,
 **2,279 native candidates**, **62 reused PDF/HTML originals**, **1,123 pages**
@@ -705,10 +749,9 @@ checkpoint with **30 collected / two reused originals / 299 aggregate starts**,
 and 52 completed new response files by the later read. These are explicitly
 nontransactional observations, retained with exact progress/response bytes and
 hashes in `missouri_v4_full_launch_actual_readiness_v1.json`.
-The complete 4,960-context corpus and genuine final full-32 checkpoint still
-require post-exit independent replay. The same worker now prepares zero-HTTP
-closure tooling and a distinct first-32 archive without mutating the active
-collector. Ohio and Pennsylvania full continuations remain withheld.
+This is historical launch readiness, not current process status. The original
+collector has subsequently **exited 1**, not completed the 4,960-context corpus.
+Ohio and Pennsylvania full continuations remain withheld.
 
 The distinct immutable first-32 archive v2 has now passed actual parent
 common-guard replay: **32 contexts / 527 pages per reader / 903 unchanged files**,
@@ -741,8 +784,50 @@ matches all fields. Reports: `missouri_runtime_prior_parent_v1.json` and
 `missouri_runtime_locked_parent_v1.json`. This is bounded runtime evidence,
 not a full old-runtime corpus replay or proof of unavoidable layout volatility.
 The earlier failure log does not itself record interpreter versions. V1/v2
-remain preserved. Prepared whole-corpus/final-32 sealing tools must not run
-until the original collector actually exits.
+remain preserved; the later full-collector failure does not invalidate this
+independently replayed first-32 evidence.
+
+### Missouri actual collector failure and post-exit recovery gate
+
+The original handle `missouri-full-campaign-v4` actually exits **1**, with
+`ValueError: checkpoint immutable campaign context mismatch` in
+`validate_checkpoint`, called by staged checkpoint sealing during
+`update_progress`. Original log:
+`missouri_full_campaign_v4_parent_launch_v1.log`. Parent executes a separate
+read-only, zero-HTTP incident probe against the pinned frozen v4 collector.
+It finds **1,152 terminal candidate files: 1,139 collected / 13 reused**,
+whereas persisted progress remains **1,120 / 1,107 collected / 13 reused**
+and **1,376 aggregate starts**. That progress is stale, not a final request count.
+The physical ledger has **2,278 rows**, not 2,278 physical exchanges.
+Report/log: `missouri_v4_actual_context_failure_parent_v1.json` / `.log`.
+
+At diagnosis time, the newly reconstructed preparation context and work-root
+context both **exactly equal the stored immutable context**. A subsequent
+read-only comparison also finds all 36 retained checkpoint context files equal
+to it, including staging/forensic copies. Normal checkpoint 00512 is missing,
+while forensic/staging copies exist and other normal checkpoints reach 01120.
+The original transient or in-memory mismatch is **not explained by these
+post-failure observations**. No source/cache mutation cause is asserted, no
+context is rewritten to bypass validation and no original-root resume is run.
+
+Earlier actual parent post-exit-helper probes pass five frozen tests but expose
+four additional failures: a wrong selected raw-context ID is accepted under a
+fresh manifest; an extra unreserved ledger ordinal is ignored; an orphan result
+is ignored; and a reservation filename/content ordinal disagreement is accepted.
+These are helper-level probes, **not execution of a full 4,960-context seal**.
+All 921 strict first-32 and 2,316 preparation files remain unchanged; zero HTTP,
+with private cleanup. Evidence:
+`missouri_post_exit_sealer_parent_v1.json` and its actual log.
+
+The same worker owns distinct immutable zero-HTTP sealer repairs and recovery
+readiness for the actually stopped prefix. Required gates include exact native
+joins and both-reader evidence for all retained candidates; complete historical
+and new physical request accounting; and actual frozen-collector recovery on a
+private copy with forbidden transport and zero newly processed candidates.
+That must recover the checkpoint frontier without refetching or resetting the
+budget, preserve forensic evidence and still report the incomplete population.
+Any original-root resume requires separate parent authorization. Complete-corpus
+and genuine final-32 sealing remain prohibited while 4,960 contexts are unfinished.
 
 ## Texas 88R filed-census and bounded original-text recovery
 
@@ -1390,7 +1475,7 @@ all 1,086 source files remain unchanged and temporary fixtures are removed.
 The first harness attempt mistook retained seed exchanges for the new exchange;
 its failure log is preserved. The corrected, actual successful diagnostic is
 `nc_native_v2_parent_release_blockers_v2.json` and its matching log.
-The same worker is preparing immutable zero-HTTP **v3**; neither preparation
+The same worker has returned immutable zero-HTTP **v3**; neither preparation
 replay nor a synthetic fixture authorizes full collection.
 
 A separate executed parent parser probe also shows silent partial enumeration:
@@ -1399,9 +1484,37 @@ complete pair with an extra HTML attribute all return `success` with only the
 first version recorded. These are three synthetic source-format negatives, not
 claims that those variants occur in the still-uncollected real pages. The exact
 HTML and parser outputs are retained in `nc_native_v2_anchor_coverage_v1.json`.
-The v3 worker is correcting complete edition-anchor accounting, retaining
-unsupported structures explicitly rather than treating any matched subset as a
-complete native version list.
+V3 adds explicit accounting for those unsupported shapes. Its actual parent
+common-guard replay passes with **1,122 paths, sizes, hashes, inodes, mtimes and
+link counts unchanged**, manifest
+`892ccd4436ec35c3ee828899bf87eb05d203009219afe8c9e903862c6932a149`.
+Actual log: `nc_native_version_v3_parent_actual_v1.log`.
+
+The separate actual parent fifth-transient shard also completes with no errors
+or skips: all genuine fifth-response persistence boundaries stop before a sixth
+mocked request, including result-file, ledger, runtime-state and curl-28 cases.
+All 1,122 original files remain unchanged and private fixtures are removed.
+Report: `nc_native_v3_parent_isolated_transient_v1.json`. The distinct parent
+core 12-test shard remains running at this checkpoint; the worker's successful
+13-test shards are separate evidence, not a substitute for that pending result.
+The worker's interrupted combined-suite log is preserved as nonrelease evidence.
+
+Parent then executes **three additional v3 parser failures** against exact frozen
+source, with an independent standard-library HTML parser observing the anchors.
+A valid unquoted extra PDF link and an unquoted extra RTF link each leave three
+real anchors, but v3 returns `success` counting only two. A commented-out extra
+PDF/RTF pair has no additional real anchor nodes, but v3 emits a phantom second
+version. Exact fixture HTML, independent href observations and actual parser
+outputs are retained in `nc_native_v3_anchor_coverage_parent_v1.json` and its
+actual log. These are synthetic format counterexamples, not claims about the
+still-uncaptured real publisher pages. All 1,122 originals remain unchanged;
+networking, children and non-report writes are denied, with zero HTTP.
+
+The same worker now owns immutable zero-HTTP **v4**, addressing HTML-aware
+anchor observation and exact-byte-span reconciliation rather than another
+supported-pair regex patch. Earlier result/checkpoint/lineage/transport positives
+and failures remain preserved. Initialization and full collection remain
+withheld pending the successor's independent release gates.
 
 ## Colorado regular-session source census and full continuation
 
