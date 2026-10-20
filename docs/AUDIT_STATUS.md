@@ -23,7 +23,8 @@ remain explicit; this is not a completed project or a certified classifier.
 | Illinois native index | Official 103rd-General-Assembly index retains 13,391 rows and matches all 13,376 canonical regular contexts. The original full collector has stopped with exit one: 7,889 success, 2,811 identity-unverified, 751 unavailable-shell, thirteen unsupported, two partial and 1,925 pending dispositions. All 11,440 new request lifecycles are closed; 11,527 exchanges include the 87 inherited. Returned packets pass integrity replay, and separate read-only parent inspection now reconstructs the actual stopped prefix with all 343,745 original file/directory metadata records unchanged. | Five retained curl exit-7 connection failures triggered the stop. Original resume skips terminal partials; blind restart is not a repair. A missing timestamp-mutation guard and reduced-population shard fixture block full-driver acceptance; safe recovery remains open. Fifteen source-only entries and 878 canonical introduced-metadata gaps remain explicit. Identity enumeration is not complete original-text recovery or filing-time certification. |
 | Colorado native index | Independent publisher census reconciles all 1,459 regular identities across 2023A/2024A. Genuine whole/final-17 parent replay now passes: 1,457 PDFs / 14,857 pages per reader / 238,834,961 raw PDF bytes, with all 2,976 physical requests resolved and all 614,630 whole-archive file metadata records unchanged. A distinct complete unlabelled paired-reader token/window inventory is delegated, not yet returned or accepted. | Twenty-nine special-session contexts are separate. Two canonical introduced-reference gaps are not publisher-absence findings; the corresponding bill pages remain uninspected. Neither reader is ground truth; file-only metadata comparisons do not cover directories or undo historical source-link changes. No model, filing-time or scientific admission follows. |
 | North Carolina native index | Independent 2023–2024 publisher census reconciles 2,004 of 2,005 canonical contexts. Complete source replay preserves 2,004 PDFs / 6,783 pages per reader, 2,002 observed numeric identities and two unresolved identity negatives. Actual parent replay now also reconstructs both complete unlabelled inputs: 4,008 reader views / 10,917,908 tokens / 14,520 windows, with zero discarded tokens. | Reader views are not extra bills or approved classifier inputs. Canonical HB 311 remains distinct from native HR 311 despite the shared URL. Statewide publisher version enumeration remains incomplete; canonical version rows are separately labelled, not rebranded as native. |
-| Wisconsin native campaign | Original collector exit zero is followed by independent genuine inspection, offline toolkit/driver/callback gates and genuine archive production. Independent whole/final-31 verification and fresh two-reader reopening now also pass: 2,655 PDFs / 18,880 pages per reader / 5,355 exchanges / 83 checkpoints, with all 40,482 archive file/directory metadata records unchanged. The distinct unlabelled input packet has returned with 5,310 reader views / 18,783,518 tokens / 27,214 windows and zero discarded tokens; worker direct/guarded replays pass, and a separate parent replay is launched, not yet accepted. | Reader views are not additional bills or certified inputs. Source-archive closure is accepted, not classifier, filing-time or scientific certification. The 25,000 ceiling includes all 93 inherited exchanges. Historical canonical-join, guard and full-fixture harness failures remain preserved; no scientific admission follows. |
+| Wisconsin native campaign | Original collector exit zero is followed by independent genuine inspection, offline toolkit/driver/callback gates and genuine archive production. Independent whole/final-31 verification and fresh two-reader reopening pass: 2,655 PDFs / 18,880 pages per reader / 5,355 exchanges / 83 checkpoints, with all 40,482 archive file/directory metadata records unchanged. Independent original-verifier replay now also accepts the distinct unlabelled input packet: 5,310 reader views / 18,783,518 tokens / 27,214 windows, zero discarded tokens and all 37,777 packet file/directory content and metadata records unchanged. Actual raw proof, progress, source pins and complete maps are independently reconciled. | Reader views are not additional bills or certified classifier inputs. Source-archive closure and unlabelled input fidelity are accepted, not classifier, filing-time or scientific certification. The input parent does not independently reread the worker's 58,774 original source/policy records. The 25,000 ceiling includes all 93 inherited exchanges. Historical collection and harness failures remain preserved; no scientific admission follows. |
+| Michigan initial native recovery | The returned worker packet reports 4,043 native/canonical exact identities and 32 introduced PDFs / 160 pages per reader, using 68 of 128 aggregate physical exchanges. Parent rehash confirms its manifest, report, verifier and handoff pins. | Parent source review finds stored-text self-consistency checks, not fresh PDF-reader or printed-header reconstruction; native-record, transport-lifecycle and guard controls also need strengthening. A distinct immutable zero-HTTP successor is assigned to the same worker, with the original packet preserved. No source-closure acceptance, full collection authorization, special-session completeness or scientific admission is claimed. |
 | Ohio full unlabelled inputs | Independent original-verifier parent replay now passes: 2,279 contexts / 6,811 source views / 93,161,481 source tokens / 118,663 windows, zero discarded tokens and all 18,290 packet file/directory content and metadata records unchanged. Raw readiness, all 45 progress lines, final proof, empty stderr, source pins and full before/after maps are independently reconciled. | Views are not bills; HTML views include exact source markup. Five PDF-only and seven unsupported contexts remain, as do 1,007 absent HTML session headers. Runtime preload precedes the guard; the original verifier runs entirely afterward. No labels, forward passes, training or scientific admission. |
 | Missouri archived printed headers | Independent original-verifier replay accepts first-page observations for all 1,152 archived PDFs in both readers, plus ten focused regressions and joins to all 4,608 copied source dependencies. All 41,914 supplement/original file-directory records remain unchanged. | Matching House/First Regular Session/102nd General Assembly observations are accepted only as literal first-page evidence. The original 1,152 false flags remain; unprinted session years stay unknown. No original identity/status, filing-time or scientific certification is promoted. The full 4,960-context corpus remains unfinished. |
 | North Carolina native-version preparation | V5 strict replay, four exact parser regressions and all fifteen original parent release tests pass, including the actual 2,004-population/final-20 fake-transport driver. Genuine readiness replay and the separate five original tests/private once-only initialization/promotion/rejection now pass independently, with all 45,587 readiness/terminal originals unchanged. | Private initialization produced 44,341 payload files; a second initialization was rejected without changing its target. Actual target, staging and authorization remain absent; no version collection is authorized. Earlier original-path replacement/metadata failures remain unreconciled; restored payload bytes do not restore historical immutability. |
@@ -74,7 +75,7 @@ SHA `d25dcefad38183786ac4b30d0a378c5f02762b9cfa89f33c166d92bb4612bd1e`.
 The temporary fixture is removed. No actual research outputs, source evidence,
 labels, model weights, scientific admission or publication files change.
 
-## Wisconsin full unlabelled input packet: returned, parent replay pending
+## Wisconsin full unlabelled input packet: independent replay accepted
 
 The distinct worker packet
 `wisconsin-2023-2024-full-native-token-input-inventory-v1` has returned with
@@ -95,23 +96,81 @@ The differing manifest in the worker's chat summary was explicitly corrected
 as erroneous chat text only; no packet, handoff or log was rewritten.
 
 Worker direct and guarded replays pass, with 58,774 original input file/directory
-records reported unchanged. These are **worker results, not independent parent
-acceptance**. The first parent attempt fails before any verifier execution
-because it parses the worker log's timing footer as JSON; the original harness
+records reported unchanged. That original-input comparison remains **worker
+evidence**, not an independent parent reread. The first parent attempt fails
+before any verifier execution because it parses the worker log's timing footer
+as JSON; the original harness
 and failure receipt are preserved, not represented as a source failure.
 
-A distinct parent v2 is launched under original handle
-`wisconsin-full-token-inventory-parent-v2`, parent PID 844, at
-2026-10-20T14:57:42.803401UTC. Its exact command is observed once. Harness
+A distinct parent v2 **actually completes with exit zero** under original handle
+`wisconsin-full-token-inventory-parent-v2`. The original completion notification
+is received and that handle is read. Parent 844 starts at
+2026-10-20T14:57:42.803401UTC; actual verifier child **1520** returns zero and
+the parent report finishes at **2026-10-20T15:07:16.958829UTC**. Harness
 `replay_wisconsin_full_token_inventory_parent_v2.py`, SHA
 `bb6af644c99f71a2865b1c4df790a08f02869083971f7d1a8d7f8f8de57943ce`,
-reuses the pinned accepted Ohio parent guard/snapshot mechanism and requires
-the actual unchanged Wisconsin verifier, thirty harmless denial controls and
-two allowed controls, all 53 progress records, exact worker-proof equality and
-full packet file/directory content/metadata equality. Runtime preload precedes
-the guard; the verifier runs afterward. No completed parent replay, model
-inference, labels, training/evaluation, filing-time, scientific or publication
-admission is claimed.
+uses the pinned accepted Ohio parent guard/snapshot mechanism. The actual
+unchanged Wisconsin verifier runs after runtime preload and guard activation:
+**thirty harmless denial controls / two allowed controls**, all **53 progress
+records**, exact worker-proof equality, empty stderr and no timeout. The parent
+reconstructs all source pages, reader texts, tokens, windows and physical-LF
+JSONL/Parquet accounting, rather than treating packet hashes as source fidelity.
+
+All **37,777 packet records** remain unchanged: **27,019 files / 10,758
+directories / 1,532,470,056 file bytes**, with single-link files and identical
+content/device/inode/mtime/ctime/nlink/mode records. Raw before/after maps are
+byte-identical, SHA
+`4587e2cc39e621c47d390d47b3b5dd4d4f0817ab526b1fcec13b70e98e6a7f5e`.
+Actual report `wisconsin_full_token_inventory_parent_actual_v2.json`, SHA
+`7bda9e4574dd83aa90ad6a92c5678efb6c8c3cf644a0b162e59da060f74e3cf9`,
+records `PASS_FULL_UNLABELLED_INPUT_REPLAY`.
+
+The separately executed raw-evidence reconciliation joins startup/launch,
+actual stdout/readiness/progress/final proof, empty stderr, worker proof, all
+four source pins, reconstructed child-source pin and every raw snapshot row.
+Receipt `wisconsin_full_token_inventory_parent_reconciliation_v2.json`, SHA
+`15945858c04a60371861ac25bdcf113324f25545cb0a13374d61db00a923b05d`,
+passes without another verifier execution. This accepts **unlabelled packet
+reconstruction only**. The parent does not independently reread all 58,774
+original source/policy records or access the original campaign/archive.
+No HTTP, labels, model forward passes, training/evaluation, filing-time,
+scientific or publication admission follows.
+
+## Michigan initial packet: returned, source reconstruction still required
+
+Worker packet `michigan-2023-2024-native-source-recovery-v1` reports **4,043
+native identities / exact canonical contexts**, zero identity nonmatches and
+**32 introduced PDFs / 160 pages per reader**, with **68 physical HTTP exchanges
+against the aggregate 128 ceiling**. Special-session completeness is unknown;
+an unobserved special-session branch is not proof of absence. All 64 saved
+reader observations lack a printed session year; the repaired multiline
+observations and a pypdf cross-reference warning remain retained. Earlier
+identity-parser and strict-JSON finalization failures are not erased.
+
+Parent rehash confirms manifest
+`dc1e67b31cc7666d31da39e84d565103d78b15b8f499d32ea8ea8de86b135f9e`,
+verifier `11fd2dacd3e428584f52c7fb132cbdab6a99e58ec3400c9bf2d0d9545b1f6f35`,
+report `6a489ca268eacb4e6a0357ee24a7930ffbd96e4db2a194aebf4be2bde2b5e32a`
+and handoff `6518cf88a48f7b8a66aea74bb931a0b9e753942e2f95179701f07a7c0dcfe7b3`.
+These pins are not source-reconstruction acceptance. Direct source inspection
+finds that the verifier checks saved reader JSONL self-consistency but never
+reopens a PDF with either reader or recomputes printed-header observations.
+Native reconstruction compares identity sets rather than every source record,
+URL/year/context and traversal join. Transport checks count reservation/start/
+result rows without enforcing each complete lifecycle. Several guard controls
+unconditionally call a denial function instead of exercising installed paths.
+These are source-review findings, not claims of executed corrupt-source cases.
+
+The same worker is completing the original deliverable in a **distinct
+immutable zero-HTTP v2**, preserving every original v1 payload and full
+file/directory metadata map. Required gates include fresh complete PDF/reader/
+header reconstruction, exact native/canonical/selection/transport joins,
+actual installed-guard callbacks and fresh-manifest semantic negatives. V1's
+original-input comparisons cover the exact consumed files, not surrounding
+shared directories. No successor result or parent source-closure acceptance
+exists yet. The remaining request allowance is **not further authorization**;
+no new HTTP, full campaign, labels, model, scientific or publication admission
+is authorized.
 
 ## Intra-party missingness, undefined ratios and empty exports
 
@@ -3057,13 +3116,38 @@ declared isolated reservation-URL mutation or result-row reorder, with no extra
 starts; all four original response artifacts remain byte-identical. This
 reconciles the completed negative observations, not a collector release.
 
-A separate original whole/nested-tail saved-archive replay is launched as
-`ny-v16-saved-archive-parent-v1`, parent **93827**, startup
-**2026-10-20T14:35:41.962124+00:00**, harness
-`a61321071f80910263f5b148899c54f19fe7d59f1705384fa196311db93920e1`.
-Its enclosing result and complete v16 original-file/directory comparison are
-not yet accepted. Even a pass would not execute a fresh parent pending driver
-or lift the two independently reproduced recovery blockers.
+A separate original whole/nested-tail saved-archive replay
+`ny-v16-saved-archive-parent-v1` **actually exits one**, child **98939**; its
+parent report finishes at **2026-10-20T15:05:20.014473UTC**. Its unchanged harness is
+`a61321071f80910263f5b148899c54f19fe7d59f1705384fa196311db93920e1`;
+actual report `ny_v16_saved_archive_parent_v1.json`, SHA
+`c2f05a6e4fa597e9f3ee1bd4d3f8f96525c5ac7f9016e19786ca792b7ef3a7d5`,
+retains the failure. The traceback is a manifest-inventory hash opening archived
+bytecode **as DATA**, rejected by an overbroad parent guard. It is not evidence
+of bytecode execution or a collector-source semantic failure. All **320,782
+original file/directory records / 265,185 files** remain unchanged. Both raw
+maps have SHA
+`5799e38cf595bd470e3e167746f3c2ebc238f73f2236a290e0d6133be49b74ff`.
+Independent failure-provenance reconciliation joins actual exit, raw readiness,
+stderr, harness pin and every raw map row; receipt
+`ny_v16_saved_archive_parent_v1_failure_reconciliation.json`, SHA
+`898c42d53d22ac3dffdfdb55b94fa0476c465590a536a2604e42e133fbb08ed4`,
+does not turn that enclosing failure into a pass.
+
+Distinct parent v2 permits read-only bytecode inventory DATA while forcing
+archived `SourceFileLoader` to compile source and rejecting archived
+`SourcelessFileLoader`. Its actual preflight passes fourteen harmless denials,
+three allowed controls, source compilation and sourceless rejection, with no
+whole-verifier execution. The first generation-only assertion failure is
+corrected before launch, not relabelled a source-replay failure. The full replay
+is launched under original session handle **4347**, parent **4855**, at
+**2026-10-20T15:10:53.090449UTC**, harness
+`0a0d1f31482627ba8f5acc843ea4c4d4241f2417bd715d920fc42654165c12b5`.
+Actual startup and exact command are observed once. Its full result remains
+pending; acceptance requires fresh original maps matching v1's unchanged map,
+the actual original verifier proof and complete before/after equality.
+Even a pass would not execute a fresh parent pending driver or lift the two
+independently reproduced recovery blockers.
 
 The same worker now owns a distinct immutable **v17** shared lifecycle
 preflight repair, both exact parent counterexamples, regression/differential
