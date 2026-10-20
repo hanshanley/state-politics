@@ -151,6 +151,17 @@ self-contained entrypoints and actual changed-source controls. Prior packets,
 failed attempts and the unavailable HB1 HTML shell remain preserved; its native
 PDF is still unfetched. No actual campaign resume or source closure is accepted.
 
+Two additional **GPT-6.1 Sol** workers now own independent Oregon and Maine
+bounded initial legislative-source packets. Top-level root and task checks found
+no conflicting legislative owner; Oregon's existing party-platform packets are
+explicitly excluded. These checks do not establish zero historical requests.
+Each worker must account for inherited relevant exchanges within an aggregate
+128-exchange ceiling, respect immediate access stops, preserve exact native
+identifiers and session boundaries, and recover at most 32 introduced-original
+contexts. Fresh dual-reader/source-only reconstruction and immutable evidence
+are required. Neither packet has returned or received parent acceptance; no
+full continuation, scientific admission or publication is authorized.
+
 Pennsylvania's narrower offline-verification
 worker remains responsible for its distinct immutable successor. Its exact v6 parser
 independently rejects the three numeric-whitespace errors, but nine required-denial
