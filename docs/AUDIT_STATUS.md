@@ -357,6 +357,23 @@ proofs, not fresh independent parent executions or recovered Illinois originals*
 Both guard sources and selected returned logs match the handoff and manifests.
 October 21 fixture timestamps are simulated, not October 20 wall-clock events.
 
+**Independent v7 installed-guard controls now pass** in separate children
+**35994 and 35997**, completing at **22:34:29 UTC on October 20, 2026**.
+The exact original suite source-compiles each original factory, actually installs
+its hook, and dispatches **49 required denials plus 23 allowed controls per guard**,
+including byte paths, file/directory descriptors and glob root/dir-fd variants.
+No additional outer hook is present to mask a missing inner denial. Raw output
+independently matches every saved case in the parent receipt; both exits are zero
+with empty stderr. Receipt `il_v7_guard_controls_parent_actual_v1.json`, SHA-256
+`60f130bc76bc3d299ba7783700fbe5570b47945c0a496bc622e3b7bf1fb23b75`,
+binds the source, logs and unchanged eight-field inventories of **eight selected
+original nodes**. Private source copies are inode-disjoint and single-link;
+successful private fixtures are removed. This accepts **synthetic audit controls
+of the installed factories only**, not actual unrelated-directory traversal,
+native xattr API coverage, OS/native-C confinement, verifier/inspector bodies,
+whole-packet or fresh-driver acceptance. Actual campaign access and HTTP remain
+zero; recovered-original, label, model and publication status do not change.
+
 The combined selected-return binding
 `nc_v6_il_v7_return_pins_parent_actual_v2.json`, SHA-256
 `4617290f82e58f468686c1aa725e892b21112f3399a573f87bbd2c6424ba7fa6`,
