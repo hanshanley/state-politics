@@ -291,13 +291,32 @@ SHA-256 `a645319f22ced79455a1c12c35728c86e68cf0a4b7aa9bee296c60f0259bbc84`.
 This is a diagnosed parent-fixture error, not evidence of a source-parser defect
 or a reason to rewrite the sealed journal.
 
-A distinct source-pinned successor started at **01:55:39 UTC**, parent 70190,
-source SHA-256
-`2e19c04ef9871c694e62ca7ba5f9f0bfde7b9c4c3f5586692d17985c401e3f92`.
-Its startup and exact command were observed once; completion remains pending.
-It copies only immutable code/inputs/plan, runs readiness first, then runs the
-**original fresh suite with a newly initialized full driver at its actual
-private location**. It neither relocates nor rewrites a completed journal.
+A distinct successor, parent 70190, completed with **enclosing failure at
+01:57:42 UTC**. Its readiness child 71533 **passed all eleven original cases**
+at 01:57:17 UTC, with empty stderr and zero HTTP/real collection initialization.
+The durable proof and raw output reconcile: source/receipt/target collisions,
+missing authorization, positive two-physical-exchange HTTPS redirect and actual
+append-before-state/result-before-ledger recovery checks executed. However,
+suite child 71565 rejected the parent's incorrectly spelled `fresh` argument:
+the archived interface requires **`--fresh`**. That rejection precedes the suite
+body and any new full-driver execution; it is another wrapper error, not an
+observed archived-suite regression. All **103,463 original/external nodes** and
+all 482 copied input records remained unchanged. Failed receipt SHA-256:
+`8f8d3bf4f51f55bfb7025d7a7221efa926bd6ac4364807af96599baee996cd64`.
+Independent binding completed at **02:01:14 UTC**, reconciling raw launch/proof/
+error records, archived full maps and every current copied input's eight fields,
+without claiming another full current original rehash:
+`kentucky_readiness_behavior_parent_actual_v2_readiness_failure_binding_v1.json`,
+SHA-256 `02a20930e3757c333f87322a4c49482ec9b2ab3d34e70c3d62e93a51c05db058`.
+
+The distinct **v3** parent started at **02:00:14 UTC**, PID 73335, source SHA-256
+`e46bb7825f98953a5a8944a5540a4d80f54e5d5b063b0afc6213c600114964bb`.
+Prelaunch source compilation confirmed the exact `--fresh` argument and distinct
+output paths without running a child or creating a fixture. Startup and the
+exact parent command were observed once; completion remains pending. It retains
+both failed predecessors, copies only immutable code/inputs/plan, runs readiness
+first, then the **original fresh suite with a new driver initialized at its actual
+private location**. No sealed source or journal is edited.
 Historical discovery still has
 123 pending records; actual destination, staging and authorization remain null.
 No live collection, labels, training, analytical admission or publication is
