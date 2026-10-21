@@ -15,6 +15,66 @@ function fullQueryJSONL(rows) {
   return rows.map(row => JSON.stringify(row) + "\n").join("");
 }
 
+async function* savedJSONLLines(names) {
+  for (const name of names) {
+    const response = await fetch(`evidence/${name}.jsonl`);
+    if (!response.ok) throw new Error(`Partition unavailable (HTTP ${response.status})`);
+    const reader = response.body.getReader(), decoder = new TextDecoder();
+    let remaining = "";
+    try {
+      while (true) {
+        const { value, done } = await reader.read();
+        remaining += decoder.decode(value, { stream: !done });
+        let end;
+        while ((end = remaining.indexOf("\n")) !== -1) {
+          const line = remaining.slice(0, end);
+          remaining = remaining.slice(end + 1);
+          if (line.trim()) yield line;
+        }
+        if (done) break;
+      }
+      if (remaining.trim()) yield remaining;
+    } finally {
+      await reader.cancel();
+      reader.releaseLock();
+    }
+  }
+}
+
+async function fullQueryBlob(names, query, receiptStatus, expectedCount) {
+  const lines = savedJSONLLines(names), encoder = new TextEncoder();
+  let count = 0;
+  const stream = new ReadableStream({
+    async pull(controller) {
+      try {
+        while (true) {
+          const { value, done } = await lines.next();
+          if (done) {
+            if (count !== expectedCount) throw new Error("Complete query count changed during export");
+            controller.close();
+            return;
+          }
+          const row = JSON.parse(value);
+          if (!filterEvidence([row], query).length
+              || (receiptStatus && row.receipt_status !== receiptStatus)) continue;
+          count++;
+          // Keep the saved line, including integers beyond Number's precision, unchanged.
+          controller.enqueue(encoder.encode(value + "\n"));
+          return;
+        }
+      } catch (error) {
+        await lines.return();
+        controller.error(error);
+      }
+    },
+    cancel() { return lines.return(); },
+  }, { highWaterMark: 1 });
+  // Native Blob storage consumes the stream; no all-record JS string/parts array is retained.
+  return new Response(stream, {
+    headers: { "Content-Type": "application/x-ndjson;charset=utf-8" },
+  }).blob();
+}
+
 function safeSourceURL(value) {
   if (typeof value !== "string") return null;
   try {
@@ -25,13 +85,16 @@ function safeSourceURL(value) {
   }
 }
 
-if (typeof module !== "undefined") module.exports = { filterEvidence, fullQueryJSONL, safeSourceURL };
+if (typeof module !== "undefined") {
+  module.exports = { filterEvidence, fullQueryJSONL, fullQueryBlob, safeSourceURL };
+}
 
 if (typeof document !== "undefined") {
   const state = document.getElementById("state");
   const collection = document.getElementById("collection");
   const party = document.getElementById("party");
   const query = document.getElementById("query");
+  const receiptStatus = document.getElementById("receipt-status");
   const status = document.getElementById("evidence-status");
   const evidence = document.getElementById("evidence");
   const download = document.getElementById("download-query");
@@ -39,7 +102,8 @@ if (typeof document !== "undefined") {
   const previous = document.getElementById("previous");
   const next = document.getElementById("next");
   const pageSize = 10;
-  let records = [], matches = [], page = 0, generation = 0, loading = false, loaded = false;
+  let records = [], matches = [], loadedNames = [], page = 0, generation = 0;
+  let loading = false, loaded = false, exporting = false, appliedQuery = "", appliedReceiptStatus = "";
 
   function element(tag, text, className) {
     const node = document.createElement(tag);
@@ -62,15 +126,49 @@ if (typeof document !== "undefined") {
     for (const row of matches.slice(begin, begin + pageSize)) {
       const article = element("article");
       const bill = row.source_type === "bill_metadata";
-      const native = row.source_type === "native_text";
-      article.append(element("h3", bill || native
-        ? `${row.state} / ${row.identifier} / ${row.session_identifier} — ${row.title ?? "No title"}`
+      const sessionText = row.source_type === "native_session_text";
+      const native = row.source_type === "native_text" || sessionText;
+      const receipt = row.source_type === "source_receipt";
+      article.append(element("h3", receipt
+        ? `${row.state} / ${row.identifier} — source-receipt observation only`
+        : sessionText
+          ? `${row.state} / ${row.identifier} / ${row.session_identifier} — publisher-session source only`
+        : bill || native
+          ? `${row.state} / ${row.identifier} / ${row.session_identifier} — ${row.title ?? "No title"}`
         : `${row.state} / ${row.party} — ${row.record_kind}`));
-      article.append(element("p", bill || native
+      article.append(element("p", receipt
+        ? `Action: ${row.source_action.action_id} · Bill: ${row.bill_id} · Session: ${row.source_bill.session_identifier}`
+        : bill || native
         ? `View: ${row.view_id} · Bill: ${row.bill_id} · `
           + (native ? `Native context: ${row.context_id}` : `Abstract: ${row.abstract_id ?? "none"}`)
         : `Record: ${row.record_id} · Source: ${row.source_sha256 ?? "none retained"}`, "note record-id"));
-      if (bill) {
+      if (receipt) {
+        const observation = row.observation;
+        article.append(element("p",
+          `Receipt status: ${row.receipt_status === "unique_origin_date_agreeing"
+            ? "unique origin / date-agreeing source receipt"
+            : "unresolved receipt observation — no date repaired"}. `
+          + "Receipt is not introduction, filing, native evidence or eligible-cycle admission. "
+          + "This separate observation is not added to the active candidate, native or model cohort.",
+          "note receipt-observation"));
+        article.append(element("p",
+          `Source action date (unaltered): ${row.source_action.date} · `
+          + `Literal receipt date: ${observation.literal_calendar_date ?? "unresolved"} · `
+          + `Agreement: ${observation.date_agreement}. Both original dates are retained.`,
+          "note receipt-dates"));
+        article.append(element("p",
+          `Source action organization: ${row.source_action.organization_id} / ${row.source_action.chamber} · `
+          + `Originating organization: ${row.source_bill.from_organization_id} / ${row.source_bill.originating_chamber} · `
+          + `Identity status: ${observation.origin_identity_status}.`, "note"));
+        article.append(sourceText("Read original receipt description (unaltered)", row.source_action.description));
+        article.append(sourceText("Inspect original action, raw date and literal date spans", JSON.stringify({
+          source_action: row.source_action, raw_event_date_span: row.raw_event_date_span,
+          literal_spans: JSON.parse(observation.receipt_spans_json),
+          negative_flags: JSON.parse(observation.negative_flags_json),
+        }, null, 2)));
+        article.append(sourceText("Inspect all original bill metadata and source context fields",
+          JSON.stringify(row.source_context, null, 2)));
+      } else if (bill) {
         const context = row.bill_context;
         const cohortNote = {
           source_coded_event: "Source-coded filing/introduction candidate, not a certified policy.",
@@ -108,6 +206,12 @@ if (typeof document !== "undefined") {
         article.append(sourceText("Read full title + abstract metadata view (not native text)", row.text));
       } else if (native) {
         const context = row.native_context;
+        if (sessionText) {
+          article.append(element("p",
+            `${row.scope_label}. This exact canonical match is not in the metadata candidate cohort. `
+            + "No date was required or inferred; retained printed/session dates are not filing dates. "
+            + "No token planning or model statistics are supplied.", "note session-observation"));
+        }
         article.append(element("p",
           `Native reader/source: ${row.reader} · Packet root: ${row.packet_root} · `
           + `Exact native context: ${row.context_id} · Join: ${context.canonical_join_basis}. `
@@ -117,7 +221,8 @@ if (typeof document !== "undefined") {
           + `Native identifier: ${context.native_identifier} · `
           + `Native-reported date: ${context.native_introduction_date || "unknown"} · `
           + `Date disposition: ${context.date_evidence_status ?? context.native_window_disposition} · `
-          + `Source introduction: ${row.bill_context.source_introduction_date || "unknown"}. `
+          + `Source introduction: ${(sessionText ? context : row.bill_context).source_introduction_date || "unknown"} · `
+          + `Original source window disposition: ${context.window_disposition ?? "unknown"}. `
           + "Native identity, original/introduced stage, filing-time alignment and legal/markup semantics "
           + "are not certified. Model input, filing-time certification, training and analytical admission: false.",
           "note"));
@@ -159,29 +264,63 @@ if (typeof document !== "undefined") {
     next.disabled = begin + pageSize >= matches.length;
     document.getElementById("page-label").textContent =
       `Page ${page + 1} of ${Math.max(1, Math.ceil(matches.length / pageSize))}`;
-    download.disabled = loading || !loaded;
+    download.disabled = loading || !loaded || exporting;
     download.textContent = `Download all ${matches.length.toLocaleString()} query matches (full-text JSONL)`;
     const identities = new Set(matches.map(row =>
       row.source_type !== "platform" ? row.bill_id : `${row.state}/${row.party}`));
     status.textContent = matches.length
       ? `Views ${begin + 1}–${Math.min(begin + pageSize, matches.length)} of ${matches.length.toLocaleString()} matching views`
-        + (collection.value !== "platform" ? ` · ${identities.size.toLocaleString()} distinct candidate bill contexts.`
+        + (collection.value === "source_receipt"
+          ? ` · ${identities.size.toLocaleString()} distinct observed source bill contexts; not cycle candidates.`
+          : collection.value === "native_session_text"
+            ? ` · ${new Set(matches.map(row => `${row.packet_root}/${row.context_id}`)).size.toLocaleString()} source references`
+              + ` · ${identities.size.toLocaleString()} unique canonical bill IDs; OUTSIDE candidate date cohort, not admissions.`
+          : collection.value !== "platform" ? ` · ${identities.size.toLocaleString()} distinct candidate bill contexts.`
           : " · Views are not certified platforms or distinct documents.")
       : "No matching views in this saved selection. This is not evidence of zero activity or publication absence.";
   }
 
   function search() {
     page = 0;
-    matches = filterEvidence(records, query.value);
+    appliedQuery = query.value;
+    appliedReceiptStatus = collection.value === "source_receipt" ? receiptStatus.value : "";
+    matches = filterEvidence(records, appliedQuery).filter(row =>
+      !appliedReceiptStatus || row.receipt_status === appliedReceiptStatus);
     render();
   }
 
   function coverage() {
     const platform = collection.value === "platform";
+    const receipt = collection.value === "source_receipt";
+    const sessionText = collection.value === "native_session_text";
+    document.getElementById("receipt-status-label").hidden = !receipt;
+    receiptStatus.disabled = !receipt;
     party.disabled = !platform || state.value === "outside";
     const selected = [...document.querySelectorAll("#state-coverage tbody tr")]
       .find(row => row.dataset.state === state.value);
-    document.getElementById("selection-scope").textContent = !platform && selected
+    const receiptCoverage = [...document.querySelectorAll("#receipt-coverage tbody tr")]
+      .find(row => row.dataset.state === state.value);
+    const sessionCoverage = [...document.querySelectorAll("#session-coverage tbody tr")]
+      .find(row => row.dataset.state === state.value);
+    document.getElementById("selection-scope").textContent = sessionText
+      ? (sessionCoverage?.dataset.sessionProvided === "true"
+        ? `${state.value}: ${sessionCoverage.dataset.views} full publisher-session source views / `
+          + `${sessionCoverage.dataset.references} source references / ${sessionCoverage.dataset.bills} unique canonical bill IDs. `
+          + "OUTSIDE candidate date cohort, not native/date/analytical admission. "
+          + "No filing date required or inferred; observed dates/window dispositions unchanged. "
+          + `${selected?.dataset.contexts ?? "Unknown"} active cycle candidate contexts remain unchanged.`
+        : "Publisher-session source coverage unknown: no reviewed scope supplied for this state/session; "
+          + "not a measured zero. Only explicitly selected NY 2023–2024 / IL 103rd scopes are supported.")
+      : receipt
+      ? (receiptCoverage?.dataset.receiptProvided === "true"
+        ? `${state.value}: ${receiptCoverage.dataset.observations} separate source-receipt observations. `
+          + `${selected?.dataset.contexts ?? "Unknown"} active cycle candidate contexts remain unchanged; `
+          + `${selected?.dataset.widerContexts ?? "unknown"} retained wider-history source contexts. `
+          + "Receipt is not introduction, filing, native evidence or eligible-cycle admission. "
+          + "Both literal and action dates, including unresolved discrepancies, are retained."
+        : "Receipt coverage unknown: this optional packet covers ME only. "
+          + "No receipt observations were supplied for this state; this is not a measured zero.")
+      : !platform && selected
       ? (Number(selected.dataset.contexts) === 0
         ? `${state.value}: date/cohort evidence unavailable in this cycle candidate dataset. `
           + "No source-coded filing/introduction, reviewed literal candidate or registered native-date candidate is available here. "
@@ -207,12 +346,16 @@ if (typeof document !== "undefined") {
       }
       document.getElementById(count).textContent = `${visible} ${label} rows`;
     }
+    for (const row of document.querySelectorAll("#receipt-coverage tbody tr, #session-coverage tbody tr")) {
+      row.hidden = Boolean(state.value && row.dataset.state !== state.value);
+    }
   }
 
   async function update() {
     const request = ++generation;
     records = [];
     matches = [];
+    loadedNames = [];
     page = 0;
     loading = true;
     loaded = false;
@@ -227,20 +370,39 @@ if (typeof document !== "undefined") {
         : "Choose a state; no source records loaded.";
       return;
     }
+    if (collection.value === "source_receipt" && state.value !== "ME") {
+      loading = false;
+      status.textContent = "Receipt coverage unknown: this packet only covers ME. "
+        + "No receipt observations were supplied for this state; not a measured zero.";
+      return;
+    }
+    if (collection.value === "native_session_text"
+        && ![...document.querySelectorAll("#session-coverage tbody tr")].some(row =>
+          row.dataset.state === state.value && row.dataset.sessionProvided === "true")) {
+      loading = false;
+      status.textContent = "Publisher-session source coverage unknown: no reviewed scope supplied "
+        + "for this state/session; not a measured zero.";
+      return;
+    }
     status.textContent = "Loading complete saved source records…";
     try {
       const names = collection.value === "bill_metadata" ? [`bills-${state.value}`]
         : collection.value === "native_text" ? [`native-${state.value}`]
+        : collection.value === "source_receipt" ? [`receipts-${state.value}`]
+        : collection.value === "native_session_text" ? [`native-session-${state.value}`]
         : state.value === "outside" ? ["platform-outside"]
           : (party.value ? [party.value] : ["D", "R"]).map(code => `platform-${state.value}-${code}`);
       const groups = await Promise.all(names.map(async name => {
-        const response = await fetch(`evidence/${name}.jsonl`);
-        if (!response.ok) throw new Error(`Partition unavailable (HTTP ${response.status})`);
-        const body = await response.text();
-        return body.split("\n").filter(line => line.trim()).map(line => JSON.parse(line));
+        const rows = [];
+        for await (const line of savedJSONLLines([name])) {
+          if (request !== generation) return [];
+          rows.push(JSON.parse(line));
+        }
+        return rows;
       }));
       if (request !== generation) return;
       records = groups.flat();
+      loadedNames = names;
       loading = false;
       loaded = true;
       search();
@@ -256,16 +418,31 @@ if (typeof document !== "undefined") {
     if (!loading) search();
   });
   for (const control of [state, collection, party]) control.addEventListener("change", update);
+  receiptStatus.addEventListener("change", () => { if (!loading) search(); });
   previous.addEventListener("click", () => { page--; render(); });
   next.addEventListener("click", () => { page++; render(); });
-  download.addEventListener("click", () => {
-    if (loading || !loaded) return;
-    const blob = new Blob([fullQueryJSONL(matches)], { type: "application/x-ndjson;charset=utf-8" });
-    const url = URL.createObjectURL(blob);
-    const link = element("a");
-    link.href = url;
-    link.download = `${collection.value}-${state.value}-${party.disabled ? "all" : party.value || "both"}-query-fulltext.jsonl`;
-    link.click();
-    setTimeout(() => URL.revokeObjectURL(url), 1000);
+  download.addEventListener("click", async () => {
+    if (loading || !loaded || exporting) return;
+    const request = generation;
+    const filename = `${collection.value}-${state.value}-${party.disabled ? "all" : party.value || "both"}-query-fulltext.jsonl`;
+    exporting = true;
+    download.disabled = true;
+    download.textContent = `Preparing all ${matches.length.toLocaleString()} complete query matches…`;
+    try {
+      const blob = await fullQueryBlob([...loadedNames], appliedQuery, appliedReceiptStatus, matches.length);
+      const url = URL.createObjectURL(blob), link = element("a");
+      link.href = url;
+      link.download = filename;
+      link.click();
+      setTimeout(() => URL.revokeObjectURL(url), 1000);
+    } catch (error) {
+      if (request === generation) {
+        status.textContent = `Complete query export failed: ${error.message}. No partial download was substituted.`;
+      }
+    } finally {
+      exporting = false;
+      download.disabled = loading || !loaded;
+      download.textContent = `Download all ${matches.length.toLocaleString()} query matches (full-text JSONL)`;
+    }
   });
 }

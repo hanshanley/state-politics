@@ -17,6 +17,7 @@ import pytest
 import yaml
 
 from state_politics.bills.study_native_overlap import normalize_packet
+from state_politics.bills.study_window import _snapshot
 from state_politics.provenance import sha256_file
 from state_politics.site_evidence import (
     COHORTS,
@@ -212,6 +213,213 @@ def repin_optional(directory):
 
 def input_pin(path):
     return {"path": str(path), "sha256": sha256_file(path), "size": path.stat().st_size}
+
+
+@pytest.fixture
+def receipt_bundle(tmp_path):
+    directory = tmp_path / "receipts"
+    directory.mkdir()
+    source = tmp_path / "retained_receipt_source.json"
+    write_json(source, {"unchanged_original": SOURCE_TEXT})
+    records, bills, actions, contexts, dispositions = [], [], [], [], []
+    for index in range(2):
+        day = "2023-12-11" if index == 0 else "2023-12-20"
+        raw_date = "December 11, 2023" if index == 0 else "December 20, 2022"
+        literal = "2023-12-11" if index == 0 else "2022-12-20"
+        description = f"Received by the Clerk of the House on {raw_date}."
+        bill = {
+            "bill_id": f"receipt-bill:{index}", "state": "ME",
+            "identifier": "LD 2081" if index else "LD 2000",
+            "session_identifier": "131", "title": SOURCE_TEXT,
+            "from_organization_id": "maine-house", "originating_chamber": "lower",
+            "original_unknown_field": {"unaltered": SOURCE_TEXT, "missing": None},
+        }
+        action = {
+            "action_id": f"receipt-action:{index}", "bill_id": bill["bill_id"], "state": "ME",
+            "date": day, "description": description, "classification": "receipt",
+            "organization_id": "maine-house", "chamber": "lower", "order": 1,
+        }
+        start = description.index(raw_date)
+        receiver = "Clerk of the House"
+        receiver_start = description.index(receiver)
+        spans = [{
+            "receipt_raw": description[:-1], "receipt_span": [0, len(description) - 1],
+            "receiver_raw": receiver,
+            "receiver_span": [receiver_start, receiver_start + len(receiver)],
+            "literal_date_raw": raw_date, "literal_date_span": [start, start + len(raw_date)],
+            "literal_calendar_date": literal, "literal_chamber": "lower",
+            "uninterpreted_description_suffix": ".",
+        }]
+        observation = {
+            "source_event_date_raw": day, "event_calendar_date": day,
+            "literal_calendar_date": literal, "date_agreement": (
+                "dates_agree" if index == 0 else "dates_disagree"
+            ),
+            "receipt_statement_count": 1, "receipt_spans_json": json.dumps(spans),
+            "target_calendar_interest": True, "is_unambiguous_origin_receipt": index == 0,
+            "bill_exact_receipt_action_count": 1, "action_id_occurrences": 1,
+            "same_observed_event_occurrences": 1,
+            "origin_identity_status": "origin_identity_matches",
+            "negative_flags_json": "[]" if index == 0 else '["dates_disagree"]',
+            "analytical_admission": False,
+        }
+        context = {
+            "bill_id": bill["bill_id"], "original_bill": bill,
+            "original_action_ids": [action["action_id"]],
+            "original_bill_abstracts": [{
+                "id": f"abstract:{index}", "bill_id": bill["bill_id"],
+                "abstract": SOURCE_TEXT, "note": SOURCE_TEXT,
+            }],
+            "original_bill_sources": [{"url": "javascript:untrusted()", "note": SOURCE_TEXT}],
+            "original_filing_ledger": {"original_unresolved": SOURCE_TEXT},
+        }
+        records.append({
+            "source_action": action, "source_bill": bill, "observation": observation,
+            "source_context_join": {
+                "artifact": "source_contexts.jsonl", "bill_id": bill["bill_id"],
+            },
+            "raw_event_date_span": {
+                "source_field": "date", "raw_value": day, "span": [0, len(day)],
+            },
+        })
+        bills.append(bill)
+        actions.append(action)
+        contexts.append(context)
+        dispositions.append({**action, **observation})
+    write_jsonl(directory / "target_calendar_receipt_observations.jsonl", records)
+    write_jsonl(directory / "source_contexts.jsonl", contexts)
+    for name, rows in (
+        ("source_bills", bills), ("source_bill_actions", actions),
+        ("all_action_dispositions", dispositions),
+    ):
+        pq.write_table(pa.Table.from_pylist(rows), directory / f"{name}.parquet")
+    status = "complete_retained_maine_receipt_observations_not_source_admission"
+    counts = {
+        "target_calendar_interest_actions": 2, "all_retained_me_bills": 2,
+        "unambiguous_origin_in_window_receipt_observations": 1,
+    }
+    write_json(directory / "report.json", {
+        "status": status, "counts": counts, "inputs_unchanged": True,
+        "analytical_admission": False, "new_requests": 0,
+    })
+    write_json(directory / "verification.json", {"original_string_and_null_preservation": True})
+    inputs = {"retained_original": _snapshot(source)}
+    write_json(directory / "manifest.json", {
+        "schema_version": 1, "status": status, "state": "ME",
+        "window_start": "2023-01-01", "window_end": "2024-12-31",
+        "analytical_admission": False, "introduction_or_filing_inference": False,
+        "original_source_writes": 0, "new_requests": 0, "inputs_unchanged": True,
+        "inputs": inputs, "inputs_after": inputs, "counts": counts,
+    })
+    repin_optional(directory)
+    return directory
+
+
+def test_receipts_remain_separate_complete_source_observations(
+    cycle_bundle, receipt_bundle, tmp_path,
+):
+    metadata, platform, *_ = cycle_bundle
+    before = _snapshot(receipt_bundle / "manifest.json")
+    out = tmp_path / "preview"
+    manifest = build_cycle_preview(metadata, platform, out, receipt_evidence=receipt_bundle)
+    assert manifest["counts"]["n_cycle_contexts"] == 14
+    assert manifest["counts"]["n_metadata_candidate_views_not_bills"] == 15
+    assert manifest["counts"]["source_receipt_evidence"] == {
+        "target_calendar_interest_views": 2, "unique_origin_date_agreeing_views": 1,
+        "unresolved_views": 1, "provided_states": ["ME"],
+        "other_states": "unknown_not_supplied", "retained_wider_history_contexts": 2,
+        "cohort_admissions": 0,
+    }
+    assert (out / "evidence/bills-ME.jsonl").read_text() == ""
+    assert not (out / "evidence/receipts-TX.jsonl").exists()
+    originals = [
+        json.loads(line) for line in
+        (receipt_bundle / "target_calendar_receipt_observations.jsonl").read_text().split("\n")
+        if line
+    ]
+    with gzip.open(out / "downloads/receipts-ME.jsonl.gz", "rt") as handle:
+        rows = [json.loads(line) for line in handle]
+    assert len(rows) == 2
+    for row, original in zip(rows, originals, strict=True):
+        assert {key: row[key] for key in original} == original
+        assert row["source_context"]["original_bill"] == original["source_bill"]
+        assert row["source_context"]["original_bill_abstracts"][0]["abstract"] == SOURCE_TEXT
+        assert row["native_evidence"] is row["eligible_cycle_admission"] is False
+    assert rows[1]["source_action"]["date"] == "2023-12-20"
+    assert rows[1]["observation"]["literal_calendar_date"] == "2022-12-20"
+    assert rows[1]["receipt_status"] == "unresolved_receipt"
+    document = (out / "index.html").read_text()
+    assert document.count("Unknown — no receipt packet supplied") == 49
+    assert 'value="source_receipt"' in document
+    assert "not introduction, filing, native evidence or eligible-cycle admission" in document
+    assert "<script>window.EVIDENCE_INJECTED" not in document
+    assert before == _snapshot(receipt_bundle / "manifest.json")
+
+
+@pytest.mark.parametrize("defect", [
+    "unfinished", "hash", "manifest_inference", "original_source_stat", "admission",
+    "missing_target", "hidden_mismatch", "changed_original", "dropped_context_field",
+    "source_admission_flag",
+])
+def test_receipt_inputs_fail_closed(cycle_bundle, receipt_bundle, tmp_path, defect):
+    metadata, platform, *_ = cycle_bundle
+    manifest_path = receipt_bundle / "manifest.json"
+    manifest = json.loads(manifest_path.read_text())
+    target_path = receipt_bundle / "target_calendar_receipt_observations.jsonl"
+    if defect == "unfinished":
+        manifest["status"] = "incomplete"
+    elif defect == "hash":
+        target_path.write_text("{}\n")
+    elif defect == "manifest_inference":
+        manifest["introduction_or_filing_inference"] = True
+    elif defect == "original_source_stat":
+        source = Path(manifest["inputs"]["retained_original"]["path"])
+        original = source.stat()
+        os.utime(source, ns=(original.st_atime_ns, original.st_mtime_ns + 1_000_000))
+    else:
+        rows = [json.loads(line) for line in target_path.read_text().split("\n") if line]
+        if defect == "admission":
+            rows[0]["observation"]["analytical_admission"] = True
+        elif defect == "source_admission_flag":
+            rows[0]["source_admission"] = True
+        elif defect == "missing_target":
+            rows.pop()
+        elif defect == "hidden_mismatch":
+            rows[1]["observation"]["literal_calendar_date"] = "2023-12-20"
+        elif defect == "changed_original":
+            rows[0]["source_action"]["description"] += " silent amendment"
+        elif defect == "dropped_context_field":
+            rows[0]["source_bill"].pop("original_unknown_field")
+        write_jsonl(target_path, rows)
+    write_json(manifest_path, manifest)
+    if defect not in {"hash", "original_source_stat"}:
+        repin_optional(receipt_bundle)
+    out = tmp_path / "preview"
+    with pytest.raises(ValueError):
+        build_cycle_preview(metadata, platform, out, receipt_evidence=receipt_bundle)
+    assert not out.exists()
+
+
+def test_receipt_source_mutation_during_export_rejected(
+    cycle_bundle, receipt_bundle, tmp_path, monkeypatch,
+):
+    from state_politics import site_evidence
+
+    metadata, platform, *_ = cycle_bundle
+    manifest = json.loads((receipt_bundle / "manifest.json").read_text())
+    source = Path(manifest["inputs"]["retained_original"]["path"])
+    original = site_evidence._write_partition
+
+    def mutate(out, name, rows):
+        original(out, name, rows)
+        if name == "receipts-ME":
+            source.write_text("source changed during export")
+
+    monkeypatch.setattr(site_evidence, "_write_partition", mutate)
+    with pytest.raises(ValueError, match="receipt source changed during build"):
+        build_cycle_preview(
+            metadata, platform, tmp_path / "preview", receipt_evidence=receipt_bundle,
+        )
 
 
 @pytest.fixture
@@ -879,6 +1087,60 @@ assert.equal(safeSourceURL("https://example.org/platform"), "https://example.org
     )
 
 
+def test_streamed_query_download_preserves_raw_fields_utf8_and_complete_matches():
+    node = shutil.which("node")
+    if not node:
+        pytest.skip("Node unavailable")
+    check = r"""
+const assert = require("node:assert/strict");
+const { fullQueryBlob } = require(process.argv[1]);
+const lines = Array.from({ length: 13 }, (_, index) =>
+  `{"view_id":"${index}","mtime_ns":1792435050043987571,`
+  + `"text":"${index < 12 ? "Keep" : "Drop"} 😀 full ending ${index}",`
+  + `"receipt_status":"${index % 2 ? "unresolved_receipt" : "unique_origin_date_agreeing"}"}`);
+const sources = {
+  "evidence/one.jsonl": lines.slice(0, 7).join("\n") + "\n",
+  "evidence/two.jsonl": lines.slice(7).join("\n"),
+};
+global.fetch = async name => {
+  assert.ok(Object.hasOwn(sources, name));
+  const bytes = new TextEncoder().encode(sources[name]);
+  let offset = 0;
+  return new Response(new ReadableStream({
+    pull(controller) {
+      if (offset === bytes.length) return controller.close();
+      controller.enqueue(bytes.slice(offset, offset + 7));
+      offset = Math.min(bytes.length, offset + 7);
+    },
+  }));
+};
+Response.prototype.text = Blob.prototype.text = () => {
+  throw new Error("Whole-source text forbidden");
+};
+(async () => {
+  const stringify = JSON.stringify;
+  JSON.stringify = () => { throw new Error("Do not reserialize raw provenance integers"); };
+  const blob = await fullQueryBlob(["one", "two"], "keep", "", 12);
+  JSON.stringify = stringify;
+  assert.equal(Buffer.from(await blob.arrayBuffer()).toString(),
+    lines.slice(0, 12).join("\n") + "\n");
+  const blank = await fullQueryBlob(["one", "two"], "", "", 13);
+  assert.equal(Buffer.from(await blank.arrayBuffer()).toString(), lines.join("\n") + "\n");
+  const receipt = await fullQueryBlob(["one", "two"], "keep", "unresolved_receipt", 6);
+  assert.equal(Buffer.from(await receipt.arrayBuffer()).toString(),
+    lines.slice(0, 12).filter((_, index) => index % 2).join("\n") + "\n");
+  assert.equal((await fullQueryBlob(["one", "two"], "not-present", "", 0)).size, 0);
+  await assert.rejects(fullQueryBlob(["one", "two"], "keep", "", 11), /count changed/);
+  global.fetch = async () => new Response("missing", { status: 404 });
+  await assert.rejects(fullQueryBlob(["one"], "", "", 0), /HTTP 404/);
+})().catch(error => { console.error(error); process.exitCode = 1; });
+"""
+    subprocess.run(
+        [node, "-e", check, str(ROOT / "web/cycle-evidence.js")],
+        check=True, capture_output=True, text=True,
+    )
+
+
 def test_cycle_cli_mode_builds_separate_unpublished_preview(
     cycle_bundle, tmp_path, capsys, monkeypatch,
 ):
@@ -916,9 +1178,11 @@ def test_cycle_cli_mode_builds_separate_unpublished_preview(
     )
 
 
-@pytest.mark.parametrize("option", ["--native-evidence", "--metadata-token-plan"])
+@pytest.mark.parametrize("option", [
+    "--native-evidence", "--metadata-token-plan", "--receipt-evidence",
+])
 def test_cycle_cli_optional_sources_work_independently(
-    cycle_bundle, optional_bundle, tmp_path, option,
+    cycle_bundle, optional_bundle, receipt_bundle, tmp_path, option,
 ):
     metadata, platform, *_ = cycle_bundle
     native, plan = optional_bundle
@@ -926,7 +1190,10 @@ def test_cycle_cli_optional_sources_work_independently(
     out = tmp_path / "preview"
     assert main([
         "--cycle-evidence", "--bill-evidence", str(metadata), "--platform-evidence", str(platform),
-        option, str(native if option == "--native-evidence" else plan), "--out", str(out),
+        option, str({
+            "--native-evidence": native, "--metadata-token-plan": plan,
+            "--receipt-evidence": receipt_bundle,
+        }[option]), "--out", str(out),
     ]) == 0
     rows = [
         json.loads(line) for line in (out / "evidence/bills-TX.jsonl").read_text().split("\n")
@@ -953,16 +1220,354 @@ def test_cycle_real_browser_controls_downloads_markup_nojs_and_mobile(cycle_bund
 
 @pytest.mark.skipif(not os.environ.get("CYCLE_BROWSER_CHROME"), reason="No real browser configured")
 def test_cycle_real_browser_native_full_query_and_token_plan(
-    cycle_bundle, optional_bundle, tmp_path,
+    cycle_bundle, optional_bundle, receipt_bundle, tmp_path,
 ):
     metadata, platform, *_ = cycle_bundle
     native, plan = optional_bundle
     out = tmp_path / "preview"
     build_cycle_preview(
         metadata, platform, out, native_evidence=native, metadata_token_plan=plan,
+        receipt_evidence=receipt_bundle,
     )
     result = subprocess.run([
         shutil.which("node"), str(ROOT / "tests/browser_cycle_site.cjs"), str(out),
         str(tmp_path / "browser-check"), os.environ["CYCLE_BROWSER_CHROME"], "fixture",
     ], capture_output=True, text=True, timeout=180)
+    assert result.returncode == 0, result.stdout + result.stderr
+
+
+@pytest.fixture
+def session_bundle(cycle_bundle, optional_bundle, tmp_path, monkeypatch):
+    """Small checksum-bound reviewed scopes; production scope pins are never relaxed."""
+    from state_politics import site_evidence
+
+    metadata, _, contexts, _, views, _ = cycle_bundle
+    native, _ = optional_bundle
+    manifest = json.loads((native / "manifest.json").read_text())
+    registry = Path(manifest["inputs"]["registry"]["path"])
+    config = yaml.safe_load(registry.read_text())
+    overlaps = pq.read_table(native / "native_context_overlap.parquet").to_pylist()
+    indexes = pq.read_table(native / "native_view_index.parquet").to_pylist()
+    contracts = {}
+    for state, scope, session in (
+        ("NY", "ny-2023-2024", "2023-2024"), ("IL", "il-103rd", "103rd"),
+    ):
+        root = tmp_path / f"session-{state}"
+        root.mkdir()
+        spec = {
+            "state": state, "root": str(root), "profile": "views",
+            "contexts": "contexts.parquet", "views": "views.parquet",
+            "context_id": "context_id", "allow_missing_identity": True,
+            "identifier": (
+                "original_source_record_json.identifier" if state == "NY" else "identifier"
+            ),
+            "source_only": {
+                "selector": "original_source_record_json.population_kind",
+                "values": ["native_untyped", "canonical_only"],
+            },
+            "preserve_context_fields": ["native_date_observations_json", "negative_flags_json"],
+            "view_reader_allowlist": ["reader-a", "reader-b"],
+        }
+        if state == "NY":
+            proof = root / "contract.json"
+            write_json(proof, {
+                "scope": "all 24,315 typed identities in the frozen 2023-2024 NY native census",
+            })
+            spec.update(canonical_session=session, binding_evidence=[{
+                "path": str(proof), "sha256": sha256_file(proof), "selector": "scope",
+                "expected": json.loads(proof.read_text())["scope"],
+            }])
+            manifest["inputs"]["NY_binding_evidence_0"] = input_pin(proof)
+        else:
+            spec.update(
+                session_identifier="native_session_identifier", session_map={"103": session},
+                context_granularity="source_reference",
+            )
+        raw, source_views = [], []
+        size = 14 if state == "NY" else 15
+        for index in range(size):
+            source_only = index == size - 2
+            bill_number = 1 if state == "IL" and index == 12 else index
+            identifier = f"HB {0 if source_only else bill_number}"
+            record = {
+                "context_id": f"{state}:{index}", "identifier": identifier,
+                "native_session_identifier": "104" if source_only and state == "IL" else "103",
+                "original_source_record_json": json.dumps({
+                    "identifier": identifier,
+                    "population_kind": "canonical_only" if source_only else "native_identity",
+                    "original_unknown": SOURCE_TEXT,
+                }),
+                "native_date_observations_json": '[{"printed_date":"2022-12-01"}]',
+                "negative_flags_json": '["no_filing_or_version_certification"]',
+                "analytical_admission": False,
+            }
+            raw.append(record)
+            for reader in ["reader-a", "reader-b"] + (["excluded-markup"] if index == 1 else []):
+                text = f"{SOURCE_TEXT}\n{state} FULL {index} {reader} SESSION-TAIL-{index}"
+                source_views.append({
+                    "view_id": f"{state}-view:{index}:{reader}", "context_id": record["context_id"],
+                    "reader": reader, "text": text, "input_sha256": digest(text),
+                    "n_input_characters": len(text), "source_record_sha256": digest(str(index)),
+                    "original_source_sha256": digest(f"source {index}"),
+                    "analytical_admission": False, "training_admission": False,
+                })
+            if index == 0:
+                candidate = {
+                    **contexts[1], "bill_id": f"{state}-bill:0", "state": state,
+                    "session_identifier": session, "identifier": identifier,
+                    "n_indexed_native_views": 2,
+                }
+                contexts.append(candidate)
+                views.append({
+                    **views[2],
+                    **{key: candidate[key] for key in (
+                        "bill_id", "state", "session_identifier", "identifier",
+                    )},
+                    "view_id": f"{state}-candidate:0",
+                })
+        pq.write_table(pa.Table.from_pylist(raw), root / "contexts.parquet")
+        pq.write_table(pa.Table.from_pylist(source_views), root / "views.parquet")
+        write_json(root / "manifest.json", {"files": {
+            name: sha256_file(root / name) for name in ("contexts.parquet", "views.parquet")
+        }})
+        spec["manifest_sha256"] = sha256_file(root / "manifest.json")
+        normalized_contexts, normalized_views = normalize_packet(
+            spec, pq.read_table(root / "contexts.parquet").to_pandas(),
+            pq.read_table(root / "views.parquet").to_pandas(),
+        )
+        spec.update(
+            expected_contexts=len(normalized_contexts), expected_views=len(normalized_views),
+        )
+        for index, row in enumerate(
+            pa.Table.from_pandas(normalized_contexts, preserve_index=False).to_pylist()
+        ):
+            joined = index < size - 2
+            bill_number = 1 if state == "IL" and index == 12 else index
+            overlaps.append({
+                **row, "bill_id": f"{state}-bill:{bill_number}" if joined else None,
+                "identifier": row["native_identifier"],
+                "canonical_join_basis": (
+                    "unique_declared_session_typed_identity" if joined
+                    else "source_only_unresolved_identity"
+                    if row["canonical_join_mode"] == "source_only"
+                    else "native_only_unmatched"
+                ),
+                "source_introduction_date": "2022-12-01" if index == 1 else "",
+                "window_disposition": (
+                    "source_introduction_before_window" if index == 1
+                    else "no_source_introduction_action"
+                ),
+                "date_evidence_status": row["native_window_disposition"],
+            })
+        indexes.extend(pa.Table.from_pandas(normalized_views, preserve_index=False).to_pylist())
+        config["packets"].append(spec)
+        for role, name in (
+            ("manifest", "manifest.json"), ("contexts", "contexts.parquet"),
+            ("views", "views.parquet"),
+        ):
+            manifest["inputs"][f"{state}_{role}"] = input_pin(root / name)
+        contracts[scope] = {
+            "state": state, "session_identifier": session, "packet_root": str(root),
+            "packet_spec_sha256": digest(json.dumps(
+                spec, sort_keys=True, ensure_ascii=True, allow_nan=False,
+            )),
+        }
+    monkeypatch.setattr(site_evidence, "NATIVE_SESSION_SCOPES", contracts)
+    registry.write_text(yaml.safe_dump(config))
+    manifest["inputs"]["registry"] = input_pin(registry)
+    write_json(native / "manifest.json", manifest)
+    overlap_columns = dict.fromkeys(key for row in overlaps for key in row)
+    pq.write_table(pa.Table.from_pylist([
+        {key: row.get(key) for key in overlap_columns} for row in overlaps
+    ]), native / "native_context_overlap.parquet")
+    pq.write_table(pa.Table.from_pylist(indexes), native / "native_view_index.parquet")
+    repin_optional(native)
+    pq.write_table(pa.Table.from_pylist(contexts), metadata / "bill_evidence.parquet")
+    pq.write_table(pa.Table.from_pylist(views), metadata / "candidate_metadata_views.parquet")
+    matrix = csv.read_csv(metadata / "state_matrix.csv").to_pylist()
+    for row in matrix:
+        if row["state"] in {"NY", "IL"}:
+            for key in (
+                "n_retained_contexts_wider_history", "n_cycle_evidence_candidate_contexts",
+                "n_filing_or_introduction_in_window", "n_cycle_metadata_candidate_views",
+                "n_cycle_contexts_with_indexed_native_text",
+            ):
+                row[key] = 1
+    csv.write_csv(pa.Table.from_pylist(matrix), metadata / "state_matrix.csv")
+    report = json.loads((metadata / "report.json").read_text())
+    report["n_cycle_contexts"] += 2
+    report["n_metadata_candidate_views_not_bills"] += 2
+    report["cohort_scope_counts"][COHORTS[0]] += 2
+    write_json(metadata / "report.json", report)
+    manifest = json.loads((metadata / "manifest.json").read_text())
+    manifest["inputs"]["native_manifest"] = input_pin(native / "manifest.json")
+    write_json(metadata / "manifest.json", manifest)
+    repin(metadata)
+    return native, tuple(contracts)
+
+
+def test_reviewed_session_sources_preserve_full_strings_references_and_no_admissions(
+    cycle_bundle, session_bundle, receipt_bundle, tmp_path,
+):
+    metadata, platform, *_ = cycle_bundle
+    native, scopes = session_bundle
+    baseline = tmp_path / "baseline"
+    old = build_cycle_preview(
+        metadata, platform, baseline, native_evidence=native, receipt_evidence=receipt_bundle,
+    )
+    out = tmp_path / "preview"
+    result = build_cycle_preview(
+        metadata, platform, out, native_evidence=native, native_session_scopes=scopes,
+        receipt_evidence=receipt_bundle,
+    )
+    assert "producer_archive" not in old
+    assert not (baseline / "downloads/producers").exists()
+    assert old["counts"] == {
+        key: value for key, value in result["counts"].items()
+        if key != "native_session_source_evidence"
+    }
+    for name, binding in result["producer_archive"].items():
+        archived = out / binding["path"]
+        assert archived.read_bytes() == (ROOT / binding["original_path"]).read_bytes()
+        assert sha256_file(archived) == binding["sha256"]
+        assert result["outputs"][binding["path"]]["sha256"] == binding["sha256"]
+        assert name == archived.name
+    assert result["producer_sha256"] == result["producer_archive"]["site_evidence.py"]["sha256"]
+    assert result["entrypoint_sha256"] == result["producer_archive"]["build_site.py"]["sha256"]
+    assert result["inputs"]["native_evidence"]["normalizer_sha256"] == (
+        result["producer_archive"]["study_native_overlap.py"]["sha256"]
+    )
+    for path in (baseline / "evidence").iterdir():
+        assert path.read_bytes() == (out / "evidence" / path.name).read_bytes()
+    counts = result["counts"]["native_session_source_evidence"]
+    assert counts["other_states_and_sessions"] == "unknown_not_supplied"
+    for state, scope, expected in (
+        ("NY", scopes[0], (22, 11, 11)), ("IL", scopes[1], (24, 12, 11)),
+    ):
+        values = counts["scopes"][scope]
+        assert (
+            values["exported_views"], values["exported_references"],
+            values["exported_unique_canonical_bills"],
+        ) == expected
+        assert values["candidate_excluded_views"] == 2
+        assert values["reader_excluded_views"] == 1
+        rows = [json.loads(line) for line in
+                (out / f"evidence/native-session-{state}.jsonl").read_text().split("\n") if line]
+        with gzip.open(out / f"downloads/native-session-{state}.jsonl.gz", "rt") as handle:
+            assert rows == [json.loads(line) for line in handle]
+        for row in rows:
+            assert row["bill_id"] != f"{state}-bill:0"
+            assert row["source_type"] == "native_session_text"
+            assert row["scope_label"].startswith("Publisher-session-bound evidence OUTSIDE")
+            assert "bill_context" not in row and "title" not in row and "token_plan" not in row
+            assert row["input_sha256"] == digest(row["text"])
+            assert row["text"].startswith(SOURCE_TEXT)
+            assert all(row[key] is False for key in (
+                "model_input_approved", "training_admission", "analytical_admission",
+                "native_identity_certified", "filing_time_text_certified",
+                "candidate_cohort_member", "eligible_cycle_admission",
+            ))
+            assert row["source_context_record"]["native_date_observations_json"] == (
+                '[{"printed_date":"2022-12-01"}]'
+            )
+            assert row["source_text_bindings"] == {"source_record.text": "text"}
+        outside = [row for row in rows if row["identifier"] == "HB 1"]
+        assert all(row["native_context"]["source_introduction_date"] == "2022-12-01"
+                   for row in outside if row["context_id"].endswith(":1"))
+        assert values["source_window_dispositions_by_reference"][
+            "source_introduction_before_window"
+        ] == 1
+    html = (out / "index.html").read_text()
+    assert html.count("Unknown — no reviewed publisher-session scope supplied") == 48
+    assert 'value="native_session_text"' in html
+    assert "not eligible 2023–2024" in html
+
+
+@pytest.mark.parametrize("defect", [
+    "unknown_scope", "missing_native", "changed_selector", "proof_checksum", "proof_value",
+    "source_only_alias", "duplicate_scope",
+])
+def test_reviewed_session_scope_and_proof_fail_closed(
+    cycle_bundle, session_bundle, tmp_path, defect,
+):
+    from state_politics import site_evidence
+
+    metadata, platform, *_ = cycle_bundle
+    native, scopes = session_bundle
+    manifest = json.loads((native / "manifest.json").read_text())
+    registry = Path(manifest["inputs"]["registry"]["path"])
+    config = yaml.safe_load(registry.read_text())
+    spec = next(spec for spec in config["packets"] if spec["state"] == "NY")
+    if defect == "unknown_scope":
+        scopes = ("ny-2025-2026",)
+    elif defect == "duplicate_scope":
+        scopes = (scopes[0], scopes[0])
+    elif defect == "changed_selector":
+        spec["source_only"]["values"] = []
+        registry.write_text(yaml.safe_dump(config))
+        manifest["inputs"]["registry"] = input_pin(registry)
+    elif defect in {"proof_checksum", "proof_value"}:
+        proof = Path(spec["binding_evidence"][0]["path"])
+        write_json(proof, {"scope": "some unrelated historical/current archive"})
+        if defect == "proof_value":
+            spec["binding_evidence"][0]["sha256"] = sha256_file(proof)
+            manifest["inputs"]["NY_binding_evidence_0"] = input_pin(proof)
+            registry.write_text(yaml.safe_dump(config))
+            manifest["inputs"]["registry"] = input_pin(registry)
+            site_evidence.NATIVE_SESSION_SCOPES[scopes[0]]["packet_spec_sha256"] = digest(
+                json.dumps(spec, sort_keys=True, ensure_ascii=True, allow_nan=False)
+            )
+    elif defect == "source_only_alias":
+        path = native / "native_context_overlap.parquet"
+        rows = pq.read_table(path).to_pylist()
+        next(row for row in rows if row["context_id"] == "NY:12")["bill_id"] = "NY-bill:0"
+        pq.write_table(pa.Table.from_pylist(rows), path)
+    write_json(native / "manifest.json", manifest)
+    repin_optional(native)
+    manifest = json.loads((metadata / "manifest.json").read_text())
+    manifest["inputs"]["native_manifest"] = input_pin(native / "manifest.json")
+    write_json(metadata / "manifest.json", manifest)
+    repin(metadata)
+    out = tmp_path / "preview"
+    with pytest.raises(ValueError):
+        build_cycle_preview(
+            metadata, platform, out, native_evidence=None if defect == "missing_native" else native,
+            native_session_scopes=scopes,
+        )
+    assert not out.exists()
+
+
+def test_reviewed_session_cli_requires_explicit_native_and_opt_in(
+    cycle_bundle, session_bundle, tmp_path,
+):
+    metadata, platform, *_ = cycle_bundle
+    native, scopes = session_bundle
+    main = runpy.run_path(str(ROOT / "scripts/build_site.py"))["main"]
+    for args in ([], ["--cycle-evidence"], ["--native-evidence", str(native)]):
+        with pytest.raises(SystemExit):
+            main([*args, "--native-session-scope", scopes[0]])
+    out = tmp_path / "preview"
+    assert main([
+        "--cycle-evidence", "--bill-evidence", str(metadata), "--platform-evidence", str(platform),
+        "--native-evidence", str(native), "--native-session-scope", scopes[0], "--out", str(out),
+    ]) == 0
+    assert (out / "evidence/native-session-NY.jsonl").exists()
+    assert not (out / "evidence/native-session-IL.jsonl").exists()
+
+
+@pytest.mark.skipif(not os.environ.get("CYCLE_BROWSER_CHROME"), reason="No real browser configured")
+def test_cycle_real_browser_reviewed_session_sources(
+    cycle_bundle, session_bundle, receipt_bundle, tmp_path,
+):
+    metadata, platform, *_ = cycle_bundle
+    native, scopes = session_bundle
+    out = tmp_path / "preview"
+    build_cycle_preview(
+        metadata, platform, out, native_evidence=native, native_session_scopes=scopes,
+        receipt_evidence=receipt_bundle,
+    )
+    result = subprocess.run([
+        shutil.which("node"), str(ROOT / "tests/browser_cycle_site.cjs"), str(out),
+        str(tmp_path / "browser-check"), os.environ["CYCLE_BROWSER_CHROME"], "fixture",
+    ], capture_output=True, text=True, timeout=240)
     assert result.returncode == 0, result.stdout + result.stderr

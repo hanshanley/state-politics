@@ -201,7 +201,21 @@ def main(argv=None):
         "--metadata-token-plan", type=Path,
         help="Optional tokenization plan; default v2 only with the default metadata selection",
     )
+    parser.add_argument(
+        "--receipt-evidence", type=Path,
+        help="Explicit optional Maine receipt packet; separate evidence, no cohort admission",
+    )
+    parser.add_argument(
+        "--native-session-scope", action="append", default=[],
+        choices=("ny-2023-2024", "il-103rd"),
+        help="Opt-in fixed reviewed publisher session OUTSIDE candidate date cohort; repeat "
+        "to include both. Requires explicit compatible --native-evidence, never date admission",
+    )
     args = parser.parse_args(argv)
+    if args.native_session_scope and not (args.cycle_evidence and args.native_evidence):
+        parser.error(
+            "--native-session-scope requires --cycle-evidence and explicit --native-evidence",
+        )
     default_evidence = args.bill_evidence is None
     if default_evidence:
         args.bill_evidence = DEFAULT_METADATA
@@ -219,6 +233,10 @@ def main(argv=None):
             optional["native_evidence"] = args.native_evidence or DEFAULT_NATIVE
         if args.metadata_token_plan or default_evidence:
             optional["metadata_token_plan"] = args.metadata_token_plan or DEFAULT_TOKEN_PLAN
+        if args.receipt_evidence:
+            optional["receipt_evidence"] = args.receipt_evidence
+        if args.native_session_scope:
+            optional["native_session_scopes"] = tuple(args.native_session_scope)
         result = build_cycle_preview(
             args.bill_evidence, args.platform_evidence, args.out, **optional,
         )
@@ -226,8 +244,8 @@ def main(argv=None):
         print(json.dumps(result["counts"], sort_keys=True))
         print(f"build manifest sha256: {sha256_file(args.out / 'downloads/build_manifest.json')}")
         return 0
-    if args.native_evidence or args.metadata_token_plan:
-        parser.error("--native-evidence and --metadata-token-plan require --cycle-evidence")
+    if args.native_evidence or args.metadata_token_plan or args.receipt_evidence:
+        parser.error("optional native/token-plan/receipt evidence requires --cycle-evidence")
     result = build_preview(
         args.coverage, args.historical, args.out, recovery_path=args.recovery,
     )

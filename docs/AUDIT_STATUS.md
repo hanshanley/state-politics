@@ -95,6 +95,128 @@ promoted**. Full decisions, source/weight immutability and default
 provisional-loader refusal are retained in
 `data/processed/cycle-target-balanced-evaluation-20261021-v1/`.
 
+## Complete native-input review, not metadata-only validation
+
+A separate source-reserved packet now freezes **39 complete native inputs /
+143,398 characters**, with 20 states sampled and all 50 accounted for.
+All selected bills' original reader/reference alternatives remain complete.
+Two isolated GPT-6.1 Sol reviewers each read all 39 exact inputs before any
+model predictions. They agreed on **36**; the **three disagreements are
+preserved without a winning label and excluded from the primary score**.
+This is independent assistant execution, not independent human gold.
+The character-bounded diagnostic is not representative population sampling.
+
+At the predeclared unchanged policy, the joint-target model reached **55.56%
+decision accuracy / 68.18% classified precision** on the agreed inputs; the
+balanced target model reached **72.22% / 86.36%**, respectively. The latter
+classified 22/36, with 19 correct topics and seven correct abstentions.
+All 39-input disagreement sensitivities remain separate. The inference
+preserved **37,326 tokens / 57 windows**, including 12 multichunk inputs,
+with zero discarded tokens. Neither model is promoted.
+
+Actual evidence:
+`data/labels/cycle-native-blind-review-20261021-v1/` and
+`data/processed/cycle-native-input-diagnostic-20261021-v1/`.
+Frozen pre-review plan:
+`cffe58358b988566ad318205977c0be7f92a3dd25176bd0b60795d0a74ca321e`.
+Evaluation manifest:
+`2ea3479d0c5e8285b16996758f52e15aab96dc1701d40a044902da6f13ef11f3`.
+These results have now informed development, so this is not an untouched
+final holdout. Comparing them with the different metadata sample is not a
+causal estimate of text-source improvement.
+
+The prior trainer could not use complete over-budget supervision. New opt-in
+`--allow-document-windows` trains **one complete-unit likelihood over all
+bounded windows**, not separately propagated chunk labels. Default refusal
+and strict inference consensus remain unchanged. A disjoint review of
+68 further native inputs retains 50 topics, 15 non-policy units and three
+unresolved rubric cases outside training. Composition preserves all 6,682
+prior rows, adds 65 native units and restores the complete 1,538-token unit.
+The new corpus has **6,698 train / 50 dev**, with exact preflight coverage of
+275,643 source tokens / 6,728 windows / 23 multichunk units. Nothing is
+truncated; encoding coverage does not assert every unit was sampled by the
+weighted optimizer. The actual three-epoch run completed, updated its encoder
+and preserved all producer/taxonomy bytes. Losses were 1.10301, .45965 and
+.31895. Deterministic optimizer replay verifies all 65 new native units were
+sampled and the restored long unit was used 17 times.
+
+At the unchanged policy, this model reached **65.79%** on metadata 190,
+**75%** on native agreed 36, **86.54%** on platform 52 and **54%** on dev 50.
+Native classified precision was **84%** at 25/36 coverage (21 correct topics,
+six correct abstentions). These are tradeoffs, not a universal improvement:
+native precision and platform decisions regress relative to retained
+alternatives. The model is not promoted. Evaluation manifest:
+`5853e29cc746f51fee427bbfa7d090878286d74d39cd82fa4b1cb0c24b73555b`.
+
+A final explicit reviewed-only ablation now tests whether remaining external
+label/target-taxonomy mismatch is dominating training. It preserves all
+858 reviewed rows (808 train / 50 dev) and separately retains all 5,890
+external rows without relabeling/deletion. All 21 topics have reviewed
+positives, although the rarest has only two. Its opt-in uniform class loss
+and full epoch shuffle are recorded; default inverse-frequency loss is
+unchanged. Complete preflight retains 94,935 tokens / 838 windows / 23
+multichunk units. Six-epoch training is running under frozen plan
+`c87a9792e787d8d59d7234a11c84a86dc766b032fcab27b0471cd5e78f2b4f9a`;
+no untouched-holdout, human-gold, causal or release claim is made.
+
+## Additional source evidence without date-cohort expansion
+
+Maine's retained source now has a complete separate receipt packet:
+all **9,877 contexts / 166,141 actions** are preserved. There are **61 unique,
+date-agreeing originating receipts** and one unresolved target discrepancy:
+LD 2081's action date is `2023-12-20`, while its literal receipt says
+`2022-12-20`. Neither date overrides the other. Receipt is **not** introduction
+or filing; Maine's target candidate count remains zero, not zero activity.
+All 62 target-calendar-interest records retain complete source fields.
+No Maine HTTP or blocked-source workaround occurred.
+
+Two explicit publisher-session scopes also expose retained native text that
+was invisible outside the candidate-date cohort: **46,776 NY reader views /
+23,388 canonical IDs** and **5,189 IL views / 5,189 IDs**. These reuse exact
+NY 2023–2024 contract proofs and IL GA-103 crosswalks, not guessed dates.
+Candidate texts are excluded from the extra channel to prevent double
+counting. The extra **51,965 views / 28,577 IDs** are source evidence, **not
+newly eligible measures or closed states**. All source-only negatives,
+unavailable contexts and scientific gates remain distinct.
+
+The national cohort stays **157,598 candidate contexts / 159,315 metadata
+views**, with **39,576 candidate-native views**. Added receipt/session sources
+do not change these denominators, party timing, platform applicability or
+model approval. Full text and source records survive in complete downloads.
+The actual latest preview is `data/preview-cycle-evidence-v6/`, manifest
+`3a1cf3e980502edefde3121af229baebccb38e0a076e8813966f8ab9da90a0d9`.
+Parent reconciliation verifies 109 input hash/stat bindings, 483 output
+hashes/byte counts, all 91,541 native text-view hashes against the original
+bound index and all 415 prior data exports unchanged. Its receipt is
+`data/processed/complete-source-explorer-parent-verification-20261021-v1.json`,
+SHA-256 `1a4f9720c62787df2b10b197deef00efaa63595bda44bcd1ab51826d39fc3432`.
+
+The large-query check exercises the actual scale, not a tiny proxy: blank
+and `"the"` queries each downloaded **46,776 complete NY records /
+1,216,462,528 bytes**, exactly identical to the original source partition.
+Streaming original NDJSON avoids whole-file JavaScript string limits and
+preserves large-integer provenance. Complete text/source hashes and every
+field were checked with bounded streaming; all browser helpers stopped.
+This does not turn those additional session records into date-cohort members.
+
+## Independent reference recovery: bounded negative, not invented gold
+
+The retained four-path provider investigation recovered no verified
+independent 2023–2024 state-topic evaluation reference within that scope.
+This is not a universal nonexistence finding. The actual capture preserves
+12 complete provider responses, methods/codebooks and full cycle records:
+`data/processed/independent-state-label-discovery-2023-2024-v1/`,
+manifest `d854bf0e6575a5c41187b81e14f6381d60bca0f50cef9e81ab1b2f8b9f05a439`.
+
+Its 6,616 exact-term effectiveness records are legislator/chamber aggregates,
+not bill-topic labels. The 1,298 presidential speech records are federal
+provider-coded units, not state bills or verified human gold; 47 encoding
+negatives remain explicit. Neither code zero nor an unflagged compatibility
+check becomes a fabricated rejection/independent label. Rights, taxonomy
+compatibility and annotation provenance remain unapproved; none was added
+to training or evaluation. Full raw bytes and complete records are retained,
+not merely links or metadata counts.
+
 ## Shared partial-native indexes and unpublished explorer
 
 The native registry now indexes **28 packets across 26 states**. Shared

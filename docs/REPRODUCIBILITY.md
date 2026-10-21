@@ -583,6 +583,148 @@ Evaluation manifest:
 Complete predictions, decision ledgers and the six-model comparison remain
 in the pre-planned evaluation directory; no reference/threshold edit occurred.
 
+## Complete native-input review and document-level training
+
+```bash
+.venv/bin/python -I -B -m state_politics.analysis.prepare_native_review \
+  --preview data/preview-cycle-evidence-v3 \
+  --output data/labels/cycle-native-blind-review-20261021-v1 \
+  --reserve-labels data/labels/cycle-target-curriculum-20261021-v1/labels.jsonl \
+  --reserve-labels data/labels/cycle-metadata-blind-review-20261021-v1/labels.jsonl \
+  --reserve-inputs data/labels/cycle-metadata-training-review-20261021-v1/review_packet.jsonl
+```
+
+Existing output directories are refused. This records the actual 39-input
+freeze; choose a fresh directory for reproduction. The complete chosen native
+string is the input, not a title/summary concatenation. All selected bills'
+reader/reference alternatives are separately retained in full, with exact
+input hashes and canonical-bill reservation. The default character ceiling
+is 12,000 and the two-per-state strata are explicit diagnostic selection,
+not truncated sources or population sampling. All 50 states retain accounting;
+20 had selected inputs after source/length/reservation restrictions.
+
+Two isolated GPT-6.1 Sol reviewers each read all 39 inputs / 143,398 characters.
+Comparison preserves both full original decisions; disagreement never chooses
+the first/majority topic:
+
+```bash
+.venv/bin/python -I -B -m state_politics.analysis.prepare_native_review compare \
+  --output data/labels/cycle-native-blind-review-20261021-v1 \
+  --review-a data/labels/cycle-native-blind-review-20261021-v1/reviewer_a_decisions.jsonl \
+  --review-b data/labels/cycle-native-blind-review-20261021-v1/reviewer_b_decisions.jsonl
+```
+
+The pre-review plan
+`data/processed/cycle-native-input-diagnostic-20261021-v1/evaluation_plan.json`
+has SHA-256 `cffe58358b988566ad318205977c0be7f92a3dd25176bd0b60795d0a74ca321e`.
+It excludes three disagreements from the primary 36-input metric before
+predictions, with all-input sensitivities reported separately. The joint-target
+model reached 55.56% decision accuracy / 68.18% precision; the balanced model
+72.22% / 86.36%, respectively. Both preserve all 37,326 tokens / 57 windows
+with zero discarded tokens. This is small, character-bounded assistant
+evidence, not human gold or a causal comparison to the different metadata
+sample. After inspection it is a development diagnostic. No model is promoted.
+Evaluation manifest:
+`2ea3479d0c5e8285b16996758f52e15aab96dc1701d40a044902da6f13ef11f3`.
+
+The separate training freeze uses `--per-state 4 --review-split train
+--quarantine-rubric-ambiguity`, a distinct seed/output, and reserves both the
+39-input labels and all their full reader alternatives. All 68 inputs were
+fully reviewed; 65 labels survive and three unresolved rubric cases remain
+complete in quarantine. The composed document curriculum preserves all 6,682
+prior rows and adds those 65 plus the complete previously quarantined
+1,538-token unit: **6,698 train / 50 dev**. Labels SHA-256:
+`4b1bb1affd9094ee4cad52f4d2fedb039435be9747ba7e3ecc12cba88e9448d8`.
+
+```bash
+HF_HUB_OFFLINE=1 TRANSFORMERS_OFFLINE=1 PYTORCH_ENABLE_MPS_FALLBACK=1 \
+  .venv/bin/python -I -B -m state_politics.analysis.train_topics \
+  --labels data/labels/cycle-native-document-curriculum-20261021-v1/labels.jsonl \
+  --source-reservation data/labels/platform-challenge-reserved-sources-v1/reservation.json \
+  --out data/models/modernbert-native-document-curriculum-20261021-v1 \
+  --epochs 3 --batch-size 4 --max-tokens 1024 --overlap 128 \
+  --learning-rate 0.00002 --seed 20261018 \
+  --reviewed-target-sampling-weight 8 --allow-document-windows
+```
+
+The new flag is opt-in; default over-budget refusal remains. It computes
+log-mean class probability across a complete unit's bounded windows, applying
+**one target per unit**, never separate labels to arbitrary chunks. This
+matches the existing probability aggregation while preserving its strict
+inference disagreement/rejection guards. Every source token survives.
+Preflight encodes 275,643 tokens / 6,728 windows / 23 multichunk units; these
+are unique-input planning counts, not claims that a weighted epoch sampled
+every row. The saved model archives exact producer Python and taxonomy bytes
+alongside tokenizer/config/weights hashes. Unit checks cover finite gradients
+through every window, extreme logits and single-window loss equivalence.
+
+The separate pre-training plan
+`data/processed/cycle-native-document-evaluation-20261021-v1/evaluation_plan.json`
+has SHA-256 `ff480571923800ae12e6c12f6371b3e40de25716cd529028bb2295beaf95bf75`.
+Actual three-epoch encoder training completed with finite losses 1.10301,
+.45965 and .31895 and a verified encoder update. All 65 native units were
+actually sampled; optimizer replay counts 17 uses of the restored long unit.
+Fixed-policy decision results: metadata 190 **65.79%**, native agreed 36
+**75%**, platform 52 **86.54%**, dev 50 **54%**. Native precision is 84%
+(21/25 classified), so higher decision coverage does not establish superior
+precision across sources. No promotion occurred. Training manifest:
+`18d3e7c6c1349c96f363832078561775340c449bc1c87261a91371ce93411d13`.
+Evaluation manifest:
+`5853e29cc746f51fee427bbfa7d090878286d74d39cd82fa4b1cb0c24b73555b`.
+
+The separate reviewed-only experiment keeps all 858 assistant-reviewed rows,
+including all 50 original dev rows, while preserving all 5,890 omitted
+external rows in full outside this experiment. All 21 topics retain positive
+support; two-example rare classes are not certified by that fact.
+
+```bash
+HF_HUB_OFFLINE=1 TRANSFORMERS_OFFLINE=1 PYTORCH_ENABLE_MPS_FALLBACK=1 \
+  .venv/bin/python -I -B -m state_politics.analysis.train_topics \
+  --labels data/labels/cycle-reviewed-only-experiment-20261021-v1/labels.jsonl \
+  --source-reservation data/labels/platform-challenge-reserved-sources-v1/reservation.json \
+  --out data/models/modernbert-reviewed-only-20261021-v1 \
+  --epochs 6 --batch-size 4 --max-tokens 1024 --overlap 128 \
+  --learning-rate 0.00002 --seed 20261018 \
+  --allow-document-windows --class-weighting uniform
+```
+
+This is explicit uniform loss, not a changed default: absent this flag,
+inverse-frequency class loss remains unchanged. With the default sampling
+weight 1, each epoch shuffles all 808 train units once without replacement.
+Preflight preserves 94,935 source tokens / 838 windows / 23 multichunk units.
+Its frozen pre-training plan is
+`data/processed/cycle-reviewed-only-evaluation-20261021-v1/evaluation_plan.json`,
+SHA-256 `c87a9792e787d8d59d7234a11c84a86dc766b032fcab27b0471cd5e78f2b4f9a`.
+Training/results are pending. External removal, exposure and class loss
+change jointly; do not claim a causal source effect. All references already
+informed development. Original labels, reference texts, thresholds and
+scientific/publication gates remain unchanged.
+
+## Receipt observations and additional publisher-session text
+
+`data/processed/maine-source-receipt-evidence-2023-2024-v1/` preserves all
+9,877 Maine bill contexts and 166,141 source actions, plus original child
+tables/ledgers and every receipt disposition. Manifest:
+`68e6302fce9f4c6a97193aedb715aa04c4c90b0e05ca89b81e7769c1795d437b`.
+The packet includes 61 unique origin/date-agreeing receipts and one unresolved
+LD 2081 discrepancy (`2023-12-20` action versus `2022-12-20` literal receipt).
+Neither value is chosen as a filing/introduction date. No Maine HTTP,
+canonical rewrite or cohort admission occurred.
+
+The opt-in `--native-session-scope` export uses only the fixed reviewed
+`ny-2023-2024` and `il-103rd` scope contracts, requiring an explicit compatible
+`--native-evidence`. It preserves complete text for exact canonical matches
+outside the metadata candidate cohort. Native session/proof selectors do not
+infer dates. Source-only/wrong-session contexts are never assigned aliases,
+and candidate views are excluded to prevent double counting.
+
+New York contributes 46,776 views / 23,388 references and canonical IDs;
+Illinois 5,189 views / references / IDs. These 51,965 additional views are
+**publisher-session-bound source evidence, not new eligible-cycle measures**.
+Original candidate-native views remain 39,576 across 27,444 candidate IDs.
+All extra fields, date dispositions, reader alternatives and false approvals
+survive, and other states/sessions remain unknown rather than zero.
+
 ## Unpublished cycle-evidence explorer
 
 ```bash
@@ -592,7 +734,9 @@ in the pre-planned evaluation directory; no reference/threshold edit occurred.
   --platform-evidence data/processed/platform-study-evidence-2023-2024-v5 \
   --native-evidence data/processed/study-native-overlap-2023-2024-v14 \
   --metadata-token-plan data/processed/study-metadata-token-plan-2023-2024-v2 \
-  --out data/preview-cycle-evidence-v3
+  --receipt-evidence data/processed/maine-source-receipt-evidence-2023-2024-v1 \
+  --native-session-scope ny-2023-2024 --native-session-scope il-103rd \
+  --out data/preview-cycle-evidence-v6
 ```
 
 Evidence mode defaults to metadata v3 and platform evidence v5, with matching
@@ -601,13 +745,16 @@ attach these default optional bundles; pass compatible explicit directories.
 The output includes all 50 state coverage rows / 100 organization rows,
 complete metadata/platform texts, lazy state partitions, full-text gzip
 downloads and `downloads/build_manifest.json`. The current build manifest is
-`5933616d52605f5c4cef273e7ee0aa2cde2f0c7caed0178e3b6acf883b986166`.
+`3a1cf3e980502edefde3121af229baebccb38e0a076e8813966f8ab9da90a0d9`.
+Receipt/session additions are explicit opt-ins only; the default/custom
+metadata behavior does not silently attach them. Build producers are archived
+with their exact source hashes. V3–v5 remain preserved.
 
 For interactive use, serve the output with a local static HTTP server:
 
 ```bash
 .venv/bin/python -I -B -m http.server 8765 \
-  --bind 127.0.0.1 --directory data/preview-cycle-evidence-v3
+  --bind 127.0.0.1 --directory data/preview-cycle-evidence-v6
 ```
 
 No server is left running by the build or verification. JavaScript fetches
@@ -615,6 +762,13 @@ require HTTP; no-JS coverage tables and full-text download links remain
 available. Filtering/search/downloads are scoped to the selected state,
 source and applicable party, not national full-text search. Downloads include
 every matching full-text view, not just the displayed page or metadata.
+Query export streams original NDJSON rather than reserializing parsed
+records, preserving large-integer provenance and avoiding whole-file string
+limits. Real single-Chromium checks exercised both blank and broad `"the"`
+queries over all **46,776 NY records / 1,216,462,528 bytes**. Both downloaded
+files exactly match the original complete partition, including all fields
+and text hashes; no giant string was transferred through CDP. Proof:
+`data/cycle-session-v6-giant-query/receipt.json`.
 Maine's empty cycle query explicitly retains the wider 9,877-context inventory
 and missing-date distinction. Real Chromium exercised pagination, complete
 query downloads, literal-markup safety, keyboard, mobile and no-JS behavior.

@@ -66,7 +66,14 @@
         <label for="collection">Source type
           <select id="collection"><option value="bill_metadata">Bill title / abstract metadata</option>
             @@NATIVE_OPTION@@
+            @@SESSION_OPTION@@
+            @@RECEIPT_OPTION@@
             <option value="platform">Platform evidence views</option></select>
+        </label>
+        <label for="receipt-status" id="receipt-status-label" hidden>Receipt observation status
+          <select id="receipt-status" disabled><option value="">All observations, including unresolved</option>
+            <option value="unique_origin_date_agreeing">Unique origin / date-agreeing receipt</option>
+            <option value="unresolved_receipt">Unresolved receipt observation</option></select>
         </label>
         <label for="party">Organization party (platform only)
           <select id="party" disabled><option value="">Both parties</option>
@@ -88,7 +95,8 @@
       <p class="note" id="download-scope">This download contains every matching view, not just
         the visible page. Bill records include full title, abstract, source abstract/notes,
         context, hashes and unapproved/null flags. Platform records retain complete source
-        strings and provenance. @@NATIVE_DOWNLOAD_NOTE@@</p>
+        strings and provenance. @@NATIVE_DOWNLOAD_NOTE@@ @@RECEIPT_DOWNLOAD_NOTE@@
+        @@SESSION_DOWNLOAD_NOTE@@</p>
       <div id="evidence"></div>
       <nav id="pagination" aria-label="Evidence pages" hidden>
         <button id="previous" type="button">Previous views</button>
@@ -117,6 +125,8 @@
         </table>
       </div>
     </section>
+    @@RECEIPT_SECTION@@
+    @@SESSION_SECTION@@
     <section aria-labelledby="org-coverage-heading">
       <h2 id="org-coverage-heading">All 100 organizations: unresolved applicability</h2>
       <p class="note">View counts overlap across captures and extractions; they do not count

@@ -2,9 +2,12 @@
 "use strict";
 const assert = require("node:assert/strict");
 const fs = require("node:fs/promises");
+const { createReadStream } = require("node:fs");
+const { createInterface } = require("node:readline");
 const path = require("node:path");
 const { spawn } = require("node:child_process");
 const { createHash } = require("node:crypto");
+const { createGunzip } = require("node:zlib");
 
 const root = path.resolve(__dirname, "..");
 const [previewArg, runArg, chrome, fixture] = process.argv.slice(2);
@@ -63,7 +66,7 @@ async function evaluate(session, expression) {
 }
 
 async function waitFor(session, expression) {
-  for (let attempt = 0; attempt < 300; attempt++) {
+  for (let attempt = 0; attempt < 1200; attempt++) {
     if (await evaluate(session, expression)) return;
     await sleep(100);
   }
@@ -104,18 +107,27 @@ async function key(session, key, code) {
   }, session);
 }
 
-async function download(session, expected, name) {
+async function download(session, expected, name, selector = "#download-query", compressed = false) {
   const directory = path.join(run, "downloads", name.replace(/[^a-z0-9]+/gi, "-"));
   await fs.mkdir(directory, { recursive: true });
   await send("Browser.setDownloadBehavior", { behavior: "allow", downloadPath: directory });
-  await evaluate(session, 'document.getElementById("download-query").click()');
+  await evaluate(session, `document.querySelector(${JSON.stringify(selector)}).click()`);
   for (let attempt = 0; attempt < 300; attempt++) {
-    const names = (await fs.readdir(directory)).filter(entry => entry.endsWith(".jsonl"));
+    const names = (await fs.readdir(directory)).filter(entry =>
+      entry.endsWith(compressed ? ".jsonl.gz" : ".jsonl"));
     if (names.length) {
       const saved = path.join(directory, names[0]);
-      const rows = (await fs.readFile(saved, "utf8")).split("\n").filter(Boolean).map(JSON.parse);
-      assert.deepEqual(rows, expected, `${name}: actual full-query download differs from complete source`);
-      return { file: path.relative(run, saved), rows: rows.length };
+      const iterator = typeof expected === "function" ? expected()[Symbol.asyncIterator]() : null;
+      let count = 0;
+      for await (const row of jsonRows(saved, compressed)) {
+        const original = iterator ? await iterator.next() : { value: expected[count], done: count >= expected.length };
+        assert.equal(original.done, false, `${name}: extra downloaded row ${count}`);
+        assert.deepEqual(row, original.value, `${name}: full-source row ${count} differs`);
+        count++;
+      }
+      assert.ok(iterator ? (await iterator.next()).done : count === expected.length,
+        `${name}: missing complete source rows`);
+      return { file: path.relative(run, saved), rows: count };
     }
     await sleep(100);
   }
@@ -123,8 +135,21 @@ async function download(session, expected, name) {
 }
 
 async function readRows(name) {
-  const text = await fs.readFile(path.join(preview, "evidence", name + ".jsonl"), "utf8");
-  return text.split("\n").filter(Boolean).map(JSON.parse);
+  const rows = [];
+  for await (const row of sourceRows(name)) rows.push(row);
+  return rows;
+}
+
+async function* jsonRows(file, compressed = false) {
+  const stream = createReadStream(file);
+  const lines = createInterface({
+    input: compressed ? stream.pipe(createGunzip()) : stream, crlfDelay: Infinity,
+  });
+  for await (const line of lines) if (line.trim()) yield JSON.parse(line);
+}
+
+function sourceRows(name) {
+  return jsonRows(path.join(preview, "evidence", name + ".jsonl"));
 }
 
 async function terminate(child) {
@@ -193,8 +218,24 @@ async function terminate(child) {
 
     const billRows = await readRows("bills-TX");
     const hasNative = await evaluate(session, 'Boolean(document.querySelector("#collection option[value=native_text]"))');
+    const hasReceipt = await evaluate(session, 'Boolean(document.querySelector("#collection option[value=source_receipt]"))');
+    const hasSessionText = await evaluate(session, 'Boolean(document.querySelector("#collection option[value=native_session_text]"))');
     const buildManifest = JSON.parse(await fs.readFile(
       path.join(preview, "downloads/build_manifest.json"), "utf8"));
+    for (const binding of Object.values(buildManifest.producer_archive || {})) {
+      const archived = await fs.readFile(path.join(preview, binding.path));
+      assert.equal(createHash("sha256").update(archived).digest("hex"), binding.sha256);
+      assert.deepEqual(buildManifest.outputs[binding.path], {
+        sha256: binding.sha256, bytes: archived.length,
+      });
+      const servedHash = await evaluate(session, `(async () => {
+        const response = await fetch(${JSON.stringify(binding.path)});
+        if (!response.ok) throw new Error("Archived producer source unavailable");
+        const bytes = await crypto.subtle.digest("SHA-256", await response.arrayBuffer());
+        return [...new Uint8Array(bytes)].map(value => value.toString(16).padStart(2, "0")).join("");
+      })()`);
+      assert.equal(servedHash, binding.sha256);
+    }
     assert.ok(billRows.every(row => row.source_bundle_manifest_sha256
       === buildManifest.inputs.bill_metadata["manifest.json"]));
     assert.ok(billRows.length > 10);
@@ -312,6 +353,66 @@ async function terminate(child) {
     assert.ok(maineScope.includes("9877 retained wider-history source contexts"));
     assert.ok(maineScope.includes("not zero legislative activity"));
     const maineDownload = await download(session, [], "ME missing cycle cohort");
+    const receiptDownloads = [];
+    let receiptRows = [];
+    if (hasReceipt) {
+      receiptRows = await readRows("receipts-ME");
+      assert.equal(receiptRows.length, fixture === "fixture" ? 2 : 62);
+      assert.ok(receiptRows.every(row => row.source_type === "source_receipt"
+        && row.analytical_admission === false && row.native_evidence === false
+        && row.eligible_cycle_admission === false && row.model_input_approved === false));
+      assert.ok(receiptRows.every(row => row.source_context.original_bill.title === row.source_bill.title));
+      assert.equal(buildManifest.counts.source_receipt_evidence.target_calendar_interest_views,
+        receiptRows.length);
+      await change(session, "collection", "source_receipt");
+      await waitFor(session, `document.querySelectorAll("#evidence article").length === ${Math.min(10, receiptRows.length)}`);
+      assert.equal(await evaluate(session, 'document.getElementById("receipt-status").disabled'), false);
+      assert.ok((await evaluate(session, 'document.getElementById("selection-scope").textContent'))
+        .includes("0 active cycle candidate contexts remain unchanged"));
+      assert.ok((await evaluate(session, 'document.getElementById("evidence-status").textContent'))
+        .includes("not cycle candidates"));
+      if (receiptRows.length > 10) {
+        await evaluate(session, 'document.getElementById("next").click()');
+      }
+      receiptDownloads.push(await download(session, receiptRows, "ME all separate receipts including unresolved"));
+      await search(session, "LD 2081");
+      const discrepant = receiptRows.filter(row => row.identifier === "LD 2081");
+      assert.equal(discrepant.length, 1);
+      await waitFor(session, 'document.querySelectorAll("#evidence article").length === 1');
+      assert.equal(discrepant[0].source_action.date, "2023-12-20");
+      assert.equal(discrepant[0].observation.literal_calendar_date, "2022-12-20");
+      const dates = await evaluate(session, 'document.querySelector("#evidence .receipt-dates").textContent');
+      assert.ok(dates.includes("2023-12-20") && dates.includes("2022-12-20"));
+      assert.ok((await evaluate(session, 'document.querySelector("#evidence .receipt-observation").textContent'))
+        .includes("unresolved receipt observation"));
+      receiptDownloads.push(await download(session, discrepant, "ME LD 2081 both discrepant dates and original full fields"));
+      await search(session, "");
+      await change(session, "receipt-status", "unresolved_receipt");
+      await waitFor(session, 'document.querySelectorAll("#evidence article").length === 1');
+      receiptDownloads.push(await download(session, discrepant, "ME unresolved receipt status filter"));
+      await change(session, "receipt-status", "unique_origin_date_agreeing");
+      const agreeing = receiptRows.filter(row => row.receipt_status === "unique_origin_date_agreeing");
+      assert.equal(agreeing.length, fixture === "fixture" ? 1 : 61);
+      await waitFor(session, `document.querySelectorAll("#evidence article").length === ${Math.min(10, agreeing.length)}`);
+      receiptDownloads.push(await download(session, agreeing, "ME only unique origin date agreeing receipts"));
+      await change(session, "receipt-status", "");
+      await change(session, "state", "TX");
+      await waitFor(session, 'document.getElementById("evidence-status").textContent.startsWith("Receipt coverage unknown")');
+      assert.ok((await evaluate(session, 'document.getElementById("selection-scope").textContent'))
+        .includes("not a measured zero"));
+      assert.equal(await evaluate(session, 'document.getElementById("download-query").disabled'), true);
+      assert.equal(requests.filter(entry => entry.url.includes("receipts-TX")).length, 0);
+      await change(session, "state", "ME");
+      await change(session, "collection", "bill_metadata");
+      await waitFor(session, 'document.getElementById("evidence-status").textContent.startsWith("No matching")');
+      assert.equal(await evaluate(session, 'document.getElementById("receipt-status").disabled'), true);
+      assert.ok((await evaluate(session, 'document.getElementById("selection-scope").textContent'))
+        .includes("9877 retained wider-history source contexts"));
+      assert.equal(await evaluate(session, 'document.querySelectorAll("#evidence article").length'), 0);
+      if (fixture === "fixture") {
+        assert.equal(await evaluate(session, 'typeof window.EVIDENCE_INJECTED'), "undefined");
+      }
+    }
     const montanaDownloads = [];
     if (hasNative && fixture !== "fixture") {
       const montana = await readRows("bills-MT");
@@ -339,6 +440,79 @@ async function terminate(child) {
         .includes("not evidence of source absence"));
     }
 
+    const sessionDownloads = [], sessionScopes = [];
+    if (hasSessionText) {
+      const { filterEvidence } = require(path.join(preview, "cycle-evidence.js"));
+      for (const [scope, binding] of Object.entries(buildManifest.inputs.native_session_scopes)) {
+        const stateCode = binding.state, partition = `native-session-${stateCode}`;
+        const values = buildManifest.counts.native_session_source_evidence.scopes[scope];
+        const prefixes = new Map();
+        let views = 0;
+        for await (const row of sourceRows(partition)) {
+          assert.equal(row.source_type, "native_session_text");
+          assert.equal(row.evidence_scope, scope);
+          assert.ok(row.bill_id && !row.bill_context && !row.title && !row.token_plan);
+          assert.ok(row.candidate_cohort_member === false && row.eligible_cycle_admission === false
+            && row.native_identity_certified === false && row.model_input_approved === false
+            && row.training_admission === false && row.analytical_admission === false);
+          assert.equal(createHash("sha256").update(row.text).digest("hex"), row.input_sha256);
+          for (const width of [1, 2]) {
+            const prefix = row.context_id.slice(0, -width);
+            prefixes.set(prefix, (prefixes.get(prefix) || 0) + 1);
+          }
+          views++;
+        }
+        assert.equal(views, values.exported_views);
+        const needle = fixture === "fixture" ? "SESSION-TAIL-"
+          : [...prefixes].filter(([, count]) => count > 10 && count < 200)
+            .sort((a, b) => a[1] - b[1])[0]?.[0];
+        assert.ok(needle, "Need a finite actual publisher-session query beyond page 1");
+        const selected = [];
+        for await (const row of sourceRows(partition)) {
+          if (filterEvidence([row], needle).length) selected.push(row);
+        }
+        assert.ok(selected.length > 10);
+        await change(session, "state", stateCode);
+        await change(session, "collection", "native_session_text");
+        await waitFor(session, 'document.getElementById("evidence-status").textContent.startsWith("Views ")');
+        assert.ok((await evaluate(session, 'document.getElementById("selection-scope").textContent'))
+          .includes("OUTSIDE candidate date cohort, not native/date/analytical admission"));
+        assert.ok((await evaluate(session, 'document.getElementById("evidence-status").textContent'))
+          .includes(`${values.exported_unique_canonical_bills.toLocaleString("en-US")} unique canonical bill IDs`));
+        await search(session, needle);
+        await waitFor(session, `document.getElementById("download-query").textContent.includes("all ${selected.length.toLocaleString("en-US")} query")`);
+        const firstRecord = await evaluate(session, 'document.querySelector("#evidence .record-id").textContent');
+        await evaluate(session, 'document.getElementById("next").click()');
+        assert.notEqual(await evaluate(session, 'document.querySelector("#evidence .record-id").textContent'), firstRecord);
+        sessionDownloads.push(await download(session, selected, `${stateCode} complete session source query beyond page 1`));
+        assert.ok((await evaluate(session, 'document.querySelector("#evidence .session-observation").textContent'))
+          .includes("No date was required or inferred"));
+        await search(session, selected[0].bill_id);
+        const byBill = selected.filter(row => row.bill_id === selected[0].bill_id);
+        const allBill = [];
+        for await (const row of sourceRows(partition)) {
+          if (filterEvidence([row], selected[0].bill_id).length) allBill.push(row);
+        }
+        assert.ok(allBill.length >= byBill.length);
+        await waitFor(session, `document.querySelectorAll("#evidence article").length === ${Math.min(10, allBill.length)}`);
+        sessionDownloads.push(await download(session, allBill, `${stateCode} exact canonical ID session text query`));
+        const displayedHash = await evaluate(session, `(async () => {
+          const text = [...document.querySelector("#evidence article").querySelectorAll(".source-text")].at(-1).textContent;
+          const bytes = await crypto.subtle.digest("SHA-256", new TextEncoder().encode(text));
+          return [...new Uint8Array(bytes)].map(value => value.toString(16).padStart(2, "0")).join("");
+        })()`);
+        assert.equal(displayedHash, allBill[0].input_sha256);
+        sessionScopes.push({ scope, views, references: values.exported_references,
+          unique_canonical_bills: values.exported_unique_canonical_bills,
+          candidate_excluded_views: values.candidate_excluded_views, searched_views: selected.length });
+        await search(session, "");
+      }
+      await change(session, "state", "TX");
+      await waitFor(session, 'document.getElementById("evidence-status").textContent.startsWith("Publisher-session source coverage unknown")');
+      assert.equal(await evaluate(session, 'document.getElementById("download-query").disabled'), true);
+      assert.equal(requests.filter(entry => entry.url.includes("native-session-TX")).length, 0);
+    }
+
     await send("Emulation.setDeviceMetricsOverride", {
       width: 390, height: 844, deviceScaleFactor: 1, mobile: true,
     }, session);
@@ -356,11 +530,34 @@ async function terminate(child) {
     await fs.writeFile(path.join(run, "mobile.png"), Buffer.from(screenshot.data, "base64"));
 
     const noJS = await target(base + "/", false);
-    assert.equal(await evaluate(noJS.sessionId, 'document.querySelectorAll("tbody tr").length'), 150);
+    assert.equal(await evaluate(noJS.sessionId, 'document.querySelectorAll("tbody tr").length'),
+      150 + (hasReceipt ? 50 : 0) + (hasSessionText ? 50 : 0));
     assert.equal(await evaluate(noJS.sessionId, 'document.querySelectorAll("a[download][href$=\'.jsonl.gz\']").length'),
-      hasNative ? 201 : 151);
+      (hasNative ? 201 : 151) + (hasReceipt ? 1 : 0) + sessionScopes.length);
     if (hasNative) {
-      assert.equal(await evaluate(noJS.sessionId, 'document.querySelectorAll("a[download][href^=\'downloads/native-\']").length'), 50);
+      assert.equal(await evaluate(noJS.sessionId, 'document.querySelectorAll("#state-coverage a[download][href^=\'downloads/native-\']").length'), 50);
+    }
+    if (hasReceipt) {
+      assert.equal(await evaluate(noJS.sessionId,
+        '[...document.querySelectorAll("#receipt-coverage tbody tr")].filter(row => row.textContent.includes("Unknown")).length'), 49);
+      receiptDownloads.push(await download(noJS.sessionId, receiptRows,
+        "ME no JS complete original receipt gzip download",
+        '#receipt-coverage a[href="downloads/receipts-ME.jsonl.gz"]', true));
+    }
+    if (hasSessionText) {
+      assert.equal(await evaluate(noJS.sessionId,
+        '[...document.querySelectorAll("#session-coverage tbody tr")].filter(row => row.textContent.includes("Unknown")).length'),
+      50 - sessionScopes.length);
+      for (const { scope } of sessionScopes) {
+        const stateCode = buildManifest.inputs.native_session_scopes[scope].state;
+        for (const compressed of [false, true]) {
+          sessionDownloads.push(await download(noJS.sessionId,
+            () => sourceRows(`native-session-${stateCode}`),
+            `${stateCode} no JS complete session source ${compressed ? "gzip" : "plain"} download`,
+            `#session-coverage a[href="${compressed ? "downloads" : "evidence"}/native-session-${stateCode}.jsonl${compressed ? ".gz" : ""}"]`,
+            compressed));
+        }
+      }
     }
     assert.ok(await evaluate(noJS.sessionId, 'document.querySelector("noscript").textContent.includes("without it")'));
     assert.equal(requests.filter(entry => entry.session === noJS.sessionId && entry.url.includes("/evidence/")).length, 0);
@@ -372,9 +569,15 @@ async function terminate(child) {
         "complete actual query downloads", "empty query/status", "markup rendered as text",
         "keyboard skip link", "390px mobile layout", "no-JS coverage and full-text links"],
       downloads: [billsDownload, searchDownload, emptyQueryDownload, platformDownload,
-        outsideDownload, maineDownload, ...nativeDownloads, ...montanaDownloads],
+        outsideDownload, maineDownload, ...nativeDownloads, ...montanaDownloads, ...receiptDownloads,
+        ...sessionDownloads],
       native_full_text: hasNative, verified_metadata_token_plan: Boolean(billRows[0].token_plan),
       maine_missing_cycle_cohort_disclosed: true,
+      separate_receipt_evidence: hasReceipt, receipt_observations: receiptRows.length,
+      receipt_unknown_states: hasReceipt ? 49 : null,
+      receipt_discrepant_dates_preserved: hasReceipt,
+      separate_publisher_session_evidence: hasSessionText, publisher_session_scopes: sessionScopes,
+      archived_producer_source_files: Object.keys(buildManifest.producer_archive || {}).length,
       javascript_exceptions: exceptions.length, no_js_evidence_requests: 0,
     };
   } finally {

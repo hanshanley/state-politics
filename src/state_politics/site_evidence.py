@@ -8,6 +8,7 @@ import html
 import json
 import shutil
 from collections import Counter, defaultdict
+from datetime import datetime
 from pathlib import Path
 
 import pyarrow as pa
@@ -18,6 +19,7 @@ import yaml
 
 from state_politics.bills.openstates_dump import STATE_CODES
 from state_politics.bills.study_native_overlap import _field, normalize_packet
+from state_politics.bills.study_window import _snapshot
 from state_politics.provenance import sha256_file
 
 ROOT = Path(__file__).resolve().parents[2]
@@ -29,6 +31,24 @@ COHORTS = (
 ADMISSIONS = (
     "model_input_approved", "filing_time_text_certified", "training_admission",
     "analytical_admission",
+)
+# These bind the entire reviewed registry specification, including selectors, source-only
+# exclusions, reader policy, populations and (for NY) the checksum-bound campaign proof.
+NATIVE_SESSION_SCOPES = {
+    "ny-2023-2024": {
+        "state": "NY", "session_identifier": "2023-2024",
+        "packet_root": "data/processed/retained-campaign-input-index-2023-2024-v1/NY",
+        "packet_spec_sha256": "01690f363095cf7050574ac6048e0a5d07490c77367c366f7a10af5cd1f694a1",
+    },
+    "il-103rd": {
+        "state": "IL", "session_identifier": "103rd",
+        "packet_root": "data/processed/retained-campaign-input-index-2023-2024-v1/IL",
+        "packet_spec_sha256": "9328f3c3f8c8df2b77dad21625e804b7091e275ea2feea5fe25e25d7664d8835",
+    },
+}
+SESSION_SCOPE_LABEL = (
+    "Publisher-session-bound evidence OUTSIDE candidate date cohort; "
+    "not native/date/analytical admission"
 )
 
 
@@ -164,7 +184,65 @@ def _scalar_source(path, *, include_text=True):
     return table
 
 
-def _native_rows(directory, metadata_manifest, metadata_pins, tables):
+def _reviewed_session_specs(scopes, specs, inputs):
+    reviewed, proofs = {}, {}
+    for scope in scopes:
+        contract = NATIVE_SESSION_SCOPES[scope]
+        matches = [spec for spec in specs if spec["root"] == contract["packet_root"]]
+        _require(len(matches) == 1, f"missing exact reviewed publisher-session packet: {scope}")
+        spec = matches[0]
+        _require(
+            _digest(json.dumps(spec, sort_keys=True, ensure_ascii=True, allow_nan=False))
+            == contract["packet_spec_sha256"],
+            f"reviewed publisher-session registry selectors/proof changed: {scope}",
+        )
+        for index, binding in enumerate(spec.get("binding_evidence", [])):
+            key = f"{spec.get('packet_id', spec['state'])}_binding_evidence_{index}"
+            _require(key in inputs, "missing publisher-session binding proof")
+            path = _bound_input(inputs[key])
+            expected = Path(binding["path"])
+            if not expected.is_absolute():
+                expected = ROOT / expected
+            _require(
+                path.resolve() == expected.resolve()
+                and inputs[key]["sha256"] == binding["sha256"],
+                "publisher-session proof path/checksum binding",
+            )
+            value = _json(path)
+            try:
+                for part in binding["selector"].split("."):
+                    value = value[part]
+            except (KeyError, TypeError) as exc:
+                raise ValueError(
+                    "incompatible cycle evidence: publisher-session proof selector",
+                ) from exc
+            _require(
+                json.dumps(value, sort_keys=True, allow_nan=False)
+                == json.dumps(binding["expected"], sort_keys=True, allow_nan=False),
+                "publisher-session proof value",
+            )
+            proofs[key] = inputs[key]
+        reviewed[spec["root"]] = (scope, contract, spec)
+    return reviewed, proofs
+
+
+def _session_exact_match(native, contract):
+    if native["bill_id"] is None or native["canonical_join_mode"] == "source_only":
+        return False
+    return (
+        native["canonical_join_basis"] in {
+            "unique_declared_session_typed_identity",
+            "declared_bill_id_exact_session_typed_identity",
+        }
+        and native["state"] == contract["state"]
+        and (native.get("state_native") or native["state"]) == contract["state"]
+        and native["session_identifier"] == contract["session_identifier"]
+        and (native.get("session_identifier_native") or native["session_identifier"])
+        == contract["session_identifier"]
+    )
+
+
+def _native_rows(directory, metadata_manifest, metadata_pins, tables, session_scopes=()):
     manifest, pins = _bind_bundle(directory, {
         "native_context_overlap.parquet", "native_view_index.parquet", "report.json",
     }, status="complete_supplied_native_overlap_not_native_census_or_analytical_admission")
@@ -179,6 +257,7 @@ def _native_rows(directory, metadata_manifest, metadata_pins, tables):
     specs = config["packets"]
     _require(config["schema_version"] == 1 and bool(specs), "native registry schema")
     _require(len({spec["root"] for spec in specs}) == len(specs), "duplicate native packet root")
+    reviewed, proof_inputs = _reviewed_session_specs(session_scopes, specs, inputs)
     contexts = pq.read_table(directory / "native_context_overlap.parquet").to_pylist()
     indexed = pq.read_table(directory / "native_view_index.parquet").to_pylist()
     context_map = {(row["packet_root"], row["context_id"]): row for row in contexts}
@@ -188,9 +267,12 @@ def _native_rows(directory, metadata_manifest, metadata_pins, tables):
     _require(len(index_map) == len(indexed), "duplicate native view binding")
     bills = _unique(tables[0].to_pylist(), "bill_id")
     partitions, consumed, seen = defaultdict(list), {"registry": inputs["registry"]}, set()
+    consumed.update(proof_inputs)
+    session_partitions, session_counts, session_bindings = {}, {}, {}
     seen_contexts = set()
     counts = Counter()
     for spec in specs:
+        session_scope = reviewed.get(spec["root"])
         packet = spec.get("packet_id", spec["state"])
         paths, lineage = {}, {}
         for role in ("manifest", "contexts", "views"):
@@ -252,6 +334,55 @@ def _native_rows(directory, metadata_manifest, metadata_pins, tables):
                     actual = bound.get(field)
                 _require(actual == value, f"native normalized context binding: {field}")
             seen_contexts.add(key)
+        if session_scope:
+            scope, contract, _ = session_scope
+            scoped_contexts = [
+                context_map[spec["root"], identifier]
+                for identifier in normalized_contexts["context_id"]
+            ]
+            exact = [row for row in scoped_contexts if _session_exact_match(row, contract)]
+            text_exact = [row for row in exact if row["n_retained_views"] > 0]
+            excluded = [row for row in text_exact if row["bill_id"] in bills]
+            exported = [row for row in text_exact if row["bill_id"] not in bills]
+            session_partitions[contract["state"]] = []
+            session_counts[scope] = {
+                "state": contract["state"], "session_identifier": contract["session_identifier"],
+                "registered_contexts": len(scoped_contexts),
+                "indexed_views": len(normalized_views),
+                "exact_canonical_references": len(exact),
+                "exact_canonical_bills": len({row["bill_id"] for row in exact}),
+                "exact_canonical_full_text_views": sum(
+                    row["n_retained_views"] for row in text_exact
+                ),
+                "exact_canonical_full_text_references": len(text_exact),
+                "exact_canonical_full_text_bills": len({row["bill_id"] for row in text_exact}),
+                "candidate_excluded_views": sum(row["n_retained_views"] for row in excluded),
+                "candidate_excluded_references": len(excluded),
+                "candidate_excluded_bills": len({row["bill_id"] for row in excluded}),
+                "exported_views": sum(row["n_retained_views"] for row in exported),
+                "exported_references": len(exported),
+                "exported_unique_canonical_bills": len({row["bill_id"] for row in exported}),
+                "excluded_unmatched_source_only_or_wrong_session_contexts": (
+                    len(scoped_contexts) - len(exact)
+                ),
+                "excluded_unmatched_source_only_or_wrong_session_views": (
+                    len(normalized_views) - sum(row["n_retained_views"] for row in text_exact)
+                ),
+                "reader_excluded_views": sum(row.get("n_excluded_views") or 0
+                                             for row in scoped_contexts),
+                "source_window_dispositions_by_reference": dict(Counter(
+                    row.get("window_disposition") for row in exported
+                )),
+                "cohort_admissions": 0,
+            }
+            session_bindings[scope] = {
+                **contract, "scope_label": SESSION_SCOPE_LABEL, "registry_spec": spec,
+                "registry": inputs["registry"], "packet_inputs": lineage,
+                "binding_proofs": {
+                    key: value for key, value in proof_inputs.items()
+                    if key.startswith(f"{packet}_binding_evidence_")
+                },
+            }
         if normalized_views.empty:
             continue
         source_key = "view_id" if spec["profile"] == "views" else "record_id"
@@ -281,6 +412,36 @@ def _native_rows(directory, metadata_manifest, metadata_pins, tables):
             _unapproved(source, ())
             bill = bills.get(native["bill_id"])
             if bill is None:
+                if session_scope and _session_exact_match(native, session_scope[1]):
+                    source_context = source_contexts[normalized["context_id"]]
+                    _unapproved(source_context, ())
+                    session_partitions[session_scope[1]["state"]].append({
+                        **normalized, "source_type": "native_session_text", "text": text,
+                        "bill_id": native["bill_id"], "identifier": native["identifier"],
+                        "session_identifier": native["session_identifier"],
+                        "evidence_scope": session_scope[0], "scope_label": SESSION_SCOPE_LABEL,
+                        "candidate_cohort_member": False, "eligible_cycle_admission": False,
+                        "native_context": native,
+                        "source_record": {
+                            key: value for key, value in source.items() if key != text_column
+                        },
+                        "source_text_bindings": {f"source_record.{text_column}": "text"},
+                        "source_context_record": source_context,
+                        "source_bundle_manifest_sha256": pins["manifest.json"],
+                        "source_lineage": {
+                            "native_manifest_sha256": pins["manifest.json"],
+                            "native_index_sha256": pins["native_view_index.parquet"],
+                            "native_context_overlap_sha256": pins["native_context_overlap.parquet"],
+                            "metadata_manifest_sha256": metadata_pins["manifest.json"],
+                            "candidate_exclusion_contexts_sha256": metadata_pins[
+                                "bill_evidence.parquet"
+                            ],
+                            "registry": inputs["registry"], "packet_inputs": lineage,
+                            "reviewed_session_scope": session_bindings[session_scope[0]],
+                        },
+                        "native_identity_certified": False,
+                        **dict.fromkeys(ADMISSIONS, False),
+                    })
                 continue
             _require(
                 all(native[field] == bill[field] for field in (
@@ -324,7 +485,12 @@ def _native_rows(directory, metadata_manifest, metadata_pins, tables):
                 counts[bill["bill_id"]] == bill["n_indexed_native_views"],
                 "native candidate full-view count",
             )
-    return partitions, pins, consumed
+    for scope, values in session_counts.items():
+        _require(
+            len(session_partitions[values["state"]]) == values["exported_views"],
+            f"publisher-session complete retained view reconciliation: {scope}",
+        )
+    return partitions, pins, consumed, session_partitions, session_counts, session_bindings
 
 
 def _token_plans(directory, metadata_pins, tables):
@@ -603,12 +769,206 @@ def _write_partition(out, name, rows):
             zipped.write(line.encode("utf-8"))
 
 
+def _receipt_rows(directory):
+    def source_flags(row):
+        _unapproved(row, ())
+        _require(
+            all(row[key] is False for key in (
+                "source_admission", "native_census", "native_evidence",
+                "introduction_or_filing_inference", "eligible_cycle_admission",
+                "model_inference_performed",
+            ) if key in row),
+            "receipt source admission/inference flags must be false",
+        )
+
+    manifest, pins = _bind_bundle(directory, {
+        "report.json", "verification.json", "target_calendar_receipt_observations.jsonl",
+        "source_contexts.jsonl", "source_bills.parquet", "source_bill_actions.parquet",
+        "all_action_dispositions.parquet",
+    }, status="complete_retained_maine_receipt_observations_not_source_admission")
+    source_flags(manifest)
+    _require(
+        manifest.get("state") == "ME"
+        and (manifest.get("window_start"), manifest.get("window_end"))
+        == ("2023-01-01", "2024-12-31")
+        and manifest.get("introduction_or_filing_inference") is False
+        and manifest.get("original_source_writes") == manifest.get("new_requests") == 0,
+        "receipt scope/inference/collection flags",
+    )
+    report = _json(directory / "report.json")
+    source_flags(report)
+    _unapproved(report, ("analytical_admission",))
+    _require(
+        report.get("status") == manifest["status"]
+        and report.get("counts") == manifest.get("counts")
+        and report.get("inputs_unchanged") is True and report.get("new_requests") == 0,
+        "receipt report contract",
+    )
+    inputs = manifest.get("inputs", {})
+    _require(bool(inputs) and inputs == manifest.get("inputs_after"), "receipt immutable inputs")
+    for entry in inputs.values():
+        _bound_input(entry)
+        _require(_snapshot(Path(entry["path"])) == entry, "receipt source seven-stat binding")
+    packet_files = {name: _snapshot(directory / name) for name in pins}
+    _require(
+        all(entry["sha256"] == pins[name] for name, entry in packet_files.items()),
+        "receipt packet changed while binding",
+    )
+    target = _jsonl(directory / "target_calendar_receipt_observations.jsonl")
+    _require(
+        len(target) == manifest["counts"]["target_calendar_interest_actions"],
+        "receipt target counts",
+    )
+    action_ids = [row["source_action"]["action_id"] for row in target]
+    _require(
+        all(isinstance(value, str) and value for value in action_ids)
+        and len(set(action_ids)) == len(action_ids), "receipt unique source action IDs",
+    )
+    bill_ids = {row["source_action"]["bill_id"] for row in target}
+    contexts = {}
+    n_contexts = 0
+    with (directory / "source_contexts.jsonl").open(encoding="utf-8") as handle:
+        for line in handle:
+            context = json.loads(line)
+            n_contexts += 1
+            if context["bill_id"] in bill_ids:
+                _require(context["bill_id"] not in contexts, "receipt duplicate source context")
+                contexts[context["bill_id"]] = context
+    _require(
+        contexts.keys() == bill_ids
+        and n_contexts == manifest["counts"]["all_retained_me_bills"],
+        "receipt complete original context joins",
+    )
+    actions = _unique(pq.read_table(
+        directory / "source_bill_actions.parquet",
+        filters=[("action_id", "in", action_ids)],
+    ).to_pylist(), "action_id")
+    bills = _unique(pq.read_table(
+        directory / "source_bills.parquet", filters=[("bill_id", "in", sorted(bill_ids))],
+    ).to_pylist(), "bill_id")
+    dispositions = pq.read_table(
+        directory / "all_action_dispositions.parquet",
+        filters=[("target_calendar_interest", "=", True)],
+    ).to_pylist()
+    observed = _unique(dispositions, "action_id")
+    _require(observed.keys() == set(action_ids), "receipt complete target population")
+    rows = []
+    for original in target:
+        action, bill, observation = (
+            original["source_action"], original["source_bill"], original["observation"]
+        )
+        action_id, bill_id = action["action_id"], action["bill_id"]
+        context = contexts[bill_id]
+        for source in (original, action, bill, context):
+            source_flags(source)
+        source_flags(observation)
+        _unapproved(observation, ("analytical_admission",))
+        _require(
+            action == actions.get(action_id) and bill == bills.get(bill_id)
+            and bill == context["original_bill"]
+            and bill["state"] == action["state"] == "ME"
+            and action_id in context["original_action_ids"],
+            "receipt exact original action/bill/context join",
+        )
+        _require(
+            observation == {key: value for key, value in observed[action_id].items()
+                            if key not in action}
+            and observation["target_calendar_interest"] is True,
+            "receipt complete unchanged observation fields",
+        )
+        event = datetime.fromisoformat(action["date"]).date().isoformat()
+        spans = json.loads(observation["receipt_spans_json"])
+        _require(len(spans) == observation["receipt_statement_count"] == 1, "receipt literal spans")
+        span = spans[0]
+        for raw, offsets in (
+            ("receipt_raw", "receipt_span"), ("receiver_raw", "receiver_span"),
+            ("literal_date_raw", "literal_date_span"),
+        ):
+            start, end = span[offsets]
+            _require(action["description"][start:end] == span[raw], "receipt raw literal span")
+        literal = datetime.strptime(span["literal_date_raw"], "%B %d, %Y").date().isoformat()
+        _require(
+            span["receipt_span"][0] == 0
+            and span["receipt_raw"]
+            == f"Received by the {span['receiver_raw']} on {span['literal_date_raw']}"
+            and span["receiver_raw"] in {"Clerk of the House", "Secretary of the Senate"}
+            and event == observation["event_calendar_date"]
+            and literal == span["literal_calendar_date"] == observation["literal_calendar_date"]
+            and (("2023-01-01" <= event <= "2024-12-31")
+                 or ("2023-01-01" <= literal <= "2024-12-31"))
+            and observation["date_agreement"]
+            == ("dates_agree" if event == literal else "dates_disagree"),
+            "receipt calendar/literal agreement",
+        )
+        _require(
+            original["raw_event_date_span"]
+            == {"source_field": "date", "raw_value": action["date"],
+                "span": [0, len(action["date"])]},
+            "receipt raw event date",
+        )
+        if observation["is_unambiguous_origin_receipt"]:
+            _require(
+                event == literal and "2023-01-01" <= event <= "2024-12-31"
+                and bill["from_organization_id"] == action["organization_id"]
+                and bill["originating_chamber"] == action["chamber"] == span["literal_chamber"]
+                and observation["bill_exact_receipt_action_count"]
+                == observation["action_id_occurrences"]
+                == observation["same_observed_event_occurrences"] == 1,
+                "receipt unique origin/date-agreeing identity",
+            )
+        rows.append({
+            **original, "source_type": "source_receipt", "state": "ME", "bill_id": bill_id,
+            "identifier": bill["identifier"], "view_id": action_id,
+            "receipt_status": (
+                "unique_origin_date_agreeing" if observation["is_unambiguous_origin_receipt"]
+                else "unresolved_receipt"
+            ),
+            "source_context": context,
+            "source_lineage": {
+                "receipt_manifest_sha256": pins["manifest.json"],
+                "source_artifact_sha256": pins["target_calendar_receipt_observations.jsonl"],
+                "source_context_artifact_sha256": pins["source_contexts.jsonl"],
+                "original_record_sha256": _digest(json.dumps(
+                    original, ensure_ascii=False, sort_keys=True, separators=(",", ":"),
+                )),
+            },
+            **dict.fromkeys(ADMISSIONS, False),
+            "native_evidence": False, "source_admission": False,
+            "introduction_or_filing_inference": False, "eligible_cycle_admission": False,
+        })
+    counts = {
+        "target_calendar_interest_views": len(rows),
+        "unique_origin_date_agreeing_views": sum(
+            row["receipt_status"] == "unique_origin_date_agreeing" for row in rows
+        ),
+        "unresolved_views": sum(row["receipt_status"] == "unresolved_receipt" for row in rows),
+        "provided_states": ["ME"], "other_states": "unknown_not_supplied",
+        "retained_wider_history_contexts": n_contexts, "cohort_admissions": 0,
+    }
+    _require(
+        counts["unique_origin_date_agreeing_views"]
+        == manifest["counts"]["unambiguous_origin_in_window_receipt_observations"],
+        "receipt origin/date-agreeing counts",
+    )
+    return rows, pins, {"packet_files": packet_files, "retained_source_inputs": inputs}, counts
+
+
 def build_cycle_preview(
     metadata_dir: Path, platform_dir: Path, out: Path, *,
     native_evidence: Path | None = None, metadata_token_plan: Path | None = None,
+    receipt_evidence: Path | None = None,
+    native_session_scopes: tuple[str, ...] = (),
 ) -> dict:
     """Build an unpublished preview into a fresh ignored directory, after validating inputs."""
     data = (ROOT / "data").resolve()
+    _require(
+        not isinstance(native_session_scopes, str)
+        and len(set(native_session_scopes)) == len(native_session_scopes)
+        and set(native_session_scopes) <= NATIVE_SESSION_SCOPES.keys(),
+        "only distinct fixed reviewed publisher-session scopes may be selected",
+    )
+    _require(not native_session_scopes or native_evidence is not None,
+             "publisher-session source evidence requires compatible native evidence")
     _require(
         out.resolve().is_relative_to(data) and out.resolve() != data
         and not out.is_symlink(),
@@ -619,10 +979,23 @@ def build_cycle_preview(
                 or source.resolve().is_relative_to(out.resolve())
                 for source in (
                     metadata_dir, platform_dir, native_evidence, metadata_token_plan,
+                    receipt_evidence,
                 ) if source is not None),
         "output overlaps source bundle",
     )
     _require(not out.exists() or (out.is_dir() and not any(out.iterdir())), "output must be empty")
+    producer_paths = {
+        "site_evidence.py": Path(__file__),
+        "build_site.py": ROOT / "scripts/build_site.py",
+    }
+    if native_evidence:
+        producer_paths["study_native_overlap.py"] = (
+            Path(__file__).with_name("bills") / "study_native_overlap.py"
+        )
+    producer_sources = {name: path.read_bytes() for name, path in producer_paths.items()}
+    producer_pins = {
+        name: hashlib.sha256(source).hexdigest() for name, source in producer_sources.items()
+    }
     metadata_manifest, metadata_pins = _bind_bundle(metadata_dir, {
         "report.json", "state_matrix.csv", "bill_evidence.parquet", "abstract_evidence.parquet",
         "candidate_metadata_views.parquet",
@@ -640,10 +1013,17 @@ def build_cycle_preview(
     ))
     counts, cohorts = _validate_metadata(report, matrix, tables)
     native_partitions, native_pins, native_inputs = {}, {}, {}
+    session_partitions, session_counts, session_bindings = {}, {}, {}
     plans, plan_pins, plan_inputs, plan_counts = {}, {}, {}, {}
+    receipts, receipt_pins, receipt_inputs, receipt_counts = [], {}, {}, {}
+    if receipt_evidence:
+        receipts, receipt_pins, receipt_inputs, receipt_counts = _receipt_rows(receipt_evidence)
     if native_evidence:
-        native_partitions, native_pins, native_inputs = _native_rows(
-            native_evidence, metadata_manifest, metadata_pins, tables,
+        (
+            native_partitions, native_pins, native_inputs,
+            session_partitions, session_counts, session_bindings,
+        ) = _native_rows(
+            native_evidence, metadata_manifest, metadata_pins, tables, native_session_scopes,
         )
     if metadata_token_plan:
         plans, plan_pins, plan_inputs, plan_counts = _token_plans(
@@ -658,6 +1038,10 @@ def build_cycle_preview(
     out.mkdir(parents=True, exist_ok=True)
     (out / "evidence").mkdir()
     (out / "downloads").mkdir()
+    if native_session_scopes:
+        (out / "downloads/producers").mkdir()
+        for name, source in producer_sources.items():
+            (out / "downloads/producers" / name).write_bytes(source)
     for state in sorted(STATES):
         views, _, _ = _bill_rows(state, tables)
         for view in views:
@@ -670,6 +1054,10 @@ def build_cycle_preview(
         for party in ("D", "R"):
             _write_partition(out, f"platform-{state}-{party}", partitions[state, party])
     _write_partition(out, "platform-outside", partitions["outside", ""])
+    if receipt_evidence:
+        _write_partition(out, "receipts-ME", receipts)
+    for state, rows in session_partitions.items():
+        _write_partition(out, f"native-session-{state}", rows)
     for source, target in (
         (metadata_dir / "manifest.json", "metadata_source_manifest.json"),
         (platform_dir / "manifest.json", "platform_source_manifest.json"),
@@ -680,6 +1068,7 @@ def build_cycle_preview(
         shutil.copyfile(source, out / "downloads" / target)
     for directory, prefix in (
         (native_evidence, "native"), (metadata_token_plan, "metadata_token_plan"),
+        (receipt_evidence, "receipt"),
     ):
         if directory:
             for name in ("manifest", "report"):
@@ -724,7 +1113,107 @@ def build_cycle_preview(
             'source views</a></td></tr>'
         )
     document = (ROOT / "web/cycle-evidence.html").read_text(encoding="utf-8")
+    session_section = ""
+    if native_session_scopes:
+        session_rows = []
+        by_state = {values["state"]: values for values in session_counts.values()}
+        for state in sorted(STATES):
+            values = by_state.get(state)
+            session_rows.append(
+                f'<tr data-state="{state}" '
+                f'data-session-provided="{str(values is not None).lower()}" '
+                f'data-views="{values["exported_views"] if values else ""}" '
+                f'data-references="{values["exported_references"] if values else ""}" '
+                f'data-bills="{values["exported_unique_canonical_bills"] if values else ""}">'
+                f'<td>{state}</td><td>'
+                + (f'{escape(values["session_identifier"])}: '
+                   f'{values["exported_views"]} full views / '
+                   f'{values["exported_references"]} source references / '
+                   f'{values["exported_unique_canonical_bills"]} unique canonical bill IDs; '
+                   f'{values["candidate_excluded_views"]} candidate views excluded'
+                   if values else "Unknown — no reviewed publisher-session scope supplied")
+                + '</td><td>'
+                + (f'<a download href="evidence/native-session-{state}.jsonl">'
+                   f'{state} full source text (plain JSONL)</a> · '
+                   f'<a download href="downloads/native-session-{state}.jsonl.gz">'
+                   f'{state} full source text (gzip JSONL)</a>' if values else "Not supplied")
+                + '</td></tr>'
+            )
+        session_section = (
+            '<section aria-labelledby="session-coverage-heading">'
+            '<h2 id="session-coverage-heading">Publisher-session-bound evidence OUTSIDE '
+            'candidate date cohort</h2>'
+            '<p>Explicitly selected reviewed publisher sessions only; not eligible 2023–2024 '
+            'bills, native/date/analytical admission, or a native-text census. Exact canonical '
+            'matches already in the metadata candidate cohort are excluded here. Reader '
+            'alternatives and physical source references are not extra bills. Full original '
+            'observed dates/window dispositions remain unchanged, including known outside-window '
+            'dates; printed/session dates are not filing dates. No date is required or inferred. '
+            'No token plan or model statistics are supplied for this source. '
+            'Other states/sessions are unknown, not measured zero.</p>'
+            '<div class="table-wrap" tabindex="0" aria-label="Publisher-session source coverage">'
+            '<table id="session-coverage"><caption>Separate reviewed publisher-session source '
+            'scope, not candidate/date admission</caption><thead><tr><th scope="col">State</th>'
+            '<th scope="col">Publisher-session source status</th><th scope="col">'
+            'Complete text downloads</th></tr></thead><tbody>'
+            + "".join(session_rows) + '</tbody></table></div></section>'
+        )
+    receipt_section = ""
+    if receipt_evidence:
+        receipt_rows = []
+        for state in sorted(STATES):
+            provided = state == "ME"
+            receipt_rows.append(
+                f'<tr data-state="{state}" data-receipt-provided="{str(provided).lower()}" '
+                f'data-observations="{len(receipts) if provided else ""}"><td>{state}</td><td>'
+                + (f'{len(receipts)} observed source-receipt views' if provided
+                   else "Unknown — no receipt packet supplied")
+                + '</td><td>'
+                + ('<a download href="downloads/receipts-ME.jsonl.gz">'
+                   'ME complete source-receipt observations</a>' if provided else "Not supplied")
+                + '</td></tr>'
+            )
+        receipt_section = (
+            '<section aria-labelledby="receipt-coverage-heading">'
+            '<h2 id="receipt-coverage-heading">Separate source-receipt observations '
+            '— not cycle candidates</h2>'
+            f'<p>{len(receipts)} target-calendar-interest Maine observations: '
+            f'{receipt_counts["unique_origin_date_agreeing_views"]} unique origin/date-agreeing '
+            f'and {receipt_counts["unresolved_views"]} unresolved. Original action and literal '
+            'description dates are both retained; a discrepancy is never repaired. Receipt is '
+            'not introduction, filing, native evidence or eligible-cycle admission. Maine’s '
+            'active candidate count remains unchanged. '
+            'Other states are unknown, not measured zero.</p>'
+            '<div class="table-wrap" tabindex="0" aria-label="Separate source-receipt coverage">'
+            '<table id="receipt-coverage"><caption>Optional receipt packet scope, independent of '
+            'the active bill/native/model cohort</caption><thead><tr><th scope="col">State</th>'
+            '<th scope="col">Receipt evidence status</th>'
+            '<th scope="col">Full original fields download</th>'
+            '</tr></thead><tbody>' + "".join(receipt_rows) + '</tbody></table></div></section>'
+        )
     fields = {
+        "@@SESSION_SECTION@@": session_section,
+        "@@SESSION_OPTION@@": (
+            '<option value="native_session_text">Publisher-session native text '
+            '(OUTSIDE candidate date cohort)</option>' if native_session_scopes else ""
+        ),
+        "@@SESSION_DOWNLOAD_NOTE@@": (
+            "Publisher-session source downloads retain complete native text, all indexed "
+            "reader/reference alternatives, original source context, hashes and observed dates "
+            "outside the candidate date cohort; they never add candidate or model inputs."
+            if native_session_scopes else ""
+        ),
+        "@@RECEIPT_SECTION@@": receipt_section,
+        "@@RECEIPT_OPTION@@": (
+            '<option value="source_receipt">Source-receipt observations '
+            '(separate; not cycle candidates)</option>'
+            if receipt_evidence else ""
+        ),
+        "@@RECEIPT_DOWNLOAD_NOTE@@": (
+            "Receipt downloads preserve the full original action/date/description, date spans, "
+            "all original bill/context/abstract fields, provenance and unresolved observations. "
+            "They do not add cycle candidates." if receipt_evidence else ""
+        ),
         "@@STATE_OPTIONS@@": "".join(
             f'<option value="{row["state"]}">{escape(row["state_name"])} ({row["state"]})</option>'
             for row in sorted(matrix, key=lambda item: item["state_name"])
@@ -781,8 +1270,12 @@ def build_cycle_preview(
             for included, prefix, label in (
                 (native_evidence, "native", "native full-text source"),
                 (metadata_token_plan, "metadata_token_plan", "tokenization planning"),
+                (receipt_evidence, "receipt", "separate source-receipt evidence"),
             ) if included
-        ),
+        ) + ("".join(
+            f' · <a download href="downloads/producers/{name}">'
+            f'Archived producer source: {name}</a>' for name in producer_paths
+        ) if native_session_scopes else ""),
         "@@NATIVE_DOWNLOAD_NOTE@@": (
             "Native downloads contain every matching complete stored native string, exact "
             "candidate mapping, reader/root identity, source lineage and original caveats; "
@@ -799,6 +1292,7 @@ def build_cycle_preview(
     for directory, pins in (
         (metadata_dir, metadata_pins), (platform_dir, platform_pins),
         (native_evidence, native_pins), (metadata_token_plan, plan_pins),
+        (receipt_evidence, receipt_pins),
     ):
         if directory is None:
             continue
@@ -810,6 +1304,19 @@ def build_cycle_preview(
         entry for key, entry in plan_inputs.items() if key in ("evidence_manifest", "views")
     )):
         _bound_input(entry)
+    for entries in receipt_inputs.values():
+        for entry in entries.values():
+            _require(
+                _snapshot(Path(entry["path"])) == entry,
+                "receipt source changed during build (SHA/seven-stat)",
+            )
+    if native_session_scopes:
+        for name, path in producer_paths.items():
+            _require(
+                sha256_file(path) == producer_pins[name]
+                == sha256_file(out / "downloads/producers" / name),
+                "producer source changed during build or archive binding mismatch",
+            )
     manifest = {
         "schema": "local_cycle_evidence_preview_v1", "publication_status": "local_only_unpublished",
         "scientific_certification": "not_performed", "analytical_admission": False,
@@ -825,8 +1332,14 @@ def build_cycle_preview(
             ),
         },
         "inputs": {"bill_metadata": metadata_pins, "platform": platform_pins},
-        "producer_sha256": sha256_file(Path(__file__)),
-        "entrypoint_sha256": sha256_file(ROOT / "scripts/build_site.py"),
+        "producer_sha256": (
+            producer_pins["site_evidence.py"] if native_session_scopes
+            else sha256_file(Path(__file__))
+        ),
+        "entrypoint_sha256": (
+            producer_pins["build_site.py"] if native_session_scopes
+            else sha256_file(ROOT / "scripts/build_site.py")
+        ),
         "assets": {
             name: sha256_file(ROOT / "web" / name) for name in (
                 "cycle-evidence.html", "preview.css", "cycle-evidence.css", "cycle-evidence.js",
@@ -840,6 +1353,9 @@ def build_cycle_preview(
             "Candidate views/contexts are not certified counts or an analytical denominator.",
             "Bill title/abstract authorship and filing-time alignment are unverified.",
             (
+                "Candidate-native full text remains restricted to exact candidate contexts; "
+                "the separately selected publisher-session source is outside that date cohort."
+                if native_session_scopes else
                 "Native full text is restricted to exact candidate contexts, not a native census."
                 if native_evidence else
                 "Native presence is a registered-packet index only; "
@@ -858,8 +1374,9 @@ def build_cycle_preview(
     if native_evidence:
         manifest["inputs"]["native_evidence"] = {
             **native_pins, "consumed_source_inputs": native_inputs,
-            "normalizer_sha256": sha256_file(
-                Path(__file__).with_name("bills") / "study_native_overlap.py",
+            "normalizer_sha256": (
+                producer_pins["study_native_overlap.py"] if native_session_scopes
+                else sha256_file(producer_paths["study_native_overlap.py"])
             ),
         }
         manifest["counts"]["native_full_text_candidate_views"] = sum(
@@ -874,6 +1391,34 @@ def build_cycle_preview(
             "binding": "identical_complete_candidate_metadata_views_artifact",
         }
         manifest["counts"]["metadata_token_plan"] = {"n_views": len(plans), **plan_counts}
+    if receipt_evidence:
+        manifest["inputs"]["receipt_evidence"] = {
+            **receipt_pins, "consumed_source_inputs": receipt_inputs,
+        }
+        manifest["counts"]["source_receipt_evidence"] = receipt_counts
+        manifest["limitations"].append(
+            "Optional Maine receipt observations are separate evidence, never bill/native/model "
+            "cohort members. Other states' receipt coverage is unknown; both dates persist.",
+        )
+    if native_session_scopes:
+        manifest["producer_archive"] = {
+            name: {
+                "path": f"downloads/producers/{name}", "sha256": producer_pins[name],
+                "original_path": str(path.relative_to(ROOT)),
+            } for name, path in producer_paths.items()
+        }
+        manifest["inputs"]["native_session_scopes"] = session_bindings
+        manifest["counts"]["native_session_source_evidence"] = {
+            "scopes": session_counts, "other_states_and_sessions": "unknown_not_supplied",
+            "cohort_admissions": 0,
+        }
+        manifest["limitations"].append(
+            "Separate publisher-session-bound native source evidence is OUTSIDE the candidate "
+            "date cohort; no filing date is required or inferred. Exact canonical matches only, "
+            "excluding all candidate bill IDs; source-only/unmatched/reader-excluded records stay "
+            "excluded and bound in original inputs. Dates/window dispositions are unaltered. "
+            "No native/date/model/training/analytical admission or token statistics are supplied.",
+        )
     (out / "downloads/build_manifest.json").write_text(
         json.dumps(manifest, indent=2, allow_nan=False) + "\n", encoding="utf-8",
     )

@@ -138,6 +138,19 @@ and metadata-token-plan inputs enrich inspection without changing original
 metadata token fields or treating planning as inference. This is not a new
 state-completion category or certified report.
 
+The current explorer additionally preserves **62 Maine receipt observations**
+under a separate optional source: 61 unique originating/date-agreeing receipts
+and LD 2081's unresolved action/literal date discrepancy. Receipt is not
+filing/introduction; Maine still has no admitted cycle-date candidates and
+retains its wider 9,877-context inventory and acquisition block.
+
+Explicit NY 2023–2024 and IL GA-103 publisher-session exports now expose
+**51,965 further retained full-text views / 28,577 canonical IDs** outside the
+candidate-date cohort. These reuse exact existing scope proofs, exclude
+already counted candidate IDs and retain all reader/reference alternatives.
+They do not infer filing dates or change the six closed scopes. This fills
+an evidence-inspection gap, not a new native-census or scientific closure.
+
 For subsequent recovery, use a common pipeline: **native cohort -> exact
 record join -> missing-original retrieval -> shared extraction/validation ->
 checkpoint acceptance**. State-specific adapters should supply publisher
@@ -196,13 +209,13 @@ certification or the completeness of either party's platforms.
 | Georgia (GA) | Blocked | Blocked-evidence reconstruction accepted; sessions API returned 401 and collection stopped. Native census unknown; zero originals. | [Parallel native recovery](AUDIT_STATUS.md#additional-parallel-native-source-recovery) |
 | Hawaii (HI) | Inventory | No dedicated native legislative closure recorded; platform-training evidence is not legislative source closure. | [National inventory](AUDIT_STATUS.md#all-state-document-reference-inventory-and-retrieval) |
 | Idaho (ID) | Inventory | No dedicated native legislative closure recorded; establish native cohort and original-version evidence. | [National inventory](AUDIT_STATUS.md#all-state-document-reference-inventory-and-retrieval) |
-| Illinois (IL) | Blocked | Initial sources, body repair and stopped-prefix inspection accepted. Actual campaign stopped with 1,925 pending and two partial cases; recovery/whole-source closure remains open. Saved mocked-driver proof is not actual recovery. | [Illinois audit](AUDIT_STATUS.md#illinois-103rd-general-assembly-native-census-and-original-html) |
+| Illinois (IL) | Blocked | Initial sources/body repair/stopped-prefix evidence remain accepted; actual collection closure is still open. Shared GA-103 export now exposes 5,189 further complete retained views outside the candidate-date cohort, separate from 5,508 candidate views. No new collection, date inference or closure credit; prior 1,925-pending/two-partial campaign accounting remains distinct. | [Illinois audit](AUDIT_STATUS.md#illinois-103rd-general-assembly-native-census-and-original-html) |
 | Indiana (IN) | Blocked | Canonical-only 2,362-context target inventory and blocked packet accepted; no native census, original or actual boundary. Historical legislative request count unknown; new HTTP allowance is zero. | [Indiana current evidence](AUDIT_STATUS.md) |
 | Iowa (IA) | Blocked | Bounded native/source reconstruction accepted, not acquisition-policy acceptance. HTTP500 block responses and post-block requests retained; collection stopped and further HTTP unauthorized. | [Initial-state audits](AUDIT_STATUS.md) |
 | Kansas (KS) | Partial | Initial r2 native cohort has 1,558 rows versus 1,559 canonical contexts; seven introduced PDFs, not full text closure. SR1742 nonmatch and historical request accounting remain open. | [Initial-state audits](AUDIT_STATUS.md) |
 | Kentucky (KY) | Partial | 3,005 native regular contexts; 30 genuine introduced PDFs and two withdrawal gaps accepted. Offline full-driver/readiness proof accepted separately; remaining genuine originals and historical request reconciliation are not completed. | [Kentucky current evidence](AUDIT_STATUS.md) |
 | Louisiana (LA) | Inventory | No dedicated native legislative closure recorded; scanned party-platform evidence is a different source type. | [National inventory](AUDIT_STATUS.md#all-state-document-reference-inventory-and-retrieval) |
-| Maine (ME) | Blocked | Blocked-evidence packet replayed; official robots restriction retained. Canonical rows are not a native census; zero originals. | [Initial-state audits](AUDIT_STATUS.md) |
+| Maine (ME) | Blocked | Official robots restriction retained; no native originals/census. Offline receipt packet preserves all 9,877 contexts/166,141 actions, 61 unique date-agreeing origin receipts and one LD 2081 discrepancy. Receipt is not filing/introduction; no target-cohort admission or renewed HTTP. | [Receipt evidence](AUDIT_STATUS.md#additional-source-evidence-without-date-cohort-expansion) |
 | Maryland (MD) | Partial | Initial v2 reconstruction and native 5,012-row inventory accepted; eight selected contexts, ten PDFs including calendars. Actual boundaries, special-session closure and remaining introduced texts are open. | [Initial-state audits](AUDIT_STATUS.md) |
 | Massachusetts (MA) | Partial | Initial v3 reconstruction accepted; 50 observed native rows and zero original PDFs, not a complete introduced-bill census. Actual boundaries and native introduced scope remain open. | [Initial-state audits](AUDIT_STATUS.md) |
 | Michigan (MI) | Partial | 4,043 native contexts and 32 genuine PDFs accepted. Offline full-campaign/transport-readiness evidence is separate; remaining 4,011 official originals are not recovered by mocked transport. | [Initial packet](AUDIT_STATUS.md#michigan-initial-packet-independent-v3-reconstruction-accepted) |
@@ -215,7 +228,7 @@ certification or the completeness of either party's platforms.
 | New Hampshire (NH) | Inventory | No dedicated native legislative closure recorded; establish native cohort and original-version evidence. | [National inventory](AUDIT_STATUS.md#all-state-document-reference-inventory-and-retrieval) |
 | New Jersey (NJ) | Blocked | Blocked-evidence replay accepted; HTTP403 stop retained. Native census/boundaries unknown; zero originals. Canonical biennia are not native introduced counts. | [Parallel native recovery](AUDIT_STATUS.md#additional-parallel-native-source-recovery) |
 | New Mexico (NM) | Partial | Bounded 87-reference/36-bill recovery, wrong-session attachment quarantine and separate substitute OCR preserved. Complete native universe and original policy-text coverage remain open. | [Native recovery](AUDIT_STATUS.md#new-mexico-native-recovery-and-cross-session-quarantine) |
-| New York (NY) | Blocked | Terminal accounting, 24,295-PDF worker reconstruction and forensic census bound. Cancelled-then-started A255 lifecycle anomaly remains unresolved; actual final-43 tail unsealed, genuine source closure not accepted. | [Current terminal/forensic audit](AUDIT_STATUS.md) |
+| New York (NY) | Blocked | Existing terminal/forensic evidence remains bound; A255 lifecycle anomaly and unsealed final-43 tail still block closure. Shared exact-session export exposes 46,776 further retained reader views across 23,388 canonical IDs outside candidate dates; 1,720 candidate views remain separate. No inferred dates, new collection or closure credit. | [Additional session evidence](AUDIT_STATUS.md#additional-source-evidence-without-date-cohort-expansion) |
 | North Carolina (NC) | Closed scope | Complete 2023/2024 2,004-PDF native source archive and actual final-20 replay accepted; two numeric identities unresolved and canonical HB311 unmatched. Statewide native version-list collection is a separate, unfinished task. | [Whole archive and tail](AUDIT_STATUS.md#north-carolina-publisher-census-and-full-original-source-continuation) |
 | North Dakota (ND) | Inventory | No dedicated native legislative closure recorded; scanned party resolutions/OCR are separate from legislative sources. | [National inventory](AUDIT_STATUS.md#all-state-document-reference-inventory-and-retrieval) |
 | Ohio (OH) | Closed scope | Complete 135th cohort accounting: 2,279 contexts, 2,267 PDF/HTML pairs, five PDF-only and seven unsupported originals; genuine whole/final-7 replay accepted. HB45/HB412 native nonmatches remain explicit. | [Genuine archive replay](AUDIT_STATUS.md#full-campaign-preparation-gates-pennsylvania-ohio-and-missouri) |
