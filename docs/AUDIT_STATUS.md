@@ -76,6 +76,18 @@ session. This measures the retained date columns, not all fields in the source
 dump, actual party-label changes, historical affiliation completeness or scientific
 validity. No canonical data or analyses were regenerated.
 
+**Bill coverage denominator repair:** populations containing only excluded
+procedural shells, publisher system tests or Montana draft requests now retain an
+unavailable classification rate, not a false zero-percent rate. Three actual
+pre-fix Parquet regressions fail; a nonempty, wholly abstained population remains
+a genuine zero-percent control. All 107 emphasis, bill-tag validation and
+state-focus tests pass after the repair. Exclusion counts, substantive
+denominators, prediction-download rows and nonempty rates retain their existing
+behavior; CSV round trips preserve unavailable coverage. Raw before/after logs
+are retained as `bill_coverage_empty_denominator_before_v1.log` and
+`bill_coverage_empty_denominator_complete_v1.log` in the session.
+No actual corpus, model outputs or research comparisons were regenerated.
+
 **October 21 review continuation:** five evidence-bound rubric proposals have
 returned without changing canonical labels. Independent parent binding verifies
 their retained source spans and quotations; it does not approve the proposed

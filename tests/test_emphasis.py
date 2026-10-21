@@ -565,6 +565,7 @@ def test_bill_prediction_export_retains_learned_rejection_and_output_map(tmp_pat
     assert counts.empty
     assert totals == {"n_bills": 1, "n_attributed": 1, "n_classified": 0}
     assert coverage.iloc[0]["n_abstained"] == 1
+    assert coverage.iloc[0]["classification_rate"] == 0.0
     row = pd.read_parquet(tmp_path / "predictions" / "SD.parquet").iloc[0]
     assert json.loads(row["output_codes"]) == [1, 6, None]
     assert row["rejection_score"] == 0.9
@@ -726,6 +727,47 @@ def test_draft_requests_are_exported_but_never_scored_or_counted_as_extra_filing
     assert drafts.abstention_reason.eq("source_draft_request").all()
     assert drafts.topic.isna().all() and drafts.n_chunks.eq(0).all()
     assert drafts.classification_text.eq(text).all() and drafts.input_sha256.notna().all()
+
+
+@pytest.mark.parametrize(
+    ("state", "title", "identifier", "excluded_column"),
+    [
+        ("IL", "EDUCATION-TECH", "HB 1", "n_procedural_excluded"),
+        ("WA", "Bill 4 for System Testing", "HB 1", "n_source_test_excluded"),
+        ("MT", "A source draft request with substantive policy language.", "LC 1",
+         "n_source_draft_excluded"),
+    ],
+)
+def test_bill_coverage_without_eligible_bills_is_unavailable(
+    tmp_path, state, title, identifier, excluded_column,
+):
+    from state_politics.analysis.revealed import count_topics_by_state
+
+    class UncalledClassifier:
+        def predict_many(self, *args, **kwargs):
+            raise AssertionError("excluded records must not reach the classifier")
+
+    bills = pd.DataFrame([{
+        "bill_id": "excluded", "state": state, "year": 2024, "sponsor_party": "D",
+        "title": title, "identifier": identifier,
+    }])
+    path = tmp_path / "bills.parquet"
+    bills.to_parquet(path, index=False)
+    counts, totals, coverage = count_topics_by_state(
+        path, UncalledClassifier(), progress=None, predictions_dir=tmp_path / "predictions",
+    )
+    assert counts.empty
+    assert totals == {"n_bills": 1, "n_attributed": 1, "n_classified": 0}
+    row = coverage.iloc[0]
+    assert row[excluded_column] == row["n_attributed"] == 1
+    assert row["n_substantive_attributed"] == row["n_classified_total"] == row["n_abstained"] == 0
+    assert pd.isna(row["classification_rate"])
+    coverage_path = tmp_path / "coverage.csv"
+    coverage.to_csv(coverage_path, index=False)
+    assert pd.isna(pd.read_csv(coverage_path).iloc[0]["classification_rate"])
+    exported = pd.read_parquet(tmp_path / "predictions" / f"{state}.parquet")
+    pd.testing.assert_frame_equal(exported[bills.columns], bills)
+    assert exported.iloc[0]["classification_status"] == "excluded"
 
 
 def test_topic_vectors_recomputes_shares_instead_of_summing_eras():

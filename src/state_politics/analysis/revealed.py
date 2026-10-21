@@ -266,7 +266,7 @@ def count_topics_by_state(
                         "n_classified_total": n_classified,
                         "n_abstained": len(substantive) - n_classified,
                         "classification_rate": (
-                            n_classified / len(substantive) if len(substantive) else 0.0
+                            n_classified / len(substantive) if len(substantive) else None
                         ),
                     }
                 )
