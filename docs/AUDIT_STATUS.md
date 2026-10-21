@@ -156,7 +156,8 @@ handle 1705 is not an OS PID. The actual ledger and all failed-attempt evidence
 remain unchanged; successful PDF retention does not repair lifecycle acceptance.
 
 The additional **GPT-6.1 Sol** Indiana initial audit returned blocked evidence;
-Utah's separate bounded initial audit remains pending. Their original scopes
+Utah's bounded initial packet has now been independently reconstructed, but its
+collection is **not accepted**, as detailed below. Their original scopes
 cover actual session boundaries/censuses, typed canonical joins and up to 32
 introduced-version contexts each, with a 128-aggregate-physical exchange ceiling
 including discovered history, robots, redirects, retries and errors. Unknown
@@ -201,6 +202,43 @@ Canonical introduction-note candidates do not certify publisher-native originals
 Both packets remain immutable; **new HTTP allowance is still zero**. The attempted
 authorization clarification received no approval. Further collection requires an
 explicit finite prospective allowance without relabelling unknown lifetime history.
+
+**Utah bounded reconstruction; collection not accepted:** the parent executed the
+unchanged original guarded verifier in an isolated Python child, exit 0.
+All **233 packet file/directory entries and fourteen consumed current originals**
+retained complete content/eight-field bindings. The original installed-inner
+controls observed **157 synthetic denials and twenty allowed probes before the
+original stronger outer guard**; these Python audit controls are not an OS or
+native-library sandbox. The raw three-record physical-LF output exactly matches
+the returned report. Receipt `utah_initial_packet_parent_actual_v1.json` has SHA-256
+`a00943b271bf585114cb745fbb7df2cecb8e734c84f404d9e288953bcffce020`.
+
+Fresh reconstruction preserves **1,863 publisher-native general-session rows**
+(929 in 2023 and 934 in 2024), distinct typed identities and exact canonical
+target joins. It reopens all seven selected original-base PDFs with both readers,
+**231 pages per reader**, seven corresponding full original HTML documents and
+23 HTML response projections in total. Neither reader is ground truth.
+The 895 listing rows displaying substitutes are not relabelled introduced
+originals. The full native introduced-text population, special-session closure
+and actual convening/sine-die dates remain unresolved; archive/scheduled ranges
+do not establish actual procedural boundaries. Robots-disallowed journal paths
+were not fetched. Eleven worker semantic-negative executions were not rerun by
+the parent; their disposable fixtures were cleaned after worker execution.
+
+The packet retains **31 known new physical official exchanges**, but historical
+usage, aggregate usage and remaining aggregate allowance are **unknown**, not
+zero. The worker subsequently confirmed that its new-32 prospective allowance
+was self-selected, without separate pre-dispatch user or parent approval.
+The separate clarification
+`utah_prospective_allowance_authority_clarification_parent_v1.json` (SHA-256
+`5a559726240b14fc2bcc76a57fa9d9b5ccdf43193515d9477e1cca71ba7a205d`)
+preserves that acknowledgment without rewriting the original packet.
+The known 31 exchanges do **not** prove that the initial aggregate ceiling of 128
+was exceeded; compliance remains unproven. Successful offline integrity checks
+do not retroactively authorize collection. **Further Utah HTTP is unauthorized**;
+the accepted result is bounded source reconstruction only, not collection-policy
+acceptance, filing-time identity, full source closure or scientific/publication
+admission. All sealed originals and failed-attempt evidence remain preserved.
 
 **Missouri fresh-input follow-through:** the first fresh-behavior worker stopped
 at dependency admission, before invoking the initializer, crash cases or next-32
