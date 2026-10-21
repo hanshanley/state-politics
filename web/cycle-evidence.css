@@ -1,0 +1,13 @@
+input { padding: 8px 12px; border: 1px solid #89877e; border-radius: 0; background: transparent; color: var(--ink); font-size: 15px; min-height: 44px; max-width: 100%; }
+#filters { align-items: end; }
+#filters label { min-width: 0; flex: 1 1 215px; }
+#filters select { width: 100%; min-width: 0; max-width: 100%; }
+#download-query { margin-bottom: 8px; }
+#pagination { display: flex; flex-wrap: wrap; align-items: center; gap: 16px; }
+#pagination[hidden] { display: none; }
+#page-label, #state-count, #org-count { font: 13px/1.5 system-ui, sans-serif; color: var(--muted); }
+.record-id, .provenance-text { overflow-wrap: anywhere; }
+.provenance-text { white-space: pre-wrap; max-height: 24rem; overflow-y: auto; font-size: 13px; }
+.skip-link { position: absolute; left: -10000px; }
+.skip-link:focus { position: static; display: inline-block; padding: 10px 24px; }
+@media (max-width: 650px) { #filters label { flex-basis: 100%; } #pagination button { flex: 1; } }

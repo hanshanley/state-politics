@@ -177,9 +177,35 @@ def main(argv=None):
         "--recovery", type=Path,
         help="Optional verified bounded-recovery inventory.json; not analytical admission",
     )
+    parser.add_argument(
+        "--cycle-evidence", action="store_true",
+        help="Evidence-only 2023–2024 preview; no report, inference or public integration",
+    )
+    parser.add_argument(
+        "--bill-evidence", type=Path,
+        default=ROOT / "data/processed/study-abstract-evidence-2023-2024-v2",
+        help="Immutable full-string bill metadata evidence bundle",
+    )
+    parser.add_argument(
+        "--platform-evidence", type=Path,
+        default=ROOT / "data/processed/platform-study-evidence-2023-2024-v5",
+        help="Immutable full-text platform evidence bundle",
+    )
     args = parser.parse_args(argv)
+    if args.cycle_evidence and args.out == ROOT / "data/preview":
+        args.out = ROOT / "data/preview-cycle-evidence-v2"
     if not args.out.resolve().is_relative_to((ROOT / "data").resolve()):
         parser.error("preview output must remain under this project's ignored data/ directory")
+    if args.cycle_evidence:
+        if args.recovery:
+            parser.error("--recovery belongs to the legacy preview, not --cycle-evidence")
+        from state_politics.site_evidence import build_cycle_preview
+
+        result = build_cycle_preview(args.bill_evidence, args.platform_evidence, args.out)
+        print(f"wrote local-only cycle evidence preview: {args.out / 'index.html'}")
+        print(json.dumps(result["counts"], sort_keys=True))
+        print(f"build manifest sha256: {sha256_file(args.out / 'downloads/build_manifest.json')}")
+        return 0
     result = build_preview(
         args.coverage, args.historical, args.out, recovery_path=args.recovery,
     )

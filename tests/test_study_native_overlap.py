@@ -272,6 +272,42 @@ def test_unselected_sessions_do_not_expand_adapter_scope():
     assert result["bill_id"].dropna().tolist() == ["b1", "b2"]
 
 
+@pytest.mark.parametrize("state", ["MI", "WA"])
+def test_michigan_exact_letter_joint_resolutions_do_not_become_generic_aliases(state):
+    spec, raw, views = inputs()
+    spec.update(state=state, canonical_session="2023-2024")
+    raw.loc[0, "identifier"] = "HJR A"
+    canonical = ledger()
+    canonical["state"] = state
+    canonical["session_identifier"] = "2023-2024"
+    canonical.loc[0, "identifier"] = "HJR A"
+    contexts, _ = normalize_packet(spec, raw, views)
+    if state == "MI":
+        result = join_contexts(contexts, canonical)
+        assert result.loc[result.context_id.eq("one"), "bill_id"].tolist() == ["b1"]
+    else:
+        with pytest.raises(ValueError, match="unsupported typed"):
+            join_contexts(contexts, canonical)
+
+
+def test_retained_negative_flags_and_raw_dates_are_not_silently_admitted():
+    spec, raw, views = inputs()
+    spec["preserve_context_fields"] = ["negative_flags_json", "native_date_observations_json"]
+    raw["negative_flags_json"] = '{"identity_unresolved": true}'
+    raw["native_date_observations_json"] = '[{"event_kind": "reading", "raw_value": "2023"}]'
+    contexts, _ = normalize_packet(spec, raw, views)
+    assert contexts["negative_flags_json"].tolist() == raw["negative_flags_json"].tolist()
+    assert (
+        contexts["native_date_observations_json"].tolist()
+        == raw["native_date_observations_json"].tolist()
+    )
+    assert contexts["native_introduction_date"].isna().all()
+    assert not contexts["analytical_admission"].any()
+    spec["preserve_context_fields"] = ["state"]
+    with pytest.raises(ValueError, match="cannot override"):
+        normalize_packet(spec, raw, views)
+
+
 def packet(tmp_path):
     spec, raw, _ = inputs()
     root = tmp_path / "native"

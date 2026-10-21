@@ -102,6 +102,10 @@ def normalize_packet(
     contexts["packet_status"] = (
         _field(raw, spec["status"]) if "status" in spec else "retained_input_unadjudicated"
     )
+    for field in spec.get("preserve_context_fields", []):
+        if field in contexts:
+            raise ValueError("source context fields cannot override normalized identity or flags")
+        contexts[field] = _field(raw, field)
     contexts["native_introduction_raw"] = None
     contexts["native_introduction_date"] = None
     contexts["native_window_disposition"] = "not_supplied_by_registered_packet"
@@ -164,8 +168,11 @@ def normalize_packet(
     return contexts, views
 
 
-def _typed_key(values: pd.Series) -> pd.Series:
-    if values.isna().any() or not values.str.fullmatch(r"[A-Za-z]+ *[0-9]+(?:-[0-9]+)?").all():
+def _typed_key(values: pd.Series, *, state: str) -> pd.Series:
+    allowed = values.str.fullmatch(r"[A-Za-z]+ *[0-9]+(?:-[0-9]+)?")
+    if state == "MI":
+        allowed |= values.str.fullmatch(r"(?i)(HJR|SJR) *[A-Z]")
+    if values.isna().any() or not allowed.all():
         raise ValueError("unsupported typed identifier; no guessed aliases")
     return values.str.replace(" ", "", regex=False).str.upper()
 
@@ -178,9 +185,9 @@ def join_contexts(contexts: pd.DataFrame, ledger: pd.DataFrame) -> pd.DataFrame:
             ledger["state"].eq(state)
             & ledger["session_identifier"].isin(native["session_identifier"])
         ].copy()
-        canonical["_typed"] = _typed_key(canonical["identifier"])
+        canonical["_typed"] = _typed_key(canonical["identifier"], state=state)
         native = native.copy()
-        native["_typed"] = _typed_key(native["native_identifier"])
+        native["_typed"] = _typed_key(native["native_identifier"], state=state)
         declared = native.loc[native["declared_bill_id"].notna()].copy()
         without = native.loc[native["declared_bill_id"].isna()].copy()
         if not declared.empty:
@@ -336,6 +343,7 @@ def build_overlap(matrix_dir: Path, registry: Path, out_dir: Path) -> dict:
         ]
         columns = {selector.split(".")[0] for selector in selectors}
         columns |= {field.split(".")[0] for field in spec.get("source_only_session_fields", [])}
+        columns |= {field.split(".")[0] for field in spec.get("preserve_context_fields", [])}
         columns |= {
             spec[key].split(".")[0]
             for key in ("native_introduction_field", "native_introduction_guard")

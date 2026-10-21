@@ -127,3 +127,59 @@ packets:
     source_kind: retained_native_input
     expected_contexts: 2868
     expected_views: 2868
+  - state: MI
+    root: data/processed/partial-native-input-index-2023-2024-v2/MI
+    manifest_sha256: 13cce6d6c25c74d5ce2481ac3802effb80a7b06cb332859f6169cb3ae4d27e41
+    profile: views
+    contexts: context_inventory.parquet
+    views: source_view_inputs.parquet
+    context_id: context_id
+    identifier: identifier
+    bill_id: canonical_bill_id
+    session_identifier: session_identifier
+    status: status
+    preserve_context_fields: [negative_flags_json, native_date_observations_json, native_date_observation_status, source_manifest_sha256, source_record_sha256, identity_basis]
+    expected_contexts: 32
+    expected_views: 64
+  - state: MD
+    root: data/processed/partial-native-input-index-2023-2024-v2/MD
+    manifest_sha256: 777a1c9aabebb6c4b700f2f562af76aeea39b629fba32e3cdcdbc8c015f6bb2b
+    profile: views
+    contexts: context_inventory.parquet
+    views: source_view_inputs.parquet
+    context_id: context_id
+    identifier: identifier
+    bill_id: canonical_bill_id
+    session_identifier: session_identifier
+    status: status
+    preserve_context_fields: [negative_flags_json, native_date_observations_json, native_date_observation_status, source_manifest_sha256, source_record_sha256, identity_basis]
+    expected_contexts: 8
+    expected_views: 16
+  - state: MN
+    root: data/processed/partial-native-input-index-2023-2024-v2/MN
+    manifest_sha256: 4d52552b25cd1e20d6d6ef499c12b41805b483e6786a84c31d3f7bbce5ba32cc
+    profile: views
+    contexts: context_inventory.parquet
+    views: source_view_inputs.parquet
+    context_id: context_id
+    identifier: identifier
+    bill_id: canonical_bill_id
+    session_identifier: session_identifier
+    status: status
+    preserve_context_fields: [negative_flags_json, native_date_observations_json, native_date_observation_status, source_manifest_sha256, source_record_sha256, identity_basis]
+    expected_contexts: 32
+    expected_views: 93
+  - state: KY
+    root: data/processed/partial-native-input-index-2023-2024-v2/KY
+    manifest_sha256: 04dc1074f33e777d2753ea3e0b0ca008faff30cb6a69d4bfa3b3cf2522238fe6
+    profile: views
+    contexts: context_inventory.parquet
+    views: source_view_inputs.parquet
+    context_id: context_id
+    identifier: identifier
+    bill_id: canonical_bill_id
+    session_identifier: session_identifier
+    status: status
+    preserve_context_fields: [negative_flags_json, native_date_observations_json, native_date_observation_status, source_manifest_sha256, source_record_sha256, identity_basis]
+    expected_contexts: 32
+    expected_views: 60

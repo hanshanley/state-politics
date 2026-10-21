@@ -89,17 +89,43 @@ and unregistered packets remain explicit. The six existing Closed scope
 statuses are unchanged, and their residual special-session/reference gaps
 are follow-up tasks, not permission to recollect their accepted regular cohorts.
 
-The current v9 integration also indexes accepted partial TX and historical FL
+The preserved v9 integration also indexes accepted partial TX and historical FL
 inputs. TX contributes 37 source-date-observed cycle text joins; its HB1 HTML
 shell is excluded from inputs. FL contributes zero, preserving the historical
 packet limitation. Separately, native introduction fields provide date evidence
 for 3,463 CA/SD text contexts with unresolved canonical source dates. Another
 569 cycle-relevant native/source date differences remain explicit for review.
 These date observations do not silently change admission or tracker status.
-The current combined `study-filing-2023-2024-v2/state_matrix.csv` preserves those
+The current v10 registry additionally indexes bounded accepted MI/MD/MN/KY
+original-reader selections: 104 contexts / 233 alternative views, with text
+for 101 contexts. MN SR61 and KY HJR21/HJR22 remain unavailable. Raw native
+dates and negative flags are preserved, not automatically admitted. There are
+now 13 packets / 12 registered states; this does not close their state cohorts
+or turn unknown coverage elsewhere into zero. The current combined
+`study-filing-2023-2024-v3/state_matrix.csv` preserves those
 native columns and adds distinct source-coded filing and deduplicated union
 counts. Use this final matrix for current source-event triage, not the older
 introduction-only counts alone.
+
+The [national title/abstract bundle](REPRODUCIBILITY.md#full-national-titleabstract-evidence)
+now extends that matrix with full metadata alternatives and separate conditional
+native/description candidate counts. It contains 155,958 contexts, including the
+unchanged 151,615 coded-event records. The additional 861 description-stated
+records are NY resolutions/concurrent resolutions and one MA petition filing;
+they do not establish whole-state dates or native completeness. ME's cycle
+date coverage remains unresolved, not zero legislative activity.
+Full abstracts cover 49,242 candidate contexts; conflicting abstract variants
+remain explicit. The [complete token plan](REPRODUCIBILITY.md#complete-metadata-token-window-plan)
+covers every tokenizer-produced source token without truncation but grants no
+classifier or analytical approval. Current metadata v2 updates native presence
+while preserving byte-identical full metadata/abstract artifacts, so the
+accepted v1 token plan is reused rather than repeated.
+
+The [local evidence explorer](REPRODUCIBILITY.md#unpublished-cycle-evidence-explorer)
+provides all-state/organization coverage, complete metadata/platform text,
+filters and complete query downloads without publication. Native originals
+are not included and token-plan UI integration is deferred. This is evidence
+inspection, not a new state-completion category or certified report.
 
 For subsequent recovery, use a common pipeline: **native cohort -> exact
 record join -> missing-original retrieval -> shared extraction/validation ->

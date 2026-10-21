@@ -105,17 +105,46 @@ groups. Manifest SHA-256:
 All detailed context counts match the previously accepted source-window
 group export; wider-history context/reference totals are 1,090,369/2,617,690.
 
+## Reusing bounded accepted partial-native originals
+
+```bash
+.venv/bin/python -I -B -m state_politics.bills.study_partial_native \
+  --data-dir data/processed \
+  --out-dir data/processed/partial-native-input-index-2023-2024-v2
+```
+
+This normalizes only accepted initial-original selections for MI/MD/MN/KY,
+using their stored extraction segments, not new collection, PDF extraction or
+OCR. Each state exports a context inventory, complete alternative-view inputs
+and pinned manifest. Negative flags, exact record/source hashes and raw native
+date observations survive; dates are not normalized or admitted here.
+
+| State | Selected contexts | Alternative views | Unavailable selected originals |
+|---|---:|---:|---|
+| MI | 32 | 64 | None |
+| MD | 8 | 16 | None |
+| MN | 32 | 93 | SR61 |
+| KY | 32 | 60 | HJR21/HJR22 |
+
+The root manifest is
+`340c652dec60090a538710f2af75f5ed0623645935c063e4bd76e6d7bade078b`.
+All 335 original source fingerprints remain unchanged. The failed v1 and its
+failure receipt remain preserved; v2 is distinct. These 104 bounded contexts /
+233 views do not close any statewide source universe. Existing outputs are
+refused; reproduction requires a fresh output directory and corresponding
+explicit registry pins.
+
 ## Shared accepted-native-packet overlap
 
 ```bash
 .venv/bin/python -I -B -m state_politics.bills.study_native_overlap \
   --matrix-dir data/processed/study-matrix-2023-2024-v1 \
   --registry conf/study_native_packets.yml \
-  --out-dir data/processed/study-native-overlap-2023-2024-v9
+  --out-dir data/processed/study-native-overlap-2023-2024-v10
 ```
 
-The registry pins nine previously accepted input manifests covering CA, CO,
-NC, OH, SD, WI, TX and FL. It selects the California 2023–2024 packet **and** the wider
+The registry pins 13 accepted input manifests covering CA, CO, NC, OH, SD,
+WI, TX, FL, MI, MD, MN and KY. It selects the California 2023–2024 packet **and** the wider
 archive: the latter contains source-dated 2024 prefilings in a 2025–2026
 session, which cannot be excluded by session-name substring. Source dates
 still come only from the existing national ledger.
@@ -127,6 +156,8 @@ California native special-session codes have an explicit registry crosswalk
 to canonical session keys. This is an identity crosswalk, not a source of dates.
 Unmapped source-only contexts remain unmatched; no HJR/HR/HB aliases or
 ambiguous joins are guessed. NC's two identity-unresolved inputs stay marked.
+MI alone additionally permits exact single-letter HJR/SJR identifiers; this
+does not extend the grammar to another state or alias measure types.
 Texas `88R` maps explicitly to canonical `88`; its original native key survives.
 Its unavailable HB1 shell is retained as a context with zero input views.
 
@@ -138,7 +169,15 @@ download: complete original strings remain in the bound input tables.
 Alternative readers never count as additional measures. Unregistered states
 retain null packet counts rather than zero recovery.
 
-The actual v9 manifest is
+The current v10 manifest is
+`f16998d466855fe653d988792f8707651541a7d45c9c7dc2459afb71266f8198`.
+It indexes 43,584 wider contexts / 59,727 alternative views across 12 states.
+Its 26,872 introduction-observed contexts without supplied native text use
+that expanded scope, not the earlier eight-state denominator. The four new
+partial indexes retain their raw negative/date/provenance fields; they do not
+certify identity, filing-time eligibility or statewide text coverage.
+
+The preserved v9 manifest is
 `5e145ead121a3b5610531bc23750c1ece202bf4adc896f9b89d060b18784f51e`.
 It indexes 43,480 wider-scope native contexts and 59,494 alternative/source
 views. Of 18,690 source-in-window observations in these eight states, 10,905
@@ -169,7 +208,8 @@ V6's explicit native `88R`/canonical `88` join failure remains incomplete;
 v7 adds the reviewed crosswalk, partial packets and native date evidence,
 and v8 exports the explicit date-resolution queue.
 V9 binds the generalized origin-event helper while retaining the same native
-data; all original introduction semantics remain unchanged.
+data; all original introduction semantics remain unchanged. V10 adds the four
+bounded partial indexes and state-scoped MI identifier grammar.
 
 ## Separate explicit filing evidence and final combined matrix
 
@@ -177,8 +217,8 @@ data; all original introduction semantics remain unchanged.
 .venv/bin/python -I -B -m state_politics.bills.study_filing \
   --window-dir data/processed/study-window-2023-2024-v2 \
   --actions data/processed/bill_actions.parquet \
-  --matrix-dir data/processed/study-native-overlap-2023-2024-v9 \
-  --out-dir data/processed/study-filing-2023-2024-v2
+  --matrix-dir data/processed/study-native-overlap-2023-2024-v10 \
+  --out-dir data/processed/study-filing-2023-2024-v3
 ```
 
 The earlier source-window ledger intentionally counted only coded
@@ -208,10 +248,13 @@ semantics: all 1,090,369 results exactly match the committed original function
 and every accepted introduction-ledger field. The final filing output was
 also compared field-for-field with that ledger and its raw action export with
 the original source table; the 50-state union counts and retained native columns
-reconcile exactly. Final manifest:
-`b6d05b23bdec09461492df13b190a43c0b138afe953ee40915a3fd458d82fc7b`.
-The native v9 matrix it consumes has unchanged v8 data and a new code-bound
-manifest `5e145ead121a3b5610531bc23750c1ece202bf4adc896f9b89d060b18784f51e`.
+reconcile exactly. Current v3 manifest:
+`a0824a1b5cfd25ae9ade853f01ea7d023dbf9932ebdacbc0511ca4c48b2423d3`.
+It consumes native v10 and preserves its expanded 12-state fields. V2 remains
+preserved with manifest
+`b6d05b23bdec09461492df13b190a43c0b138afe953ee40915a3fd458d82fc7b`;
+its native v9 input was
+`5e145ead121a3b5610531bc23750c1ece202bf4adc896f9b89d060b18784f51e`.
 No canonical extraction, earlier ledger, label or model was rewritten.
 
 ## All-organization platform evidence and advisory source-date claims
@@ -255,6 +298,136 @@ parent reconciliation verifies full original texts/records, allocations and
 spans, not a second semantic review. No new collection, model inference,
 training, canonical source rewrite or website publication is part of this step.
 All generated evidence remains local/Git-ignored, not backed up by pushing code.
+
+## Uncoded action-description evidence
+
+The separate `state_politics.bills.study_description_evidence` producer binds
+the existing filing/source-action inputs, retains exact original records and
+recognizes reviewed literal self-descriptions, not guessed first-action dates.
+Its MA/ME/NY packet preserves 184,977 contexts / 3,473 raw actions. The in-window
+candidate channel contains 860 NY introduction records (856 resolutions / four
+concurrent resolutions) and one MA petition filing. ME's approval/referral/
+printing descriptions remain unresolved, not recoded introductions.
+
+The actual output is `data/processed/study-description-evidence-2023-2024-v1/`,
+manifest `df4cec9dea19c7a506588747afd659a864cf50ef6205969a1a4ef75a12f19b63`.
+It is description-stated, not original source-coded or native-certified evidence.
+Original action classifications and canonical date fields remain unchanged.
+The accepted v1 description packet is reused with filing v3 only after exact
+filing-ledger, source-window, extraction-manifest and description-ledger hash
+agreement. A changed upstream manifest alone does not require repeating
+description extraction when all relevant input bytes remain identical.
+
+## Full national title/abstract evidence
+
+```bash
+.venv/bin/python -I -B -m state_politics.bills.study_abstracts \
+  --data-dir data/processed \
+  --filing-dir data/processed/study-filing-2023-2024-v3 \
+  --native-dir data/processed/study-native-overlap-2023-2024-v10 \
+  --description-dir data/processed/study-description-evidence-2023-2024-v1 \
+  --out-dir data/processed/study-abstract-evidence-2023-2024-v2
+```
+
+This exports `bill_evidence.parquet`, `abstract_evidence.parquet`,
+`candidate_metadata_views.parquet`, the enriched `state_matrix.csv`, report and
+immutable manifest. Every selected abstract, original note, source title and
+alternative survives, including literal Unicode separators. No latest/longest
+selection or near-duplicate collapse is performed. Native text presence is
+known only relative to registered packets; other states retain nulls.
+
+The 155,958 candidate contexts comprise 151,615 coded-event records, 3,482
+native-date-only and 861 description-only records. Conditional channels and
+their source dates remain distinct from the coded count. Full abstracts cover
+49,242 contexts / 50,959 records; 1,409 contexts have different abstract texts.
+The 157,675 metadata views never prepend summaries to native introduced text.
+Source tests, drafts and procedural title-only cases are flagged, not dropped
+or falsely admitted. All model/training/filing-time/analytical approval flags
+remain false; no tokenizer or classifier runs in this producer.
+
+Manifest:
+`69af46267bdc8c6ce4adb02a1bf4ec6ab1c06eee897f75af4efd38fd7611616b`.
+Exact source fields, full strings/input hashes and all 50 prior matrix rows
+reconcile to original extraction and upstream evidence.
+V1 remains unchanged with manifest
+`931a2ce0bcdb0a7ed328dc966cd21a3a14ff2c77cd561c5208d25753792f1150`.
+Both metadata-view and abstract artifacts are byte-identical between versions;
+v2 updates native-presence fields and upstream bindings, not source strings.
+
+## Complete metadata token-window plan
+
+```bash
+HF_HUB_OFFLINE=1 TRANSFORMERS_OFFLINE=1 \
+  .venv/bin/python -I -B -m state_politics.analysis.study_token_plan \
+  --evidence-dir data/processed/study-abstract-evidence-2023-2024-v1 \
+  --policy-dir data/processed/california-native-bill-input-inventory-v2 \
+  --out-dir data/processed/study-metadata-token-plan-2023-2024-v1
+```
+
+Only local tokenizer files from the pinned accepted policy manifest are loaded;
+no encoder weights or remote code/network are used. The official tokenizer
+revision is `8949b909ec900327062f0ebf497f51aef5e6f0c8`. Source tokens retain their
+character offsets, and paragraph-aware overlapping windows use the existing
+1,024-token model budget, 1,018 source-token budget and 128-token overlap.
+Marker IDs are `[25310, 3646, 27, 187]`, wrapper IDs `[50281, 50282]`.
+
+The output `token_window_plan.parquet` contains every source token/offset,
+window range and wrapped input length keyed to the original view/input hash;
+full strings remain in the metadata bundle. It covers all 157,675 views /
+10,044,063 source tokens in 158,506 windows, zero discarded tokens. The maximum
+source has 16,848 tokens / 21 windows; every wrapped input is at most 1,024.
+The full-source tokenizer emits a long-sequence warning for some inputs, but
+the encoder is never called on these strings. Independent low-level tokenizer
+replay reproduced every saved token/offset and window-coverage invariant.
+
+Manifest:
+`4b9f5dce745031ecefa8058037e69457dd79559aa9e2b15c1fba48333a937cfe`.
+This is an unlabelled coverage plan, not model accuracy, source-date alignment,
+eligibility, calibration, predictions or analytical admission.
+The command above records the actual v1 run. Its plan is reusable for metadata
+v2 because the entire `candidate_metadata_views.parquet` artifact has the same
+SHA-256, `2010b82b02dc7b6da884c3e206f718544622599e035a99b8f86b538dfa83586b`.
+The corresponding complete abstract artifact is also unchanged:
+`4d36e2deef8b99a7c5456b070c327a5c790a131ee841eb11db59c5d5ed74ebd1`.
+This is exact artifact reuse, not an assumption that similar text tokenizes
+identically. The original token-plan manifest is not rewritten.
+
+## Unpublished cycle-evidence explorer
+
+```bash
+.venv/bin/python -I -B scripts/build_site.py \
+  --cycle-evidence \
+  --out data/preview-cycle-evidence-v2
+```
+
+Evidence mode defaults to metadata v2 and platform evidence v5; explicit
+`--bill-evidence` / `--platform-evidence` directories override those inputs.
+The output includes all 50 state coverage rows / 100 organization rows,
+complete metadata/platform texts, lazy state partitions, full-text gzip
+downloads and `downloads/build_manifest.json`. The current build manifest is
+`3a15286ec34bd86c7e7a48b797651ea6c7bd56af38422d4707bf63d5286566d2`.
+
+For interactive use, serve the output with a local static HTTP server:
+
+```bash
+.venv/bin/python -I -B -m http.server 8765 \
+  --bind 127.0.0.1 --directory data/preview-cycle-evidence-v2
+```
+
+No server is left running by the build or verification. JavaScript fetches
+require HTTP; no-JS coverage tables and full-text download links remain
+available. Filtering/search/downloads are scoped to the selected state,
+source and applicable party, not national full-text search. Downloads include
+every matching full-text view, not just the displayed page or metadata.
+Maine's empty cycle query explicitly retains the wider 9,877-context inventory
+and missing-date distinction. Real Chromium exercised pagination, complete
+query downloads, literal-markup safety, keyboard, mobile and no-JS behavior.
+
+Native originals/PDFs are not exported; native presence is index-only relative
+to registered packets. Token-plan UI integration is deferred, so metadata
+token fields remain null. No model, source collector, certified findings,
+report, public route or deployment is part of this build. Source bundles,
+earlier previews and full-text artifacts remain unchanged and local/Git-ignored.
 
 ## State packet and cycle overlap
 

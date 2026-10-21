@@ -24,6 +24,107 @@ accepted source scopes can supply reusable 2023–2024 evidence, with their exis
 exceptions. Historical counts and seven-scope statements below retain their
 original checkpoint meaning, not current dispatch priority.
 
+## Shared partial-native indexes and unpublished explorer
+
+The native registry now indexes **13 accepted packets across 12 states**:
+CA, CO, NC, OH, SD, WI, TX, FL, MI, MD, MN and KY. The four additions reuse
+stored accepted original-reader/source projections, not new collection or PDF
+extraction. Their bounded selections contain **104 contexts / 233 alternative
+views**, with text for 101 contexts. MN SR61 and KY HJR21/HJR22 remain unavailable.
+All 335 original source-file fingerprints remain unchanged. These are selected
+partial inventories, not statewide native censuses or newly closed states.
+Raw native date observations and negative flags survive without admission.
+
+Partial-index v2 manifest:
+`340c652dec60090a538710f2af75f5ed0623645935c063e4bd76e6d7bade078b`.
+Native-overlap v10 manifest:
+`f16998d466855fe653d988792f8707651541a7d45c9c7dc2459afb71266f8198`.
+The combined index contains 43,584 wider contexts / 59,727 alternative views.
+Its 26,872 introduction-observed missing-text rows reflect the expanded
+12-state scope, not a regression from the earlier eight-state snapshot.
+Native denominators remain unknown; dates and alternatives are not extra bills.
+
+An actual **local-only, unpublished evidence explorer** is built at
+`data/preview-cycle-evidence-v2/`. It covers all 50 states / 100 organizations,
+preserves full metadata/platform text and supports state/source/party filters,
+literal search, pagination and complete filtered-query downloads. Keyboard,
+mobile and no-JS coverage/download access were exercised in real Chromium.
+Maine explicitly distinguishes its missing cycle-date cohort from 9,877 wider
+retained contexts. Search scope is the selected state/source, not national
+full-text search. Native originals/PDFs are not exported, and token-plan UI
+integration remains deferred; metadata token fields are still null.
+
+Preview build-manifest SHA-256:
+`3a15286ec34bd86c7e7a48b797651ea6c7bd56af38422d4707bf63d5286566d2`.
+No report, public route, website deployment, classification findings or
+scientific release is included. Generated evidence/preview files remain
+local and Git-ignored; a code push does not back them up.
+
+## National metadata evidence and complete token coverage
+
+The shared metadata export now retains **155,958 candidate contexts** in one
+50-state matrix: 151,615 source-coded filing/introduction contexts, 3,482
+additional native-reported-date candidates and 861 description-stated candidates.
+The latter two channels remain explicitly conditional; they are not silently
+added to the coded-event count or admitted to analysis.
+
+The packet preserves **50,959 full source abstracts and notes** across **49,242
+contexts**, together with all source titles. **1,409 contexts have different
+abstract variants**; none is replaced with a guessed latest/longest summary.
+The 157,675 full title/abstract views are alternatives, not extra bills.
+Source tests, Montana draft requests, procedural title-only cases and unknown
+native-text presence remain explicit. Potentially later metadata is never
+prepended to an introduced native text.
+
+Current metadata packet `data/processed/study-abstract-evidence-2023-2024-v2/`
+has manifest SHA-256
+`69af46267bdc8c6ce4adb02a1bf4ec6ab1c06eee897f75af4efd38fd7611616b`.
+Every selected source abstract/note and title, each constructed full string/hash,
+and all prior matrix columns were checked against the original bound inputs.
+Abstract authorship, stage and filing-time alignment are not certified.
+V1 remains preserved with manifest
+`931a2ce0bcdb0a7ed328dc966cd21a3a14ff2c77cd561c5208d25753792f1150`.
+V2 updates registered-native presence and lineage; both complete metadata-view
+and abstract artifacts are byte-identical to v1. The accepted token plan is
+therefore reusable without retokenizing unchanged text.
+
+The retained official ModernBERT tokenizer was then used **without encoder
+weights** to plan all **10,044,063 source tokens** in **158,506 bounded windows**,
+with zero discarded source tokens. There are 393 multichunk views; the largest
+contains 16,848 source tokens / 21 windows. Every wrapped model input is at
+most 1,024 tokens. An independent low-level tokenizer replay reproduced every
+token and character offset for all 157,675 views. The full-source tokenizer's
+long-sequence warning was retained; no unwindowed sequence was passed to a model.
+Token coverage is not classification accuracy or source eligibility.
+
+Token packet `data/processed/study-metadata-token-plan-2023-2024-v1/` has manifest
+SHA-256 `4b9f5dce745031ecefa8058037e69457dd79559aa9e2b15c1fba48333a937cfe`.
+Both packets retain `model_input_approved=false` and
+`analytical_admission=false`. No encoder execution, training, calibration,
+canonical topic labels or publication changes occurred.
+
+## Separate uncoded introduction and petition-filing evidence
+
+The retained MA/ME/NY actions have been inspected for explicit self-descriptions
+without changing their original action codes. The separate exact-literal
+channel finds **860 NY introduction candidates**—856 resolutions and four
+concurrent resolutions, **not 860 bills**—and **one MA petition-filing candidate**.
+ME remains unresolved: approval for introduction, referral and ordered printing
+are not treated as completed introduction.
+
+The packet preserves all 184,977 scoped contexts, 3,473 exact raw literal
+actions and distributions covering 803,453 source actions. Every original
+context field and selected raw action was reconciled to the bound inputs.
+Before/after-window and ambiguous/origin-mismatched cases remain separate.
+The new channel is `description_stated_not_coded_not_native_certified`;
+neither canonical date fields nor source classifications were rewritten.
+
+`data/processed/study-description-evidence-2023-2024-v1/` has manifest
+SHA-256 `df4cec9dea19c7a506588747afd659a864cf50ef6205969a1a4ef75a12f19b63`.
+The metadata bundle includes its 861 positive records under a distinct
+candidate-scope flag. Missing date evidence is still not zero activity or
+native-census completeness.
+
 ## Shared platform evidence and targeted source-date review
 
 The shared platform producer now accounts for **100 state-party organizations**
@@ -92,14 +193,16 @@ these rules. Unclassified INTRODUCED descriptions and first readings have not
 been silently treated as filings or introductions.
 
 The current combined matrix is
-`data/processed/study-filing-2023-2024-v2/state_matrix.csv`.
+`data/processed/study-filing-2023-2024-v3/state_matrix.csv`.
 Its manifest SHA-256 is
-`b6d05b23bdec09461492df13b190a43c0b138afe953ee40915a3fd458d82fc7b`.
-The pass preserves all native-view/date fields from the eight-state native v9
+`a0824a1b5cfd25ae9ade853f01ea7d023dbf9932ebdacbc0511ca4c48b2423d3`.
+The pass preserves all native-view/date fields from the 12-state native v10
 matrix and checks common ledger lineage. Every original ledger field, the
 entire raw filing-action export, all 50 state counts and input/output bindings
 were independently reconciled. No source collection, model execution or
-analytical admission occurred.
+analytical admission occurred. The earlier v2/eight-state snapshot remains
+preserved with manifest
+`b6d05b23bdec09461492df13b190a43c0b138afe953ee40915a3fd458d82fc7b`.
 
 ## Shared national baseline and dispatch
 
