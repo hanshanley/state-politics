@@ -128,17 +128,49 @@ The worker inspector's OS exit was not independently recovered; its raw final
 completion record is bound separately. Its deliberately stopped first attempt,
 which completed no document rows, remains preserved rather than counted as success.
 
-The original inventory helper used `os.walk` without an error callback, which
-could suppress directory-enumeration failures; no actual omitted directory has
-been demonstrated. The same New York owner is performing a distinct error-explicit
-current namespace/stat census and bounded historical A 255 investigation, without
-rewriting the original evidence. Both that follow-through and Missouri's distinct
-fresh private initializer/crash/next-32 attempt remain pending. The historical
-cancellation cause is still unknown; successful PDF retention does not repair it.
+**Supplementary census and historical investigation completed:** the original
+inventory helper used `os.walk` without an error callback, which could suppress
+directory-enumeration failures. A distinct error-explicit `os.scandir` census
+enumerated all **121,870 directories** and matches all **520,114 entries** against
+the archived namespace and seven non-digest stat fields; no omission was found.
+It does not repeat content hashing or establish retroactive acquisition immutability.
+The parent independently reconciled every returned census row, repinned all
+original v1 artifact bindings and six selected current originals, and directly
+verified all **233 retained historical events** against the live session log at
+their captured byte offsets. It did not rerun the census, rehash the whole live
+history prefix or independently recount its physical line numbers. Receipt
+`ny_genuine_preseal_forensic_parent_binding_actual_v1.json` has SHA-256
+`c905a009d4e5769291dd723e759965a36397d9cf5f89251fb7a5844991a0d01f`.
+
+The history establishes that **this session executed the original mutating
+`status` command concurrently with the collector**, bounded by tool events on
+**October 19, 2026, 18:46:39.256-18:46:39.986 UTC**. This interval contains
+A 255's cancellation at **18:46:39.689370 UTC**. The source's `status` path calls
+`reconcile`, which can cancel a reservation before its paced request starts;
+the collector can then continue with its in-memory reservation. Retained shell
+output separately identifies collector PID 89340 as still running. This is an
+observed concurrent execution and an evidence-backed race explanation, **not
+proof of the cancellation's exclusive writer or cause**: neither a cancellation
+writer PID nor the probe's internal ledger-snapshot time was recorded. Tool
+handle 1705 is not an OS PID. The actual ledger and all failed-attempt evidence
+remain unchanged; successful PDF retention does not repair lifecycle acceptance.
+
+Two additional **GPT-6.1 Sol** agents now own separate bounded initial Indiana
+and Utah native-source audits: actual session boundaries/censuses, typed canonical
+joins and up to 32 introduced-version contexts each, with a 128-aggregate-physical
+exchange ceiling including discovered history, robots, redirects, retries and
+errors. Unknown history remains unknown, not zero; ten-second monotonic pacing
+and immediate access-stop rules apply. Top-level root and task-ownership checks
+found no conflict, not proof of zero historical requests. No returned packet or
+parent acceptance is claimed. Missouri's separate fresh private
+initializer/crash/next-32 attempt also remains pending.
+
 No source recovery, collection restart, new HTTP, sealing, label/model change,
-scientific admission or publication is authorized by these checks. These
-observations are supplemental to v54, not retroactive inputs; ignored
-source/session artifacts remain local-only and are not backed up by a Git push.
+scientific admission or publication is authorized by the New York checks.
+The bounded Indiana/Utah assignments are separate initial collection scopes,
+not full-continuation authority. These observations are supplemental to v54,
+not retroactive inputs; ignored source/session artifacts remain local-only
+and are not backed up by a Git push.
 
 **Missouri fresh-input follow-through:** the first fresh-behavior worker stopped
 at dependency admission, before invoking the initializer, crash cases or next-32
