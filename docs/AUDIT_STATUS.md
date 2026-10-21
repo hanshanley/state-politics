@@ -80,11 +80,31 @@ lifecycle acceptance, final-tail sealing and completed-archive replay remain ope
 
 Two new **GPT-6.1 Sol** assignments are now bounded to read-only genuine New York
 preseal reconstruction and fresh, private Missouri initializer/crash/next-32
-execution, respectively. Neither assignment is a completed result. No original
+execution, respectively. Neither requested gate has completed. No original
 source recovery, collection restart, new HTTP, label/model change, scientific
 admission or publication is authorized by these offline checks. These observations
 are supplemental to v54, not retroactive inputs; ignored source/session artifacts
 remain local-only and are not backed up by a Git push.
+
+**Missouri fresh-input follow-through:** the first fresh-behavior worker stopped
+at dependency admission, before invoking the initializer, crash cases or next-32
+loop. It reports verification of all 31,131 v3 payloads, exact archived availability
+of the 29,806 stopped-prefix files and unchanged snapshots of 108,438 v1-v3
+file/directory entries. The required complete preparation tree was outside those
+permitted inputs; this is not proof that the tree is globally missing.
+The blocked handoff `missouri_fresh_next32_handoff_6_1_sol_v1.json` and its raw
+evidence remain preserved, not relabelled as successful behavior execution.
+
+The parent located the archived preparation-v4 manifest and independently observed
+its exact 505,872 bytes, required SHA-256
+`5feca7de302864d13d30ba5fcec4874f5f256f09ef2e30c6ce5d3b971e17305d`
+and unchanged eight-field snapshot. A new narrow read-only input allowance,
+`missouri_preparation_readonly_allowance_parent_v1.json` (SHA-256
+`b5218bad85062c0224c8964deb5a2eff77230239249066a362ff220bf69d1b0f`),
+allows the same worker to verify the complete preparation tree before a distinct
+private v2 attempt. The parent has not yet verified all preparation payloads or
+accepted fresh behavior. Actual stopped-campaign/successor/staging/authorization
+access and HTTP remain prohibited; no manifest pin or source gate was relaxed.
 
 Virginia's bounded initial source packet now passes independent original-verifier
 reconstruction: **6,458 distinct introduced identities**, 6,698 raw rows including
