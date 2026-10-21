@@ -148,8 +148,9 @@ file/directory records** independently reconcile unchanged. Historical discovery
 and acquisition-metadata limitations remain; worker semantic negatives were not
 independently rerun.
 
-Kentucky's **independent saved-packet reconstruction now passes**; fresh parent
-normal-driver execution and transport-readiness acceptance remain open.
+Kentucky's **independent saved-packet reconstruction now passes**. The distinct
+readiness successor's fresh parent normal-driver execution also passes below;
+remaining behavioral and live-transport admission gates are separate.
 The worker's exact final mocked normal-driver run processes all 3,005 native
 contexts, reuses 30 genuine originals in 32 seed slots, and seals 93 full
 32-context checkpoints plus the true final 29. Its 5,947 additional exchanges
@@ -235,12 +236,43 @@ parent reconciliation only, not the successful pacing execution or its evidence.
 The adapter deliberately requires its injected kernel-test gate even with
 authorization-shaped flags: these results do not establish live-adapter readiness.
 
-A distinct parent execution of the final normal 3,005-context driver on fresh
-private `copy2` inputs has started, followed by a readonly zero-refetch resume
-and separate whole/true29 reconstruction processes. Its startup and exact parent
-command were observed once; no completed result is claimed yet. Full packet
-inventory preservation, all 48,989 manifested payloads and source-dependent
-behavioral acceptance remain separate gates. Historical discovery still has
+A distinct **fresh parent normal-driver execution completed at 01:36:05 UTC on
+October 21, 2026**, exit zero. Parent 38390 ran the exact archived final driver
+in child 39011 on 482 private `copy2` inputs: all 3,005 native contexts,
+32 seed slots/30 genuine originals, 2,973 pending contexts, 5,947 mocked
+transport results and 6,024 aggregate reservations including 77 historical
+exchanges. Real persistence and immediate checkpointing produced 94 checkpoints,
+3,001 PDFs/four gaps and the true final 29. Non-seed responses remain synthetic.
+The same child's readonly completed resume performed **zero transport calls,
+dispatches or sleeps**, leaving all 51,308 private file/directory nodes unchanged.
+Distinct children 41767/41768 independently reconstructed the whole and true29
+range (2,977-3,005), including all 94 checkpoint inventories and the complete
+transport prefix. Each exercised 35 original installed-inner denials and three
+legitimate reads before stronger policies; all three stderr streams were empty.
+All **52,143 original packet nodes plus two external nodes**, all 48,989
+manifested payloads, 482 copied inputs and 51,309 readonly reconstruction nodes
+reconcile unchanged. Execution receipt SHA-256:
+`4bfc4007248f139d696296f2b1a75eb98ac450ce144d1997047ac20b78c187ff`.
+
+Independent raw reconciliation completed at **01:39:12 UTC** and freshly
+rehashed **every current original and private node**, not just selected pins.
+It binds the enclosing startup/launch/report records, actual child PIDs/argv/
+clock order, all raw stdout and empty stderr, source pins, both 94-boundary
+progress sequences, exact numerical summaries and zero-dispatch resume.
+Binding `kentucky_readiness_full_parent_actual_v1_raw_binding_v1.json`, SHA-256:
+`190324d68834c3237fb89e0c378b750391dd459ebc770a27d093cbf91db0cd2b`.
+Archived `worker_not_parent_acceptance` wording remains unchanged; independent
+parent execution is established by its separate launch and raw-result lineage.
+This accepts fresh **mocked** execution/reconstruction only, not genuine
+non-seed source closure, wire timing, original acquisition immutability or an
+OS/native-C sandbox.
+
+A separate original 63-case suite and eleven readiness cases started at
+**01:40:23 UTC** in parent 54990 on another private `copy2` fixture. Its startup
+and exact command were observed once; no completed behavioral result is claimed.
+It reuses the independently executed full fixture, not another full-driver run.
+Intentional private plan/checkpoint/ledger metadata changes must not be confused
+with mutation of the accepted original fixture. Historical discovery still has
 123 pending records; actual destination, staging and authorization remain null.
 No live collection, labels, training, analytical admission or publication is
 authorized.
