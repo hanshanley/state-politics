@@ -21,6 +21,12 @@ The GPT-6.1 Sol worker's detailed evidence is retained in session artifact
 No full-dump incidence, revised corpus counts or affiliation-history recovery is
 claimed; no current-party backfill or analytical regeneration occurred.
 
+**October 21 review continuation:** five evidence-bound rubric proposals have
+returned without changing canonical labels. Independent parent binding verifies
+their retained source spans and quotations; it does not approve the proposed
+precedence rules. Missouri's original saved-next-32 parent replay also completes
+successfully, within the offline reconstruction limits documented below.
+
 Virginia's bounded initial source packet now passes independent original-verifier
 reconstruction: **6,458 distinct introduced identities**, 6,698 raw rows including
 240 duplicates, twelve original HTML contexts and two PDFs / four pages per reader.
@@ -1125,11 +1131,29 @@ The independent saved-next-32 parent replay started at **October 21, 03:38:49 UT
 under original handle `missouri-successor-v3-parent-v1`, parent PID **90251**,
 source SHA-256
 `2055af8c974b5f6142d641f86133ea3cf9433b526a3bc2db697053e250ab0bfd`.
-Its startup record and exact command were observed once; no completed result is
-claimed here. It requires full v1/v2/v3 before/after content/eight-field maps,
-original installed controls before the stronger outer and fresh saved-packet
-reader/checkpoint reconstruction. It is not a new initializer, crash-suite or
-normal-driver execution and authorizes no actual recovery or HTTP.
+The original completion notification is consumed and the original handle returns
+**exit 0**. Child **91663** finishes at **03:44:19 UTC**; the enclosing parent
+finishes at **03:45:43 UTC**. All **108,458 original v1/v2/v3 and consumed external
+file/directory records** retain their content/eight-field inventories.
+The original installed controls execute **24 denials and fourteen positive
+controls before** the stronger outer policy. Fresh saved-packet reconstruction
+matches the worker proof: **1,184 PDFs / 6,061 pages per reader**, 37 checkpoints,
+1,440 aggregate exchanges and 3,776 pending native contexts. Stderr is empty.
+Receipt `missouri_successor_v3_parent_actual_v1.json`, SHA-256
+`db9903052a59c729d97f85deaf675c398af5fe6711939635a3f9180fde33e8f9`,
+accepts **saved-next-32 reconstruction only**.
+
+A separate independent binder reconciles the raw child stdout, enclosing log,
+actual PID/argv/chronology, complete archived before/after maps, all 31,131
+manifest entries and exact saved-worker proof. Six current selected files are
+freshly rehashed; this is **not a second whole-current-packet inventory**.
+Binding receipt `missouri_successor_v3_parent_actual_v1.raw_binding_v1.json`,
+SHA-256 `a6f4346b3113fb2e9363c5ec73429958d59c4dc38d70e45299096ea5d72a5dc7`.
+Neither execution is a new initializer, crash-suite or normal-driver run, an
+OS/native-C sandbox or permission for actual recovery/HTTP. The original v4
+transient failure remains unexplained, all 1,152 original false identity flags
+remain false, and actual successor initialization/staging/authorization remain
+absent.
 V2 worker evidence reports 1,184
 PDFs / 6,061 pages per reader, the unchanged original ledger prefix followed by
 ordinals 1409-1440, five semantic-fault cases and three real initializer crash
@@ -1235,11 +1259,11 @@ No collector or HTTP ran during these checks.
 | Georgia blocked source recovery | Independent original-verifier replay accepts four retained exchanges, including the terminal official sessions HTTP 401, and all 64 unchanged packet file/directory records. | Blocked-evidence acceptance only: native census unknown and zero originals recovered. The 4,723 regular and 67 special canonical candidates are comparison inputs, not native counts. No authentication bypass or further request is authorized. Late metadata capture and construction byte-restoration incidents prevent acquisition-time immutability claims. |
 | Ohio full unlabelled inputs | Independent original-verifier parent replay now passes: 2,279 contexts / 6,811 source views / 93,161,481 source tokens / 118,663 windows, zero discarded tokens and all 18,290 packet file/directory content and metadata records unchanged. Raw readiness, all 45 progress lines, final proof, empty stderr, source pins and full before/after maps are independently reconciled. | Views are not bills; HTML views include exact source markup. Five PDF-only and seven unsupported contexts remain, as do 1,007 absent HTML session headers. Runtime preload precedes the guard; the original verifier runs entirely afterward. No labels, forward passes, training or scientific admission. |
 | Missouri archived printed headers | Independent original-verifier replay accepts first-page observations for all 1,152 archived PDFs in both readers, plus ten focused regressions and joins to all 4,608 copied source dependencies. All 41,914 supplement/original file-directory records remain unchanged. | Matching House/First Regular Session/102nd General Assembly observations are accepted only as literal first-page evidence. The original 1,152 false flags remain; unprinted session years stay unknown. No original identity/status, filing-time or scientific certification is promoted. The full 4,960-context corpus remains unfinished. |
-| Missouri successor readiness | V1 and v2 parent probes establish five guard omissions and ten subsequent read-scope omissions respectively. The original worker has returned immutable zero-HTTP v3; an independent saved-next-32 reconstruction is running. | No completed v3 parent acceptance is claimed here. Saved reconstruction is distinct from a fresh initializer/crash-suite/normal-driver execution. Actual successor/staging/authorization remain absent, and the full 4,960-context corpus remains unfinished. |
+| Missouri successor readiness | Immutable v3 passes independent saved-next-32 reconstruction: 1,184 PDFs / 6,061 pages per reader; all 108,458 original nodes unchanged. Raw execution, archived maps and manifest independently bind. Earlier v1/v2 omissions remain preserved. | Saved reconstruction is not a fresh initializer/crash-suite/normal-driver run or full readiness certification. Actual successor/staging/authorization remain absent, and the full 4,960-context corpus remains unfinished. |
 | North Carolina native-version preparation | V5 strict replay, four exact parser regressions and all fifteen original parent release tests pass, including the actual 2,004-population/final-20 fake-transport driver. Genuine readiness/private initializer gates and actual zero-HTTP initialization pass. Independent reconciliation v3 accepts all 44,342 initialized files, all 56,761 unchanged original file/directory records, sixteen exact inherited transport files and zero new requests. Finite-launch controls v4 now passes all seven fresh independent private behavioral suites, with full preflight before first freshness issuance, strict 120-second parent/child gates, and all 642 packet nodes unchanged. Raw proofs/commands/current nodes independently bind. Separate guarded and source-inspected inventory-only measurements finish in 576.53 and 661.20 seconds respectively, preserving all original/target records. | Both earlier reconciliation failures, old timeout defects, the v2 child-self-match counterexample and the first v4 parent fixture-cleanup failure remain preserved. Different cache/load conditions prevent attributing timing differences to audit overhead; neither run measures the complete launcher or proves infeasibility. Private synthetic clocks, process fixtures and mocked curl dispatch do not certify real campaign timing/transport. Fresh actual maps, pins, duplicate absence, strict freshness and exclusive finite authorization remain required. No collection is authorized. Historical original-path replacement/metadata failures remain unreconciled; restored bytes do not restore historical immutability. |
 | Tennessee blocked native recovery | Independent parent replay reconstructs the single retained official robots exchange and frozen canonical populations: 9,665 regular, 474 extraordinary-session and 32,407 outside-target rows. All 38 packet file/directory records remain unchanged; raw proof, generated source and complete map bytes reconcile. | Robots disallows all crawling; no bypass or continuation is authorized. Native boundaries/counts and introduced originals remain unknown; zero bill originals recovered. Canonical rows are not an official native census. Acquisition-time immutability and upstream history-scan completeness are not certified. |
 | Classification | Four saved official English ModernBERT-base pilots compared on the same 52 platform references: external-only 41/52, joint 47/52, broader-source 47/52, Republican-expanded 49/52. The fourth run correctly rejects 3/4 mixtures and 6/6 non-policy units. | The fourth run loses one policy decision, still accepts a mixture above 0.999 and regresses on insufficient-evidence and taxonomy-boundary development cases. Both sets are examined diagnostics, not fresh independent tests. Independent review and empirical gates remain required. No candidate is approved. |
-| Training-label second review | Two GPT-6.1 Sol reviewers examine all 122 target-platform training rows and five separate quarantines. Parent source/population/quote/physical-line bindings complete. Two complete unlabelled CA source-unit proposals independently reconstruct all eighteen native children. | 115 provisionally consistent, one suspected mislabel, four unresolved boundaries and two source-scope defects are advisory findings, not accuracy. No canonical label/input changes or training admission; independent gold, rubric adjudication and release gates remain missing. |
+| Training-label second review | Two GPT-6.1 Sol reviewers examine all 122 target-platform training rows and five separate quarantines. Five subsequent rubric proposals return with independently bound source spans, 23 source quotations and 37 rule quotations. Two complete unlabelled CA source-unit proposals independently reconstruct all eighteen native children. | The 115 provisionally consistent, one suspected mislabel, four boundaries and two source-scope findings remain advisory, not accuracy. Proposals are not adopted; canonical labels/inputs remain unchanged. Independent gold, approved rubric precedence and release gates remain missing. |
 | Native-version dispatch pacing | NC's exact frozen transport is unpaced in a narrow mocked parent probe. V6 returns a private normal-2,004/final-20/no-refetch proof using the unchanged v5 paced wrapper and two genuine seed pages. Independent saved-packet/checkpoint reconstruction now passes, with all 61,281 packet/external/verifier/harness records unchanged and complete archived maps/raw process proofs separately bound. Earlier pacing and behavioral suites are explicitly reused source-bound proofs, not fresh executions. Oregon's saved whole/tail packet independently reconstructs, with all 62,116 original file/directory records freshly rebound. | NC's fresh behavioral and original-inner-guard admission remain open; localized lineage is not the full terminal archive or a fresh original terminal-validator execution. Synthetic clocks and kernel dispatch do not establish actual wire timing. Minimum spacing alone exceeds the unchanged finite timeout; no live timeout is observed or timeout increased. Oregon still lacks a fresh final-source full-driver pacing proof. Neither state is authorized for actual collection. |
 | Labels | External CAP files and two state-reference CSVs recovered; exact-context Florida candidates and complete bounded overlap witnesses are frozen without label admission. Split/group/text and reviewed-platform source-body checks retain explicit label provenance. | Modern Florida external titles/subtopics are missing; Pennsylvania rows stop in 2016. Annotation provenance, source permissions, adapted-topic compatibility, bill families and independent state-domain references remain unresolved. |
 | Evaluation | Checkpoint-bound training/evaluation split isolation, development-only temperature/threshold selection, exact evidence joins, abstention accounting, per-topic and subgroup metrics. | Reviewer arrangement, frozen empirical gates, independent target tests and clustered uncertainty. No checkpoint can be certified by changing a status field. |
@@ -7469,6 +7493,50 @@ quarantines remain excluded.** The source-scope proposals do not settle final
 topic/rejection judgments. Rubric-boundary adjudication, independent evaluation
 and empirical release gates still block classifier certification. No HTTP,
 campaign execution, production-site change or publication occurs.
+
+### Five-record evidence-bound rubric proposals, not adopted
+
+A subsequent **GPT-6.1 Sol** review returns proposals for exactly the suspected
+NE-R mislabel and four unresolved KS-R, HI-R, CA-D and TX-D boundaries above.
+It does not reopen the two separate CA-D source-scope proposals, relabel the
+five quarantines or repeat the entire 122-record review.
+
+| Organization | Provisional proposal | Approval still required |
+|---|---|---|
+| KS-R | Retain 12, Law/crime/justice | Court object versus institutional selection/election administration. |
+| NE-R | Conditional 15, Business, rather than mixed rejection | Coherent recruitment/regulation package versus coequal general-tax policy. |
+| HI-R | Conditional 23, Culture/family, rather than mixed rejection | Express family-formation aim versus coequal tax/housing/business objects. |
+| CA-D | Retain mixed-policy rejection provisionally | Energy supply versus environment; incidental benefits are not automatically independent interventions. |
+| TX-D | Retain insufficient-evidence rejection provisionally | Specificity and coherence of rights, religion and rural-revitalization principles. |
+
+Returned artifact `platform_five_record_adjudication_20261021_sol_6b0f14_v2.json`,
+SHA-256 `f3009a2d82d1254774c0770b5f527f84976e85bde3d092c507193916a3e10f40`,
+retains exact canonical physical lines, full source rows and contexts, original
+review references, overlap witnesses and explicit non-adoption flags.
+The first generator's codebook-path assertion failure and empty output remain
+preserved; its distinct corrected entrypoint binds the original compatibility
+packet's normalized CAP codebook and provenance, not a different raw snapshot.
+
+Independent parent binding freshly hashes all **120 retained file/directory
+entries before and after**, checks five canonical dictionaries/physical lines,
+five raw-body hashes, unique exact body-hash/full-text Parquet joins, full-text
+hashes and unit/context spans, **23 source quotations and 37 rule quotations**.
+The canonical **6,158 rows** remain unchanged, SHA-256
+`395ffa760c684619199ac005df8e52b3d42a5e94d9a8a7e9772b7b1642a33361`.
+Same-raw-document training populations, including each reviewed record, are
+**14 / 17 / 15 / 7 / 8** respectively. These familiar documents cannot become
+fresh independent tests by deleting an individual training row.
+Receipt `platform_five_adjudication_parent_binding_actual_v3.json`, SHA-256
+`7549a57e48f0e4dd872e237fe9ab5a6ad334865417788da519e9dddd3ea9eefc`.
+Two earlier parent-only schema failures remain preserved: a file-only inventory
+assumption rejected archived directories; a named-asset-only lookup rejected
+draft-rule references that correctly use absolute asset paths.
+
+This parent binding does not independently compare every Parquet metadata cell
+or rerun the worker's challenge/reservation overlap computation. It is inspected
+local read-only code, not a network guard or OS sandbox. **No proposal is adopted,
+no reference becomes independent gold, and no training, inference, source campaign
+or publication occurs.** Rubric approval and independent evaluation remain open.
 
 ## Expanded source-bound platform curriculum
 
