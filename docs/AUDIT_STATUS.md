@@ -267,12 +267,38 @@ This accepts fresh **mocked** execution/reconstruction only, not genuine
 non-seed source closure, wire timing, original acquisition immutability or an
 OS/native-C sandbox.
 
-A separate original 63-case suite and eleven readiness cases started at
-**01:40:23 UTC** in parent 54990 on another private `copy2` fixture. Its startup
-and exact command were observed once; no completed behavioral result is claimed.
-It reuses the independently executed full fixture, not another full-driver run.
-Intentional private plan/checkpoint/ledger metadata changes must not be confused
-with mutation of the accepted original fixture. Historical discovery still has
+A separate original behavioral attempt **failed**, with suite child 57330
+exiting one at **01:50:53 UTC on October 21**; enclosing parent 54990 completed
+its failure receipt at 01:53:26 UTC. Initializer/crash/transport checks and
+whole/true29/checkpoint reconstruction ran, but the suite's completed-resume
+step rejected `StartJoin`. **No 63-case suite pass or readiness execution is
+claimed for this attempt.** The parent incorrectly relocated a completed
+path-bound journal: recorded curl output/header/trace arguments still name the
+accepted fixture's original absolute paths, not the new clone. Readonly
+reconstruction does not establish that such a relocated journal is resumable.
+All **103,456 original packet/accepted-fixture/external nodes** stayed unchanged;
+all 48,286 copied original payloads retained their bytes. The failed source,
+private tree, stdout, stderr and receipt remain intact.
+Failure receipt SHA-256:
+`417bfd2bc497a56236d03c78302836f836bd3e1078a5d4e9d2bb712459e18657`.
+
+Independent failure reconciliation completed at **01:56:29 UTC**, binding raw
+stdout/stderr, actual launch lineage, all archived before/after rows, unchanged
+copied inputs/payloads and the three exact absolute-path argument mismatches.
+It compares archived full maps, **not another full current content rehash**.
+Binding `kentucky_readiness_behavior_parent_actual_v1_failure_binding_v1.json`,
+SHA-256 `a645319f22ced79455a1c12c35728c86e68cf0a4b7aa9bee296c60f0259bbc84`.
+This is a diagnosed parent-fixture error, not evidence of a source-parser defect
+or a reason to rewrite the sealed journal.
+
+A distinct source-pinned successor started at **01:55:39 UTC**, parent 70190,
+source SHA-256
+`2e19c04ef9871c694e62ca7ba5f9f0bfde7b9c4c3f5586692d17985c401e3f92`.
+Its startup and exact command were observed once; completion remains pending.
+It copies only immutable code/inputs/plan, runs readiness first, then runs the
+**original fresh suite with a newly initialized full driver at its actual
+private location**. It neither relocates nor rewrites a completed journal.
+Historical discovery still has
 123 pending records; actual destination, staging and authorization remain null.
 No live collection, labels, training, analytical admission or publication is
 authorized.
