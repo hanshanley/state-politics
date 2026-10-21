@@ -64,6 +64,47 @@ date dispositions and persisted aggregate counts; its receipt is
 `study_window_2023_2024_verified_v2.json`. Generated evidence remains Git-ignored
 and local-only; committing this documentation does not back up those files.
 
+## State packet and cycle overlap
+
+```bash
+.venv/bin/python -I -B -m state_politics.bills.study_sources \
+  --window-dir data/processed/study-window-2023-2024-v2 \
+  --reference-dir data/processed/bill-document-reference-inventory-v4 \
+  --input-dir data/processed/florida-native-bill-input-inventory-v1 \
+  --state FL \
+  --out-dir data/processed/florida-study-source-overlap-2023-2024-v3
+```
+
+This is an offline reconciliation of **the supplied packet**, not permission to
+collect references or proof that all local archives were searched. Use a new
+output directory for another execution. Consumed manifests must bind exact
+file hashes, matching extraction lineage and a completed unlabelled input
+inventory. Exact bill IDs must also agree on state, identifier and session;
+imported link IDs must match the same bill in the reference inventory.
+
+Outputs preserve every state context in `state_contexts.parquet`, every source
+reference in `source_reference_links.parquet`, and all supplied input fields,
+including complete text, in `supplied_input_overlap.parquet`. Native-session/
+chamber/type/date-disposition groups are in `state_session_counts.csv`.
+`report.json` and `manifest.json` bind counts, limits, input/code snapshots and
+output digests/bytes. No dates are inferred and no analytical admission is granted.
+Reconciliation failures leave an incomplete manifest; existing outputs are not
+overwritten.
+
+The actual Florida v3 manifest is
+`26ab544fa6544a766bc62dc6dd719731923ff7e8fe729b92352e9c07f474e313`.
+Separate session verifier `verify_florida_study_source_overlap_v3.py` checks every
+original/export field and grouped count without calling producer helpers,
+rehashing native PDFs or retokenizing inputs. Its receipt is
+`florida_study_source_overlap_verified_v3.json`.
+The 2,868 historical inputs have zero observed in-window overlap; all 1,847
+qualifying date observations are Senate-side, not a statewide denominator.
+V1, its original producer and the missing-coverage-flag regression remain
+preserved as superseded diagnostics. V2 restored full coverage fields; v3 also
+rejects nullable missing context identities. V2 and its independently verified
+receipt remain preserved. All accepted source packets are unchanged.
+Outputs/session evidence remain Git-ignored and local-only.
+
 ## One-command audit
 
 ```bash

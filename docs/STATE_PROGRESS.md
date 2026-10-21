@@ -14,8 +14,9 @@ Later platforms cannot substitute for missing contemporaneous evidence.
 North Carolina, Ohio, South Dakota and Wisconsin.** The exact cohorts and
 remaining exceptions are below. Do not recollect or re-prove these closed scopes
 without a new, identified defect or a genuinely different cohort.
-Florida's previously accepted multi-year linked-source packet remains accepted,
-but does not close the newly specified 2023–2024 state cohort; it is now Partial.
+Florida's accepted linked-source packet contains 2019/2020 session contexts,
+with **zero overlap with observed 2023–2024 introductions**. It remains accepted
+for its historical scope, not the target-cycle cohort; Florida remains Partial.
 
 **No state is yet complete end to end.** Operative D/R platforms, event-time
 party attribution, certified classifications and regenerated analyses remain
@@ -49,6 +50,10 @@ replace native verification. Its 559,730 unresolved contexts span the wider
 retained history and are not all target-cycle missing filings. AK, AZ, CT, IN,
 LA, MA, ME and NY have no qualifying in-window dates under the strict source
 rule; do not turn that missing evidence into zero legislative activity.
+Florida illustrates a further chamber gap: its 1,847 in-window date observations
+are **all Senate-side**. Its 2023/2024-labelled sessions also retain 2,008
+date-unresolved contexts, including 1,885 House-side records. Neither session
+labels nor the observed Senate subset establish a statewide filing denominator.
 
 ## How to use this list
 
@@ -87,7 +92,7 @@ certification or the completeness of either party's platforms.
 | Colorado (CO) | Closed scope | 2023/2024 regular cohort: 1,459 identities, 1,457 PDFs and two explicit reference gaps; whole archive and actual final-17 replay accepted. Resolve SB 23-214/HB 24-1430 references and separate special-session scope, not a repeat of the 1,457-PDF collection. | [Colorado closure](AUDIT_STATUS.md#colorado-regular-session-source-census-and-full-continuation) |
 | Connecticut (CT) | Blocked | Initial v2 blocked-evidence reconstruction accepted; zero originals. Native census/boundaries unknown and official robots restriction retained. | [Initial-state audits](AUDIT_STATUS.md) |
 | Delaware (DE) | Blocked | Blocked-evidence packet replayed; robots redirects ended in Page Not Found. Native census/boundaries unknown; zero originals. | [Initial-state audits](AUDIT_STATUS.md) |
-| Florida (FL) | Partial | Wider linked cohort remains accepted: 2,868 contexts with complete extraction/input replay. Establish its 2023–2024 overlap and native-cycle completeness; do not redo the packet or pursue the 2019 SB186 correction gap for this study. | [Linked cohort](AUDIT_STATUS.md#complete-linked-florida-cohort-and-version-isolated-candidate-inputs) |
+| Florida (FL) | Partial | Exact reconciliation completed: all 2,868 supplied inputs are 2019/2020 session contexts, with zero observed target-cycle overlap. All 1,847 qualifying date observations are Senate-side; 2,008 target-session-labelled contexts lack introduction dates. Establish native 2023–2024 universe/originals and House dates, not another historical replay or the 2019 SB186 correction gap. | [Cycle reconciliation](AUDIT_STATUS.md#florida-cycle-source-reconciliation) |
 | Georgia (GA) | Blocked | Blocked-evidence reconstruction accepted; sessions API returned 401 and collection stopped. Native census unknown; zero originals. | [Parallel native recovery](AUDIT_STATUS.md#additional-parallel-native-source-recovery) |
 | Hawaii (HI) | Inventory | No dedicated native legislative closure recorded; platform-training evidence is not legislative source closure. | [National inventory](AUDIT_STATUS.md#all-state-document-reference-inventory-and-retrieval) |
 | Idaho (ID) | Inventory | No dedicated native legislative closure recorded; establish native cohort and original-version evidence. | [National inventory](AUDIT_STATUS.md#all-state-document-reference-inventory-and-retrieval) |

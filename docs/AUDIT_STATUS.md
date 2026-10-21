@@ -83,6 +83,65 @@ additional state source scope. No HTTP, model execution, label/corpus rewrite
 or publication-site change occurred. Generated evidence remains local-only;
 the Git checkpoint does not back up ignored outputs.
 
+## Florida cycle source reconciliation
+
+**October 21:** exact bill/session/link joins now establish that the accepted
+2,868-input Florida packet contains **2019/2020 session contexts**, not recovered
+2023–2024 inputs. The historical extraction/input acceptance remains valid for
+its actual scope; do not repeat that recovery or pursue the 2019 corrected-copy
+gap to finish the selected cycle.
+
+| Supplied packet session | Source introduction before 2023 | No source introduction action | Inputs |
+|---|---:|---:|---:|
+| 2019 | 1,453 | 35 | 1,488 |
+| 2020 | 1,347 | 33 | 1,380 |
+| **Total** | **2,800** | **68** | **2,868** |
+
+There is **zero overlap with observed target-cycle introductions**. The 68
+unknown dates remain unknown, not inferred from historical session labels.
+Absence from this supplied packet is not absence from all local archives.
+
+The separate state inventory preserves all **25,072 retained Florida contexts**,
+**45,458 source-reference rows** and complete supplied input strings/fields.
+Among the **1,847** source-coded in-window introductions, all are **upper-chamber
+observations**. Sessions labelled 2023, 2023B, 2023C and 2024 additionally contain
+**2,008 date-unresolved contexts: 1,885 lower-chamber and 123 upper-chamber**.
+Those labels are diagnostic context, not dates or automatic inclusions/exclusions.
+Neither the observed Senate subset nor these session totals are native-universe
+or final analytical denominators.
+
+The 1,847 observed contexts have **6,612 document-reference links**; **3,504
+usable original-note links cover 1,753 distinct contexts**. Multiple formats
+and duplicate URLs remain separate rows. A usable URL or Filed note is not a
+retrieved, native-verified original or proof of filing-time eligibility.
+
+The completed local successor is
+`data/processed/florida-study-source-overlap-2023-2024-v3/`, manifest SHA-256
+`26ab544fa6544a766bc62dc6dd719731923ff7e8fe729b92352e9c07f474e313`.
+Separate session verifier `verify_florida_study_source_overlap_v3.py` and receipt
+`florida_study_source_overlap_verified_v3.json` reconstruct every original/export
+field, exact identity join, imported link and grouped count; all 12 consumed
+input/code snapshots and all output hashes/stat fields remain unchanged.
+The 2,864 imported links match their actual source contexts; four supplemental
+records retain null link IDs, not invented imported links.
+
+V1 remains a superseded diagnostic: its producer omitted the coverage table's
+`filing_time_text_certified` column from the context export. The failing focused
+regression, original producer, output and log remain preserved; v2 restored the
+field and all original coverage values. Three further synthetic regressions
+showed that nullable missing identifiers could pass equality reductions in
+coverage, reference and input joins. V3 explicitly rejects unknown equality;
+its real-packet verifier separately confirms all identity fields are present.
+V2 and its executed producer/receipt remain preserved. All five data/report
+exports are byte-identical between v2 and v3. No source packet was rewritten.
+See [the executable contract](REPRODUCIBILITY.md#state-packet-and-cycle-overlap).
+
+**Florida stays Partial.** Native target-cycle universe/original recovery and
+House introduction-date evidence remain open. This is not a fresh PDF/text
+replay, native census, collection authorization, label/model change or scientific
+admission. There were no new HTTP requests or publication changes; ignored
+evidence remains local-only, not backed up by the Git checkpoint.
+
 **October 21 state tracking and distinct offline inventories:** the linked tracker
 records all 50 states, each accepted cohort, remaining source gap and evidence.
 Seven source-accounting scopes are closed; no state is scientifically complete.
