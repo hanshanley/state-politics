@@ -9,6 +9,30 @@ and accounting packets**. The canonical audit has **308/342 passing checks**
 and **34 missing-artifact failures**. Known source, collection and scientific failures
 remain explicit; this is not a completed project or a certified classifier.
 
+**October 21 complete-suite follow-through:** the original full offline pytest
+run finished at 11:54:57 UTC with exit 1. Its sixteen recorded progress rows contain
+1,084 passing marks and one failure; the sole reported failing test is
+`test_reproducibility_audit_passes_current_artifacts`. That execution's artifact
+audit failed **36/332 checks**: 34 overlapping missing-artifact checks, default-PATH
+OCR discovery and the omitted code-guide entry for `tests/test_modernbert_inference.py`.
+The guide now documents those stub-only inference tests; the original public-docs
+checker passes all 108 checks. The already-restored isolated Tesseract executable
+reports the declared **5.5.2**; no runtime installation or version change was needed.
+
+A distinct full artifact-audit execution, with that existing runtime on PATH,
+now passes **299/333 checks**, retaining **34 missing-artifact failures** and exit 1.
+Only the guide/discovery failures disappeared; every other report field, including
+authored-input hashes and `scientific_certification: not_performed`, matches the
+preserved failed report. The extra check is the OCR-version check enabled by finding
+the executable. The original live failed report remains byte-identical and is
+separately preserved as `state_politics_full_tests_original_audit_report_20261021_v1.json`
+(SHA-256 `c65b67e9a455ac793e178b36823518d198cc37459ecaa5fedf09cbf538dcb5c2`).
+The new report is `state_politics_post_test_audit_20261021_v1.json`
+(SHA-256 `fae4f8a5932b113bc47dad6def615a44ca7546eabf969feada81221c84cc3efe`);
+both execution logs remain in the session. These are current-checkout observations,
+not replacements for frozen v54. The full suite was not rerun or declared green;
+no audit test was skipped, missing analysis fabricated or scientific gate waived.
+
 **October 21 attribution repair:** event-time affiliation resolution now compares
 canonical calendar dates rather than the original spelling of an accepted date.
 Compact and ISO-week event dates previously passed validation but could select a
