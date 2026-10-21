@@ -148,7 +148,7 @@ continuations, reviewing **134 and 112 raw occurrences**, respectively. Together
 the three reviews cover all **116 records / 336 occurrences**, without overlap.
 Neither continuation finds additional distinguishing policy narrative in the other
 original fields. The platform record refers to "those individuals" without their
-antecedent; its surrounding source context remains missing.
+antecedent in those compared occurrence fields.
 
 A fresh parent binder verifies the exact 48+48 assignments, complete occurrence
 fields and raw source bytes, canonical physical-LF lines, differing-field
@@ -167,6 +167,23 @@ its source and failed log are preserved; v2 corrects only that parent assumption
 All contextual reviews remain advisory: unresolved rubric boundaries and missing
 native evidence are not label-error counts. No automatic relabeling, group
 exclusion or training rebuild occurred.
+
+**Additional platform context recovered offline.** A separate follow-through
+preserves five preceding and five following CSV records around each occurrence
+of `cap:republican_platforms:row-13729`: 22 complete records, with exact raw-byte,
+physical-LF and field bindings. Both the 2000 and 2004 sequences immediately
+precede the standalone sentence with the same description of Vietnamese
+government retribution against ethnic minorities and others who fought alongside
+US forces. This supplies a plausible antecedent in the stored source sequence;
+it does not verify original platform paragraph order or select a topic. That
+preceding description itself carries the competing major codes 16 and 19.
+Receipt `training_platform_neighbor_context_parent_v1.json`, SHA-256
+`bad9778c554aa818ad198695987103d289eda73e05e71db870bd7d2035b97ef1`,
+preserves all original fields, including encoding damage, and unchanged hashes
+and seven stat fields for all four consumed inputs. No canonical text enrichment,
+source-label correction, new gold, HTTP or model execution occurred. The original
+reviews remain unchanged. Approval of any new dataset's conflict-exclusion policy
+is still outstanding; user unavailability is not approval.
 
 **Evaluation integrity repair:** malformed logit containers such as null, false
 or an object now fail explicitly instead of masquerading as insufficient-evidence
