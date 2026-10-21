@@ -151,6 +151,13 @@ already counted candidate IDs and retain all reader/reference alternatives.
 They do not infer filing dates or change the six closed scopes. This fills
 an evidence-inspection gap, not a new native-census or scientific closure.
 
+The final reviewed-only classifier experiment is complete, not an active
+collector or a newly approved model. Its small native assistant diagnostic
+reached 18/19 classified precision at 19/36 coverage, with lower decision
+accuracy than the mixed full-document model. Metadata and platform
+decisions also regressed; no state or scientific gate is closed by this
+experiment. See the [completed model comparison](AUDIT_STATUS.md#complete-native-input-review-not-metadata-only-validation).
+
 For subsequent recovery, use a common pipeline: **native cohort -> exact
 record join -> missing-original retrieval -> shared extraction/validation ->
 checkpoint acceptance**. State-specific adapters should supply publisher

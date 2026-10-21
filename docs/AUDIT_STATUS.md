@@ -155,9 +155,37 @@ external rows without relabeling/deletion. All 21 topics have reviewed
 positives, although the rarest has only two. Its opt-in uniform class loss
 and full epoch shuffle are recorded; default inverse-frequency loss is
 unchanged. Complete preflight retains 94,935 tokens / 838 windows / 23
-multichunk units. Six-epoch training is running under frozen plan
-`c87a9792e787d8d59d7234a11c84a86dc766b032fcab27b0471cd5e78f2b4f9a`;
-no untouched-holdout, human-gold, causal or release claim is made.
+multichunk units. Six-epoch training completed under frozen plan
+`c87a9792e787d8d59d7234a11c84a86dc766b032fcab27b0471cd5e78f2b4f9a`.
+The encoder changed, all 808 training units were sampled exactly once per
+epoch, all 65 new native units participated and the restored long unit was
+used six times. Finite losses were 2.47723, 1.28487, .44147, .13042, .05888
+and .02039; declining training loss is not evidence of generalization.
+
+At the same frozen inference policy, the completed comparison is:
+
+| Development diagnostic | Full-document mixed curriculum: decision accuracy | Reviewed-only: decision accuracy |
+| --- | ---: | ---: |
+| Metadata 190 | 65.79% | 62.11% |
+| Native agreed 36 | 75.00% | 72.22% |
+| Platform 52 | 86.54% | 75.00% |
+| Development 50 | 54.00% | 56.00% |
+
+Reviewed-only native classified precision rose to **94.74%**, but only
+**19/36** inputs were classified (18 correct topics, plus eight correct
+abstentions). The mixed model classified 25/36 at 84% precision. This is a
+precision/coverage tradeoff on a small assistant-reviewed diagnostic, not
+population accuracy or a universally better classifier. External removal,
+exposure and loss weighting changed jointly, so their causal effects are
+not isolated. No references or thresholds were changed, no model is
+promoted and no further tuning on these consumed diagnostics is planned.
+Training manifest:
+`2660bca48e99a27058724d3a1e0113e3492c6ef48a974b2acbde729fe131d127`.
+Evaluation manifest:
+`6c2c589bc867620bf37b065c0390c343d3cfb5a198d19726310a7f7656e95319`.
+Full predictions and retained producers are in
+`data/processed/cycle-reviewed-only-evaluation-20261021-v1/`.
+No untouched-holdout, human-gold, causal or release claim is made.
 
 ## Additional source evidence without date-cohort expansion
 
@@ -198,6 +226,15 @@ Streaming original NDJSON avoids whole-file JavaScript string limits and
 preserves large-integer provenance. Complete text/source hashes and every
 field were checked with bounded streaming; all browser helpers stopped.
 This does not turn those additional session records into date-cohort members.
+
+The final changed-surface regression run passed **498 tests**, including
+three real-Chromium cases. Its JUnit report and all six browser receipts
+from the two parent suites remain retained; only the two generated fixture
+trees were removed. The independent engineering/source receipt is
+`data/processed/source-explorer-engineering-validation-20261021-v1.json`,
+SHA-256 `697cec640678450a8b757b019b9606f3d5d15124a855800b2123c786100502cf`.
+It is not scientific certification or a repair of the separately documented
+34 legacy missing-artifact audit failures.
 
 ## Independent reference recovery: bounded negative, not invented gold
 

@@ -695,10 +695,30 @@ Preflight preserves 94,935 source tokens / 838 windows / 23 multichunk units.
 Its frozen pre-training plan is
 `data/processed/cycle-reviewed-only-evaluation-20261021-v1/evaluation_plan.json`,
 SHA-256 `c87a9792e787d8d59d7234a11c84a86dc766b032fcab27b0471cd5e78f2b4f9a`.
-Training/results are pending. External removal, exposure and class loss
-change jointly; do not claim a causal source effect. All references already
-informed development. Original labels, reference texts, thresholds and
-scientific/publication gates remain unchanged.
+Training and fixed evaluation completed. All six epochs visited every one
+of the 808 units exactly once, the encoder changed, all 65 native training
+units participated and the restored complete long unit had six exposures.
+Losses were 2.47722595, 1.28487319, .44146607, .13042140, .05887739 and
+.02038712. Training manifest:
+`2660bca48e99a27058724d3a1e0113e3492c6ef48a974b2acbde729fe131d127`.
+
+Evaluation output is
+`data/processed/cycle-reviewed-only-evaluation-20261021-v1/`, manifest
+`6c2c589bc867620bf37b065c0390c343d3cfb5a198d19726310a7f7656e95319`.
+All 22 manifest-bound evaluation files, archived producers, original label
+bytes, frozen plan and default provisional-loader refusal were verified.
+At confidence .8, margin .2 and temperature 1, decision accuracy was
+62.11% on metadata 190, 72.22% on native agreed 36, 75% on platform 52 and
+56% on dev 50. Native precision was 18/19 = 94.74%, at 19/36 coverage;
+eight additional decisions were correct abstentions. Relative to the
+mixed full-document model, higher native precision costs coverage and
+does not improve native, metadata or platform decision accuracy.
+
+External removal, exposure and class loss change jointly; do not claim a
+causal source effect. All references already informed development.
+Original labels, reference texts, thresholds and scientific/publication
+gates remain unchanged. The checkpoint remains provisional; no promotion
+or additional tuning on these diagnostics is planned.
 
 ## Receipt observations and additional publisher-session text
 
