@@ -99,16 +99,46 @@ has SHA-256 `52b128039eede60bbde7b051297d0b79632ed0ef9afaf43080b21fa074d21a33`;
 selected maps `ny_genuine_terminal_selected_maps_parent_v2.json` have SHA-256
 `96399f0c91f435fe85e93495038ff9ae05c813d9a8715b143ff3b90ca2656b5c`.
 The observer ran October 21 at 11:35:36-11:35:47 UTC. The original PID was absent;
-that observation is not an exact OS exit time. Genuine whole-source reconstruction,
-lifecycle acceptance, final-tail sealing and completed-archive replay remain open.
+that observation is not an exact OS exit time. At this observation, whole-source
+reconstruction was still outstanding; the returned inspection is recorded below.
+Lifecycle acceptance, final-tail sealing and completed-archive replay remain open.
 
-Two new **GPT-6.1 Sol** assignments are now bounded to read-only genuine New York
-preseal reconstruction and fresh, private Missouri initializer/crash/next-32
-execution, respectively. Neither requested gate has completed. No original
-source recovery, collection restart, new HTTP, label/model change, scientific
-admission or publication is authorized by these offline checks. These observations
-are supplemental to v54, not retroactive inputs; ignored source/session artifacts
-remain local-only and are not backed up by a Git push.
+**New York genuine-source inspection returned; closure still blocked:** the
+GPT-6.1 Sol worker reports reopening all **24,295 retained PDFs**, with **64,721
+pages per reader**, reproducing saved page/full texts, source spans and PyMuPDF
+block layouts. It retains **24,247 cross-reader text disagreements**; neither
+reader is ground truth. Its transport/checkpoint reconstruction preserves all
+379 checkpoints, the exact unsealed 43-candidate tail and the A 255 cancellation.
+The inspection reports exactly one failed check: cancelled-then-started lifecycle
+acceptance. It does not certify genuine preseal readiness or legal identity.
+
+A separate parent binder completed with exit 0, independently reconciling the
+pinned handoff/report, all returned artifacts, every document record, all 97 PDF
+progress records, reader page/character totals and all **520,114 archived
+before/after map entries** (398,244 files and 121,870 directories). Map entries
+match; serialized map bytes do not, because wrapper metadata differs. The parent
+also independently read the current ledger, reproduced its exact event counts and
+four physical A 255 lines, and verified eight selected current source files'
+complete content/eight-field bindings before and after. This is binding of the
+worker's reconstruction evidence, **not another parent PDF extraction or a second
+current whole-source content rehash**. Receipt
+`ny_genuine_preseal_parent_binding_actual_v1.json` has SHA-256
+`6499b25c9e951290886588c4b6160576cc189bdbcba4b794b70e2347775d8912`.
+The worker inspector's OS exit was not independently recovered; its raw final
+completion record is bound separately. Its deliberately stopped first attempt,
+which completed no document rows, remains preserved rather than counted as success.
+
+The original inventory helper used `os.walk` without an error callback, which
+could suppress directory-enumeration failures; no actual omitted directory has
+been demonstrated. The same New York owner is performing a distinct error-explicit
+current namespace/stat census and bounded historical A 255 investigation, without
+rewriting the original evidence. Both that follow-through and Missouri's distinct
+fresh private initializer/crash/next-32 attempt remain pending. The historical
+cancellation cause is still unknown; successful PDF retention does not repair it.
+No source recovery, collection restart, new HTTP, sealing, label/model change,
+scientific admission or publication is authorized by these checks. These
+observations are supplemental to v54, not retroactive inputs; ignored
+source/session artifacts remain local-only and are not backed up by a Git push.
 
 **Missouri fresh-input follow-through:** the first fresh-behavior worker stopped
 at dependency admission, before invoking the initializer, crash cases or next-32
