@@ -24,6 +24,83 @@ accepted source scopes can supply reusable 2023–2024 evidence, with their exis
 exceptions. Historical counts and seven-scope statements below retain their
 original checkpoint meaning, not current dispatch priority.
 
+## Shared platform evidence and targeted source-date review
+
+The shared platform producer now accounts for **100 state-party organizations**
+and **3,917 evidence views**, retaining complete text and provenance rather than
+metadata-only records. These are 1,559 recovery captures, 61 alternative
+extractions, 202 frozen modern-table views, 2,091 historical archive views and
+four supplementary caucus entries. Views are not distinct adopted platforms;
+202 historical records outside the 100-organization scope remain retained but
+unallocated. There are 3,636 nonempty full-text views.
+
+A bounded GPT-6.1 Sol follow-up reviewed all 16 records with cycle-year metadata:
+**15 retained texts were fully read; KY-R's source text is unavailable**.
+Five empty filtered-table views were joined to their retained full captures.
+The advisory packet preserves 417,088 reviewed characters and 40 exact source
+spans. Four selected views explicitly claim in-cycle adoption/passage: the WA-R
+platform/resolutions and two AL-R resolution compilations. Other cases distinguish
+title year, requested legislative year, a 2020 platform reprinted beside a 2024
+agenda, a later 2025 agenda, archive indexes and viewer shells.
+
+The successor retains eight source-date candidate record views, **not eight
+certified platforms**. All 100 operative/applicability statuses remain unresolved;
+the 25 earlier reviews and all original texts/source records are unchanged.
+The date bands may overlap for a document with different section-level claims.
+Absence of an admitted date observation is not a finding that a text contains
+no date. These are assistant advisory readings, not human or independent gold.
+
+Actual packet `data/processed/platform-study-evidence-2023-2024-v5/` has manifest
+SHA-256 `3d17be52163ab449158e8ca38ee8b95a7ac7a5d52838f77e9f4ddf2fec8df19b`.
+Its advisory source packet
+`platform-cycle-date-advisory-2023-2024-v1` has manifest
+`c85d4afa2f000a03cabbb733e8efdf0b78c1bc3b372d092cc6cb17e2b279a002`.
+All 1,762 input digests/byte counts/ordered seven-stat bindings and output
+digests were checked; all 3,917 original records/texts, 100 allocations, 15
+complete reviewed texts and 40 exact spans reconcile. The parent checked
+binding and source-text fidelity, not a second semantic adjudication.
+No HTTP, new OCR, classifier execution, canonical labels or publication change
+was performed.
+
+## Explicit filing evidence recovered alongside introduction
+
+The shared date pipeline now accounts for **coded filing events**, not only
+introductions. One common origin/chamber/date validator preserves the prior
+introduction behavior exactly; all 1,090,369 results were replayed against the
+committed function and accepted ledger without a difference.
+
+The actual filing pass retains **251,835 raw source-coded filing actions**
+and observes **45,184 in-window filings**. These include **18,695 contexts
+without a resolved source introduction date**, plus **2,117 with an
+out-of-window introduction**. The deduplicated source-coded
+filing-or-introduction population is **151,615 contexts**. These are retained
+source-event observations, not native completeness, eligibility or party
+attribution. Every original introduction field and all raw filing fields survive.
+
+| Previously no in-window introduction observations | In-window coded filings |
+|---|---:|
+| Alaska | 154 |
+| Arizona | 327 |
+| Connecticut | 1,097 |
+| Indiana | 187 |
+| Louisiana | 1,984 |
+
+Florida has 1,978 in-window filings, including **85 lower-chamber observations**;
+its union with introductions is 2,022 contexts, not a statewide filing census.
+MA, ME and NY still have no qualifying coded filing/introduction date under
+these rules. Unclassified INTRODUCED descriptions and first readings have not
+been silently treated as filings or introductions.
+
+The current combined matrix is
+`data/processed/study-filing-2023-2024-v2/state_matrix.csv`.
+Its manifest SHA-256 is
+`b6d05b23bdec09461492df13b190a43c0b138afe953ee40915a3fd458d82fc7b`.
+The pass preserves all native-view/date fields from the eight-state native v9
+matrix and checks common ledger lineage. Every original ledger field, the
+entire raw filing-action export, all 50 state counts and input/output bindings
+were independently reconciled. No source collection, model execution or
+analytical admission occurred.
+
 ## Shared national baseline and dispatch
 
 The shared `state_politics.bills.study_matrix` command now replaces separate
@@ -54,6 +131,38 @@ Generated packets are local/Git-ignored; pushing code and hashes is not their
 backup.
 
 ## Accepted native packets connected to the shared matrix
+
+The current **v9** registry integrates nine accepted packets across **eight
+states**, adding Texas and Florida without turning historical inputs or HTML
+shells into cycle evidence. Its 18,690 source-date-observed contexts include
+10,905 with retained text and 7,785 without an exact supplied-text join.
+The residual is the earlier six-state 44 plus TX 5,894 and FL 1,847.
+Texas contributes 37 observed in-window text joins from 47 usable inputs;
+HB1's retained unavailable shell contributes no input. Florida's 2,868
+historical inputs still contribute zero observed target-cycle joins.
+
+Explicit native introduction fields now provide **3,463 additional dated
+text contexts whose canonical source dates were unresolved**: CA 3,285 and
+SD 178. This is separately retained evidence, not a rewritten canonical date
+ledger or automatic analytical admission. The cycle-relevant comparison also
+retains **569 different native/source dates** (CA 17 / SD 552), including
+prefiling versus later recorded introduction. Neither date is silently chosen;
+all 4,032 cases are exported in `date_resolution_queue.parquet`.
+
+V9 manifest SHA-256:
+`5e145ead121a3b5610531bc23750c1ece202bf4adc896f9b89d060b18784f51e`.
+Its wider inventory has 43,480 native contexts / 59,494 alternative/source
+views. Every one of the 32,167 supplied native date observations was checked
+against the original bound input field, and all matched canonical source dates
+remain unchanged. Full input/output hashes and seven input stat fields were
+verified. The native date channel requires explicit introduced-version guards
+for California and the publisher's introduced field for South Dakota; dates
+are never supplied by session names or URLs. Original scope and eligibility
+exceptions remain attached. V6's literal `88R` versus canonical `88` mismatch
+is preserved; the successor uses an explicit identity crosswalk and retains
+the native key.
+
+### Earlier six-state overlap
 
 The shared `study_native_overlap` run reuses seven accepted input inventories,
 including both California packets. The first six-packet join found 169

@@ -9,6 +9,7 @@ import yaml
 from state_politics.bills.study_native_overlap import (
     build_overlap,
     join_contexts,
+    native_introduction_observation,
     normalize_packet,
 )
 from state_politics.bills.study_window import _STATES
@@ -67,6 +68,7 @@ def ledger():
                 "source_introduction_before_window",
                 "no_source_introduction_action",
             ],
+            "source_introduction_date": ["2023-02-01", "2019-02-01", ""],
         }
     )
 
@@ -136,6 +138,89 @@ def test_null_id_packet_never_falls_back_to_guessing_aliases():
     assert not result["source_in_window"].any()
 
 
+def test_native_regular_session_crosswalk_is_explicit_and_preserves_original_key():
+    spec, raw, views = inputs()
+    spec.pop("canonical_session")
+    spec.update(session_identifier="source_session", session_map={"88R": "88"})
+    raw["source_session"] = "88R"
+    canonical = ledger()
+    canonical["session_identifier"] = "88"
+    contexts, _ = normalize_packet(spec, raw, views)
+    result = join_contexts(contexts, canonical)
+    assert result.loc[result.bill_id.notna(), "session_identifier"].eq("88").all()
+    assert result["native_session_identifier"].eq("88R").all()
+    raw.loc[0, "source_session"] = "88S"
+    with pytest.raises(ValueError, match="explicit canonical crosswalk"):
+        normalize_packet(spec, raw, views)
+
+
+def test_explicit_unavailable_html_shell_is_retained_but_never_counted_as_input():
+    spec, raw, views = inputs()
+    spec.update(
+        view_available="input_available",
+        view_character_count="body_characters",
+        source_kind="native_html_body",
+    )
+    raw["body_characters"] = raw.pop("n_input_characters")
+    raw["input_available"] = [False, True, True]
+    raw.loc[0, "input_sha256"] = None
+    contexts, indexed = normalize_packet(spec, raw, views)
+    assert len(contexts) == 3
+    assert len(indexed) == 2
+    assert indexed["reader"].eq("native_html_body").all()
+    assert contexts.set_index("context_id").loc["one", "n_retained_views"] == 0
+    raw["input_available"] = ["False", "True", "True"]
+    with pytest.raises(ValueError, match="explicit boolean"):
+        normalize_packet(spec, raw, views)
+
+
+@pytest.mark.parametrize(
+    "raw,expected,date",
+    [
+        ("2022-12-31T23:30:00-06:00", "native_introduction_before_window", "2022-12-31"),
+        ("2023-01-01 00:00:00", "native_introduction_in_window", "2023-01-01"),
+        ("2024-12-31", "native_introduction_in_window", "2024-12-31"),
+        ("2025-01-01", "native_introduction_after_window", "2025-01-01"),
+        (None, "missing_native_introduction_observation", None),
+        ("2023-01-01not-a-date", "invalid_native_introduction_observation", None),
+    ],
+)
+def test_native_reported_date_requires_complete_value_and_keeps_local_day(raw, expected, date):
+    assert native_introduction_observation(raw) == (date, expected)
+
+
+def test_native_date_adds_evidence_without_replacing_unknown_or_conflicting_source_dates():
+    spec, raw, views = inputs()
+    spec.update(native_introduction_field="introduced", native_introduction_guard="is_introduced")
+    raw["introduced"] = ["2023-02-01", "2023-02-02", None]
+    raw["is_introduced"] = True
+    contexts, _ = normalize_packet(spec, raw, views)
+    canonical = ledger()
+    canonical.loc[canonical.bill_id.eq("b2"), "source_introduction_date"] = ""
+    canonical.loc[canonical.bill_id.eq("b2"), "window_disposition"] = (
+        "no_source_introduction_action"
+    )
+    result = join_contexts(contexts, canonical).set_index("context_id")
+    assert result.loc["old", "native_in_window"]
+    assert not result.loc["old", "source_in_window"]
+    assert result.loc["old", "window_disposition"] == "no_source_introduction_action"
+    assert result.loc["old", "date_evidence_status"] == "native_date_only_source_unresolved"
+    raw.loc[0, "is_introduced"] = False
+    with pytest.raises(ValueError, match="explicit introduced records"):
+        normalize_packet(spec, raw, views)
+
+
+def test_comparable_native_and_source_dates_keep_disagreement_visible():
+    spec, raw, views = inputs()
+    spec["native_introduction_field"] = "introduced"
+    raw["introduced"] = ["2023-02-01", "2023-02-02", None]
+    contexts, _ = normalize_packet(spec, raw, views)
+    result = join_contexts(contexts, ledger()).set_index("context_id")
+    assert result.loc["one", "date_evidence_status"] == "native_source_dates_agree"
+    assert result.loc["old", "date_evidence_status"] == "native_source_dates_differ"
+    assert result.loc["old", "source_introduction_date"] == "2019-02-01"
+
+
 def test_explicit_native_special_session_crosswalk_links_only_mapped_contexts():
     spec, raw, views = inputs()
     spec.update(
@@ -181,6 +266,7 @@ def test_unselected_sessions_do_not_expand_adapter_scope():
         "UNREVIEWED-SPECIAL-FORMAT",
         "other-special-session",
         "source_introduction_in_window",
+        "2023-03-05",
     ]
     result = join_contexts(contexts, canonical)
     assert result["bill_id"].dropna().tolist() == ["b1", "b2"]
@@ -221,6 +307,7 @@ def packet(tmp_path):
         "HB 4",
         "20232024",
         "source_introduction_in_window",
+        "2023-03-05",
     ]
     original.to_csv(ledger_path, index=False)
     pd.DataFrame(

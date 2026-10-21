@@ -10,6 +10,8 @@ packets:
     identifier: identifier
     bill_id: bill_id
     canonical_session: "20232024"
+    native_introduction_field: action_date
+    native_introduction_guard: is_introduced_action
     source_only_session_fields: [native_session_num]
     source_only_session_map:
       "1": "20232024 Special Session 1"
@@ -26,6 +28,8 @@ packets:
     identifier: identifier
     bill_id: bill_id
     session_identifier: biennium
+    native_introduction_field: action_date
+    native_introduction_guard: is_introduced_action
     source_only_session_fields: [biennium, native_session_num]
     source_only_session_map:
       "20252026:1": "20252026 Special Session 1"
@@ -78,6 +82,7 @@ packets:
     context_id: native_bill_id
     identifier: native_identifier
     session_identifier: native_session_identifier
+    native_introduction_field: native_introduced_observation
     expected_contexts: 5369
     expected_views: 10738
   - state: WI
@@ -92,3 +97,33 @@ packets:
     canonical_session: "2023"
     expected_contexts: 2655
     expected_views: 5310
+  - state: TX
+    root: data/processed/texas-native-body-input-inventory-v2
+    manifest_sha256: 3806bfabb926e03d23dd612eaf493b94d9aee39d516281a5ffe011cf3d03f9ba
+    profile: single
+    contexts: candidate_inputs.parquet
+    context_id: record_id
+    identifier: identifier
+    status: candidate_state
+    bill_id: bill_id
+    session_identifier: session
+    session_map:
+      "88R": "88"
+    view_character_count: n_body_characters
+    view_available: classifier_input_available
+    source_kind: native_html_body
+    expected_contexts: 48
+    expected_views: 47
+  - state: FL
+    root: data/processed/florida-native-bill-input-inventory-v1
+    manifest_sha256: 6946d82b351f774c355949eb63055e19d7f99acabcedfc95fe850b42661719a9
+    profile: single
+    contexts: candidate_inputs.parquet
+    context_id: record_id
+    identifier: identifier
+    status: source_native_status
+    bill_id: bill_id
+    session_identifier: session_identifier
+    source_kind: retained_native_input
+    expected_contexts: 2868
+    expected_views: 2868

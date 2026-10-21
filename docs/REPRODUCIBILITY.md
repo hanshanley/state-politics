@@ -111,11 +111,11 @@ group export; wider-history context/reference totals are 1,090,369/2,617,690.
 .venv/bin/python -I -B -m state_politics.bills.study_native_overlap \
   --matrix-dir data/processed/study-matrix-2023-2024-v1 \
   --registry conf/study_native_packets.yml \
-  --out-dir data/processed/study-native-overlap-2023-2024-v5
+  --out-dir data/processed/study-native-overlap-2023-2024-v9
 ```
 
-The registry pins seven previously accepted input manifests covering CA, CO,
-NC, OH, SD and WI. It selects the California 2023–2024 packet **and** the wider
+The registry pins nine previously accepted input manifests covering CA, CO,
+NC, OH, SD, WI, TX and FL. It selects the California 2023–2024 packet **and** the wider
 archive: the latter contains source-dated 2024 prefilings in a 2025–2026
 session, which cannot be excluded by session-name substring. Source dates
 still come only from the existing national ledger.
@@ -127,22 +127,36 @@ California native special-session codes have an explicit registry crosswalk
 to canonical session keys. This is an identity crosswalk, not a source of dates.
 Unmapped source-only contexts remain unmatched; no HJR/HR/HB aliases or
 ambiguous joins are guessed. NC's two identity-unresolved inputs stay marked.
+Texas `88R` maps explicitly to canonical `88`; its original native key survives.
+Its unavailable HB1 shell is retained as a context with zero input views.
 
 Outputs are `native_context_overlap.parquet`, `native_view_index.parquet`,
-`missing_supplied_native_text.parquet`, the enriched `state_matrix.csv`,
+`missing_supplied_native_text.parquet`, `native_introduction_observations.parquet`,
+`date_resolution_queue.parquet`, the enriched `state_matrix.csv`,
 `report.json` and `manifest.json`. The view index is an index, not a text
 download: complete original strings remain in the bound input tables.
 Alternative readers never count as additional measures. Unregistered states
 retain null packet counts rather than zero recovery.
 
-The actual v5 manifest is
-`113a97fd0b0356d8cb0746c4a87eeaf8e06e8fd6fbef7518f39d8ce8e2620a4a`.
-It indexes 40,564 wider-scope native contexts and 56,579 alternative/source
-views. Of 10,912 source-in-window observations in these six states, 10,868
-have indexed nonempty retained views; the residual export has exactly 44
-bill IDs. These are supplied-packet/date-observed counts, not native-universe
+The actual v9 manifest is
+`5e145ead121a3b5610531bc23750c1ece202bf4adc896f9b89d060b18784f51e`.
+It indexes 43,480 wider-scope native contexts and 59,494 alternative/source
+views. Of 18,690 source-in-window observations in these eight states, 10,905
+have indexed nonempty retained views; the residual export has exactly 7,785
+bill IDs, including 5,894 TX and 1,847 FL contexts. The earlier six-state
+residual remains 44. These are supplied-packet/date-observed counts, not native-universe
 denominators, eligibility, classification accuracy or all-state completeness.
 No native documents were recollected, re-extracted or tokenized.
+
+California's introduced-version date and South Dakota's introduced field form
+a **separate native-reported date channel**. Complete timestamp/date values
+are validated with source-local days; missing/invalid observations stay explicit.
+No canonical source date is overwritten. Native in-window text contexts include
+3,463 with unresolved source dates (CA 3,285 / SD 178). The date-resolution queue
+also retains 569 different native/source dates (CA 17 / SD 552); an earlier
+native date can describe prefiling rather than an error in a later event date.
+The 4,032-row queue requires event/eligibility adjudication, not automatic
+earliest-date selection. Native date evidence is not analytical admission.
 
 V1/v2 incomplete attempts preserve strict-format failures: Colorado's
 hyphenated identifiers needed literal support, and unselected special-session
@@ -151,6 +165,96 @@ regressions preserve both failures. V3/v4 are intermediate completed snapshots;
 v5 additionally reuses California wider/special-session evidence. Earlier
 outputs/logs remain unchanged. All original input bindings are checked before
 and after the shared run; existing output directories are refused.
+V6's explicit native `88R`/canonical `88` join failure remains incomplete;
+v7 adds the reviewed crosswalk, partial packets and native date evidence,
+and v8 exports the explicit date-resolution queue.
+V9 binds the generalized origin-event helper while retaining the same native
+data; all original introduction semantics remain unchanged.
+
+## Separate explicit filing evidence and final combined matrix
+
+```bash
+.venv/bin/python -I -B -m state_politics.bills.study_filing \
+  --window-dir data/processed/study-window-2023-2024-v2 \
+  --actions data/processed/bill_actions.parquet \
+  --matrix-dir data/processed/study-native-overlap-2023-2024-v9 \
+  --out-dir data/processed/study-filing-2023-2024-v2
+```
+
+The earlier source-window ledger intentionally counted only coded
+`introduction` events. The study permits filing **or** introduction, so a
+separate pass now preserves exact `filing` action codes as well. It requires
+one event in the originating organization/chamber and a complete valid date;
+multiple events remain unresolved. Reading-1 actions and uncoded descriptions
+such as INTRODUCED are not silently recoded. Filing and introduction retain
+distinct dates and dispositions; every original ledger field remains unchanged.
+
+The output contains the full `bill_filing_evidence.csv`, all 251,835 original
+coded actions in `source_filing_actions.parquet`, session/chamber/type filing
+counts and the enriched `state_matrix.csv`. The matrix retains all native-text
+and native-date columns from the prior stage. It adds 45,184 in-window filing
+observations: 18,695 have no resolved introduction date and 2,117 have an
+introduction outside the window. Deduplicated filing-or-introduction coverage
+is 151,615 source contexts, **not a native census or eligible-bill denominator**.
+Measure types, source tests and draft contexts still require their own gates.
+
+AK, AZ, CT, IN and LA gain observed source-date evidence from explicit filings;
+MA, ME and NY still lack either qualifying source code in this retained window.
+This does not mean zero activity. Florida gains 85 lower-chamber filing-date
+observations, not complete House coverage.
+
+The shared origin-event helper was generalized without changing introduction
+semantics: all 1,090,369 results exactly match the committed original function
+and every accepted introduction-ledger field. The final filing output was
+also compared field-for-field with that ledger and its raw action export with
+the original source table; the 50-state union counts and retained native columns
+reconcile exactly. Final manifest:
+`b6d05b23bdec09461492df13b190a43c0b138afe953ee40915a3fd458d82fc7b`.
+The native v9 matrix it consumes has unchanged v8 data and a new code-bound
+manifest `5e145ead121a3b5610531bc23750c1ece202bf4adc896f9b89d060b18784f51e`.
+No canonical extraction, earlier ledger, label or model was rewritten.
+
+## All-organization platform evidence and advisory source-date claims
+
+```bash
+.venv/bin/python -I -B -m state_politics.platforms.study_evidence \
+  --record-reviews data/processed/platform-cycle-date-advisory-2023-2024-v1/reviews.jsonl \
+  --out data/processed/platform-study-evidence-2023-2024-v5
+```
+
+This consumes accepted retained platform inventories, exact extraction
+alternatives, modern/historical table views, supplementary caucus entries and
+explicit advisory review packets. It preserves 3,917 full evidence records in
+`records.jsonl`, all 100 organization allocations in `organizations.jsonl`,
+the producer copy and a checksum-bound manifest. Full text survives, including
+views excluded by the original collector; table filtering is not source loss.
+National/other-party historical rows stay retained but outside state-D/R counts.
+
+Source-stated dates, metadata-year hints, document role and operative
+applicability are distinct. No URL/filename/year hint supplies adoption or
+continued applicability. The bounded 16-record follow-up fully read 15
+available texts and retained KY-R as text-unavailable; five empty table views
+use exact capture-text joins. Its 40 claims bind exact source character spans,
+reviewed text hashes and full UTF-8 texts, including original CR/LF content.
+The reviews are advisory, not canonical labels or independent certification.
+
+V5 retains 100 organizations / 3,917 views, including eight source-date
+candidate views. Four newly reviewed views explicitly claim 2023–2024
+passage/adoption; other candidates can be narrow agenda-year claims.
+Counts are not distinct platforms or whole-cycle operative coverage, and
+section-level date bands may overlap. Every applicability status stays
+unresolved. V4 and its original 25 reviews/texts remain unchanged.
+
+V5 manifest:
+`3d17be52163ab449158e8ca38ee8b95a7ac7a5d52838f77e9f4ddf2fec8df19b`.
+Advisory manifest:
+`c85d4afa2f000a03cabbb733e8efdf0b78c1bc3b372d092cc6cb17e2b279a002`.
+The inventory's `inputs[].stat` is ordered as device, inode, mode, link count,
+size, mtime_ns and ctime_ns. All 1,762 consumed bindings were checked unchanged;
+parent reconciliation verifies full original texts/records, allocations and
+spans, not a second semantic review. No new collection, model inference,
+training, canonical source rewrite or website publication is part of this step.
+All generated evidence remains local/Git-ignored, not backed up by pushing code.
 
 ## State packet and cycle overlap
 

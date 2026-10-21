@@ -55,51 +55,58 @@ _GROUP_COLUMNS = [
 
 def introduction_disposition(bill: dict, actions: list[dict]) -> dict:
     """Require one source-coded introduction in the originating organization and chamber."""
+    return source_event_disposition(bill, actions, event_class="introduction")
+
+
+def source_event_disposition(bill: dict, actions: list[dict], *, event_class: str) -> dict:
+    """Keep explicit filing and introduction events distinct under the same identity rules."""
+    if event_class not in {"introduction", "filing"}:
+        raise ValueError("only source-coded filing/introduction events are supported")
     for action in actions:
         if (
             action["bill_id"] != bill["bill_id"]
             or action["state"] != bill["state"]
-            or "introduction" not in (action["classification"] or "").split("|")
+            or event_class not in (action["classification"] or "").split("|")
         ):
-            raise ValueError("introduction evidence does not match its bill/classification")
+            raise ValueError(f"{event_class} evidence does not match its bill/classification")
     origin = bill["from_organization_id"]
     matched = [action for action in actions if origin and action["organization_id"] == origin]
     observed_date = None
     if not actions:
-        disposition = "no_source_introduction_action"
+        disposition = f"no_source_{event_class}_action"
     elif not origin:
         disposition = "missing_originating_organization"
     elif not matched:
-        disposition = "no_origin_introduction_action"
+        disposition = f"no_origin_{event_class}_action"
     elif len(matched) != 1:
-        disposition = "multiple_origin_introduction_actions"
+        disposition = f"multiple_origin_{event_class}_actions"
     elif bill["originating_chamber"] not in {"upper", "lower", "legislature"}:
         disposition = "unknown_originating_chamber"
     elif matched[0]["chamber"] != bill["originating_chamber"]:
-        disposition = "origin_introduction_chamber_unresolved"
+        disposition = f"origin_{event_class}_chamber_unresolved"
     elif matched[0]["date"] is None or matched[0]["date"] == "":
-        disposition = "missing_origin_introduction_date"
+        disposition = f"missing_origin_{event_class}_date"
     else:
         raw_date = matched[0]["date"]
         try:
             if not isinstance(raw_date, str) or not raw_date:
-                raise ValueError("missing introduction date")
+                raise ValueError(f"missing {event_class} date")
             observed_date = _event_calendar_date(raw_date).isoformat()
         except ValueError:
-            disposition = "invalid_origin_introduction_date"
+            disposition = f"invalid_origin_{event_class}_date"
         else:
             disposition = (
-                "source_introduction_before_window"
+                f"source_{event_class}_before_window"
                 if observed_date < START
-                else "source_introduction_after_window"
+                else f"source_{event_class}_after_window"
                 if observed_date > END
-                else "source_introduction_in_window"
+                else f"source_{event_class}_in_window"
             )
     return {
-        "n_introduction_actions": len(actions),
-        "n_origin_introduction_actions": len(matched),
-        "origin_introduction_action_ids": json.dumps([a["action_id"] for a in matched]),
-        "source_introduction_date": observed_date,
+        f"n_{event_class}_actions": len(actions),
+        f"n_origin_{event_class}_actions": len(matched),
+        f"origin_{event_class}_action_ids": json.dumps([a["action_id"] for a in matched]),
+        f"source_{event_class}_date": observed_date,
         "window_disposition": disposition,
     }
 

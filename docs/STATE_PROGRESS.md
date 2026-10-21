@@ -49,11 +49,19 @@ introductions inside 2023–2024. This does **not** close additional states or
 replace native verification. Its 559,730 unresolved contexts span the wider
 retained history and are not all target-cycle missing filings. AK, AZ, CT, IN,
 LA, MA, ME and NY have no qualifying in-window dates under the strict source
-rule; do not turn that missing evidence into zero legislative activity.
+introduction rule; do not turn that missing evidence into zero legislative activity.
 Florida illustrates a further chamber gap: its 1,847 in-window date observations
 are **all Senate-side**. Its 2023/2024-labelled sessions also retain 2,008
 date-unresolved contexts, including 1,885 House-side records. Neither session
 labels nor the observed Senate subset establish a statewide filing denominator.
+These introduction-only observations are now supplemented by the separate
+[coded-filing pass](REPRODUCIBILITY.md#separate-explicit-filing-evidence-and-final-combined-matrix).
+It adds 18,695 in-window filing contexts with unresolved introduction dates,
+including observed filings in AK, AZ, CT, IN and LA. The deduplicated
+filing-or-introduction population is 151,615 retained source contexts, not a
+native or analytical denominator. Florida also has 85 lower-chamber coded
+filings; its House date gap is reduced, not closed. MA, ME and NY still lack
+qualifying coded observations, not legislative activity.
 
 ## Shared pipeline and dispatch
 
@@ -80,6 +88,18 @@ These are not statewide native denominators; missing dates, source-only rows
 and unregistered packets remain explicit. The six existing Closed scope
 statuses are unchanged, and their residual special-session/reference gaps
 are follow-up tasks, not permission to recollect their accepted regular cohorts.
+
+The current v9 integration also indexes accepted partial TX and historical FL
+inputs. TX contributes 37 source-date-observed cycle text joins; its HB1 HTML
+shell is excluded from inputs. FL contributes zero, preserving the historical
+packet limitation. Separately, native introduction fields provide date evidence
+for 3,463 CA/SD text contexts with unresolved canonical source dates. Another
+569 cycle-relevant native/source date differences remain explicit for review.
+These date observations do not silently change admission or tracker status.
+The current combined `study-filing-2023-2024-v2/state_matrix.csv` preserves those
+native columns and adds distinct source-coded filing and deduplicated union
+counts. Use this final matrix for current source-event triage, not the older
+introduction-only counts alone.
 
 For subsequent recovery, use a common pipeline: **native cohort -> exact
 record join -> missing-original retrieval -> shared extraction/validation ->
@@ -213,6 +233,14 @@ conflicting source labels have advisory contextual reviews, not adjudicated gold
 conflict-exclusion policy is not approved. Cycle-applicable platforms and
 event-time affiliations within 2023–2024 are not certified. The report and all dependent analyses
 remain unfinished. The publication site is unchanged and publication unauthorized.
+
+The [shared platform evidence ledger](REPRODUCIBILITY.md#all-organization-platform-evidence-and-advisory-source-date-claims)
+now accounts for all 100 organizations and 3,917 full evidence views. A bounded
+16-record advisory review recovered explicit date/role claims from 15 available
+texts while retaining one unavailable caucus source. Eight source-date candidate
+views are indexed, not eight certified platforms. All operative/applicability
+statuses remain unresolved; do not infer adoption from year hints or confuse
+multiple views/resolution compilations with complete party platforms.
 
 Detailed evidence, failed predecessors and qualifications remain in
 [the audit history](AUDIT_STATUS.md). Update this compact tracker rather than

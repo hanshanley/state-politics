@@ -10,11 +10,31 @@ import pandas as pd
 import yaml
 
 from ..provenance import utc_now_iso
+from .outcomes import _event_calendar_date
 from .study_sources import _unique
-from .study_window import _snapshot
+from .study_window import END, START, _snapshot
 
 _STATUS = "complete_supplied_native_overlap_not_native_census_or_analytical_admission"
 _IN_WINDOW = "source_introduction_in_window"
+
+
+def native_introduction_observation(value) -> tuple[str | None, str]:
+    """Keep a separate native-reported date channel, never a source-date fallback."""
+    if pd.isna(value) or value == "":
+        return None, "missing_native_introduction_observation"
+    if not isinstance(value, str):
+        return None, "invalid_native_introduction_observation"
+    try:
+        date = _event_calendar_date(value).isoformat()
+    except ValueError:
+        return None, "invalid_native_introduction_observation"
+    return date, (
+        "native_introduction_in_window"
+        if START <= date <= END
+        else "native_introduction_before_window"
+        if date < START
+        else "native_introduction_after_window"
+    )
 
 
 def _field(frame: pd.DataFrame, selector: str) -> pd.Series:
@@ -59,6 +79,15 @@ def normalize_packet(
         if "session_identifier" in spec
         else "declared_canonical_cohort_not_date_evidence"
     )
+    contexts["native_session_identifier"] = (
+        contexts["session_identifier"] if "session_identifier" in spec else None
+    )
+    if "session_map" in spec:
+        sessions = contexts["session_identifier"].map(spec["session_map"])
+        if sessions.isna().any():
+            raise ValueError("native session lacks an explicit canonical crosswalk")
+        contexts["session_identifier"] = sessions
+        contexts["session_binding"] = "explicit_native_session_crosswalk"
     contexts["canonical_join_mode"] = "declared_bill_id" if "bill_id" in spec else "typed_key"
     if "source_only_session_fields" in spec:
         codes = pd.concat(
@@ -73,21 +102,42 @@ def normalize_packet(
     contexts["packet_status"] = (
         _field(raw, spec["status"]) if "status" in spec else "retained_input_unadjudicated"
     )
+    contexts["native_introduction_raw"] = None
+    contexts["native_introduction_date"] = None
+    contexts["native_window_disposition"] = "not_supplied_by_registered_packet"
+    if "native_introduction_field" in spec:
+        if "native_introduction_guard" in spec:
+            guard = _field(raw, spec["native_introduction_guard"])
+            if guard.isna().any() or not pd.api.types.is_bool_dtype(guard.dtype) or not guard.all():
+                raise ValueError("native introduction date requires explicit introduced records")
+        observed = _field(raw, spec["native_introduction_field"])
+        contexts["native_introduction_raw"] = observed
+        dates = observed.map(native_introduction_observation)
+        contexts["native_introduction_date"] = dates.map(lambda value: value[0])
+        contexts["native_window_disposition"] = dates.map(lambda value: value[1])
     if spec["profile"] == "reader_rows":
         if contexts.groupby("context_id", dropna=False).nunique(dropna=False).gt(1).any().any():
             raise ValueError("reader variants disagree on native context")
         contexts = contexts.drop_duplicates("context_id").reset_index(drop=True)
     _unique(contexts, "context_id")
     if spec["profile"] in {"single", "reader_rows"}:
+        character_column = spec.get("view_character_count", "n_input_characters")
         views = (
-            raw[["record_id", "input_sha256", "n_input_characters"]]
-            .rename(
-                columns={"record_id": "view_id"},
-            )
+            raw[["record_id", "input_sha256", character_column]]
+            .rename(columns={"record_id": "view_id", character_column: "n_input_characters"})
             .copy()
         )
         views["context_id"] = _field(raw, spec["context_id"]).astype("string")
-        views["reader"] = raw["reader"] if spec["profile"] == "reader_rows" else "native_caml"
+        views["reader"] = (
+            raw["reader"]
+            if spec["profile"] == "reader_rows"
+            else spec.get("source_kind", "native_caml")
+        )
+        if "view_available" in spec:
+            available = raw[spec["view_available"]]
+            if available.isna().any() or not pd.api.types.is_bool_dtype(available.dtype):
+                raise ValueError("explicit boolean input availability required")
+            views = views.loc[available].copy()
     elif spec["profile"] == "views" and raw_views is not None:
         views = raw_views[
             ["view_id", "context_id", "reader", "input_sha256", "n_input_characters"]
@@ -184,6 +234,23 @@ def join_contexts(contexts: pd.DataFrame, ledger: pd.DataFrame) -> pd.DataFrame:
     if result.loc[result["bill_id"].notna(), "bill_id"].duplicated().any():
         raise ValueError("multiple native contexts would double-count a canonical bill")
     result["source_in_window"] = result["window_disposition"].eq(_IN_WINDOW).fillna(False)
+    result["native_in_window"] = result["native_window_disposition"].eq(
+        "native_introduction_in_window"
+    )
+    result["date_evidence_status"] = result["native_window_disposition"]
+    native_date = result["native_introduction_date"].notna()
+    source_date = result["source_introduction_date"].notna() & result[
+        "source_introduction_date"
+    ].ne("")
+    joined = result["bill_id"].notna()
+    result.loc[native_date & ~joined, "date_evidence_status"] = "native_date_identity_unmatched"
+    result.loc[native_date & joined & ~source_date, "date_evidence_status"] = (
+        "native_date_only_source_unresolved"
+    )
+    comparable = native_date & source_date & joined
+    agrees = result["native_introduction_date"].eq(result["source_introduction_date"]).fillna(False)
+    result.loc[comparable & agrees, "date_evidence_status"] = "native_source_dates_agree"
+    result.loc[comparable & ~agrees, "date_evidence_status"] = "native_source_dates_differ"
     return result
 
 
@@ -217,6 +284,7 @@ def build_overlap(matrix_dir: Path, registry: Path, out_dir: Path) -> dict:
         "producer": Path(__file__),
         "study_sources": Path(__file__).with_name("study_sources.py"),
         "study_window": Path(__file__).with_name("study_window.py"),
+        "outcomes": Path(__file__).with_name("outcomes.py"),
         "provenance": Path(__file__).parent.parent / "provenance.py",
     }
     for spec in specs:
@@ -268,8 +336,19 @@ def build_overlap(matrix_dir: Path, registry: Path, out_dir: Path) -> dict:
         ]
         columns = {selector.split(".")[0] for selector in selectors}
         columns |= {field.split(".")[0] for field in spec.get("source_only_session_fields", [])}
+        columns |= {
+            spec[key].split(".")[0]
+            for key in ("native_introduction_field", "native_introduction_guard")
+            if key in spec
+        }
         if spec["profile"] in {"single", "reader_rows"}:
-            columns |= {"record_id", "input_sha256", "n_input_characters"}
+            columns |= {
+                "record_id",
+                "input_sha256",
+                spec.get("view_character_count", "n_input_characters"),
+            }
+        if "view_available" in spec:
+            columns.add(spec["view_available"])
         if spec["profile"] == "reader_rows":
             columns.add("reader")
         raw = _read(paths[f"{packet_id}_contexts"], columns)
@@ -308,6 +387,10 @@ def build_overlap(matrix_dir: Path, registry: Path, out_dir: Path) -> dict:
         "n_supplied_native_views",
         "n_source_in_window_with_supplied_native_text",
         "n_source_in_window_without_supplied_native_text",
+        "n_native_in_window_with_join_and_text",
+        "n_native_in_window_text_with_unresolved_source_date",
+        "n_native_in_window_text_with_outside_source_date",
+        "n_native_source_date_disagreements_cycle_relevant",
     ):
         matrix[column] = pd.Series(pd.NA, index=matrix.index, dtype="Int64")
     matrix["native_packet_integration"] = "not_registered_not_zero_recovery"
@@ -323,9 +406,50 @@ def build_overlap(matrix_dir: Path, registry: Path, out_dir: Path) -> dict:
         matrix.loc[mask, "n_source_in_window_without_supplied_native_text"] = int(
             missing["state"].eq(state).sum()
         )
+        if selected["native_window_disposition"].ne("not_supplied_by_registered_packet").any():
+            native = selected.loc[
+                selected["native_in_window"]
+                & selected["bill_id"].notna()
+                & selected["n_retained_views"].gt(0)
+            ]
+            outside = native["window_disposition"].isin(
+                [
+                    "source_introduction_before_window",
+                    "source_introduction_after_window",
+                ]
+            )
+            matrix.loc[mask, "n_native_in_window_with_join_and_text"] = len(native)
+            matrix.loc[mask, "n_native_in_window_text_with_unresolved_source_date"] = int(
+                (~native["source_in_window"] & ~outside).sum()
+            )
+            matrix.loc[mask, "n_native_in_window_text_with_outside_source_date"] = int(
+                outside.sum()
+            )
+            matrix.loc[mask, "n_native_source_date_disagreements_cycle_relevant"] = int(
+                (
+                    selected["date_evidence_status"].eq("native_source_dates_differ")
+                    & (selected["native_in_window"] | selected["source_in_window"])
+                ).sum()
+            )
     matched.to_parquet(out_dir / "native_context_overlap.parquet", index=False)
     views.to_parquet(out_dir / "native_view_index.parquet", index=False)
     missing.to_parquet(out_dir / "missing_supplied_native_text.parquet", index=False)
+    matched.loc[
+        matched["native_window_disposition"].ne("not_supplied_by_registered_packet")
+    ].to_parquet(out_dir / "native_introduction_observations.parquet", index=False)
+    date_queue = matched.loc[
+        (matched["native_in_window"] | matched["source_in_window"])
+        & matched["date_evidence_status"].isin(
+            [
+                "native_date_only_source_unresolved",
+                "native_source_dates_differ",
+                "native_date_identity_unmatched",
+                "invalid_native_introduction_observation",
+                "missing_native_introduction_observation",
+            ]
+        )
+    ]
+    date_queue.to_parquet(out_dir / "date_resolution_queue.parquet", index=False)
     matrix.to_csv(out_dir / "state_matrix.csv", index=False)
     result = {
         "status": _STATUS,
@@ -334,11 +458,13 @@ def build_overlap(matrix_dir: Path, registry: Path, out_dir: Path) -> dict:
         "n_reader_or_source_views_not_bills": len(views),
         "n_source_only_contexts": int(matched["bill_id"].isna().sum()),
         "n_source_in_window_without_supplied_native_text": len(missing),
+        "cycle_date_resolution_counts": date_queue["date_evidence_status"].value_counts().to_dict(),
         "limitations": [
             "Only registered accepted packets are indexed, not all local archives.",
             "View text is referenced by full-table binding and input hash, not re-extracted here.",
             "Reader alternatives are not extra bills or adjudicated truth.",
             "Configured canonical sessions select cohorts, never supply missing dates.",
+            "Native-reported dates stay separate; conflicts never overwrite source dates.",
             "Retained text does not certify native identity, original stage or filing eligibility.",
             "Unregistered packet counts are unknown, not zero; native census remains uncomputed.",
         ],
