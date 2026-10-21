@@ -196,13 +196,54 @@ bound by `kentucky_transport_pacing_parent_actual_v1_raw_binding_v1.json`,
 SHA-256 `518470f6377d1d972f8a58ff3630f798b9b6456329879851302ca51c4ea55a78`;
 the original observation receipt is
 `6394a2efaa1da74e475397258dfea15c736f61805357ff6f125aad7ee034d1d4`.
-The same **GPT-6.1 Sol** owner now has a distinct immutable zero-HTTP readiness
-successor scope: monotonic physical-dispatch pacing, conservative restart
-spacing, pre-kernel adapter controls, and a fresh exact-final normal-driver
-fixture with rebound source-dependent proofs. No successor return or parent
-acceptance is claimed. Historical discovery still has 123 pending records;
-actual destination, staging and authorization remain null. No live collection,
-labels, training, analytical admission or publication is authorized.
+The **GPT-6.1 Sol** readiness successor has now returned as the distinct immutable
+`kentucky-2023-2024-native-transport-readiness-v2-successor-v3` packet.
+The original completion notification and owner response have been consumed.
+Handoff SHA-256:
+`9cc2fb9d62f20d229161e24fcb80a8c82d48e4dcadf7949293188b8d287df83c`;
+manifest SHA-256:
+`6ae32ff63736c6b8f6116299dea97460609ab0b0e02ce564f391cac2cb165099`.
+The older plain-v2 manifest-order failures and intermediate test/bootstrap
+failures remain preserved; the successor does not relabel those attempts.
+
+A **fresh independent private pacing replay** completed at **01:24:19 UTC on
+October 21, 2026**, exit zero. The exact archived guard exercised its 35
+installed-inner denials and three legitimate reads before the worker and parent
+outer policies. Eleven final-source cases pass, including shared first,
+retry, redirect and robots pacing, conservative restart, undersleep/stalled
+sleep, monotonic regression, wall-clock jumps and flags-only adapter rejection.
+Four genuine `Popen` constructions exercise the constructor, `_execute_child`
+and `communicate` with real pipes; only the kernel fork/wait operations are
+mocked. Measured **real monotonic mock-kernel entry gaps** are
+**10.008283250, 10.016320333 and 10.021183709 seconds**, with eight registered
+read-pipe events. There is no real curl process, HTTP or wire-timing measurement.
+All **17 selected original nodes** and twelve private copied input files retain
+identical content and eight-field metadata; this is not a complete packet
+reinventory. Receipt `kentucky_readiness_pacing_parent_actual_v1.json`, SHA-256:
+`47ced5434fd462433314cb55a07f1f59f374fdbc5ba909d738926e3f9bcd2aa7`.
+An independent raw reconciliation completed at **01:32:05 UTC**: all five
+physical-LF stdout records, the enclosing child-start/report records,
+parent/child identities, argv and clock order, all archived and current selected
+metadata rows, twelve lifecycle rows and sixteen durable transport artifacts
+agree. Real monotonic gap/restart arithmetic is recomputed from the recorded
+entries. Binding `kentucky_readiness_pacing_parent_actual_v1_raw_binding_v2.json`,
+SHA-256:
+`8a822188246052bde5deed7df43942ad3cfec03d8ae2c90e013635c6ad0add8a`.
+The first binder's wrong enclosing-log cardinality assertion and scalar-counter
+assumption are preserved in its source/failure log; the distinct v2 changes
+parent reconciliation only, not the successful pacing execution or its evidence.
+The adapter deliberately requires its injected kernel-test gate even with
+authorization-shaped flags: these results do not establish live-adapter readiness.
+
+A distinct parent execution of the final normal 3,005-context driver on fresh
+private `copy2` inputs has started, followed by a readonly zero-refetch resume
+and separate whole/true29 reconstruction processes. Its startup and exact parent
+command were observed once; no completed result is claimed yet. Full packet
+inventory preservation, all 48,989 manifested payloads and source-dependent
+behavioral acceptance remain separate gates. Historical discovery still has
+123 pending records; actual destination, staging and authorization remain null.
+No live collection, labels, training, analytical admission or publication is
+authorized.
 
 The three actual parent replays and a separate raw-proof/source/full-map/current-row
 binding completed on October 20, 2026. Their supplemental binding is
