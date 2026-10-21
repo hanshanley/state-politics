@@ -1,0 +1,83 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self'; style-src 'self'; connect-src 'self'; img-src 'self'; base-uri 'none'; form-action 'none'; object-src 'none'">
+  <title>Local model-blind human review</title>
+  <link rel="stylesheet" href="human-review.css">
+  <script src="human-review.js" defer></script>
+</head>
+<body>
+<header>
+  <h1>Local model-blind HUMAN review</h1>
+  <p id="notice"></p>
+  <p id="status" role="status">Loading and checking frozen inputs…</p>
+  <p id="binding"></p>
+  <nav id="downloads" aria-label="Complete frozen source downloads"></nav>
+</header>
+<main hidden id="workspace">
+  <section aria-label="Instructions and rubric">
+    <h2>Review protocol</h2>
+    <p>Read every character of the chosen native text before deciding. Do not use a model,
+      predictions, links, or outside context. Choose one topic only when supported by that
+      entire input; otherwise explicitly abstain. A rationale (20+ characters) and at
+      least one exact nonempty evidence span from the chosen text are required, including
+      abstentions. Alternative readers are preserved for source audit only. Their presence
+      does not certify source completeness or identity. All texts are untruncated.</p>
+    <details><summary>All 21 topic definitions and abstention rubric</summary>
+      <div id="rubric"></div>
+      <dl>
+        <dt>non_policy</dt><dd>No substantive policy content, such as ceremonial material.</dd>
+        <dt>mixed_policy</dt><dd>Multiple substantive topics without a defensible single dominant topic.</dd>
+        <dt>insufficient_evidence</dt><dd>The chosen complete retained input cannot support a policy decision.</dd>
+        <dt>rubric_ambiguity</dt><dd>The definitions leave an unresolved boundary; explain it, do not force a topic.</dd>
+      </dl>
+    </details>
+    <details><summary>All-50 state selection and deficits (not population estimates)</summary>
+      <pre id="accounting"></pre>
+    </details>
+  </section>
+  <section aria-label="Reviewer">
+    <h2>Self-attested provenance</h2>
+    <label>Pseudonymous reviewer ID (3–48 letters/digits/underscore/hyphen; no personal data)
+      <input id="reviewer" autocomplete="off" maxlength="48">
+    </label>
+    <label>Review date <input id="reviewed-on" type="date"></label>
+    <label><input id="human" type="checkbox">I self-attest that I am a human reviewer.
+      This is not identity verification.</label>
+    <label><input id="no-model" type="checkbox">I used no model assistance or predictions.</label>
+    <label><input id="all-full" type="checkbox">I reviewed every chosen input in this packet in full.</label>
+    <p>Drafts are stored only in this browser on this origin, keyed by packet hash.
+      They may contain source quotations; use a trusted device. A draft is not an export.
+      Reload restores it without filling undecided records. Export your completed annotations
+      before clearing browser storage. The independent Python importer must validate exports.</p>
+    <button id="export" type="button">Export annotations ONLY (not complete inputs)</button>
+    <label>Import completed annotations for this packet
+      <input id="import" type="file" accept=".json,application/json">
+    </label>
+    <button id="clear" type="button">Clear this packet's local draft</button>
+  </section>
+  <section aria-label="Record annotation">
+    <h2 id="record-title"></h2>
+    <label>Record <select id="record-picker"></select></label>
+    <p id="progress"></p>
+    <p id="record-identity"></p>
+    <h3>Entire chosen native text — decision evidence</h3>
+    <pre id="chosen-text"></pre>
+    <details><summary>All preserved original alternative texts and exact raw provenance</summary>
+      <div id="alternatives"></div>
+    </details>
+    <label>Explicit decision <select id="decision"><option value="">Undecided — choose explicitly</option></select></label>
+    <label>Rationale (20+ characters; no personal data) <textarea id="rationale" rows="4"></textarea></label>
+    <label>Exact evidence spans (one per line; each must occur in chosen text)
+      <textarea id="spans" rows="3"></textarea>
+    </label>
+    <label><input id="full" type="checkbox">I read this entire chosen input.</label>
+    <label><input id="input-only" type="checkbox">My decision uses only this chosen input, not alternatives or external context.</label>
+    <button id="previous" type="button">Previous</button>
+    <button id="next" type="button">Next</button>
+  </section>
+</main>
+</body>
+</html>

@@ -1483,6 +1483,91 @@ def test_reviewed_session_sources_preserve_full_strings_references_and_no_admiss
     assert "not eligible 2023–2024" in html
 
 
+def test_independent_session_frame_retains_all_members_and_full_downloads(
+    cycle_bundle, session_bundle, tmp_path,
+):
+    from state_politics import site_evidence
+    from state_politics.analysis.prepare_session_cohort import freeze_session_cohort
+
+    metadata, platform, _, _, _, _ = cycle_bundle
+    native, scopes = session_bundle
+    native_rows = pq.read_table(native / "native_context_overlap.parquet").to_pylist()
+    contracts = {
+        spec["packet_root"]: spec for spec in site_evidence.NATIVE_SESSION_SCOPES.values()
+    }
+    bills = {}
+    for row in native_rows:
+        contract = contracts.get(row["packet_root"])
+        if contract and site_evidence._session_exact_match(row, contract):
+            bills[row["bill_id"]] = {
+                **{key: row[key] for key in (
+                    "bill_id", "state", "identifier", "session_identifier",
+                )}, "title": SOURCE_TEXT, "source_extra": 1792612374203564526,
+                "source_introduction_date": None,
+            }
+    original_bills = tmp_path / "original_bills.parquet"
+    pq.write_table(pa.Table.from_pylist(list(bills.values())), original_bills)
+    original_abstracts = tmp_path / "original_abstracts.parquet"
+    pq.write_table(pa.Table.from_pylist([{
+        "id": "new-full-abstract", "bill_id": "NY-bill:1",
+        "abstract": SOURCE_TEXT + " full abstract ending", "note": "full note",
+    }]), original_abstracts)
+    original_ledger = tmp_path / "original_ledger.csv"
+    csv.write_csv(pa.Table.from_pylist([{
+        **{key: bill[key] for key in (
+            "bill_id", "state", "identifier", "session_identifier",
+        )}, "source_filing_date": "2022-12-15" if bill["bill_id"] == "NY-bill:1" else "",
+        "unknown_original_field": SOURCE_TEXT,
+    } for bill in bills.values()]), original_ledger)
+    manifest = json.loads((metadata / "manifest.json").read_bytes())
+    manifest["inputs"].update(
+        bills=input_pin(original_bills), abstracts=input_pin(original_abstracts),
+        ledger=input_pin(original_ledger),
+    )
+    write_json(metadata / "manifest.json", manifest)
+    preview = tmp_path / "session-preview"
+    build_cycle_preview(
+        metadata, platform, preview, native_evidence=native, native_session_scopes=scopes,
+    )
+    original_manifest = (metadata / "manifest.json").read_bytes()
+    out = tmp_path / "independent-frame"
+    result = freeze_session_cohort(metadata, native, preview, out, scopes=scopes)
+    assert result["counts"]["session_members"] == 24
+    assert result["counts"]["native_references"] == 25
+    assert result["counts"]["complete_native_views"] == 50
+    assert result["counts"]["session_only_members"] == 22
+    assert result["counts"]["also_calendar_candidates"] == 2
+    assert result["all_states_accounted"] == 50
+    assert result["new_primary_cohort_admissions"] == 0
+    assert result["event_dates_inferred"] is False
+    assert result["excluded_native_contexts_preserved"] == 4
+    assert result["inputs_before"] == result["inputs_after"]
+    assert (metadata / "manifest.json").read_bytes() == original_manifest
+    members = [json.loads(raw) for raw in (out / "session_members.jsonl").read_bytes().split(b"\n")
+               if raw]
+    before_date = next(row for row in members if row["bill_id"] == "NY-bill:1")
+    assert before_date["source_bill"]["source_introduction_date"] is None
+    assert before_date["native_contexts"][0]["source_introduction_date"] == "2022-12-01"
+    assert before_date["calendar_candidate_member"] is False
+    assert before_date["abstract_records"][0]["note"] == "full note"
+    assert before_date["source_date_ledger"]["source_filing_date"] == "2022-12-15"
+    assert before_date["source_date_ledger"]["unknown_original_field"] == SOURCE_TEXT
+    for state, expected in (("NY", 24), ("IL", 26)):
+        raw = (out / f"native-{state}.jsonl").read_bytes()
+        assert gzip.decompress((out / f"native-{state}.jsonl.gz").read_bytes()) == raw
+        exported = [json.loads(line) for line in raw.split(b"\n") if line]
+        assert len(exported) == expected
+        assert all(row["text"].endswith(f"SESSION-TAIL-{row['context_id'].split(':')[1]}")
+                   for row in exported)
+    comparison = csv.read_csv(out / "state_comparison.csv").to_pylist()
+    assert len(comparison) == 50
+    assert next(row for row in comparison if row["state"] == "ME")["session_members"] is None
+    for name, entry in result["artifacts"].items():
+        assert sha256_file(out / name) == entry["sha256"]
+    with pytest.raises(FileExistsError):
+        freeze_session_cohort(metadata, native, preview, out, scopes=scopes)
+
+
 @pytest.mark.parametrize("defect", [
     "unknown_scope", "missing_native", "changed_selector", "proof_checksum", "proof_value",
     "source_only_alias", "duplicate_scope",

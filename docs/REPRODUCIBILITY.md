@@ -745,6 +745,91 @@ Original candidate-native views remain 39,576 across 27,444 candidate IDs.
 All extra fields, date dispositions, reader alternatives and false approvals
 survive, and other states/sessions remain unknown rather than zero.
 
+## Separate verified publisher-session comparison
+
+```bash
+.venv/bin/python -I -B -m state_politics.analysis.prepare_session_cohort \
+  --metadata data/processed/study-abstract-evidence-2023-2024-v3 \
+  --native data/processed/study-native-overlap-2023-2024-v14 \
+  --preview data/preview-cycle-evidence-v6 \
+  --scope ny-2023-2024 --scope il-103rd \
+  --out data/processed/verified-session-comparison-2023-2024-REPLAY
+```
+
+Outputs must not exist. The actual v2 has 37,644 full member records and
+metadata views, 6,827 calendar overlaps, 30,817 session-only members,
+59,193 complete native views, 2,699 members lacking retained text and
+64 preserved negative contexts. Each member retains original canonical
+bill fields, every abstract and the complete unchanged source-date CSV
+record, including dates outside the calendar window. No date is inferred.
+Physical native references are not counted as extra bills.
+
+Manifest:
+`5188b96eb36fa8aebc4b409fc621b7d829cfb5718b1b90e1b47e6051f266b979`.
+Independent complete-field/native-byte receipt:
+`data/processed/session-comparison-parent-verification-20261021-v2.json`,
+SHA-256 `621b8992e8351b1c2edf81d7cb5fdec1988fb56bd37c00836a432c3f8a106c3e`.
+The 48 other states remain unsupplied/unknown for this particular frame;
+the original 157,598 calendar candidates and all scientific gates are unchanged.
+
+## Model-blind human annotation and one local workspace
+
+The actual fresh frozen source is
+`data/labels/cycle-native-human-review-frozen-20261021-v1/`.
+Its source manifest is
+`fde2ca1af51f2d505d11cef31af281fd0be761d2710e9573a97bc81345e8b570`.
+The complete recruitment packet has 28 chosen inputs and 52 alternatives,
+14 selected states and all 50 accounted for. Known training/inspected
+source/group/text reservations were supplied before selection, including
+all native and metadata quarantines. No model was consulted or human
+decision fabricated. This is a bounded recruitment packet, not a
+population-accuracy reference.
+
+```bash
+.venv/bin/python -I -B -m state_politics.analysis.human_review build \
+  --frozen data/labels/cycle-native-human-review-frozen-20261021-v1 \
+  --output data/human-review-native-REPLAY
+
+.venv/bin/python -I -B scripts/serve_research.py \
+  --evidence data/preview-cycle-evidence-v6 \
+  --sessions data/processed/verified-session-comparison-2023-2024-v2 \
+  --review data/human-review-native-20261021-v3 \
+  --port 8765
+```
+
+Open the printed loopback address. The server checks complete artifact
+hashes at startup and changed-file fingerprints before serving, permits
+only manifest-listed paths and binds only 127.0.0.1. It does not expose the
+repository or all of `data/`, create symlinks/copies, publish or load models.
+Human packet manifest:
+`a1fa21d6842f34ebc6bebb8ea51261abce1448b757dfa116bc5157823b7df457`.
+
+Reviewers use pseudonymous IDs and must explicitly select each decision,
+provide exact evidence/rationale and attest complete reading. Full original
+inputs are available separately from clearly named annotation-only exports.
+Draft recovery is browser/origin-local, not a backup or identity check.
+After a real reviewer exports a file:
+
+```bash
+.venv/bin/python -I -B -m state_politics.analysis.human_review validate \
+  --packet data/human-review-native-20261021-v3 \
+  --annotations ANNOTATIONS_ONLY_JSON
+.venv/bin/python -I -B -m state_politics.analysis.human_review import \
+  --packet data/human-review-native-20261021-v3 \
+  --annotations ANNOTATIONS_ONLY_JSON --output data/human-review-import-UNIQUE
+.venv/bin/python -I -B -m state_politics.analysis.human_review compare \
+  --packet data/human-review-native-20261021-v3 \
+  --annotations REVIEW_A_JSON --review-b REVIEW_B_JSON \
+  --output data/human-review-comparison-UNIQUE.json
+```
+
+These commands preserve original source and annotation bytes, reject
+changed/missing/duplicate/foreign records and retain both disputed reviews.
+Human provenance is explicitly self-attested; neither UI attestations,
+different pseudonyms nor agreement certify identity, independence or gold.
+No imported packet automatically enters training/evaluation or changes
+provisional-loader refusal. No real annotations currently exist.
+
 ## Unpublished cycle-evidence explorer
 
 ```bash

@@ -187,6 +187,69 @@ Full predictions and retained producers are in
 `data/processed/cycle-reviewed-only-evaluation-20261021-v1/`.
 No untouched-holdout, human-gold, causal or release claim is made.
 
+## Verified session comparison without silently redefining the study
+
+The calendar definition remains unchanged, but it no longer prevents
+inspection of a separate verified publisher-session frame. The actual
+`data/processed/verified-session-comparison-2023-2024-v2/` contains
+**37,644 exact NY/IL session members**, including **30,817 outside the
+calendar-candidate cohort** and 6,827 overlapping it. All original bill
+fields, full abstract alternatives, complete source-date ledger records
+and 37,644 native reference contexts survive.
+
+There are **59,193 complete native views for 34,945 members**, with **2,699
+members explicitly lacking retained native text**. This does not invent
+originals for those gaps. All 64 unmatched/source-only native contexts
+remain in a separate full-record export, never aliased to a known bill.
+All 50 states are accounted for; the other 48 have no supplied reviewed
+session scope, not zero activity. Original calendar membership, actual
+dates, reader alternatives and all false approval flags are unchanged.
+
+The complete native streams are byte-identical to the original bound
+preview partitions, including large-integer provenance and Unicode.
+Independent parent replay verifies every member's original bill fields,
+all 37,644 date-ledger records, original context alternatives and all
+59,193 text hashes. Manifest:
+`5188b96eb36fa8aebc4b409fc621b7d829cfb5718b1b90e1b47e6051f266b979`.
+Parent receipt:
+`621b8992e8351b1c2edf81d7cb5fdec1988fb56bd37c00836a432c3f8a106c3e`.
+This is a source comparison, not a new primary denominator, introduced
+universe, model admission, state closure or scientific result.
+
+## Human validation workflow and genuinely unannotated inputs
+
+A working local model-blind human review interface now replaces the
+previously manual handoff of labeling files. It shows the entire chosen
+native input, all preserved alternatives/provenance, the 21-topic rubric
+and explicit abstentions. It supports local draft recovery, complete raw
+source downloads and strict packet/hash/span-bound annotation export,
+validation and byte-preserving import. A two-review comparison preserves
+both original envelopes and every disagreement, without choosing a winner.
+
+The actual fresh source/group-reserved packet is
+`data/human-review-native-20261021-v3/`: **28 complete inputs / 52 alternatives,
+14 selected states, all 50 accounted for**. It excludes known training and
+previously inspected inputs, including quarantines and alternatives.
+The 72-slot deficit to the initial two-per-state target is explicit.
+Neither absence of retained native evidence nor exhausted reserved pools
+means zero legislative activity. Selection is length/state bounded,
+not representative sampling.
+
+**No actual human judgments have been created.** Human identity is
+self-attested, and distinct pseudonyms cannot establish independence.
+Synthetic browser/test annotations remain isolated fixtures. Imports
+do not produce canonical labels, independent gold or scientific approval.
+Packet manifest:
+`a1fa21d6842f34ebc6bebb8ea51261abce1448b757dfa116bc5157823b7df457`.
+Parent verified all 16 artifact hashes, exact ZIP/source bytes and all
+chosen full-text hashes; receipt:
+`21e9f5ed6723e1a628d4dfbda023aacccbadb2cacb93c45fd6f15bda31b09a35`.
+
+`scripts/serve_research.py` connects the existing evidence explorer,
+session comparison and blind review in one loopback-only workspace. It
+serves only unchanged manifest-listed artifacts, not the whole data
+directory, and performs no publication, collection or classification.
+
 ## Additional source evidence without date-cohort expansion
 
 Maine's retained source now has a complete separate receipt packet:

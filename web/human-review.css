@@ -1,0 +1,13 @@
+:root { color-scheme: light; font-family: system-ui, sans-serif; color: #172437; background: #f6f8fb; }
+body { margin: 0 auto; max-width: 1100px; padding: 1.5rem; line-height: 1.55; }
+section, header { background: white; border: 1px solid #bbc8d6; padding: 1.3rem; margin-bottom: 1rem; }
+label { display: block; margin: 1rem 0; }
+textarea { display: block; width: 95%; }
+input:not([type=checkbox]), select, button { padding: .5rem; max-width: 100%; }
+button, a { margin: .4rem; }
+pre { white-space: pre-wrap; overflow-wrap: anywhere; font-size: .95rem; border: 1px solid #c9d3e0; padding: 1rem; }
+details { margin: 1rem 0; }
+summary { cursor: pointer; font-weight: bold; }
+#status { font-weight: bold; }
+#record-identity, #binding { overflow-wrap: anywhere; font-family: monospace; }
+:focus-visible { outline: 3px solid #006ec9; }
