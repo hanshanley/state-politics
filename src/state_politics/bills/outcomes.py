@@ -86,14 +86,14 @@ def resolve_party_on_date(
     intervals: list[tuple[str, str, str]] | None,
     date: str | None,
 ) -> tuple[str, str]:
-    """Resolve event-time affiliation with an explicit evidence or missingness reason."""
+    """Resolve event-time affiliation using canonical dates and explicit missingness reasons."""
     if not intervals:
         return "unknown", "missing_membership"
     if not date:
         return "unknown", "missing_event_date"
     date = date[:10]
     try:
-        calendar_date.fromisoformat(date)
+        date = calendar_date.fromisoformat(date).isoformat()
     except ValueError:
         return "unknown", "invalid_event_date"
     active = []

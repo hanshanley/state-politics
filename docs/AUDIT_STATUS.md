@@ -9,6 +9,18 @@ and accounting packets**. The canonical audit has **308/342 passing checks**
 and **34 missing-artifact failures**. Known source, collection and scientific failures
 remain explicit; this is not a completed project or a certified classifier.
 
+**October 21 attribution repair:** event-time affiliation resolution now compares
+canonical calendar dates rather than the original spelling of an accepted date.
+Compact and ISO-week event dates previously passed validation but could select a
+later party or incorrectly return no active membership. Three synthetic pre-fix
+failures establish the defect; all 84 affected ingestion/outcome tests pass after
+normalization. Inclusive membership boundaries, conflicting/undated evidence and
+partially unresolved primary sponsors retain their existing unknown dispositions.
+The GPT-6.1 Sol worker's detailed evidence is retained in session artifact
+`party_attribution_date_normalization_gpt61sol_20261020T233624_dda176eb.json`.
+No full-dump incidence, revised corpus counts or affiliation-history recovery is
+claimed; no current-party backfill or analytical regeneration occurred.
+
 Virginia's bounded initial source packet now passes independent original-verifier
 reconstruction: **6,458 distinct introduced identities**, 6,698 raw rows including
 240 duplicates, twelve original HTML contexts and two PDFs / four pages per reader.
@@ -1105,8 +1117,20 @@ remain unchanged. The **19:41:16 UTC** parent receipt is
 `2f55291df56f9fd2e2f0adafc9de940c1be9389add41d86ab429ece505906df6`.
 Its raw proof, source/pins, PID/chronology and complete maps independently bind
 with Pennsylvania at 19:53:49 UTC as described above.
-The same original worker owns distinct immutable zero-HTTP **v3** remediation;
-there is no returned v3 or parent readiness acceptance yet. V2 worker evidence reports 1,184
+The same original worker returned distinct immutable zero-HTTP **v3** remediation.
+Its handoff remains `READY_FOR_PARENT_REPLAY_ONLY`, with 31,131 manifested payloads
+and manifest SHA-256
+`9fb0cba7863b6b0e6d142bb05eef261d81ae3ad15e2dab6cb42e058998bb76aa`.
+The independent saved-next-32 parent replay started at **October 21, 03:38:49 UTC**
+under original handle `missouri-successor-v3-parent-v1`, parent PID **90251**,
+source SHA-256
+`2055af8c974b5f6142d641f86133ea3cf9433b526a3bc2db697053e250ab0bfd`.
+Its startup record and exact command were observed once; no completed result is
+claimed here. It requires full v1/v2/v3 before/after content/eight-field maps,
+original installed controls before the stronger outer and fresh saved-packet
+reader/checkpoint reconstruction. It is not a new initializer, crash-suite or
+normal-driver execution and authorizes no actual recovery or HTTP.
+V2 worker evidence reports 1,184
 PDFs / 6,061 pages per reader, the unchanged original ledger prefix followed by
 ordinals 1409-1440, five semantic-fault cases and three real initializer crash
 boundaries. Manifest:
@@ -1211,7 +1235,7 @@ No collector or HTTP ran during these checks.
 | Georgia blocked source recovery | Independent original-verifier replay accepts four retained exchanges, including the terminal official sessions HTTP 401, and all 64 unchanged packet file/directory records. | Blocked-evidence acceptance only: native census unknown and zero originals recovered. The 4,723 regular and 67 special canonical candidates are comparison inputs, not native counts. No authentication bypass or further request is authorized. Late metadata capture and construction byte-restoration incidents prevent acquisition-time immutability claims. |
 | Ohio full unlabelled inputs | Independent original-verifier parent replay now passes: 2,279 contexts / 6,811 source views / 93,161,481 source tokens / 118,663 windows, zero discarded tokens and all 18,290 packet file/directory content and metadata records unchanged. Raw readiness, all 45 progress lines, final proof, empty stderr, source pins and full before/after maps are independently reconciled. | Views are not bills; HTML views include exact source markup. Five PDF-only and seven unsupported contexts remain, as do 1,007 absent HTML session headers. Runtime preload precedes the guard; the original verifier runs entirely afterward. No labels, forward passes, training or scientific admission. |
 | Missouri archived printed headers | Independent original-verifier replay accepts first-page observations for all 1,152 archived PDFs in both readers, plus ten focused regressions and joins to all 4,608 copied source dependencies. All 41,914 supplement/original file-directory records remain unchanged. | Matching House/First Regular Session/102nd General Assembly observations are accepted only as literal first-page evidence. The original 1,152 false flags remain; unprinted session years stay unknown. No original identity/status, filing-time or scientific certification is promoted. The full 4,960-context corpus remains unfinished. |
-| Missouri successor readiness | V1 returns a worker-reported private initializer and next-32 continuation packet; parent hashes its manifest, handoff and guard source, then executes fourteen harmless required-event probes against the exact callback. | Five required denials are absent. Parent has not accepted initialization or continuation. The same worker owns immutable zero-HTTP v2 guard, fresh-reader and actual initializer crash-gate completion; actual successor/staging/authorization remain absent. |
+| Missouri successor readiness | V1 and v2 parent probes establish five guard omissions and ten subsequent read-scope omissions respectively. The original worker has returned immutable zero-HTTP v3; an independent saved-next-32 reconstruction is running. | No completed v3 parent acceptance is claimed here. Saved reconstruction is distinct from a fresh initializer/crash-suite/normal-driver execution. Actual successor/staging/authorization remain absent, and the full 4,960-context corpus remains unfinished. |
 | North Carolina native-version preparation | V5 strict replay, four exact parser regressions and all fifteen original parent release tests pass, including the actual 2,004-population/final-20 fake-transport driver. Genuine readiness/private initializer gates and actual zero-HTTP initialization pass. Independent reconciliation v3 accepts all 44,342 initialized files, all 56,761 unchanged original file/directory records, sixteen exact inherited transport files and zero new requests. Finite-launch controls v4 now passes all seven fresh independent private behavioral suites, with full preflight before first freshness issuance, strict 120-second parent/child gates, and all 642 packet nodes unchanged. Raw proofs/commands/current nodes independently bind. Separate guarded and source-inspected inventory-only measurements finish in 576.53 and 661.20 seconds respectively, preserving all original/target records. | Both earlier reconciliation failures, old timeout defects, the v2 child-self-match counterexample and the first v4 parent fixture-cleanup failure remain preserved. Different cache/load conditions prevent attributing timing differences to audit overhead; neither run measures the complete launcher or proves infeasibility. Private synthetic clocks, process fixtures and mocked curl dispatch do not certify real campaign timing/transport. Fresh actual maps, pins, duplicate absence, strict freshness and exclusive finite authorization remain required. No collection is authorized. Historical original-path replacement/metadata failures remain unreconciled; restored bytes do not restore historical immutability. |
 | Tennessee blocked native recovery | Independent parent replay reconstructs the single retained official robots exchange and frozen canonical populations: 9,665 regular, 474 extraordinary-session and 32,407 outside-target rows. All 38 packet file/directory records remain unchanged; raw proof, generated source and complete map bytes reconcile. | Robots disallows all crawling; no bypass or continuation is authorized. Native boundaries/counts and introduced originals remain unknown; zero bill originals recovered. Canonical rows are not an official native census. Acquisition-time immutability and upstream history-scan completeness are not certified. |
 | Classification | Four saved official English ModernBERT-base pilots compared on the same 52 platform references: external-only 41/52, joint 47/52, broader-source 47/52, Republican-expanded 49/52. The fourth run correctly rejects 3/4 mixtures and 6/6 non-policy units. | The fourth run loses one policy decision, still accepts a mixture above 0.999 and regresses on insufficient-evidence and taxonomy-boundary development cases. Both sets are examined diagnostics, not fresh independent tests. Independent review and empirical gates remain required. No candidate is approved. |

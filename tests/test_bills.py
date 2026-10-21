@@ -301,6 +301,71 @@ def test_build_bills_uses_historical_memberships_and_preserves_unresolved_primar
     ]
 
 
+@pytest.mark.parametrize(("primary", "person_id", "entity_type", "expected"), [
+    ("t", None, "organization", "unknown"),
+    ("t", "missing", "person", "unknown"),
+    ("f", None, "organization", "D"),
+])
+def test_build_bills_preserves_sponsor_roles_and_partially_unresolved_primaries(
+    monkeypatch, primary, person_id, entity_type, expected,
+):
+    from state_politics.bills import ingest, openstates_dump
+
+    jurisdiction = "ocd-jurisdiction/country:us/state:tx/government"
+    unresolved = {
+        "id": "unresolved", "bill_id": "bill", "person_id": person_id,
+        "entity_type": entity_type, "organization_id": "committee", "name": "Source name",
+        "classification": "source-role", "primary": primary,
+    }
+    tables = {
+        "opencivicdata_jurisdiction": [{"id": jurisdiction}],
+        "opencivicdata_legislativesession": [{
+            "id": "session", "jurisdiction_id": jurisdiction, "start_date": "2024-01-01",
+        }],
+        "opencivicdata_organization": [
+            {"id": "dem", "classification": "party", "name": "Democratic"},
+        ],
+        "opencivicdata_membership": [
+            {"person_id": "known", "organization_id": "dem",
+             "start_date": "2020-01-01", "end_date": None},
+            {"person_id": None, "organization_id": "dem",
+             "start_date": "2020-01-01", "end_date": None},
+        ],
+        "opencivicdata_bill": [{
+            "id": "bill", "legislative_session_id": "session",
+            "first_action_date": "2024-06-01",
+        }],
+        "opencivicdata_billsponsorship": [
+            {"bill_id": "bill", "person_id": "known", "entity_type": "person",
+             "primary": "t"},
+            unresolved,
+        ],
+    }
+    def stream(path, table):
+        return iter(tables.get(table, []))
+
+    monkeypatch.setattr(ingest, "stream_table", stream)
+    monkeypatch.setattr(openstates_dump, "stream_table", stream)
+    bills, sponsors = ingest.build_bills("fixture")
+    assert bills.sponsor_party.tolist() == [expected]
+    assert bills.n_sponsors.tolist() == [2]
+    assert bills.n_primary_sponsors.tolist() == [2 if primary == "t" else 1]
+    assert bills.n_unresolved_primary_sponsors.tolist() == [int(primary == "t")]
+    assert bills.sponsor_attribution_basis.tolist() == ["primary"]
+    original = sponsors.iloc[1]
+    for field in ("person_id", "entity_type", "organization_id", "classification"):
+        if unresolved[field] is None:
+            assert pd.isna(original[field])
+        else:
+            assert original[field] == unresolved[field]
+    assert original.sponsor_name == unresolved["name"]
+    assert original.party == "unknown"
+    assert original.party_resolution == "unresolved"
+    assert original.party_resolution_reason == (
+        "missing_person_id" if person_id is None else "missing_membership"
+    )
+
+
 def test_evidence_retains_source_versions_and_reconciles_exact_bill_joins(tmp_path, monkeypatch):
     from state_politics.bills import ingest
 

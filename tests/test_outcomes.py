@@ -51,6 +51,34 @@ def test_party_membership_resolves_at_vote_date():
     assert party_on_date(None, "2025-05-01") == "unknown"
 
 
+@pytest.mark.parametrize("event_date", ["20240101", "2024-W01-1"])
+def test_party_membership_compares_parsed_event_dates_not_iso_spellings(event_date):
+    intervals = [
+        ("2024-01-01", "2024-03-31", "D"),
+        ("2024-04-01", "", "R"),
+    ]
+    assert resolve_party_on_date(intervals, event_date) == ("D", "active_membership")
+
+
+@pytest.mark.parametrize(("intervals", "event_date", "expected"), [
+    ([("2024-01-01", "2024-12-31", "D")], "2024-01-01", ("D", "active_membership")),
+    ([("2024-01-01", "2024-12-31", "D")], "20241231", ("D", "active_membership")),
+    ([("2024-01-01", "2024-12-31", "D")], "2024-12-31T23:59:59",
+     ("D", "active_membership")),
+    ([("", "2024-12-31", "D")], "2024-12-31", ("D", "active_membership")),
+    ([("2024-01-01", "2024-06-01", "D"), ("2024-06-01", "", "R")], "2024-06-01",
+     ("unknown", "conflicting_active_memberships")),
+    ([("2024-01-01", "2024-12-31", "D")] * 2 + [("2024-06-01", "", "D")],
+     "2024-06-01", ("D", "active_membership")),
+    ([("", "", "D"), ("2024-01-01", "", "D")], "2024-06-01",
+     ("unknown", "undated_membership")),
+])
+def test_party_membership_boundaries_duplicates_and_undated_evidence(
+    intervals, event_date, expected,
+):
+    assert resolve_party_on_date(intervals, event_date) == expected
+
+
 def test_party_membership_never_uses_expired_future_or_conflicting_affiliations():
     intervals = [("2020-01-01", "2020-12-31", "D"), ("2022-01-01", "", "R")]
     assert party_on_date(intervals, "2019-01-01") == "unknown"
