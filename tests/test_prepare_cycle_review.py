@@ -138,6 +138,15 @@ def test_distinct_assistant_reviewer_identity_is_preserved():
     assert labels[0]["human_gold"] is False
 
 
+def test_native_full_input_reservation_does_not_treat_unused_title_as_input():
+    reservation = Reservation([{"record_id": "old", "text": "A generic title"}])
+    native = {"source_type": "native_text", "text": "Entirely distinct complete policy body",
+              "title": "A generic title"}
+    assert reservation.overlap(native) is None
+    assert reservation.overlap({**native, "text": "A generic title"}) == "reserved_exact_text"
+    assert reservation.overlap({**native, "source_type": "bill_metadata"}) == "reserved_exact_text"
+
+
 @pytest.fixture
 def project_workspace():
     # Keep filesystem tests inside the project, never OS temporary directories.
@@ -293,3 +302,32 @@ def test_train_ambiguity_is_quarantined_without_reason_or_input_remapping(
     with pytest.raises(FileExistsError):
         assemble(output, decisions_path)
     assert {path.name: binding(path) for path in output.iterdir()} == before
+
+
+def test_jsonl_unicode_separators_survive_full_assembly(project_workspace):
+    packet = source_packet(project_workspace, n_contexts=1)
+    path = packet / "candidate_metadata_views.parquet"
+    views = pd.read_parquet(path)
+    text = views.loc[0, "text"] + "preserved\u2028line\u2029paragraph"
+    views.loc[0, "text"] = text
+    views.loc[0, "input_sha256"] = digest(text)
+    views.loc[0, "n_input_characters"] = len(text)
+    views.to_parquet(path)
+    manifest_path = packet / "manifest.json"
+    manifest = json.loads(manifest_path.read_bytes())
+    manifest["artifacts"][path.name] = binding(path)
+    write_json(manifest_path, manifest)
+    output = project_workspace / "unicode-review"
+    freeze(packet, output, reservations=())
+    row = review.read_jsonl(output / "review_packet.jsonl")[0]
+    decisions = project_workspace / "decisions.jsonl"
+    write_jsonl(decisions, [{
+        "record_id": row["record_id"], "input_sha256": row["input_sha256"],
+        "topic": 1, "abstention_reason": None,
+        "reviewer_id": "fixture", "reviewer_type": "assistant", "reviewed_on": "2026-10-21",
+        "input_reviewed_in_full": True, "input_only_no_external_context": True,
+        "rationale": "Complete synthetic review preserving Unicode source separators.",
+        "evidence_spans": ["preserved\u2028line\u2029paragraph"],
+    }])
+    assert assemble(output, decisions)["n_labels"] == 1
+    assert review.read_jsonl(output / "labels.jsonl")[0]["text"] == text

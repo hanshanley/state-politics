@@ -79,6 +79,13 @@ def write_jsonl(path: Path, rows: list[dict]) -> None:
     path.write_text("".join(canonical(row) + "\n" for row in rows), encoding="utf-8")
 
 
+def read_jsonl(path: Path) -> list[dict]:
+    return [
+        json.loads(line)
+        for line in path.read_bytes().decode("utf-8").split("\n") if line.strip()
+    ]
+
+
 def fingerprint(path: Path) -> dict:
     stat = path.stat()
     return {
@@ -151,8 +158,11 @@ class Reservation:
             return "reserved_identity"
         # Check complete inputs AND their source fields; do not reuse a reserved
         # abstract by merely prepending a new title.
+        fields = ("text",) if row.get("source_type") == "native_text" else (
+            "text", "title", "abstract",
+        )
         texts = {
-            row[key] for key in ("text", "title", "abstract")
+            row[key] for key in fields
             if isinstance(row.get(key), str) and normalized_text(row[key])
         }
         for text in texts:
@@ -364,9 +374,10 @@ def freeze(
         loaded = load_examples(path, codes)
         reservation_counts[str(path)] = len(loaded)
         # Immediately discard all labels and other non-reservation fields.
-        reserved_rows.extend(
-            {key: row[key] for key in ("record_id", "group_id", "text")} for row in loaded
-        )
+        reserved_rows.extend({
+            key: row[key] for key in ("record_id", "group_id", "bill_id", "view_id", "text")
+            if key in row
+        } for row in loaded)
     views = json.loads(pd.read_parquet(packet / artifacts[0]).to_json(orient="records"))
     bills = json.loads(pd.read_parquet(packet / artifacts[1]).to_json(orient="records"))
     selected, accounting = sample_views(
@@ -514,15 +525,19 @@ def assemble_decisions(
                    for span in spans)
         ):
             raise ValueError("evidence spans must be exact nonempty input substrings")
+        basis = "native" if original.get("input_basis") == "retained_native_text" else "metadata"
         labels.append({
             **original, **decision, "text_sha256": original["input_sha256"],
             "split": review_split, "domain": "bill", "label_origin": "reviewed_target",
-            "label_version": SEED if review_split == "challenge"
-            else "cycle-metadata-research-training-review-v1",
+            "label_version": original.get("review_label_version", SEED)
+            if review_split == "challenge" else original.get(
+                "review_label_version", "cycle-metadata-research-training-review-v1",
+            ),
             "evidence_tier": "blind_assistant_input_diagnostic" if review_split == "challenge"
             else "blind_assistant_research_training_advisory",
             "source_url": (
-                f"urn:state-politics:cycle-metadata:sha256:{original['input_sha256']}"
+                f"urn:state-politics:cycle-{basis}"
+                f":sha256:{original['input_sha256']}"
                 f":view:{original['view_id']}"
             ),
             "source_sha256": original["source_view_sha256"],
@@ -569,13 +584,9 @@ def assemble(output: Path, decisions_path: Path) -> dict:
     source_paths = [Path(row["path"]) for row in frozen["sources_before"]]
     if [fingerprint(path) for path in source_paths] != frozen["sources_before"]:
         raise ValueError("source fingerprints changed since freeze")
-    packet = [
-        json.loads(line) for line in (output / "review_packet.jsonl").read_text().splitlines()
-    ]
+    packet = read_jsonl(output / "review_packet.jsonl")
     decisions_binding = binding(decisions_path)
-    decisions = [
-        json.loads(line) for line in decisions_path.read_text().splitlines() if line.strip()
-    ]
+    decisions = read_jsonl(decisions_path)
     codes = [topic.code for topic in load_topics(output / "topics.yml")]
     reviewed = assemble_decisions(
         packet, decisions, codes, review_split=plan["review_split"],
@@ -608,7 +619,19 @@ def assemble(output: Path, decisions_path: Path) -> dict:
             reserved.extend(load_examples(path, codes))
     validate_split_isolation([*reserved, *validated])
     # Repeat the text/identity reservation check, independent of sampler state.
-    reservation = Reservation(reserved)
+    reserved_inputs = []
+    for path in frozen.get("reservation_input_paths", []):
+        source = Path(path)
+        if source not in source_paths:
+            raise ValueError("unbound reservation input file")
+        for row in read_jsonl(source):
+            if (
+                not isinstance(row.get("text"), str)
+                or digest(row["text"]) != row.get("input_sha256")
+            ):
+                raise ValueError("reservation input text/hash mismatch")
+            reserved_inputs.append(row)
+    reservation = Reservation([*reserved, *reserved_inputs])
     for row in reviewed:
         if reason := reservation.overlap(row["original_view"]):
             raise ValueError(f"assembled reservation collision: {reason}")

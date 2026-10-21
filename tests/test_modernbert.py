@@ -33,6 +33,8 @@ from state_politics.analysis.state_references import (
 )
 from state_politics.analysis.taxonomy import DEFAULT_TOPICS_PATH, load_topics
 from state_politics.analysis.train_topics import (
+    complete_training_windows,
+    document_log_probabilities,
     label_support,
     load_examples,
     training_indices,
@@ -67,6 +69,67 @@ def test_invalid_target_sampling_weight_fails_explicitly(weight):
             [{"label_origin": "external_coded"}], seed=17, epoch=0,
             reviewed_target_weight=weight,
         )
+
+
+class SourcePositionTokenizer:
+    cls_token_id = 101
+    sep_token_id = 102
+
+    def encode(self, text, add_special_tokens=False):
+        tokens = list(range(1, len(text) + 1))
+        return [101, *tokens, 102] if add_special_tokens else tokens
+
+    def __call__(self, text, **kwargs):
+        assert kwargs["truncation"] is False
+        return {"input_ids": self.encode(text),
+                "offset_mapping": [(index, index + 1) for index in range(len(text))]}
+
+def test_complete_training_retains_long_source_in_bounded_windows():
+    tokenizer = SourcePositionTokenizer()
+    text = "Complete\u2028source\n\nwith every character retained."
+    windows, count = complete_training_windows(
+        tokenizer, text, "bill", max_tokens=32, overlap=2,
+    )
+    prefix, _ = policy_tokens(tokenizer, "", "bill")
+    assert count == len(text) and len(windows) > 1
+    assert all(len(window["input_ids"]) <= 32 for window in windows)
+    covered = set()
+    for window in windows:
+        ids = window["input_ids"]
+        assert ids[:1 + len(prefix)] == [101, *prefix] and ids[-1] == 102
+        covered.update(ids[1 + len(prefix):-1])
+    assert covered == set(range(1, len(text) + 1))
+
+
+def test_document_likelihood_is_one_target_and_keeps_all_window_gradients():
+    torch = pytest.importorskip("torch")
+    logits = torch.tensor([[2.0, -1.0], [0.0, 1.0], [-2.0, 3.0]], requires_grad=True)
+    pooled = document_log_probabilities(logits, [2, 1])
+    probabilities = torch.softmax(logits, dim=-1)
+    assert torch.allclose(pooled.exp(), torch.stack([
+        probabilities[:2].mean(dim=0), probabilities[2],
+    ]))
+    targets = torch.tensor([0, 1])
+    torch.nn.NLLLoss()(pooled, targets).backward()
+    assert torch.isfinite(logits.grad).all()
+    assert (logits.grad.abs().sum(dim=1) > 0).all()
+    single = logits.detach().clone().requires_grad_()
+    assert torch.allclose(
+        torch.nn.NLLLoss()(document_log_probabilities(single, [1, 1, 1]),
+                           torch.tensor([0, 1, 1])),
+        torch.nn.CrossEntropyLoss()(single, torch.tensor([0, 1, 1])),
+    )
+
+
+def test_document_likelihood_remains_finite_and_rejects_missing_windows():
+    torch = pytest.importorskip("torch")
+    logits = torch.tensor([[9000.0, -9000.0], [-9000.0, 9000.0]])
+    assert torch.isfinite(document_log_probabilities(logits, [2])).all()
+    for counts in ([], [0, 2], [True, 1], [1], [3]):
+        with pytest.raises(ValueError, match="exact positive"):
+            document_log_probabilities(logits, counts)
+    with pytest.raises(ValueError, match="finite window"):
+        document_log_probabilities(torch.tensor([[float("inf"), 0.0]]), [1])
 
 
 def test_external_state_csv_preserves_logical_records_and_rejects_malformed_sources(tmp_path):

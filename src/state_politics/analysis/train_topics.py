@@ -26,6 +26,7 @@ from .modernbert import (
     model_input_ids,
     modernbert_config,
     policy_tokens,
+    section_windows,
 )
 from .taxonomy import DEFAULT_TOPICS_PATH, load_topics
 
@@ -263,8 +264,56 @@ def training_indices(
     )
 
 
+def complete_training_windows(tokenizer, text, domain, *, max_tokens, overlap):
+    prefix, tokens = policy_tokens(tokenizer, text, domain)
+    encoded = tokenizer(
+        text, add_special_tokens=False, return_offsets_mapping=True, truncation=False,
+    )
+    if encoded["input_ids"] != tokens or len(encoded["offset_mapping"]) != len(tokens):
+        raise ValueError("full training tokens/offsets disagree with source encoding")
+    if not tokens:
+        raise ValueError("complete training unit has no source tokens")
+    overhead = len(model_input_ids(tokenizer, prefix))
+    ranges = section_windows(text, encoded["offset_mapping"], max_tokens - overhead, overlap)
+    windows, covered = [], 0
+    for start, end in ranges:
+        if not 0 <= start <= covered < end <= len(tokens):
+            raise ValueError("training windows must cover every source token without gaps")
+        ids = model_input_ids(tokenizer, prefix + tokens[start:end])
+        if len(ids) > max_tokens:
+            raise ValueError("complete training window exceeds token budget")
+        windows.append({"input_ids": ids})
+        covered = end
+    if covered != len(tokens):
+        raise ValueError("complete training discarded source tokens")
+    return windows, len(tokens)
+
+
+def document_log_probabilities(window_logits, window_counts):
+    """One differentiable complete-unit likelihood, never per-window target labels."""
+    import torch
+
+    if (
+        window_logits.ndim != 2 or not window_counts
+        or any(type(count) is not int or count < 1 for count in window_counts)
+        or sum(window_counts) != window_logits.shape[0]
+        or not torch.isfinite(window_logits).all()
+    ):
+        raise ValueError("finite window logits and exact positive document counts required")
+    values = torch.log_softmax(window_logits, dim=-1)
+    start = 0
+    documents = []
+    for count in window_counts:
+        documents.append(torch.logsumexp(values[start:start + count], dim=0) - math.log(count))
+        start += count
+    return torch.stack(documents)
+
+
 def train(args) -> Path:
     reviewed_weight = _sampling_weight(getattr(args, "reviewed_target_sampling_weight", 1.0))
+    complete_documents = getattr(args, "allow_document_windows", False)
+    if type(complete_documents) is not bool:
+        raise ValueError("allow_document_windows must be boolean")
     topics = load_topics(args.topics)
     codes = [topic.code for topic in topics]
     rows = load_examples(args.labels, codes)
@@ -273,6 +322,11 @@ def train(args) -> Path:
         validate_source_reservation(rows, reservation_path)
         if reservation_path is not None else None
     )
+    if (
+        type(args.max_tokens) is not int or not 32 <= args.max_tokens <= 8192
+        or type(args.overlap) is not int or not 0 <= args.overlap < args.max_tokens - 16
+    ):
+        raise ValueError("training token budget/overlap is incompatible with checkpoint loading")
     train_rows = [row for row in rows if row["split"] == "train"]
     counts = Counter(row["topic"] for row in train_rows)
     outputs = [*codes, None] if counts[None] else codes
@@ -298,7 +352,19 @@ def train(args) -> Path:
         MODEL_ID, revision=MODEL_REVISION, trust_remote_code=False
     )
     examples = []
+    complete_coverage = Counter()
     for row in train_rows:
+        if complete_documents:
+            windows, n_tokens = complete_training_windows(
+                tokenizer, row["text"], row["domain"],
+                max_tokens=args.max_tokens, overlap=args.overlap,
+            )
+            examples.append((windows, outputs.index(row["topic"])))
+            complete_coverage.update({
+                "n_complete_units": 1, "n_source_tokens": n_tokens,
+                "n_windows": len(windows), "n_multichunk_units": int(len(windows) > 1),
+            })
+            continue
         prefix, tokens = policy_tokens(tokenizer, row["text"], row["domain"])
         encoded = {"input_ids": model_input_ids(tokenizer, prefix + tokens)}
         if len(encoded["input_ids"]) > args.max_tokens:
@@ -332,8 +398,16 @@ def train(args) -> Path:
     weights = torch.tensor(
         [len(train_rows) / (len(outputs) * counts[code]) for code in outputs], device=device
     )
-    criterion = torch.nn.CrossEntropyLoss(weight=weights)
+    criterion = (
+        torch.nn.NLLLoss(weight=weights)
+        if complete_documents else torch.nn.CrossEntropyLoss(weight=weights)
+    )
     args.out.mkdir(parents=True)
+    code_sources = {
+        name: Path(__file__).with_name(name).read_bytes()
+        for name in ("train_topics.py", "modernbert.py", "taxonomy.py")
+    }
+    topic_source = args.topics.read_bytes()
     manifest = {
         "schema_version": 2 if counts[None] else 1,
         "model_id": MODEL_ID, "base_revision": MODEL_REVISION,
@@ -343,9 +417,10 @@ def train(args) -> Path:
         "labels_sha256": sha256_file(args.labels),
         "source_reservation": reservation,
         "code_sha256": {
-            name: sha256_file(Path(__file__).with_name(name))
-            for name in ("train_topics.py", "modernbert.py", "taxonomy.py")
+            name: hashlib.sha256(content).hexdigest() for name, content in code_sources.items()
         },
+        "producer_sources": {name: f"producer_{name}" for name in code_sources},
+        "taxonomy_source": "producer_topics.yml",
         "dependency_versions": {
             package: importlib.metadata.version(package)
             for package in ("torch", "transformers", "tokenizers", "safetensors", "numpy")
@@ -374,6 +449,15 @@ def train(args) -> Path:
             "draws_per_epoch": len(train_rows),
             "raw_label_rows_are_not_duplicated": True,
         },
+        "training_unit_policy": (
+            "complete_document_log_mean_probability"
+            if complete_documents else "complete_single_window_unit"
+        ),
+        "complete_document_coverage": {
+            **dict(complete_coverage), "n_discarded_source_tokens": 0,
+            "per_window_label_propagation": False,
+            "scope": "unique_complete_training_input_encoding_before_sampling",
+        } if complete_documents else None,
         "optimizer": {"name": "AdamW", "weight_decay": 0.01, "gradient_clip_norm": 1.0},
         "training_history": [],
         "limitations": [
@@ -392,12 +476,20 @@ def train(args) -> Path:
         loss_sum = 0.0
         for start in range(0, len(indices), args.batch_size):
             batch = [examples[i] for i in indices[start:start + args.batch_size]]
+            window_counts = [len(item[0]) for item in batch] if complete_documents else None
+            encodings = (
+                [window for item in batch for window in item[0]]
+                if complete_documents else [item[0] for item in batch]
+            )
             inputs = tokenizer.pad(
-                [item[0] for item in batch], padding=True, return_tensors="pt"
+                encodings, padding=True, return_tensors="pt"
             ).to(device)
             targets = torch.tensor([item[1] for item in batch], device=device)
             optimizer.zero_grad(set_to_none=True)
-            loss = criterion(model(**inputs).logits, targets)
+            logits = model(**inputs).logits
+            if complete_documents:
+                logits = document_log_probabilities(logits, window_counts)
+            loss = criterion(logits, targets)
             if not torch.isfinite(loss):
                 raise RuntimeError("non-finite training loss; checkpoint is not promotable")
             loss.backward()
@@ -428,6 +520,9 @@ def train(args) -> Path:
     manifest["encoder_update_verified"] = {"parameter": encoder_name, "changed": True}
     model.save_pretrained(args.out, safe_serialization=True)
     tokenizer.save_pretrained(args.out)
+    for name, content in code_sources.items():
+        (args.out / f"producer_{name}").write_bytes(content)
+    (args.out / "producer_topics.yml").write_bytes(topic_source)
     manifest["checkpoint_files"] = {
         path.name: sha256_file(path) for path in args.out.iterdir() if path.is_file()
     }
@@ -454,6 +549,11 @@ def main(argv: list[str] | None = None) -> int:
         "--reviewed-target-sampling-weight", type=float, default=1.0,
         help="explicit research sampling weight for reviewed target examples; "
         "one preserves the original shuffle, other weights sample with replacement",
+    )
+    parser.add_argument(
+        "--allow-document-windows", action="store_true",
+        help="train one complete-unit likelihood over all bounded windows, never truncate "
+        "or propagate the document label to separate window training examples",
     )
     args = parser.parse_args(argv)
     if (
