@@ -309,6 +309,18 @@ def document_log_probabilities(window_logits, window_counts):
     return torch.stack(documents)
 
 
+def class_weight_values(counts, outputs, policy="inverse_frequency"):
+    if (
+        policy not in ("inverse_frequency", "uniform") or not outputs
+        or any(type(counts.get(code)) is not int or counts[code] < 1 for code in outputs)
+    ):
+        raise ValueError("valid class-weight policy and positive output support required")
+    if policy == "uniform":
+        return [1.0] * len(outputs)
+    n_rows = sum(counts.values())
+    return [n_rows / (len(outputs) * counts[code]) for code in outputs]
+
+
 def train(args) -> Path:
     reviewed_weight = _sampling_weight(getattr(args, "reviewed_target_sampling_weight", 1.0))
     complete_documents = getattr(args, "allow_document_windows", False)
@@ -333,6 +345,8 @@ def train(args) -> Path:
     missing = set(codes) - counts.keys()
     if missing:
         raise ValueError(f"training labels missing topics: {sorted(missing)}")
+    class_weighting = getattr(args, "class_weighting", "inverse_frequency")
+    loss_weights = class_weight_values(counts, outputs, class_weighting)
     if not any(row["split"] == "dev" for row in rows):
         raise ValueError("reviewed target-domain development labels are required")
     if args.out.exists():
@@ -395,9 +409,7 @@ def train(args) -> Path:
     )
     initial_encoder_parameter = encoder_parameter.detach().cpu().clone()
     optimizer = torch.optim.AdamW(model.parameters(), lr=args.learning_rate, weight_decay=0.01)
-    weights = torch.tensor(
-        [len(train_rows) / (len(outputs) * counts[code]) for code in outputs], device=device
-    )
+    weights = torch.tensor(loss_weights, device=device)
     criterion = (
         torch.nn.NLLLoss(weight=weights)
         if complete_documents else torch.nn.CrossEntropyLoss(weight=weights)
@@ -453,6 +465,7 @@ def train(args) -> Path:
             "complete_document_log_mean_probability"
             if complete_documents else "complete_single_window_unit"
         ),
+        "loss_weighting": {"kind": class_weighting, "output_weights": loss_weights},
         "complete_document_coverage": {
             **dict(complete_coverage), "n_discarded_source_tokens": 0,
             "per_window_label_propagation": False,
@@ -554,6 +567,10 @@ def main(argv: list[str] | None = None) -> int:
         "--allow-document-windows", action="store_true",
         help="train one complete-unit likelihood over all bounded windows, never truncate "
         "or propagate the document label to separate window training examples",
+    )
+    parser.add_argument(
+        "--class-weighting", choices=("inverse_frequency", "uniform"),
+        default="inverse_frequency", help="explicit loss weighting; default unchanged",
     )
     args = parser.parse_args(argv)
     if (

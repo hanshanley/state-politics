@@ -5,6 +5,7 @@ import hashlib
 import json
 import random
 import re
+from collections import Counter
 
 import pytest
 
@@ -33,6 +34,7 @@ from state_politics.analysis.state_references import (
 )
 from state_politics.analysis.taxonomy import DEFAULT_TOPICS_PATH, load_topics
 from state_politics.analysis.train_topics import (
+    class_weight_values,
     complete_training_windows,
     document_log_probabilities,
     label_support,
@@ -130,6 +132,17 @@ def test_document_likelihood_remains_finite_and_rejects_missing_windows():
             document_log_probabilities(logits, counts)
     with pytest.raises(ValueError, match="finite window"):
         document_log_probabilities(torch.tensor([[float("inf"), 0.0]]), [1])
+
+
+def test_class_loss_default_is_preserved_and_uniform_is_explicit():
+    counts = Counter({1: 10, 2: 30, None: 20})
+    assert class_weight_values(counts, [1, 2, None]) == [2.0, 2 / 3, 1.0]
+    assert class_weight_values(counts, [1, 2, None], "uniform") == [1.0, 1.0, 1.0]
+    for bad in ("automatic", None, True):
+        with pytest.raises(ValueError, match="class-weight"):
+            class_weight_values(counts, [1, 2, None], bad)
+    with pytest.raises(ValueError, match="positive output support"):
+        class_weight_values(counts, [1, 3], "uniform")
 
 
 def test_external_state_csv_preserves_logical_records_and_rejects_malformed_sources(tmp_path):
