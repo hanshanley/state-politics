@@ -47,6 +47,45 @@ These are input/output-contract repairs, not measured accuracy gains, official
 checkpoint inference, new training, rubric approval or release certification.
 No saved model, threshold, source corpus, canonical label or publication file changed.
 
+**October 21 New York terminal accounting:** the original full collector has
+completed with exit 0. A read-only parent observation reconciles all **24,315 typed
+candidates**, 24,317 complete-population dispositions and **zero pending**:
+20,125 successes, 4,170 unverified headers and 22 failures. The 24,299 additional
+candidate results have matching reserve/start/result triplets; their physical
+exchanges plus 24 inherited exchanges total **24,323**, against the 50,000 ceiling.
+The twenty HTTP 302 outcomes remain failures; no redirect target was followed.
+The original collector leaves **379 normal checkpoint directories and an unsealed
+43-candidate tail**. Directory names and tail membership were checked, not complete
+checkpoint contents or PDF/extraction fidelity.
+
+The ledger also contains a real unresolved lifecycle anomaly: **A 255**, request
+`00233_a255_attempt1`, was reserved, cancelled, then started and completed under
+the same request ID. Physical JSONL lines 697-700 preserve all four events.
+Cancellation occurred on October 19 at 18:46:39.689370 UTC, before the recorded
+start at 18:46:39.832821 UTC. The later HTTP 200 result does not make this a
+compliant lifecycle, and its historical cause is unknown. Nothing was removed,
+reconciled away or promoted. The distinct successful observer reports
+`PASS_TERMINAL_ACCOUNTING_WITH_LIFECYCLE_ANOMALY`; its predecessor's failed
+three-event-only assumption is preserved separately.
+
+All **24,306 selected original files** retained their complete content/eight-field
+snapshots before and after the observation; this is not a full file/directory
+census. Session receipt `ny_genuine_terminal_observation_parent_actual_v2.json`
+has SHA-256 `52b128039eede60bbde7b051297d0b79632ed0ef9afaf43080b21fa074d21a33`;
+selected maps `ny_genuine_terminal_selected_maps_parent_v2.json` have SHA-256
+`96399f0c91f435fe85e93495038ff9ae05c813d9a8715b143ff3b90ca2656b5c`.
+The observer ran October 21 at 11:35:36-11:35:47 UTC. The original PID was absent;
+that observation is not an exact OS exit time. Genuine whole-source reconstruction,
+lifecycle acceptance, final-tail sealing and completed-archive replay remain open.
+
+Two new **GPT-6.1 Sol** assignments are now bounded to read-only genuine New York
+preseal reconstruction and fresh, private Missouri initializer/crash/next-32
+execution, respectively. Neither assignment is a completed result. No original
+source recovery, collection restart, new HTTP, label/model change, scientific
+admission or publication is authorized by these offline checks. These observations
+are supplemental to v54, not retroactive inputs; ignored source/session artifacts
+remain local-only and are not backed up by a Git push.
+
 Virginia's bounded initial source packet now passes independent original-verifier
 reconstruction: **6,458 distinct introduced identities**, 6,698 raw rows including
 240 duplicates, twelve original HTML contexts and two PDFs / four pages per reader.
