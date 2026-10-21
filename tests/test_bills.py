@@ -301,6 +301,74 @@ def test_build_bills_uses_historical_memberships_and_preserves_unresolved_primar
     ]
 
 
+@pytest.mark.parametrize(("event_date", "valid"), [
+    ("2024-06-01Tnot-a-time", False),
+    ("2024-06-01T25:00:00", False),
+    ("2024-06-01/2025-06-01", False),
+    ("2024-06-01 trailing text", False),
+    ("20240601T235959", True),
+    ("2024-W22-6T23:59:59", True),
+    ("2024-06-01T23:59:59-05:00", True),
+])
+def test_sponsor_and_voter_parties_validate_the_complete_event_date(
+    monkeypatch, tmp_path, event_date, valid,
+):
+    from state_politics.bills import ingest, openstates_dump, outcomes
+
+    jurisdiction = "ocd-jurisdiction/country:us/state:tx/government"
+    tables = {
+        "opencivicdata_jurisdiction": [{"id": jurisdiction}],
+        "opencivicdata_legislativesession": [{
+            "id": "session", "jurisdiction_id": jurisdiction, "start_date": "2024-01-01",
+        }],
+        "opencivicdata_organization": [{
+            "id": "dem", "classification": "party", "name": "Democratic",
+        }],
+        "opencivicdata_membership": [{
+            "person_id": "person", "organization_id": "dem",
+            "start_date": "2024-06-01", "end_date": "2024-06-01",
+        }],
+        "opencivicdata_bill": [{
+            "id": "bill", "legislative_session_id": "session", "first_action_date": event_date,
+        }],
+        "opencivicdata_billsponsorship": [{
+            "bill_id": "bill", "person_id": "person", "primary": "t",
+        }],
+        "opencivicdata_voteevent": [{
+            "id": "vote", "bill_id": "bill", "start_date": event_date,
+        }],
+        "opencivicdata_personvote": [{
+            "vote_event_id": "vote", "voter_id": "person", "option": "yes",
+        }],
+    }
+
+    def stream(path, table):
+        return iter(tables.get(table, []))
+
+    monkeypatch.setattr(ingest, "stream_table", stream)
+    monkeypatch.setattr(openstates_dump, "stream_table", stream)
+    bills, sponsors = ingest.build_bills("synthetic")
+    expected_party = "D" if valid else "unknown"
+    assert bills.sponsor_party.tolist() == [expected_party]
+    assert bills.party_attribution_date.tolist() == ["2024-06-01" if valid else ""]
+    assert bills.party_attribution_date_basis.tolist() == [
+        "first_action_proxy" if valid else "invalid_first_action",
+    ]
+    assert sponsors.party_resolution_reason.tolist() == [
+        "active_membership" if valid else "missing_event_date",
+    ]
+    assert outcomes.resolve_party_on_date(
+        [("2024-06-01", "2024-06-01", "D")], event_date,
+    ) == (
+        expected_party, "active_membership" if valid else "invalid_event_date",
+    )
+    outcomes.extract_outcomes("synthetic", bills, tmp_path)
+    counts = pd.read_parquet(tmp_path / "vote_party_counts.parquet")
+    assert counts.voter_party.tolist() == [expected_party]
+    assert counts.sponsor_party.tolist() == [expected_party]
+    assert counts.n_votes.tolist() == [1]
+
+
 @pytest.mark.parametrize(("primary", "person_id", "entity_type", "expected"), [
     ("t", None, "organization", "unknown"),
     ("t", "missing", "person", "unknown"),

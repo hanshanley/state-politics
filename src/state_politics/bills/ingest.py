@@ -31,12 +31,11 @@ import argparse
 import json
 import tempfile
 from collections import Counter, defaultdict
-from datetime import date
 from pathlib import Path
 
 from ..provenance import ProvenanceLog, sha256_file, utc_now_iso
 from .openstates_dump import find_pg_restore, state_of, stream_table
-from .outcomes import party_membership_intervals, resolve_party_on_date
+from .outcomes import _event_calendar_date, party_membership_intervals, resolve_party_on_date
 
 # Party normalization lives in `people`, and is imported rather than restated here: the two
 # modules read the same party strings from the same source, and a second copy of the mapping
@@ -96,7 +95,7 @@ def sponsorship_date(first_action: str | None, session_start: str | None) -> tup
     if not first_action:
         return "", "missing_first_action"
     try:
-        parsed = date.fromisoformat(first_action[:10])
+        parsed = _event_calendar_date(first_action)
     except ValueError:
         return "", "invalid_first_action"
     session_year = _year_of(session_start)

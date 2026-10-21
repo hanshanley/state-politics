@@ -45,6 +45,22 @@ The GPT-6.1 Sol worker's detailed evidence is retained in session artifact
 No full-dump incidence, revised corpus counts or affiliation-history recovery is
 claimed; no current-party backfill or analytical regeneration occurred.
 
+**Complete event-date follow-through:** a subsequent GPT-6.1 Sol repair removes
+first-ten-character truncation from sponsor and voter date validation. A valid
+date prefix followed by a malformed time, impossible hour, date range or trailing
+text no longer establishes historical affiliation. Both paths share complete ISO
+parsing and preserve the source-local calendar day rather than shifting it to UTC.
+Compact/week timestamps and timezone-bearing timestamps remain accepted. Independent
+parent replay of the two original committed functions reproduces **four failures
+and three passing controls**; all **91 ingestion/outcome tests** pass with the repair.
+Scoped Ruff and diff checks also pass. The replay replaces only those functions
+in current module globals, not the whole historical package. Raw parent evidence
+is retained as `temporal_attribution_parent_tests_v1.log` and
+`temporal_attribution_parent_prefixed_replay_v2.log` in the session; the first
+parent replay's mistaken six-failure expectation and its failed assertion remain
+preserved separately. These are synthetic integration checks, not new historical
+membership evidence, a full-dump incidence measurement or regenerated analyses.
+
 **October 21 review continuation:** five evidence-bound rubric proposals have
 returned without changing canonical labels. Independent parent binding verifies
 their retained source spans and quotations; it does not approve the proposed

@@ -13,6 +13,7 @@ import json
 import tempfile
 from collections import Counter, defaultdict
 from datetime import date as calendar_date
+from datetime import datetime
 from pathlib import Path
 
 from ..provenance import sha256_file, utc_now_iso
@@ -82,6 +83,11 @@ def party_on_date(
     return resolve_party_on_date(intervals, date)[0]
 
 
+def _event_calendar_date(value: str) -> calendar_date:
+    """Validate the complete ISO event value, retaining its source-local calendar day."""
+    return datetime.fromisoformat(value).date()
+
+
 def resolve_party_on_date(
     intervals: list[tuple[str, str, str]] | None,
     date: str | None,
@@ -91,9 +97,8 @@ def resolve_party_on_date(
         return "unknown", "missing_membership"
     if not date:
         return "unknown", "missing_event_date"
-    date = date[:10]
     try:
-        date = calendar_date.fromisoformat(date).isoformat()
+        date = _event_calendar_date(date).isoformat()
     except ValueError:
         return "unknown", "invalid_event_date"
     active = []
