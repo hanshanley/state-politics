@@ -100,7 +100,7 @@ def label_support(rows: list[dict], codes: list[int]) -> list[dict]:
 
 
 def load_examples(path: Path | str, codes: list[int]) -> list[dict]:
-    """Validate the complete split manifest before a model or tokenizer is downloaded."""
+    """Validate split isolation and integer topics/explicit rejections before model loading."""
     rows = []
     seen_ids = set()
     for number, line in enumerate(Path(path).read_text().split("\n"), 1):
@@ -134,7 +134,7 @@ def load_examples(path: Path | str, codes: list[int]) -> list[dict]:
             row["label_origin"] != "reviewed_target"
         ):
             raise ValueError(f"row {number}: evaluation requires reviewed target-domain labels")
-        if row.get("topic") not in codes and not (
+        if (type(row.get("topic")) is not int or row["topic"] not in codes) and not (
             row.get("topic") is None
             and isinstance(row.get("abstention_reason"), str)
             and row["abstention_reason"].strip()

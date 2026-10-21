@@ -346,6 +346,7 @@ class ModernBertClassifier:
         ).to(self.device).eval()
 
     def predict_records(self, texts: list[str], *, domain: str, batch_size: int = 8):
+        """Return one record per text, refusing outputs not aligned with input windows."""
         import torch
 
         if domain not in DOMAINS or batch_size < 1:
@@ -374,7 +375,10 @@ class ModernBertClassifier:
                     examples, padding=True, return_attention_mask=True, return_tensors="pt"
                 ).to(self.device)
                 with torch.inference_mode():
-                    logits.extend(self.model(**inputs).logits.float().cpu().tolist())
+                    batch_logits = self.model(**inputs).logits.float().cpu().tolist()
+                if len(batch_logits) != len(examples):
+                    raise ValueError("model must return one logit row per input window")
+                logits.extend(batch_logits)
             decision = decide(logits, self.output_codes, **policy)
             record = asdict(decision)
             record.update(

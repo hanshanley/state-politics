@@ -27,6 +27,26 @@ their retained source spans and quotations; it does not approve the proposed
 precedence rules. Missouri's original saved-next-32 parent replay also completes
 successfully, within the offline reconstruction limits documented below.
 
+**October 21 classifier safeguards:** two separate GPT-6.1 Sol audits produced
+bounded fixes. Label manifests now reject JSON booleans and floating-point values
+that Python previously treated as integer topic codes; valid integer topics and
+explicit reviewed rejections remain accepted across all four splits. Inference
+now requires exactly one output row per submitted window in each batch, rather
+than silently accepting missing or extra rows while reporting zero discarded
+tokens. Synthetic tokenizer/model-output tests preserve offsets, overlapping
+window coverage, input hashes, empty-input abstentions and mixed-topic abstentions.
+An independent parent replay of the original committed functions reproduces
+**14 failures and 14 passing controls**; the repaired functions pass all **28**
+cases. The two complete affected test files pass **115 tests**, including existing
+tiny randomly initialized local CPU checkpoint integrations; scoped Ruff and
+diff checks pass. The parent receipt is
+`classifier_safeguards_parent_actual_v1.json`, with separate baseline/current
+stdout and stderr logs retained in the session. All **6,158 canonical labels**
+retain hash `395ffa760c684619199ac005df8e52b3d42a5e94d9a8a7e9772b7b1642a33361`.
+These are input/output-contract repairs, not measured accuracy gains, official
+checkpoint inference, new training, rubric approval or release certification.
+No saved model, threshold, source corpus, canonical label or publication file changed.
+
 Virginia's bounded initial source packet now passes independent original-verifier
 reconstruction: **6,458 distinct introduced identities**, 6,698 raw rows including
 240 duplicates, twelve original HTML contexts and two PDFs / four pages per reader.

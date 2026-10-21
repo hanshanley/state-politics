@@ -460,6 +460,28 @@ def test_label_manifest_does_not_promote_predictions_to_independent_labels(tmp_p
         load_examples(path, [1, 6])
 
 
+@pytest.mark.parametrize("split", ["train", "dev", "test", "challenge"])
+@pytest.mark.parametrize("topic", [True, 1.0, 6.0])
+def test_label_manifest_rejects_noninteger_topic_aliases(tmp_path, split, topic):
+    path = tmp_path / "labels.jsonl"
+    path.write_text(json.dumps(_label("one", "School funding", split, topic=topic)) + "\n")
+    with pytest.raises(ValueError, match="row 1: invalid topic"):
+        load_examples(path, [1, 6])
+
+
+@pytest.mark.parametrize("split", ["train", "dev", "test", "challenge"])
+@pytest.mark.parametrize("topic", [1, 6, None])
+def test_label_manifest_preserves_integer_topics_and_explicit_rejections(tmp_path, split, topic):
+    path = tmp_path / "labels.jsonl"
+    path.write_text(json.dumps(_label(
+        "one", "School funding", split, topic=topic,
+        label_origin="reviewed_target", abstention_reason="non_policy",
+    )) + "\n")
+    row = load_examples(path, [1, 6])[0]
+    assert row["topic"] == topic
+    assert type(row["topic"]) is type(topic)
+
+
 def _source_reservation(tmp_path):
     path = tmp_path / "reservation.json"
     path.write_text(json.dumps({"sources": [{
