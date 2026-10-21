@@ -24,6 +24,37 @@ accepted source scopes can supply reusable 2023–2024 evidence, with their exis
 exceptions. Historical counts and seven-scope statements below retain their
 original checkpoint meaning, not current dispatch priority.
 
+## Shared national baseline and dispatch
+
+The shared `state_politics.bills.study_matrix` command now replaces separate
+per-state date/reference baseline audits. The actual offline run at
+`data/processed/study-matrix-2023-2024-v1/` joins **1,090,369 retained contexts**
+and their coverage accounting for **2,617,690 reference links**. It exports
+**50 state rows**, **4,162 session/chamber/type/date-disposition groups** and
+**44 remaining-gap entries**, excluding CA, CO, NC, OH, SD and WI from
+redispatch. The reviewed tracker remains authoritative for accepted scope;
+generated counts do not promote a state to complete.
+
+Manifest SHA-256:
+`666cef19585cba7c2f980ca9503ea479303bd3005ef367c12a4685f3abff8732`.
+Every exported source-context group matches the accepted source-window group
+counts. Consumed-input hashes/stat fields and output hashes were verified.
+The run observes 130,803 qualifying source-coded introductions; AK, AZ, CT, IN,
+LA, MA, ME and NY still have none under that rule, not zero activity. Native
+denominators and recovered-cycle-text counts remain null in this matrix because
+the state-native packets have not yet been reconciled into its common schema.
+No new source requests, model execution or publication changes occurred.
+
+Use the [shared operating contract](STATE_PROGRESS.md#shared-pipeline-and-dispatch):
+one baseline, bounded named gaps, common validation/checkpoint rules and
+state-specific publisher adapters. The matrix implements offline triage, not
+the future shared collection adapter layer. Platform applicability, event-time
+affiliations, label adjudication and classifier release remain separate gates.
+Generated packets are local/Git-ignored; pushing code and hashes is not their
+backup.
+
+## Current tracker
+
 For the current state-by-state dispatch list, see
 [the 50-state completion tracker](STATE_PROGRESS.md). It separates six reusable
 cycle source-accounting cohorts from partial, blocked and newly assigned work; none

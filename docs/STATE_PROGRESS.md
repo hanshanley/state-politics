@@ -55,6 +55,39 @@ are **all Senate-side**. Its 2023/2024-labelled sessions also retain 2,008
 date-unresolved contexts, including 1,885 House-side records. Neither session
 labels nor the observed Senate subset establish a statewide filing denominator.
 
+## Shared pipeline and dispatch
+
+Use **one national baseline, not 50 bespoke baseline audits**. The shared
+`state_politics.bills.study_matrix` command joins the retained date ledger and
+reference coverage once, checks exact identities and extraction lineage, and
+exports all 50 states together. See the
+[reproduction command](REPRODUCIBILITY.md#shared-50-state-matrix-and-gap-queue).
+
+The generated `state_matrix.csv` combines measured source-date/reference counts
+with this table's reviewed statuses, accepted evidence and remaining scope.
+`state_session_chamber_counts.csv` exposes session/chamber/type gaps without
+guessing dates. `gap_queue.csv` excludes the six closed scopes, carries blocked
+states as blocker-resolution tasks and preserves existing owners for states
+marked In progress. It is a triage queue, not network dispatch or a claim that
+old SQL tasks are active.
+
+For subsequent recovery, use a common pipeline: **native cohort -> exact
+record join -> missing-original retrieval -> shared extraction/validation ->
+checkpoint acceptance**. State-specific adapters should supply publisher
+endpoints, native identities and version conventions, not a new orchestration
+or verification framework. Reuse accepted manifests and process only missing
+or changed inputs; repeat a full audit only for a changed shared rule or an
+identified defect. Mocked-driver/readiness demonstrations are engineering
+checks, not completion credit for collecting documents.
+
+Dispatch bounded named gaps, not whole states. Keep at most three independent
+gap tasks assigned at once, each with one owner and an explicit stop condition.
+Keep blocked work out of collection, preserve request history and restrictions,
+and update this current table on acceptance. Platform applicability, attribution
+and classifier approval remain separate project-wide gates, not 50 separate
+training campaigns. This is the operating contract; common collection adapters
+are not implemented by the offline matrix command.
+
 ## How to use this list
 
 - **Closed scope:** collection/accounting and independent replay accepted for

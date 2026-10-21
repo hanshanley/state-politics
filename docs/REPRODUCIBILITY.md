@@ -64,6 +64,47 @@ date dispositions and persisted aggregate counts; its receipt is
 `study_window_2023_2024_verified_v2.json`. Generated evidence remains Git-ignored
 and local-only; committing this documentation does not back up those files.
 
+## Shared 50-state matrix and gap queue
+
+```bash
+.venv/bin/python -I -B -m state_politics.bills.study_matrix \
+  --window-dir data/processed/study-window-2023-2024-v2 \
+  --reference-dir data/processed/bill-document-reference-inventory-v4 \
+  --tracker docs/STATE_PROGRESS.md \
+  --out-dir data/processed/study-matrix-2023-2024-v1
+```
+
+This is the common offline baseline for all 50 states, replacing repeated
+state-by-state date/reference audits. It binds both source manifests to the
+same extraction, checks exact bill/state/identifier/session identities and
+requires exactly the state registry's 50 unique tracker entries. Inputs and
+producer hashes/stat fields must remain unchanged during execution.
+
+The output contains `state_matrix.csv`, `state_session_chamber_counts.csv`,
+`gap_queue.csv`, `report.json` and a completed/incomplete `manifest.json`.
+Existing output directories are refused. The matrix preserves reviewed scope,
+evidence and next gaps; the queue excludes Closed scope states and explicitly
+separates blocked work from collection. Queue sorting is alphabetical within
+action, not an impact or completeness ranking. Zero observed introduction dates
+means missing qualifying date evidence, not zero legislative activity.
+Unresolved-date counts span retained wider history; they are not target-cycle
+missing-filing counts. Links are not recovered original texts. Native-cycle
+denominators and recovered-cycle-text counts are null because this join does
+not reconcile the state-native packets. No collection, classifier execution,
+platform approval or analytical admission is performed.
+
+The committed tracker remains the single reviewed source for dispatch status;
+the generated matrix is a hash-bound snapshot, not a second editable status
+registry. Rerun into a new output directory after changing that tracker or its
+bound inputs. Generated packets remain local/Git-ignored, not backed up by a
+code/documentation push.
+
+The actual v1 run contains 50 matrix rows, 44 gap entries and 4,162 detailed
+groups. Manifest SHA-256:
+`666cef19585cba7c2f980ca9503ea479303bd3005ef367c12a4685f3abff8732`.
+All detailed context counts match the previously accepted source-window
+group export; wider-history context/reference totals are 1,090,369/2,617,690.
+
 ## State packet and cycle overlap
 
 ```bash
