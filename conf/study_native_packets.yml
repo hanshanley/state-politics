@@ -1,0 +1,94 @@
+schema_version: 1
+# Session constants below select declared canonical cohorts; they never supply dates.
+packets:
+  - state: CA
+    root: data/processed/california-native-bill-input-inventory-v2
+    manifest_sha256: 21520fcde171e9bc1026c6a3dce790f0f381a31cb35262c67db01b55be35d7c4
+    profile: single
+    contexts: candidate_inputs.parquet
+    context_id: record_id
+    identifier: identifier
+    bill_id: bill_id
+    canonical_session: "20232024"
+    source_only_session_fields: [native_session_num]
+    source_only_session_map:
+      "1": "20232024 Special Session 1"
+      "2": "20232024 Special Session 2"
+    expected_contexts: 5564
+    expected_views: 5564
+  - state: CA
+    packet_id: CA_wider
+    root: data/processed/california-multibiennium-native-token-input-inventory-v1
+    manifest_sha256: deb1acdeb953a30446175e4cb11be935511cb6a4114f1e1a093a60b89e97170a
+    profile: single
+    contexts: candidate_inputs.parquet
+    context_id: record_id
+    identifier: identifier
+    bill_id: bill_id
+    session_identifier: biennium
+    source_only_session_fields: [biennium, native_session_num]
+    source_only_session_map:
+      "20252026:1": "20252026 Special Session 1"
+    expected_contexts: 21234
+    expected_views: 21234
+  - state: CO
+    root: data/processed/colorado-2023-2024-full-native-token-input-inventory-v2
+    manifest_sha256: 295bb028e3bb0dbaf8a3cb46f7e3035dc39cbe1fa8219a05f92112d6321acb0a
+    profile: views
+    contexts: source_inventory.parquet
+    views: token_inventory.parquet
+    context_id: context_id
+    identifier: identifier
+    status: status
+    bill_id: canonical_bill_id
+    session_identifier: session_identifier
+    expected_contexts: 1459
+    expected_views: 2914
+  - state: NC
+    root: data/processed/north-carolina-full-native-pdf-token-input-inventory-v1
+    manifest_sha256: 30bfb40f95b53b67f516d2dc49efb9c05efb2935ee1df0f8ad6b042a588d5a42
+    profile: views
+    contexts: candidate_inputs.parquet
+    views: reader_view_inputs.parquet
+    context_id: context_id
+    identifier: identifier
+    status: status
+    bill_id: bill_id
+    session_identifier: source_context_json.session_identifier
+    expected_contexts: 2004
+    expected_views: 4008
+  - state: OH
+    root: data/processed/ohio-135th-full-native-token-input-inventory-v1
+    manifest_sha256: 943bfdb0e45f2c243f92d3639a4189074f15843007c5d53ad0e67a7cd52308d5
+    profile: views
+    contexts: candidate_inputs.parquet
+    views: source_view_inputs.parquet
+    context_id: context_id
+    identifier: identifier
+    status: status
+    bill_id: canonical_bill_id
+    canonical_session: "135"
+    expected_contexts: 2279
+    expected_views: 6811
+  - state: SD
+    root: data/processed/south-dakota-native-bill-input-inventory-v1
+    manifest_sha256: 0c96ca4701edd487f3e446e26f99a75e155c84b4e0c4050354896943f26df911
+    profile: reader_rows
+    contexts: candidate_inputs.parquet
+    context_id: native_bill_id
+    identifier: native_identifier
+    session_identifier: native_session_identifier
+    expected_contexts: 5369
+    expected_views: 10738
+  - state: WI
+    root: data/processed/wisconsin-2023-2024-full-native-token-input-inventory-v1
+    manifest_sha256: b29a95168a63acfd096597c15654fa74ae5c111c8303e4a4b160677871d79313
+    profile: views
+    contexts: candidate_inputs.parquet
+    views: source_view_inputs.parquet
+    context_id: context_id
+    identifier: typed_identity
+    status: status
+    canonical_session: "2023"
+    expected_contexts: 2655
+    expected_views: 5310

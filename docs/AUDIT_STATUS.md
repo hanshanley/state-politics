@@ -53,6 +53,47 @@ affiliations, label adjudication and classifier release remain separate gates.
 Generated packets are local/Git-ignored; pushing code and hashes is not their
 backup.
 
+## Accepted native packets connected to the shared matrix
+
+The shared `study_native_overlap` run reuses seven accepted input inventories,
+including both California packets. The first six-packet join found 169
+source-in-window contexts without supplied text; adding the already retained
+wider California archive filled 110, and explicit native special-session
+crosswalks filled another 15. **125 exact text joins were restored without new
+requests**, leaving the following measured subset:
+
+| State | Source-in-window observations | With supplied retained text views | Without supplied retained text |
+|---|---:|---:|---:|
+| CA | 2,283 | 2,283 | 0 |
+| CO | 1,480 | 1,449 | 31 |
+| NC | 2,005 | 2,004 | 1 |
+| OH | 1,590 | 1,579 | 11 |
+| SD | 899 | 899 | 0 |
+| WI | 2,655 | 2,654 | 1 |
+| **Total** | **10,912** | **10,868** | **44** |
+
+The 44-row residual contains 34 special-session contexts and ten existing
+regular-cohort reference/nonmatch gaps: CO SB23-214/HB24-1430, NC HB311,
+OH HB45/HB412 and five unsupported resolutions. This is a record-level
+follow-up queue, not another regular-cohort collection campaign. California's
+2024 prefilings remain in scope despite 2025–2026 canonical session keys.
+
+Actual output `data/processed/study-native-overlap-2023-2024-v5/` has manifest
+SHA-256 `113a97fd0b0356d8cb0746c4a87eeaf8e06e8fd6fbef7518f39d8ce8e2620a4a`.
+Its wider retained population is 40,564 native contexts / 56,579 source-reader
+views; 2,984 source-only contexts remain unmatched. Exact context/date joins,
+view multiplicity, all input/output hashes and seven input stat fields, the
+50-state matrix and the residual 44 bill IDs were checked against original
+bound evidence. NC's two identity-unresolved texts remain explicitly marked.
+This reuses accepted extraction, not a fresh source re-extraction or factual
+certification. V1/v2 format/scope failures and V3/v4 intermediates remain
+preserved. No source packet, label, model or publication asset changed.
+
+The six-state table excludes unknown-date populations and cannot establish
+statewide completeness. Unregistered states have unknown packet counts, not
+zero recovered texts. Cycle-applicable platforms, event-time affiliation,
+classifier review/evaluation and native-universe evidence remain unresolved.
+
 ## Current tracker
 
 For the current state-by-state dispatch list, see

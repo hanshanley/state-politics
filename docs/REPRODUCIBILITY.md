@@ -105,6 +105,53 @@ groups. Manifest SHA-256:
 All detailed context counts match the previously accepted source-window
 group export; wider-history context/reference totals are 1,090,369/2,617,690.
 
+## Shared accepted-native-packet overlap
+
+```bash
+.venv/bin/python -I -B -m state_politics.bills.study_native_overlap \
+  --matrix-dir data/processed/study-matrix-2023-2024-v1 \
+  --registry conf/study_native_packets.yml \
+  --out-dir data/processed/study-native-overlap-2023-2024-v5
+```
+
+The registry pins seven previously accepted input manifests covering CA, CO,
+NC, OH, SD and WI. It selects the California 2023–2024 packet **and** the wider
+archive: the latter contains source-dated 2024 prefilings in a 2025–2026
+session, which cannot be excluded by session-name substring. Source dates
+still come only from the existing national ledger.
+
+Three shared profiles normalize single-source inputs, separate context/view
+tables and paired-reader rows. Exact bill-ID/session/typed-identifier agreement
+or a unique explicitly declared session/typed-identifier join is required.
+California native special-session codes have an explicit registry crosswalk
+to canonical session keys. This is an identity crosswalk, not a source of dates.
+Unmapped source-only contexts remain unmatched; no HJR/HR/HB aliases or
+ambiguous joins are guessed. NC's two identity-unresolved inputs stay marked.
+
+Outputs are `native_context_overlap.parquet`, `native_view_index.parquet`,
+`missing_supplied_native_text.parquet`, the enriched `state_matrix.csv`,
+`report.json` and `manifest.json`. The view index is an index, not a text
+download: complete original strings remain in the bound input tables.
+Alternative readers never count as additional measures. Unregistered states
+retain null packet counts rather than zero recovery.
+
+The actual v5 manifest is
+`113a97fd0b0356d8cb0746c4a87eeaf8e06e8fd6fbef7518f39d8ce8e2620a4a`.
+It indexes 40,564 wider-scope native contexts and 56,579 alternative/source
+views. Of 10,912 source-in-window observations in these six states, 10,868
+have indexed nonempty retained views; the residual export has exactly 44
+bill IDs. These are supplied-packet/date-observed counts, not native-universe
+denominators, eligibility, classification accuracy or all-state completeness.
+No native documents were recollected, re-extracted or tokenized.
+
+V1/v2 incomplete attempts preserve strict-format failures: Colorado's
+hyphenated identifiers needed literal support, and unselected special-session
+formats must not expand a packet adapter's normalization scope. Focused
+regressions preserve both failures. V3/v4 are intermediate completed snapshots;
+v5 additionally reuses California wider/special-session evidence. Earlier
+outputs/logs remain unchanged. All original input bindings are checked before
+and after the shared run; existing output directories are refused.
+
 ## State packet and cycle overlap
 
 ```bash

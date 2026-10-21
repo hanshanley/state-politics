@@ -71,6 +71,16 @@ states as blocker-resolution tasks and preserves existing owners for states
 marked In progress. It is a triage queue, not network dispatch or a claim that
 old SQL tasks are active.
 
+The [shared native-packet join](REPRODUCIBILITY.md#shared-accepted-native-packet-overlap)
+now connects seven accepted input inventories for CA, CO, NC, OH, SD and WI.
+Across their source-date-observed subset, 10,868 contexts have retained text
+views and 44 lack an exact supplied-text join: CO 31, NC 1, OH 11 and WI 1.
+California and South Dakota have no such gap in this observed subset.
+These are not statewide native denominators; missing dates, source-only rows
+and unregistered packets remain explicit. The six existing Closed scope
+statuses are unchanged, and their residual special-session/reference gaps
+are follow-up tasks, not permission to recollect their accepted regular cohorts.
+
 For subsequent recovery, use a common pipeline: **native cohort -> exact
 record join -> missing-original retrieval -> shared extraction/validation ->
 checkpoint acceptance**. State-specific adapters should supply publisher
