@@ -146,8 +146,41 @@ All 77 identified physical exchanges, the original verifier proof, seventeen
 additional installed-inner controls before the outer policy, and all **456 packet
 file/directory records** independently reconcile unchanged. Historical discovery
 and acquisition-metadata limitations remain; worker semantic negatives were not
-independently rerun. A new **GPT-6.1 Sol** worker now owns a separate zero-HTTP
-full-source preparation, not actual initialization, collection or source admission.
+independently rerun.
+
+The full-source preparation has returned, but **independent acceptance remains
+pending**. Its exact final mocked normal-driver run processes all 3,005 native
+contexts, reuses 30 genuine originals in 32 seed slots, and seals 93 full
+32-context checkpoints plus the true final 29. Its 5,947 additional exchanges
+and non-seed PDF bodies are synthetic fixtures, not recovered official sources.
+The final saved fixture contains 3,001 PDFs and four gaps; the two additional
+fixture gaps are not newly observed publisher gaps. Final-source whole/tail
+replays and readonly relocation controls are distinct from the sixty earlier
+focused checks, which preceded additive verifier fixes. The failed construction
+finalizer and preceding attempts remain preserved. Root manifest SHA-256:
+`51a2587681bdbe94b017534d807d903383d60dfa7688cf46ce31aa4aa022fca7`.
+An independent parent saved whole/true-29-tail/readonly-relocation execution
+has started; startup is not a completed reconstruction or a fresh parent
+normal-driver result.
+
+An independent exact-final-source `Journal.request` **unit observation** on
+October 21, 2026 UTC (October 20 locally) records two mocked dispatch entries
+only **0.026242625 seconds apart**. Six actual private ledger rows and fourteen
+private files retain both responses; the three selected original nodes remain
+unchanged. This establishes an unpaced unit path, not official wire timing,
+real-curl compatibility, a full-driver execution, or a whole-packet comparison.
+The raw observation and every selected/current private response are separately
+bound by `kentucky_transport_pacing_parent_actual_v1_raw_binding_v1.json`,
+SHA-256 `518470f6377d1d972f8a58ff3630f798b9b6456329879851302ca51c4ea55a78`;
+the original observation receipt is
+`6394a2efaa1da74e475397258dfea15c736f61805357ff6f125aad7ee034d1d4`.
+The same **GPT-6.1 Sol** owner now has a distinct immutable zero-HTTP readiness
+successor scope: monotonic physical-dispatch pacing, conservative restart
+spacing, pre-kernel adapter controls, and a fresh exact-final normal-driver
+fixture with rebound source-dependent proofs. No successor return or parent
+acceptance is claimed. Historical discovery still has 123 pending records;
+actual destination, staging and authorization remain null. No live collection,
+labels, training, analytical admission or publication is authorized.
 
 The three actual parent replays and a separate raw-proof/source/full-map/current-row
 binding completed on October 20, 2026. Their supplemental binding is
