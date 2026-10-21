@@ -14,7 +14,8 @@ but remains provisional and has not been independently certified. Source
 completeness and filing-time party attribution remain unresolved; existing figures
 and analytical claims are legacy results, not revalidated findings.
 
-See the [research status](docs/AUDIT_STATUS.md) for current limitations and evidence.
+See the [50-state progress tracker](docs/STATE_PROGRESS.md) for completed source
+cohorts and remaining work, and the [research status](docs/AUDIT_STATUS.md) for evidence.
 
 ## Setup
 

@@ -4,6 +4,56 @@ The existing figures and analytical conclusions are **legacy, not revalidated fi
 The current changes repair infrastructure and preserve evidence; they do not certify a
 replacement classifier or establish complete contemporary coverage.
 
+For the current state-by-state dispatch list, see
+[the 50-state completion tracker](STATE_PROGRESS.md). It separates seven closed
+source-accounting cohorts from partial, blocked and newly assigned work; none
+is an end-to-end scientifically completed state. Historical "running" and
+"pending" entries below are observations at their recorded checkpoints, not
+current process status. Reuse accepted state/cohort evidence rather than
+repeating its collection or proof.
+
+**October 21 state tracking and distinct offline inventories:** the linked tracker
+records all 50 states, each accepted cohort, remaining source gap and evidence.
+Seven source-accounting scopes are closed; no state is scientifically complete.
+Stale task records for accepted bounded Colorado/Wisconsin/Arizona/Massachusetts/
+Kentucky work were reconciled. Connecticut's accepted blocked-evidence packet
+does not close source recovery, and Pennsylvania's stopped actual campaign stays
+blocked; historical failed attempts remain failures.
+
+Two distinct GPT-6.1 Sol owners have now completed all-retained-session offline
+inventories, without network requests or source-campaign initialization:
+
+| State | Stored session contexts | Measures | Versions | Version links | Sources | Measures without versions/links |
+|---|---:|---:|---:|---:|---:|---:|
+| Alabama | 12 | 11,847 | 23,164 | 23,169 | 18,294 | 2 |
+| South Carolina | 5 | 17,229 | 42,676 | 58,488 | 17,229 | 10 |
+
+These counts include the stored measure types, not just bills. Each worker
+retained four complete-field Parquet exports and checked exact bill-ID child
+selection, full-row multiplicity, extraction-manifest bindings and unchanged
+source hashes/seven stat fields. The Alabama receipt is
+`alabama_offline_source_readiness_20261021_v1.json`, SHA-256
+`104a985cd7645788a92df930a107effc805f61bc9c59e31bdc4dd19f032e04de`;
+South Carolina's is `south_carolina_offline_source_readiness_20261021_v1.json`,
+SHA-256 `a417b9928b5c977e71de62c936ddfa4871a0da7cef828a8d4315b86882bd2327`.
+Their scripts, logs and exports remain local session artifacts.
+South Carolina's stored 2017-2018 session contains retained 2018 rows only,
+not the complete biennium. Its measures include resolutions; all 42,676 retained
+version-date and classification fields are empty. Neither stored session labels
+nor undated version references establish introduction timing or original status.
+
+The separate parent artifact-binding execution completed with exit 0:
+`al_sc_offline_readiness_parent_v1.json`, SHA-256
+`bbded96cb14598d7cbc3a79d4bd8235ab3df7f3dbab8e200f650c2a434997f58`.
+It independently binds both receipt digests, producer hashes/logs, all eight
+export hashes/full schemas/persisted row counts, and session-total arithmetic.
+Every consumed input/output/receipt/producer/log full hash and seven non-content
+stat fields is unchanged before/after. This is not a repeated full-row source
+inventory, a native census, actual session-boundary proof, original-filing
+certification or recovered full text. Both states therefore remain **Inventory**,
+not closed source scopes. Canonical data, labels, weights and the publication
+site are unchanged; pushing these documents does not back up ignored evidence.
+
 **October 20, 2026 continuation:** latest completed audit **v54** binds **126 research
 and accounting packets**. The canonical audit has **308/342 passing checks**
 and **34 missing-artifact failures**. Known source, collection and scientific failures
