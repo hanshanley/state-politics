@@ -53,6 +53,12 @@ def join_predictions(labels: list[dict], predictions: list[dict]) -> list[dict]:
 
 
 def metrics(rows: list[dict], codes: list[int], policy: dict) -> dict:
+    if any(
+        not isinstance(row["logits"], list)
+        or any(not isinstance(chunk, list) for chunk in row["logits"])
+        for row in rows
+    ):
+        raise ValueError("model logits must be a list of chunk logit lists")
     outputs = [checked_output_codes(codes, row.get("output_codes", codes)) for row in rows]
     if outputs and any(mapping != outputs[0] for mapping in outputs):
         raise ValueError("evaluation rows have inconsistent model output maps")
@@ -234,6 +240,14 @@ def main(argv=None):
         or training_manifest.get("labels_sha256") != training_labels_hash
     ):
         parser.error("training evidence differs from the prediction model/taxonomy/labels")
+    training_outputs = checked_output_codes(
+        codes, training_manifest.get("output_codes", codes),
+    )
+    if any(
+        checked_output_codes(codes, row.get("output_codes", codes)) != training_outputs
+        for row in predictions
+    ):
+        parser.error("prediction output map differs from the original training evidence")
     training_rows = load_examples(args.training_labels, codes)
     if not any(row["split"] == "train" for row in training_rows):
         parser.error("original training evidence has no training rows")

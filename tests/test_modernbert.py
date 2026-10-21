@@ -762,6 +762,28 @@ def test_evaluation_counts_abstentions_and_never_calibrates_on_test():
         calibrate(rows, [1, 2], min_precision=0.99, min_coverage=1, min_support=3)
 
 
+@pytest.mark.parametrize("logits", [None, {}, "", False, [None]])
+def test_evaluation_rejects_malformed_logits_instead_of_scoring_an_abstention(logits):
+    policy = dict(temperature=1, min_confidence=0.8, min_margin=0.2)
+    with pytest.raises(ValueError, match="logits"):
+        metrics([{"topic": None, "logits": logits}], [1, 2], policy)
+
+
+def test_evaluation_retains_empty_logits_in_all_eligible_denominators():
+    policy = dict(temperature=1, min_confidence=0.8, min_margin=0.2)
+    report = metrics([
+        {"topic": 1, "logits": [[8, 0]]},
+        {"topic": 2, "logits": []},
+        {"topic": None, "logits": []},
+    ], [1, 2], policy)
+    assert report["n_eligible"] == 3 and report["n_classified"] == 1
+    assert report["all_eligible_topic_accuracy"] == 1 / 3
+    assert report["classified_precision"] == 1
+    assert report["decision_accuracy"] == 2 / 3
+    assert report["abstention_reasons"] == {"insufficient_evidence": 2}
+    assert report["probability_metrics"]["n"] == 1
+
+
 def test_evaluation_refuses_predictions_for_changed_or_missing_evidence():
     labels = [{"record_id": "one", "text_sha256": "original", "domain": "bill"}]
     with pytest.raises(ValueError, match="IDs"):
@@ -786,6 +808,9 @@ def test_evaluation_refuses_predictions_for_changed_or_missing_evidence():
     ("changed_training_labels", "binding"),
     ("different_model", "binding"),
     ("training_taxonomy", "binding"),
+    ("missing_rejection_output", "binding"),
+    ("extra_rejection_output", "binding"),
+    ("matched_rejection_output", None),
 ])
 def test_separate_evaluation_is_bound_to_original_training_evidence(
     tmp_path, case, expected_error,
@@ -833,6 +858,9 @@ def test_separate_evaluation_is_bound_to_original_training_evidence(
     training_manifest.write_text(json.dumps({
         "topic_codes": codes, "labels_sha256": sha256_file(training_labels),
         "taxonomy_sha256": "wrong" if case == "training_taxonomy" else taxonomy_hash,
+        **({"output_codes": [*codes, None]} if case in (
+            "missing_rejection_output", "matched_rejection_output",
+        ) else {}),
     }))
     predictions = tmp_path / "predictions.jsonl"
     predictions.write_text(json.dumps({
@@ -841,6 +869,10 @@ def test_separate_evaluation_is_bound_to_original_training_evidence(
         "model_run": "wrong" if case == "different_model" else sha256_file(training_manifest),
         "taxonomy_sha256": taxonomy_hash,
         "logits": [[12 if code == 6 else 0 for code in codes]],
+        **({
+            "output_codes": [*codes, None],
+            "logits": [[12 if code == 6 else 0 for code in [*codes, None]]],
+        } if case in ("extra_rejection_output", "matched_rejection_output") else {}),
     }) + "\n")
     policy = tmp_path / "policy.json"
     policy.write_text(json.dumps(dict(temperature=1, min_confidence=0.8, min_margin=0.2)))

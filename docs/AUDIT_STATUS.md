@@ -126,6 +126,58 @@ now stops; upstream ambiguity must be reviewed before rebuilding. No replacement
 topic, automatic quarantine policy, training run or scientific approval is
 inferred from this finding.
 
+**Original contextual evidence:** a returned source packet now preserves all
+original fields for the **116 affected canonical training records**, with **336
+matching raw CSV occurrences** (334 bill rows and two Republican-platform rows).
+The raw-occurrence inventory deliberately includes matches outside the current
+compatibility subset; 336 is not a count of eligible examples or adjudicated
+errors. An independent parent reconstruction verifies every canonical physical-LF
+line and raw CSV offset/hash/field join, and scans all three source CSVs to confirm
+the complete matching population. All consumed input hashes and seven non-content
+stat fields remain unchanged. Packet SHA-256:
+`ad5544779154b696e2117dc3cec0ecfea7dc1f7af3220a994ca9b01822736baf`.
+
+The original worker semantically inspected only the first **20 lexicographically
+sorted record IDs**, covering 90 occurrences: 19 groups have identical descriptions,
+and one differs only by punctuation. It reports no additional substantive narrative
+in the other fields that resolves those topic conflicts. These are advisory
+assistant observations, not corrected labels, independent gold or an approved
+rubric. The other **96 records remain inventory-only** in this packet; two new
+GPT-6.1 Sol reviewers now own disjoint 48-record contextual reviews, with no returned
+findings claimed. Original evidence and parent source-binding results remain in
+session artifacts `training_preparation_conflict_evidence_6_1_sol_v1.json` and
+`training_preparation_conflict_evidence_parent_v2.json`. The first parent binder's
+incorrect assumption that inventory-only rows contain a semantic-review field,
+its source and failed log are preserved; v2 corrects only that parent assumption.
+No automatic relabeling, group exclusion or training rebuild occurred.
+
+**Evaluation integrity repair:** malformed logit containers such as null, false
+or an object now fail explicitly instead of masquerading as insufficient-evidence
+abstentions. A genuine empty chunk list remains a valid abstention and stays in
+all-eligible denominators. Prediction policy/rejection output maps must also match
+the original hash-bound training manifest, rather than merely being valid maps
+individually. Legacy policy-only maps and matched supervised-rejection maps remain
+accepted. Independent parent replay of the two original committed functions
+reproduces **seven failures and two passing controls**; the repaired functions pass
+all nine cases. This is an original-function replay in current module globals,
+not whole historical-package execution. All 130 affected classifier, inference and
+preparation tests pass, including existing tiny randomly initialized CPU checkpoint
+integrations. Parent replay and raw logs remain in
+`evaluation_integrity_parent_replay_v1.*` and
+`evaluation_integrity_parent_complete_v1.log`.
+
+A separate read-only scan of **252 saved prediction rows** across five development/
+challenge exports from all four provisional pilots finds **zero malformed logit
+containers and zero original-training output-map mismatches**. Every row's base
+model-run hash matches its original manifest, every nonempty chunk has the expected
+width and finite scores, and all nine consumed files retain their complete hashes
+and seven non-content stat fields. The receipt is
+`evaluation_integrity_retained_predictions_parent_v1.json`. This establishes
+incidence only in those retained exports, not accuracy improvement, new model
+inference, calibration, training or certification. Labels, checkpoints, thresholds
+and the publication remain unchanged; ignored evidence packets are local-only,
+not backed up by committing these documentation and code changes.
+
 **October 21 review continuation:** five evidence-bound rubric proposals have
 returned without changing canonical labels. Independent parent binding verifies
 their retained source spans and quotations; it does not approve the proposed
