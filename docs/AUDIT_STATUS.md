@@ -312,11 +312,39 @@ SHA-256 `02a20930e3757c333f87322a4c49482ec9b2ab3d34e70c3d62e93a51c05db058`.
 The distinct **v3** parent started at **02:00:14 UTC**, PID 73335, source SHA-256
 `e46bb7825f98953a5a8944a5540a4d80f54e5d5b063b0afc6213c600114964bb`.
 Prelaunch source compilation confirmed the exact `--fresh` argument and distinct
-output paths without running a child or creating a fixture. Startup and the
-exact parent command were observed once; completion remains pending. It retains
-both failed predecessors, copies only immutable code/inputs/plan, runs readiness
-first, then the **original fresh suite with a new driver initialized at its actual
-private location**. No sealed source or journal is edited.
+output paths without running a child or creating a fixture. Its original
+completion notification was consumed and the original handle returned **exit
+zero**: parent completion **02:26:30 UTC on October 21, 2026**. Readiness child
+75333 passed all **11 original cases**; suite child 75388 passed all **63 original
+cases**, both with empty stderr and no timeout. Both failed predecessors remain
+intact. The original suite initialized a **new full driver at its actual private
+location**, rather than relocating or rewriting a completed journal.
+
+The fresh normal driver processed **3,005 native contexts**, with 32 seed slots
+containing 30 genuine originals and 2,973 initially pending contexts. Its transport
+was mocked: **5,947 new results plus 77 historical reservations**, 3,001 fixture
+PDFs/four gaps, and **94 checkpoints (93 full groups of 32 plus the true 29 tail)**.
+Whole, tail and checkpoint reconstruction cover 3,005/29/32 contexts; actual
+completed-driver resume preserved all 50,809 inspected file/directory records.
+Actual crash recovery, persisted 403/429 stops, fifth-503 recovery before a sixth
+dispatch, curl 18/28 rejection, physical-LF Unicode parsing, aggregate budgeting,
+fresh-manifest semantic corruption and original/new extraction differential
+checks passed. All **103,474 original/external nodes** stayed unchanged; copied
+code/inputs retained all eight recorded fields and the private plan's bytes were
+restored. Parent receipt `kentucky_readiness_behavior_parent_actual_v3.json`,
+SHA-256 `d486fb73817598cb3d0bdccb7a614fb172caeefaebe59bb6d9ea2839e366015d`.
+
+Independent binding completed **02:27:57 UTC**, exit zero, reconciling raw stdout,
+durable proofs, launch PIDs/arguments/clock order, final code pins, all archived
+original maps and all 482 current copied inputs. It freshly hashed **every one
+of 51,716 current private nodes**, reconciled all 48,614 manifested payloads,
+and checked unique private file inodes and separation from originals. It did
+**not** repeat the whole current original-content rehash. Binding
+`kentucky_readiness_behavior_parent_actual_v3.raw_binding_v1.json`, SHA-256
+`7078a14d5e3e5bebabf0d76b90615f6c031c3a2f1051dae159ceb3ac7d435fb4`.
+This accepts **offline fresh-driver behavior and readiness only**: synthetic
+non-seed PDFs are not recovered official documents, mocked pacing is not measured
+wire timing, and Python audit controls are not an OS/native-C sandbox.
 Historical discovery still has
 123 pending records; actual destination, staging and authorization remain null.
 No live collection, labels, training, analytical admission or publication is
