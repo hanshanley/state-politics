@@ -9,6 +9,10 @@ Topic attention measures neither policy agreement nor legislative achievement.
 
 ## Status
 
+The active study covers **2023–2024 bills and platforms applicable during that
+cycle**. Older and 2025–2026 evidence is retained separately, not required for
+completion or silently pooled into the study.
+
 Research is in progress. A supervised ModernBERT-base classifier candidate exists,
 but remains provisional and has not been independently certified. Source
 completeness and filing-time party attribution remain unresolved; existing figures

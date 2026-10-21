@@ -10,6 +10,12 @@ Failures still produce a nonzero exit and a report. Dependency hashes were delib
 updated for the ModernBERT migration; the unchanged legacy analysis parameters describe
 the old baseline, not a newly trained model.
 
+The active study is limited to **2023–2024** and platforms applicable during that
+cycle. Wider retained corpora, historical training data and old audit reports
+remain unchanged. Broad rebuild commands below are not a request to complete
+other years; target-cycle selection and its inclusion/exclusion provenance must
+be bound explicitly before regenerated outputs can support the narrowed study.
+
 ## One-command audit
 
 ```bash

@@ -13,6 +13,18 @@ reviewer provenance is unresolved; it is not verified independent human truth.
 The complete input-hash, OCR, random-seed and artifact-producer audit is documented separately
 in [REPRODUCIBILITY.md](REPRODUCIBILITY.md).
 
+**Active study scope (October 21, 2026):** the target window is **January 1, 2023
+through December 31, 2024**, with platforms applicable during that period.
+Use verified filing/introduction evidence and actual publisher sessions, retaining
+regular/special distinctions and unresolved dates. A session spanning the window
+does not make all its records eligible. An older platform needs evidence of
+continued applicability; a later platform is not a substitute.
+Wider source archives and historical classifier-training data are retained
+separately. Completing earlier/later years or multi-cycle trends is not required.
+The collection commands and legacy analyses below describe existing machinery,
+not authorization to rerun broad historical collection or proof that saved outputs
+already implement this narrower study. Reuse accepted target-cycle sources first.
+
 **Contents**
 
 - [Comparison accounting](#comparison-accounting)

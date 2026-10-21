@@ -4,9 +4,29 @@ The existing figures and analytical conclusions are **legacy, not revalidated fi
 The current changes repair infrastructure and preserve evidence; they do not certify a
 replacement classifier or establish complete contemporary coverage.
 
+**October 21 scope reduction:** the active study is now **January 1, 2023 through
+December 31, 2024**, choosing the earlier of the user's two permitted cycles.
+Only legislative measures introduced/filed in that window and platforms applicable
+during it are target evidence; keep bill/non-bill types distinct. Respect actual publisher session boundaries and retain
+special-session distinctions; overlapping biennia need record-level inclusion,
+not substring filtering. Unknown filing dates remain unknown. Pre-2023 platforms
+need evidence of continued applicability; 2025–2026 platforms cannot replace them.
+
+Wider archives, historical OCR, older date/identity exceptions and multi-cycle
+trends are no longer completion requirements. Preserve the accepted packets and
+external classifier-training material; do not extend their temporal coverage.
+Reuse target-cycle subsets without recollecting accepted sources. This changes
+the research contract, not canonical bytes, frozen reports or certification:
+existing wide-window exports have not been filtered or regenerated.
+Florida's accepted multi-year linked cohort does not establish the newly selected
+cycle's native universe; its tracker status is therefore Partial. The six other
+accepted source scopes can supply reusable 2023–2024 evidence, with their existing
+exceptions. Historical counts and seven-scope statements below retain their
+original checkpoint meaning, not current dispatch priority.
+
 For the current state-by-state dispatch list, see
-[the 50-state completion tracker](STATE_PROGRESS.md). It separates seven closed
-source-accounting cohorts from partial, blocked and newly assigned work; none
+[the 50-state completion tracker](STATE_PROGRESS.md). It separates six reusable
+cycle source-accounting cohorts from partial, blocked and newly assigned work; none
 is an end-to-end scientifically completed state. Historical "running" and
 "pending" entries below are observations at their recorded checkpoints, not
 current process status. Reuse accepted state/cohort evidence rather than
