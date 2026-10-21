@@ -142,14 +142,31 @@ sorted record IDs**, covering 90 occurrences: 19 groups have identical descripti
 and one differs only by punctuation. It reports no additional substantive narrative
 in the other fields that resolves those topic conflicts. These are advisory
 assistant observations, not corrected labels, independent gold or an approved
-rubric. The other **96 records remain inventory-only** in this packet; two new
-GPT-6.1 Sol reviewers now own disjoint 48-record contextual reviews, with no returned
-findings claimed. Original evidence and parent source-binding results remain in
+rubric. The original packet still leaves the other **96 records inventory-only**;
+two separate GPT-6.1 Sol reviewers have now returned the disjoint 48-record
+continuations, reviewing **134 and 112 raw occurrences**, respectively. Together
+the three reviews cover all **116 records / 336 occurrences**, without overlap.
+Neither continuation finds additional distinguishing policy narrative in the other
+original fields. The platform record refers to "those individuals" without their
+antecedent; its surrounding source context remains missing.
+
+A fresh parent binder verifies the exact 48+48 assignments, complete occurrence
+fields and raw source bytes, canonical physical-LF lines, differing-field
+inventories and individual notes. All 15 consumed inputs/review/supporting files
+retain their hashes and seven non-content stat fields. This binds the reviews;
+it is not a second independent semantic adjudication or a repeat of the prior
+full-CSV matching census. Receipt:
+`training_conflict_context_batches_parent_v1.json`. Review packet SHA-256 values:
+`01b26bc328c14e04063f6bfe49c0ab20b130d8a2152597847e8538ee22ef3bb3` and
+`3fbdc1d04358513b15d77407836e80fd8a3677dfaf2a41cda833c1cb8531aef5`.
+Original evidence and parent source-binding results remain in
 session artifacts `training_preparation_conflict_evidence_6_1_sol_v1.json` and
 `training_preparation_conflict_evidence_parent_v2.json`. The first parent binder's
 incorrect assumption that inventory-only rows contain a semantic-review field,
 its source and failed log are preserved; v2 corrects only that parent assumption.
-No automatic relabeling, group exclusion or training rebuild occurred.
+All contextual reviews remain advisory: unresolved rubric boundaries and missing
+native evidence are not label-error counts. No automatic relabeling, group
+exclusion or training rebuild occurred.
 
 **Evaluation integrity repair:** malformed logit containers such as null, false
 or an object now fail explicitly instead of masquerading as insufficient-evidence
