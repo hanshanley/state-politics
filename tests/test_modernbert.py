@@ -3,6 +3,7 @@
 import csv
 import hashlib
 import json
+import random
 import re
 
 import pytest
@@ -34,9 +35,38 @@ from state_politics.analysis.taxonomy import DEFAULT_TOPICS_PATH, load_topics
 from state_politics.analysis.train_topics import (
     label_support,
     load_examples,
+    training_indices,
     validate_source_reservation,
 )
 from state_politics.provenance import sha256_file
+
+
+def test_training_sampler_default_preserves_the_original_epoch_shuffle():
+    rows = [{"label_origin": "external_coded"} for _ in range(12)]
+    expected = list(range(len(rows)))
+    random.Random(17 + 2).shuffle(expected)
+    assert training_indices(rows, seed=17, epoch=2) == expected
+
+
+def test_explicit_sampling_weight_increases_target_exposure_without_duplicate_labels():
+    rows = [{"label_origin": "external_coded"} for _ in range(100)]
+    rows += [{"label_origin": "reviewed_target"} for _ in range(2)]
+    indices = training_indices(rows, seed=17, epoch=0, reviewed_target_weight=100)
+    assert len(indices) == len(rows)
+    assert len(rows) == 102
+    assert all(0 <= index < len(rows) for index in indices)
+    assert sum(rows[index]["label_origin"] == "reviewed_target" for index in indices) > 51
+    assert len(set(indices)) < len(rows)
+    assert indices == training_indices(rows, seed=17, epoch=0, reviewed_target_weight=100)
+
+
+@pytest.mark.parametrize("weight", [0, -1, True, None, float("nan"), float("inf")])
+def test_invalid_target_sampling_weight_fails_explicitly(weight):
+    with pytest.raises(ValueError, match="sampling weight"):
+        training_indices(
+            [{"label_origin": "external_coded"}], seed=17, epoch=0,
+            reviewed_target_weight=weight,
+        )
 
 
 def test_external_state_csv_preserves_logical_records_and_rejects_malformed_sources(tmp_path):

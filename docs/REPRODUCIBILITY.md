@@ -110,10 +110,11 @@ group export; wider-history context/reference totals are 1,090,369/2,617,690.
 ```bash
 .venv/bin/python -I -B -m state_politics.bills.study_partial_native \
   --data-dir data/processed \
-  --out-dir data/processed/partial-native-input-index-2023-2024-v2
+  --out-dir data/processed/partial-native-input-index-2023-2024-v3
 ```
 
-This normalizes only accepted initial-original selections for MI/MD/MN/KY,
+This normalizes only accepted initial-original selections for
+MI/MD/MN/KY/AZ/KS/OR/VA,
 using their stored extraction segments, not new collection, PDF extraction or
 OCR. Each state exports a context inventory, complete alternative-view inputs
 and pinned manifest. Negative flags, exact record/source hashes and raw native
@@ -126,13 +127,39 @@ date observations survive; dates are not normalized or admitted here.
 | MN | 32 | 93 | SR61 |
 | KY | 32 | 60 | HJR21/HJR22 |
 
-The root manifest is
-`340c652dec60090a538710f2af75f5ed0623645935c063e4bd76e6d7bade078b`.
-All 335 original source fingerprints remain unchanged. The failed v1 and its
-failure receipt remain preserved; v2 is distinct. These 104 bounded contexts /
-233 views do not close any statewide source universe. Existing outputs are
+The table describes the original four-state selection; v3 adds AZ/KS/OR/VA
+for **164 contexts / 337 views**, with text for 156 contexts. Root manifest:
+`4fd4d59c89399504cf0d887d10e267be791fe7df1ff4822027fe414f20b13051`.
+V2 remains preserved with manifest
+`340c652dec60090a538710f2af75f5ed0623645935c063e4bd76e6d7bade078b`,
+104 contexts / 233 views and all 335 original source fingerprints unchanged.
+The failed v1 and failure receipt also remain preserved. These bounded
+selections do not close any statewide source universe. Existing outputs are
 refused; reproduction requires a fresh output directory and corresponding
 explicit registry pins.
+
+## Normalizing complete retained campaign projections
+
+```bash
+.venv/bin/python -I -B -m state_politics.bills.study_retained_campaigns \
+  --data-dir data/processed \
+  --evidence-dir data/processed/study-abstract-evidence-2023-2024-v2 \
+  --states MO NY IL PA \
+  --out-dir data/processed/retained-campaign-input-index-2023-2024-v1
+```
+
+The first common offline pass preserves 62,208 complete stored views /
+688,174,798 UTF-8 bytes; manifest:
+`5f8d64fc42a75476e0c01fdb21045d67c78364161c956e7ab2e9f552ec67e84a`.
+The same command with `--states TX WA MT NM UT OK WV` and distinct output
+`data/processed/retained-supplement-input-index-2023-2024-v1` preserves
+30,730 contexts / 12,659 stored views / 299,118,518 UTF-8 bytes; manifest:
+`d98970398a02b5967a41a60c4867d48f6ceeeb779157edb2fe7f43dfcd606892`.
+Original metadata, partial bodies, negative flags and literal dates remain
+bound to source fingerprints. Markup/history readers are not automatically
+policy text; NM wrong-session/later documents retain quarantine. The MT
+supplement's 22 history/ancillary views are not registered as policy originals.
+No HTTP, PDF/HTML re-extraction or repeated campaign-closure audit runs here.
 
 ## Shared accepted-native-packet overlap
 
@@ -140,17 +167,20 @@ explicit registry pins.
 .venv/bin/python -I -B -m state_politics.bills.study_native_overlap \
   --matrix-dir data/processed/study-matrix-2023-2024-v1 \
   --registry conf/study_native_packets.yml \
-  --out-dir data/processed/study-native-overlap-2023-2024-v10
+  --out-dir data/processed/study-native-overlap-2023-2024-v14
 ```
 
-The registry pins 13 accepted input manifests covering CA, CO, NC, OH, SD,
-WI, TX, FL, MI, MD, MN and KY. It selects the California 2023–2024 packet **and** the wider
+The registry pins **28 packets across 26 states**, retaining earlier accepted
+scopes while adding the common partial/campaign indexes and MT date observations.
+It selects the California 2023–2024 packet **and** the wider
 archive: the latter contains source-dated 2024 prefilings in a 2025–2026
-session, which cannot be excluded by session-name substring. Source dates
-still come only from the existing national ledger.
+session, which cannot be excluded by session-name substring. Canonical source
+dates still come only from the existing national ledger; native dates remain
+in their separate observation channel.
 
-Three shared profiles normalize single-source inputs, separate context/view
-tables and paired-reader rows. Exact bill-ID/session/typed-identifier agreement
+Shared profiles normalize single-source inputs, separate context/view
+tables, paired-reader rows and guarded date-only observations.
+Exact bill-ID/session/typed-identifier agreement
 or a unique explicitly declared session/typed-identifier join is required.
 California native special-session codes have an explicit registry crosswalk
 to canonical session keys. This is an identity crosswalk, not a source of dates.
@@ -161,7 +191,8 @@ does not extend the grammar to another state or alias measure types.
 Texas `88R` maps explicitly to canonical `88`; its original native key survives.
 Its unavailable HB1 shell is retained as a context with zero input views.
 
-Outputs are `native_context_overlap.parquet`, `native_view_index.parquet`,
+Outputs are `native_context_overlap.parquet`, `native_bill_overlap.parquet`,
+`native_view_index.parquet`,
 `missing_supplied_native_text.parquet`, `native_introduction_observations.parquet`,
 `date_resolution_queue.parquet`, the enriched `state_matrix.csv`,
 `report.json` and `manifest.json`. The view index is an index, not a text
@@ -169,13 +200,25 @@ download: complete original strings remain in the bound input tables.
 Alternative readers never count as additional measures. Unregistered states
 retain null packet counts rather than zero recovery.
 
-The current v10 manifest is
-`f16998d466855fe653d988792f8707651541a7d45c9c7dc2459afb71266f8198`.
-It indexes 43,584 wider contexts / 59,727 alternative views across 12 states.
-Its 26,872 introduction-observed contexts without supplied native text use
-that expanded scope, not the earlier eight-state denominator. The four new
-partial indexes retain their raw negative/date/provenance fields; they do not
-certify identity, filing-time eligibility or statewide text coverage.
+The current v14 manifest is
+`867eb6c6adfcbc8274114819f561794567cd60eb860b399fb1b33a6faac4e60e`.
+It indexes **118,009 raw contexts / 128,486 alternative views**, including
+15,433 source-only contexts and 102,365 unique canonical bills with native
+contexts. The separate bill aggregate prevents physical-reference inflation
+while retaining every raw context. Conflicting native dates remain null with
+an explicit conflict status; they are never resolved by earliest/latest.
+Its 52,237 introduction-observed missing-text contexts reflect wider
+registered scope, not a cycle denominator.
+
+Opt-in missing identities and negative-flag source-only rules do not weaken
+default matching. JSON scope proofs bind NY/PA session constants, not dates.
+Explicit reader allowlists exclude 6,190 markup/alternative views while
+preserving the complete original source packets. Empty zero-view tables are
+valid; nonempty malformed views remain errors. MT uses the accepted native
+event observations, requiring both exact formal identity and a unique origin
+introduction event: 1,640 calendar-2023–2024 observations, including 213
+calendar-2024 prefilings in session 2025. Drafts and history text are not policy
+originals. All admissions remain false.
 
 The preserved v9 manifest is
 `5e145ead121a3b5610531bc23750c1ece202bf4adc896f9b89d060b18784f51e`.
@@ -210,6 +253,12 @@ and v8 exports the explicit date-resolution queue.
 V9 binds the generalized origin-event helper while retaining the same native
 data; all original introduction semantics remain unchanged. V10 adds the four
 bounded partial indexes and state-scoped MI identifier grammar.
+V10 remains preserved with manifest
+`f16998d466855fe653d988792f8707651541a7d45c9c7dc2459afb71266f8198`
+(43,584 contexts / 59,727 views / 12 states). Failed v11–v13 attempts remain
+preserved: duplicate packet IDs, an incorrect TX selector, zero-view schema
+types and legitimate repeated reference contexts were repaired explicitly
+rather than dropping records or changing earlier artifacts.
 
 ## Separate explicit filing evidence and final combined matrix
 
@@ -217,8 +266,8 @@ bounded partial indexes and state-scoped MI identifier grammar.
 .venv/bin/python -I -B -m state_politics.bills.study_filing \
   --window-dir data/processed/study-window-2023-2024-v2 \
   --actions data/processed/bill_actions.parquet \
-  --matrix-dir data/processed/study-native-overlap-2023-2024-v10 \
-  --out-dir data/processed/study-filing-2023-2024-v3
+  --matrix-dir data/processed/study-native-overlap-2023-2024-v14 \
+  --out-dir data/processed/study-filing-2023-2024-v4
 ```
 
 The earlier source-window ledger intentionally counted only coded
@@ -248,9 +297,12 @@ semantics: all 1,090,369 results exactly match the committed original function
 and every accepted introduction-ledger field. The final filing output was
 also compared field-for-field with that ledger and its raw action export with
 the original source table; the 50-state union counts and retained native columns
-reconcile exactly. Current v3 manifest:
+reconcile exactly. Current v4 manifest:
+`9be1ee10f4269774646a0e117e04873ed2914004f0e46df3652ff97072c31ce0`.
+It consumes native v14, preserving the original filing ledger/actions while
+updating native fields. V3 remains preserved with manifest
 `a0824a1b5cfd25ae9ade853f01ea7d023dbf9932ebdacbc0511ca4c48b2423d3`.
-It consumes native v10 and preserves its expanded 12-state fields. V2 remains
+V2 remains
 preserved with manifest
 `b6d05b23bdec09461492df13b190a43c0b138afe953ee40915a3fd458d82fc7b`;
 its native v9 input was
@@ -323,10 +375,10 @@ description extraction when all relevant input bytes remain identical.
 ```bash
 .venv/bin/python -I -B -m state_politics.bills.study_abstracts \
   --data-dir data/processed \
-  --filing-dir data/processed/study-filing-2023-2024-v3 \
-  --native-dir data/processed/study-native-overlap-2023-2024-v10 \
+  --filing-dir data/processed/study-filing-2023-2024-v4 \
+  --native-dir data/processed/study-native-overlap-2023-2024-v14 \
   --description-dir data/processed/study-description-evidence-2023-2024-v1 \
-  --out-dir data/processed/study-abstract-evidence-2023-2024-v2
+  --out-dir data/processed/study-abstract-evidence-2023-2024-v3
 ```
 
 This exports `bill_evidence.parquet`, `abstract_evidence.parquet`,
@@ -336,32 +388,37 @@ alternative survives, including literal Unicode separators. No latest/longest
 selection or near-duplicate collapse is performed. Native text presence is
 known only relative to registered packets; other states retain nulls.
 
-The 155,958 candidate contexts comprise 151,615 coded-event records, 3,482
+The 157,598 candidate contexts comprise 151,615 coded-event records, 5,122
 native-date-only and 861 description-only records. Conditional channels and
 their source dates remain distinct from the coded count. Full abstracts cover
 49,242 contexts / 50,959 records; 1,409 contexts have different abstract texts.
-The 157,675 metadata views never prepend summaries to native introduced text.
+The 159,315 metadata views never prepend summaries to native introduced text.
 Source tests, drafts and procedural title-only cases are flagged, not dropped
 or falsely admitted. All model/training/filing-time/analytical approval flags
 remain false; no tokenizer or classifier runs in this producer.
 
 Manifest:
-`69af46267bdc8c6ce4adb02a1bf4ec6ab1c06eee897f75af4efd38fd7611616b`.
+`38bf92a35831fe6ca75003f16caf2fce3354f48f54208bbf11a2b09d79b76c9d`.
 Exact source fields, full strings/input hashes and all 50 prior matrix rows
 reconcile to original extraction and upstream evidence.
 V1 remains unchanged with manifest
 `931a2ce0bcdb0a7ed328dc966cd21a3a14ff2c77cd561c5208d25753792f1150`.
-Both metadata-view and abstract artifacts are byte-identical between versions;
-v2 updates native-presence fields and upstream bindings, not source strings.
+V2 remains preserved with manifest
+`69af46267bdc8c6ce4adb02a1bf4ec6ab1c06eee897f75af4efd38fd7611616b`:
+its metadata-view and abstract artifacts were byte-identical to v1.
+V3 adds 1,640 MT date candidates; the complete abstract artifact is still
+byte-identical. It consumes the manifest-declared canonical native-bill
+aggregate, not duplicate raw references. A corrupt declared aggregate fails
+rather than silently falling back.
 
 ## Complete metadata token-window plan
 
 ```bash
 HF_HUB_OFFLINE=1 TRANSFORMERS_OFFLINE=1 \
   .venv/bin/python -I -B -m state_politics.analysis.study_token_plan \
-  --evidence-dir data/processed/study-abstract-evidence-2023-2024-v1 \
+  --evidence-dir data/processed/study-abstract-evidence-2023-2024-v3 \
   --policy-dir data/processed/california-native-bill-input-inventory-v2 \
-  --out-dir data/processed/study-metadata-token-plan-2023-2024-v1
+  --out-dir data/processed/study-metadata-token-plan-2023-2024-v2
 ```
 
 Only local tokenizer files from the pinned accepted policy manifest are loaded;
@@ -373,18 +430,22 @@ Marker IDs are `[25310, 3646, 27, 187]`, wrapper IDs `[50281, 50282]`.
 
 The output `token_window_plan.parquet` contains every source token/offset,
 window range and wrapped input length keyed to the original view/input hash;
-full strings remain in the metadata bundle. It covers all 157,675 views /
-10,044,063 source tokens in 158,506 windows, zero discarded tokens. The maximum
+full strings remain in the metadata bundle. It covers all 159,315 views /
+10,059,370 source tokens in 160,146 windows, zero discarded tokens. The maximum
 source has 16,848 tokens / 21 windows; every wrapped input is at most 1,024.
 The full-source tokenizer emits a long-sequence warning for some inputs, but
 the encoder is never called on these strings. Independent low-level tokenizer
-replay reproduced every saved token/offset and window-coverage invariant.
+replay of every current view reproduced all saved token IDs/offsets and
+window-coverage invariants. All 157,675 old plan rows are exactly unchanged;
+the 1,640 additional rows are preserved without discarded tokens.
 
 Manifest:
-`4b9f5dce745031ecefa8058037e69457dd79559aa9e2b15c1fba48333a937cfe`.
+`f251ec5da26987c61d2ddee4987c150b606504a6d82b52330cc6ce6dce2fb83b`.
 This is an unlabelled coverage plan, not model accuracy, source-date alignment,
 eligibility, calibration, predictions or analytical admission.
-The command above records the actual v1 run. Its plan is reusable for metadata
+V1 remains preserved with manifest
+`4b9f5dce745031ecefa8058037e69457dd79559aa9e2b15c1fba48333a937cfe`
+(157,675 views / 10,044,063 tokens / 158,506 windows). Its plan is reusable for metadata
 v2 because the entire `candidate_metadata_views.parquet` artifact has the same
 SHA-256, `2010b82b02dc7b6da884c3e206f718544622599e035a99b8f86b538dfa83586b`.
 The corresponding complete abstract artifact is also unchanged:
@@ -392,26 +453,161 @@ The corresponding complete abstract artifact is also unchanged:
 This is exact artifact reuse, not an assumption that similar text tokenizes
 identically. The original token-plan manifest is not rewritten.
 
+## Explicit conflict-exclusion classifier experiment
+
+Conflicting eligible CAP labels still fail preparation by default. The
+experimental whole-group exclusion mode must be explicitly selected:
+
+```bash
+.venv/bin/python -I -B -m state_politics.analysis.prepare_topics \
+  --cap-dir data/raw/cap \
+  --reviewed-target data/labels/retained-target-review-input-20261021-v1/reviewed_target.jsonl \
+  --out data/labels/cap-conflict-exclusion-experiment-20261021-v1 \
+  --per-source-topic 100 --min-year 2000 --seed 20261018 \
+  --conflict-policy exclude-groups
+```
+
+The reviewed-target input contains all 263 original assistant-reviewed records,
+copied as complete original JSONL records from the unchanged canonical
+6,158-row manifest. Its receipt binds the original physical-LF positions,
+canonical hash/stat fields and exact subset hash. No source topic is corrected,
+no assistant review is renamed human gold and no challenge label is tuned.
+Existing outputs are refused; choose distinct paths for a new experiment.
+
+A first pass finds competing eligible codes across all three source files;
+the second excludes every group member before deduplication and sampling.
+`conflict_exclusions.jsonl` preserves every complete original excluded row,
+source filename/CSV record position/hash and competing topics. The manifest
+binds its hash/count and archives the exact preparation producer. Source
+hashes are rechecked after scanning. Known compatibility flags and
+reviewed-target exact/near-copy reservations remain in effect.
+
+Actual preparation excludes 2,228 groups / 6,120 eligible source rows and
+produces 6,103 training / 50 development records. Labels SHA-256:
+`2b9d0c833846341c7ef94b72b2358c9033ef4aceba0e8ebb6d7be2b3407393ed`.
+Preparation manifest:
+`66a75a42301b0a1d54e1f5f5b5586eed981f90ef08e1f36024cf75b7afc2a849`.
+The same original 116 conflict-exposed canonical records map to excluded
+groups, but replacement sampling means this is not simply a 116-row deletion.
+The canonical file retains SHA-256
+`395ffa760c684619199ac005df8e52b3d42a5e94d9a8a7e9772b7b1642a33361`.
+
+Preflight checks all source/group/text split identities and the 52 previously
+examined challenge records; no detected exact/near training copy survives.
+All training inputs fit 1,024 tokens without truncation (maximum 468).
+The actual fresh full-encoder/head run uses the prior settings:
+
+```bash
+HF_HUB_OFFLINE=1 TRANSFORMERS_OFFLINE=1 PYTORCH_ENABLE_MPS_FALLBACK=1 \
+  .venv/bin/python -I -B -m state_politics.analysis.train_topics \
+  --labels data/labels/cap-conflict-exclusion-experiment-20261021-v1/labels.jsonl \
+  --source-reservation data/labels/platform-challenge-reserved-sources-v1/reservation.json \
+  --out data/models/modernbert-conflict-exclusion-experiment-20261021-v1 \
+  --epochs 3 --batch-size 4 --max-tokens 1024 --overlap 128 \
+  --learning-rate 0.00002 --seed 20261018
+```
+
+The pre-training evaluation plan is frozen at
+`data/processed/conflict-exclusion-model-evaluation-20261021-v1/evaluation_plan.json`,
+SHA-256 `78fa1a516dd53cf2035e6f55f95fdef653e8e28214beb927a37651ce27c5c807`.
+It pins baseline/code/input/reservation hashes and the unchanged decision
+policy. Completed evaluation found 54% development / 88.46% earlier-challenge
+decision accuracy, versus 62% / 94.23% for the prior Republican curriculum;
+the exclusion experiment is not promoted. No thresholds/references changed. Previously
+examined assistant-labelled diagnostics are not independent human gold,
+population accuracy, causal proof of an exclusion effect or release approval.
+Default loading must still reject provisional checkpoints.
+
+## Frozen cycle diagnostics and target-source curriculum
+
+`state_politics.analysis.prepare_cycle_review` provides `freeze` and `assemble`
+actions. Freezing binds complete metadata inputs and all exact/near/group/source
+reservations before annotation. Assembly requires evidence spans and explicit
+assistant reviewer provenance; it preserves separate reviewer IDs. Challenge
+and training roles are frozen, and `--quarantine-rubric-ambiguity` is an
+explicit training-only choice, not relabeling locked challenge answers.
+
+Actual blind references are in
+`data/labels/cycle-metadata-blind-review-20261021-v1/`: 190 complete inputs,
+50 states accounted for, 110 topics / 80 abstentions. Labels SHA-256:
+`edaf5b57d3590635612a03c662fc618e3460a2066b32ff194a5a72c0b557d8ef`.
+Five-model results and complete decisions are retained in
+`data/processed/cycle-metadata-blind-evaluation-20261021-v1/`; the best fixed-policy
+decision accuracy was 61.58%. These manually read assistant references are
+not independent human gold. After inspection they are development diagnostics,
+not untouched final holdout data.
+
+Two separate GPT-6.1 Sol reviewers read 564 new training-review units, excluding
+the locked 190 inputs, the earlier 52-input challenge and prior training/source
+reservations. All original decisions survive. The explicit quarantine retains
+34 rubric-ambiguity cases, leaving 530 labels, SHA-256
+`972dab8b867304b5cc17edb310d95256a9932bea682a3b2e94e19452f7f89277`.
+Composition preserves the prior 6,153 rows, adds 529 bounded units and preserves
+one complete 1,538-token unit outside the training budget without truncation.
+The resulting 6,632 train / 50 dev labels have SHA-256
+`58bfd46ab4044ad3bec68b3a5e0c131f926f98e6d4ff11beec89d5aa92417a3d`.
+All labels remain assistant/external evidence, not adjudicated scientific gold.
+
+```bash
+HF_HUB_OFFLINE=1 TRANSFORMERS_OFFLINE=1 PYTORCH_ENABLE_MPS_FALLBACK=1 \
+  .venv/bin/python -I -B -m state_politics.analysis.train_topics \
+  --labels data/labels/cycle-target-curriculum-20261021-v1/labels.jsonl \
+  --source-reservation data/labels/platform-challenge-reserved-sources-v1/reservation.json \
+  --out data/models/modernbert-cycle-target-balanced-20261021-v1 \
+  --epochs 3 --batch-size 4 --max-tokens 1024 --overlap 128 \
+  --learning-rate 0.00002 --seed 20261018 \
+  --reviewed-target-sampling-weight 8
+```
+
+Weight 1 preserves the original deterministic shuffle. Explicit other weights
+sample with replacement for the same epoch length, recording actual origin,
+domain and unique-record counts without duplicating label rows. This actual
+three-epoch run completed with finite losses 1.04416, .49240 and .30613 and a
+verified encoder update; each epoch drew 6,632 examples.
+The pre-training plan
+`data/processed/cycle-target-balanced-evaluation-20261021-v1/evaluation_plan.json`
+has SHA-256 `9f6a7877c71e5e6c46878d6ee1fc2925b832a7e2c6f0b1ea47ed6f555254e239`.
+It freezes the original temperature/confidence/margin, source references and
+producer hashes; neither curriculum changes nor sampling establish a causal
+accuracy improvement or independent release approval.
+
+Actual fixed-policy results were **61.05%** decision accuracy on cycle 190,
+**92.31%** on the earlier platform 52 and **60%** on dev 50. Cycle classified
+precision was 58.73% (74 correct topics / 126 classified), with 42 correct
+abstentions. The best retained prior cycle decision result remains 61.58%.
+The new model is not promoted; default provisional refusal was checked.
+Training manifest SHA-256:
+`d3c751dee57437e7e3d21b35eaac611da2e1040fc17bdf238b72048f89b18faf`.
+Evaluation manifest:
+`e5b9cc3e48ad01f297241a9f893db051e346b843c65e19870368555536b15da4`.
+Complete predictions, decision ledgers and the six-model comparison remain
+in the pre-planned evaluation directory; no reference/threshold edit occurred.
+
 ## Unpublished cycle-evidence explorer
 
 ```bash
 .venv/bin/python -I -B scripts/build_site.py \
   --cycle-evidence \
-  --out data/preview-cycle-evidence-v2
+  --bill-evidence data/processed/study-abstract-evidence-2023-2024-v3 \
+  --platform-evidence data/processed/platform-study-evidence-2023-2024-v5 \
+  --native-evidence data/processed/study-native-overlap-2023-2024-v14 \
+  --metadata-token-plan data/processed/study-metadata-token-plan-2023-2024-v2 \
+  --out data/preview-cycle-evidence-v3
 ```
 
-Evidence mode defaults to metadata v2 and platform evidence v5; explicit
-`--bill-evidence` / `--platform-evidence` directories override those inputs.
+Evidence mode defaults to metadata v3 and platform evidence v5, with matching
+native v14 / token-plan v2 enrichments. Custom metadata does not silently
+attach these default optional bundles; pass compatible explicit directories.
 The output includes all 50 state coverage rows / 100 organization rows,
 complete metadata/platform texts, lazy state partitions, full-text gzip
 downloads and `downloads/build_manifest.json`. The current build manifest is
-`3a15286ec34bd86c7e7a48b797651ea6c7bd56af38422d4707bf63d5286566d2`.
+`5933616d52605f5c4cef273e7ee0aa2cde2f0c7caed0178e3b6acf883b986166`.
 
 For interactive use, serve the output with a local static HTTP server:
 
 ```bash
 .venv/bin/python -I -B -m http.server 8765 \
-  --bind 127.0.0.1 --directory data/preview-cycle-evidence-v2
+  --bind 127.0.0.1 --directory data/preview-cycle-evidence-v3
 ```
 
 No server is left running by the build or verification. JavaScript fetches
@@ -423,9 +619,13 @@ Maine's empty cycle query explicitly retains the wider 9,877-context inventory
 and missing-date distinction. Real Chromium exercised pagination, complete
 query downloads, literal-markup safety, keyboard, mobile and no-JS behavior.
 
-Native originals/PDFs are not exported; native presence is index-only relative
-to registered packets. Token-plan UI integration is deferred, so metadata
-token fields remain null. No model, source collector, certified findings,
+The actual enriched preview exports 39,576 complete native text views /
+27,512 source references / 27,444 distinct candidate bills. It does not
+embed raw PDFs or certify original-stage identity. Planning statistics are
+in a separate `token_plan` namespace; original metadata token fields remain
+null. All 159,315 metadata views have bound token counts/windows with zero
+discarded source tokens. Native inputs without that supplied metadata plan
+do not acquire invented token statistics. No model, source collector, certified findings,
 report, public route or deployment is part of this build. Source bundles,
 earlier previews and full-text artifacts remain unchanged and local/Git-ignored.
 

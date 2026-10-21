@@ -152,7 +152,7 @@ def test_minnesota_uses_final_exchanges_all_html_spans_and_two_pdf_readers():
     assert inputs[2]["source_url"] == "actual-pdf"
 
 
-@pytest.mark.parametrize("state", ["MI", "MD", "MN", "KY"])
+@pytest.mark.parametrize("state", ["MI", "MD", "MN", "KY", "AZ", "KS", "OR", "VA"])
 def test_selected_unavailable_contexts_cannot_emit_placeholder_or_notice_text(state):
     assert list(_reader_inputs(MemoryPacket({}), state, {}, context(False))) == []
 
@@ -299,3 +299,187 @@ def test_state_output_retains_raw_date_columns_on_contexts_not_only_views():
         "no_unambiguous_stored_date_field_selected"
     )
     assert manifest["native_date_observations"]["n_contexts_with_observations"] == 0
+
+
+def test_flat_kansas_manifest_is_checksum_bound_without_a_wrapper():
+    member = {"derived/selected.json": {"sha256": "member", "size": 12}}
+    spec = {"manifest_sha256": "manifest", "manifest_members": None}
+    with (
+        patch("state_politics.bills.study_partial_native._snapshot", side_effect=lambda path: {
+            "sha256": "manifest" if path.name == "manifest.json" else "member", "size": 12,
+        }),
+        patch.object(Path, "read_text", return_value=json.dumps(member)),
+    ):
+        packet = FrozenPacket(Path("data/processed/unit-flat-manifest"), spec)
+        assert packet.pin("derived/selected.json")["sha256"] == "member"
+        assert packet.stable()["all_consumed_files_unchanged"]
+
+
+def test_arizona_canonical_link_context_does_not_invent_a_native_listing_identity():
+    bill = {
+        "bill_id": "literal-bill-id", "state": "AZ", "identifier": "HB 2001",
+        "session_identifier": "56th-1st-regular",
+    }
+    row = {
+        "typed_key": ["HB", 2001, "lower", "56th-1st-regular"],
+        "canonical_version": {"bill_id": bill["bill_id"]},
+        "canonical_links": [{
+            "bill_id": bill["bill_id"], "media_type": "application/pdf", "url": "literal-pdf",
+        }],
+        "substantive_original_retained": True,
+    }
+    packet = MemoryPacket({
+        "recovery.json": [row], "canonical.json": {"bills": [bill]},
+        "derived/selection.json": {"selected": [{
+            "typed_key": row["typed_key"], "canonical_bill": bill, "native": None,
+        }]},
+    })
+    record = _records(packet, "AZ", {
+        "contexts": "recovery.json", "canonical": "canonical.json",
+    })[0]
+    assert record["canonical_bill_id"] == bill["bill_id"]
+    assert record["context_id"] == "literal-pdf"
+    assert record["native_identifier"] is None
+    assert record["native_session_identifier"] is None
+    assert "publisher_html_original_link_not_proven" in record["negative_flags"]
+    assert native_date_observations("AZ", row) == []
+
+
+def test_kansas_selected_absence_keeps_exact_gap_metadata_and_never_uses_canonical_dates():
+    selected = [
+        {"identifier": "SB 1", "formal_identifier_literal": "SB 1",
+         "detail_path": "/literal/one/", "session_label": "2023-2024 Regular Sessions"},
+        {"identifier": "SCR 1601", "formal_identifier_literal": "SCR 1601",
+         "detail_path": "/literal/two/", "session_label": "2023-2024 Regular Sessions"},
+    ]
+    gap = {"identifier": "SCR 1601", "reason": "no PDF link; later texts not substituted"}
+    packet = MemoryPacket({
+        "selected.json": selected,
+        "derived/introduced_contexts.json": [{"identifier": "SB 1"}],
+        "derived/original_context_gaps.json": [gap],
+        "derived/html_original_contexts.json": [],
+        "canonical.jsonl": [
+            {"bill_id": f"id-{i}", "identifier": row["identifier"], "state": "KS",
+             "session_identifier": "2023-2024", "first_action_date": "2023-01-09"}
+            for i, row in enumerate(selected)
+        ],
+    })
+    records = _records(packet, "KS", {
+        "contexts": "selected.json", "canonical": "canonical.jsonl",
+    })
+    assert records[1]["available"] is False
+    assert json.loads(records[1]["source_linkage_metadata_json"])["gap"] == gap
+    assert records[1]["native_session_identifier"] == "2023-2024 Regular Sessions"
+    assert list(_reader_inputs(packet, "KS", {}, records[1])) == []
+    assert native_date_observations("KS", records[0]["source_record"]) == []
+
+
+def test_kansas_uses_whole_plain_reader_strings_and_complete_html_segments_not_journals():
+    packet = MemoryPacket({
+        "derived/pdf/087.json": {
+            "fitz": {"pages": [{
+                "number": 1, "text": "Be it enacted:\nwhole\u2028bill",
+                "layout": "not the selected reader string",
+            }]},
+            "pypdf": {"pages": [{"number": 1, "text": "Be it enacted:\nother whole bill"}]},
+        },
+        "raw/087/result.json": {"body_sha256": None},
+        "derived/document_html/110.json": {
+            "segments": [{"text": "front matter\n"}, {"text": "Be it enacted:\nwhole bill"}],
+            "text": "front matter\nBe it enacted:\nwhole bill",
+        },
+        "raw/110/result.json": {"body_sha256": None},
+    })
+    record = context() | {
+        "negative_flags": [],
+        "source_linkage_metadata_json": json.dumps({
+            "original": {"original_exchange": 87, "original_url": "literal-original-pdf"},
+            "html_originals": [{"exchange": 110, "url": "literal-original-html"}],
+        }),
+    }
+    inputs = list(_reader_inputs(packet, "KS", {}, record))
+    assert [item["reader"] for item in inputs] == ["pymupdf", "pypdf", "html_full_projection"]
+    assert inputs[0]["source_reader"] == "fitz"
+    assert inputs[0]["segments"] == ["Be it enacted:\nwhole\u2028bill"]
+    assert inputs[2]["segments"] == ["front matter\n", "Be it enacted:\nwhole bill"]
+    assert inputs[1]["extraction_selector"] == "pypdf/pages/*/text"
+
+
+@pytest.mark.parametrize("defect", ["header-only", "missing-page", "explicit-truncation"])
+def test_oregon_incomplete_view_is_an_explicit_negative_not_a_full_text_or_lost_context(defect):
+    pages = [{"page": 1, "text": "Be it enacted:\nSECTION 1. Whole bill.\n"}]
+    bad = [dict(pages[0])]
+    if defect == "header-only":
+        bad[0]["text"] = "82nd OREGON LEGISLATIVE ASSEMBLY--2023\nHouse Bill 2001\n"
+    elif defect == "missing-page":
+        bad = []
+    else:
+        bad[0]["truncated"] = True
+    identity = {"session": "literal-session", "measure_type": "HB", "measure_number": 2001}
+    packet = MemoryPacket({"derived/pdfs.json": [{
+        "exchange": 63, "identity": identity, "version": "Introduced",
+        "url": "literal-original", "body_sha256": None, "page_count": 1,
+        "pages": {"pymupdf": bad, "pypdf": pages},
+    }]})
+    record = context() | {
+        "negative_flags": [],
+        "source_record": {
+            "identity": identity,
+            "proof": [{"pdf_exchange": 63, "link": {"url": "literal-original"}}],
+        },
+    }
+    inputs = list(_reader_inputs(packet, "OR", {}, record))
+    assert [item["reader"] for item in inputs] == ["pypdf"]
+    assert record["available"] is True
+    excluded = record["excluded_source_views"]
+    assert len(excluded) == 1 and excluded[0]["reader"] == "pymupdf"
+    assert excluded[0]["reason"] in record["negative_flags"]
+    assert excluded[0]["extraction_path"] == "derived/pdfs.json"
+
+
+def test_virginia_raw_offered_and_prefiled_dates_do_not_collapse_into_a_session_date():
+    row = {"printed_observations": {
+        "offered": {"raw": "Offered January 11, 2023", "groups": ["January 11, 2023"]},
+        "prefiled": {"raw": "Prefiled July 18, 2022", "groups": ["July 18, 2022"]},
+        "session": {"raw": "2023 SESSION"},
+    }}
+    observations = native_date_observations("VA", row)
+    assert [item["raw_value"] for item in observations] == [
+        "Offered January 11, 2023", "Prefiled July 18, 2022",
+    ]
+    assert [item["event_kind"] for item in observations] == ["offered", "prefiled"]
+
+
+def test_zero_complete_stored_projections_remains_an_explicit_zero_view_state():
+    packet = MemoryPacket({})
+    packet.stable = lambda: {"all_consumed_files_unchanged": True}
+    record = context(False) | {
+        "identifier": "HB 1", "native_identifier": "HB1",
+        "session_identifier": "literal-session", "native_session_identifier": "literal-native",
+        "canonical_bill_id": "literal-ocd-id", "source_record_locator": "0",
+        "negative_flags": ["stored_projection_header_only"],
+    }
+    spec = {
+        "root": "accepted", "contexts": "records", "canonical": "canonical",
+        "manifest_sha256": "frozen", "expected_contexts": 1, "expected_views": 0,
+        "accepted_listed_identities": None, "limitations": ["bounded selection"],
+    }
+    stored = {}
+    with (
+        patch("state_politics.bills.study_partial_native.FrozenPacket", return_value=packet),
+        patch("state_politics.bills.study_partial_native._records", return_value=[record]),
+        patch("state_politics.bills.study_partial_native.sha256_file", return_value="table-hash"),
+        patch.object(pd.DataFrame, "to_parquet",
+                     lambda frame, path, **kwargs: stored.update({str(path): frame.copy()})),
+        patch.object(pd, "read_parquet", side_effect=lambda path: stored[str(path)]),
+        patch.object(Path, "mkdir"),
+        patch.object(Path, "stat", return_value=SimpleNamespace(st_size=10)),
+        patch.object(Path, "write_text"),
+    ):
+        manifest = build_state(Path("data/processed"), Path("unit-zero-output"), "AZ", spec)
+    assert manifest["counts"]["n_contexts"] == 1
+    assert manifest["counts"]["n_source_views"] == 0
+    assert manifest["counts"]["n_contexts_with_views"] == 0
+    contexts = stored["unit-zero-output/context_inventory.parquet"]
+    assert not bool(contexts.iloc[0]["full_source_text_available"])
+    assert contexts.iloc[0]["status"] == "selected_original_unavailable_retained_gap"

@@ -10,6 +10,7 @@ from __future__ import annotations
 import argparse
 import hashlib
 import json
+import re
 from collections import Counter
 from pathlib import Path
 
@@ -83,6 +84,70 @@ PROFILES = {
             "Printed BR numbers are bill requests, not typed bill identities; no BR aliases.",
         ],
     },
+    "AZ": {
+        "root": "arizona-2023-2024-native-source-recovery-v2",
+        "manifest_sha256": "572b9f31948b7ca736b2280dc6659f3ca3feeaf19ef22d3964eca05b1f24c007",
+        "manifest_members": "files",
+        "contexts": "derived/recovery.json",
+        "canonical": "derived/canonical.json",
+        "expected_contexts": 4,
+        "expected_views": 9,
+        "accepted_listed_identities": None,
+        "limitations": [
+            "Four canonical-linked original contexts, not an established native census.",
+            "Four PDFs and one original HTML projection; listing HTML is not bill text.",
+            "Publisher HTML original-link proof and acquisition history remain unresolved.",
+            "Canonical session/identifier linkage is not a certified native identity.",
+        ],
+    },
+    "KS": {
+        "root": "kansas-2023-2024-native-source-recovery-v1-r2",
+        "manifest_sha256": "abb9c65dc9167f5b20844d7c8d2d1b2e5decd32a65cff9d30c8a7477b9ecf138",
+        "manifest_members": None,
+        "contexts": "derived/selected_native_contexts.json",
+        "canonical": "derived/canonical_regular_rows.jsonl",
+        "expected_contexts": 12,
+        "expected_views": 15,
+        "accepted_listed_identities": 1558,
+        "limitations": [
+            "Twelve selected contexts contain seven introduced PDFs and one HTML alternative.",
+            "Five selected originals lack an introduced PDF link and remain explicit gaps.",
+            "Journal PDFs are excluded; their pages are not introduced-bill text.",
+            "SR 1742 remains a canonical nonmatch; unrecorded historical requests remain unknown.",
+        ],
+    },
+    "OR": {
+        "root": "oregon-2023-2024-native-source-recovery-v2",
+        "manifest_sha256": "1ea8f41976e302c2885c8d2a3a74f33d9169c42c3cef75b354938fd244a1b48a",
+        "manifest_members": "files",
+        "contexts": "derived/recoveries.json",
+        "canonical": "derived/canonical.json",
+        "expected_contexts": 32,
+        "expected_views": 64,
+        "accepted_listed_identities": 3263,
+        "limitations": [
+            "Only 32 selected introduced PDFs are indexed, including two special-session contexts.",
+            "The 93 stored HTML responses are listings/version controls, not original bill bodies.",
+            "Current listed identities are not a historical introduced-universe certification.",
+            "Boundaries, request history and full-source pacing admission remain unresolved.",
+        ],
+    },
+    "VA": {
+        "root": "virginia-2023-2024-native-source-recovery-v1",
+        "manifest_sha256": "d1c6f9b1a4fb8d3003a399f91ddbb0ccd756d47d2dbbcb2a8981de0753e877a5",
+        "manifest_members": "inventory",
+        "contexts": "derived/original_contexts.json",
+        "canonical": "derived/canonical_regular_rows.json",
+        "expected_contexts": 12,
+        "expected_views": 16,
+        "accepted_listed_identities": 6458,
+        "limitations": [
+            "Twelve original HTML contexts and two PDF alternatives are bounded selections.",
+            "All stored main-source HTML text is retained, without claiming browser rendering.",
+            "166 canonical-only 2023 contexts and 6,446 native originals remain unrecovered.",
+            "Introduced observations do not establish the complete carryover/pending universe.",
+        ],
+    },
 }
 
 
@@ -109,7 +174,9 @@ class FrozenPacket:
         if self.before["manifest.json"]["sha256"] != spec["manifest_sha256"]:
             raise ValueError("unaccepted initial-source manifest")
         manifest = json.loads((self.root / "manifest.json").read_text(encoding="utf-8"))
-        members = manifest[spec["manifest_members"]]
+        members = (
+            manifest[spec["manifest_members"]] if spec["manifest_members"] else manifest
+        )
         self.members = (
             members if isinstance(members, dict) else {entry["path"]: entry for entry in members}
         )
@@ -168,6 +235,10 @@ def _canonical_rows(packet: FrozenPacket, state: str, spec: dict) -> list[dict]:
             filters=[("state", "==", state)],
         ).to_dict("records")
     value = packet.read(name)
+    if state == "AZ":
+        return value["bills"]
+    if state == "OR":
+        return [entry["row"] for entry in value["rows"]]
     return value["canonical_rows"] if state == "MN" else value
 
 
@@ -178,6 +249,8 @@ def _records(packet: FrozenPacket, state: str, spec: dict) -> list[dict]:
     by_id = {row["bill_id"]: row for row in canonical}
     if len(by_id) != len(canonical):
         raise ValueError("nonunique frozen canonical identity")
+    if state in {"AZ", "KS", "OR", "VA"}:
+        return _additional_records(packet, state, spec, raw, canonical)
     selected = {}
     native_to_canonical = {}
     if state == "MD":
@@ -259,11 +332,163 @@ def _records(packet: FrozenPacket, state: str, spec: dict) -> list[dict]:
     return rows
 
 
+def _additional_records(packet, state, spec, raw, canonical):
+    """Use saved crosswalks, never derive a session or identifier from a URL."""
+    rows = []
+    by_id = {row["bill_id"]: row for row in canonical}
+    if state == "AZ":
+        selected = packet.read("derived/selection.json")["selected"]
+    elif state == "KS":
+        originals = packet.read("derived/introduced_contexts.json")
+        gaps = packet.read("derived/original_context_gaps.json")
+        html = packet.read("derived/html_original_contexts.json")
+    elif state == "OR":
+        selected = packet.read("derived/selections.json")
+        natives = packet.read("derived/native_rows.json")
+        joins = packet.read("derived/joins.json")
+        indexed = {
+            entry["canonical_row"]: entry["row"]
+            for entry in packet.read(spec["canonical"])["rows"]
+        }
+    for index, row in enumerate(raw):
+        linkage = {}
+        if state == "AZ":
+            selection = _one(
+                [item for item in selected if item["typed_key"] == row["typed_key"]],
+                "Arizona accepted selection",
+            )
+            bill = by_id[row["canonical_version"]["bill_id"]]
+            if bill != selection["canonical_bill"] or any(
+                link["bill_id"] != bill["bill_id"] for link in row["canonical_links"]
+            ):
+                raise ValueError("Arizona canonical original-link disagreement")
+            context_id = _one(
+                [link["url"] for link in row["canonical_links"]
+                 if link["media_type"] == "application/pdf"],
+                "Arizona canonical original PDF",
+            )
+            native_identifier = native_session = None
+            available = row["substantive_original_retained"] is True
+            flags = [
+                "native_listing_identity_not_established",
+                "publisher_html_original_link_not_proven",
+                "native_introduced_population_unknown",
+            ]
+            linkage = {"selection": selection}
+        elif state == "KS":
+            bill = _one(
+                [item for item in canonical if item["identifier"] == row["identifier"]],
+                "Kansas frozen exact identifier/session crosswalk",
+            )
+            original = [item for item in originals if item["identifier"] == row["identifier"]]
+            gap = [item for item in gaps if item["identifier"] == row["identifier"]]
+            if len(original) + len(gap) != 1:
+                raise ValueError("Kansas selected original/gap disagreement")
+            context_id, native_identifier = row["detail_path"], row["formal_identifier_literal"]
+            native_session = row["session_label"]
+            available = bool(original)
+            flags = ["current_listing_not_historical_introduced_census"]
+            if not available:
+                flags.append("selected_original_unavailable_no_introduced_pdf_link")
+            linkage = {
+                "original": original[0] if original else None,
+                "gap": gap[0] if gap else None,
+                "html_originals": [
+                    item for item in html if item["identifier"] == row["identifier"]
+                ],
+            }
+        elif state == "OR":
+            selection = _one(
+                [item for item in selected if item["selection"] == row["selection"]],
+                "Oregon accepted selection",
+            )
+            native = natives[selection["native_row"]]
+            if selection["identity"] != row["identity"] or native["identity"] != row["identity"]:
+                raise ValueError("Oregon selected/native identity disagreement")
+            join = _one(
+                [item for item in joins
+                 if item["identity"] == {
+                     key: row["identity"][key]
+                     for key in ("session", "chamber", "measure_type", "measure_number")
+                 }],
+                "Oregon native/canonical join",
+            )
+            if selection["native_row"] not in join["native_rows"]:
+                raise ValueError("Oregon native/canonical row disagreement")
+            bill = indexed[_one(join["canonical_rows"], "Oregon canonical row")]
+            context_id, native_identifier = selection["version_url"], native["label"]
+            native_session = row["identity"]["session"]
+            available = row["original_proof"] is True
+            flags = ["current_listing_not_historical_introduced_census"]
+            if join["special"]:
+                flags.append("special_session_context_not_regular_cohort")
+            linkage = {"selection": selection, "native": native, "join": join}
+        else:
+            bill = _one(
+                [item for item in canonical
+                 if item["native_comparison_key"] == [
+                     row["native_session"], row["native_identifier"]
+                 ] and row["population_index"] in item["official_population_indices"]],
+                "Virginia saved exact native/canonical crosswalk",
+            )
+            context_id, native_identifier = row["detail_url"], row["native_identifier"]
+            native_session = row["native_session"]
+            available = row["source_status"] == "recovered-original-context-not-classified"
+            flags = ["carryover_pending_universe_not_certified"]
+        if bill.get("state") != state:
+            raise ValueError("canonical cross-state disagreement")
+        rows.append({
+            "context_id": context_id, "identifier": bill["identifier"],
+            "native_identifier": native_identifier,
+            "session_identifier": bill["session_identifier"],
+            "native_session_identifier": native_session,
+            "canonical_bill_id": bill["bill_id"],
+            "source_record": row, "source_record_locator": str(index),
+            "source_linkage_metadata_json": _json(linkage),
+            "available": available, "negative_flags": flags,
+            "identity_basis": (
+                "frozen_canonical_original_links_native_listing_and_publisher_linkage_unproven"
+                if state == "AZ"
+                else "explicit_frozen_canonical_crosswalk_and_native_original_linkage"
+            ),
+        })
+    return rows
+
+
 def _reader_inputs(packet: FrozenPacket, state: str, spec: dict, context: dict):
     row = context["source_record"]
     if not context["available"]:
         return
-    if state == "MI":
+    if state in {"AZ", "KS", "OR", "VA"}:
+        for source in _additional_inputs(packet, state, context):
+            segments = source["segments"]
+            reason = None
+            if not source.get("stored_complete", True) or not segments or any(
+                not isinstance(segment, str) for segment in segments
+            ):
+                reason = "stored_projection_truncated_or_missing_pages"
+            elif not re.search(
+                r"(?:be\s+it\s+(?:enacted|resolved)|resolved|whereas|section\s+\d+)",
+                "".join(segments), re.IGNORECASE,
+            ):
+                reason = "stored_projection_header_only_or_no_substantive_body_marker"
+            if reason:
+                exclusion = {
+                    key: source[key] for key in (
+                        "reader", "source_reader", "extraction_path",
+                        "extraction_selector", "source_path", "source_url",
+                    )
+                } | {
+                    "reason": reason,
+                    "extraction_sha256": packet.pin(source["extraction_path"])["sha256"],
+                    "original_source_sha256": packet.pin(source["source_path"])["sha256"],
+                }
+                context.setdefault("excluded_source_views", []).append(exclusion)
+                if reason not in context["negative_flags"]:
+                    context["negative_flags"].append(reason)
+                continue
+            yield source
+    elif state == "MI":
         for reader in ("pymupdf", "pypdf"):
             stream = row[f"reader_streams.{reader}"]
             name = f"v1_input/{stream['file']}"
@@ -361,6 +586,163 @@ def _reader_inputs(packet: FrozenPacket, state: str, spec: dict, context: dict):
                     }
 
 
+def _pdf_inputs(name, source_path, source_url, source_sha256, readers, n_pages, page_key):
+    for source_reader, reader, pages in readers:
+        strings = [page.get("text") for page in pages]
+        yield {
+            "reader": reader, "source_reader": source_reader, "segments": strings,
+            "extraction_path": name,
+            "extraction_selector": f"{source_reader}/pages/*/text",
+            "source_path": source_path, "source_url": source_url,
+            "source_sha256": source_sha256, "n_pages": len(pages), "kind": "original_pdf",
+            "stored_complete": (
+                len(pages) == n_pages
+                and [page.get(page_key) for page in pages] == list(range(1, n_pages + 1))
+                and not any(page.get("truncated") or page.get("header_only") for page in pages)
+            ),
+        }
+
+
+def _additional_inputs(packet, state, context):
+    row = context["source_record"]
+    if state == "AZ":
+        for exchange in row["original_exchanges"]:
+            link = _one(
+                [link for link in row["canonical_links"] if link["url"] == exchange["url"]],
+                "Arizona saved original exchange/link",
+            )
+            pdf = link["media_type"] == "application/pdf"
+            if not pdf and link["media_type"] != "text/html":
+                raise ValueError("Arizona unrecognized original media type")
+            name = f"derived/{exchange['exchange_id']}.{'pdf' if pdf else 'html'}.json"
+            projection = packet.read(name)
+            common = {
+                "extraction_path": name, "source_path": exchange["body_path"],
+                "source_url": exchange["url"], "source_sha256": exchange["body_sha256"],
+                "stored_complete": (
+                    exchange["complete"] is True and exchange["http_status"] == 200
+                    and exchange["curl_returncode"] == 0
+                ),
+            }
+            if pdf:
+                for reader in ("pymupdf", "pypdf"):
+                    pages = projection[f"{reader}_pages"]
+                    yield {
+                        **common, "reader": reader, "source_reader": reader,
+                        "segments": pages, "extraction_selector": f"{reader}_pages/*",
+                        "n_pages": len(pages), "kind": "original_pdf",
+                        "stored_complete": (
+                            common["stored_complete"]
+                            and len(pages) == projection[f"{reader}_page_count"]
+                            and not projection["page_count_discrepancy"]
+                        ),
+                    }
+            else:
+                yield {
+                    **common, "reader": "html_full_projection",
+                    "source_reader": "stored_visible_literal_data_projection",
+                    "segments": [projection["visible_literal_data_projection"]],
+                    "extraction_selector": "visible_literal_data_projection",
+                    "n_pages": None, "kind": "original_html",
+                }
+    elif state == "KS":
+        linkage = json.loads(context["source_linkage_metadata_json"])
+        original = linkage["original"]
+        exchange = original["original_exchange"]
+        name = f"derived/pdf/{exchange:03}.json"
+        projection = packet.read(name)
+        response = packet.read(f"raw/{exchange:03}/result.json")
+        for source in _pdf_inputs(
+            name, f"raw/{exchange:03}/body.bin", original["original_url"],
+            response["body_sha256"],
+            [(reader, "pymupdf" if reader == "fitz" else reader, projection[reader]["pages"])
+             for reader in ("fitz", "pypdf")],
+            len(projection["fitz"]["pages"]), "number",
+        ):
+            yield source
+        for html in linkage["html_originals"]:
+            exchange = html["exchange"]
+            name = f"derived/document_html/{exchange:03}.json"
+            projection = packet.read(name)
+            segments = [segment["text"] for segment in projection["segments"]]
+            if "".join(segments) != projection["text"]:
+                raise ValueError("Kansas saved HTML segment/text disagreement")
+            yield {
+                "reader": "html_full_projection",
+                "source_reader": "stored_document_html_segments",
+                "segments": segments, "extraction_path": name,
+                "extraction_selector": "segments/*/text",
+                "source_path": f"raw/{exchange:03}/body.bin", "source_url": html["url"],
+                "source_sha256": packet.read(f"raw/{exchange:03}/result.json")["body_sha256"],
+                "n_pages": None, "kind": "original_html",
+            }
+    elif state == "OR":
+        pdfs = packet.read("derived/pdfs.json")
+        for proof in row["proof"]:
+            projection = _one(
+                [item for item in pdfs if item["exchange"] == proof["pdf_exchange"]],
+                "Oregon accepted introduced PDF",
+            )
+            if (
+                projection["identity"] != row["identity"]
+                or projection["version"] != "Introduced"
+                or projection["url"] != proof["link"]["url"]
+            ):
+                raise ValueError("Oregon original proof/projection disagreement")
+            for source in _pdf_inputs(
+                "derived/pdfs.json", f"transport/{projection['exchange']:03}.body",
+                projection["url"], projection["body_sha256"],
+                [(reader, reader, projection["pages"][reader])
+                 for reader in ("pymupdf", "pypdf")],
+                projection["page_count"], "page",
+            ):
+                source["extraction_selector"] = (
+                    f"{pdfs.index(projection)}/pages/{source['source_reader']}/*/text"
+                )
+                yield source
+    else:
+        yield {
+            "reader": "html_full_projection", "source_reader": "stored_exact_main_text",
+            "segments": [row["exact_main_text"]],
+            "extraction_path": "derived/original_contexts.json",
+            "extraction_selector": f"{context['source_record_locator']}/exact_main_text",
+            "source_path": row["html_artifact"],
+            "source_url": row["introduced_link"]["url"], "source_sha256": None,
+            "n_pages": None, "kind": "original_html",
+        }
+        if row.get("pdf_transport_id") is not None:
+            name = "derived/pdf_pages.json"
+            pages = packet.read(name)
+            selected = [
+                page for page in pages if page["transport_id"] == row["pdf_transport_id"]
+            ]
+            if any(
+                (page["native_session"], page["native_identifier"]) != (
+                    row["native_session"], row["native_identifier"]
+                ) for page in selected
+            ):
+                raise ValueError("Virginia PDF/context disagreement")
+            for source in _pdf_inputs(
+                name, f"transport/{row['pdf_transport_id']:03}.body",
+                _one(
+                    [response["url"] for response in packet.read(
+                        "derived/response_classifications.json"
+                    ) if response["transport_id"] == row["pdf_transport_id"]],
+                    "Virginia stored PDF URL",
+                ),
+                None,
+                [(reader, reader, [
+                    {"page_number": page["page_number"], "text": page[f"{reader}_text"]}
+                    for page in selected
+                ]) for reader in ("pymupdf", "pypdf")],
+                row["pdf_page_count"], "page_number",
+            ):
+                source["extraction_selector"] = (
+                    f"transport_id={row['pdf_transport_id']}/*/{source['source_reader']}_text"
+                )
+                yield source
+
+
 def native_date_observations(state: str, row: dict) -> list[dict]:
     """Retain explicit saved observations only; no date parsing or calendar inference."""
     observations = []
@@ -389,6 +771,16 @@ def native_date_observations(state: str, row: dict) -> list[dict]:
                     "raw_value": introduced["literal"],
                     "source_field": f"printed_observations/{reader}/introduced/literal",
                     "basis": "full saved Introduced and read first time literal, not a header year",
+                })
+    elif state == "VA":
+        for kind in ("offered", "prefiled"):
+            observation = row["printed_observations"].get(kind)
+            if observation:
+                observations.append({
+                    "event_kind": kind,
+                    "raw_value": observation["raw"],
+                    "source_field": f"printed_observations/{kind}/raw",
+                    "basis": "saved printed original main-source date literal, not session year",
                 })
     return observations
 
@@ -441,9 +833,12 @@ def reconcile_tables(contexts: pd.DataFrame, views: pd.DataFrame) -> dict:
         not views["context_id"].isin(contexts["context_id"]).all()
         or views.duplicated(["context_id", "reader"]).any()
         or not views["text"].map(_digest).eq(views["input_sha256"]).all()
+        or not views["raw_text_sha256"].eq(views["input_sha256"]).all()
         or not views["text"].str.len().eq(views["n_input_characters"]).all()
         or views["text"].str.strip().eq("").any()
-        or views[["approved", "policy_eligible", "analytical_admission"]].any().any()
+        or views[[
+            "approved", "policy_eligible", "analytical_admission", "training_admission"
+        ]].any().any()
     ):
         raise ValueError("whole-text/identity/negative-admission reconciliation failed")
     counts = views.groupby("context_id").size()
@@ -493,7 +888,7 @@ def build_state(data_dir: Path, out_dir: Path, state: str, spec: dict) -> dict:
         view_rows.extend(retained)
         context_rows.append({
             key: value for key, value in context.items()
-            if key not in {"source_record", "negative_flags", "available"}
+            if key not in {"source_record", "negative_flags", "available", "excluded_source_views"}
         } | {
             "state": state,
             "status": (
@@ -509,6 +904,7 @@ def build_state(data_dir: Path, out_dir: Path, state: str, spec: dict) -> dict:
             "source_manifest_path": str(packet.root / "manifest.json"),
             "source_manifest_sha256": spec["manifest_sha256"],
             "negative_flags_json": _json(context["negative_flags"]),
+            "excluded_source_views_json": _json(context.get("excluded_source_views", [])),
             "native_date_observations_json": _json(date_observations),
             "native_date_observation_status": (
                 "separate_raw_publisher_observations_not_source_date_replacements"
@@ -516,7 +912,9 @@ def build_state(data_dir: Path, out_dir: Path, state: str, spec: dict) -> dict:
             ),
             "n_retained_views": len(retained),
             "full_source_text_available": bool(retained),
-            "identity_basis": "explicit_frozen_canonical_crosswalk_and_native_original_linkage",
+            "identity_basis": context.get(
+                "identity_basis", "explicit_frozen_canonical_crosswalk_and_native_original_linkage"
+            ),
             "native_identity_certified": False,
             "approved": False,
             "policy_eligible": False,
@@ -524,6 +922,19 @@ def build_state(data_dir: Path, out_dir: Path, state: str, spec: dict) -> dict:
             "training_admission": False,
         })
     contexts, views = pd.DataFrame(context_rows), pd.DataFrame(view_rows)
+    if not view_rows:
+        views = pd.DataFrame(columns=[
+            "view_id", "context_id", "reader", "source_reader", "input_sha256",
+            "raw_text_sha256", "n_input_characters", "text", "source_kind", "n_pages",
+            "source_url", "original_source_path", "original_source_sha256",
+            "extraction_path", "extraction_sha256", "extraction_selector",
+            "source_record_sha256", "segment_character_counts_json", "segment_text_sha256s_json",
+            "text_assembly", "full_source_text_available", "approved", "policy_eligible",
+            "analytical_admission", "training_admission", "state", "source_record_locator",
+            "source_table_path", "source_table_sha256", "source_manifest_path",
+            "source_manifest_sha256", "negative_flags_json", "native_date_observations_json",
+            "native_date_observation_status",
+        ])
     summary = reconcile_tables(contexts, views)
     if (len(contexts), len(views)) != (spec["expected_contexts"], spec["expected_views"]):
         raise ValueError(f"{state}: bounded accepted population mismatch")
@@ -548,6 +959,9 @@ def build_state(data_dir: Path, out_dir: Path, state: str, spec: dict) -> dict:
         "source_packet_root": str(packet.root),
         "source_manifest_sha256": spec["manifest_sha256"],
         "counts": summary,
+        "n_excluded_source_views": sum(
+            len(json.loads(value)) for value in contexts["excluded_source_views_json"]
+        ),
         "limitations": spec["limitations"],
         "native_date_observations": {
             "column": "native_date_observations_json",
@@ -586,7 +1000,7 @@ def build_indexes(data_dir: Path, out_dir: Path) -> dict:
     if code_before != code_after:
         raise ValueError("index builder changed during execution")
     result = {
-        "status": "complete_four_bounded_initial_source_indexes",
+        "status": "complete_eight_bounded_initial_source_indexes",
         "created_at": utc_now_iso(),
         "builder_before": code_before,
         "builder_after": code_after,

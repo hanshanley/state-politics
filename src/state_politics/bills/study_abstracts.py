@@ -261,6 +261,13 @@ def build_inventory(
 ) -> dict:
     if out_dir.exists():
         raise FileExistsError(out_dir)
+    native_snapshot = _snapshot(native_dir / "manifest.json")
+    native_manifest = json.loads((native_dir / "manifest.json").read_text(encoding="utf-8"))
+    native_table = (
+        "native_bill_overlap.parquet"
+        if "native_bill_overlap.parquet" in native_manifest["artifacts"]
+        else "native_context_overlap.parquet"
+    )
     paths = {
         "extraction_manifest": data_dir / "bill_extraction_manifest.json",
         "bills": data_dir / "bills.parquet",
@@ -269,7 +276,7 @@ def build_inventory(
         "ledger": filing_dir / "bill_filing_evidence.csv",
         "matrix": filing_dir / "state_matrix.csv",
         "native_manifest": native_dir / "manifest.json",
-        "native_contexts": native_dir / "native_context_overlap.parquet",
+        "native_contexts": native_dir / native_table,
         "native_report": native_dir / "report.json",
         "producer": Path(__file__),
         "revealed": Path(__file__).parent.parent / "analysis/revealed.py",
@@ -283,9 +290,10 @@ def build_inventory(
         paths["description_manifest"] = description_dir / "manifest.json"
         paths["description_ledger"] = description_dir / "candidate_bill_ledger.csv"
     before = {key: _snapshot(path) for key, path in paths.items()}
+    if before["native_manifest"] != native_snapshot:
+        raise ValueError("native manifest changed while selecting canonical bill evidence")
     extraction = json.loads(paths["extraction_manifest"].read_text(encoding="utf-8"))
     filing = json.loads(paths["filing_manifest"].read_text(encoding="utf-8"))
-    native_manifest = json.loads(paths["native_manifest"].read_text(encoding="utf-8"))
     window_path = Path(filing["inputs"]["window_manifest"]["path"])
     paths["window_manifest"] = window_path
     before["window_manifest"] = _snapshot(window_path)
@@ -310,7 +318,7 @@ def build_inventory(
         (
             native_manifest,
             (
-                ("native_contexts", "native_context_overlap.parquet"),
+                ("native_contexts", native_table),
                 ("native_report", "report.json"),
             ),
         ),

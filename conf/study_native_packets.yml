@@ -183,3 +183,262 @@ packets:
     preserve_context_fields: [negative_flags_json, native_date_observations_json, native_date_observation_status, source_manifest_sha256, source_record_sha256, identity_basis]
     expected_contexts: 32
     expected_views: 60
+  - state: AZ
+    root: data/processed/partial-native-input-index-2023-2024-v3/AZ
+    manifest_sha256: 38f804e9da95484ff693d5ad806b9fcd4d776530e129d66b30f7bf107e0d43fb
+    profile: views
+    contexts: context_inventory.parquet
+    views: source_view_inputs.parquet
+    context_id: context_id
+    identifier: identifier
+    bill_id: canonical_bill_id
+    session_identifier: session_identifier
+    status: status
+    preserve_context_fields: [negative_flags_json, native_date_observations_json, native_date_observation_status, source_manifest_sha256, source_record_sha256, identity_basis]
+    expected_contexts: 4
+    expected_views: 9
+  - state: KS
+    root: data/processed/partial-native-input-index-2023-2024-v3/KS
+    manifest_sha256: 1b5966f75e78c5825e4768d88411f2d44532a05ec646d9045213eed5b2ae0698
+    profile: views
+    contexts: context_inventory.parquet
+    views: source_view_inputs.parquet
+    context_id: context_id
+    identifier: identifier
+    bill_id: canonical_bill_id
+    session_identifier: session_identifier
+    status: status
+    preserve_context_fields: [negative_flags_json, native_date_observations_json, native_date_observation_status, source_manifest_sha256, source_record_sha256, identity_basis]
+    expected_contexts: 12
+    expected_views: 15
+  - state: OR
+    root: data/processed/partial-native-input-index-2023-2024-v3/OR
+    manifest_sha256: 22776dde686fd30c85d94835871e205a1ab268fc21e6b204b331f73a2399acac
+    profile: views
+    contexts: context_inventory.parquet
+    views: source_view_inputs.parquet
+    context_id: context_id
+    identifier: identifier
+    bill_id: canonical_bill_id
+    session_identifier: session_identifier
+    status: status
+    preserve_context_fields: [negative_flags_json, native_date_observations_json, native_date_observation_status, source_manifest_sha256, source_record_sha256, identity_basis]
+    expected_contexts: 32
+    expected_views: 64
+  - state: VA
+    root: data/processed/partial-native-input-index-2023-2024-v3/VA
+    manifest_sha256: ae65f681b2993b2d3e476cb27ce3bd09813ef0d18a726d51def4983724e5403b
+    profile: views
+    contexts: context_inventory.parquet
+    views: source_view_inputs.parquet
+    context_id: context_id
+    identifier: identifier
+    bill_id: canonical_bill_id
+    session_identifier: session_identifier
+    status: status
+    preserve_context_fields: [negative_flags_json, native_date_observations_json, native_date_observation_status, source_manifest_sha256, source_record_sha256, identity_basis]
+    expected_contexts: 12
+    expected_views: 16
+  - state: MO
+    root: data/processed/retained-campaign-input-index-2023-2024-v1/MO
+    manifest_sha256: dc824a51073fceda874fc654307413eff0f87f2adc12d1a53478405b996d261c
+    profile: views
+    contexts: context_inventory.parquet
+    views: source_view_inputs.parquet
+    context_id: context_id
+    identifier: identifier
+    bill_id: canonical_bill_id
+    session_identifier: session_identifier
+    status: source_status
+    preserve_context_fields: [negative_flags_json, native_date_observations_json, native_date_observation_status, source_manifest_sha256, source_record_sha256, identity_basis]
+    expected_contexts: 1152
+    expected_views: 2304
+  - state: NY
+    root: data/processed/retained-campaign-input-index-2023-2024-v1/NY
+    manifest_sha256: 99a929e5f7f554952d7f4a8ea69e25a060dde03a6d7f294899b6d55c74421493
+    profile: views
+    contexts: context_inventory.parquet
+    views: source_view_inputs.parquet
+    context_id: context_id
+    identifier: original_source_record_json.identifier
+    canonical_session: "2023-2024"
+    allow_missing_identity: true
+    source_only:
+      selector: original_source_record_json.population_kind
+      values: [native_untyped, canonical_only]
+    binding_evidence:
+      - path: data/processed/ny-full-source-campaign-v1/contract/campaign_contract.json
+        sha256: 459617115e22f240b203261df698b95680b6ba603d05f0f2c63c37d49a7eb933
+        selector: scope
+        expected: all 24,315 typed identities in the frozen 2023-2024 NY native census
+    status: source_status
+    preserve_context_fields: [negative_flags_json, native_date_observations_json, native_date_observation_status, source_manifest_sha256, source_record_sha256, identity_basis, original_identity_observation]
+    expected_contexts: 24317
+    expected_views: 48590
+  - state: IL
+    root: data/processed/retained-campaign-input-index-2023-2024-v1/IL
+    manifest_sha256: 067dbf0dc7b2db20f4950f5704c8c64ea0d52cabd613af237b08583105166a9c
+    profile: views
+    context_granularity: source_reference
+    contexts: context_inventory.parquet
+    views: source_view_inputs.parquet
+    context_id: context_id
+    identifier: identifier
+    session_identifier: native_session_identifier
+    session_map: {"103": "103rd"}
+    allow_missing_identity: true
+    status: source_status
+    preserve_context_fields: [negative_flags_json, native_date_observations_json, native_date_observation_status, source_manifest_sha256, source_record_sha256, identity_basis, original_identity_observation]
+    expected_contexts: 13391
+    expected_views: 10700
+  - state: PA
+    root: data/processed/retained-campaign-input-index-2023-2024-v1/PA
+    manifest_sha256: da066ed53467ccce662976a7b1b14ec499775d268225958bccfc2f28fe779451
+    profile: views
+    contexts: context_inventory.parquet
+    views: source_view_inputs.parquet
+    context_id: context_id
+    identifier: original_source_record_json.identifier
+    canonical_session: "2023-2024"
+    binding_evidence:
+      - path: data/processed/pennsylvania-full-original-actual-stopped-prefix-inspection-v1/stopped_root_copy/contract.json
+        sha256: 14dd2f6c684847418cc38baaf813a565c539f886274d8f2e30f7c72fe8d45bf7
+        selector: session
+        expected: 2023-2024 regular
+    allow_missing_identity: true
+    status: source_status
+    view_reader_allowlist: [pdf_stored_reader, html_full_projection, parent_pdf_stored_reader, parent_html_stored_reader]
+    preserve_context_fields: [negative_flags_json, native_date_observations_json, native_date_observation_status, source_manifest_sha256, source_record_sha256, identity_basis]
+    expected_contexts: 4786
+    expected_views: 454
+  - state: TX
+    packet_id: TX_retained_continuation
+    root: data/processed/retained-supplement-input-index-2023-2024-v1/TX
+    manifest_sha256: d6dedc53ece8d3cd1f12e1415f6ed09495ac5aa51478b020dd330e953ebd5f78
+    profile: views
+    context_granularity: source_reference
+    contexts: context_inventory.parquet
+    views: source_view_inputs.parquet
+    context_id: context_id
+    identifier: identifier
+    bill_id: canonical_bill_id
+    session_identifier: native_session_identifier
+    session_map: {"88R": "88"}
+    allow_missing_identity: true
+    source_only:
+      selector: negative_flags_json
+      match: json_array_any
+      values: [canonical_only_unmatched_native_identity_no_alias, unavailable_HB1_HTML_shell_PDF_unfetched]
+    status: source_status
+    view_reader_allowlist: [html_full_source_projection, initial_pdf_stored_reader, stored_native_body, stored_prospective_input]
+    preserve_context_fields: [negative_flags_json, native_date_observations_json, native_date_observation_status, source_manifest_sha256, source_record_sha256, identity_basis, original_document_metadata_json]
+    expected_contexts: 11809
+    expected_views: 6129
+  - state: WA
+    root: data/processed/retained-supplement-input-index-2023-2024-v1/WA
+    manifest_sha256: 2cde74b26a0acfcf4eafc73fe1a1df30fefab26949b89f168cec74bc5eb9a487
+    profile: views
+    context_granularity: source_reference
+    contexts: context_inventory.parquet
+    views: source_view_inputs.parquet
+    context_id: context_id
+    identifier: identifier
+    bill_id: canonical_bill_id
+    session_identifier: session_identifier
+    allow_missing_identity: true
+    source_only:
+      selector: negative_flags_json
+      match: json_array_any
+      values: [SR8601_source_note_plain_heading_version_conflict_unresolved]
+    status: source_status
+    view_reader_allowlist: [html_full_projection, stored_pdf_reader]
+    preserve_context_fields: [negative_flags_json, native_date_observations_json, native_date_observation_status, source_manifest_sha256, source_record_sha256, identity_basis]
+    expected_contexts: 411
+    expected_views: 371
+  - state: NM
+    root: data/processed/retained-supplement-input-index-2023-2024-v1/NM
+    manifest_sha256: 38d74fdb9cc8ed3694ebaba6dcb6953d0ffa2ffb22ba1cd6cdaf406ba60e05c7
+    profile: views
+    context_granularity: source_reference
+    contexts: context_inventory.parquet
+    views: source_view_inputs.parquet
+    context_id: context_id
+    identifier: identifier
+    bill_id: canonical_bill_id
+    session_identifier: session_identifier
+    allow_missing_identity: true
+    source_only:
+      selector: negative_flags_json
+      match: json_array_any
+      values: [quarantined_wrong_session_document_never_exact_native_match, later_or_unclassified_version_not_exact_introduced]
+    status: source_status
+    view_reader_allowlist: [pdf_embedded_text_all_pages_no_ocr, html_visible_text_utf8_confirmed]
+    preserve_context_fields: [negative_flags_json, native_date_observations_json, native_date_observation_status, source_manifest_sha256, source_record_sha256, identity_basis]
+    expected_contexts: 87
+    expected_views: 86
+  - state: UT
+    root: data/processed/retained-supplement-input-index-2023-2024-v1/UT
+    manifest_sha256: 29d7b22356664795d1c72c281656bb7804e0f300ab3ef9fd89cfc827551049cb
+    profile: views
+    contexts: context_inventory.parquet
+    views: source_view_inputs.parquet
+    context_id: context_id
+    identifier: identifier
+    bill_id: canonical_bill_id
+    session_identifier: session_identifier
+    status: source_status
+    view_reader_allowlist: [pymupdf, pypdf, html_full_projection]
+    preserve_context_fields: [negative_flags_json, native_date_observations_json, native_date_observation_status, source_manifest_sha256, source_record_sha256, identity_basis]
+    expected_contexts: 7
+    expected_views: 21
+  - state: OK
+    root: data/processed/retained-supplement-input-index-2023-2024-v1/OK
+    manifest_sha256: a2df150f347f8dedb6c008bbc5cc187ad0e6acaa968d4898db82a57a7d9bc172
+    profile: views
+    contexts: context_inventory.parquet
+    views: source_view_inputs.parquet
+    context_id: context_id
+    identifier: identifier
+    session_identifier: session_identifier
+    allow_missing_identity: true
+    status: source_status
+    preserve_context_fields: [negative_flags_json, native_date_observations_json, native_date_observation_status, source_manifest_sha256, source_record_sha256, identity_basis, partial_stored_projection_json]
+    expected_contexts: 1
+    expected_views: 0
+  - state: WV
+    root: data/processed/retained-supplement-input-index-2023-2024-v1/WV
+    manifest_sha256: 1686fc86820a65242cbed20df5df4a09b646f24277f6680969964bbf40a3a469
+    profile: views
+    contexts: context_inventory.parquet
+    views: source_view_inputs.parquet
+    context_id: context_id
+    identifier: identifier
+    session_identifier: session_identifier
+    allow_missing_identity: true
+    status: source_status
+    preserve_context_fields: [negative_flags_json, native_date_observations_json, native_date_observation_status, source_manifest_sha256, source_record_sha256, identity_basis, partial_stored_projection_json]
+    expected_contexts: 1
+    expected_views: 0
+  - state: MT
+    root: data/processed/montana-native-introduction-events-v2
+    manifest_sha256: fa80e600c142f70107f5e42018df0477df068cd12529af72d3e5864a59ed847e
+    profile: observations
+    contexts: source_introduction_observations.parquet
+    context_id: bill_id
+    identifier: identifier
+    bill_id: bill_id
+    session_identifier: session_identifier
+    allow_missing_identity: true
+    source_only:
+      selector: source_identity_kind
+      values: [draft_request]
+    status: intro_source_context_status
+    native_introduction_field: intro_bound_native_origin_date_observation
+    native_introduction_when:
+      - selector: intro_source_context_status
+        values: [exact_formal_identity_native_event_observation]
+      - selector: intro_bound_native_event_status
+        values: [unique_origin_introduction_event]
+    preserve_context_fields: [source_identity_kind, native_match_status, n_native_identity_matches, matched_native_record_index, matched_native_formal_identifier, intro_source_context_status, intro_bound_native_event_status, intro_bound_native_origin_date_observation]
+    expected_contexts: 18403
+    expected_views: 0

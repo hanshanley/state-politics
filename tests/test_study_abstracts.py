@@ -294,6 +294,44 @@ def test_changed_source_text_fails_before_output_creation(tmp_path):
     assert not out.exists()
 
 
+@pytest.mark.parametrize("corrupt_bill_binding", [False, True])
+def test_declared_canonical_bill_index_prevents_reference_context_double_counting(
+    tmp_path, corrupt_bill_binding,
+):
+    data, filing, native = packet(tmp_path)
+    raw_path = native / "native_context_overlap.parquet"
+    bills = pd.read_parquet(raw_path)
+    bills.loc[0, "n_retained_views"] = 5
+    bill_path = native / "native_bill_overlap.parquet"
+    bills.to_parquet(bill_path, index=False)
+    pd.concat([bills, bills.iloc[:1]], ignore_index=True).to_parquet(raw_path, index=False)
+    manifest_path = native / "manifest.json"
+    manifest = json.loads(manifest_path.read_text())
+    manifest["artifacts"]["native_context_overlap.parquet"]["sha256"] = sha256_file(raw_path)
+    manifest["artifacts"][bill_path.name] = {
+        "sha256": "bad" if corrupt_bill_binding else sha256_file(bill_path),
+    }
+    manifest_path.write_text(json.dumps(manifest))
+    filing_path = filing / "manifest.json"
+    filing_manifest = json.loads(filing_path.read_text())
+    filing_manifest["inputs"]["matrix_manifest"]["sha256"] = sha256_file(manifest_path)
+    filing_path.write_text(json.dumps(filing_manifest))
+    out = tmp_path / "out"
+    if corrupt_bill_binding:
+        with pytest.raises(ValueError, match="native_contexts: packet checksum"):
+            build_inventory(data, filing, native, out)
+        assert not out.exists()
+    else:
+        build_inventory(data, filing, native, out)
+        result = pd.read_parquet(out / "bill_evidence.parquet")
+        observed = result.loc[
+            result.bill_id.eq(bills.bill_id.iloc[0]), "n_indexed_native_views",
+        ].item()
+        assert observed == 5
+        binding = json.loads((out / "manifest.json").read_text())["inputs"]["native_contexts"]
+        assert binding["path"] == str(bill_path.resolve())
+
+
 @pytest.mark.parametrize("changed_ledger", [False, True])
 def test_description_reuse_binds_relevant_event_bytes_not_unrelated_native_matrix(
     tmp_path,

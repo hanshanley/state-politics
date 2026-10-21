@@ -48,51 +48,107 @@ The 52 previously examined challenge records remain source/group/text-isolated;
 no new training example is an exact or detected near copy. All wrapped training
 inputs fit the retained 1,024-token budget (maximum 468). Whole-group exclusion
 is an explicit conservative experimental choice, not adjudicated gold or
-certification of remaining labels. Fresh full-encoder/head training has started
-in a distinct provisional checkpoint with the prior three-epoch settings and
-fixed decision policy. Its actual evaluation is pending; default provisional
-loader refusal and the publication boundary remain unchanged.
+certification of remaining labels. Fresh full-encoder/head training completed,
+with a verified encoder parameter change. At the unchanged confidence .8,
+margin .2 and temperature 1 policy, its development decision accuracy was 54%
+versus 62% for the prior Republican curriculum; the previously examined
+52-input challenge was 88.46% versus 94.23%. Exclusion repairs label integrity,
+not demonstrated accuracy. Neither model is promoted.
+
+## Target-cycle classification diagnostics and curriculum
+
+A frozen **190-input complete-metadata diagnostic** accounts for all 50 states:
+110 topic decisions and 80 abstentions. Maine has no candidate; MA and MT had
+one each in that frozen snapshot. These are manually read, model-blind
+assistant references, **not independent human gold or a population sample**.
+After inspecting five models' results, this is a development diagnostic,
+not an untouched final holdout. At the same fixed decision policy, the best
+decision accuracy was only **61.58%** (joint target rejection); the
+conflict-exclusion model reached 57.37%. All remain provisional and the
+default loader refuses them. Actual results and full decision records are in
+`data/processed/cycle-metadata-blind-evaluation-20261021-v1/`.
+
+The earlier corpus had only 51 positive reviewed bill examples. Two separate
+GPT-6.1 Sol reviewers therefore read **564 new complete target inputs**, with
+the 190 diagnostic and earlier challenge/source/group reservations excluded
+before sampling. Decisions comprise 410 topics, 75 non-policy,
+45 insufficient-evidence and 34 rubric-ambiguity cases. The 34 ambiguous
+cases remain in explicit quarantine, not arbitrary winning labels; one
+1,538-token unit is separately preserved rather than truncated for training.
+
+The composed experimental dataset has **6,632 training / 50 development
+records**, retaining the original initialization/review records plus 529 new
+bounded target units. Canonical 6,158-row labels remain unchanged. An explicit
+reviewed-target sampling weight of 8 addresses external-source dominance
+without altering the default trainer's original epoch shuffle. A separate
+three-epoch full encoder/head experiment uses a pre-frozen evaluation plan;
+its results cannot certify independent accuracy or isolate a causal effect of
+sampling because the curriculum also changed.
+
+That run completed with a verified encoder update and finite losses
+1.04416, .49240 and .30613. At the frozen policy it reached **61.05%** on the
+190 cycle inputs, **92.31%** on the earlier 52-input platform challenge and
+**60%** on development 50. Its cycle classified precision was **58.73%**:
+74 correct topics among 126 classified inputs, plus 42 correct abstentions.
+This does not surpass the prior best cycle decision result; **no model is
+promoted**. Full decisions, source/weight immutability and default
+provisional-loader refusal are retained in
+`data/processed/cycle-target-balanced-evaluation-20261021-v1/`.
 
 ## Shared partial-native indexes and unpublished explorer
 
-The native registry now indexes **13 accepted packets across 12 states**:
-CA, CO, NC, OH, SD, WI, TX, FL, MI, MD, MN and KY. The four additions reuse
-stored accepted original-reader/source projections, not new collection or PDF
-extraction. Their bounded selections contain **104 contexts / 233 alternative
-views**, with text for 101 contexts. MN SR61 and KY HJR21/HJR22 remain unavailable.
-All 335 original source-file fingerprints remain unchanged. These are selected
-partial inventories, not statewide native censuses or newly closed states.
-Raw native date observations and negative flags survive without admission.
+The native registry now indexes **28 packets across 26 states**. Shared
+partial-index v3 retains MI/MD/MN/KY/AZ/KS/OR/VA selections: **164 contexts /
+337 alternative views**, with text for 156 contexts. Two common retained
+campaign batches preserve another **62,208 and 12,659 complete stored views**
+without new HTTP or extraction. Raw markup, ancillary history, wrong-session
+documents and partial/unavailable originals keep distinct dispositions.
+MT contributes guarded date-only observations; OK/WV contribute explicit
+zero-view contexts. None is a new statewide completeness certification.
 
-Partial-index v2 manifest:
-`340c652dec60090a538710f2af75f5ed0623645935c063e4bd76e6d7bade078b`.
-Native-overlap v10 manifest:
-`f16998d466855fe653d988792f8707651541a7d45c9c7dc2459afb71266f8198`.
-The combined index contains 43,584 wider contexts / 59,727 alternative views.
-Its 26,872 introduction-observed missing-text rows reflect the expanded
-12-state scope, not a regression from the earlier eight-state snapshot.
-Native denominators remain unknown; dates and alternatives are not extra bills.
+Partial-index v3 manifest:
+`4fd4d59c89399504cf0d887d10e267be791fe7df1ff4822027fe414f20b13051`.
+Native-overlap v14 manifest:
+`867eb6c6adfcbc8274114819f561794567cd60eb860b399fb1b33a6faac4e60e`.
+The combined wider index retains **118,009 raw contexts / 128,486 indexed
+views**, including 15,433 source-only contexts. A separate canonical-bill
+aggregate covers **102,365 unique bills** without double-counting physical
+references. Reader allowlists exclude 6,190 markup/alternative views from the
+policy-reader index, not from their original packets. The 52,237
+introduction-observed missing-text contexts use this wider registered scope,
+not a target-cycle denominator. Native dates cannot override canonical dates;
+conflicting native observations remain unresolved rather than earliest/latest.
+
+Reusing the accepted MT native event packet recovers **1,640 formal
+2023–2024 introduction observations**, including **213 calendar-2024
+prefilings in session 2025**. Draft requests and ancillary history text are
+not policy inputs. Separate bounded official AL/SC discovery retains raw
+responses and negative/budget evidence, but does not establish native
+universes or add approved originals to this index.
 
 An actual **local-only, unpublished evidence explorer** is built at
-`data/preview-cycle-evidence-v2/`. It covers all 50 states / 100 organizations,
+`data/preview-cycle-evidence-v3/`. It covers all 50 states / 100 organizations,
 preserves full metadata/platform text and supports state/source/party filters,
 literal search, pagination and complete filtered-query downloads. Keyboard,
 mobile and no-JS coverage/download access were exercised in real Chromium.
 Maine explicitly distinguishes its missing cycle-date cohort from 9,877 wider
 retained contexts. Search scope is the selected state/source, not national
-full-text search. Native originals/PDFs are not exported, and token-plan UI
-integration remains deferred; metadata token fields are still null.
+full-text search. The explicit native bundle now exports **39,576 complete
+text views / 27,512 source references / 27,444 distinct candidate bills**;
+raw PDFs are not embedded. The token plan has a separate display/download
+namespace, preserving the original null metadata token fields. Planning is
+not inference or approval.
 
 Preview build-manifest SHA-256:
-`3a15286ec34bd86c7e7a48b797651ea6c7bd56af38422d4707bf63d5286566d2`.
+`5933616d52605f5c4cef273e7ee0aa2cde2f0c7caed0178e3b6acf883b986166`.
 No report, public route, website deployment, classification findings or
 scientific release is included. Generated evidence/preview files remain
 local and Git-ignored; a code push does not back them up.
 
 ## National metadata evidence and complete token coverage
 
-The shared metadata export now retains **155,958 candidate contexts** in one
-50-state matrix: 151,615 source-coded filing/introduction contexts, 3,482
+The shared metadata export now retains **157,598 candidate contexts** in one
+50-state matrix: 151,615 source-coded filing/introduction contexts, 5,122
 additional native-reported-date candidates and 861 description-stated candidates.
 The latter two channels remain explicitly conditional; they are not silently
 added to the coded-event count or admitted to analysis.
@@ -100,37 +156,48 @@ added to the coded-event count or admitted to analysis.
 The packet preserves **50,959 full source abstracts and notes** across **49,242
 contexts**, together with all source titles. **1,409 contexts have different
 abstract variants**; none is replaced with a guessed latest/longest summary.
-The 157,675 full title/abstract views are alternatives, not extra bills.
+The 159,315 full title/abstract views are alternatives, not extra bills.
 Source tests, Montana draft requests, procedural title-only cases and unknown
 native-text presence remain explicit. Potentially later metadata is never
 prepended to an introduced native text.
 
-Current metadata packet `data/processed/study-abstract-evidence-2023-2024-v2/`
+Current metadata packet `data/processed/study-abstract-evidence-2023-2024-v3/`
 has manifest SHA-256
-`69af46267bdc8c6ce4adb02a1bf4ec6ab1c06eee897f75af4efd38fd7611616b`.
+`38bf92a35831fe6ca75003f16caf2fce3354f48f54208bbf11a2b09d79b76c9d`.
 Every selected source abstract/note and title, each constructed full string/hash,
 and all prior matrix columns were checked against the original bound inputs.
 Abstract authorship, stage and filing-time alignment are not certified.
 V1 remains preserved with manifest
 `931a2ce0bcdb0a7ed328dc966cd21a3a14ff2c77cd561c5208d25753792f1150`.
-V2 updates registered-native presence and lineage; both complete metadata-view
-and abstract artifacts are byte-identical to v1. The accepted token plan is
-therefore reusable without retokenizing unchanged text.
+V2 updated registered-native presence with byte-identical metadata/abstract
+artifacts. V3 adds the 1,640 MT date candidates; the complete abstract artifact
+remains byte-identical while metadata views and their bound token plan expand.
 
 The retained official ModernBERT tokenizer was then used **without encoder
-weights** to plan all **10,044,063 source tokens** in **158,506 bounded windows**,
+weights** to plan all **10,059,370 source tokens** in **160,146 bounded windows**,
 with zero discarded source tokens. There are 393 multichunk views; the largest
 contains 16,848 source tokens / 21 windows. Every wrapped model input is at
 most 1,024 tokens. An independent low-level tokenizer replay reproduced every
-token and character offset for all 157,675 views. The full-source tokenizer's
+token and character offset for **all 159,315 current views**, including exact
+equality of all 157,675 earlier plan rows and 1,640 new rows. The full-source tokenizer's
 long-sequence warning was retained; no unwindowed sequence was passed to a model.
 Token coverage is not classification accuracy or source eligibility.
 
-Token packet `data/processed/study-metadata-token-plan-2023-2024-v1/` has manifest
-SHA-256 `4b9f5dce745031ecefa8058037e69457dd79559aa9e2b15c1fba48333a937cfe`.
+Token packet `data/processed/study-metadata-token-plan-2023-2024-v2/` has manifest
+SHA-256 `f251ec5da26987c61d2ddee4987c150b606504a6d82b52330cc6ce6dce2fb83b`.
 Both packets retain `model_input_approved=false` and
-`analytical_admission=false`. No encoder execution, training, calibration,
-canonical topic labels or publication changes occurred.
+`analytical_admission=false`. These evidence producers perform no encoder
+execution, training, calibration, canonical-label changes or publication.
+The final integrated receipt
+`data/processed/cycle-expanded-evidence-reconciliation-20261021-v1.json`
+verifies **128 input hash/seven-stat bindings and 435 output hashes/byte counts**,
+unchanged filing ledgers/raw actions/full abstracts and unique native-bill
+counts. Receipt SHA-256:
+`4b9c36e407d161b7967aa079ae776f10db3b748c314a8c6a3aacd8e8b7bcd16b`.
+The changed-surface parent suite passed **455 tests**, including real Chromium;
+the public-documentation audit passed 135 checks. These scoped checks do not
+resolve the previously recorded missing legacy analytical artifacts or certify
+scientific findings.
 
 ## Separate uncoded introduction and petition-filing evidence
 

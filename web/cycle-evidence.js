@@ -62,11 +62,13 @@ if (typeof document !== "undefined") {
     for (const row of matches.slice(begin, begin + pageSize)) {
       const article = element("article");
       const bill = row.source_type === "bill_metadata";
-      article.append(element("h3", bill
+      const native = row.source_type === "native_text";
+      article.append(element("h3", bill || native
         ? `${row.state} / ${row.identifier} / ${row.session_identifier} — ${row.title ?? "No title"}`
         : `${row.state} / ${row.party} — ${row.record_kind}`));
-      article.append(element("p", bill
-        ? `View: ${row.view_id} · Bill: ${row.bill_id} · Abstract: ${row.abstract_id ?? "none"}`
+      article.append(element("p", bill || native
+        ? `View: ${row.view_id} · Bill: ${row.bill_id} · `
+          + (native ? `Native context: ${row.context_id}` : `Abstract: ${row.abstract_id ?? "none"}`)
         : `Record: ${row.record_id} · Source: ${row.source_sha256 ?? "none retained"}`, "note record-id"));
       if (bill) {
         const context = row.bill_context;
@@ -86,11 +88,49 @@ if (typeof document !== "undefined") {
           + `Source filing: ${context.source_filing_date || "unknown"} · `
           + `Native-date candidate: ${context.native_introduction_date || "unknown"} · `
           + `Indexed native views: ${context.n_indexed_native_views ?? "unknown (state packet not registered)"}. `
-          + "Index only; no native document text/PDFs included.", "note"));
+          + "This count is an index, not full native text in this metadata view; use the separate native source if included.",
+          "note"));
+        if (row.token_plan) {
+          const plan = row.token_plan;
+          article.append(element("p",
+            `Verified tokenization planning: ${plan.n_input_tokens.toLocaleString()} source tokens · `
+            + `${plan.n_windows.toLocaleString()} windows · `
+            + `${plan.n_unique_covered_tokens.toLocaleString()} unique covered tokens · `
+            + `${plan.n_overlap_token_positions.toLocaleString()} overlapping token positions · `
+            + `${plan.n_discarded_tokens} discarded tokens. `
+            + `Model-input window lengths: ${plan.window_model_input_lengths.join(", ")} (maximum 1,024). `
+            + "Original source token fields remain null. Planning is not predictions, certainty, model admission "
+            + "or filing-time eligibility; all approval flags remain false.", "note token-plan"));
+        }
         article.append(sourceText("Read full raw title", row.title ?? null));
         article.append(sourceText("Read full source abstract / summary (unverified alignment)", row.abstract));
         article.append(sourceText("Read full source abstract note", row.abstract_note));
         article.append(sourceText("Read full title + abstract metadata view (not native text)", row.text));
+      } else if (native) {
+        const context = row.native_context;
+        article.append(element("p",
+          `Native reader/source: ${row.reader} · Packet root: ${row.packet_root} · `
+          + `Exact native context: ${row.context_id} · Join: ${context.canonical_join_basis}. `
+          + "Reader alternatives and repeated source roots are views, not extra bills.", "note"));
+        article.append(element("p",
+          `Retained native status/stage: ${context.packet_status ?? "unresolved"} · `
+          + `Native identifier: ${context.native_identifier} · `
+          + `Native-reported date: ${context.native_introduction_date || "unknown"} · `
+          + `Date disposition: ${context.date_evidence_status ?? context.native_window_disposition} · `
+          + `Source introduction: ${row.bill_context.source_introduction_date || "unknown"}. `
+          + "Native identity, original/introduced stage, filing-time alignment and legal/markup semantics "
+          + "are not certified. Model input, filing-time certification, training and analytical admission: false.",
+          "note"));
+        for (const [label, source] of [
+          ["Native context caveats and negative observations", context],
+          ["Original native source caveats", row.source_record],
+          ["Original native context caveats", row.source_context_record],
+        ]) {
+          const caveats = Object.fromEntries(Object.entries(source).filter(([key]) =>
+            /negative|date|identity|stage|version|status|semantics|certif|eligible|approv|admission|input_tier|construction|source_kind/i.test(key)));
+          article.append(sourceText(label, JSON.stringify(caveats, null, 2)));
+        }
+        article.append(sourceText("Read complete retained native source text (no summary prepended)", row.text));
       } else {
         article.append(element("p",
           `${row.retrieval_status ?? row.availability ?? "Retained evidence view"} · `
@@ -122,10 +162,10 @@ if (typeof document !== "undefined") {
     download.disabled = loading || !loaded;
     download.textContent = `Download all ${matches.length.toLocaleString()} query matches (full-text JSONL)`;
     const identities = new Set(matches.map(row =>
-      row.source_type === "bill_metadata" ? row.bill_id : `${row.state}/${row.party}`));
+      row.source_type !== "platform" ? row.bill_id : `${row.state}/${row.party}`));
     status.textContent = matches.length
       ? `Views ${begin + 1}–${Math.min(begin + pageSize, matches.length)} of ${matches.length.toLocaleString()} matching views`
-        + (collection.value === "bill_metadata" ? ` · ${identities.size.toLocaleString()} distinct candidate bill contexts.`
+        + (collection.value !== "platform" ? ` · ${identities.size.toLocaleString()} distinct candidate bill contexts.`
           : " · Views are not certified platforms or distinct documents.")
       : "No matching views in this saved selection. This is not evidence of zero activity or publication absence.";
   }
@@ -149,7 +189,10 @@ if (typeof document !== "undefined") {
           + "An empty query download is not zero legislative activity or zero policies."
         : `${state.value}: ${Number(selected.dataset.contexts).toLocaleString()} saved cycle candidate contexts. `
           + "Native-only and description-only candidates are distinct from source-coded dates. "
-          + "This is not a certified denominator or full native-text corpus.")
+          + (collection.value === "native_text"
+            ? "Only exact joined native views in this candidate cohort are shown; excluded/unmatched contexts "
+              + "are not evidence of source absence. This is not a native census or introduced-stage certification."
+            : "This is not a certified denominator or full native-text corpus."))
       : platform
         ? "Platform evidence views overlap; unknown dates and unresolved applicability are not publication absence."
         : "Choose a state to inspect its saved cycle evidence scope; a missing cohort is not zero activity.";
@@ -187,6 +230,7 @@ if (typeof document !== "undefined") {
     status.textContent = "Loading complete saved source records…";
     try {
       const names = collection.value === "bill_metadata" ? [`bills-${state.value}`]
+        : collection.value === "native_text" ? [`native-${state.value}`]
         : state.value === "outside" ? ["platform-outside"]
           : (party.value ? [party.value] : ["D", "R"]).map(code => `platform-${state.value}-${code}`);
       const groups = await Promise.all(names.map(async name => {

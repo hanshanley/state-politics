@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import argparse
 import json
+from hashlib import sha256
 from pathlib import Path
 
 import pandas as pd
@@ -37,13 +38,22 @@ def native_introduction_observation(value) -> tuple[str | None, str]:
     )
 
 
-def _field(frame: pd.DataFrame, selector: str) -> pd.Series:
+def _field(frame: pd.DataFrame, selector: str, *, missing_ok: bool = False) -> pd.Series:
     column, *nested = selector.split(".")
+    if missing_ok and column not in frame:
+        return pd.Series(None, index=frame.index, dtype=object)
     values = frame[column]
     if nested:
-        values = values.map(json.loads)
+        values = values.map(
+            lambda value: None if missing_ok and pd.isna(value) else json.loads(value)
+        )
         for key in nested:
-            values = values.map(lambda value, key=key: value[key])
+            if missing_ok:
+                values = values.map(
+                    lambda value, key=key: value.get(key) if isinstance(value, dict) else None
+                )
+            else:
+                values = values.map(lambda value, key=key: value[key])
     return values
 
 
@@ -56,7 +66,21 @@ def normalize_packet(
     raw: pd.DataFrame,
     raw_views: pd.DataFrame | None,
 ) -> tuple[pd.DataFrame, pd.DataFrame]:
-    """Keep context and reader alternatives separate; do not choose a ground-truth reader."""
+    """Keep context and reader alternatives separate; do not choose a ground-truth reader.
+
+    ``allow_missing_identity: true`` retains missing identifier/session rows as source-only.
+    ``source_only: {selector: <field>, values: [<value>, ...]}`` also quarantines explicitly
+    selected rows, even when their typed identity or declared bill ID would otherwise match.
+    Set its ``match: json_array_any`` to match flags in a JSON string array instead.
+    For the views profile, ``view_reader_allowlist: [<reader>, ...]`` retains only those
+    readers and records per-context ``n_excluded_views``; full source tables remain bound.
+    ``native_introduction_when: [{selector: <field>, values: [<value>, ...]}, ...]``
+    requires every condition before reading a date field, only for matching rows.
+    The ``observations`` profile supplies context/date metadata with no policy-text views
+    and requires no record ID, text hash or character count beyond the context selectors.
+    ``context_granularity: source_reference`` permits multiple physical references to a
+    canonical bill; the default ``measure`` still permits at most one measure context.
+    """
     contexts = pd.DataFrame(
         {
             "state": spec["state"],
@@ -70,10 +94,50 @@ def normalize_packet(
             "declared_bill_id": _field(raw, spec["bill_id"]) if "bill_id" in spec else None,
         }
     )
-    if contexts[["context_id", "native_identifier", "session_identifier"]].isna().any().any():
+    if not isinstance(spec["state"], str) or not spec["state"]:
+        raise ValueError("missing native context state")
+    if contexts["context_id"].isna().any():
         raise ValueError("missing native context identity")
-    if contexts[["context_id", "native_identifier", "session_identifier"]].eq("").any().any():
+    if contexts["context_id"].eq("").any():
         raise ValueError("empty native context identity")
+    granularity = spec.get("context_granularity", "measure")
+    if granularity not in {"measure", "source_reference"}:
+        raise ValueError("unsupported native context granularity")
+    contexts["context_granularity"] = granularity
+    identity = contexts[["native_identifier", "session_identifier"]]
+    missing_identity = (identity.isna() | identity.eq("")).any(axis=1)
+    if type(spec.get("allow_missing_identity", False)) is not bool:
+        raise ValueError("allow_missing_identity requires an explicit boolean")
+    if not spec.get("allow_missing_identity", False):
+        if identity.isna().any().any():
+            raise ValueError("missing native context identity")
+        if identity.eq("").any().any():
+            raise ValueError("empty native context identity")
+    source_only = missing_identity.copy()
+    if "source_only" in spec:
+        selector = spec["source_only"]
+        if not isinstance(selector["values"], list):
+            raise ValueError("source-only selector values must be a list")
+        selected = _field(raw, selector["selector"])
+        match = selector.get("match", "value")
+        if match == "json_array_any":
+            try:
+                selected = selected.map(json.loads)
+            except (TypeError, ValueError) as exc:
+                raise ValueError("source-only selector requires a JSON string array") from exc
+            if not selected.map(
+                lambda flags: (
+                    isinstance(flags, list) and all(isinstance(flag, str) for flag in flags)
+                )
+            ).all():
+                raise ValueError("source-only selector requires a JSON string array")
+            source_only |= selected.map(
+                lambda flags: any(flag in selector["values"] for flag in flags)
+            )
+        elif match == "value":
+            source_only |= selected.isin(selector["values"])
+        else:
+            raise ValueError("unsupported source-only selector match")
     contexts["session_binding"] = (
         "retained_context_field"
         if "session_identifier" in spec
@@ -84,10 +148,12 @@ def normalize_packet(
     )
     if "session_map" in spec:
         sessions = contexts["session_identifier"].map(spec["session_map"])
-        if sessions.isna().any():
+        if sessions.loc[~source_only].isna().any():
             raise ValueError("native session lacks an explicit canonical crosswalk")
-        contexts["session_identifier"] = sessions
-        contexts["session_binding"] = "explicit_native_session_crosswalk"
+        contexts["session_identifier"] = sessions.where(
+            sessions.notna(), contexts["session_identifier"]
+        )
+        contexts.loc[sessions.notna(), "session_binding"] = "explicit_native_session_crosswalk"
     contexts["canonical_join_mode"] = "declared_bill_id" if "bill_id" in spec else "typed_key"
     if "source_only_session_fields" in spec:
         codes = pd.concat(
@@ -99,6 +165,7 @@ def normalize_packet(
         contexts.loc[mapped, "session_identifier"] = sessions.loc[mapped]
         contexts.loc[mapped, "session_binding"] = "explicit_native_session_code_crosswalk"
         contexts.loc[mapped, "canonical_join_mode"] = "typed_key"
+    contexts.loc[source_only, "canonical_join_mode"] = "source_only"
     contexts["packet_status"] = (
         _field(raw, spec["status"]) if "status" in spec else "retained_input_unadjudicated"
     )
@@ -111,14 +178,37 @@ def normalize_packet(
     contexts["native_window_disposition"] = "not_supplied_by_registered_packet"
     if "native_introduction_field" in spec:
         if "native_introduction_guard" in spec:
-            guard = _field(raw, spec["native_introduction_guard"])
-            if guard.isna().any() or not pd.api.types.is_bool_dtype(guard.dtype) or not guard.all():
+            guard = _field(raw, spec["native_introduction_guard"]).loc[~source_only]
+            if not guard.empty and (
+                guard.isna().any() or not pd.api.types.is_bool_dtype(guard.dtype) or not guard.all()
+            ):
                 raise ValueError("native introduction date requires explicit introduced records")
-        observed = _field(raw, spec["native_introduction_field"])
-        contexts["native_introduction_raw"] = observed
-        dates = observed.map(native_introduction_observation)
-        contexts["native_introduction_date"] = dates.map(lambda value: value[0])
-        contexts["native_window_disposition"] = dates.map(lambda value: value[1])
+        date_rows = ~source_only
+        if "native_introduction_when" in spec:
+            conditions = spec["native_introduction_when"]
+            if not isinstance(conditions, list) or not conditions:
+                raise ValueError("native introduction conditions require a nonempty list")
+            for condition in conditions:
+                if not isinstance(condition["values"], list):
+                    raise ValueError("native introduction condition values must be a list")
+                selected = _field(raw.loc[date_rows], condition["selector"], missing_ok=True)
+                date_rows.loc[date_rows] = selected.notna() & selected.isin(condition["values"])
+            observed = pd.Series(None, index=raw.index[date_rows], dtype=object)
+            if date_rows.any():
+                try:
+                    observed = _field(raw.loc[date_rows], spec["native_introduction_field"])
+                except KeyError as exc:
+                    raise ValueError(
+                        "matching native introduction condition lacks a date field"
+                    ) from exc
+                if observed.isna().any() or observed.eq("").any():
+                    raise ValueError("matching native introduction condition lacks a date field")
+        else:
+            observed = _field(raw, spec["native_introduction_field"])
+        contexts.loc[observed.index, "native_introduction_raw"] = observed
+        dates = observed.loc[date_rows].map(native_introduction_observation)
+        contexts.loc[date_rows, "native_introduction_date"] = dates.map(lambda value: value[0])
+        contexts.loc[date_rows, "native_window_disposition"] = dates.map(lambda value: value[1])
     if spec["profile"] == "reader_rows":
         if contexts.groupby("context_id", dropna=False).nunique(dropna=False).gt(1).any().any():
             raise ValueError("reader variants disagree on native context")
@@ -146,8 +236,25 @@ def normalize_packet(
         views = raw_views[
             ["view_id", "context_id", "reader", "input_sha256", "n_input_characters"]
         ].copy()
+    elif spec["profile"] == "observations" and raw_views is None:
+        views = pd.DataFrame(
+            {
+                column: pd.Series(dtype="int64" if column == "n_input_characters" else "string")
+                for column in (
+                    "view_id",
+                    "context_id",
+                    "reader",
+                    "input_sha256",
+                    "n_input_characters",
+                )
+            }
+        )
     else:
         raise ValueError("unsupported native input profile")
+    if views.empty:
+        views = views.astype(
+            {column: "int64" if column == "n_input_characters" else "string" for column in views}
+        )
     _unique(views, "view_id")
     if (
         views[["context_id", "reader", "input_sha256", "n_input_characters"]].isna().any().any()
@@ -158,6 +265,18 @@ def normalize_packet(
         or views.duplicated(["context_id", "reader"]).any()
     ):
         raise ValueError("invalid or orphaned retained source view")
+    if "view_reader_allowlist" in spec:
+        readers = spec["view_reader_allowlist"]
+        if (
+            spec["profile"] != "views"
+            or not isinstance(readers, list)
+            or not all(isinstance(reader, str) and reader for reader in readers)
+        ):
+            raise ValueError("explicit reader allowlist requires the views profile")
+        excluded = ~views["reader"].isin(readers)
+        counts = views.loc[excluded].groupby("context_id").size()
+        contexts["n_excluded_views"] = contexts["context_id"].map(counts).fillna(0).astype("int64")
+        views = views.loc[~excluded].copy()
     counts = views.groupby("context_id").size()
     contexts["n_retained_views"] = contexts["context_id"].map(counts).fillna(0).astype("int64")
     contexts["packet_root"] = spec["root"]
@@ -169,6 +288,8 @@ def normalize_packet(
 
 
 def _typed_key(values: pd.Series, *, state: str) -> pd.Series:
+    if not values.map(lambda value: isinstance(value, str)).all():
+        raise ValueError("unsupported typed identifier; no guessed aliases")
     allowed = values.str.fullmatch(r"[A-Za-z]+ *[0-9]+(?:-[0-9]+)?")
     if state == "MI":
         allowed |= values.str.fullmatch(r"(?i)(HJR|SJR) *[A-Z]")
@@ -181,15 +302,25 @@ def join_contexts(contexts: pd.DataFrame, ledger: pd.DataFrame) -> pd.DataFrame:
     """Require exact bill identity or unique explicit session/typed-identity agreement."""
     pieces = []
     for state, native in contexts.groupby("state", sort=True):
+        native = native.copy()
+        source_only = native["canonical_join_mode"].eq("source_only")
         canonical = ledger.loc[
             ledger["state"].eq(state)
-            & ledger["session_identifier"].isin(native["session_identifier"])
+            & ledger["session_identifier"].isin(native.loc[~source_only, "session_identifier"])
         ].copy()
-        canonical["_typed"] = _typed_key(canonical["identifier"], state=state)
-        native = native.copy()
-        native["_typed"] = _typed_key(native["native_identifier"], state=state)
-        declared = native.loc[native["declared_bill_id"].notna()].copy()
-        without = native.loc[native["declared_bill_id"].isna()].copy()
+        canonical["_typed"] = (
+            _typed_key(canonical["identifier"], state=state) if not canonical.empty else None
+        )
+        typed = ~source_only | (
+            native["native_identifier"].notna() & native["native_identifier"].ne("")
+        )
+        native["_typed"] = None
+        if typed.any():
+            native.loc[typed, "_typed"] = _typed_key(
+                native.loc[typed, "native_identifier"], state=state
+            )
+        declared = native.loc[~source_only & native["declared_bill_id"].notna()].copy()
+        without = native.loc[source_only | native["declared_bill_id"].isna()].copy()
         if not declared.empty:
             matched = declared.merge(
                 canonical,
@@ -212,12 +343,22 @@ def join_contexts(contexts: pd.DataFrame, ledger: pd.DataFrame) -> pd.DataFrame:
             matched["canonical_join_basis"] = "declared_bill_id_exact_session_typed_identity"
             pieces.append(matched.drop(columns=["_merge", "_typed_native", "_typed"]))
         for mode, subset in without.groupby("canonical_join_mode"):
-            if mode == "declared_bill_id":
+            if mode in {"declared_bill_id", "source_only"}:
                 matched = subset.copy()
                 for column in canonical:
+                    if (
+                        mode == "source_only"
+                        and column in matched
+                        and column not in {"state", "session_identifier", "_typed"}
+                    ):
+                        matched = matched.rename(columns={column: f"{column}_native"})
                     if column not in matched:
                         matched[column] = None
-                matched["canonical_join_basis"] = "source_only_no_declared_bill_id"
+                matched["canonical_join_basis"] = (
+                    "source_only_unresolved_identity"
+                    if mode == "source_only"
+                    else "source_only_no_declared_bill_id"
+                )
             else:
                 matched = subset.merge(
                     canonical.drop(columns="state"),
@@ -238,8 +379,25 @@ def join_contexts(contexts: pd.DataFrame, ledger: pd.DataFrame) -> pd.DataFrame:
                 )
             pieces.append(matched.drop(columns="_typed"))
     result = pd.concat(pieces, ignore_index=True)
-    if result.loc[result["bill_id"].notna(), "bill_id"].duplicated().any():
+    _check_measure_uniqueness(result)
+    return _annotate_date_evidence(result)
+
+
+def _check_measure_uniqueness(contexts: pd.DataFrame) -> None:
+    granularity = contexts.get(
+        "context_granularity", pd.Series("measure", index=contexts.index)
+    ).fillna("measure")
+    if not granularity.isin(["measure", "source_reference"]).all():
+        raise ValueError("unsupported native context granularity")
+    if (
+        contexts.loc[contexts["bill_id"].notna() & granularity.eq("measure"), "bill_id"]
+        .duplicated()
+        .any()
+    ):
         raise ValueError("multiple native contexts would double-count a canonical bill")
+
+
+def _annotate_date_evidence(result: pd.DataFrame) -> pd.DataFrame:
     result["source_in_window"] = result["window_disposition"].eq(_IN_WINDOW).fillna(False)
     result["native_in_window"] = result["native_window_disposition"].eq(
         "native_introduction_in_window"
@@ -261,7 +419,108 @@ def join_contexts(contexts: pd.DataFrame, ledger: pd.DataFrame) -> pd.DataFrame:
     return result
 
 
+def aggregate_bill_contexts(contexts: pd.DataFrame) -> pd.DataFrame:
+    """Aggregate joined contexts, never physical references, to one row per canonical bill.
+
+    Canonical identity/source-date fields must agree. A unique normalized native date
+    resolves; different native dates produce ``conflicting_native_introduction_observations``
+    with no selected date and ``native_in_window=False``. ``native_introduction_raw`` is
+    a JSON array of all raw observations; ``source_contexts_json`` binds each observation
+    and retained-view count to its unchanged packet root/context ID.
+    """
+    _check_measure_uniqueness(contexts)
+    joined = contexts.loc[contexts["bill_id"].notna()].copy()
+    canonical_columns = [
+        "bill_id",
+        "state",
+        "identifier",
+        "session_identifier",
+        "source_introduction_date",
+        "window_disposition",
+    ]
+    if joined.groupby("bill_id")[canonical_columns[1:]].nunique(dropna=False).gt(1).any().any():
+        raise ValueError("canonical bill identity/source-date fields disagree across contexts")
+    reference_columns = [
+        column
+        for column in (
+            "packet_root",
+            "context_id",
+            "context_granularity",
+            "packet_status",
+            "native_identifier",
+            "native_session_identifier",
+            "canonical_join_basis",
+            "native_introduction_raw",
+            "native_introduction_date",
+            "native_window_disposition",
+            "date_evidence_status",
+            "n_retained_views",
+            "negative_flags_json",
+        )
+        if column in joined
+    ]
+    rows = []
+    for _, group in joined.groupby("bill_id", sort=False):
+        row = group.iloc[0][canonical_columns].to_dict()
+        dates = group["native_introduction_date"].dropna().unique().tolist()
+        if len(dates) == 1:
+            native_date, disposition = native_introduction_observation(dates[0])
+        elif len(dates) > 1:
+            native_date, disposition = None, "conflicting_native_introduction_observations"
+        else:
+            native_date, disposition = None, "not_supplied_by_registered_packet"
+            for status in (
+                "invalid_native_introduction_observation",
+                "missing_native_introduction_observation",
+            ):
+                if group["native_window_disposition"].eq(status).any():
+                    disposition = status
+                    break
+        references = group[reference_columns].astype(object)
+        references = references.where(references.notna(), None)
+        observations = group["native_introduction_raw"].astype(object)
+        row.update(
+            n_native_contexts=len(group),
+            n_retained_views=int(group["n_retained_views"].sum()),
+            native_introduction_raw=json.dumps(
+                observations.where(observations.notna(), None).tolist(),
+                ensure_ascii=False,
+                default=str,
+            ),
+            native_introduction_date=native_date,
+            native_window_disposition=disposition,
+            source_contexts_json=json.dumps(
+                references.to_dict("records"), ensure_ascii=False, default=str
+            ),
+            native_identity_certified=False,
+            analytical_admission=False,
+        )
+        rows.append(row)
+    result = pd.DataFrame(
+        rows,
+        columns=[
+            *canonical_columns,
+            "n_native_contexts",
+            "n_retained_views",
+            "native_introduction_raw",
+            "native_introduction_date",
+            "native_window_disposition",
+            "source_contexts_json",
+            "native_identity_certified",
+            "analytical_admission",
+        ],
+    )
+    result = result.astype({"n_native_contexts": "int64", "n_retained_views": "int64"})
+    return _annotate_date_evidence(result)
+
+
 def build_overlap(matrix_dir: Path, registry: Path, out_dir: Path) -> dict:
+    """Bind optional packet ``binding_evidence`` before materializing derived outputs.
+
+    Each entry requires ``path``, exact ``sha256``, dotted JSON ``selector`` and typed
+    JSON ``expected`` value. Proofs bind identity scope only; they never supply dates.
+    ``expected_views`` counts retained views after any explicit reader allowlist.
+    """
     if out_dir.exists():
         raise FileExistsError(out_dir)
     matrix_manifest_path = matrix_dir / "manifest.json"
@@ -303,7 +562,33 @@ def build_overlap(matrix_dir: Path, registry: Path, out_dir: Path) -> dict:
         ):
             if name:
                 paths[f"{packet_id}_{role}"] = Path(spec["root"]) / name
+        for index, binding in enumerate(spec.get("binding_evidence", [])):
+            paths[f"{packet_id}_binding_evidence_{index}"] = Path(binding["path"])
     before.update({key: _snapshot(path) for key, path in paths.items() if key not in before})
+    for spec in specs:
+        packet_id = spec.get("packet_id", spec["state"])
+        for index, binding in enumerate(spec.get("binding_evidence", [])):
+            key = f"{packet_id}_binding_evidence_{index}"
+            proof = paths[key].read_bytes()
+            if (
+                before[key]["sha256"] != binding["sha256"]
+                or sha256(proof).hexdigest() != binding["sha256"]
+                or _snapshot(paths[key]) != before[key]
+            ):
+                raise ValueError(f"{packet_id}: binding evidence checksum mismatch")
+            try:
+                if not isinstance(binding["selector"], str) or not binding["selector"]:
+                    raise ValueError("nonempty binding selector required")
+                actual = _field(
+                    pd.DataFrame({"proof": [proof.decode("utf-8")]}),
+                    f"proof.{binding['selector']}",
+                ).tolist()[0]
+                if json.dumps(actual, sort_keys=True, allow_nan=False) != json.dumps(
+                    binding["expected"], sort_keys=True, allow_nan=False
+                ):
+                    raise ValueError("binding value mismatch")
+            except (KeyError, TypeError, ValueError) as exc:
+                raise ValueError(f"{packet_id}: binding evidence JSON value mismatch") from exc
     if (
         before["matrix"]["sha256"] != matrix_manifest["artifacts"]["state_matrix.csv"]["sha256"]
         or before["ledger"]["sha256"] != matrix_manifest["inputs"]["ledger"]["sha256"]
@@ -334,6 +619,7 @@ def build_overlap(matrix_dir: Path, registry: Path, out_dir: Path) -> dict:
     }
     manifest_path.write_text(json.dumps(manifest, indent=2) + "\n", encoding="utf-8")
     all_contexts, all_views = [], []
+    reader_allowlist_counts = {}
     for spec in specs:
         packet_id = spec.get("packet_id", spec["state"])
         selectors = [
@@ -344,6 +630,12 @@ def build_overlap(matrix_dir: Path, registry: Path, out_dir: Path) -> dict:
         columns = {selector.split(".")[0] for selector in selectors}
         columns |= {field.split(".")[0] for field in spec.get("source_only_session_fields", [])}
         columns |= {field.split(".")[0] for field in spec.get("preserve_context_fields", [])}
+        columns |= {
+            condition["selector"].split(".")[0]
+            for condition in spec.get("native_introduction_when", [])
+        }
+        if "source_only" in spec:
+            columns.add(spec["source_only"]["selector"].split(".")[0])
         columns |= {
             spec[key].split(".")[0]
             for key in ("native_introduction_field", "native_introduction_guard")
@@ -375,10 +667,20 @@ def build_overlap(matrix_dir: Path, registry: Path, out_dir: Path) -> dict:
         contexts, views = normalize_packet(spec, raw, raw_views)
         if len(contexts) != spec["expected_contexts"] or len(views) != spec["expected_views"]:
             raise ValueError(f"{spec['state']}: accepted packet population mismatch")
+        if "view_reader_allowlist" in spec:
+            excluded = int(contexts["n_excluded_views"].sum())
+            reader_allowlist_counts[packet_id] = {
+                "state": spec["state"],
+                "allowed_readers": spec["view_reader_allowlist"],
+                "n_source_views": len(views) + excluded,
+                "n_retained_views": len(views),
+                "n_excluded_views": excluded,
+            }
         all_contexts.append(contexts)
         all_views.append(views)
     ledger = pd.read_csv(paths["ledger"], dtype=str, keep_default_na=False)
     matched = join_contexts(pd.concat(all_contexts, ignore_index=True), ledger)
+    bills = aggregate_bill_contexts(matched)
     views = pd.concat(all_views, ignore_index=True)
     matrix = pd.read_csv(paths["matrix"], keep_default_na=False)
     if not set(states).issubset(set(matrix["state"])):
@@ -386,9 +688,7 @@ def build_overlap(matrix_dir: Path, registry: Path, out_dir: Path) -> dict:
     missing = ledger.loc[
         ledger["state"].isin(states)
         & ledger["window_disposition"].eq(_IN_WINDOW)
-        & ~ledger["bill_id"].isin(
-            matched.loc[matched["n_retained_views"].gt(0), "bill_id"].dropna()
-        )
+        & ~ledger["bill_id"].isin(bills.loc[bills["n_retained_views"].gt(0), "bill_id"])
     ].copy()
     for column in (
         "n_supplied_native_contexts",
@@ -403,10 +703,11 @@ def build_overlap(matrix_dir: Path, registry: Path, out_dir: Path) -> dict:
         matrix[column] = pd.Series(pd.NA, index=matrix.index, dtype="Int64")
     matrix["native_packet_integration"] = "not_registered_not_zero_recovery"
     for state in states:
-        selected = matched.loc[matched["state"].eq(state)]
+        selected_contexts = matched.loc[matched["state"].eq(state)]
+        selected = bills.loc[bills["state"].eq(state)]
         mask = matrix["state"].eq(state)
         matrix.loc[mask, "native_packet_integration"] = "supplied_packet_index_bound"
-        matrix.loc[mask, "n_supplied_native_contexts"] = len(selected)
+        matrix.loc[mask, "n_supplied_native_contexts"] = len(selected_contexts)
         matrix.loc[mask, "n_supplied_native_views"] = int(views["state"].eq(state).sum())
         matrix.loc[mask, "n_source_in_window_with_supplied_native_text"] = int(
             (selected["source_in_window"] & selected["n_retained_views"].gt(0)).sum()
@@ -414,7 +715,11 @@ def build_overlap(matrix_dir: Path, registry: Path, out_dir: Path) -> dict:
         matrix.loc[mask, "n_source_in_window_without_supplied_native_text"] = int(
             missing["state"].eq(state).sum()
         )
-        if selected["native_window_disposition"].ne("not_supplied_by_registered_packet").any():
+        if (
+            selected_contexts["native_window_disposition"]
+            .ne("not_supplied_by_registered_packet")
+            .any()
+        ):
             native = selected.loc[
                 selected["native_in_window"]
                 & selected["bill_id"].notna()
@@ -440,6 +745,7 @@ def build_overlap(matrix_dir: Path, registry: Path, out_dir: Path) -> dict:
                 ).sum()
             )
     matched.to_parquet(out_dir / "native_context_overlap.parquet", index=False)
+    bills.to_parquet(out_dir / "native_bill_overlap.parquet", index=False)
     views.to_parquet(out_dir / "native_view_index.parquet", index=False)
     missing.to_parquet(out_dir / "missing_supplied_native_text.parquet", index=False)
     matched.loc[
@@ -463,6 +769,7 @@ def build_overlap(matrix_dir: Path, registry: Path, out_dir: Path) -> dict:
         "status": _STATUS,
         "registered_states": states,
         "n_native_contexts": len(matched),
+        "n_canonical_bills_with_native_contexts": len(bills),
         "n_reader_or_source_views_not_bills": len(views),
         "n_source_only_contexts": int(matched["bill_id"].isna().sum()),
         "n_source_in_window_without_supplied_native_text": len(missing),
@@ -479,6 +786,11 @@ def build_overlap(matrix_dir: Path, registry: Path, out_dir: Path) -> dict:
         "new_requests": 0,
         "analytical_admission": False,
     }
+    if reader_allowlist_counts:
+        result["reader_allowlist_counts"] = reader_allowlist_counts
+        result["n_reader_views_excluded_by_allowlist"] = sum(
+            counts["n_excluded_views"] for counts in reader_allowlist_counts.values()
+        )
     (out_dir / "report.json").write_text(json.dumps(result, indent=2) + "\n", encoding="utf-8")
     if {key: _snapshot(path) for key, path in paths.items()} != before:
         raise ValueError("native-overlap inputs changed; output remains incomplete")

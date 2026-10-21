@@ -4,6 +4,7 @@ const assert = require("node:assert/strict");
 const fs = require("node:fs/promises");
 const path = require("node:path");
 const { spawn } = require("node:child_process");
+const { createHash } = require("node:crypto");
 
 const root = path.resolve(__dirname, "..");
 const [previewArg, runArg, chrome, fixture] = process.argv.slice(2);
@@ -191,6 +192,7 @@ async function terminate(child) {
     assert.equal(await evaluate(session, "document.activeElement.id"), "evidence-heading");
 
     const billRows = await readRows("bills-TX");
+    const hasNative = await evaluate(session, 'Boolean(document.querySelector("#collection option[value=native_text]"))');
     const buildManifest = JSON.parse(await fs.readFile(
       path.join(preview, "downloads/build_manifest.json"), "utf8"));
     assert.ok(billRows.every(row => row.source_bundle_manifest_sha256
@@ -198,6 +200,12 @@ async function terminate(child) {
     assert.ok(billRows.length > 10);
     await change(session, "state", "TX");
     await waitFor(session, 'document.querySelectorAll("#evidence article").length === 10');
+    if (billRows[0].token_plan) {
+      const planText = await evaluate(session, 'document.querySelector("#evidence .token-plan").textContent');
+      assert.ok(planText.includes(billRows[0].token_plan.n_input_tokens.toLocaleString("en-US")));
+      assert.ok(planText.includes("not predictions"));
+      assert.equal(billRows[0].n_input_tokens, null);
+    }
     assert.equal(await evaluate(session, 'document.querySelectorAll("#state-coverage tbody tr:not([hidden])").length'), 1);
     const first = await evaluate(session, 'document.querySelector("#evidence .record-id").textContent');
     await evaluate(session, 'document.getElementById("next").click()');
@@ -220,6 +228,58 @@ async function terminate(child) {
     assert.equal(await evaluate(session, 'document.querySelectorAll("#evidence script, #evidence img").length'), 0);
     assert.equal(await evaluate(session, 'typeof window.EVIDENCE_INJECTED'), "undefined");
 
+    const nativeDownloads = [];
+    if (hasNative) {
+      const nativeRows = await readRows("native-TX");
+      assert.ok(nativeRows.length > 10);
+      await change(session, "collection", "native_text");
+      await waitFor(session, 'document.querySelectorAll("#evidence article").length === 10');
+      assert.ok((await evaluate(session, 'document.getElementById("selection-scope").textContent'))
+        .includes("not a native census"));
+      const distinctBills = new Set(nativeRows.map(row => row.bill_id)).size;
+      assert.ok((await evaluate(session, 'document.getElementById("evidence-status").textContent'))
+        .includes(`${distinctBills.toLocaleString("en-US")} distinct candidate bill contexts`));
+      const nativeFirst = await evaluate(session, 'document.querySelector("#evidence .record-id").textContent');
+      await evaluate(session, 'document.getElementById("next").click()');
+      assert.notEqual(await evaluate(session, 'document.querySelector("#evidence .record-id").textContent'), nativeFirst);
+      nativeDownloads.push(await download(session, nativeRows, "native complete views from page 2"));
+      if (fixture === "fixture") {
+        await search(session, '"quoted phrase"');
+        await waitFor(session, 'document.querySelectorAll("#evidence article").length === 10');
+        await evaluate(session, 'document.getElementById("next").click()');
+        nativeDownloads.push(await download(session, nativeRows, "native full-text filtered matches beyond page 1"));
+        await search(session, "NATIVE-END-11");
+        const filtered = nativeRows.filter(row => row.text.includes("NATIVE-END-11"));
+        await waitFor(session, `document.querySelectorAll("#evidence article").length === ${filtered.length}`);
+        nativeDownloads.push(await download(session, filtered, "native complete string tail query"));
+        assert.ok(await evaluate(session,
+          '[...document.querySelectorAll("#evidence .source-text")].some(node => node.textContent.endsWith("NATIVE-END-11"))'));
+        assert.equal(await evaluate(session, 'document.querySelectorAll("#evidence script, #evidence img").length'), 0);
+        assert.equal(await evaluate(session, 'typeof window.EVIDENCE_INJECTED'), "undefined");
+      } else {
+        await search(session, "native_text");
+        await waitFor(session, 'document.querySelectorAll("#evidence article").length === 10');
+        await evaluate(session, 'document.getElementById("next").click()');
+        nativeDownloads.push(await download(session, nativeRows, "native filtered full-source query beyond page 1"));
+        const { filterEvidence } = require(path.join(preview, "cycle-evidence.js"));
+        const needle = nativeRows[0].text.split(/[\r\n\u2028\u2029]+/)
+          .map(line => line.trim()).filter(line => line.length >= 20).at(-1)?.slice(-80);
+        assert.ok(needle, "Need an actual retained native-text query");
+        const filtered = filterEvidence(nativeRows, needle);
+        assert.ok(filtered.length > 0);
+        await search(session, needle);
+        await waitFor(session, `document.querySelectorAll("#evidence article").length === ${Math.min(10, filtered.length)}`);
+        nativeDownloads.push(await download(session, filtered, "native literal retained-text query"));
+        const displayedHash = await evaluate(session, `(async () => {
+          const text = [...document.querySelector("#evidence article").querySelectorAll(".source-text")].at(-1).textContent;
+          const bytes = await crypto.subtle.digest("SHA-256", new TextEncoder().encode(text));
+          return [...new Uint8Array(bytes)].map(value => value.toString(16).padStart(2, "0")).join("");
+        })()`);
+        assert.equal(displayedHash, filtered[0].input_sha256);
+        assert.equal(createHash("sha256").update(filtered[0].text).digest("hex"), displayedHash);
+      }
+      await search(session, "");
+    }
     await change(session, "collection", "platform");
     const platformD = await readRows("platform-TX-D");
     await waitFor(session, 'document.getElementById("evidence-status").textContent.startsWith("Views ")');
@@ -252,6 +312,32 @@ async function terminate(child) {
     assert.ok(maineScope.includes("9877 retained wider-history source contexts"));
     assert.ok(maineScope.includes("not zero legislative activity"));
     const maineDownload = await download(session, [], "ME missing cycle cohort");
+    const montanaDownloads = [];
+    if (hasNative && fixture !== "fixture") {
+      const montana = await readRows("bills-MT");
+      const nativeDateOnly = montana.filter(row => row.cohort_scope === "native_reported_date_candidate");
+      assert.equal(nativeDateOnly.length, 1640, "Additional Montana native-date-only metadata cohort");
+      assert.ok(montana.every(row => row.n_input_tokens === null && row.token_plan?.n_discarded_tokens === 0));
+      const prefilings = nativeDateOnly.filter(row => row.session_identifier === "2025"
+        && row.bill_context.native_introduction_date?.startsWith("2024-"));
+      assert.equal(prefilings.length, 213, "Calendar 2024 observations in declared 2025 session");
+      await change(session, "state", "MT");
+      await waitFor(session, 'document.querySelectorAll("#evidence article").length === 10');
+      await evaluate(session, 'document.getElementById("next").click()');
+      montanaDownloads.push(await download(session, montana, "MT complete expanded metadata and token planning from page 2"));
+      await search(session, prefilings[0].bill_id);
+      const selected = montana.filter(row => row.bill_id === prefilings[0].bill_id);
+      await waitFor(session, `document.querySelectorAll("#evidence article").length === ${selected.length}`);
+      assert.ok((await evaluate(session, 'document.querySelector("#evidence article").textContent'))
+        .includes("not a source-coded bill date"));
+      montanaDownloads.push(await download(session, selected, "MT calendar 2024 prefiling in session 2025"));
+      await search(session, "");
+      await change(session, "collection", "native_text");
+      await waitFor(session, 'document.getElementById("evidence-status").textContent.startsWith("No matching")');
+      montanaDownloads.push(await download(session, [], "MT date observations are not native policy text"));
+      assert.ok((await evaluate(session, 'document.getElementById("selection-scope").textContent'))
+        .includes("not evidence of source absence"));
+    }
 
     await send("Emulation.setDeviceMetricsOverride", {
       width: 390, height: 844, deviceScaleFactor: 1, mobile: true,
@@ -271,7 +357,11 @@ async function terminate(child) {
 
     const noJS = await target(base + "/", false);
     assert.equal(await evaluate(noJS.sessionId, 'document.querySelectorAll("tbody tr").length'), 150);
-    assert.equal(await evaluate(noJS.sessionId, 'document.querySelectorAll("a[download][href$=\'.jsonl.gz\']").length'), 151);
+    assert.equal(await evaluate(noJS.sessionId, 'document.querySelectorAll("a[download][href$=\'.jsonl.gz\']").length'),
+      hasNative ? 201 : 151);
+    if (hasNative) {
+      assert.equal(await evaluate(noJS.sessionId, 'document.querySelectorAll("a[download][href^=\'downloads/native-\']").length'), 50);
+    }
     assert.ok(await evaluate(noJS.sessionId, 'document.querySelector("noscript").textContent.includes("without it")'));
     assert.equal(requests.filter(entry => entry.session === noJS.sessionId && entry.url.includes("/evidence/")).length, 0);
     assert.equal(exceptions.length, 0, "Unexpected real-browser JavaScript errors");
@@ -282,7 +372,8 @@ async function terminate(child) {
         "complete actual query downloads", "empty query/status", "markup rendered as text",
         "keyboard skip link", "390px mobile layout", "no-JS coverage and full-text links"],
       downloads: [billsDownload, searchDownload, emptyQueryDownload, platformDownload,
-        outsideDownload, maineDownload],
+        outsideDownload, maineDownload, ...nativeDownloads, ...montanaDownloads],
+      native_full_text: hasNative, verified_metadata_token_plan: Boolean(billRows[0].token_plan),
       maine_missing_cycle_cohort_disclosed: true,
       javascript_exceptions: exceptions.length, no_js_evidence_requests: 0,
     };

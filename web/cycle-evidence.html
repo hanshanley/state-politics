@@ -45,14 +45,9 @@
         they are not necessarily official publisher-authored or filing-time text.
         Alternatives are views of the same bill, not more bills. No later summary is
         prepended to introduced native text.</p>
-      <p class="note">Metadata token fields remain null / not assessed in this preview.
-        A separate offline token-window plan is not included here; token planning does not
-        establish model-input approval, classification or analytical admission.</p>
-      <p><strong>Native documents are not included.</strong> Native text presence is an index
-        relative to @@NATIVE_PACKET_STATE_COUNT@@ registered state packets only; other states
-        remain unknown. Registered packets include bounded partial inventories, not state-wide
-        native-text censuses. Zero means no matching view in those packets, not no native text.
-        Even a positive index count here does not provide native PDF/document text.</p>
+      <p class="note" id="token-plan-scope">@@TOKEN_PLAN_NOTE@@
+        No filing-time eligibility, classification accuracy or analytical admission is established.</p>
+      <p id="native-scope">@@NATIVE_NOTE@@</p>
       <p>Platform captures, historical/table views and alternate extractions overlap.
         @@DATE_CANDIDATE_COUNT@@ source-date candidate views are not @@DATE_CANDIDATE_COUNT@@
         certified platforms. Metadata-year hints are not adoption dates; older adoption does
@@ -70,6 +65,7 @@
         </label>
         <label for="collection">Source type
           <select id="collection"><option value="bill_metadata">Bill title / abstract metadata</option>
+            @@NATIVE_OPTION@@
             <option value="platform">Platform evidence views</option></select>
         </label>
         <label for="party">Organization party (platform only)
@@ -92,7 +88,7 @@
       <p class="note" id="download-scope">This download contains every matching view, not just
         the visible page. Bill records include full title, abstract, source abstract/notes,
         context, hashes and unapproved/null flags. Platform records retain complete source
-        strings and provenance. Native originals are not included.</p>
+        strings and provenance. @@NATIVE_DOWNLOAD_NOTE@@</p>
       <div id="evidence"></div>
       <nav id="pagination" aria-label="Evidence pages" hidden>
         <button id="previous" type="button">Previous views</button>
@@ -105,7 +101,8 @@
     <section aria-labelledby="bill-coverage-heading">
       <h2 id="bill-coverage-heading">All 50 states: bill metadata candidate coverage</h2>
       <p class="note">These are candidate contexts and alternative views, not validated bills
-        or certified policies. “Unknown” is not zero. Native presence is index-only.
+        or certified policies. “Unknown” is not zero. Native presence counts remain indexes;
+        optional native full-text downloads are a separate exact-cohort source.
         Gzip JSONL links contain complete source strings, not metadata-only exports.</p>
       <p id="state-count" role="status">50 state rows</p>
       <div class="table-wrap" tabindex="0" aria-label="Scrollable state coverage table">
@@ -146,7 +143,8 @@
         · <a download href="downloads/platform_source_manifest.json">Original platform manifest</a>
         · <a download href="downloads/metadata_source_report.json">Metadata scope report</a>
         · <a download href="downloads/state_matrix.csv">All 50 state coverage rows</a>
-        · <a download href="downloads/organizations.jsonl">All 100 organization coverage rows</a></p>
+        · <a download href="downloads/organizations.jsonl">All 100 organization coverage rows</a>
+        @@OPTIONAL_DOWNLOADS@@</p>
       <p class="note">Coverage files are summaries, not substitutes for source records.
         Complete full-text source downloads are linked for every state/organization above.
         Source identifiers and provenance paths are text only, not filesystem-serving routes.

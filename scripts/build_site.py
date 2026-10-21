@@ -16,6 +16,9 @@ from state_politics.platforms.recovery import load_recovery
 from state_politics.provenance import sha256_file
 
 ROOT = Path(__file__).resolve().parents[1]
+DEFAULT_METADATA = ROOT / "data/processed/study-abstract-evidence-2023-2024-v3"
+DEFAULT_NATIVE = ROOT / "data/processed/study-native-overlap-2023-2024-v14"
+DEFAULT_TOKEN_PLAN = ROOT / "data/processed/study-metadata-token-plan-2023-2024-v2"
 
 
 def build_preview(
@@ -183,17 +186,27 @@ def main(argv=None):
     )
     parser.add_argument(
         "--bill-evidence", type=Path,
-        default=ROOT / "data/processed/study-abstract-evidence-2023-2024-v2",
-        help="Immutable full-string bill metadata evidence bundle",
+        help="Full-string metadata bundle (default: v3 with matching native v14/token plan v2)",
     )
     parser.add_argument(
         "--platform-evidence", type=Path,
         default=ROOT / "data/processed/platform-study-evidence-2023-2024-v5",
         help="Immutable full-text platform evidence bundle",
     )
+    parser.add_argument(
+        "--native-evidence", type=Path,
+        help="Optional matching native bundle; default v14 only with default metadata selection",
+    )
+    parser.add_argument(
+        "--metadata-token-plan", type=Path,
+        help="Optional tokenization plan; default v2 only with the default metadata selection",
+    )
     args = parser.parse_args(argv)
+    default_evidence = args.bill_evidence is None
+    if default_evidence:
+        args.bill_evidence = DEFAULT_METADATA
     if args.cycle_evidence and args.out == ROOT / "data/preview":
-        args.out = ROOT / "data/preview-cycle-evidence-v2"
+        args.out = ROOT / "data/preview-cycle-evidence-v3"
     if not args.out.resolve().is_relative_to((ROOT / "data").resolve()):
         parser.error("preview output must remain under this project's ignored data/ directory")
     if args.cycle_evidence:
@@ -201,11 +214,20 @@ def main(argv=None):
             parser.error("--recovery belongs to the legacy preview, not --cycle-evidence")
         from state_politics.site_evidence import build_cycle_preview
 
-        result = build_cycle_preview(args.bill_evidence, args.platform_evidence, args.out)
+        optional = {}
+        if args.native_evidence or default_evidence:
+            optional["native_evidence"] = args.native_evidence or DEFAULT_NATIVE
+        if args.metadata_token_plan or default_evidence:
+            optional["metadata_token_plan"] = args.metadata_token_plan or DEFAULT_TOKEN_PLAN
+        result = build_cycle_preview(
+            args.bill_evidence, args.platform_evidence, args.out, **optional,
+        )
         print(f"wrote local-only cycle evidence preview: {args.out / 'index.html'}")
         print(json.dumps(result["counts"], sort_keys=True))
         print(f"build manifest sha256: {sha256_file(args.out / 'downloads/build_manifest.json')}")
         return 0
+    if args.native_evidence or args.metadata_token_plan:
+        parser.error("--native-evidence and --metadata-token-plan require --cycle-evidence")
     result = build_preview(
         args.coverage, args.historical, args.out, recovery_path=args.recovery,
     )

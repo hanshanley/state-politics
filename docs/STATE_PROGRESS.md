@@ -96,20 +96,29 @@ packet limitation. Separately, native introduction fields provide date evidence
 for 3,463 CA/SD text contexts with unresolved canonical source dates. Another
 569 cycle-relevant native/source date differences remain explicit for review.
 These date observations do not silently change admission or tracker status.
-The current v10 registry additionally indexes bounded accepted MI/MD/MN/KY
-original-reader selections: 104 contexts / 233 alternative views, with text
-for 101 contexts. MN SR61 and KY HJR21/HJR22 remain unavailable. Raw native
-dates and negative flags are preserved, not automatically admitted. There are
-now 13 packets / 12 registered states; this does not close their state cohorts
-or turn unknown coverage elsewhere into zero. The current combined
-`study-filing-2023-2024-v3/state_matrix.csv` preserves those
+The current v14 registry indexes **28 packets / 26 states**. The bounded
+MI/MD/MN/KY/AZ/KS/OR/VA selections preserve 164 contexts / 337 views, with
+text for 156 contexts. Additional retained campaign projections are normalized
+without new HTTP or extraction. Native indexes distinguish raw markup,
+ancillary histories, wrong-session documents and unavailable originals from
+policy-reader views. MT contributes guarded native date observations, not
+policy text; OK/WV contribute explicit zero-view contexts.
+
+The combined wider-scope inventory has 118,009 raw contexts, 102,365 unique
+canonical bills with native contexts and 128,486 indexed views. Reference
+contexts and alternatives remain preserved, but bill-level counters no longer
+count physical references as separate bills. These are not target-cycle
+denominators or newly closed states. MT adds 1,640 literal in-window native
+introduction observations, including 213 calendar-2024 prefilings in session
+2025; draft requests and ancillary histories are not policy originals.
+The current combined `study-filing-2023-2024-v4/state_matrix.csv` preserves those
 native columns and adds distinct source-coded filing and deduplicated union
 counts. Use this final matrix for current source-event triage, not the older
 introduction-only counts alone.
 
 The [national title/abstract bundle](REPRODUCIBILITY.md#full-national-titleabstract-evidence)
 now extends that matrix with full metadata alternatives and separate conditional
-native/description candidate counts. It contains 155,958 contexts, including the
+native/description candidate counts. It contains 157,598 contexts, including the
 unchanged 151,615 coded-event records. The additional 861 description-stated
 records are NY resolutions/concurrent resolutions and one MA petition filing;
 they do not establish whole-state dates or native completeness. ME's cycle
@@ -117,15 +126,17 @@ date coverage remains unresolved, not zero legislative activity.
 Full abstracts cover 49,242 candidate contexts; conflicting abstract variants
 remain explicit. The [complete token plan](REPRODUCIBILITY.md#complete-metadata-token-window-plan)
 covers every tokenizer-produced source token without truncation but grants no
-classifier or analytical approval. Current metadata v2 updates native presence
-while preserving byte-identical full metadata/abstract artifacts, so the
-accepted v1 token plan is reused rather than repeated.
+classifier or analytical approval. Metadata v3 adds the MT date candidates
+under the separate native-date channel, now 5,122 records. Token-plan v2 covers
+159,315 complete metadata views and 10,059,370 source tokens; source-date,
+model and analytical approvals remain separate.
 
 The [local evidence explorer](REPRODUCIBILITY.md#unpublished-cycle-evidence-explorer)
 provides all-state/organization coverage, complete metadata/platform text,
-filters and complete query downloads without publication. Native originals
-are not included and token-plan UI integration is deferred. This is evidence
-inspection, not a new state-completion category or certified report.
+filters and complete query downloads without publication. Optional native-text
+and metadata-token-plan inputs enrich inspection without changing original
+metadata token fields or treating planning as inference. This is not a new
+state-completion category or certified report.
 
 For subsequent recovery, use a common pipeline: **native cohort -> exact
 record join -> missing-original retrieval -> shared extraction/validation ->
@@ -198,7 +209,7 @@ certification or the completeness of either party's platforms.
 | Minnesota (MN) | Partial | Initial publisher-listed 11,146-identity inventory and 31 original pairs accepted; SR61 selected gap, cross-year contexts and introduced-universe proof remain open. | [Parallel native recovery](AUDIT_STATUS.md#additional-parallel-native-source-recovery) |
 | Mississippi (MS) | Inventory | No dedicated native legislative closure recorded; establish native cohort and original-version evidence. | [National inventory](AUDIT_STATUS.md#all-state-document-reference-inventory-and-retrieval) |
 | Missouri (MO) | Blocked | Native reconciliation, genuine 1,152-PDF stopped prefix, private recovery and header supplement accepted. Next-32 mocked proof reaches 1,184, not genuine collection; remaining full 4,960-context campaign is not closed. | [Stopped-prefix recovery](AUDIT_STATUS.md#missouri-actual-collector-failure-and-post-exit-recovery-gate) |
-| Montana (MT) | Partial | Reuse accepted native/history/introduction concordance for 2023–2024 only. Prioritize original policy texts and conflicts affecting this cycle; missing 2019 histories and 2025 origin dates no longer block study completion. | [Native/history evidence](AUDIT_STATUS.md#native-montana-universe-and-draftformal-identity-reconciliation) |
+| Montana (MT) | Partial | Shared date-only integration retains 1,640 guarded formal native observations inside 2023–2024, including 213 calendar-2024 prefilings in session 2025. No policy originals are supplied by this date profile. Prioritize cycle policy texts/conflicts, not missing 2019 histories or out-of-window 2025 events. | [Native/history evidence](AUDIT_STATUS.md#native-montana-universe-and-draftformal-identity-reconciliation) |
 | Nebraska (NE) | Inventory | No dedicated native legislative closure recorded. Nonpartisan legislature stays unavailable for D/R attribution; party-platform training evidence is separate. | [National inventory](AUDIT_STATUS.md#all-state-document-reference-inventory-and-retrieval) |
 | Nevada (NV) | Inventory | No dedicated native legislative closure recorded; recovered party-platform PDF does not close bill sources. | [National inventory](AUDIT_STATUS.md#all-state-document-reference-inventory-and-retrieval) |
 | New Hampshire (NH) | Inventory | No dedicated native legislative closure recorded; establish native cohort and original-version evidence. | [National inventory](AUDIT_STATUS.md#all-state-document-reference-inventory-and-retrieval) |
@@ -225,6 +236,15 @@ certification or the completeness of either party's platforms.
 | Wyoming (WY) | Inventory | No dedicated native legislative closure recorded; establish native cohort and original-version evidence. | [National inventory](AUDIT_STATUS.md#all-state-document-reference-inventory-and-retrieval) |
 
 ## Current assignments
+
+The additional bounded AL/SC official-source discovery has returned. Six
+actual raw responses and their provenance are preserved in
+`data/processed/al-sc-official-source-discovery-2023-2024-v1/`, manifest
+`4d94e23afed88c1d3d9c0286543341b495261dbb5f5348dbf32ef112621aba79`.
+AL's introduced-document sample and SC's bill/previous-version pages are not
+native-census closure or approved policy-input indexes. Conservatively charged
+discovery/capture usage is AL 25/25 and SC 20/25; historical usage remains
+unknown. Do not repeat discovery or treat unused allowance as authorization.
 
 Both **new offline inventories have returned and their artifacts are bound**.
 The owners are idle, not running collectors. Their completed bounded tasks are

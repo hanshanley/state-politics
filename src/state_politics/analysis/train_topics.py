@@ -6,6 +6,7 @@ import argparse
 import hashlib
 import importlib.metadata
 import json
+import math
 import random
 import re
 from collections import Counter
@@ -238,7 +239,32 @@ def validate_source_reservation(rows: list[dict], path: Path) -> dict:
     }
 
 
+def _sampling_weight(value) -> float:
+    if type(value) not in (int, float) or not math.isfinite(value) or value <= 0:
+        raise ValueError("reviewed-target sampling weight must be finite and positive")
+    return float(value)
+
+
+def training_indices(
+    rows: list[dict], *, seed: int, epoch: int, reviewed_target_weight: float = 1.0,
+) -> list[int]:
+    weight = _sampling_weight(reviewed_target_weight)
+    if not rows:
+        raise ValueError("training sampler requires examples")
+    rng = random.Random(seed + epoch)
+    indices = list(range(len(rows)))
+    if weight == 1.0:
+        rng.shuffle(indices)
+        return indices
+    return rng.choices(
+        indices,
+        weights=[weight if row["label_origin"] == "reviewed_target" else 1.0 for row in rows],
+        k=len(rows),
+    )
+
+
 def train(args) -> Path:
+    reviewed_weight = _sampling_weight(getattr(args, "reviewed_target_sampling_weight", 1.0))
     topics = load_topics(args.topics)
     codes = [topic.code for topic in topics]
     rows = load_examples(args.labels, codes)
@@ -341,6 +367,13 @@ def train(args) -> Path:
         "decision_status": "uncalibrated_research_defaults",
         "seed": args.seed, "learning_rate": args.learning_rate,
         "batch_size": args.batch_size, "epochs": args.epochs,
+        "sampling": {
+            "kind": "deterministic_shuffle_without_replacement"
+            if reviewed_weight == 1.0 else "weighted_with_replacement",
+            "reviewed_target_weight": reviewed_weight,
+            "draws_per_epoch": len(train_rows),
+            "raw_label_rows_are_not_duplicated": True,
+        },
         "optimizer": {"name": "AdamW", "weight_decay": 0.01, "gradient_clip_norm": 1.0},
         "training_history": [],
         "limitations": [
@@ -353,8 +386,9 @@ def train(args) -> Path:
     }
     for epoch in range(args.epochs):
         model.train()
-        indices = list(range(len(examples)))
-        random.Random(args.seed + epoch).shuffle(indices)
+        indices = training_indices(
+            train_rows, seed=args.seed, epoch=epoch, reviewed_target_weight=reviewed_weight,
+        )
         loss_sum = 0.0
         for start in range(0, len(indices), args.batch_size):
             batch = [examples[i] for i in indices[start:start + args.batch_size]]
@@ -378,6 +412,14 @@ def train(args) -> Path:
         epoch_report = {
             "epoch": epoch + 1, "training_loss": loss_sum / len(examples),
             "completed_at": utc_now_iso(),
+            "n_sampled_examples": len(indices),
+            "n_unique_sampled_records": len(set(indices)),
+            "sampled_label_origin_counts": dict(Counter(
+                train_rows[index]["label_origin"] for index in indices
+            )),
+            "sampled_domain_counts": dict(Counter(
+                train_rows[index]["domain"] for index in indices
+            )),
         }
         manifest["training_history"].append(epoch_report)
         print(json.dumps(epoch_report), flush=True)
@@ -408,6 +450,11 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--max-tokens", type=int, default=1024)
     parser.add_argument("--overlap", type=int, default=128)
     parser.add_argument("--learning-rate", type=float, default=2e-5)
+    parser.add_argument(
+        "--reviewed-target-sampling-weight", type=float, default=1.0,
+        help="explicit research sampling weight for reviewed target examples; "
+        "one preserves the original shuffle, other weights sample with replacement",
+    )
     args = parser.parse_args(argv)
     if (
         args.epochs < 1 or args.batch_size < 1 or not 32 <= args.max_tokens <= 8192
