@@ -16,6 +16,54 @@ remain unchanged. Broad rebuild commands below are not a request to complete
 other years; target-cycle selection and its inclusion/exclusion provenance must
 be bound explicitly before regenerated outputs can support the narrowed study.
 
+## Separate 2023–2024 source-date ledger
+
+```bash
+.venv/bin/python -I -B -m state_politics.bills.study_window \
+  --data-dir data/processed \
+  --out-dir data/processed/study-window-2023-2024-v2
+```
+
+The completed local execution uses the directory above. Choose a **new directory**
+for another execution; existing outputs are never overwritten. The earlier v1
+is preserved; v2 adds exact native session IDs to grouped counts and explicitly
+discloses that proposed bills/draft requests are not automatically eligible.
+This command reads the wider extraction, not a previously filtered cycle dataset.
+It verifies the extraction manifest's Parquet hashes/row counts, records full
+input/code hashes and seven stat fields, and rechecks them before completion.
+A failed build leaves an explicitly incomplete manifest.
+
+Outputs are `bill_window_ledger.csv` (every retained bill-context row and its
+date disposition), `source_introduction_actions.parquet` (complete raw rows
+with an exact introduction classification token), `state_session_counts.csv`,
+`report.json` and the hash-bound `manifest.json`. Record and grouped exports
+preserve native session IDs, session metadata, chamber and measure type.
+
+A usable source-date observation requires exactly one introduction action
+matching the bill's originating organization and known chamber. Duplicate
+origin introductions remain unresolved even on the same date. Other-chamber
+introductions stay in the evidence export, not new originating filings.
+First/latest actions, session years, URL dates and filenames never supply an
+introduction date. Complete ISO event strings are validated, retaining their
+source-local calendar day rather than converting time zones.
+
+The actual run accounts for all **1,090,369 contexts**, **760,947 raw introduction
+actions** and **4,162 state/session/type/disposition groups**. Only **130,803**
+contexts have unambiguous source-coded introductions inside the window.
+These are source observations, **not a certified filing population**: native
+verification, prefiling/carryover interpretation, original-version eligibility,
+formal-measure selection and party timing remain separate gates. Wider-history
+unresolved contexts are not automatically target-cycle gaps or exclusions.
+No canonical table, label, model, platform selection or analytical output changes.
+
+The local completed manifest SHA-256 is
+`d19544a98d8b1ce29da414970d445a9da111ede5b8cbe3de53af50639012dfc1`.
+The separate session verifier `verify_study_window_actual_v2.py` compares all
+original bill fields, every raw introduction action, originating-event joins,
+date dispositions and persisted aggregate counts; its receipt is
+`study_window_2023_2024_verified_v2.json`. Generated evidence remains Git-ignored
+and local-only; committing this documentation does not back up those files.
+
 ## One-command audit
 
 ```bash

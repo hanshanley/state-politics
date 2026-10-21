@@ -32,6 +32,57 @@ is an end-to-end scientifically completed state. Historical "running" and
 current process status. Reuse accepted state/cohort evidence rather than
 repeating its collection or proof.
 
+## 2023–2024 source-date inventory
+
+**October 21:** a separate, completed inventory now accounts for all
+**1,090,369 retained contexts** without altering the wider canonical extraction.
+Every context has a date disposition; all **760,947 raw source-coded introduction
+actions** are preserved. Exact originating-organization/chamber matching is
+required; duplicate origin actions are not resolved by choosing the earliest.
+
+| Source-evidence disposition | Retained contexts |
+|---|---:|
+| Unambiguous source introduction during 2023–2024 | 130,803 |
+| Unambiguous source introduction before 2023 | 273,166 |
+| Unambiguous source introduction after 2024 | 126,670 |
+| No source-coded introduction action | 492,878 |
+| Introduction actions present, none in originating organization | 26,308 |
+| Multiple originating introduction actions | 40,544 |
+| **Total** | **1,090,369** |
+
+The **559,730 unresolved contexts cover the entire retained history**, not
+559,730 proven missing target-cycle filings. Alaska, Arizona, Connecticut,
+Indiana, Louisiana, Maine, Massachusetts and New York have **no qualifying
+in-window date observations under this strict rule**; this is unavailable
+source-date coverage, never zero legislation or evidence of native absence.
+The 130,803 in-window observations retain distinct measure types, including
+568 proposed bills; Montana draft/formal eligibility is not established by
+an upstream type or an introduction action. These are not analytical admissions.
+
+The actual v2 build and separate full-row source/output reconciliation both
+exited 0. Original bill fields, every selected raw action, exact origin action-ID
+joins, date boundaries, all 50 state totals and all 4,162 native-session/type/
+disposition groups reconcile. All consumed source/code hashes and seven stat
+fields are unchanged. Grouped counts retain `legislative_session_id`, so equal
+session labels cannot merge distinct native contexts. Focused cases also cover
+missing/invalid dates, opposite chambers, identical-date duplicates, overlapping
+biennia, special sessions and incomplete-output behavior.
+
+Local outputs are `data/processed/study-window-2023-2024-v2/`, manifest SHA-256
+`d19544a98d8b1ce29da414970d445a9da111ede5b8cbe3de53af50639012dfc1`.
+Session evidence includes `study_window_2023_2024_actual_v2.log`,
+`verify_study_window_actual_v2.py` (SHA-256
+`cc63d2575e7a5b4920808de5c7741829ad695f52b834dcba88e2c1a0c38efb52`),
+and `study_window_2023_2024_verified_v2.json`/`.log`. V1 remains preserved,
+not overwritten. See [the executable contract](REPRODUCIBILITY.md#separate-20232024-source-date-ledger).
+
+This is a source-date inventory, not independent native-date verification,
+native-universe closure, a prefiling/carryover decision, eligible original
+text selection, party reattribution or classifier certification. It closes no
+additional state source scope. No HTTP, model execution, label/corpus rewrite
+or publication-site change occurred. Generated evidence remains local-only;
+the Git checkpoint does not back up ignored outputs.
+
 **October 21 state tracking and distinct offline inventories:** the linked tracker
 records all 50 states, each accepted cohort, remaining source gap and evidence.
 Seven source-accounting scopes are closed; no state is scientifically complete.

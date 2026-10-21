@@ -42,6 +42,14 @@ external classifier-training examples may remain training evidence; that does
 not make their years part of the target analysis or independent evaluation.
 The selected window is a design decision, not certification of existing exports.
 
+The [separate source-date inventory](AUDIT_STATUS.md#20232024-source-date-inventory)
+now accounts for every retained context: 130,803 have unambiguous source-coded
+introductions inside 2023–2024. This does **not** close additional states or
+replace native verification. Its 559,730 unresolved contexts span the wider
+retained history and are not all target-cycle missing filings. AK, AZ, CT, IN,
+LA, MA, ME and NY have no qualifying in-window dates under the strict source
+rule; do not turn that missing evidence into zero legislative activity.
+
 ## How to use this list
 
 - **Closed scope:** collection/accounting and independent replay accepted for
