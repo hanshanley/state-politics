@@ -88,6 +88,44 @@ are retained as `bill_coverage_empty_denominator_before_v1.log` and
 `bill_coverage_empty_denominator_complete_v1.log` in the session.
 No actual corpus, model outputs or research comparisons were regenerated.
 
+**External training-label conflict repair:** eligible normalized duplicate
+descriptions with competing topic codes previously retained whichever label was
+encountered first, including across source files. Preparation now raises an
+explicit error identifying both topics and CSV locations before sampling or
+output writing; it does not guess a corrected label. Independent parent replay
+of the original `prepare()` function reproduces four failures and two passing
+controls; the repaired function passes all six cases. Same-topic duplicate
+provenance/accounting, compatibility quarantine and reviewed-target reservation
+remain unchanged. The original-function replay is not a whole historical-package
+execution. The worker handoff and independent parent replay source/logs are
+retained separately as `training_preparation_integrity_6_1_sol_v1.json` and
+`training_preparation_parent_replay_v1.py`, with original/fixed execution logs.
+
+**Retained-source conflict incidence:** a separate read-only scan of all three
+checksum-pinned CAP CSVs finds **2,228 normalized texts** with competing topic
+codes among rows passing the current compatibility rules and year floor of 2000.
+There are **2,845 conflicting duplicate rows** relative to the first encountered
+topic. This precedes reviewed-target exclusions and sampling; these are not
+2,845 adjudicated errors or additional training examples. A second exact
+source-row join verifies all **5,895 external-coded rows** in the unchanged
+**6,158-row canonical pilot labels** against CSV line, source record, year,
+description, topic and hashes. **116 retained training rows** match conflicting
+groups: **115 bill descriptions and one platform unit**. This establishes actual
+training exposure to ambiguous source labels, not which alternative is correct,
+model error incidence or a measured effect on accuracy.
+
+The complete input content hashes and seven non-content stat fields remain
+unchanged for both scans; canonical labels retain SHA-256
+`395ffa760c684619199ac005df8e52b3d42a5e94d9a8a7e9772b7b1642a33361`.
+Exact locations, competing source topics, source code, logs and limitations are
+retained as `training_preparation_retained_duplicate_incidence_v1.*` and
+`training_preparation_canonical_conflict_join_v1.*` in the session.
+Existing labels/checkpoints are preserved, not silently regenerated or
+retroactively certified. A new preparation encountering an unresolved conflict
+now stops; upstream ambiguity must be reviewed before rebuilding. No replacement
+topic, automatic quarantine policy, training run or scientific approval is
+inferred from this finding.
+
 **October 21 review continuation:** five evidence-bound rubric proposals have
 returned without changing canonical labels. Independent parent binding verifies
 their retained source spans and quotations; it does not approve the proposed

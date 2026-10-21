@@ -120,6 +120,7 @@ def prepare(
     reviewed: list[dict],
     sources=SOURCES,
 ) -> tuple[list[dict], dict]:
+    """Prepare initialization rows, rejecting conflicting eligible duplicate labels."""
     if per_source_topic < 1:
         raise ValueError("per-source-topic must be positive")
     if any(row["label_origin"] != "reviewed_target" for row in reviewed):
@@ -127,6 +128,7 @@ def prepare(
     reserved = {normalized_text(row["text"]) for row in reviewed}
     reference_shingles = [_shingles(row["text"]) for row in reviewed]
     seen = set(reserved)
+    external_labels = {}
     chosen = []
     source_reports = []
     for filename, domain, url, expected_sha in sources:
@@ -157,11 +159,19 @@ def prepare(
                     continue
                 text = row["description"].strip()
                 fingerprint = normalized_text(text)
+                topic = int(row["majortopic"])
+                previous = external_labels.get(fingerprint)
+                if previous is not None and previous[0] != topic:
+                    raise ValueError(
+                        f"{filename}:{number}: conflicting external labels for normalized "
+                        f"duplicate text: topic {topic} versus topic {previous[0]} "
+                        f"at {previous[1]}:{previous[2]}"
+                    )
                 if fingerprint in seen:
                     dispositions["exact_duplicate_or_target_overlap"] += 1
                     continue
+                external_labels[fingerprint] = (topic, filename, number)
                 seen.add(fingerprint)
-                topic = int(row["majortopic"])
                 record_id = f"cap:{Path(filename).stem}:row-{number}"
                 group = (
                     row.get("bill_id") if domain == "bill" else row["year"]
