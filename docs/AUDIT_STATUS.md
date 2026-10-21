@@ -24,6 +24,35 @@ accepted source scopes can supply reusable 2023–2024 evidence, with their exis
 exceptions. Historical counts and seven-scope statements below retain their
 original checkpoint meaning, not current dispatch priority.
 
+## Explicit conflict-exclusion experiment
+
+The fail-closed training-preparation default is unchanged: conflicting eligible
+external labels still raise an error. A new, explicitly selected
+`--conflict-policy exclude-groups` experiment instead excludes **every eligible
+member of each conflicting normalized-text group before deduplication and
+sampling**. It never selects the first/majority topic, rewrites a source label
+or treats ambiguity as a reviewed rejection. Complete original excluded rows,
+source positions, competing codes and hashes are retained for audit.
+
+The actual new packet
+`data/labels/cap-conflict-exclusion-experiment-20261021-v1/` excludes **2,228
+groups / 6,120 eligible source rows**, including the groups exposing 116
+canonical training records. Resampling supplies **6,103 training rows**, with
+the same 263 retained assistant-reviewed records and 50-row development set.
+The original 6,158-row canonical manifest is byte- and stat-unchanged. New labels
+SHA-256: `2b9d0c833846341c7ef94b72b2358c9033ef4aceba0e8ebb6d7be2b3407393ed`.
+Preparation manifest:
+`66a75a42301b0a1d54e1f5f5b5586eed981f90ef08e1f36024cf75b7afc2a849`.
+
+The 52 previously examined challenge records remain source/group/text-isolated;
+no new training example is an exact or detected near copy. All wrapped training
+inputs fit the retained 1,024-token budget (maximum 468). Whole-group exclusion
+is an explicit conservative experimental choice, not adjudicated gold or
+certification of remaining labels. Fresh full-encoder/head training has started
+in a distinct provisional checkpoint with the prior three-epoch settings and
+fixed decision policy. Its actual evaluation is pending; default provisional
+loader refusal and the publication boundary remain unchanged.
+
 ## Shared partial-native indexes and unpublished explorer
 
 The native registry now indexes **13 accepted packets across 12 states**:

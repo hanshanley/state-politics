@@ -255,8 +255,11 @@ collector or replacement agent was launched for them.
 ## Remaining project-wide gates
 
 The classifier remains provisional. All 116 retained training records exposed to
-conflicting source labels have advisory contextual reviews, not adjudicated gold;
-conflict-exclusion policy is not approved. Cycle-applicable platforms and
+conflicting source labels have advisory contextual reviews, not adjudicated gold.
+An explicit conservative experiment now excludes whole conflicting eligible
+external-label groups before resampling; canonical labels remain unchanged and
+this does not certify the remaining labels. Fresh provisional training/evaluation
+is separate from canonical gold or scientific release. Cycle-applicable platforms and
 event-time affiliations within 2023–2024 are not certified. The report and all dependent analyses
 remain unfinished. The publication site is unchanged and publication unauthorized.
 

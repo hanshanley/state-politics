@@ -2,9 +2,12 @@
 
 import csv
 import hashlib
+import json
+from functools import partial
 
 import pytest
 
+from state_politics.analysis import prepare_topics
 from state_politics.analysis.prepare_topics import prepare
 
 TEXT = (
@@ -91,3 +94,82 @@ def test_quarantined_label_does_not_create_duplicate_conflict(tmp_path):
     assert report["sources"][0]["dispositions"] == {
         "eligible_initialization_candidate": 1, "quarantined": 1,
     }
+
+
+@pytest.mark.parametrize("reverse_sources", [False, True])
+def test_explicit_policy_excludes_every_cross_source_member_before_sampling(
+    tmp_path, reverse_sources,
+):
+    different = TEXT + " Additional provisions address a distinct local issue."
+    sources = [
+        source(tmp_path, "first.csv", [1, 1], texts=[TEXT, different]),
+        source(tmp_path, "second.csv", [3, 3], texts=[TEXT.upper(), TEXT]),
+    ]
+    if reverse_sources:
+        sources.reverse()
+    rows, report = prepare(
+        tmp_path, [1, 3], per_source_topic=1, min_year=2000,
+        seed=17, reviewed=[], sources=sources, conflict_policy="exclude-groups",
+    )
+    assert [row["text"] for row in rows] == [different]
+    assert report["conflicting_eligible_group_count"] == 1
+    assert report["excluded_conflicting_row_count"] == 3
+    excluded = report["excluded_conflicting_rows"]
+    assert {row["source_file"] for row in excluded} == {"first.csv", "second.csv"}
+    assert {row["source_csv_line"] for row in excluded} == {2, 3}
+    assert all(row["competing_topics"] == [1, 3] for row in excluded)
+    assert len({row["normalized_text_sha256"] for row in excluded}) == 1
+    assert {row["source_record"]["description"] for row in excluded} == {
+        TEXT, TEXT.upper(),
+    }
+    assert sum(
+        item["dispositions"].get("quarantined_conflicting_label_group", 0)
+        for item in report["sources"]
+    ) == 3
+
+
+def test_explicit_policy_preserves_same_topic_and_existing_compatibility_rules(tmp_path):
+    descriptor = source(
+        tmp_path, "synthetic.csv", [1, 1, 3], subtopics=[100, 100, 100],
+    )
+    rows, report = prepare(
+        tmp_path, [1, 3], per_source_topic=10, min_year=2000,
+        seed=17, reviewed=[], sources=[descriptor], conflict_policy="exclude-groups",
+    )
+    assert [row["topic"] for row in rows] == [1]
+    assert report["conflicting_eligible_group_count"] == 0
+    assert report["excluded_conflicting_rows"] == []
+    assert report["sources"][0]["dispositions"] == {
+        "eligible_initialization_candidate": 1,
+        "exact_duplicate_or_target_overlap": 1, "quarantined": 1,
+    }
+
+
+def test_explicit_policy_writes_auditable_full_source_exclusions(tmp_path, monkeypatch):
+    descriptor = source(
+        tmp_path, "synthetic.csv", [1, 3, 1],
+        texts=[TEXT, TEXT, TEXT + " A separate program addresses another issue."],
+    )
+    monkeypatch.setattr(prepare_topics, "prepare", partial(prepare, sources=[descriptor]))
+    out = tmp_path / "prepared"
+    assert prepare_topics.main([
+        "--cap-dir", str(tmp_path), "--out", str(out),
+        "--conflict-policy", "exclude-groups",
+    ]) == 0
+    manifest = json.loads((out / "source_manifest.json").read_text())
+    exclusions = out / manifest["conflict_exclusions"]["path"]
+    assert hashlib.sha256(exclusions.read_bytes()).hexdigest() == (
+        manifest["conflict_exclusions"]["sha256"]
+    )
+    rows = [json.loads(line) for line in exclusions.read_text().splitlines()]
+    assert len(rows) == manifest["conflict_exclusions"]["n_rows"] == 2
+    assert rows[0]["source_record"]["description"] == TEXT
+    assert "excluded_conflicting_rows" not in manifest
+
+
+def test_unknown_conflict_policy_fails_explicitly(tmp_path):
+    with pytest.raises(ValueError, match="conflict policy"):
+        prepare(
+            tmp_path, [1, 3], per_source_topic=1, min_year=2000,
+            seed=17, reviewed=[], sources=[], conflict_policy="choose-first",
+        )

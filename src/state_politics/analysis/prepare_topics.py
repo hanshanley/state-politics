@@ -110,6 +110,35 @@ def near_overlap(text: str, references: list[set[tuple[str, ...]]]) -> bool:
     return False
 
 
+def _source_rows(path: Path):
+    with path.open(encoding="utf-8", newline="") as handle:
+        reader = csv.DictReader(handle)
+        required = {
+            "id", "year", "majortopic", "subtopic", "pap_majortopic",
+            "pap_subtopic", "description",
+        }
+        if not required <= set(reader.fieldnames or []):
+            raise ValueError(f"{path.name}: source schema changed")
+        for number, row in enumerate(reader, 2):
+            if None in row or any(value is None for value in row.values()):
+                raise ValueError(f"{path.name}:{number}: malformed CSV row")
+            yield number, row
+
+
+def _conflicting_groups(cap_dir: Path, codes: set[int], min_year: int, sources) -> dict:
+    labels = defaultdict(set)
+    for filename, _, _, expected_sha in sources:
+        path = cap_dir / filename
+        if sha256_file(path) != expected_sha:
+            raise ValueError(f"{filename}: frozen source checksum mismatch")
+        for _, row in _source_rows(path):
+            if not compatibility_flags(row, codes, min_year):
+                labels[normalized_text(row["description"])].add(int(row["majortopic"]))
+        if sha256_file(path) != expected_sha:
+            raise ValueError(f"{filename}: frozen source changed during conflict scan")
+    return {text: sorted(topics) for text, topics in labels.items() if len(topics) > 1}
+
+
 def prepare(
     cap_dir: Path,
     codes: list[int],
@@ -119,12 +148,21 @@ def prepare(
     seed: int,
     reviewed: list[dict],
     sources=SOURCES,
+    conflict_policy: str = "error",
 ) -> tuple[list[dict], dict]:
-    """Prepare initialization rows, rejecting conflicting eligible duplicate labels."""
+    """Prepare initialization rows; excluding whole conflict groups requires explicit opt-in."""
     if per_source_topic < 1:
         raise ValueError("per-source-topic must be positive")
+    if conflict_policy not in ("error", "exclude-groups"):
+        raise ValueError("conflict policy must be error or exclude-groups")
     if any(row["label_origin"] != "reviewed_target" for row in reviewed):
         raise ValueError("target review file must not contain external labels or predictions")
+    sources = tuple(sources)
+    conflicting = (
+        _conflicting_groups(cap_dir, set(codes), min_year, sources)
+        if conflict_policy == "exclude-groups" else {}
+    )
+    excluded = []
     reserved = {normalized_text(row["text"]) for row in reviewed}
     reference_shingles = [_shingles(row["text"]) for row in reviewed]
     seen = set(reserved)
@@ -140,65 +178,70 @@ def prepare(
         dispositions = Counter()
         flag_counts = Counter()
         n_raw = 0
-        with path.open(encoding="utf-8", newline="") as handle:
-            reader = csv.DictReader(handle)
-            required = {
-                "id", "year", "majortopic", "subtopic", "pap_majortopic",
-                "pap_subtopic", "description",
-            }
-            if not required <= set(reader.fieldnames or []):
-                raise ValueError(f"{filename}: source schema changed")
-            for number, row in enumerate(reader, 2):
-                n_raw += 1
-                if None in row or any(value is None for value in row.values()):
-                    raise ValueError(f"{filename}:{number}: malformed CSV row")
-                flags = compatibility_flags(row, set(codes), min_year)
-                flag_counts.update(flags)
-                if flags:
-                    dispositions["quarantined"] += 1
-                    continue
-                text = row["description"].strip()
-                fingerprint = normalized_text(text)
-                topic = int(row["majortopic"])
-                previous = external_labels.get(fingerprint)
-                if previous is not None and previous[0] != topic:
-                    raise ValueError(
-                        f"{filename}:{number}: conflicting external labels for normalized "
-                        f"duplicate text: topic {topic} versus topic {previous[0]} "
-                        f"at {previous[1]}:{previous[2]}"
-                    )
-                if fingerprint in seen:
-                    dispositions["exact_duplicate_or_target_overlap"] += 1
-                    continue
-                external_labels[fingerprint] = (topic, filename, number)
-                seen.add(fingerprint)
-                record_id = f"cap:{Path(filename).stem}:row-{number}"
-                group = (
-                    row.get("bill_id") if domain == "bill" else row["year"]
-                )
-                if not group:
-                    raise ValueError(f"{filename}:{number}: missing source family identifier")
-                candidate = {
-                    "record_id": record_id,
-                    "group_id": f"cap:{Path(filename).stem}:{group}",
-                    "split": "train", "domain": domain, "text": text,
+        for number, row in _source_rows(path):
+            n_raw += 1
+            flags = compatibility_flags(row, set(codes), min_year)
+            flag_counts.update(flags)
+            if flags:
+                dispositions["quarantined"] += 1
+                continue
+            text = row["description"].strip()
+            fingerprint = normalized_text(text)
+            topic = int(row["majortopic"])
+            if fingerprint in conflicting:
+                dispositions["quarantined_conflicting_label_group"] += 1
+                excluded.append({
+                    "reason": "conflicting_eligible_external_labels",
+                    "normalized_text_sha256": hashlib.sha256(
+                        fingerprint.encode()
+                    ).hexdigest(),
+                    "competing_topics": conflicting[fingerprint],
+                    "source_file": filename, "domain": domain,
                     "source_url": url, "source_sha256": actual_sha,
-                    "source_record_id": row["id"], "source_csv_line": number,
-                    "source_major": row["majortopic"], "source_subtopic": row["subtopic"],
-                    "year": int(row["year"]), "label_origin": "external_coded",
-                    "label_version": LABEL_VERSION, "topic": topic,
-                    "evidence_tier": (
-                        "external_bill_description" if domain == "bill"
-                        else "external_national_platform_quasi_sentence"
-                    ),
-                    "source_use_url": SOURCE_USE_URL,
-                    "source_license": "CC-BY-NC-SA-4.0 for project-generated variables; "
-                    "original-text rights may also apply",
-                    "compatibility_status": "provisional_initialization_not_gold",
-                }
-                priority = hashlib.sha256(f"{seed}:{record_id}".encode()).hexdigest()
-                buckets[topic].append((priority, candidate))
-                dispositions["eligible_initialization_candidate"] += 1
+                    "source_csv_line": number, "source_record": row,
+                })
+                continue
+            previous = external_labels.get(fingerprint)
+            if previous is not None and previous[0] != topic:
+                raise ValueError(
+                    f"{filename}:{number}: conflicting external labels for normalized "
+                    f"duplicate text: topic {topic} versus topic {previous[0]} "
+                    f"at {previous[1]}:{previous[2]}"
+                )
+            if fingerprint in seen:
+                dispositions["exact_duplicate_or_target_overlap"] += 1
+                continue
+            external_labels[fingerprint] = (topic, filename, number)
+            seen.add(fingerprint)
+            record_id = f"cap:{Path(filename).stem}:row-{number}"
+            group = (
+                row.get("bill_id") if domain == "bill" else row["year"]
+            )
+            if not group:
+                raise ValueError(f"{filename}:{number}: missing source family identifier")
+            candidate = {
+                "record_id": record_id,
+                "group_id": f"cap:{Path(filename).stem}:{group}",
+                "split": "train", "domain": domain, "text": text,
+                "source_url": url, "source_sha256": actual_sha,
+                "source_record_id": row["id"], "source_csv_line": number,
+                "source_major": row["majortopic"], "source_subtopic": row["subtopic"],
+                "year": int(row["year"]), "label_origin": "external_coded",
+                "label_version": LABEL_VERSION, "topic": topic,
+                "evidence_tier": (
+                    "external_bill_description" if domain == "bill"
+                    else "external_national_platform_quasi_sentence"
+                ),
+                "source_use_url": SOURCE_USE_URL,
+                "source_license": "CC-BY-NC-SA-4.0 for project-generated variables; "
+                "original-text rights may also apply",
+                "compatibility_status": "provisional_initialization_not_gold",
+            }
+            priority = hashlib.sha256(f"{seed}:{record_id}".encode()).hexdigest()
+            buckets[topic].append((priority, candidate))
+            dispositions["eligible_initialization_candidate"] += 1
+        if sha256_file(path) != expected_sha:
+            raise ValueError(f"{filename}: frozen source changed during preparation")
         source_selected = []
         overlap_count = 0
         for bucket in buckets.values():
@@ -226,6 +269,12 @@ def prepare(
         "preparation_code_sha256": sha256_file(__file__),
         "status": "provisional_initialization_not_independent_validation",
         "seed": seed, "minimum_external_year": min_year,
+        "conflict_policy": conflict_policy,
+        "conflicting_eligible_group_count": (
+            len(conflicting) if conflict_policy == "exclude-groups" else None
+        ),
+        "excluded_conflicting_row_count": len(excluded),
+        "excluded_conflicting_rows": excluded,
         "reviewed_code_migrations": sorted(REVIEWED_CODE_MIGRATIONS),
         "per_source_topic_cap": per_source_topic, "sources": source_reports,
         "split_counts": dict(Counter(row["split"] for row in chosen)),
@@ -238,6 +287,8 @@ def prepare(
         ),
         "limitations": [
             "External numeric codes are provisional initialization labels, not project gold.",
+            "Opt-in conflict exclusion removes every eligible member before sampling; "
+            "it neither selects a winning topic nor changes canonical labels.",
             "Quarantine rules detect known conflicts; they do not prove remaining compatibility.",
             "National/historical descriptions and quasi-sentences differ from state policy units.",
             "Culture initialization covers arts, not the full adapted family/moral category.",
@@ -259,6 +310,11 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--per-source-topic", type=int, default=100)
     parser.add_argument("--min-year", type=int, default=2000)
     parser.add_argument("--seed", type=int, default=20261018)
+    parser.add_argument(
+        "--conflict-policy", choices=("error", "exclude-groups"), default="error",
+        help="explicit experimental exclusion of entire conflicting external-label groups; "
+        "does not correct labels or certify the remaining data",
+    )
     args = parser.parse_args(argv)
     if args.out.exists():
         raise FileExistsError(f"refusing to overwrite {args.out}")
@@ -267,6 +323,7 @@ def main(argv: list[str] | None = None) -> int:
     rows, report = prepare(
         args.cap_dir, codes, per_source_topic=args.per_source_topic,
         min_year=args.min_year, seed=args.seed, reviewed=reviewed,
+        conflict_policy=args.conflict_policy,
     )
     report["taxonomy_sha256"] = sha256_file(args.topics)
     report["reviewed_target_sha256"] = (
@@ -275,6 +332,21 @@ def main(argv: list[str] | None = None) -> int:
     args.out.parent.mkdir(parents=True, exist_ok=True)
     with TemporaryDirectory(prefix=".topic-labels-", dir=args.out.parent) as directory:
         staging = Path(directory)
+        producer = staging / "producer.py"
+        producer.write_bytes(Path(__file__).read_bytes())
+        if sha256_file(producer) != report["preparation_code_sha256"]:
+            raise ValueError("preparation code changed during execution")
+        report["producer_copy"] = producer.name
+        excluded = report.pop("excluded_conflicting_rows")
+        if args.conflict_policy == "exclude-groups":
+            exclusions = staging / "conflict_exclusions.jsonl"
+            exclusions.write_text("".join(
+                json.dumps(row, ensure_ascii=False) + "\n" for row in excluded
+            ))
+            report["conflict_exclusions"] = {
+                "path": exclusions.name, "sha256": sha256_file(exclusions),
+                "n_rows": len(excluded),
+            }
         labels = staging / "labels.jsonl"
         labels.write_text("".join(json.dumps(row, ensure_ascii=False) + "\n" for row in rows))
         load_examples(labels, codes)
