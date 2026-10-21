@@ -61,6 +61,21 @@ parent replay's mistaken six-failure expectation and its failed assertion remain
 preserved separately. These are synthetic integration checks, not new historical
 membership evidence, a full-dump incidence measurement or regenerated analyses.
 
+**Retained-data date incidence:** a separate read-only parent scan compares the old
+first-ten-character date parser with the repaired complete-value parser on every
+retained `bills.parquet:first_action_date` and `vote_events.parquet:start_date`.
+Among **1,090,369 bill rows**, both accept **1,065,708 dates** and retain **24,661
+missing dates**. Both accept dates in all **873,980 vote-event rows**. There are
+**zero changed validation dispositions or parsed calendar days** in these two
+retained columns; the synthetic failures do not establish affected corpus rows.
+Both complete Parquet hashes match the original extraction manifest. Their full
+content hashes and seven non-content stat fields, the manifest and current parser
+are unchanged before/after the scan. Source and results are retained separately
+as `temporal_attribution_retained_date_impact_v1.py`, `.json` and `.log` in the
+session. This measures the retained date columns, not all fields in the source
+dump, actual party-label changes, historical affiliation completeness or scientific
+validity. No canonical data or analyses were regenerated.
+
 **October 21 review continuation:** five evidence-bound rubric proposals have
 returned without changing canonical labels. Independent parent binding verifies
 their retained source spans and quotations; it does not approve the proposed
@@ -179,8 +194,8 @@ introduced-version contexts each, with a 128-aggregate-physical exchange ceiling
 including discovered history, robots, redirects, retries and errors. Unknown
 history remains unknown, not zero; ten-second monotonic pacing and immediate
 access-stop rules apply. Top-level root and task-ownership checks found no conflict,
-not proof of zero historical requests. Missouri's fresh private return and its
-remaining verification are recorded below.
+not proof of zero historical requests. Missouri's fresh private return and
+completed bounded reconstruction are recorded below.
 
 No source recovery, collection restart, new HTTP, sealing, label/model change,
 scientific admission or publication is authorized by the New York checks.
@@ -275,8 +290,9 @@ allowed the same worker to verify the complete preparation tree before a distinc
 private v2 attempt. That attempt returned genuine original initializer,
 three initializer crash/retry boundaries and normal next-32 execution. Its private
 mocked-transport result is **1,184 completed / 3,776 pending / 1,440 consumed /
-37 checkpoints**. The 32 new PDFs were reopened with both readers; the final
-independent all-1,184 reader pass and five semantic-negative gates remain unfinished.
+37 checkpoints**. The 32 new PDFs were reopened with both readers. The distinct
+v3 read-only follow-through below completes the all-1,184 reconstruction and five
+fresh semantic controls without rerunning this initializer/continuation.
 
 The zero-work `Campaign.run(max_candidates=0)` probe made no additional transport
 calls and processed no candidates, but rewrote `progress.json` and changed its
@@ -297,11 +313,39 @@ or acceptance of guard ordering. Receipt
 `3f58137497bb8a50a93c4bbff9a10e4eaf15401246944b368c403cec97fe5568`.
 The worker deliberately interrupted remaining reconstruction after observing the
 progress change; its exit-1 `KeyboardInterrupt` was not an original toolkit exception.
-The same GPT-6.1 Sol owner now has a distinct zero-HTTP, read-only follow-through
-to finish reconstruction and semantic controls, preserving v2 and the collector
-rather than patching away an expected timestamp refresh. Actual stopped-campaign,
-real-successor, staging and authorization access remain prohibited. No new HTTP,
-source closure, full-4,960 behavior or scientific/publication admission is claimed.
+The same GPT-6.1 Sol owner subsequently completed a distinct zero-HTTP, read-only
+v3 follow-through, preserving v2 and the collector rather than patching away an
+expected timestamp refresh. Its six child executions reconstruct **1,184 PDFs /
+6,061 pages per reader**, all **37 checkpoints**, the native population and exact
+ledger joins, current **1,440 consumed / 3,776 pending** counters and the original
+**1,152 false identity flags**. No identity promotion occurred. Five separate full
+copy2 fixtures, each with a fresh manifest and one changed payload, reach and reject
+the unchanged original budget, candidate-context, ledger-prefix, reader or
+result-to-ledger semantic gate. These are selected substantive gate executions
+after manifest verification, not five reruns of the entire verifier.
+
+Each child's original installed controls reports **24 denials and 14 allows before
+the stronger outer hook**. This is Python audit-hook evidence, not an OS/native-C
+sandbox or proof of actual forbidden-API coverage. The worker's complete before/
+after maps retain all **147,220 consumed file/directory entries** unchanged.
+Independent parent binding reconciles all **51 returned artifact hashes**, all
+archived entries, six child launch/receipt/raw-output/PID/clock joins and all
+**111,089 prior archived original rows**. Six selected current originals are freshly
+content/eight-field checked unchanged; this is not another full current original
+rehash or parent reader extraction. Receipt
+`missouri_fresh_next32_v3_parent_binding_actual_v2.json` has SHA-256
+`82a432abb1e373fd6558ba88862aa27b98820ea4fbe229229a00beb4423ccf96`.
+The first binder's incorrect assumption that every enclosing-log PID denoted the
+parent is preserved with its failed log; the successor distinguishes explicit
+child-launch/completion records. That was a parent binding error, not a source
+failure.
+
+V3 does not reexecute the initializer, crashes, next-32 or zero-fetch resume;
+those remain bound genuine v2 executions. The prior failed progress byte/metadata
+gate and unavailable before-progress JSON bytes remain explicit. Actual stopped-
+campaign, real-successor, staging and authorization access remain prohibited.
+No new HTTP, source closure, full-4,960 behavior or scientific/publication
+admission is claimed.
 
 Virginia's bounded initial source packet now passes independent original-verifier
 reconstruction: **6,458 distinct introduced identities**, 6,698 raw rows including
@@ -1535,7 +1579,7 @@ No collector or HTTP ran during these checks.
 | Georgia blocked source recovery | Independent original-verifier replay accepts four retained exchanges, including the terminal official sessions HTTP 401, and all 64 unchanged packet file/directory records. | Blocked-evidence acceptance only: native census unknown and zero originals recovered. The 4,723 regular and 67 special canonical candidates are comparison inputs, not native counts. No authentication bypass or further request is authorized. Late metadata capture and construction byte-restoration incidents prevent acquisition-time immutability claims. |
 | Ohio full unlabelled inputs | Independent original-verifier parent replay now passes: 2,279 contexts / 6,811 source views / 93,161,481 source tokens / 118,663 windows, zero discarded tokens and all 18,290 packet file/directory content and metadata records unchanged. Raw readiness, all 45 progress lines, final proof, empty stderr, source pins and full before/after maps are independently reconciled. | Views are not bills; HTML views include exact source markup. Five PDF-only and seven unsupported contexts remain, as do 1,007 absent HTML session headers. Runtime preload precedes the guard; the original verifier runs entirely afterward. No labels, forward passes, training or scientific admission. |
 | Missouri archived printed headers | Independent original-verifier replay accepts first-page observations for all 1,152 archived PDFs in both readers, plus ten focused regressions and joins to all 4,608 copied source dependencies. All 41,914 supplement/original file-directory records remain unchanged. | Matching House/First Regular Session/102nd General Assembly observations are accepted only as literal first-page evidence. The original 1,152 false flags remain; unprinted session years stay unknown. No original identity/status, filing-time or scientific certification is promoted. The full 4,960-context corpus remains unfinished. |
-| Missouri successor readiness | Immutable v3 passes independent saved-next-32 reconstruction: 1,184 PDFs / 6,061 pages per reader; all 108,458 original nodes unchanged. Raw execution, archived maps and manifest independently bind. Earlier v1/v2 omissions remain preserved. | Saved reconstruction is not a fresh initializer/crash-suite/normal-driver run or full readiness certification. Actual successor/staging/authorization remain absent, and the full 4,960-context corpus remains unfinished. |
+| Missouri successor readiness | Earlier saved-next-32 reconstruction remains accepted. A distinct fresh private v2 executes the original initializer, three crash/retry boundaries and normal next-32; read-only v3 reconstructs 1,184 PDFs / 6,061 pages per reader and 37 checkpoints, with five substantive fresh-manifest corruption controls. Independent binding verifies 51 artifacts, all 147,220 archived consumed entries and six selected current originals unchanged. | V3 is not another initializer/driver/resume execution or current whole-original rehash. The prior partial zero-fetch call changed progress bytes/metadata; that failed exact-byte gate and missing before-progress bytes remain explicit. Actual successor/staging/authorization remain absent, 3,776 candidates remain pending, and no full-4,960 or scientific readiness certification is claimed. |
 | North Carolina native-version preparation | V5 strict replay, four exact parser regressions and all fifteen original parent release tests pass, including the actual 2,004-population/final-20 fake-transport driver. Genuine readiness/private initializer gates and actual zero-HTTP initialization pass. Independent reconciliation v3 accepts all 44,342 initialized files, all 56,761 unchanged original file/directory records, sixteen exact inherited transport files and zero new requests. Finite-launch controls v4 now passes all seven fresh independent private behavioral suites, with full preflight before first freshness issuance, strict 120-second parent/child gates, and all 642 packet nodes unchanged. Raw proofs/commands/current nodes independently bind. Separate guarded and source-inspected inventory-only measurements finish in 576.53 and 661.20 seconds respectively, preserving all original/target records. | Both earlier reconciliation failures, old timeout defects, the v2 child-self-match counterexample and the first v4 parent fixture-cleanup failure remain preserved. Different cache/load conditions prevent attributing timing differences to audit overhead; neither run measures the complete launcher or proves infeasibility. Private synthetic clocks, process fixtures and mocked curl dispatch do not certify real campaign timing/transport. Fresh actual maps, pins, duplicate absence, strict freshness and exclusive finite authorization remain required. No collection is authorized. Historical original-path replacement/metadata failures remain unreconciled; restored bytes do not restore historical immutability. |
 | Tennessee blocked native recovery | Independent parent replay reconstructs the single retained official robots exchange and frozen canonical populations: 9,665 regular, 474 extraordinary-session and 32,407 outside-target rows. All 38 packet file/directory records remain unchanged; raw proof, generated source and complete map bytes reconcile. | Robots disallows all crawling; no bypass or continuation is authorized. Native boundaries/counts and introduced originals remain unknown; zero bill originals recovered. Canonical rows are not an official native census. Acquisition-time immutability and upstream history-scan completeness are not certified. |
 | Classification | Four saved official English ModernBERT-base pilots compared on the same 52 platform references: external-only 41/52, joint 47/52, broader-source 47/52, Republican-expanded 49/52. The fourth run correctly rejects 3/4 mixtures and 6/6 non-policy units. | The fourth run loses one policy decision, still accepts a mixture above 0.999 and regresses on insufficient-evidence and taxonomy-boundary development cases. Both sets are examined diagnostics, not fresh independent tests. Independent review and empirical gates remain required. No candidate is approved. |
