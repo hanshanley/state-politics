@@ -148,8 +148,9 @@ file/directory records** independently reconcile unchanged. Historical discovery
 and acquisition-metadata limitations remain; worker semantic negatives were not
 independently rerun.
 
-The full-source preparation has returned, but **independent acceptance remains
-pending**. Its exact final mocked normal-driver run processes all 3,005 native
+Kentucky's **independent saved-packet reconstruction now passes**; fresh parent
+normal-driver execution and transport-readiness acceptance remain open.
+The worker's exact final mocked normal-driver run processes all 3,005 native
 contexts, reuses 30 genuine originals in 32 seed slots, and seals 93 full
 32-context checkpoints plus the true final 29. Its 5,947 additional exchanges
 and non-seed PDF bodies are synthetic fixtures, not recovered official sources.
@@ -159,9 +160,30 @@ replays and readonly relocation controls are distinct from the sixty earlier
 focused checks, which preceded additive verifier fixes. The failed construction
 finalizer and preceding attempts remain preserved. Root manifest SHA-256:
 `51a2587681bdbe94b017534d807d903383d60dfa7688cf46ce31aa4aa022fca7`.
-An independent parent saved whole/true-29-tail/readonly-relocation execution
-has started; startup is not a completed reconstruction or a fresh parent
-normal-driver result.
+The original parent execution completed at **00:18:51 UTC on October 21, 2026**
+(October 20 locally), exit zero. Three distinct children independently
+reconstructed the whole 3,005-context fixture, true final 29 contexts
+(2,977-3,005), and four readonly original/relocated recovery cases. Each child
+exercised all 35 original installed-inner denials and three legitimate reads
+before the worker and parent outer policies; all stderr streams were empty.
+Both semantic replays rebuilt all 94 checkpoint inventories and the 5,947-result
+transport prefix. Every one of the **153,921 packet file/directory nodes**,
+plus eleven external evidence/harness nodes, retained identical content and
+eight-field metadata. All 144,698 payload manifest entries reconcile.
+Parent receipt SHA-256:
+`1fd6a2991f6124ffaedf27ab3fb207e5437d54d153458451bee4e181d26dd50e`.
+
+A separate raw binding completed at **00:21:11 UTC**: it reconciles the actual
+parent/child PIDs, argv and clocks, physical-LF stdout, enclosing log, every
+archived before/after row, manifest, and final worker whole/tail proofs.
+Its fresh current checks cover **62 selected nodes**, not a second full current
+payload rehash. Binding receipt
+`kentucky_full_saved_parent_actual_v1_raw_binding_v1.json`, SHA-256:
+`fde634c1c20dd92ac0afced623ca666cbfa694ef6b14dc5a83684f0b04faffd6`.
+This accepts saved mocked reconstruction and observed readonly controls only,
+not fresh parent normal-driver execution, genuine source closure, original
+acquisition immutability, or an OS/native-C sandbox. The original accepted
+initial-source packet was not freshly reinventoried in this execution.
 
 An independent exact-final-source `Journal.request` **unit observation** on
 October 21, 2026 UTC (October 20 locally) records two mocked dispatch entries
