@@ -155,15 +155,15 @@ writer PID nor the probe's internal ledger-snapshot time was recorded. Tool
 handle 1705 is not an OS PID. The actual ledger and all failed-attempt evidence
 remain unchanged; successful PDF retention does not repair lifecycle acceptance.
 
-Two additional **GPT-6.1 Sol** agents now own separate bounded initial Indiana
-and Utah native-source audits: actual session boundaries/censuses, typed canonical
-joins and up to 32 introduced-version contexts each, with a 128-aggregate-physical
-exchange ceiling including discovered history, robots, redirects, retries and
-errors. Unknown history remains unknown, not zero; ten-second monotonic pacing
-and immediate access-stop rules apply. Top-level root and task-ownership checks
-found no conflict, not proof of zero historical requests. No returned packet or
-parent acceptance is claimed. Missouri's separate fresh private
-initializer/crash/next-32 attempt also remains pending.
+The additional **GPT-6.1 Sol** Indiana initial audit returned blocked evidence;
+Utah's separate bounded initial audit remains pending. Their original scopes
+cover actual session boundaries/censuses, typed canonical joins and up to 32
+introduced-version contexts each, with a 128-aggregate-physical exchange ceiling
+including discovered history, robots, redirects, retries and errors. Unknown
+history remains unknown, not zero; ten-second monotonic pacing and immediate
+access-stop rules apply. Top-level root and task-ownership checks found no conflict,
+not proof of zero historical requests. Missouri's fresh private return and its
+remaining verification are recorded below.
 
 No source recovery, collection restart, new HTTP, sealing, label/model change,
 scientific admission or publication is authorized by the New York checks.
@@ -171,6 +171,36 @@ The bounded Indiana/Utah assignments are separate initial collection scopes,
 not full-continuation authority. These observations are supplemental to v54,
 not retroactive inputs; ignored source/session artifacts remain local-only
 and are not backed up by a Git push.
+
+**Indiana blocked reconstruction and offline inventory:** the parent executed the
+unchanged original guarded verifier in an isolated Python child, exit 0, with
+63 observed original installed callback denials and no stronger outer hook.
+All 40 packet file/directory entries and six consumed current originals retained
+their complete content/eight-field bindings. The result reconstructs 10,946
+canonical Indiana rows, including 2,362 2023/2024 session-token contexts;
+these are **not a publisher-native census**. No official original, native session
+boundary or source closure was recovered. Receipt
+`indiana_initial_blocked_parent_actual_v1.json` has SHA-256
+`e5443ba4c8ef97fb561704f4c878e12bc0e7f065a92827f9e2f5463999e99746`.
+Python audit controls are not an OS/native-library sandbox; worker semantic
+negatives were not independently rerun.
+
+The same worker completed a bounded zero-HTTP follow-through over thirteen
+existing files, including three history logs. It retained three genuine
+party/archive logical retrieval records, not legislative physical exchanges.
+Historical legislative request totals remain unknown. The parent independently
+reconstructed the canonical-only inventory: **2,362 contexts, 4,337 version rows,
+4,463 links and 4,724 source references**, preserving original fields and
+multiplicity. It also directly rejoined the three public provenance records,
+bound the complete sidecar and verified all twelve non-event current inputs
+unchanged. The append-active session log was not independently replayed or
+whole-file repinned; the worker's bounded history search is not proof of absence.
+Receipt `indiana_offline_inventory_parent_binding_actual_v1.json` has SHA-256
+`3c1ec0a2bfe80ce620c5337b537de1e8d75457474ffae67fbca31809d3b48961`.
+Canonical introduction-note candidates do not certify publisher-native originals.
+Both packets remain immutable; **new HTTP allowance is still zero**. The attempted
+authorization clarification received no approval. Further collection requires an
+explicit finite prospective allowance without relabelling unknown lifetime history.
 
 **Missouri fresh-input follow-through:** the first fresh-behavior worker stopped
 at dependency admission, before invoking the initializer, crash cases or next-32
@@ -187,10 +217,37 @@ its exact 505,872 bytes, required SHA-256
 and unchanged eight-field snapshot. A new narrow read-only input allowance,
 `missouri_preparation_readonly_allowance_parent_v1.json` (SHA-256
 `b5218bad85062c0224c8964deb5a2eff77230239249066a362ff220bf69d1b0f`),
-allows the same worker to verify the complete preparation tree before a distinct
-private v2 attempt. The parent has not yet verified all preparation payloads or
-accepted fresh behavior. Actual stopped-campaign/successor/staging/authorization
-access and HTTP remain prohibited; no manifest pin or source gate was relaxed.
+allowed the same worker to verify the complete preparation tree before a distinct
+private v2 attempt. That attempt returned genuine original initializer,
+three initializer crash/retry boundaries and normal next-32 execution. Its private
+mocked-transport result is **1,184 completed / 3,776 pending / 1,440 consumed /
+37 checkpoints**. The 32 new PDFs were reopened with both readers; the final
+independent all-1,184 reader pass and five semantic-negative gates remain unfinished.
+
+The zero-work `Campaign.run(max_candidates=0)` probe made no additional transport
+calls and processed no candidates, but rewrote `progress.json` and changed its
+inode/times and root-directory times. This probe is on a **partial 1,184/4,960
+campaign**, not a completed full-campaign resume. Source inspection shows that
+`run` always calls `update_progress`, which emits `updated_at` by atomic replacement.
+Failing exact-byte preservation of operational progress is not, by itself, proof
+of corrupted source evidence or a substantive collector defect. The failed
+byte-preservation result remains preserved; original before-progress JSON bytes
+were not independently recovered for a direct field-by-field comparison.
+
+The parent bound every returned artifact, all **111,089 archived before/after
+original entries**, raw execution/crash records and exact resume-map differences;
+six selected current original files were rehashed unchanged. This is evidence
+binding, not another initializer/driver execution, a current whole-original rehash
+or acceptance of guard ordering. Receipt
+`missouri_fresh_next32_return_parent_binding_actual_v2.json` has SHA-256
+`3f58137497bb8a50a93c4bbff9a10e4eaf15401246944b368c403cec97fe5568`.
+The worker deliberately interrupted remaining reconstruction after observing the
+progress change; its exit-1 `KeyboardInterrupt` was not an original toolkit exception.
+The same GPT-6.1 Sol owner now has a distinct zero-HTTP, read-only follow-through
+to finish reconstruction and semantic controls, preserving v2 and the collector
+rather than patching away an expected timestamp refresh. Actual stopped-campaign,
+real-successor, staging and authorization access remain prohibited. No new HTTP,
+source closure, full-4,960 behavior or scientific/publication admission is claimed.
 
 Virginia's bounded initial source packet now passes independent original-verifier
 reconstruction: **6,458 distinct introduced identities**, 6,698 raw rows including
