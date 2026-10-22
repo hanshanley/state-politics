@@ -53,6 +53,26 @@ certified policy denominator. The six native source closures and all independent
 human, operative-platform, historical-party and model-promotion gates remain
 unchanged. Nothing is published or added to themarginoferror.com.
 
+Final acceptance passed **1,727 repository tests** and **162 public-documentation
+checks**. Independent source reconciliation compared every complete exported
+record with the original JSONL, verified all selected version bindings and all
+39 snapshot ZIP members; all 532 explorer and 66 gallery artifact hashes match.
+Actual Chromium checks passed at 1,440/390 CSS pixels, including the complete
+1,723,535,812-byte ZIP, all 2,029 Arkansas query records and the full
+15,384,142-character Ohio source with its exact rendered-text hash.
+Browser receipt: `data/snapshot-workspace-browser-proof-20261022-v3/receipt.json`.
+The stopped browser/server and only explicitly owned temporary fixtures/profiles
+were cleaned; original sources, full downloads and failed diagnostics remain.
+After these checks, all 41 frozen evaluation-plan artifacts, five current runtime
+files, 20 original model/label bindings and the unannotated human packet were
+independently reverified unchanged.
+
+The **latest actual artifact audit remains blocked: 404/438 checks pass, with
+exactly the same 34 missing-artifact failures** as the earlier checkpoint.
+Report: `data/snapshot-final-artifact-audit-20261022-v1.json`. Recovered evidence
+is not substituted for independently validated classified, operative-platform
+or historical-party analytical outputs to make that audit green.
+
 ## October 22 missing-input and native-text recovery
 
 The new recovery fills actual source and graph-input gaps; it does not certify
@@ -107,7 +127,7 @@ remain unchanged. No actual human annotations, classifier execution, model
 promotion or themarginoferror.com integration occurred. Generated research
 data and previews remain local/Git-ignored; a code push is not their backup.
 
-The current gallery is `outputs/recreated-2023-2024-v4/index.html`: **13
+The earlier recovery gallery is `outputs/recreated-2023-2024-v4/index.html`: **13
 PNG/SVG pairs, 12 complete chart CSVs and five complete research ZIPs**, with
 the 13 old images retained separately as unvalidated references. Actual
 Chromium inspection found long new CSV filenames overflowing the v3 mobile
@@ -136,7 +156,7 @@ not recovered or inferred introduction dates.
 
 Receipt: `data/recovery-parent-reconciliation-20261022-v1.json`, SHA-256
 `5391ecf2b32245087c3a2e135c98fedaef8cf95db0a7a7be65bb7fe57395418d`.
-The **fresh actual artifact audit remains blocked: 401/435 checks pass,
+At that earlier checkpoint, the **actual artifact audit remained blocked: 401/435 checks passed,
 with exactly the same 34 missing-artifact failures as before**. Its separate
 report is `data/recovery-current-artifact-audit-20261022-v1.json`, SHA-256
 `2b3518d34abe726a26ec41b8a5964aa41761ff5d9175e8b564114e1aba2a8b37`.
