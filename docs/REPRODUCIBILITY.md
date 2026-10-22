@@ -21,13 +21,15 @@ be bound explicitly before regenerated outputs can support the narrowed study.
 ```bash
 .venv/bin/python -I -B scripts/recreate_graphs.py \
   --research-corpus data/processed/research-corpus-text-20261022-v4 \
-  --out-dir outputs/recreated-2023-2024-v9
+  --archive-text data/processed/independent-archive-text-20261022-v2 \
+  --archive-text data/processed/lawatlas-text-evidence-20261022-v1 \
+  --out-dir outputs/recreated-2023-2024-v10
 ```
 
-Open `outputs/recreated-2023-2024-v9/index.html` locally. The bundle contains 14
-current evidence graphs in PNG and SVG, 13 complete chart-data CSVs, seven complete
-research-packet ZIPs and a hash manifest. It also archives the exact four main
-plotting producers and the recovered producers within their research packets.
+Open `outputs/recreated-2023-2024-v10/index.html` locally. The bundle contains 14
+current evidence graphs in PNG and SVG, 13 complete chart-data CSVs, nine complete
+research-packet ZIPs and a hash manifest. It also archives the exact six
+plotting/source-consumer producers and the recovered producers within their research packets.
 It uses saved evidence
 tables and existing development diagnostics without
 collecting sources or executing a classifier. Missing native channels remain
@@ -141,6 +143,64 @@ retained text and 29,143 remain without an observed body in these inputs.
 The remaining full-context Parquet preserves unknown native counts and
 authorizes no automatic collection. No source is silently promoted to a
 publisher-native or introduced version.
+
+## Independent archived bill text
+
+The newest offline pass adds **7,004 existing contexts / 7,875 complete views**,
+mostly NJ, with one additional NE context. Source packets:
+
+- `data/processed/independent-archive-text-20261022-v2/`: pinned NJ mirror,
+  7,001 contexts / 7,871 views; manifest
+  `af315112eed07fb4fd0228d5182516ebd4f4d72ec263df218e134ed736c8a54b`.
+- `data/processed/lawatlas-text-evidence-20261022-v1/`: four complete PDFs,
+  including an overlapping A1899 alternative; manifest
+  `f3efd87b8170dc5d414bd744cac9829ab0aab56560e66bd6a42788ae8fe3e12f`.
+
+Both tracked producers are offline-only and refuse existing output directories:
+
+```bash
+.venv/bin/python -I -B -m state_politics.bills.archive_text \
+  --archive data/processed/independent-archive-history-recovery-20261022-v1/nj-c99d1624.tar.gz \
+  --gap-queue outputs/recreated-2023-2024-v9/chart-data/missing_retained_text.parquet \
+  --out-dir data/processed/independent-archive-text-NEW
+
+.venv/bin/python -I -B -m state_politics.bills.lawatlas_text build \
+  --source-dir data/processed/new-public-corpora-nj-ok-ne-20261022-v1 \
+  --gap-queue outputs/recreated-2023-2024-v9/chart-data/missing_retained_text.parquet \
+  --out-dir data/processed/lawatlas-text-evidence-NEW
+```
+
+The NJ consumer replays every tar member, verifies the complete pinned Git
+country tree, and requires exact original metadata, own printed identity and
+one associated archived version link. Complete strings retain the archive's
+existing machine prologue and all Unicode; raw HTML stays in the complete tar.
+Combined substitutes retain all explicit own numbers without becoming extra
+bills. A3493's session conflict, S2025's A4700 title conflict and A3857's
+ancillary committee statement remain excluded. Older v1 is unchanged and
+verifies under its original header profile.
+
+The LawAtlas adapter replays all six PDFs and preserves original records,
+675-row source/disposition accounting, duplicate references, source responses,
+extraction alternatives and the original partial-size-abort caveat. Four
+attachments match exact current candidate state/session/number identities;
+two remain rejected. PDF text is never prepended with a title or summary.
+Source licensing/version limitations remain explicit in
+[the citation ledger](../CITATIONS.md#12-independent-legislative-archives).
+
+Repeat `--archive-text` for both packets in the preview and graph CLIs.
+The preview exports all 50 state plain/gzip archive partitions, full strings,
+raw metadata, printed spans and source-member hashes. The gallery's two
+additional ZIPs include every packet artifact, full raw tar/PDF/HTML evidence
+and rejected rows, not metadata-only downloads. Provider overlap is counted
+once per bill ID, while all 7,875 views remain available. All 632 prior
+non-code explorer outputs remain byte-identical.
+
+The v10 chart-data union now contains **135,459 / 157,598 contexts with some
+retained text; 22,139 without observed text**. Its complete
+`chart-data/missing_retained_text.parquet` preserves every original remaining
+context field and authorizes no automatic collection. The coverage CSV keeps
+separate research-corpus-only and independent-archive-only columns; the plot
+combines their color without inflating totals. All approval flags remain false.
 
 ## October 22 recovered inputs
 
@@ -1056,11 +1116,11 @@ population-accuracy reference.
   --output data/human-review-native-REPLAY
 
 .venv/bin/python -I -B scripts/serve_research.py \
-  --evidence data/preview-cycle-evidence-v14 \
+  --evidence data/preview-cycle-evidence-v15 \
   --sessions data/processed/verified-session-comparison-2023-2024-v3 \
   --review data/human-review-native-20261021-v3 \
   --sources data/processed/native-inventory-catalog-2023-2024-v2 \
-  --graphs outputs/recreated-2023-2024-v9 \
+  --graphs outputs/recreated-2023-2024-v10 \
   --port 8765
 ```
 
@@ -1162,13 +1222,16 @@ synthetic references/logits and is not classifier validation.
   --metadata-token-plan data/processed/study-metadata-token-plan-2023-2024-v2 \
   --snapshot-text data/processed/retained-dump-gap-recovery-20261022-v1 \
   --research-corpus data/processed/research-corpus-text-20261022-v4 \
+  --archive-text data/processed/independent-archive-text-20261022-v2 \
+  --archive-text data/processed/lawatlas-text-evidence-20261022-v1 \
   --receipt-evidence data/processed/maine-source-receipt-evidence-2023-2024-v1 \
   --native-session-scope ny-2023-2024 --native-session-scope il-103rd \
   --native-session-scope tx-88r-retained \
-  --out data/preview-cycle-evidence-v14
+  --out data/preview-cycle-evidence-v15
 ```
 
-The current explicit build uses metadata v4 / native v15 and research-corpus v4, with the unchanged
+The current explicit build adds both independent archives to metadata v4 /
+native v15 and research-corpus v4, with the unchanged
 platform evidence v5 and token-plan v2. The latter is reusable because the
 complete 159,315-view metadata input Parquet is byte-identical to v3.
 CLI defaults remain the earlier metadata v3 / native v14 selection; custom
@@ -1178,11 +1241,16 @@ The output includes all 50 state coverage rows / 100 organization rows,
 complete metadata/platform texts, lazy state partitions, full-text gzip
 downloads and `downloads/build_manifest.json`. The earlier v11 build manifest is
 `0a04fa86cdac4895c4e3148df03fa34b6afe84c45d78720b49793f1c190660d1`.
-The current v14 manifest is
+The preserved v14 manifest is
 `f9ae658b13b0ba76d20c60fd9d023e0bf1415d4a6b5a4ab9950896e58cac3e60`;
 528 older non-code source exports remain byte-identical. V14 additionally
 exposes all 2,315 complete research-corpus views and restored original metadata,
 without changing candidate admission or metadata token plans.
+The current v15 manifest is
+`cca5cd91d57bae8ac6f5ce84a2c7110a9a45014f998f18956ebc5bd6eacb984b`:
+742 bound outputs and all 7,875 new archive views, including all alternatives.
+All 632 non-code exports from v14 remain byte-identical. The v10 gallery
+manifest is `245d39f6f730f39b379e38f5728d21b06ecd31498238f49f6f83c456cc3b0322`.
 Receipt/session additions are explicit opt-ins only; the default/custom
 metadata behavior does not silently attach them. Build producers are archived
 with their exact source hashes. Earlier builds remain preserved. V11 retains
@@ -1194,7 +1262,7 @@ For interactive use, serve the output with a local static HTTP server:
 
 ```bash
 .venv/bin/python -I -B -m http.server 8765 \
-  --bind 127.0.0.1 --directory data/preview-cycle-evidence-v11
+  --bind 127.0.0.1 --directory data/preview-cycle-evidence-v15
 ```
 
 No server is left running by the build or verification. JavaScript fetches

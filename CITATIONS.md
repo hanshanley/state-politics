@@ -206,8 +206,11 @@ The complete raw archive, original HTML, metadata, source-version links and
 rejected/conflicting documents remain local research evidence. No publisher
 original, introduced-version, redistribution or model approval is inferred.
 
-LawAtlas / MonQcle. Public research records and attached legislative PDFs,
-accessed 2026-10-22. Four exact existing candidates retain complete attached
+LawAtlas / MonQcle, Temple University Center for Public Health Law Research,
+with ASTHO under Act for Public Health. *State Bills Relating to Vaccines in
+Schools and Provider Scopes of Practice*, study `65249f4d9cd360fa468b4573`.
+Public research records and attached legislative PDFs, accessed 2026-10-22.
+Four exact existing candidates retain complete attached
 bill text: NJ S3841 and A5445 (220th Legislature), NJ A1899 (221st Legislature)
 and NE LB202 (108th Legislature). New Jersey and Nebraska legislative bodies
 are the originating institutions; LawAtlas is an independent archive, not
@@ -216,5 +219,13 @@ source-row references, all six downloaded attachments, extraction alternatives,
 HTTP evidence, 675-row source dispositions and the partial-size-abort caveat
 are retained in `data/processed/lawatlas-text-evidence-20261022-v1/`.
 Recorded source/rights observations remain in its
-`source-evidence/source_findings.json`; no general redistribution or
+`source-evidence/source_findings.json`. This legacy study's retained Terms of
+Download declares CC BY 4.0 except otherwise noted, with attribution and change
+notice conditions. The retained public viewer constructs the legal-record
+and attachment URLs used here; no credentials or cookies were supplied.
+Its agreement checkbox/statistical export was not executed, no statistical
+export was downloaded, and not all external scripts/site-wide terms were
+retained. Public HTTP responses alone do not prove blanket attachment rights.
+The different Hawaii lead's explicit account restriction remains binding for
+that lead; this study is not a way around it. No general redistribution or
 filing-time approval is asserted.

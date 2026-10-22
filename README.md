@@ -29,7 +29,7 @@ candidates**, with **22,139 remaining gaps**. Complete alternative views and
 original source metadata are retained. Source versions, archive extraction,
 research-corpus cleaning and classifications remain uncertified.
 The local graph bundle includes complete research downloads and an explicit
-remaining-text queue; see the [recovery commands](docs/REPRODUCIBILITY.md#complete-retained-searchable-bill-text).
+remaining-text queue; see the [recovery commands](docs/REPRODUCIBILITY.md#independent-archived-bill-text).
 
 ## Setup
 

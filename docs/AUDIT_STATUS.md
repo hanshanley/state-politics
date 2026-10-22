@@ -48,6 +48,51 @@ unannotated, and no model inference/training/promotion or publication occurred.
 The status ledger remains six closed source scopes, 21 partial, 21 blocked
 and two inventory; zero scientifically complete states.
 
+Final local deliverables are **explorer v15 / gallery v10**:
+`data/preview-cycle-evidence-v15/` and
+`outputs/recreated-2023-2024-v10/index.html`. The gallery includes 14 PNG/SVG
+graph pairs, 13 complete CSVs, nine complete research ZIPs and the exact
+22,139-context remaining queue. Generated evidence remains local/Git-ignored;
+pushing the code does not back up those data.
+
+Actual parent validation passed **1,789 code tests**, with zero failures,
+errors or skips, including real browser cases, plus **169 public-documentation
+checks**. The separate tracked artifact
+audit remains **411/445**, with exactly the same **34 known missing-output
+failures**, not scientific certification. The source/code checkpoint
+`5d55b97e3cc2ffaeb0943e3bcf075860e47e7215` is saved/pushed as Hans Hanley
+without Copilot attribution.
+
+Independent parent verification binds every complete new body and printed
+span, 22,743 raw tar text/metadata/markup members, all 742 explorer / 71
+gallery artifact hashes, all 50 plain/gzip archive partition pairs and all
+116 members in the two new complete research ZIPs. All 632 old non-code
+explorer exports remain byte-identical. Every original field in every
+remaining gap-context row is unchanged, and all 50 state union counts
+reconcile without duplicated providers. Receipt:
+`data/independent-archive-parent-verification-20261022-v1.json`.
+
+Actual Chromium verified the five workspace mounts, all graph images at
+1440/390 CSS pixels, both complete research ZIP downloads, all 7,874 NJ
+records / 245,745,364 bytes and the full NE query with exact source hashes.
+The entire **1,945,989-character** archived body rendered with its exact
+hash, and A1899 retained four provider/version alternatives. No JavaScript
+errors, external page requests or horizontal overflow occurred. Receipt:
+`data/archive-workspace-browser-proof-20261022-v1/receipt.json`.
+Browser/server exited; the actual port 61489 is closed.
+
+After regression, all 41 frozen plan artifacts, five runtime source files,
+20 original model/label bindings and the unannotated human packet reverify
+unchanged. No actual human annotation, model execution/promotion, state
+scientific closure or public integration occurred.
+Six useful fixture-browser receipts were archived before removing only four
+explicitly inspected parent-owned pytest scratch trees and the stopped actual
+browser profile. All genuine sources, downloads, failed diagnostics and agent
+artifacts remain retained. The separate LawAtlas viewing/export/account-scope
+clarification is preserved in
+`data/independent-archive-source-access-clarification-20261022-v1.json`;
+it grants no new access or redistribution approval.
+
 ## Preceding exact research-corpus recovery
 
 The renewed remaining-gap pass has recovered **2,079 previously missing candidate
