@@ -485,8 +485,9 @@ V1 remains unchanged with manifest
 V2 remains preserved with manifest
 `69af46267bdc8c6ce4adb02a1bf4ec6ab1c06eee897f75af4efd38fd7611616b`:
 its metadata-view and abstract artifacts were byte-identical to v1.
-V3 adds 1,640 MT date candidates; v4 updates only native-presence fields and
-lineage for the Arkansas recovery. Complete metadata-view and abstract
+V3 adds 1,640 MT date candidates; v4 updates native-presence/status fields and
+lineage for the Arkansas recovery without changing resolved dates or inclusion.
+Complete metadata-view and abstract
 artifacts remain byte-identical to v3, whose manifest is
 `38bf92a35831fe6ca75003f16caf2fce3354f48f54208bbf11a2b09d79b76c9d`.
 It consumes the manifest-declared canonical native-bill

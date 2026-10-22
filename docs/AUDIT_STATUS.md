@@ -76,6 +76,27 @@ than overwriting its original failed report. The final CSS adjustment was
 then exercised against the actual gallery in Chromium. These results do not
 remove the known legacy missing-artifact or scientific-validation gates.
 
+Independent reconciliation verifies **all 391 ZIP members**, 61 gallery
+artifacts, 428 explorer outputs, every new PDF hash/physical page count and
+all **1,946 stored reader pages** against complete view joins/hashes. It also
+rehashes the frozen 41 evaluation-plan artifacts, five current runtime files
+and 20 original model/label bindings. The original filing ledger, raw filing
+actions, session counts, abstracts and complete metadata input views remain
+byte-identical. Arkansas's raw native-date additions are `[null]` observations,
+not recovered or inferred introduction dates.
+
+Receipt: `data/recovery-parent-reconciliation-20261022-v1.json`, SHA-256
+`5391ecf2b32245087c3a2e135c98fedaef8cf95db0a7a7be65bb7fe57395418d`.
+The **fresh actual artifact audit remains blocked: 401/435 checks pass,
+with exactly the same 34 missing-artifact failures as before**. Its separate
+report is `data/recovery-current-artifact-audit-20261022-v1.json`, SHA-256
+`2b3518d34abe726a26ec41b8a5964aa41761ff5d9175e8b564114e1aba2a8b37`.
+Recovered original snapshots are not silently installed as canonical
+classified/operative or D/R analytical tables to make that audit green.
+Three useful browser fixture receipts are archived; only the named parent
+test tree and two stopped Chrome profiles were removed. Actual downloaded
+ZIP/JSONL evidence, failed v3 mobile proof and genuine sources remain intact.
+
 ## October 21 engineering assurance recheck
 
 The fresh repository-wide code run passed **1,641 tests**, including configured real
