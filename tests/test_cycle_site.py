@@ -248,6 +248,71 @@ def test_research_corpus_exports_complete_alternatives_without_new_bill_admissio
     assert "not publisher originals" in document
 
 
+@pytest.mark.parametrize("duplicate_view", [False, True])
+def test_independent_archive_exports_preserve_provider_alternatives_and_full_text(
+    cycle_bundle, tmp_path, monkeypatch, duplicate_view,
+):
+    metadata, platform, *_ = cycle_bundle
+    context = pq.read_table(metadata / "bill_evidence.parquet").to_pylist()[0]
+    packets, originals = [], []
+    for index in range(2):
+        directory = tmp_path / f"archive-{index}"
+        directory.mkdir()
+        write_json(directory / "manifest.json", {"schema": "consumer-wiring-fixture"})
+        write_json(directory / "report.json", {"source": index})
+        packets.append(directory)
+        originals.append({
+            **{key: context[key] for key in (
+                "bill_id", "state", "identifier", "session_identifier", "title",
+            )},
+            "view_id": f"archive:{0 if duplicate_view else index}",
+            "source_type": "archive_text", "archive_provider": f"fixture:{index}",
+            "text": SOURCE_TEXT + "\u2028Complete original ending.\u2029",
+            "source_record": {"original_null": None, "original_field": SOURCE_TEXT},
+            "source_identity": {"printed_evidence": []}, "source_members": {},
+            "archive_generated_prologue_preserved": True, "training_admission": False,
+            "model_input_approved": False, "analytical_admission": False,
+        })
+
+    def supplied_archive(directory, current):
+        assert context in current
+        index = packets.index(directory)
+        return [originals[index]], [context], {
+            name: sha256_file(directory / name) for name in ("manifest.json", "report.json")
+        }, {"schema": "consumer-wiring-fixture"}
+
+    monkeypatch.setattr("state_politics.site_evidence.load_archive", supplied_archive)
+    out = tmp_path / "archive-preview"
+    if duplicate_view:
+        with pytest.raises(ValueError, match="duplicate independent-archive source view"):
+            build_cycle_preview(metadata, platform, out, archive_text_evidence=tuple(packets))
+        assert not out.exists()
+        return
+    manifest = build_cycle_preview(
+        metadata, platform, out, archive_text_evidence=tuple(packets),
+    )
+    assert manifest["counts"]["n_cycle_contexts"] == 14
+    assert manifest["counts"]["archive_text"] == {
+        "n_contexts": 1, "n_views": 2, "n_packets": 2,
+        "publisher_original_verified": False, "filing_time_text_certified": False,
+    }
+    body = (out / "evidence/archive-TX.jsonl").read_bytes()
+    rows = [json.loads(line) for line in body.decode().split("\n") if line]
+    for row, original in zip(rows, originals, strict=True):
+        assert {key: row[key] for key in original} == original
+        assert row["source_bundle_manifest_sha256"] in {
+            sha256_file(directory / "manifest.json") for directory in packets
+        }
+    assert gzip.decompress((out / "downloads/archive-TX.jsonl.gz").read_bytes()) == body
+    assert (out / "evidence/archive-ME.jsonl").read_bytes() == b""
+    assert (out / "downloads/producers/archive_text.py").is_file()
+    assert (out / "downloads/producers/lawatlas_text.py").is_file()
+    document = (out / "index.html").read_text()
+    assert 'value="archive_text"' in document
+    assert document.count('href="downloads/archive-') == 50
+    assert "not publisher-version certification" in document
+
+
 @pytest.mark.parametrize("defect", ["scope", "version", "body", "approval", "linked_manifest"])
 def test_snapshot_rejects_wrong_scope_version_body_and_approval(
     cycle_bundle, snapshot_bundle, tmp_path, defect,
@@ -1417,6 +1482,14 @@ def test_cycle_cli_mode_builds_separate_unpublished_preview(
         metadata, ROOT / "data/processed/platform-study-evidence-2023-2024-v5",
         ROOT / "data/preview-cycle-evidence-v3", {},
     )
+    first, second = tmp_path / "first-archive", tmp_path / "second-archive"
+    assert main([
+        "--cycle-evidence", "--bill-evidence", str(metadata),
+        "--archive-text", str(first), "--archive-text", str(second),
+    ]) == 0
+    assert captured[-1][3] == {"archive_text_evidence": (first, second)}
+    with pytest.raises(SystemExit):
+        main(["--archive-text", str(first)])
 
 
 @pytest.mark.parametrize("option", [

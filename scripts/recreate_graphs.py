@@ -25,6 +25,8 @@ from matplotlib.ticker import PercentFormatter, StrMethodFormatter  # noqa: E402
 ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(ROOT / "src"))
 
+from state_politics.bills.archive_text import SCHEMA as ARCHIVE_SCHEMA  # noqa: E402
+from state_politics.bills.archive_text import load_archive  # noqa: E402
 from state_politics.bills.research_corpus_text import FLAGS, SCHEMA, load_corpus  # noqa: E402
 from state_politics.bills.study_matrix import read_tracker  # noqa: E402
 from state_politics.platforms.dataverse import coverage_matrix  # noqa: E402
@@ -135,12 +137,21 @@ def source_table(root: Path, kind: str, name: str, inputs: dict) -> pd.DataFrame
 
 
 def recovery_packet(
-    root: Path, directory: str, inputs: dict, *, snapshot=False, corpus=False,
+    root: Path, directory: str, inputs: dict, *, snapshot=False, corpus=False, archive=False,
 ) -> dict[str, Path]:
     manifest_name = "sealed_manifest.json" if snapshot else "manifest.json"
     path = checked_file(root, f"{directory}/{manifest_name}", inputs)
     manifest = json.loads(path.read_bytes())
-    if corpus:
+    if archive:
+        if (
+            manifest.get("schema") not in (
+                ARCHIVE_SCHEMA, "state-politics.lawatlas-archive-text.v1",
+            )
+            or not all(manifest.get("approvals", {}).get(flag) is False for flag in FLAGS)
+        ):
+            raise ValueError("unapproved independent archive required")
+        files = manifest["packet_artifacts"]
+    elif corpus:
         if (
             manifest.get("schema") != SCHEMA
             or not all(manifest.get("approvals", {}).get(flag) is False for flag in FLAGS)
@@ -222,7 +233,7 @@ def arkansas_rows(files: dict[str, Path]) -> pd.DataFrame:
     return result
 
 
-def snapshot_coverage(root, packet, inputs, *, corpus_directory=None):
+def snapshot_coverage(root, packet, inputs, *, corpus_directory=None, archive_directories=()):
     base = SOURCES["metadata"]
     manifest = json.loads((root / base / "manifest.json").read_bytes())
     metadata = checked_file(
@@ -248,6 +259,7 @@ def snapshot_coverage(root, packet, inputs, *, corpus_directory=None):
     joined["neither_source_observed"] = ~(
         joined["native_text_observed"] | joined["snapshot_text_observed"]
     )
+    original_gaps = set(joined.loc[joined["neither_source_observed"], "bill_id"])
     extra = {}
     if corpus_directory is not None:
         _, corpus_contexts, _, _ = load_corpus(corpus_directory, bills.to_dict("records"))
@@ -257,6 +269,19 @@ def snapshot_coverage(root, packet, inputs, *, corpus_directory=None):
         joined["research_corpus_text_observed"] = joined["bill_id"].isin(corpus_ids)
         joined["neither_source_observed"] &= ~joined["research_corpus_text_observed"]
         extra["research_corpus_only"] = ("research_corpus_text_observed", "sum")
+    if archive_directories:
+        archive_ids = set()
+        for directory in archive_directories:
+            _, contexts, _, _ = load_archive(directory, bills.to_dict("records"))
+            archive_ids.update(row["bill_id"] for row in contexts)
+        if not archive_ids <= original_gaps:
+            raise ValueError("archive recovery must cover only exact remaining source gaps")
+        joined["archive_text_observed"] = joined["bill_id"].isin(archive_ids)
+        joined["independent_archive_only"] = (
+            joined["archive_text_observed"] & joined["neither_source_observed"]
+        )
+        joined["neither_source_observed"] &= ~joined["archive_text_observed"]
+        extra["independent_archive_only"] = ("independent_archive_only", "sum")
     grouped = joined.groupby("state").agg(
         candidate_contexts=("bill_id", "size"), both_sources=("both_sources", "sum"),
         native_only=("native_only", "sum"), snapshot_only=("snapshot_only", "sum"),
@@ -276,9 +301,13 @@ def snapshot_graph(output, coverage):
         ("snapshot_only", "Snapshot text only", theme.BLUE),
         ("native_only", "Native reader text only", theme.GOLD),
     ]
-    if "research_corpus_only" in coverage:
+    independent = [
+        name for name in ("research_corpus_only", "independent_archive_only") if name in coverage
+    ]
+    if independent:
+        coverage = coverage.assign(independent_text_only=coverage[independent].sum(axis=1))
         categories.append((
-            "research_corpus_only", "Independent cleaned research text", theme.MUTED,
+            "independent_text_only", "Independent corpus / archive text", theme.MUTED,
         ))
     categories.append(("neither_source_observed", "No text observed in these inputs", theme.GRID))
     for column, label, color in categories:
@@ -296,7 +325,7 @@ def snapshot_graph(output, coverage):
         "Source: sealed retained-dump recovery and unchanged metadata v4. Snapshot versions "
         "may be amended/later, not introduced originals. Source overlap is de-duplicated by "
         "exact bill ID. Unregistered native channels remain unknown; no observed text is "
-        "not publisher absence. Research-corpus header joins are not publisher-original "
+        "not publisher absence. Independent corpus/archive joins are not publisher-original "
         "certification. Empty/no-candidate states do not mean no legislative activity.",
     )
     figure["chart_data"] = "chart-data/retained_text_coverage.csv"
@@ -654,7 +683,10 @@ def gallery(output: Path, figures: list[dict], legacy: list[str], research: dict
     )
 
 
-def recreate(root: Path, output: Path, *, research_corpus: Path | None = None) -> dict:
+def recreate(
+    root: Path, output: Path, *, research_corpus: Path | None = None,
+    archive_text: tuple[Path, ...] = (),
+) -> dict:
     root, output = root.resolve(), output.absolute()
     if output.exists():
         raise FileExistsError("refusing to overwrite an existing graph bundle")
@@ -686,6 +718,13 @@ def recreate(root: Path, output: Path, *, research_corpus: Path | None = None) -
         packets["research_corpus"] = recovery_packet(
             root, research_corpus.relative_to(root).as_posix(), inputs, corpus=True,
         )
+    archive_directories = tuple(directory.absolute() for directory in archive_text)
+    for index, directory in enumerate(archive_directories, 1):
+        if not directory.is_relative_to(root / "data/processed"):
+            raise ValueError("independent archives must remain under processed project data")
+        packets[f"independent_archive_{index}"] = recovery_packet(
+            root, directory.relative_to(root).as_posix(), inputs, archive=True,
+        )
     outcome_manifest = json.loads(packets["outcomes"]["manifest.json"].read_bytes())
     producer = outcome_manifest["inputs"]["producer"]
     producer_path = root / "src/state_politics/analysis/cycle_outcome_evidence.py"
@@ -695,6 +734,7 @@ def recreate(root: Path, output: Path, *, research_corpus: Path | None = None) -
     arkansas = arkansas_rows(packets["arkansas"])
     retained_text, missing_text = snapshot_coverage(
         root, packets["snapshot"], inputs, corpus_directory=research_corpus,
+        archive_directories=archive_directories,
     )
     historical_path = checked_file(root, "data/processed/platforms_historical.parquet", inputs)
     historical = coverage_matrix(pd.read_parquet(historical_path))
@@ -705,7 +745,10 @@ def recreate(root: Path, output: Path, *, research_corpus: Path | None = None) -
         Path(__file__), Path(__file__).with_name("plot_platform_coverage.py"),
         ROOT / "src/state_politics/plotting/theme.py",
         ROOT / "src/state_politics/plotting/charts.py",
-    )
+    ) + (tuple(
+        ROOT / "src/state_politics/bills" / name
+        for name in ("archive_text.py", "lawatlas_text.py")
+    ) if archive_directories else ())
     for path in producers:
         inputs[f"producer:{path.name}"] = binding(path)
     for name in ("graphs", "chart-data", "legacy-reference", "producers", "research-data"):
@@ -774,8 +817,15 @@ def main(argv=None):
         "--research-corpus", type=Path,
         help="Optional header-joined research-corpus recovery; no publisher/model approval",
     )
+    parser.add_argument(
+        "--archive-text", type=Path, action="append", default=[],
+        help="Complete independent archive; repeat for alternatives, de-duplicated by bill ID",
+    )
     args = parser.parse_args(argv)
-    result = recreate(ROOT, args.out_dir, research_corpus=args.research_corpus)
+    result = recreate(
+        ROOT, args.out_dir, research_corpus=args.research_corpus,
+        archive_text=tuple(args.archive_text),
+    )
     print(f"Wrote {len(result['fresh_graphs'])} fresh PNG/SVG graphs and "
           f"{len(result['legacy_images_copied_not_regenerated'])} separate legacy images "
           f"to {args.out_dir}")

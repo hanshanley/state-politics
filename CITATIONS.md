@@ -183,3 +183,38 @@ existing missing-text candidates. Source summaries are neither independent
 human gold nor classifier output. Publisher-original/version completeness,
 cleaning quality, filing-time alignment and redistribution remain uncertified;
 this source is exposed only in the unpublished research workspace.
+
+## 12. Independent legislative archives
+
+Windy Civi Pipelines. *New Jersey data pipeline*, immutable commit
+`c99d1624d45dd8bc0b282a6469e19ee28e112097` (December 14, 2025), accessed
+2026-10-22. Repository: `windy-civi-pipelines/nj-data-pipeline`. This older
+archive actually retains session 221, unlike the newer repository's session
+catalog alone. The complete downloaded tar SHA-256 is
+`0d5f348f6db36b57503ca894907fe44e70eeba071610b4d057b85640ab862f18`.
+Reconstructing every archived `country:us` Git blob/tree reproduces the
+pinned data-tree object `4b57fb6de51433a6673c1e68443eb79e7d28be49`;
+a truncated recursive-tree API response is not treated as a complete census.
+
+The originating records are New Jersey legislative materials; the repository
+and its extractor are intermediaries. Full archived text includes the
+extractor's existing machine-generated prologue, explicitly distinguished
+from printed bill evidence and never used as human gold. No standalone data
+license was observed in this older repository. A newer project's CC BY 4.0
+dashboard/download notice is not assumed to license this predecessor archive.
+The complete raw archive, original HTML, metadata, source-version links and
+rejected/conflicting documents remain local research evidence. No publisher
+original, introduced-version, redistribution or model approval is inferred.
+
+LawAtlas / MonQcle. Public research records and attached legislative PDFs,
+accessed 2026-10-22. Four exact existing candidates retain complete attached
+bill text: NJ S3841 and A5445 (220th Legislature), NJ A1899 (221st Legislature)
+and NE LB202 (108th Legislature). New Jersey and Nebraska legislative bodies
+are the originating institutions; LawAtlas is an independent archive, not
+an original-version certification. Full original public records, duplicate
+source-row references, all six downloaded attachments, extraction alternatives,
+HTTP evidence, 675-row source dispositions and the partial-size-abort caveat
+are retained in `data/processed/lawatlas-text-evidence-20261022-v1/`.
+Recorded source/rights observations remain in its
+`source-evidence/source_findings.json`; no general redistribution or
+filing-time approval is asserted.

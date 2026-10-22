@@ -89,9 +89,12 @@ def test_native_graph_cannot_claim_two_readers_when_one_is_missing(tmp_path):
         GRAPH["arkansas_rows"](native_files(tmp_path, missing_reader=True))
 
 
-@pytest.mark.parametrize("corpus_bill", [None, "d", "b"])
+@pytest.mark.parametrize(("corpus_bill", "archive_bills"), [
+    (None, ()), ("d", ()), ("b", ()), (None, ("d", "d")),
+    ("d", ("d", "d")), (None, ("b",)),
+])
 def test_snapshot_native_union_counts_exact_bills_once_and_keeps_unknown_native_counts(
-    tmp_path, monkeypatch, corpus_bill,
+    tmp_path, monkeypatch, corpus_bill, archive_bills,
 ):
     metadata = tmp_path / GRAPH["SOURCES"]["metadata"]
     metadata.mkdir(parents=True)
@@ -121,7 +124,15 @@ def test_snapshot_native_union_counts_exact_bills_once_and_keeps_unknown_native_
             lambda *_: ([], [{"bill_id": corpus_bill}], {}, {}),
         )
         optional["corpus_directory"] = tmp_path / "corpus"
-    if corpus_bill == "b":
+    if archive_bills:
+        monkeypatch.setitem(
+            GRAPH["snapshot_coverage"].__globals__, "load_archive",
+            lambda path, _: ([], [{"bill_id": archive_bills[int(path.name)]}], {}, {}),
+        )
+        optional["archive_directories"] = tuple(
+            tmp_path / str(index) for index in range(len(archive_bills))
+        )
+    if corpus_bill == "b" or "b" in archive_bills:
         with pytest.raises(ValueError, match="only exact remaining source gaps"):
             GRAPH["snapshot_coverage"](
                 tmp_path, {"context_inventory.parquet": inventory}, {}, **optional,
@@ -136,10 +147,13 @@ def test_snapshot_native_union_counts_exact_bills_once_and_keeps_unknown_native_
     ]
     assert counts.loc["AK", ["candidate_contexts", "snapshot_only",
                               "neither_source_observed"]].tolist() == [
-        2, 1, 0 if corpus_bill else 1,
+        2, 1, 0 if corpus_bill or archive_bills else 1,
     ]
+    if archive_bills:
+        assert counts.loc["AK", "independent_archive_only"] == (0 if corpus_bill else 1)
     if corpus_bill:
         assert counts.loc["AK", "research_corpus_only"] == 1
+    if corpus_bill or archive_bills:
         assert missing.empty
     else:
         assert missing["bill_id"].tolist() == ["d"]

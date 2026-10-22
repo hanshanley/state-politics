@@ -27,7 +27,34 @@ not that the state has no data. Platform recovery is separate from the
 legislative status in this table; no state's operative-platform coverage is
 certified complete.
 
-## Additional exact research-text recovery
+## Additional independent-archive recovery
+
+The latest source pass recovers **7,004 more existing contexts / 7,875 complete
+views**: **NJ 7,003 contexts / 7,874 views; NE one context / one view**.
+The pinned older `windy-civi-pipelines/nj-data-pipeline` archive supplies
+7,001 contexts / 7,871 views, with its complete Git data tree independently
+reconstructed. LawAtlas adds four complete PDF views; NJ A1899 overlaps the
+mirror and remains a separate alternative, so only three are net additions.
+The source packets are `data/processed/independent-archive-text-20261022-v2/`
+and `data/processed/lawatlas-text-evidence-20261022-v1/`.
+
+All source strings, original metadata and versions, raw HTML/PDF bytes,
+combined-substitute alternatives and negative evidence remain preserved.
+Three conflicting/ancillary mirror views remain excluded: A3493's printed
+220th versus metadata 221st legislature, S2025's conflicting A4700 title,
+and A3857's committee statement without the required printed session.
+None is repaired using its date or URL. Older sealed header-profile v1
+still verifies; new formatting support does not rewrite that evidence.
+
+De-duplicated availability is now **135,459 / 157,598 contexts**, with
+**22,139 remaining**. NJ's text gaps fall from 8,752 to **1,749**; Nebraska's
+from 1,813 to **1,812**. Bounded independent Hawaii/OK searches produced no
+additional admissible text; this is not proof of publisher absence.
+These additions do not reopen any publisher collector, infer a date or
+party, approve a classifier, or change the state-status distribution.
+No state becomes scientifically complete.
+
+## Earlier exact research-text recovery
 
 The next missing-queue pass recovered **2,079 further candidate contexts / 2,315
 complete original source views**: New Hampshire 981 / 1,217 and Illinois
@@ -38,11 +65,11 @@ aliases are retained with their literal source spans; line numbers are not
 stripped from stored bodies. All 12,340 original NH/IL records and every
 unmatched/rejected disposition remain in the complete research packet.
 
-Combined native/snapshot/research-text availability is **128,455 of 157,598
+That pass's native/snapshot/research-text availability was **128,455 of 157,598
 existing candidate contexts**. The remaining **29,143** are in
 `outputs/recreated-2023-2024-v9/chart-data/missing_retained_text.parquet`.
 The new immutable packet is `data/processed/research-corpus-text-20261022-v4/`;
-the current explorer/gallery are `data/preview-cycle-evidence-v14/` and
+its explorer/gallery are `data/preview-cycle-evidence-v14/` and
 `outputs/recreated-2023-2024-v9/`. Earlier versions remain preserved.
 
 All 103,113 current NH/IL/TX source records and every source-row disposition

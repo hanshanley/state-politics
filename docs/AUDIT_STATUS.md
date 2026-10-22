@@ -4,7 +4,51 @@ The existing figures and analytical conclusions are **legacy, not revalidated fi
 The current changes repair infrastructure and preserve evidence; they do not certify a
 replacement classifier or establish complete contemporary coverage.
 
-## Additional exact research-corpus recovery
+## Additional independent-archive recovery
+
+The newest pass has recovered **7,004 additional existing candidate contexts /
+7,875 complete views**, without repeating the dump/MTSU/native audits or
+reopening closed publisher collectors. NJ contributes 7,003 contexts / 7,874
+views; Nebraska contributes one / one. Exact de-duplication leaves
+**135,459 / 157,598 candidates with some retained text; 22,139 remaining**.
+
+The older immutable NJ mirror actually contains session 221. Its entire
+120,267,741-byte archive reconstructs the pinned complete `country:us` Git
+tree, resolving the truncated recursive-tree API limitation. Exact original
+metadata, own printed headers and uniquely associated version links recover
+7,001 contexts / 7,871 views. Complete extracted strings retain their existing
+machine prologues; no summary or inferred date is substituted for bill text.
+Raw HTML remains in the full archive. Explicit combined-substitute number
+lists preserve genuine alternatives, not additional bills. The sealed packet
+is `data/processed/independent-archive-text-20261022-v2/`, manifest
+`af315112eed07fb4fd0228d5182516ebd4f4d72ec263df218e134ed736c8a54b`.
+
+All three rejected mirror views remain unresolved: A3493 prints the wrong
+legislature relative to its metadata, S2025 has an A4700 title conflict, and
+A3857 is a committee statement without the required session header. These
+were not "corrected" using a date or URL. Earlier source v1 remains sealed
+and replayable under its original header profile.
+
+GPT-6.1 Sol independently recovered four LawAtlas PDFs: NJ S3841/A5445 in
+session 220, NJ A1899 in session 221, and NE LB202 in session 108. The A1899
+PDF overlaps the mirror, so the four views add only three net contexts.
+The strict reusable offline adapter preserves all 675 source records,
+duplicate references, six downloaded attachments, original responses,
+extraction alternatives, rejected evidence and the partial-response caveat.
+Packet `data/processed/lawatlas-text-evidence-20261022-v1/` has manifest
+`f3efd87b8170dc5d414bd744cac9829ab0aab56560e66bd6a42788ae8fe3e12f`.
+Both actual packets replay against the unchanged candidate metadata.
+Separate bounded Hawaii/OK investigations found no admissible additions;
+they do not certify source absence.
+
+Both archives remain independent source evidence, not original-version,
+filing-time, licensing, event-time affiliation, scientific or classifier
+certification. All eight approval flags remain false, human review remains
+unannotated, and no model inference/training/promotion or publication occurred.
+The status ledger remains six closed source scopes, 21 partial, 21 blocked
+and two inventory; zero scientifically complete states.
+
+## Preceding exact research-corpus recovery
 
 The renewed remaining-gap pass has recovered **2,079 previously missing candidate
 contexts / 2,315 complete source views**: New Hampshire 981 contexts / 1,217
@@ -56,7 +100,7 @@ UT/AL/MI/RI yielded zero further matches after a corrected whole-text review
 of 108,142 records; genuine fragments, unresolved own identities and every
 disposition remain available rather than being promoted to bodies.
 
-The current deliverables are **explorer v14 / gallery v9**, with **128,455 of
+That pass's deliverables were **explorer v14 / gallery v9**, with **128,455 of
 157,598 existing candidate contexts** having some retained text and **29,143**
 explicit remaining gaps. All source types stay separate. The new offline producer
 passes 23 focused tests; final full code assurance passed **1,754 tests**, with

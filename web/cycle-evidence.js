@@ -131,11 +131,12 @@ if (typeof document !== "undefined") {
       const receipt = row.source_type === "source_receipt";
       const snapshot = row.source_type === "snapshot_text";
       const corpus = row.source_type === "research_corpus_text";
+      const archive = row.source_type === "archive_text";
       article.append(element("h3", receipt
         ? `${row.state} / ${row.identifier} — source-receipt observation only`
         : sessionText
           ? `${row.state} / ${row.identifier} / ${row.session_identifier} — publisher-session source only`
-        : bill || native || snapshot || corpus
+        : bill || native || snapshot || corpus || archive
           ? `${row.state} / ${row.identifier} / ${row.session_identifier} — ${row.title ?? "No title"}`
         : `${row.state} / ${row.party} — ${row.record_kind}`));
       article.append(element("p", receipt
@@ -144,6 +145,8 @@ if (typeof document !== "undefined") {
         ? `View: ${row.view_id} · Bill: ${row.bill_id} · Retained provider snapshot, not an introduced-version certification`
         : corpus
         ? `View: ${row.view_id} · Bill: ${row.bill_id} · Independent cleaned research text, not publisher-certified`
+        : archive
+        ? `View: ${row.view_id} · Bill: ${row.bill_id} · Archive: ${row.archive_provider} · Not publisher-version certification`
         : bill || native
         ? `View: ${row.view_id} · Bill: ${row.bill_id} · `
           + (native ? `Native context: ${row.context_id}` : `Abstract: ${row.abstract_id ?? "none"}`)
@@ -174,6 +177,22 @@ if (typeof document !== "undefined") {
         }, null, 2)));
         article.append(sourceText("Inspect all original bill metadata and source context fields",
           JSON.stringify(row.source_context, null, 2)));
+      } else if (archive) {
+        article.append(element("p",
+          "Exact printed state, session and own bill identity match an existing candidate. "
+          + "Provider alternatives and combined substitutes are not extra bills. Complete "
+          + "source metadata and original source-member references remain available. "
+          + "No dates, party, introduced version, human gold or model approval are inferred. "
+          + (row.archive_generated_prologue_preserved
+            ? "This full string includes the archive's existing machine-generated extraction prologue, not our added summary."
+            : "This is the complete retained PDF extraction, without an added summary."),
+          "note archive-observation"));
+        article.append(sourceText("Read complete archived bill text (unaltered)", row.text));
+        article.append(sourceText("Inspect printed identity, source version and all original metadata",
+          JSON.stringify({source_identity: row.source_identity, source_version: row.source_version,
+            source_record: row.source_record, source_members: row.source_members,
+            archive_provider: row.archive_provider, archive_commit: row.archive_commit,
+            archive_country_git_tree: row.archive_country_git_tree}, null, 2)));
       } else if (corpus) {
         article.append(element("p",
           "Joined by printed state, session and bill identity to an existing candidate. "
@@ -347,6 +366,7 @@ if (typeof document !== "undefined") {
     const sessionText = collection.value === "native_session_text";
     const snapshot = collection.value === "snapshot_text";
     const corpus = collection.value === "research_corpus_text";
+    const archive = collection.value === "archive_text";
     document.getElementById("receipt-status-label").hidden = !receipt;
     receiptStatus.disabled = !receipt;
     party.disabled = !platform || state.value === "outside";
@@ -360,7 +380,16 @@ if (typeof document !== "undefined") {
       .find(row => row.dataset.state === state.value);
     const corpusCoverage = [...document.querySelectorAll("#corpus-coverage tbody tr")]
       .find(row => row.dataset.state === state.value);
-    document.getElementById("selection-scope").textContent = corpus
+    const archiveCoverage = [...document.querySelectorAll("#archive-coverage tbody tr")]
+      .find(row => row.dataset.state === state.value);
+    document.getElementById("selection-scope").textContent = archive
+      ? (archiveCoverage
+        ? `${state.value}: ${archiveCoverage.dataset.contexts} existing contexts / `
+          + `${archiveCoverage.dataset.views} complete archived bill views. `
+          + "Alternative providers overlap; not extra bills or introduced-version certification. "
+          + "No supplied matching text is not publisher absence; all model approvals remain false."
+        : "No independent archive packet was supplied; coverage is unknown.")
+      : corpus
       ? (corpusCoverage
         ? `${state.value}: ${corpusCoverage.dataset.contexts} existing candidate contexts / `
           + `${corpusCoverage.dataset.views} complete research-corpus views. `
@@ -467,6 +496,7 @@ if (typeof document !== "undefined") {
         : collection.value === "native_session_text" ? [`native-session-${state.value}`]
         : collection.value === "snapshot_text" ? [`snapshot-${state.value}`]
         : collection.value === "research_corpus_text" ? [`corpus-${state.value}`]
+        : collection.value === "archive_text" ? [`archive-${state.value}`]
         : state.value === "outside" ? ["platform-outside"]
           : (party.value ? [party.value] : ["D", "R"]).map(code => `platform-${state.value}-${code}`);
       const groups = await Promise.all(names.map(async name => {

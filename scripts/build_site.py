@@ -212,6 +212,10 @@ def main(argv=None):
         help="Optional complete header-joined research text; never publisher/model certification",
     )
     parser.add_argument(
+        "--archive-text", type=Path, action="append", default=[],
+        help="Complete independent archive packet; repeat for alternative providers; no approval",
+    )
+    parser.add_argument(
         "--receipt-evidence", type=Path,
         help="Explicit optional Maine receipt packet; separate evidence, no cohort admission",
     )
@@ -248,6 +252,8 @@ def main(argv=None):
             optional["snapshot_text_evidence"] = args.snapshot_text
         if args.research_corpus:
             optional["research_corpus_evidence"] = args.research_corpus
+        if args.archive_text:
+            optional["archive_text_evidence"] = tuple(args.archive_text)
         if args.receipt_evidence:
             optional["receipt_evidence"] = args.receipt_evidence
         if args.native_session_scope:
@@ -261,10 +267,11 @@ def main(argv=None):
         return 0
     if (
         args.native_evidence or args.metadata_token_plan
-        or args.receipt_evidence or args.snapshot_text or args.research_corpus
+        or args.receipt_evidence or args.snapshot_text or args.research_corpus or args.archive_text
     ):
         parser.error(
-            "optional native/token-plan/receipt/snapshot/corpus evidence requires --cycle-evidence",
+            "optional native/token-plan/receipt/snapshot/corpus/archive evidence "
+            "requires --cycle-evidence",
         )
     result = build_preview(
         args.coverage, args.historical, args.out, recovery_path=args.recovery,

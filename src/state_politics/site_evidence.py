@@ -17,6 +17,7 @@ import pyarrow.csv as csv
 import pyarrow.parquet as pq
 import yaml
 
+from state_politics.bills.archive_text import load_archive
 from state_politics.bills.openstates_dump import STATE_CODES
 from state_politics.bills.research_corpus_text import load_corpus
 from state_politics.bills.study_native_overlap import _field, normalize_packet
@@ -967,6 +968,7 @@ def build_cycle_preview(
     native_session_scopes: tuple[str, ...] = (),
     snapshot_text_evidence: Path | None = None,
     research_corpus_evidence: Path | None = None,
+    archive_text_evidence: tuple[Path, ...] = (),
 ) -> dict:
     """Build an unpublished preview into a fresh ignored directory, after validating inputs."""
     data = (ROOT / "data").resolve()
@@ -991,6 +993,7 @@ def build_cycle_preview(
                     receipt_evidence,
                     snapshot_text_evidence,
                     research_corpus_evidence,
+                    *archive_text_evidence,
                 ) if source is not None),
         "output overlaps source bundle",
     )
@@ -1012,8 +1015,12 @@ def build_cycle_preview(
         producer_paths["research_texas_identity.py"] = (
             Path(__file__).with_name("bills") / "research_texas_identity.py"
         )
+    if archive_text_evidence:
+        for name in ("archive_text.py", "lawatlas_text.py"):
+            producer_paths[name] = Path(__file__).with_name("bills") / name
     archive_producers = bool(
         native_session_scopes or snapshot_text_evidence or research_corpus_evidence
+        or archive_text_evidence
     )
     producer_sources = {name: path.read_bytes() for name, path in producer_paths.items()}
     producer_pins = {
@@ -1040,6 +1047,17 @@ def build_cycle_preview(
         corpus_views, corpus_contexts, corpus_pins, _ = load_corpus(
             research_corpus_evidence, tables[0].to_pylist(),
         )
+    archive_views, archive_contexts, archive_bindings = [], {}, []
+    for directory in archive_text_evidence:
+        rows, contexts, pins, source_manifest = load_archive(directory, tables[0].to_pylist())
+        archive_views.extend(
+            {**row, "source_bundle_manifest_sha256": pins["manifest.json"]} for row in rows
+        )
+        for row in contexts:
+            archive_contexts[row["bill_id"]] = row
+        archive_bindings.append((directory, pins, source_manifest))
+    _require(len({row["view_id"] for row in archive_views}) == len(archive_views),
+             "duplicate independent-archive source view")
     native_partitions, native_pins, native_inputs = {}, {}, {}
     session_partitions, session_counts, session_bindings = {}, {}, {}
     plans, plan_pins, plan_inputs, plan_counts = {}, {}, {}, {}
@@ -1095,6 +1113,10 @@ def build_cycle_preview(
                 {**row, "source_bundle_manifest_sha256": corpus_pins["manifest.json"]}
                 for row in corpus_views if row["state"] == state
             ])
+        if archive_text_evidence:
+            _write_partition(out, f"archive-{state}", [
+                row for row in archive_views if row["state"] == state
+            ])
         for party in ("D", "R"):
             _write_partition(out, f"platform-{state}-{party}", partitions[state, party])
     _write_partition(out, "platform-outside", partitions["outside", ""])
@@ -1116,6 +1138,9 @@ def build_cycle_preview(
             ("report.json", "corpus_source_report.json"),
         ):
             shutil.copyfile(research_corpus_evidence / source, out / "downloads" / target)
+    for index, (directory, _, _) in enumerate(archive_bindings, 1):
+        for name in ("manifest.json", "report.json"):
+            shutil.copyfile(directory / name, out / "downloads" / f"archive_{index}_{name}")
     for directory, prefix in (
         (native_evidence, "native"), (metadata_token_plan, "metadata_token_plan"),
         (receipt_evidence, "receipt"),
@@ -1305,7 +1330,54 @@ def build_cycle_preview(
             '<th scope="col">Complete source views</th><th scope="col">Full record download</th>'
             '</tr></thead><tbody>' + "".join(corpus_rows) + '</tbody></table></div></section>'
         )
+    archive_section = ""
+    if archive_text_evidence:
+        archive_rows = []
+        for state in sorted(STATES):
+            n_contexts = sum(row["state"] == state for row in archive_contexts.values())
+            n_views = sum(row["state"] == state for row in archive_views)
+            archive_rows.append(
+                f'<tr data-state="{state}" data-contexts="{n_contexts}" data-views="{n_views}">'
+                f'<td>{state}</td><td>{n_contexts:,}</td><td>{n_views:,}</td><td>'
+                f'<a download href="downloads/archive-{state}.jsonl.gz">'
+                f'{state} complete independent-archive records</a></td></tr>'
+            )
+        archive_links = "".join(
+            f'<li><a download href="downloads/archive_{index}_manifest.json">'
+            f'Archive {index}: full source manifest</a> / '
+            f'<a download href="downloads/archive_{index}_report.json">scope report</a></li>'
+            for index in range(1, len(archive_bindings) + 1)
+        )
+        archive_section = (
+            '<section aria-labelledby="archive-heading"><h2 id="archive-heading">'
+            'Independent archived bill text: not publisher-version certification</h2>'
+            '<p>Exact printed state, session and own bill identity join existing candidates. '
+            'Alternative providers and combined substitutes remain separate complete views, '
+            'not extra bills. Archived extraction prologues, when present, remain unaltered '
+            'and are not human labels. Original metadata, versions and source-member hashes '
+            'are retained. Complete research ZIPs in the graph gallery additionally preserve '
+            'the original archived HTML/PDF bytes and negative evidence. Licensing, original '
+            'version, filing-time, party and all scientific/model approvals remain unresolved. '
+            'No matching supplied text is not publisher absence.</p><ul>' + archive_links
+            + '</ul><div class="table-wrap" tabindex="0" aria-label="Independent archive coverage">'
+            '<table id="archive-coverage"><caption>Provider overlaps counted once per candidate; '
+            'all source alternatives preserved</caption><thead><tr><th scope="col">State</th>'
+            '<th scope="col">Existing candidate contexts</th><th scope="col">Full source views</th>'
+            '<th scope="col">Complete record download</th></tr></thead><tbody>'
+            + "".join(archive_rows) + '</tbody></table></div></section>'
+        )
     fields = {
+        "@@ARCHIVE_SECTION@@": archive_section,
+        "@@ARCHIVE_OPTION@@": (
+            '<option value="archive_text">Independent archived bill text '
+            '(printed identity; not publisher-certified)</option>' if archive_text_evidence else ""
+        ),
+        "@@ARCHIVE_NOTE@@": (
+            f'<p id="archive-scope"><strong>{len(archive_contexts):,} existing contexts / '
+            f'{len(archive_views):,} complete archive views.</strong> Provider overlaps are '
+            'not additional bills; retained text is not introduced-version or model approval.</p>'
+            if archive_text_evidence else ""
+        ),
         "@@CORPUS_SECTION@@": corpus_section,
         "@@CORPUS_OPTION@@": (
             '<option value="research_corpus_text">Independent research-corpus text '
@@ -1468,6 +1540,11 @@ def build_cycle_preview(
                 for name, digest in corpus_pins.items()),
             "research-corpus source changed during build",
         )
+    for directory, pins, _ in archive_bindings:
+        _require(
+            all(sha256_file(directory / name) == digest for name, digest in pins.items()),
+            "independent-archive source changed during build",
+        )
     if archive_producers:
         for name, path in producer_paths.items():
             _require(
@@ -1583,6 +1660,23 @@ def build_cycle_preview(
             "Independent cleaned research-corpus text is joined by printed headers, not "
             "certified publisher originals. All original source fields and alternatives "
             "remain complete; summaries are not human gold and no new dates/bills are admitted.",
+        )
+    if archive_text_evidence:
+        manifest["inputs"]["archive_text"] = [
+            {"schema": source["schema"], "packet_files": pins}
+            for _, pins, source in archive_bindings
+        ]
+        manifest["counts"]["archive_text"] = {
+            "n_contexts": len(archive_contexts), "n_views": len(archive_views),
+            "n_packets": len(archive_bindings),
+            "publisher_original_verified": False, "filing_time_text_certified": False,
+        }
+        manifest["limitations"].append(
+            "Independent archived bill text preserves complete provider strings, metadata and "
+            "printed identity evidence. Provider overlaps and combined versions are not extra "
+            "bills. Original HTML/PDF bytes live in the separately delivered complete research "
+            "ZIPs. Existing extraction prologues are not human gold; no dates, party, filing-time, "
+            "version, licensing, scientific, publication or model approval is inferred.",
         )
     if native_session_scopes:
         manifest["inputs"]["native_session_scopes"] = session_bindings
