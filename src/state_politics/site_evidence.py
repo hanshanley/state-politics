@@ -18,6 +18,7 @@ import pyarrow.parquet as pq
 import yaml
 
 from state_politics.bills.openstates_dump import STATE_CODES
+from state_politics.bills.research_corpus_text import load_corpus
 from state_politics.bills.study_native_overlap import _field, normalize_packet
 from state_politics.bills.study_window import _snapshot
 from state_politics.provenance import sha256_file
@@ -965,6 +966,7 @@ def build_cycle_preview(
     receipt_evidence: Path | None = None,
     native_session_scopes: tuple[str, ...] = (),
     snapshot_text_evidence: Path | None = None,
+    research_corpus_evidence: Path | None = None,
 ) -> dict:
     """Build an unpublished preview into a fresh ignored directory, after validating inputs."""
     data = (ROOT / "data").resolve()
@@ -988,6 +990,7 @@ def build_cycle_preview(
                     metadata_dir, platform_dir, native_evidence, metadata_token_plan,
                     receipt_evidence,
                     snapshot_text_evidence,
+                    research_corpus_evidence,
                 ) if source is not None),
         "output overlaps source bundle",
     )
@@ -1002,7 +1005,13 @@ def build_cycle_preview(
         )
     if snapshot_text_evidence:
         producer_paths["site_snapshot_text.py"] = Path(__file__).with_name("site_snapshot_text.py")
-    archive_producers = bool(native_session_scopes or snapshot_text_evidence)
+    if research_corpus_evidence:
+        producer_paths["research_corpus_text.py"] = (
+            Path(__file__).with_name("bills") / "research_corpus_text.py"
+        )
+    archive_producers = bool(
+        native_session_scopes or snapshot_text_evidence or research_corpus_evidence
+    )
     producer_sources = {name: path.read_bytes() for name, path in producer_paths.items()}
     producer_pins = {
         name: hashlib.sha256(source).hexdigest() for name, source in producer_sources.items()
@@ -1023,6 +1032,11 @@ def build_cycle_preview(
         "bill_evidence", "abstract_evidence", "candidate_metadata_views",
     ))
     counts, cohorts = _validate_metadata(report, matrix, tables)
+    corpus_views, corpus_contexts, corpus_pins = [], [], {}
+    if research_corpus_evidence:
+        corpus_views, corpus_contexts, corpus_pins, _ = load_corpus(
+            research_corpus_evidence, tables[0].to_pylist(),
+        )
     native_partitions, native_pins, native_inputs = {}, {}, {}
     session_partitions, session_counts, session_bindings = {}, {}, {}
     plans, plan_pins, plan_inputs, plan_counts = {}, {}, {}, {}
@@ -1073,6 +1087,11 @@ def build_cycle_preview(
         _write_partition(out, f"bills-{state}", views)
         if native_evidence:
             _write_partition(out, f"native-{state}", native_partitions.get(state, []))
+        if research_corpus_evidence:
+            _write_partition(out, f"corpus-{state}", [
+                {**row, "source_bundle_manifest_sha256": corpus_pins["manifest.json"]}
+                for row in corpus_views if row["state"] == state
+            ])
         for party in ("D", "R"):
             _write_partition(out, f"platform-{state}-{party}", partitions[state, party])
     _write_partition(out, "platform-outside", partitions["outside", ""])
@@ -1088,6 +1107,12 @@ def build_cycle_preview(
         (platform_dir / "organizations.jsonl", "organizations.jsonl"),
     ):
         shutil.copyfile(source, out / "downloads" / target)
+    if research_corpus_evidence:
+        for source, target in (
+            ("manifest.json", "corpus_source_manifest.json"),
+            ("report.json", "corpus_source_report.json"),
+        ):
+            shutil.copyfile(research_corpus_evidence / source, out / "downloads" / target)
     for directory, prefix in (
         (native_evidence, "native"), (metadata_token_plan, "metadata_token_plan"),
         (receipt_evidence, "receipt"),
@@ -1244,7 +1269,53 @@ def build_cycle_preview(
             '<th scope="col">Complete records download</th></tr></thead><tbody>'
             + "".join(snapshot_rows) + '</tbody></table></div></section>'
         )
+    corpus_section = ""
+    if research_corpus_evidence:
+        corpus_rows = []
+        for state in sorted(STATES):
+            n_contexts = sum(row["state"] == state for row in corpus_contexts)
+            n_views = sum(row["state"] == state for row in corpus_views)
+            corpus_rows.append(
+                f'<tr data-state="{state}" data-contexts="{n_contexts}" '
+                f'data-views="{n_views}"><td>{state}</td><td>{n_contexts:,}</td>'
+                f'<td>{n_views:,}</td><td><a download href="downloads/corpus-{state}.jsonl.gz">'
+                f'{state} complete research-corpus records</a></td></tr>'
+            )
+        corpus_section = (
+            '<section aria-labelledby="corpus-heading"><h2 id="corpus-heading">'
+            'Independent research-corpus text: printed-header joins, not publisher originals</h2>'
+            '<p>Original cleaned text and every original source-record field are preserved. '
+            'Printed state, session and bill identity join only existing missing-text candidates; '
+            'titles, effective dates and filenames never establish a join. Source summaries are '
+            'not human gold or predictions. Existing later-session prefilings remain in their '
+            'unchanged candidate cohort. Versions, provenance quality, filing-time alignment '
+            'and all scientific/model approvals remain uncertified. Zero means no matching '
+            'recovered text in this supplied packet, not publisher absence.</p>'
+            '<p><a download href="downloads/corpus_source_manifest.json">'
+            'Complete research-source manifest and original-record ancestry</a> · '
+            '<a download href="downloads/corpus_source_report.json">'
+            'Source scope and rejected-row accounting</a></p>'
+            '<div class="table-wrap" tabindex="0" aria-label="Research-corpus text coverage">'
+            '<table id="corpus-coverage"><caption>Complete matching research text, overlapping '
+            'existing bill identities rather than new bills</caption><thead><tr>'
+            '<th scope="col">State</th><th scope="col">Existing candidate contexts</th>'
+            '<th scope="col">Complete source views</th><th scope="col">Full record download</th>'
+            '</tr></thead><tbody>' + "".join(corpus_rows) + '</tbody></table></div></section>'
+        )
     fields = {
+        "@@CORPUS_SECTION@@": corpus_section,
+        "@@CORPUS_OPTION@@": (
+            '<option value="research_corpus_text">Independent research-corpus text '
+            '(printed-header joins; not publisher-certified)</option>'
+            if research_corpus_evidence else ""
+        ),
+        "@@CORPUS_NOTE@@": (
+            f'<p id="corpus-scope"><strong>{len(corpus_contexts):,} existing candidate contexts '
+            f'have {len(corpus_views):,} complete matching research-corpus views.</strong> '
+            'This separately identified third-party cleaned source is not a publisher-original, '
+            'introduced-version, classification or model-input certification.</p>'
+            if research_corpus_evidence else ""
+        ),
         "@@SNAPSHOT_SECTION@@": snapshot_section,
         "@@SNAPSHOT_OPTION@@": (
             '<option value="snapshot_text">Retained snapshot text (selected version, '
@@ -1388,6 +1459,12 @@ def build_cycle_preview(
                 for name, digest in snapshot_pins.items()),
             "snapshot source changed during build",
         )
+    if research_corpus_evidence:
+        _require(
+            all(sha256_file(research_corpus_evidence / name) == digest
+                for name, digest in corpus_pins.items()),
+            "research-corpus source changed during build",
+        )
     if archive_producers:
         for name, path in producer_paths.items():
             _require(
@@ -1492,6 +1569,17 @@ def build_cycle_preview(
             "Retained searchable-bill text is source-snapshot/version bound, not certified "
             "introduced/native original text. Error and missing rows remain complete; index "
             "timestamps and source version notes do not establish filing-time dates or parties.",
+        )
+    if research_corpus_evidence:
+        manifest["inputs"]["research_corpus_text"] = corpus_pins
+        manifest["counts"]["research_corpus_text"] = {
+            "n_contexts": len(corpus_contexts), "n_views": len(corpus_views),
+            "publisher_original_verified": False, "filing_time_text_certified": False,
+        }
+        manifest["limitations"].append(
+            "Independent cleaned research-corpus text is joined by printed headers, not "
+            "certified publisher originals. All original source fields and alternatives "
+            "remain complete; summaries are not human gold and no new dates/bills are admitted.",
         )
     if native_session_scopes:
         manifest["inputs"]["native_session_scopes"] = session_bindings

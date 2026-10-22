@@ -159,3 +159,27 @@ The curated source registry is `conf/caucus_priority_registry.yml`; collection c
 Sampling metadata, seed, source frame, and the labeling protocol are preserved in
 `data/gold/plank_topics_gold.meta.yml` and `data/gold/README.md`. These labels are authored
 evidence—not a generated artifact—and are hashed in `conf/reproducibility.yml`.
+
+## 11. Independent research-corpus text
+
+MTSUs-Fall-2025-Software-Engineering-Pr (2025). *United States State Legislation
+with Summaries* [Data set], published through Hugging Face. Accessed 2026-10-22;
+pinned revision `d4f15948c8af7733df9aa70ce68b14a65dec3d82`.
+Original keyed NH/IL records are additionally pinned to revision
+`9411b4690c3ba8c0c28ab19eb9370316908c00af`; whole-record comparisons
+restore removed source filenames and original dataset keys, without interpreting
+those keys as external bill IDs or inventing a session.
+
+Source: `https://huggingface.co/datasets/MTSUs-Fall-2025-Software-Engineering-Pr/United_States_State_Legislation_with_Summaries`.
+The dataset card declares Apache-2.0; this is a recorded publisher license
+observation, not verification of every upstream right or cleaning step.
+The credited corpus publisher is an intermediary; legislative bodies are the
+originating institutions represented in the printed source text.
+
+Complete NH/IL JSON files match the pinned tree's advertised LFS SHA-256 and
+byte counts. Original text/title/summary fields and duplicate records are
+preserved. Printed state, assembly/session and bill identities link only
+existing missing-text candidates. Source summaries are neither independent
+human gold nor classifier output. Publisher-original/version completeness,
+cleaning quality, filing-time alignment and redistribution remain uncertified;
+this source is exposed only in the unpublished research workspace.

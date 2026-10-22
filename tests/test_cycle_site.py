@@ -161,6 +161,74 @@ def test_snapshot_preserves_complete_source_fields_errors_and_separate_version_s
     assert (out / "downloads/producers/site_snapshot_text.py").is_file()
 
 
+def test_research_corpus_exports_complete_alternatives_without_new_bill_admission(
+    cycle_bundle, tmp_path,
+):
+    from state_politics.bills.research_corpus_text import REVISION, SOURCE_FILES, recover
+
+    metadata, platform, *_ = cycle_bundle
+    for name in ("bill_evidence", "abstract_evidence", "candidate_metadata_views"):
+        rows = pq.read_table(metadata / f"{name}.parquet").to_pylist()
+        for row in rows:
+            if row["state"] == "TX":
+                row["state"] = "NH"
+        pq.write_table(pa.Table.from_pylist(rows), metadata / f"{name}.parquet")
+    matrix = csv.read_csv(metadata / "state_matrix.csv").to_pylist()
+    original = {row["state"]: dict(row) for row in matrix}
+    for row in matrix:
+        if row["state"] in ("TX", "NH"):
+            other = original["NH" if row["state"] == "TX" else "TX"]
+            row.update({key: value for key, value in other.items()
+                        if key not in ("state", "state_name")})
+    csv.write_csv(pa.Table.from_pylist(matrix), metadata / "state_matrix.csv")
+    repin(metadata)
+    source = tmp_path / "corpus-source"
+    source.mkdir()
+    text = (
+        "HB 0 - AS INTRODUCED 2023 SESSION STATE OF NEW HAMPSHIRE "
+        "Be it Enacted by the Senate and House of Representatives: " + SOURCE_TEXT
+    )
+    records = [
+        {"title": "Original", "summary": "Not gold", "text": text},
+        {"title": None, "summary": "Original duplicate", "text": text},
+    ]
+    raw = source / SOURCE_FILES["NH"]
+    write_json(raw, records)
+    write_json(source / "mtsu-dataset-metadata.json", {
+        "sha": REVISION, "cardData": {"license": "apache-2.0"},
+    })
+    write_json(source / "mtsu-file-tree.json", [{
+        "path": raw.name, "size": raw.stat().st_size, "lfs": {"oid": sha256_file(raw)},
+    }])
+    contexts = pq.read_table(metadata / "bill_evidence.parquet").to_pylist()
+    gap = source / "gap.parquet"
+    pq.write_table(pa.Table.from_pylist([
+        {**row, "neither_source_observed": True} for row in contexts if row["state"] == "NH"
+    ]), gap)
+    packet = tmp_path / "corpus-packet"
+    recover(source, gap, packet, states=("NH",))
+    out = tmp_path / "corpus-preview"
+    manifest = build_cycle_preview(metadata, platform, out, research_corpus_evidence=packet)
+    assert manifest["counts"]["n_cycle_contexts"] == 14
+    assert manifest["counts"]["research_corpus_text"] == {
+        "n_contexts": 1, "n_views": 2, "publisher_original_verified": False,
+        "filing_time_text_certified": False,
+    }
+    exported = [json.loads(line) for line in (
+        out / "evidence/corpus-NH.jsonl"
+    ).read_text().split("\n") if line]
+    assert [row["source_record"] for row in exported] == records
+    assert gzip.decompress((out / "downloads/corpus-NH.jsonl.gz").read_bytes()) == (
+        out / "evidence/corpus-NH.jsonl"
+    ).read_bytes()
+    assert (out / "evidence/corpus-ME.jsonl").read_bytes() == b""
+    assert (out / "downloads/producers/research_corpus_text.py").is_file()
+    document = (out / "index.html").read_text()
+    assert 'value="research_corpus_text"' in document
+    assert document.count('href="downloads/corpus-') == 50
+    assert "not publisher originals" in document
+
+
 @pytest.mark.parametrize("defect", ["scope", "version", "body", "approval", "linked_manifest"])
 def test_snapshot_rejects_wrong_scope_version_body_and_approval(
     cycle_bundle, snapshot_bundle, tmp_path, defect,

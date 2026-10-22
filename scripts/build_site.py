@@ -208,6 +208,10 @@ def main(argv=None):
         help="Optional sealed retained searchable-bill text, never introduced-version admission",
     )
     parser.add_argument(
+        "--research-corpus", type=Path,
+        help="Optional complete header-joined research text; never publisher/model certification",
+    )
+    parser.add_argument(
         "--receipt-evidence", type=Path,
         help="Explicit optional Maine receipt packet; separate evidence, no cohort admission",
     )
@@ -242,6 +246,8 @@ def main(argv=None):
             optional["metadata_token_plan"] = args.metadata_token_plan or DEFAULT_TOKEN_PLAN
         if args.snapshot_text:
             optional["snapshot_text_evidence"] = args.snapshot_text
+        if args.research_corpus:
+            optional["research_corpus_evidence"] = args.research_corpus
         if args.receipt_evidence:
             optional["receipt_evidence"] = args.receipt_evidence
         if args.native_session_scope:
@@ -255,10 +261,10 @@ def main(argv=None):
         return 0
     if (
         args.native_evidence or args.metadata_token_plan
-        or args.receipt_evidence or args.snapshot_text
+        or args.receipt_evidence or args.snapshot_text or args.research_corpus
     ):
         parser.error(
-            "optional native/token-plan/receipt/snapshot evidence requires --cycle-evidence",
+            "optional native/token-plan/receipt/snapshot/corpus evidence requires --cycle-evidence",
         )
     result = build_preview(
         args.coverage, args.historical, args.out, recovery_path=args.recovery,

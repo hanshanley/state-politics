@@ -20,11 +20,12 @@ be bound explicitly before regenerated outputs can support the narrowed study.
 
 ```bash
 .venv/bin/python -I -B scripts/recreate_graphs.py \
-  --out-dir outputs/recreated-2023-2024-v6
+  --research-corpus data/processed/research-corpus-text-20261022-v2 \
+  --out-dir outputs/recreated-2023-2024-v8
 ```
 
-Open `outputs/recreated-2023-2024-v6/index.html` locally. The bundle contains 14
-current evidence graphs in PNG and SVG, 13 complete chart-data CSVs, six complete
+Open `outputs/recreated-2023-2024-v8/index.html` locally. The bundle contains 14
+current evidence graphs in PNG and SVG, 13 complete chart-data CSVs, seven complete
 research-packet ZIPs and a hash manifest. It also archives the exact four main
 plotting producers and the recovered producers within their research packets.
 It uses saved evidence
@@ -85,11 +86,50 @@ and selected version/link row. Whitespace-only strings remain unchanged and
 separately counted, rather than being stripped or advertised as substantive
 bodies. The metadata token plan still covers metadata only, not these new texts.
 
-`chart-data/retained_text_coverage.csv` de-duplicates native/snapshot availability:
+The earlier v6 `chart-data/retained_text_coverage.csv` de-duplicates native/snapshot availability:
 126,376 candidate contexts have some retained text; 31,222 do not in the supplied
 inputs. `chart-data/missing_retained_text.parquet` contains the complete remaining
 queue and explicitly authorizes no collection. Counts overlap between sources;
 do not add them or interpret unknown native channels as publisher absence.
+
+## Exact additional research-corpus text
+
+The next source packet, `data/processed/research-corpus-text-20261022-v2/`,
+recovers 2,070 previously missing contexts / 2,306 complete views from pinned
+NH/IL source files. Reproduce it offline into a **new** output directory:
+
+```bash
+.venv/bin/python -I -B -m state_politics.bills.research_corpus_text \
+  --source-dir data/processed/remaining-gap-public-source-discovery-20261022-v1 \
+  --gap-queue outputs/recreated-2023-2024-v6/chart-data/missing_retained_text.parquet \
+  --out-dir data/processed/research-corpus-text-REPLAY
+```
+
+The source directory retains dataset metadata, file-tree/LFS hashes and complete
+downloaded JSON under revision `d4f15948c8af7733df9aa70ce68b14a65dec3d82`;
+see [source attribution and license observations](../CITATIONS.md#11-independent-research-corpus-text).
+No request is made by this producer. It verifies complete input hashes, requires
+literal state/session/bill evidence plus substantive body text, preserves exact
+source spans and all alternatives, and records every unmatched/rejected row.
+Written assembly declarations and explicit constitutional-amendment aliases
+are handled without deleting line numbers or inferring dates. Existing
+later-session prefilings remain within the unchanged candidate cohort.
+
+The packet contains complete original JSON arrays, full matched JSONL, exact
+original gap-context rows, every source-row disposition and archived producer.
+The consumer replays source ordinals, original records, body hashes and printed
+identities against the unchanged candidate cohort. All model/training/party/
+filing-time/scientific/publisher-original/publication approvals remain false;
+source summaries are not gold or predictions. Earlier 2,060-context v1 stays
+sealed and still verifies under the stronger parser.
+
+The explicit `--research-corpus` preview/graph option adds a distinct source,
+complete state JSONL/gzip exports and a complete research ZIP. The v8 coverage
+CSV de-duplicates all three channels: 128,446 candidate contexts have some
+retained text and 29,152 remain without an observed body in these inputs.
+The remaining full-context Parquet preserves unknown native counts and
+authorizes no automatic collection. No source is silently promoted to a
+publisher-native or introduced version.
 
 ## October 22 recovered inputs
 
@@ -1005,11 +1045,11 @@ population-accuracy reference.
   --output data/human-review-native-REPLAY
 
 .venv/bin/python -I -B scripts/serve_research.py \
-  --evidence data/preview-cycle-evidence-v11 \
+  --evidence data/preview-cycle-evidence-v13 \
   --sessions data/processed/verified-session-comparison-2023-2024-v3 \
   --review data/human-review-native-20261021-v3 \
   --sources data/processed/native-inventory-catalog-2023-2024-v2 \
-  --graphs outputs/recreated-2023-2024-v6 \
+  --graphs outputs/recreated-2023-2024-v8 \
   --port 8765
 ```
 
@@ -1110,13 +1150,14 @@ synthetic references/logits and is not classifier validation.
   --native-evidence data/processed/study-native-overlap-2023-2024-v15 \
   --metadata-token-plan data/processed/study-metadata-token-plan-2023-2024-v2 \
   --snapshot-text data/processed/retained-dump-gap-recovery-20261022-v1 \
+  --research-corpus data/processed/research-corpus-text-20261022-v2 \
   --receipt-evidence data/processed/maine-source-receipt-evidence-2023-2024-v1 \
   --native-session-scope ny-2023-2024 --native-session-scope il-103rd \
   --native-session-scope tx-88r-retained \
-  --out data/preview-cycle-evidence-v11
+  --out data/preview-cycle-evidence-v13
 ```
 
-The current explicit build uses metadata v4 / native v15, with the unchanged
+The current explicit build uses metadata v4 / native v15 and research-corpus v2, with the unchanged
 platform evidence v5 and token-plan v2. The latter is reusable because the
 complete 159,315-view metadata input Parquet is byte-identical to v3.
 CLI defaults remain the earlier metadata v3 / native v14 selection; custom
@@ -1124,7 +1165,7 @@ metadata does not silently attach optional bundles. Pass the compatible
 explicit directories above.
 The output includes all 50 state coverage rows / 100 organization rows,
 complete metadata/platform texts, lazy state partitions, full-text gzip
-downloads and `downloads/build_manifest.json`. The current build manifest is
+downloads and `downloads/build_manifest.json`. The earlier v11 build manifest is
 `0a04fa86cdac4895c4e3148df03fa34b6afe84c45d78720b49793f1c190660d1`.
 Receipt/session additions are explicit opt-ins only; the default/custom
 metadata behavior does not silently attach them. Build producers are archived

@@ -6,11 +6,11 @@ replacement classifier or establish complete contemporary coverage.
 
 ## Additional research-corpus recovery in progress
 
-The renewed remaining-gap pass has recovered **2,060 previously missing candidate
-contexts / 2,296 complete source views**: New Hampshire 981 contexts / 1,217
-views and Illinois 1,079 / 1,079. This is actual new source text, not the earlier
+The renewed remaining-gap pass has recovered **2,070 previously missing candidate
+contexts / 2,306 complete source views**: New Hampshire 981 contexts / 1,217
+views and Illinois 1,089 / 1,089. This is actual new source text, not the earlier
 123,182 searchable-record recovery counted again. The complete packet is
-`data/processed/research-corpus-text-20261022-v1/`.
+`data/processed/research-corpus-text-20261022-v2/`.
 
 These third-party cleaned texts come from the pinned public MTSU corpus revision
 `d4f15948c8af7733df9aa70ce68b14a65dec3d82`; complete downloaded JSON files
@@ -19,11 +19,16 @@ session and bill identities plus a substantive body clause, never title-only
 similarity, effective dates or a filename-derived year. All original fields,
 duplicate alternatives and unmatched-row dispositions remain preserved.
 Already-admitted 2024 prefilings in later-labelled sessions stay within the
-existing cohort; no new bills or dates are admitted.
+existing cohort; no new bills or dates are admitted. After the first 2,060-context
+checkpoint, actual rejected-text inspection found ten additional Illinois
+resolutions/constitutional amendments. Their explicit written assembly
+declarations and amendment aliases now join exactly, without stripping original
+line numbers or guessing a year from drafting codes. Earlier v1 remains sealed.
 
 Independent offline inspections found no additional qualifying bodies in the
 unused retained dump tables or unindexed native captures. The public Hawaii
-corpus is explicitly 2025-only; Maryland's cleaned rows mostly lack sufficient
+corpus has 4,033 explicit 2025 headings and 13 unresolved rows; none is joined
+to the current Hawaii cohort. Maryland's cleaned rows mostly lack sufficient
 printed session identity. Neither is counted as recovered target text.
 The independent govbot repositories' historical session catalogs do not establish
 coverage: their actual HI/NJ/IL folders contain only 2026/222/104th cohorts.
@@ -31,7 +36,17 @@ Closed publisher collectors were not reopened. The new source remains
 **not publisher-original or introduced-version certified**, and every
 model/training/party/scientific/publication gate remains false.
 
-The new offline producer and 13 focused tests pass. Shared explorer/graph
+Inspection of the corpus's actual Git history also found that later cleaning
+discarded original dataset keys and `source_file` fields. The additive
+`research-corpus-text-20261022-v3` packet preserves all **12,340 original keyed
+records** from revision `9411b4690c3ba8c0c28ab19eb9370316908c00af`.
+Every one of the 2,306 matched current views has exact whole-record ancestry;
+all **2,546 original-record references** remain distinct rather than arbitrarily
+selecting one. Keys remain uninterpreted strings, not assumed external bill IDs;
+the raw ancestor files and all removed metadata are retained without duplicating
+body text in query records. Earlier packets remain unchanged.
+
+The new offline producer and 19 focused tests pass. Shared explorer/graph
 integration and further independently recoverable corpus subsets are in progress;
 the v11/v6 deliverables below remain the earlier accepted checkpoint.
 

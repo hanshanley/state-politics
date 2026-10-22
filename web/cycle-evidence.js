@@ -130,17 +130,20 @@ if (typeof document !== "undefined") {
       const native = row.source_type === "native_text" || sessionText;
       const receipt = row.source_type === "source_receipt";
       const snapshot = row.source_type === "snapshot_text";
+      const corpus = row.source_type === "research_corpus_text";
       article.append(element("h3", receipt
         ? `${row.state} / ${row.identifier} — source-receipt observation only`
         : sessionText
           ? `${row.state} / ${row.identifier} / ${row.session_identifier} — publisher-session source only`
-        : bill || native || snapshot
+        : bill || native || snapshot || corpus
           ? `${row.state} / ${row.identifier} / ${row.session_identifier} — ${row.title ?? "No title"}`
         : `${row.state} / ${row.party} — ${row.record_kind}`));
       article.append(element("p", receipt
         ? `Action: ${row.source_action.action_id} · Bill: ${row.bill_id} · Session: ${row.source_bill.session_identifier}`
         : snapshot
         ? `View: ${row.view_id} · Bill: ${row.bill_id} · Retained provider snapshot, not an introduced-version certification`
+        : corpus
+        ? `View: ${row.view_id} · Bill: ${row.bill_id} · Independent cleaned research text, not publisher-certified`
         : bill || native
         ? `View: ${row.view_id} · Bill: ${row.bill_id} · `
           + (native ? `Native context: ${row.context_id}` : `Abstract: ${row.abstract_id ?? "none"}`)
@@ -171,6 +174,26 @@ if (typeof document !== "undefined") {
         }, null, 2)));
         article.append(sourceText("Inspect all original bill metadata and source context fields",
           JSON.stringify(row.source_context, null, 2)));
+      } else if (corpus) {
+        article.append(element("p",
+          "Joined by printed state, session and bill identity to an existing candidate. "
+          + "This independently published cleaned text is not a certified publisher-original "
+          + "or introduced version. Source summaries are not human gold or predictions; "
+          + "no filing date, party affiliation, token plan or model approval is inferred.",
+          "note corpus-observation"));
+        if (row.source_ancestry) {
+          article.append(element("p",
+            `${row.source_ancestry.length} exact original keyed-record reference(s) retained. `
+            + "Original dataset keys and source filenames are visible in complete provenance; "
+            + "keys are not interpreted as external bill IDs.", "note"));
+        }
+        article.append(sourceText("Read complete research-corpus text (unaltered source string)",
+          row.source_record.text));
+        article.append(sourceText("Inspect printed identity evidence and source record",
+          JSON.stringify({source_identity: row.source_identity, source_record: row.source_record,
+            source_file: row.source_file, source_row_ordinal: row.source_row_ordinal,
+            source_file_sha256: row.source_file_sha256, dataset: row.dataset,
+            dataset_revision: row.dataset_revision}, null, 2)));
       } else if (snapshot) {
         article.append(element("p",
           `Retained nonempty text: ${row.snapshot.has_nonempty_raw_text} · `
@@ -320,6 +343,7 @@ if (typeof document !== "undefined") {
     const receipt = collection.value === "source_receipt";
     const sessionText = collection.value === "native_session_text";
     const snapshot = collection.value === "snapshot_text";
+    const corpus = collection.value === "research_corpus_text";
     document.getElementById("receipt-status-label").hidden = !receipt;
     receiptStatus.disabled = !receipt;
     party.disabled = !platform || state.value === "outside";
@@ -331,7 +355,16 @@ if (typeof document !== "undefined") {
       .find(row => row.dataset.state === state.value);
     const snapshotCoverage = [...document.querySelectorAll("#snapshot-coverage tbody tr")]
       .find(row => row.dataset.state === state.value);
-    document.getElementById("selection-scope").textContent = snapshot
+    const corpusCoverage = [...document.querySelectorAll("#corpus-coverage tbody tr")]
+      .find(row => row.dataset.state === state.value);
+    document.getElementById("selection-scope").textContent = corpus
+      ? (corpusCoverage
+        ? `${state.value}: ${corpusCoverage.dataset.contexts} existing candidate contexts / `
+          + `${corpusCoverage.dataset.views} complete research-corpus views. `
+          + "Printed-header joins, not publisher-original or introduced-version certification. "
+          + "No matching recovered view is not publisher absence; all model approvals remain false."
+        : "No independent research-corpus packet was supplied; coverage is unknown.")
+      : snapshot
       ? (snapshotCoverage
         ? `${state.value}: ${snapshotCoverage.dataset.records} candidate snapshot records, `
           + `${snapshotCoverage.dataset.nonempty} with retained nonempty raw_text. `
@@ -383,7 +416,8 @@ if (typeof document !== "undefined") {
       document.getElementById(count).textContent = `${visible} ${label} rows`;
     }
     for (const row of document.querySelectorAll(
-      "#receipt-coverage tbody tr, #session-coverage tbody tr, #snapshot-coverage tbody tr",
+      "#receipt-coverage tbody tr, #session-coverage tbody tr, #snapshot-coverage tbody tr, "
+      + "#corpus-coverage tbody tr",
     )) {
       row.hidden = Boolean(state.value && row.dataset.state !== state.value);
     }
@@ -429,6 +463,7 @@ if (typeof document !== "undefined") {
         : collection.value === "source_receipt" ? [`receipts-${state.value}`]
         : collection.value === "native_session_text" ? [`native-session-${state.value}`]
         : collection.value === "snapshot_text" ? [`snapshot-${state.value}`]
+        : collection.value === "research_corpus_text" ? [`corpus-${state.value}`]
         : state.value === "outside" ? ["platform-outside"]
           : (party.value ? [party.value] : ["D", "R"]).map(code => `platform-${state.value}-${code}`);
       const groups = await Promise.all(names.map(async name => {

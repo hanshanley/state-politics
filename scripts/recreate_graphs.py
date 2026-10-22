@@ -25,6 +25,7 @@ from matplotlib.ticker import PercentFormatter, StrMethodFormatter  # noqa: E402
 ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(ROOT / "src"))
 
+from state_politics.bills.research_corpus_text import FLAGS, SCHEMA, load_corpus  # noqa: E402
 from state_politics.bills.study_matrix import read_tracker  # noqa: E402
 from state_politics.platforms.dataverse import coverage_matrix  # noqa: E402
 from state_politics.plotting import charts, theme  # noqa: E402
@@ -133,11 +134,20 @@ def source_table(root: Path, kind: str, name: str, inputs: dict) -> pd.DataFrame
     return frame.sort_values("state").reset_index(drop=True)
 
 
-def recovery_packet(root: Path, directory: str, inputs: dict, *, snapshot=False) -> dict[str, Path]:
+def recovery_packet(
+    root: Path, directory: str, inputs: dict, *, snapshot=False, corpus=False,
+) -> dict[str, Path]:
     manifest_name = "sealed_manifest.json" if snapshot else "manifest.json"
     path = checked_file(root, f"{directory}/{manifest_name}", inputs)
     manifest = json.loads(path.read_bytes())
-    if snapshot:
+    if corpus:
+        if (
+            manifest.get("schema") != SCHEMA
+            or not all(manifest.get("approvals", {}).get(flag) is False for flag in FLAGS)
+        ):
+            raise ValueError("unapproved header-joined research corpus required")
+        files = manifest["packet_artifacts"]
+    elif snapshot:
         if (
             manifest.get("status")
             != "complete_bounded_retained_dump_gap_recovery_not_scientific_certification"
@@ -212,7 +222,7 @@ def arkansas_rows(files: dict[str, Path]) -> pd.DataFrame:
     return result
 
 
-def snapshot_coverage(root, packet, inputs):
+def snapshot_coverage(root, packet, inputs, *, corpus_directory=None):
     base = SOURCES["metadata"]
     manifest = json.loads((root / base / "manifest.json").read_bytes())
     metadata = checked_file(
@@ -238,10 +248,20 @@ def snapshot_coverage(root, packet, inputs):
     joined["neither_source_observed"] = ~(
         joined["native_text_observed"] | joined["snapshot_text_observed"]
     )
+    extra = {}
+    if corpus_directory is not None:
+        _, corpus_contexts, _, _ = load_corpus(corpus_directory, bills.to_dict("records"))
+        corpus_ids = {row["bill_id"] for row in corpus_contexts}
+        if not corpus_ids <= set(joined.loc[joined["neither_source_observed"], "bill_id"]):
+            raise ValueError("research recovery must cover only exact remaining source gaps")
+        joined["research_corpus_text_observed"] = joined["bill_id"].isin(corpus_ids)
+        joined["neither_source_observed"] &= ~joined["research_corpus_text_observed"]
+        extra["research_corpus_only"] = ("research_corpus_text_observed", "sum")
     grouped = joined.groupby("state").agg(
         candidate_contexts=("bill_id", "size"), both_sources=("both_sources", "sum"),
         native_only=("native_only", "sum"), snapshot_only=("snapshot_only", "sum"),
         neither_source_observed=("neither_source_observed", "sum"),
+        **extra,
     )
     grouped = grouped.reindex(sorted(read_tracker(root / "docs/STATE_PROGRESS.md")["state"]),
                               fill_value=0).reset_index()
@@ -251,12 +271,17 @@ def snapshot_coverage(root, packet, inputs):
 def snapshot_graph(output, coverage):
     fig, ax = plt.subplots(figsize=(13, 16))
     left = np.zeros(len(coverage))
-    for column, label, color in (
-        ("both_sources", "Both retained sources", theme.GREEN),
+    categories = [
+        ("both_sources", "Native + snapshot text", theme.GREEN),
         ("snapshot_only", "Snapshot text only", theme.BLUE),
         ("native_only", "Native reader text only", theme.GOLD),
-        ("neither_source_observed", "No text observed in these inputs", theme.GRID),
-    ):
+    ]
+    if "research_corpus_only" in coverage:
+        categories.append((
+            "research_corpus_only", "Independent cleaned research text", theme.MUTED,
+        ))
+    categories.append(("neither_source_observed", "No text observed in these inputs", theme.GRID))
+    for column, label, color in categories:
         values = coverage[column]
         ax.barh(coverage["state"], values, left=left, color=color, label=label, height=0.65)
         left += values.to_numpy()
@@ -267,11 +292,12 @@ def snapshot_graph(output, coverage):
     figure = save(
         fig, output / "graphs", "retained_snapshot_text_coverage",
         "Recovered text without double-counting bills",
-        "Complete provider-selected snapshot text complements retained native reader views",
+        "Separate source channels complement retained native reader views",
         "Source: sealed retained-dump recovery and unchanged metadata v4. Snapshot versions "
         "may be amended/later, not introduced originals. Source overlap is de-duplicated by "
         "exact bill ID. Unregistered native channels remain unknown; no observed text is "
-        "not publisher absence. Empty/no-candidate states do not mean no legislative activity.",
+        "not publisher absence. Research-corpus header joins are not publisher-original "
+        "certification. Empty/no-candidate states do not mean no legislative activity.",
     )
     figure["chart_data"] = "chart-data/retained_text_coverage.csv"
     return figure
@@ -628,7 +654,7 @@ def gallery(output: Path, figures: list[dict], legacy: list[str], research: dict
     )
 
 
-def recreate(root: Path, output: Path) -> dict:
+def recreate(root: Path, output: Path, *, research_corpus: Path | None = None) -> dict:
     root, output = root.resolve(), output.absolute()
     if output.exists():
         raise FileExistsError("refusing to overwrite an existing graph bundle")
@@ -653,6 +679,13 @@ def recreate(root: Path, output: Path) -> dict:
         name: recovery_packet(root, directory, inputs, snapshot=name == "snapshot")
         for name, directory in RECOVERED_PACKETS.items()
     }
+    if research_corpus is not None:
+        research_corpus = research_corpus.absolute()
+        if not research_corpus.is_relative_to(root / "data/processed"):
+            raise ValueError("research corpus must remain under processed project data")
+        packets["research_corpus"] = recovery_packet(
+            root, research_corpus.relative_to(root).as_posix(), inputs, corpus=True,
+        )
     outcome_manifest = json.loads(packets["outcomes"]["manifest.json"].read_bytes())
     producer = outcome_manifest["inputs"]["producer"]
     producer_path = root / "src/state_politics/analysis/cycle_outcome_evidence.py"
@@ -660,7 +693,9 @@ def recreate(root: Path, output: Path) -> dict:
         root, producer_path.relative_to(root).as_posix(), inputs, producer,
     )
     arkansas = arkansas_rows(packets["arkansas"])
-    retained_text, missing_text = snapshot_coverage(root, packets["snapshot"], inputs)
+    retained_text, missing_text = snapshot_coverage(
+        root, packets["snapshot"], inputs, corpus_directory=research_corpus,
+    )
     historical_path = checked_file(root, "data/processed/platforms_historical.parquet", inputs)
     historical = coverage_matrix(pd.read_parquet(historical_path))
     legacy = sorted(path for path in (root / "outputs").glob("*.png") if path.is_file())
@@ -735,8 +770,12 @@ def recreate(root: Path, output: Path) -> dict:
 def main(argv=None):
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--out-dir", type=Path, default=ROOT / "outputs/recreated-2023-2024")
+    parser.add_argument(
+        "--research-corpus", type=Path,
+        help="Optional header-joined research-corpus recovery; no publisher/model approval",
+    )
     args = parser.parse_args(argv)
-    result = recreate(ROOT, args.out_dir)
+    result = recreate(ROOT, args.out_dir, research_corpus=args.research_corpus)
     print(f"Wrote {len(result['fresh_graphs'])} fresh PNG/SVG graphs and "
           f"{len(result['legacy_images_copied_not_regenerated'])} separate legacy images "
           f"to {args.out_dir}")

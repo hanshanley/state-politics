@@ -89,8 +89,9 @@ def test_native_graph_cannot_claim_two_readers_when_one_is_missing(tmp_path):
         GRAPH["arkansas_rows"](native_files(tmp_path, missing_reader=True))
 
 
+@pytest.mark.parametrize("corpus_bill", [None, "d", "b"])
 def test_snapshot_native_union_counts_exact_bills_once_and_keeps_unknown_native_counts(
-    tmp_path, monkeypatch,
+    tmp_path, monkeypatch, corpus_bill,
 ):
     metadata = tmp_path / GRAPH["SOURCES"]["metadata"]
     metadata.mkdir(parents=True)
@@ -113,14 +114,33 @@ def test_snapshot_native_union_counts_exact_bills_once_and_keeps_unknown_native_
     }).to_parquet(inventory)
     monkeypatch.setitem(GRAPH["snapshot_coverage"].__globals__, "read_tracker",
                         lambda _: pd.DataFrame({"state": ["AK", "CA"]}))
+    optional = {}
+    if corpus_bill:
+        monkeypatch.setitem(
+            GRAPH["snapshot_coverage"].__globals__, "load_corpus",
+            lambda *_: ([], [{"bill_id": corpus_bill}], {}, {}),
+        )
+        optional["corpus_directory"] = tmp_path / "corpus"
+    if corpus_bill == "b":
+        with pytest.raises(ValueError, match="only exact remaining source gaps"):
+            GRAPH["snapshot_coverage"](
+                tmp_path, {"context_inventory.parquet": inventory}, {}, **optional,
+            )
+        return
     coverage, missing = GRAPH["snapshot_coverage"](
-        tmp_path, {"context_inventory.parquet": inventory}, {},
+        tmp_path, {"context_inventory.parquet": inventory}, {}, **optional,
     )
     counts = coverage.set_index("state")
     assert counts.loc["CA", ["candidate_contexts", "both_sources", "native_only"]].tolist() == [
         2, 1, 1,
     ]
     assert counts.loc["AK", ["candidate_contexts", "snapshot_only",
-                              "neither_source_observed"]].tolist() == [2, 1, 1]
-    assert missing["bill_id"].tolist() == ["d"]
-    assert pd.isna(missing.iloc[0]["n_indexed_native_views"])
+                              "neither_source_observed"]].tolist() == [
+        2, 1, 0 if corpus_bill else 1,
+    ]
+    if corpus_bill:
+        assert counts.loc["AK", "research_corpus_only"] == 1
+        assert missing.empty
+    else:
+        assert missing["bill_id"].tolist() == ["d"]
+        assert pd.isna(missing.iloc[0]["n_indexed_native_views"])

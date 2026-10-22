@@ -17,6 +17,7 @@ from state_politics.provenance import sha256_file
 
 SCHEMA = "state-politics.research-corpus-text.v1"
 REVISION = "d4f15948c8af7733df9aa70ce68b14a65dec3d82"
+ANCESTOR_REVISION = "9411b4690c3ba8c0c28ab19eb9370316908c00af"
 DATASET = (
     "MTSUs-Fall-2025-Software-Engineering-Pr/"
     "United_States_State_Legislation_with_Summaries"
@@ -25,6 +26,7 @@ SOURCE_FILES = {
     "NH": "reordered_cleaned_data_NH.json",
     "IL": "reordered_cleaned_data_IL.json",
 }
+ANCESTOR_FILES = {"NH": "cleaned_bills_NH.json", "IL": "cleaned_data_IL.json"}
 FLAGS = (
     "scientific_approval", "model_input_approved", "training_approved",
     "publication_approved", "party_attribution_approved", "filing_time_text_certified",
@@ -38,6 +40,47 @@ BODY_CLAUSE = re.compile(
 def require(condition, message):
     if not condition:
         raise ValueError(f"incompatible research corpus: {message}")
+
+
+def _illinois_resolution(text):
+    # Resolutions print the assembly in the resolving clause, with page line numbers.
+    space = r"(?:\s+\d+)?\s+"
+    words = [
+        "RESOLVED,?", "BY", "THE", r"(?:HOUSE" + space + "OF" + space
+        + r"REPRESENTATIVES|SENATE)", "OF", "THE", "ONE", "HUNDRED",
+        r"(FIRST|SECOND|THIRD|FOURTH|FIFTH|SIXTH|SEVENTH|EIGHTH|NINTH)",
+        "GENERAL", "ASSEMBLY", "OF", "THE", "STATE", "OF", "ILLINOIS",
+    ]
+    venue = re.search(r"\b" + space.join(words) + r"\b", text, re.I)
+    if venue is None:
+        return None
+    sessions = {
+        "FIRST": "101st", "SECOND": "102nd", "THIRD": "103rd", "FOURTH": "104th",
+        "FIFTH": "105th", "SIXTH": "106th", "SEVENTH": "107th", "EIGHTH": "108th",
+        "NINTH": "109th",
+    }
+    session = sessions[venue[1].upper()]
+    number = re.match(r"\s*(HR|SR|HJR|SJR)\s*0*(\d+)\b", text, re.I)
+    if number:
+        identifier = f"{number[1].upper()} {int(number[2])}"
+        draft = re.match(r"\s*(?:HR|SR|HJR|SJR)\s*\d+\s+(?:LRB|HEE)(\d{3})\b",
+                         text, re.I)
+        if draft and draft[1] != session[:-2]:
+            return None
+    else:
+        number = re.match(
+            r"\s*(\d+(?:ST|ND|RD|TH))\s+GENERAL\s+ASSEMBLY\s+"
+            r"State\s+of\s+Illinois\s+\d{4}\s+and\s+\d{4}\s+"
+            r"(HOUSE|SENATE)\s+JOINT\s+RESOLUTION\s+CONSTITUTIONAL\s+AMENDMENT\s+"
+            r"(HC|SC)\s*0*(\d+)\b", text[:1200], re.I,
+        )
+        if not number or number[1].lower() != session:
+            return None
+        chamber = number[2].upper()
+        if number[3].upper() != ("HC" if chamber == "HOUSE" else "SC"):
+            return None
+        identifier = f"{'HJRCA' if chamber == 'HOUSE' else 'SJRCA'} {int(number[4])}"
+    return session, identifier, [number, venue]
 
 
 def printed_identity(state: str, text: str) -> dict | None:
@@ -58,11 +101,15 @@ def printed_identity(state: str, text: str) -> dict | None:
             r"State\s+of\s+Illinois\s+(\d{4})\s+and\s+(\d{4})\s+"
             r"(HJRCA|SJRCA|HJR|SJR|HB|SB|HR|SR)\s*0*(\d+)", head, re.I,
         )
-        if not header:
-            return None
-        session = header[1].lower()
-        identifier = f"{header[4].upper()} {int(header[5])}"
-        matches = [header]
+        if header:
+            session = header[1].lower()
+            identifier = f"{header[4].upper()} {int(header[5])}"
+            matches = [header]
+        else:
+            resolution = _illinois_resolution(text)
+            if resolution is None:
+                return None
+            session, identifier, matches = resolution
     else:
         raise ValueError(f"unsupported research corpus state: {state}")
     clause = BODY_CLAUSE.search(text)
@@ -89,7 +136,51 @@ def _write_json(path, value):
     path.write_text(json.dumps(value, ensure_ascii=False, allow_nan=False, indent=2) + "\n")
 
 
-def recover(source_dir: Path, gap_queue: Path, out: Path, *, states=("NH", "IL")):
+def _signature(record):
+    return tuple(record.get(field) for field in ("title", "summary", "text"))
+
+
+def _ancestor_index(name, digest, originals):
+    require(isinstance(originals, dict), "ancestor must preserve its original keyed object")
+    index = defaultdict(list)
+    for key, record in originals.items():
+        require(isinstance(record, dict) and all(
+            field in record and (record[field] is None or isinstance(record[field], str))
+            for field in ("title", "summary", "text")
+        ), "incomplete original ancestor record")
+        index[_signature(record)].append({
+            "dataset_revision": ANCESTOR_REVISION, "source_file": name,
+            "source_file_sha256": digest, "original_dataset_key": key,
+            "original_fields": {k: v for k, v in record.items()
+                                if k not in ("title", "summary", "text")},
+            "key_semantics": "original_dataset_key_not_interpreted_as_an_external_identifier",
+        })
+    return index
+
+
+def _ancestry(source_dir, out, states, bindings):
+    tree_name = "mtsu-original-file-tree.json"
+    tree = {row["path"]: row for row in _json(source_dir / tree_name)}
+    target = out / "source-ancestry"
+    target.mkdir()
+    shutil.copy2(source_dir / tree_name, target / tree_name)
+    indexes = {}
+    for state in states:
+        name = ANCESTOR_FILES[state]
+        require(bindings[str(source_dir / name)] == {
+            "bytes": tree[name]["size"], "sha256": tree[name]["lfs"]["oid"],
+        }, f"advertised complete ancestor bytes/hash: {name}")
+        shutil.copy2(source_dir / name, target / name)
+        indexes[state] = _ancestor_index(
+            name, tree[name]["lfs"]["oid"], _json(source_dir / name),
+        )
+    return indexes
+
+
+def recover(
+    source_dir: Path, gap_queue: Path, out: Path, *, states=("NH", "IL"),
+    source_ancestry=False,
+):
     require(bool(states) and len(set(states)) == len(states)
             and set(states) <= SOURCE_FILES.keys(), "unsupported or duplicate source profiles")
     source_dir, gap_queue, out = map(lambda p: p.absolute(), (source_dir, gap_queue, out))
@@ -101,6 +192,9 @@ def recover(source_dir: Path, gap_queue: Path, out: Path, *, states=("NH", "IL")
     paths = [gap_queue, source_dir / "mtsu-dataset-metadata.json",
              source_dir / "mtsu-file-tree.json"]
     paths += [source_dir / SOURCE_FILES[state] for state in states]
+    if source_ancestry:
+        paths += [source_dir / "mtsu-original-file-tree.json"]
+        paths += [source_dir / ANCESTOR_FILES[state] for state in states]
     require(all(p.is_file() and p.resolve() == p for p in paths), "linked or missing input")
     metadata = _json(source_dir / "mtsu-dataset-metadata.json")
     require(metadata["sha"] == REVISION and metadata["cardData"]["license"] == "apache-2.0",
@@ -127,6 +221,7 @@ def recover(source_dir: Path, gap_queue: Path, out: Path, *, states=("NH", "IL")
     for name in ("mtsu-dataset-metadata.json", "mtsu-file-tree.json"):
         shutil.copy2(source_dir / name, out / name)
     shutil.copy2(Path(__file__), out / "producer/research_corpus_text.py")
+    ancestors = _ancestry(source_dir, out, states, before) if source_ancestry else {}
     views, dispositions, counts = [], [], Counter()
     by_bill = Counter()
     for state in states:
@@ -175,6 +270,8 @@ def recover(source_dir: Path, gap_queue: Path, out: Path, *, states=("NH", "IL")
                 "training_admission": False, "source_date_or_party_inferred": False,
                 **dict.fromkeys(FLAGS, False),
             })
+            if source_ancestry:
+                views[-1]["source_ancestry"] = ancestors[state].get(_signature(record), [])
     require(bool(views), "no exact remaining identities with complete source bodies recovered")
     with (out / "views.jsonl").open("w") as handle:
         for row in views:
@@ -204,6 +301,16 @@ def recover(source_dir: Path, gap_queue: Path, out: Path, *, states=("NH", "IL")
         ),
         "approvals": dict.fromkeys(FLAGS, False),
     }
+    if source_ancestry:
+        report["original_dataset_records_preserved"] = sum(
+            len(references) for index in ancestors.values() for references in index.values()
+        )
+        report["views_with_original_dataset_metadata"] = sum(
+            bool(row["source_ancestry"]) for row in views
+        )
+        report["original_dataset_record_references"] = sum(
+            len(row["source_ancestry"]) for row in views
+        )
     _write_json(out / "report.json", report)
     require(all(_binding(p) == before[str(p)] for p in paths), "input changed during recovery")
     manifest = {
@@ -215,6 +322,8 @@ def recover(source_dir: Path, gap_queue: Path, out: Path, *, states=("NH", "IL")
             if p.is_file()
         },
     }
+    if source_ancestry:
+        manifest["source_ancestry_revision"] = ANCESTOR_REVISION
     _write_json(out / "manifest.json", manifest)
     return manifest
 
@@ -247,6 +356,11 @@ def load_corpus(directory: Path, metadata=None):
     original_gap = {row["bill_id"]: row for row in gap_rows}
     by_bill = {row["bill_id"]: row for row in contexts}
     require(len(by_bill) == len(contexts), "duplicate recovered context")
+    require(all(
+        key in original_gap and all(row[field] == value
+                                   for field, value in original_gap[key].items())
+        for key, row in by_bill.items()
+    ), "original missing-context fields changed")
     current = {row["bill_id"]: row for row in metadata} if metadata is not None else by_bill
     require(set(by_bill) <= current.keys(), "unknown existing candidate")
     require(len({row["view_id"] for row in rows}) == len(rows), "duplicate source view")
@@ -262,6 +376,7 @@ def load_corpus(directory: Path, metadata=None):
                 and row["source_date_or_party_inferred"] is False, "source approvals")
         require(row["source_type"] == "research_corpus_text"
                 and row["dataset"] == DATASET and row["dataset_revision"] == REVISION
+                and row["state"] in SOURCE_FILES
                 and SOURCE_FILES[row["state"]] == row["source_file"]
                 and row["view_id"] == (
                     f"research-corpus:{REVISION}:{row['source_file']}:{row['source_row_ordinal']}"
@@ -284,11 +399,29 @@ def load_corpus(directory: Path, metadata=None):
         source = directory / "source-data" / name
         require(f"source-data/{name}" in pins, "unbound original source file")
         originals = _json(source)
-        require(all(sha256_file(source) == row["source_file_sha256"] for row in records[:1]),
+        digest = sha256_file(source)
+        require(all(digest == row["source_file_sha256"] for row in records),
                 "original source file binding")
+        require(all(type(row["source_row_ordinal"]) is int
+                    and 0 <= row["source_row_ordinal"] < len(originals) for row in records),
+                "invalid original source ordinal")
         require(all(originals[row["source_row_ordinal"]] == row["source_record"]
                     for row in records),
                 "source record altered or bound to wrong original ordinal")
+    has_ancestry = "source_ancestry_revision" in manifest
+    require(all(("source_ancestry" in row) == has_ancestry for row in rows),
+            "unbound or missing original-source ancestry")
+    if has_ancestry:
+        require(manifest["source_ancestry_revision"] == ANCESTOR_REVISION,
+                "original-source revision")
+        for state in {row["state"] for row in rows}:
+            name = ANCESTOR_FILES[state]
+            path = directory / "source-ancestry" / name
+            require(f"source-ancestry/{name}" in pins, "unbound ancestor source")
+            index = _ancestor_index(name, sha256_file(path), _json(path))
+            for row in (item for item in rows if item["state"] == state):
+                require(row["source_ancestry"] == index.get(_signature(row["source_record"]), []),
+                        "complete original ancestor record binding")
     require(set(observed) == set(by_bill)
             and all(observed[key] == row["research_corpus_text_views"]
                     for key, row in by_bill.items()), "recovered context/view counts")
@@ -303,8 +436,15 @@ def main(argv=None):
     parser.add_argument("--gap-queue", type=Path, required=True)
     parser.add_argument("--out-dir", type=Path, required=True)
     parser.add_argument("--states", nargs="+", choices=sorted(SOURCE_FILES), default=["NH", "IL"])
+    parser.add_argument(
+        "--source-ancestry", action="store_true",
+        help="Include pinned original keyed records and source filenames removed by later cleaning",
+    )
     args = parser.parse_args(argv)
-    manifest = recover(args.source_dir, args.gap_queue, args.out_dir, states=tuple(args.states))
+    manifest = recover(
+        args.source_dir, args.gap_queue, args.out_dir, states=tuple(args.states),
+        source_ancestry=args.source_ancestry,
+    )
     load_corpus(args.out_dir)
     print(json.dumps(manifest["counts"], indent=2))
     return 0

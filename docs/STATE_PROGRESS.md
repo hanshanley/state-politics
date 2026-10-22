@@ -27,7 +27,33 @@ not that the state has no data. Platform recovery is separate from the
 legislative status in this table; no state's operative-platform coverage is
 certified complete.
 
-## Retained-text availability after the national dump recovery
+## Additional exact research-text recovery
+
+The next missing-queue pass recovered **2,070 further candidate contexts / 2,306
+complete original source views**: New Hampshire 981 / 1,217 and Illinois
+1,089 / 1,089. These independently published cleaned texts require exact printed
+state, legislative session and bill identity, not title-only matching. Illinois
+resolutions' written-out assembly declarations and constitutional-amendment
+aliases are retained with their literal source spans; line numbers are not
+stripped from stored bodies. All 12,340 original NH/IL records and every
+unmatched/rejected disposition remain in the complete research packet.
+
+Combined native/snapshot/research-text availability is **128,446 of 157,598
+existing candidate contexts**. The remaining **29,152** are in
+`outputs/recreated-2023-2024-v8/chart-data/missing_retained_text.parquet`.
+The new immutable packet is `data/processed/research-corpus-text-20261022-v2/`;
+the current explorer/gallery are `data/preview-cycle-evidence-v13/` and
+`outputs/recreated-2023-2024-v8/`. Earlier versions remain preserved.
+
+Existing 2024 prefilings in later-labelled sessions stay in their original
+candidate cohort; no new dates or bills are admitted. Third-party cleaned text
+is **not publisher-original, introduced-version or classifier certification**.
+Research summaries are never human gold. Closed native collectors remain
+closed, and the six source closures / state status distribution below do not
+change. The independent unused-dump and retained-native audits yielded no
+additional admissible body texts; quarantined sources were not promoted.
+
+## Retained-text availability after the earlier national dump recovery
 
 The previously omitted PostgreSQL `opencivicdata_searchablebill` table contains
 **123,182 nonempty, exact-version-bound texts across 46 states**, totaling
@@ -50,7 +76,7 @@ Maine's empty calendar cohort is not a completion claim. The legislative status
 categories below therefore remain **6 closed / 21 partial / 21 blocked /
 2 inventory**, with zero scientifically completed states.
 
-The current explorer is `data/preview-cycle-evidence-v11/`; the current graph/data
+That checkpoint's explorer is `data/preview-cycle-evidence-v11/`; its graph/data
 gallery is `outputs/recreated-2023-2024-v6/`. Source snapshots, native views and
 metadata remain separate overlapping evidence channels, never additional bills.
 Closed collector allowances and publisher restrictions are unchanged. This
