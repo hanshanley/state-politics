@@ -39,7 +39,9 @@ SOURCE_NOTE = (
 )
 
 
-def build_figure(coverage: pd.DataFrame, out_path: Path) -> Path:
+def build_figure(
+    coverage: pd.DataFrame, out_path: Path, *, source: str = SOURCE_NOTE,
+) -> Path:
     states = coverage[coverage["state"] != "US"].copy()
     # Matplotlib places index 0 at the bottom, so the axis is inverted below and index 0
     # renders at the TOP. Sorting oldest-first therefore puts the most severe gaps at the top.
@@ -103,7 +105,7 @@ def build_figure(coverage: pd.DataFrame, out_path: Path) -> Path:
     ax.text(1981, header_y, "Republican", color=theme.PARTY_COLORS["R"], fontweight="bold",
             fontsize=10, va="center")
 
-    return charts.finish(fig, ax, out_path, source=SOURCE_NOTE, legend=False)
+    return charts.finish(fig, ax, out_path, source=source, legend=False)
 
 
 def main(argv: list[str] | None = None) -> int:

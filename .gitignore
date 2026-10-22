@@ -3,6 +3,7 @@
 # git cannot re-include a file whose parent directory is itself excluded.
 data/*
 !data/.gitkeep
+/outputs/recreated-*/
 
 # Large source corpora and dumps
 *.pgdump

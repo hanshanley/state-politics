@@ -16,6 +16,30 @@ remain unchanged. Broad rebuild commands below are not a request to complete
 other years; target-cycle selection and its inclusion/exclusion provenance must
 be bound explicitly before regenerated outputs can support the narrowed study.
 
+## Recreated graph bundle
+
+```bash
+.venv/bin/python -I -B scripts/recreate_graphs.py \
+  --out-dir outputs/recreated-2023-2024-v2
+```
+
+Open `outputs/recreated-2023-2024-v2/index.html` locally. The bundle contains seven
+fresh graphs in PNG and SVG, six complete chart-data CSVs and a hash manifest.
+It also archives the exact four plotting producers. It uses saved evidence
+tables and existing development diagnostics without
+collecting sources or executing a classifier. Missing native channels remain
+unknown, repeated metadata observations are not inflated into new identities,
+and assistant-reviewed diagnostics are not independent human validation.
+
+The historical corpus-recency graph is faithfully rebuilt from the retained
+historical records, not treated as operative 2023–2024 platform coverage.
+The original 13 PNGs are copied unchanged into `legacy-reference/`, clearly
+separate from freshly rendered graphs: most old analytical source tables are
+missing, so those images are **not** claimed to have been regenerated or
+validated. No party-topic, trend or outcome results are invented to fill them.
+Existing output directories are refused; use a new `outputs/recreated-*`
+directory for another run. Generated bundles are local and Git-ignored.
+
 ## Separate 2023–2024 source-date ledger
 
 ```bash

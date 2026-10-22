@@ -67,6 +67,94 @@ def test_palette_matches_portfolio():
     assert theme.GRID == "#D6D3CC"
 
 
+@pytest.mark.parametrize("case", ["agreed", "bad-rate", "bad-hash"])
+def test_recreated_diagnostics_preserve_agreed_scope_and_denominators(
+    tmp_path, monkeypatch, case,
+):
+    import hashlib
+    import json
+    from pathlib import Path
+
+    monkeypatch.syspath_prepend(str(Path(__file__).resolve().parents[1] / "scripts"))
+    import recreate_graphs as script
+
+    models = {"Mixed full-document": "mixed", "Reviewed-only": "reviewed"}
+    monkeypatch.setattr(script, "MODELS", models)
+    for directory in models.values():
+        root = tmp_path / "data/processed" / directory
+        root.mkdir(parents=True)
+        all_metrics = {
+            "n_eligible": 3, "n_classified": 2, "n_abstained": 1, "n_correct_topic": 1,
+            "correct_abstention_count": 1, "decision_accuracy": 2 / 3,
+            "coverage": 2 / 3, "classified_precision": 0.5,
+        }
+        agreed = {
+            "n_eligible": 2, "n_classified": 1, "n_abstained": 1, "n_correct_topic": 1,
+            "correct_abstention_count": 1, "decision_accuracy": 1.0,
+            "coverage": 0.5, "classified_precision": 1.0,
+        }
+        if case == "bad-rate":
+            agreed["coverage"] = 1.0
+        data = {
+            "model_promotion": False, "human_gold": False, "publication": False,
+            "reference_results": {
+                key: {"all_reference_metrics": all_metrics, **(
+                    {"primary_agreed_metrics": agreed} if key == "cycle_native_39" else {}
+                )} for key in script.DATASETS
+            },
+        }
+        path = root / "comparison.json"
+        path.write_text(json.dumps(data))
+        sha = hashlib.sha256(path.read_bytes()).hexdigest()
+        (root / "manifest.json").write_text(json.dumps({
+            "files": {"comparison.json": "0" * 64 if case == "bad-hash" else sha},
+        }))
+    if case != "agreed":
+        with pytest.raises(ValueError, match="hash mismatch|denominators"):
+            script.diagnostic_rows(tmp_path, {})
+    else:
+        frame = script.diagnostic_rows(tmp_path, {})
+        native = frame[frame["dataset"] == "cycle_native_39"]
+        assert len(frame) == 8 and native["n_eligible"].tolist() == [2, 2]
+        assert native["coverage"].tolist() == [0.5, 0.5]
+        assert native["classified_precision"].tolist() == [1.0, 1.0]
+
+
+def test_recreated_graph_bundle_refuses_overwrite_and_external_output(tmp_path, monkeypatch):
+    from pathlib import Path
+
+    monkeypatch.syspath_prepend(str(Path(__file__).resolve().parents[1] / "scripts"))
+    import recreate_graphs as script
+
+    existing = tmp_path / "outputs" / "existing"
+    existing.mkdir(parents=True)
+    marker = existing / "preserved.txt"
+    marker.write_text("original bytes")
+    with pytest.raises(FileExistsError):
+        script.recreate(tmp_path, existing)
+    assert marker.read_text() == "original bytes"
+    with pytest.raises(ValueError, match="output directory"):
+        script.recreate(tmp_path, tmp_path / "public" / "graphs")
+
+
+def test_historical_graph_uses_explicit_retained_source_note(tmp_path, monkeypatch):
+    from pathlib import Path
+
+    import pandas as pd
+
+    monkeypatch.syspath_prepend(str(Path(__file__).resolve().parents[1] / "scripts"))
+    import plot_platform_coverage as script
+
+    frame = pd.DataFrame([{
+        "state": "CA", "latest_D": 2016, "latest_R": 2016, "latest_any": 2016,
+    }])
+    out = tmp_path / "historical.svg"
+    script.build_figure(frame, out, source="RETAINED ARCHIVE ONLY")
+    text = out.read_text()
+    assert "RETAINED ARCHIVE ONLY" in text
+    assert "accessed 2026-07-28" not in text
+
+
 def test_figure_report_preserves_undefined_intraparty_ratio(tmp_path, monkeypatch, capsys):
     from pathlib import Path
 

@@ -1,0 +1,486 @@
+#!/usr/bin/env python3
+"""Recreate supported evidence graphs; preserve unsupported old figures as references."""
+
+from __future__ import annotations
+
+import argparse
+import hashlib
+import html
+import json
+import runpy
+import shutil
+import sys
+from pathlib import Path
+
+import matplotlib
+
+matplotlib.use("Agg")
+
+import matplotlib.pyplot as plt  # noqa: E402
+import numpy as np  # noqa: E402
+import pandas as pd  # noqa: E402
+from matplotlib.ticker import PercentFormatter, StrMethodFormatter  # noqa: E402
+
+ROOT = Path(__file__).resolve().parent.parent
+sys.path.insert(0, str(ROOT / "src"))
+
+from state_politics.bills.study_matrix import read_tracker  # noqa: E402
+from state_politics.platforms.dataverse import coverage_matrix  # noqa: E402
+from state_politics.plotting import charts, theme  # noqa: E402
+
+SOURCES = {
+    "metadata": "data/processed/study-abstract-evidence-2023-2024-v3",
+    "native": "data/processed/native-inventory-catalog-2023-2024-v2",
+    "sessions": "data/processed/verified-session-comparison-2023-2024-v3",
+}
+MODELS = {
+    "Mixed full-document": "cycle-native-document-evaluation-20261021-v1",
+    "Reviewed-only": "cycle-reviewed-only-evaluation-20261021-v1",
+}
+DATASETS = {
+    "cycle_metadata_190": "Metadata",
+    "cycle_native_39": "Native text (agreed only)",
+    "platform_52": "Platform",
+    "development_50": "Development",
+}
+STATUS_COLORS = {
+    "Closed scope": theme.GREEN,
+    "Partial": theme.BLUE,
+    "Blocked": theme.ACCENT,
+    "Inventory": theme.MUTED,
+}
+MODEL_COLORS = {"Mixed full-document": theme.BLUE, "Reviewed-only": theme.GOLD}
+CHART_TABLES = {
+    "state_source_status": "state_source_status",
+    "bill_evidence_by_state": "bill_evidence_by_state",
+    "native_inventory_observations": "native_source_observations",
+    "session_calendar_comparison": "session_calendar_comparison",
+    "classifier_development_diagnostics": "classifier_metrics",
+    "native_precision_and_coverage": "classifier_metrics",
+    "platform_corpus_recency": "historical_platform_coverage",
+}
+NOTICE = (
+    "Evidence inspection and assistant-reviewed development diagnostics, not validated "
+    "party-policy findings. Source scopes are not completed studies. Models remain "
+    "provisional; no human gold, new predictions, publication or scientific approval."
+)
+
+
+def digest(path: Path) -> str:
+    value = hashlib.sha256()
+    with path.open("rb") as handle:
+        for block in iter(lambda: handle.read(1024 * 1024), b""):
+            value.update(block)
+    return value.hexdigest()
+
+
+def binding(path: Path) -> dict:
+    return {"sha256": digest(path), "bytes": path.stat().st_size}
+
+
+def checked_file(root: Path, relative: str, inputs: dict, expected=None) -> Path:
+    path = root / relative
+    if not path.is_file() or path.resolve() != path:
+        raise ValueError(f"missing or linked graph input: {relative}")
+    actual = binding(path)
+    wanted = expected.get("sha256") if isinstance(expected, dict) else expected
+    if wanted is not None and actual["sha256"] != wanted:
+        raise ValueError(f"graph input hash mismatch: {relative}")
+    if isinstance(expected, dict) and actual["bytes"] != expected["bytes"]:
+        raise ValueError(f"graph input size mismatch: {relative}")
+    inputs[relative] = actual
+    return path
+
+
+def source_table(root: Path, kind: str, name: str, inputs: dict) -> pd.DataFrame:
+    directory = SOURCES[kind]
+    manifest_path = checked_file(root, f"{directory}/manifest.json", inputs)
+    manifest = json.loads(manifest_path.read_bytes())
+    if manifest.get("analytical_admission") is not False:
+        raise ValueError("only explicitly unapproved evidence inputs are supported")
+    path = checked_file(
+        root, f"{directory}/{name}", inputs, manifest["artifacts"][name],
+    )
+    frame = pd.read_csv(path)
+    if len(frame) != 50 or frame["state"].nunique() != 50:
+        raise ValueError(f"all fifty unique states required: {kind}")
+    return frame.sort_values("state").reset_index(drop=True)
+
+
+def diagnostic_rows(root: Path, inputs: dict) -> pd.DataFrame:
+    rows = []
+    for model, directory in MODELS.items():
+        base = f"data/processed/{directory}"
+        manifest_path = checked_file(root, f"{base}/manifest.json", inputs)
+        manifest = json.loads(manifest_path.read_bytes())
+        path = checked_file(
+            root, f"{base}/comparison.json", inputs, manifest["files"]["comparison.json"],
+        )
+        comparison = json.loads(path.read_bytes())
+        if (
+            comparison.get("model_promotion") is not False
+            or comparison.get("human_gold") is not False
+            or comparison.get("publication") is not False
+        ):
+            raise ValueError("unapproved development diagnostic required")
+        for dataset, label in DATASETS.items():
+            result = comparison["reference_results"][dataset]
+            selected = ("primary_agreed_metrics" if dataset == "cycle_native_39"
+                        else "all_reference_metrics")
+            metrics = result[selected]
+            fields = (
+                "n_eligible", "n_classified", "n_abstained", "n_correct_topic",
+                "correct_abstention_count",
+            )
+            if any(type(metrics[key]) is not int or metrics[key] < 0 for key in fields):
+                raise ValueError("diagnostic counts must be nonnegative integers")
+            n, classified = metrics["n_eligible"], metrics["n_classified"]
+            correct, abstained_correct = (
+                metrics["n_correct_topic"], metrics["correct_abstention_count"],
+            )
+            if (
+                n <= 0 or classified <= 0
+                or classified + metrics["n_abstained"] != n or correct > classified
+                or abstained_correct > metrics["n_abstained"]
+            ):
+                raise ValueError("diagnostic counts do not reconcile")
+            rates = {
+                "decision_accuracy": (correct + abstained_correct) / n,
+                "coverage": classified / n,
+                "classified_precision": correct / classified,
+            }
+            if any(abs(metrics[key] - value) > 1e-12 for key, value in rates.items()):
+                raise ValueError("diagnostic rates do not match their denominators")
+            rows.append({
+                "model": model, "dataset": dataset, "dataset_label": label,
+                "metric_scope": selected, **{key: metrics[key] for key in fields}, **rates,
+                "reference_basis": "assistant-reviewed development evidence, not human gold",
+            })
+    return pd.DataFrame(rows)
+
+
+def save(fig, out: Path, name: str, title: str, subtitle: str, note: str) -> dict:
+    fig.suptitle(title, x=0.02, y=0.99, ha="left", fontsize=18, fontweight="bold")
+    fig.text(0.02, 0.94, subtitle, va="top", fontsize=10.5, color=theme.MUTED)
+    source = theme.source_note(fig, note, x=0.02)
+    theme.layout_with_note(fig, source, top=0.87)
+    for suffix in ("png", "svg"):
+        kwargs = {"metadata": {"Date": None}} if suffix == "svg" else {}
+        fig.savefig(out / f"{name}.{suffix}", dpi=200, bbox_inches="tight", **kwargs)
+    plt.close(fig)
+    return {"name": name, "title": title, "subtitle": subtitle, "source_note": note}
+
+
+def count_axis(ax):
+    ax.grid(axis="x", color=theme.GRID, linewidth=0.5)
+    ax.grid(axis="y", visible=False)
+    ax.set_axisbelow(True)
+    ax.xaxis.set_major_formatter(StrMethodFormatter("{x:,.0f}"))
+
+
+def render_graphs(out, tracker, metadata, native, sessions, diagnostics, historical):
+    theme.apply()
+    plt.rcParams["svg.fonttype"] = "none"
+    figures = []
+    status = tracker["legislative_status"].value_counts().reindex(STATUS_COLORS, fill_value=0)
+    fig, ax = plt.subplots(figsize=(10, 5))
+    bars = ax.barh(list(status.index), status.values, color=list(STATUS_COLORS.values()),
+                   height=0.55)
+    ax.bar_label(bars, padding=7, fontsize=11)
+    ax.invert_yaxis()
+    ax.set_xlim(0, max(25, status.max() * 1.18))
+    ax.set_xlabel("States")
+    count_axis(ax)
+    figures.append(save(
+        fig, out, "state_source_status", "Fifty-state source progress",
+        "A closed source scope is not a completed state study",
+        "Source: current STATE_PROGRESS.md. Closed scopes: CA, CO, NC, OH, SD, WI. "
+        "Partial and blocked scopes retain explicit gaps; zero states are scientifically complete.",
+    ))
+
+    fig, axes = plt.subplots(1, 3, figsize=(14, 16), sharey=True, sharex=True)
+    columns = [
+        ("n_cycle_evidence_candidate_contexts", "Calendar candidates", theme.MUTED),
+        ("n_cycle_contexts_with_nonempty_abstract", "Have an abstract", theme.BLUE),
+        ("n_cycle_contexts_with_indexed_native_text", "Have retained native text", theme.GREEN),
+    ]
+    y = np.arange(len(metadata))
+    for ax, (column, title, color) in zip(axes, columns, strict=True):
+        values = metadata[column]
+        known = values.notna()
+        ax.barh(y[known], values[known], color=color, height=0.65)
+        for position in y[~known]:
+            ax.text(0, position, "not supplied", va="center", fontsize=7, color=theme.MUTED)
+        ax.set_title(title, fontsize=12, pad=12)
+        ax.set_xlabel("Retained contexts", fontsize=10)
+        count_axis(ax)
+        ax.tick_params(axis="x", labelsize=8)
+    axes[0].set_yticks(y, metadata["state"], fontsize=8)
+    axes[0].invert_yaxis()
+    figures.append(save(
+        fig, out, "bill_evidence_by_state", "The retained 2023-2024 bill evidence",
+        "Distinct candidate contexts, not source views or a certified introduced-bill universe",
+        "Source: hash-bound study-abstract-evidence v3 state matrix. Abstract and native-text "
+        "columns overlap and must not be added together. Missing native channels stay unknown, "
+        "not zero. No calendar candidates means no qualifying date evidence, not no activity.",
+    ))
+
+    observed = native[native["native_source_record_observations"].gt(0)].copy()
+    fig, ax = plt.subplots(figsize=(11, 6))
+    base = observed["distinct_native_source_identity_observations"]
+    repeated = observed["duplicate_identity_observations_preserved"]
+    ax.barh(observed["state"], base, color=theme.BLUE, label="Native identities")
+    ax.barh(observed["state"], repeated, left=base, color=theme.GOLD,
+            label="Repeated observations")
+    for position, (_, row) in enumerate(observed.iterrows()):
+        total = int(row["native_source_record_observations"])
+        repeat = int(row["duplicate_identity_observations_preserved"])
+        label = f"{total:,}" + (f" ({repeat:,} repeated)" if repeat else "")
+        ax.text(total + 60, position, label, va="center", fontsize=10)
+    ax.invert_yaxis()
+    ax.set_xlim(0, observed["native_source_record_observations"].max() * 1.40)
+    ax.set_xlabel("Publisher metadata observations")
+    ax.legend(loc="lower right")
+    count_axis(ax)
+    figures.append(save(
+        fig, out, "native_inventory_observations",
+        "Recovered metadata without inflated bill counts",
+        "Six sources returned measure metadata; other source channels remain separately accounted",
+        "Source: native inventory catalog v2. LA ACT subsets and NV prefix repetitions are "
+        "preserved, not additional identities. HI covers passed bills only; its separate "
+        "filename inventory is excluded. These are not introduced-bill or original-text counts.",
+    ))
+
+    supplied = sessions[sessions["session_members"].notna()]
+    fig, ax = plt.subplots(figsize=(11, 5))
+    ax.barh(supplied["state"], supplied["also_calendar_candidates"], color=theme.BLUE,
+            label="Also calendar candidates")
+    ax.barh(supplied["state"], supplied["session_only_members"],
+            left=supplied["also_calendar_candidates"], color=theme.GOLD,
+            label="Session frame only")
+    for position, value in enumerate(supplied["session_members"]):
+        ax.text(value + 300, position, f"{int(value):,}", va="center", fontsize=11)
+    ax.invert_yaxis()
+    ax.set_xlim(0, supplied["session_members"].max() * 1.16)
+    ax.set_xlabel("Retained session-member contexts")
+    ax.legend(loc="lower right")
+    count_axis(ax)
+    figures.append(save(
+        fig, out, "session_calendar_comparison", "Session membership and calendar evidence differ",
+        "Only the explicitly reviewed NY 2023-2024, IL 103rd and TX 88R scopes",
+        "Source: verified-session-comparison v3. Session-only membership does not establish "
+        "filing dates or admission to the primary calendar cohort. The other 47 states lack "
+        "a supplied scope in this comparison, not legislative activity.",
+    ))
+
+    fig, ax = plt.subplots(figsize=(11, 6))
+    first = diagnostics[diagnostics["model"] == "Mixed full-document"].set_index("dataset")
+    second = diagnostics[diagnostics["model"] == "Reviewed-only"].set_index("dataset")
+    order = list(DATASETS)
+    labels = [f"{DATASETS[key]} (n={first.loc[key, 'n_eligible']})" for key in order]
+    charts.dumbbell(
+        ax, labels, first.loc[order, "decision_accuracy"] * 100,
+        second.loc[order, "decision_accuracy"] * 100,
+        left_color=theme.BLUE, right_color=theme.GOLD,
+        left_label="Mixed full-document", right_label="Reviewed-only",
+    )
+    ax.invert_yaxis()
+    ax.set_xlim(0, 100)
+    ax.xaxis.set_major_formatter(PercentFormatter())
+    ax.set_xlabel("Correct topic or correct abstention")
+    ax.legend(loc="lower right")
+    figures.append(save(
+        fig, out, "classifier_development_diagnostics", "Classifier candidates show mixed results",
+        "Saved assistant-reviewed development diagnostics, not independent validation",
+        "Source: the two frozen complete-document evaluation comparisons. Thresholds remain "
+        "confidence 0.8 / margin 0.2 / temperature 1. Native results exclude three disputed "
+        "references. These inspected sets cannot certify population accuracy; neither model "
+        "is promoted. Coverage and denominators remain in the complete CSV export.",
+    ))
+
+    native_metrics = diagnostics[diagnostics["dataset"] == "cycle_native_39"]
+    fig, axes = plt.subplots(1, 2, figsize=(12, 5), sharey=True)
+    for ax, metric, title in zip(
+        axes, ("classified_precision", "coverage"),
+        ("Correct among classified", "Share receiving a topic"), strict=True,
+    ):
+        bars = ax.barh(
+            native_metrics["model"], native_metrics[metric] * 100,
+            color=[MODEL_COLORS[name] for name in native_metrics["model"]], height=0.5,
+        )
+        for bar, (_, row) in zip(bars, native_metrics.iterrows(), strict=True):
+            numerator = row["n_correct_topic"] if metric == "classified_precision" else (
+                row["n_classified"]
+            )
+            denominator = row["n_classified"] if metric == "classified_precision" else (
+                row["n_eligible"]
+            )
+            ax.text(
+                2, bar.get_y() + bar.get_height() / 2, f"{numerator}/{denominator}",
+                va="center", color=theme.TEXT if row["model"] == "Reviewed-only" else "white",
+                fontsize=11,
+            )
+        ax.set_xlim(0, 100)
+        ax.xaxis.set_major_formatter(PercentFormatter())
+        ax.set_title(title, fontsize=12)
+        ax.grid(axis="x", color=theme.GRID, linewidth=0.5)
+        ax.set_axisbelow(True)
+    axes[0].invert_yaxis()
+    figures.append(save(
+        fig, out, "native_precision_and_coverage", "Native-text precision and abstention",
+        "The same 36 agreed development references; three disputes remain unscored",
+        "Source: primary_agreed_metrics in the fixed saved comparisons. Precision is "
+        "conditional on classification; coverage uses all 36 agreed inputs. These small, "
+        "assistant-reviewed development samples are not independent human validation.",
+    ))
+
+    builder = runpy.run_path(str(Path(__file__).with_name("plot_platform_coverage.py")))[
+        "build_figure"
+    ]
+    note = (
+        "Source: retained Harvard Dataverse historical platform corpus; major D/R records "
+        "only. Original archive years, including missing state-party observations, are "
+        "preserved. This reproduces a historical corpus view, not operative 2023-2024 "
+        "platform coverage. No new collection or later-platform substitution."
+    )
+    for suffix in ("png", "svg"):
+        builder(historical, out / f"platform_corpus_recency.{suffix}", source=note)
+    figures.append({
+        "name": "platform_corpus_recency",
+        "title": "Historical platform corpus recency",
+        "subtitle": "Recreated original graph from the retained historical corpus",
+        "source_note": note,
+    })
+    for figure in figures:
+        figure["chart_data"] = f"chart-data/{CHART_TABLES[figure['name']]}.csv"
+    return figures
+
+
+def gallery(output: Path, figures: list[dict], legacy: list[str]):
+    def card(name, title, text, directory, extra=""):
+        return (
+            f'<article><h2>{html.escape(title)}</h2><p>{html.escape(text)}</p>'
+            f'<a href="{directory}/{name}.png"><img src="{directory}/{name}.png" '
+            f'alt="{html.escape(title)}" loading="lazy"></a>{extra}</article>'
+        )
+
+    fresh = "".join(card(
+        row["name"], row["title"], row["subtitle"], "graphs",
+        f'<p><a href="graphs/{row["name"]}.svg">SVG</a> | '
+        f'<a href="{row["chart_data"]}" download>Complete chart data (CSV)</a></p>',
+    ) for row in figures)
+    old = "".join(card(Path(name).stem, Path(name).stem.replace("_", " "),
+                       "Unchanged old image; not regenerated or revalidated.", "legacy-reference")
+                  for name in legacy)
+    downloads = "".join(
+        f'<li><a href="chart-data/{path.name}">{path.name}</a></li>'
+        for path in sorted((output / "chart-data").glob("*.csv"))
+    )
+    (output / "index.html").write_text(
+        '<!doctype html><html lang="en"><meta charset="utf-8">'
+        '<meta name="viewport" content="width=device-width,initial-scale=1">'
+        '<title>State politics: recreated graphs</title><style>'
+        f'body{{background:{theme.BG};color:{theme.TEXT};font:16px/1.6 Georgia,serif;'
+        'max-width:1100px;margin:40px auto;padding:0 24px}'
+        f'article{{border-top:1px solid {theme.GRID};padding:20px 0}}'
+        f'p{{color:{theme.MUTED}}}img{{max-width:100%;height:auto}}'
+        f'a{{color:{theme.BLUE}}}h1,h2{{font-weight:normal}}</style><main>'
+        '<p>LOCAL / UNPUBLISHED</p><h1>State politics: recreated graphs</h1>'
+        f'<p>{html.escape(NOTICE)}</p><h2>Freshly rendered graphs</h2>{fresh}'
+        f'<h2>Complete chart data</h2><ul>{downloads}</ul>'
+        '<h2>Legacy reference images</h2><p>The original numerical inputs for most '
+        'analytical figures are missing. These copies preserve the old images only; '
+        f'they are not new 2023-2024 findings.</p>{old}</main></html>',
+        encoding="utf-8",
+    )
+
+
+def recreate(root: Path, output: Path) -> dict:
+    root, output = root.resolve(), output.absolute()
+    if output.exists():
+        raise FileExistsError("refusing to overwrite an existing graph bundle")
+    if output.resolve() != output or not any(
+        output.is_relative_to(root / name) and output != root / name
+        for name in ("outputs", "data")
+    ):
+        raise ValueError("use a new non-symlink output directory under project outputs/ or data/")
+    inputs = {}
+    tracker_path = checked_file(root, "docs/STATE_PROGRESS.md", inputs)
+    tracker = read_tracker(tracker_path)
+    if not set(tracker["legislative_status"]) <= STATUS_COLORS.keys():
+        raise ValueError("source status cannot be omitted from the chart")
+    metadata = source_table(root, "metadata", "state_matrix.csv", inputs)
+    native = source_table(root, "native", "state_inventory_matrix.csv", inputs)
+    sessions = source_table(root, "sessions", "state_comparison.csv", inputs)
+    for frame in (metadata, native, sessions):
+        if set(frame["state"]) != set(tracker["state"]):
+            raise ValueError("state tables disagree with the current fifty-state tracker")
+    diagnostics = diagnostic_rows(root, inputs)
+    historical_path = checked_file(root, "data/processed/platforms_historical.parquet", inputs)
+    historical = coverage_matrix(pd.read_parquet(historical_path))
+    legacy = sorted(path for path in (root / "outputs").glob("*.png") if path.is_file())
+    for path in legacy:
+        checked_file(root, path.relative_to(root).as_posix(), inputs)
+    producers = (
+        Path(__file__), Path(__file__).with_name("plot_platform_coverage.py"),
+        ROOT / "src/state_politics/plotting/theme.py",
+        ROOT / "src/state_politics/plotting/charts.py",
+    )
+    for path in producers:
+        inputs[f"producer:{path.name}"] = binding(path)
+    for name in ("graphs", "chart-data", "legacy-reference", "producers"):
+        (output / name).mkdir(parents=True)
+    for path in producers:
+        shutil.copy2(path, output / "producers" / path.name)
+    tables = {
+        "state_source_status": tracker,
+        "bill_evidence_by_state": metadata,
+        "native_source_observations": native,
+        "session_calendar_comparison": sessions,
+        "classifier_metrics": diagnostics,
+        "historical_platform_coverage": historical,
+    }
+    for name, frame in tables.items():
+        frame.to_csv(output / "chart-data" / f"{name}.csv", index=False)
+    figures = render_graphs(
+        output / "graphs", tracker, metadata, native, sessions, diagnostics, historical,
+    )
+    for path in legacy:
+        shutil.copy2(path, output / "legacy-reference" / path.name)
+    gallery(output, figures, [path.name for path in legacy])
+    for relative, expected in inputs.items():
+        if not relative.startswith("producer:") and binding(root / relative) != expected:
+            raise ValueError(f"graph source changed during rendering: {relative}")
+    for path in producers:
+        if binding(path) != inputs[f"producer:{path.name}"]:
+            raise ValueError(f"graph producer changed during rendering: {path.name}")
+    artifacts = {
+        path.relative_to(output).as_posix(): binding(path)
+        for path in sorted(output.rglob("*")) if path.is_file()
+    }
+    report = {
+        "status": "recreated_evidence_graphs_and_separate_legacy_references",
+        "notice": NOTICE, "fresh_graphs": figures, "legacy_images_copied_not_regenerated": [
+            path.name for path in legacy
+        ],
+        "complete_chart_tables": list(tables), "inputs": inputs, "artifacts": artifacts,
+        "source_collection": False, "model_execution": False, "model_promotion": False,
+        "publication": False, "scientific_certification": "not_performed",
+    }
+    (output / "manifest.json").write_text(json.dumps(report, indent=2) + "\n", encoding="utf-8")
+    return report
+
+
+def main(argv=None):
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("--out-dir", type=Path, default=ROOT / "outputs/recreated-2023-2024")
+    args = parser.parse_args(argv)
+    result = recreate(ROOT, args.out_dir)
+    print(f"Wrote {len(result['fresh_graphs'])} fresh PNG/SVG graphs and "
+          f"{len(result['legacy_images_copied_not_regenerated'])} separate legacy images "
+          f"to {args.out_dir}")
+    return 0
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())

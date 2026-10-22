@@ -118,6 +118,7 @@ repository audit fails when a Python file is added without an entry here.
 | `scripts/audit_reproducibility.py` | Validates manual-input hashes, sources, seeds, producers, OCR rows, artifact relationships, state coverage, formulas, and public documentation. |
 | `scripts/report_figures.py` | Recomputes and prints legacy documentation/figure diagnostics from retained artifacts; separates unavailable replication verdicts from the available-row denominator and known failed directions. |
 | `scripts/plot_platform_coverage.py` | Plots historical corpus recency by state and party. |
+| `scripts/recreate_graphs.py` | Recreates checksum-bound all-state evidence, source-status, session and saved classifier-diagnostic graphs with full CSV tables and PNG/SVG exports. Rebuilds historical recency from retained records, keeps old images separately as legacy references, refuses overwrites and does not run models or publish findings. |
 | `scripts/plot_platform_gap.py` | Plots modern organization coverage and explicit gap statuses. |
 | `scripts/plot_party_emphasis.py` | Plots Democratic vs Republican platform-topic shares. |
 | `scripts/plot_stated_vs_revealed.py` | Plots platform-vs-bill shares with missing markers preserved; flags only available mapped-tag direction failures, never unavailable replication verdicts. |
