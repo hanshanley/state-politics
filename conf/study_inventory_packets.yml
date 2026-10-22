@@ -1,0 +1,39 @@
+schema_version: 1
+packets:
+  - packet_id: initial-nh-id
+    directory: data/processed/native-inventory-ar-id-nh-v2
+    manifest_sha256: 7bc22b2bcd11521ee220023351fa4122e9d13aec582c5b370f191d97cf85c010
+    effective_states: [ID, NH]
+    raw_archives:
+      - directory: data/raw/native-inventory-ar-id-nh-v1
+        manifest_sha256: 91c0a7d10b6a0b44f8b3626a58e992e569aa99c432cf424d4e0ea3c6beac72c7
+  - packet_id: arkansas
+    directory: data/processed/native-inventory-ar-complete-v3
+    manifest_sha256: c3723323c437c1835cf40392d75e57a30c50257f08c62fa8ec069fd85864fc44
+    effective_states: [AR]
+    raw_archives:
+      - directory: data/raw/native-inventory-ar-complete-projection-v1
+        manifest_sha256: 36aa3f5daf83433bb15f9792630597e87095d39564a390e41ff34a4a3000d0f5
+      - directory: data/raw/native-inventory-ar-complete-v1
+        manifest_sha256: c694a8d60b9f5358a5ab63596301c6d6b0d5a5615788350bad2d77766a0fcb67
+  - packet_id: remaining-states
+    directory: data/processed/native-inventory-remaining-v2
+    manifest_sha256: 675de9a6d40f8f9a4b7ef1b4b7164803b76ad6a38c29d37557bb2ee8ac4866e0
+    effective_states: [HI, MS, ND, NE, NV, VT]
+    raw_archives:
+      - directory: data/raw/native-inventory-remaining-v1
+        manifest_sha256: 2ec0454cc6a749ba8d050d3dc3860d75aed721b1e095bb0016c4528cba38f0f9
+  - packet_id: wyoming-policy-evidence
+    directory: data/processed/native-inventory-missing-robots-followup-v1
+    manifest_sha256: dd12ffc75651fbfb322e6f42a20b1b2f2bf494e0ac168e1c01247a0485c6b9fe
+    effective_states: [WY]
+    raw_archives:
+      - directory: data/raw/native-inventory-missing-robots-followup-v1
+        manifest_sha256: 3e279719552ccdf1615f85ee1b343b3d5a6c8afbd5068958c1fe6e7e276e956c
+  - packet_id: louisiana-rhode-island
+    directory: data/processed/native-inventory-la-ri-completion-v1
+    manifest_sha256: 717ead624f3272b680c32fe8a54b57d5a9fcf424185300dc65e8365f986a8cfb
+    effective_states: [LA, RI]
+    raw_archives:
+      - directory: data/raw/native-inventory-la-ri-completion-v1
+        manifest_sha256: 02886e182e9a0d7bc57f056ea9c06f92f26f65b1a4f4d92cf291f3ec62ef2c50

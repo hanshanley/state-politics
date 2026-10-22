@@ -1,0 +1,1781 @@
+schema_version: 1
+purpose: Offline complete publisher-listed AR session/type/page census metadata projection
+collection_authority: Separate frozen new150-exchange AR authorization; no authority
+  here
+producer_sha256: 033e874423e982d6b27b7b2cdb3a35db96fe9d152b398630920741d12e2812a4
+state_status:
+  AR: complete_four_session_publisher_listed_type_page_census_not_introduced_universe
+scope_limitations:
+  AR:
+  - All exact type links and every observed page recovered for2023R,2023S1,2024F,2024S2.
+  - Publisher-listed census is not independent proof of all introduced measures.
+  - Bill/nonbill, regular/fiscal/extraordinary sessions and2023biennium remain separate.
+  - Seven prior complete census pages reused byte-for-byte; no repeated native HTTP.
+  - No policy originals downloaded, no canonical join certified and no dates inferred.
+  - Prior NH-04 redirect body loss remains disclosed in inherited packet; no NH HTTP.
+canonical_session_candidate_aliases:
+  AR:
+    2023R: '2023'
+    2023S1: 2023S1
+    2024F: 2024F
+    2024S2: 2024S2
+adapters:
+  role_grid:
+    record_selector:
+      tag: div
+      attrs:
+        role: row
+      requires:
+      - aria-rowindex
+    identifier_selector:
+      tag: a
+      attrs_contain:
+        href: /Bills/Detail?
+    bill_types:
+    - HB
+    - SB
+    fields:
+      title:
+        tag: div
+        attrs:
+          aria-colindex: '2'
+      sponsor:
+        tag: div
+        attrs:
+          aria-colindex: '3'
+      all_source_cells:
+        tag: div
+        attrs:
+          role: gridcell
+    pagination:
+      page_regex: Page (?P<page>\d+) of (?P<pages>\d+)
+      link_selector:
+      - tag: div
+        classes:
+        - tableSectionFooter
+      - tag: a
+        requires:
+        - href
+type_indexes:
+- exchange: inherited:native-inventory-ar-id-nh-v1:AR-08
+  state: AR
+  session: 2024S2
+  link_selector:
+    tag: a
+    attrs_contain:
+      href: /Bills/ViewBills?
+- exchange: new:native-inventory-ar-complete-v1:AR-02
+  state: AR
+  session: 2023R
+  link_selector:
+    tag: a
+    attrs_contain:
+      href: /Bills/ViewBills?
+- exchange: new:native-inventory-ar-complete-v1:AR-03
+  state: AR
+  session: 2023S1
+  link_selector:
+    tag: a
+    attrs_contain:
+      href: /Bills/ViewBills?
+- exchange: new:native-inventory-ar-complete-v1:AR-04
+  state: AR
+  session: 2024F
+  link_selector:
+    tag: a
+    attrs_contain:
+      href: /Bills/ViewBills?
+pages:
+- exchange: new:native-inventory-ar-complete-v1:AR-05
+  state: AR
+  session: 2023R
+  biennium_literal: '2023'
+  session_kind: Regular Session, 2023
+  measure_type_scope: HB
+  adapter: role_grid
+  query_semantics: Publisher-listed type/page; literal records, not independently
+    all introduced.
+  source_packet: data/raw/native-inventory-ar-complete-v1
+  source_exchange_original: AR-05
+  source_offset_literal: 0
+- exchange: new:native-inventory-ar-complete-v1:AR-27
+  state: AR
+  session: 2023R
+  biennium_literal: '2023'
+  session_kind: Regular Session, 2023
+  measure_type_scope: HB
+  adapter: role_grid
+  query_semantics: Publisher-listed type/page; literal records, not independently
+    all introduced.
+  source_packet: data/raw/native-inventory-ar-complete-v1
+  source_exchange_original: AR-27
+  source_offset_literal: 20
+- exchange: new:native-inventory-ar-complete-v1:AR-28
+  state: AR
+  session: 2023R
+  biennium_literal: '2023'
+  session_kind: Regular Session, 2023
+  measure_type_scope: HB
+  adapter: role_grid
+  query_semantics: Publisher-listed type/page; literal records, not independently
+    all introduced.
+  source_packet: data/raw/native-inventory-ar-complete-v1
+  source_exchange_original: AR-28
+  source_offset_literal: 40
+- exchange: new:native-inventory-ar-complete-v1:AR-29
+  state: AR
+  session: 2023R
+  biennium_literal: '2023'
+  session_kind: Regular Session, 2023
+  measure_type_scope: HB
+  adapter: role_grid
+  query_semantics: Publisher-listed type/page; literal records, not independently
+    all introduced.
+  source_packet: data/raw/native-inventory-ar-complete-v1
+  source_exchange_original: AR-29
+  source_offset_literal: 60
+- exchange: new:native-inventory-ar-complete-v1:AR-30
+  state: AR
+  session: 2023R
+  biennium_literal: '2023'
+  session_kind: Regular Session, 2023
+  measure_type_scope: HB
+  adapter: role_grid
+  query_semantics: Publisher-listed type/page; literal records, not independently
+    all introduced.
+  source_packet: data/raw/native-inventory-ar-complete-v1
+  source_exchange_original: AR-30
+  source_offset_literal: 80
+- exchange: new:native-inventory-ar-complete-v1:AR-31
+  state: AR
+  session: 2023R
+  biennium_literal: '2023'
+  session_kind: Regular Session, 2023
+  measure_type_scope: HB
+  adapter: role_grid
+  query_semantics: Publisher-listed type/page; literal records, not independently
+    all introduced.
+  source_packet: data/raw/native-inventory-ar-complete-v1
+  source_exchange_original: AR-31
+  source_offset_literal: 100
+- exchange: new:native-inventory-ar-complete-v1:AR-32
+  state: AR
+  session: 2023R
+  biennium_literal: '2023'
+  session_kind: Regular Session, 2023
+  measure_type_scope: HB
+  adapter: role_grid
+  query_semantics: Publisher-listed type/page; literal records, not independently
+    all introduced.
+  source_packet: data/raw/native-inventory-ar-complete-v1
+  source_exchange_original: AR-32
+  source_offset_literal: 120
+- exchange: new:native-inventory-ar-complete-v1:AR-33
+  state: AR
+  session: 2023R
+  biennium_literal: '2023'
+  session_kind: Regular Session, 2023
+  measure_type_scope: HB
+  adapter: role_grid
+  query_semantics: Publisher-listed type/page; literal records, not independently
+    all introduced.
+  source_packet: data/raw/native-inventory-ar-complete-v1
+  source_exchange_original: AR-33
+  source_offset_literal: 140
+- exchange: new:native-inventory-ar-complete-v1:AR-34
+  state: AR
+  session: 2023R
+  biennium_literal: '2023'
+  session_kind: Regular Session, 2023
+  measure_type_scope: HB
+  adapter: role_grid
+  query_semantics: Publisher-listed type/page; literal records, not independently
+    all introduced.
+  source_packet: data/raw/native-inventory-ar-complete-v1
+  source_exchange_original: AR-34
+  source_offset_literal: 160
+- exchange: new:native-inventory-ar-complete-v1:AR-35
+  state: AR
+  session: 2023R
+  biennium_literal: '2023'
+  session_kind: Regular Session, 2023
+  measure_type_scope: HB
+  adapter: role_grid
+  query_semantics: Publisher-listed type/page; literal records, not independently
+    all introduced.
+  source_packet: data/raw/native-inventory-ar-complete-v1
+  source_exchange_original: AR-35
+  source_offset_literal: 180
+- exchange: new:native-inventory-ar-complete-v1:AR-36
+  state: AR
+  session: 2023R
+  biennium_literal: '2023'
+  session_kind: Regular Session, 2023
+  measure_type_scope: HB
+  adapter: role_grid
+  query_semantics: Publisher-listed type/page; literal records, not independently
+    all introduced.
+  source_packet: data/raw/native-inventory-ar-complete-v1
+  source_exchange_original: AR-36
+  source_offset_literal: 200
+- exchange: new:native-inventory-ar-complete-v1:AR-37
+  state: AR
+  session: 2023R
+  biennium_literal: '2023'
+  session_kind: Regular Session, 2023
+  measure_type_scope: HB
+  adapter: role_grid
+  query_semantics: Publisher-listed type/page; literal records, not independently
+    all introduced.
+  source_packet: data/raw/native-inventory-ar-complete-v1
+  source_exchange_original: AR-37
+  source_offset_literal: 220
+- exchange: new:native-inventory-ar-complete-v1:AR-38
+  state: AR
+  session: 2023R
+  biennium_literal: '2023'
+  session_kind: Regular Session, 2023
+  measure_type_scope: HB
+  adapter: role_grid
+  query_semantics: Publisher-listed type/page; literal records, not independently
+    all introduced.
+  source_packet: data/raw/native-inventory-ar-complete-v1
+  source_exchange_original: AR-38
+  source_offset_literal: 240
+- exchange: new:native-inventory-ar-complete-v1:AR-39
+  state: AR
+  session: 2023R
+  biennium_literal: '2023'
+  session_kind: Regular Session, 2023
+  measure_type_scope: HB
+  adapter: role_grid
+  query_semantics: Publisher-listed type/page; literal records, not independently
+    all introduced.
+  source_packet: data/raw/native-inventory-ar-complete-v1
+  source_exchange_original: AR-39
+  source_offset_literal: 260
+- exchange: new:native-inventory-ar-complete-v1:AR-40
+  state: AR
+  session: 2023R
+  biennium_literal: '2023'
+  session_kind: Regular Session, 2023
+  measure_type_scope: HB
+  adapter: role_grid
+  query_semantics: Publisher-listed type/page; literal records, not independently
+    all introduced.
+  source_packet: data/raw/native-inventory-ar-complete-v1
+  source_exchange_original: AR-40
+  source_offset_literal: 280
+- exchange: new:native-inventory-ar-complete-v1:AR-41
+  state: AR
+  session: 2023R
+  biennium_literal: '2023'
+  session_kind: Regular Session, 2023
+  measure_type_scope: HB
+  adapter: role_grid
+  query_semantics: Publisher-listed type/page; literal records, not independently
+    all introduced.
+  source_packet: data/raw/native-inventory-ar-complete-v1
+  source_exchange_original: AR-41
+  source_offset_literal: 300
+- exchange: new:native-inventory-ar-complete-v1:AR-42
+  state: AR
+  session: 2023R
+  biennium_literal: '2023'
+  session_kind: Regular Session, 2023
+  measure_type_scope: HB
+  adapter: role_grid
+  query_semantics: Publisher-listed type/page; literal records, not independently
+    all introduced.
+  source_packet: data/raw/native-inventory-ar-complete-v1
+  source_exchange_original: AR-42
+  source_offset_literal: 320
+- exchange: new:native-inventory-ar-complete-v1:AR-43
+  state: AR
+  session: 2023R
+  biennium_literal: '2023'
+  session_kind: Regular Session, 2023
+  measure_type_scope: HB
+  adapter: role_grid
+  query_semantics: Publisher-listed type/page; literal records, not independently
+    all introduced.
+  source_packet: data/raw/native-inventory-ar-complete-v1
+  source_exchange_original: AR-43
+  source_offset_literal: 340
+- exchange: new:native-inventory-ar-complete-v1:AR-44
+  state: AR
+  session: 2023R
+  biennium_literal: '2023'
+  session_kind: Regular Session, 2023
+  measure_type_scope: HB
+  adapter: role_grid
+  query_semantics: Publisher-listed type/page; literal records, not independently
+    all introduced.
+  source_packet: data/raw/native-inventory-ar-complete-v1
+  source_exchange_original: AR-44
+  source_offset_literal: 360
+- exchange: new:native-inventory-ar-complete-v1:AR-45
+  state: AR
+  session: 2023R
+  biennium_literal: '2023'
+  session_kind: Regular Session, 2023
+  measure_type_scope: HB
+  adapter: role_grid
+  query_semantics: Publisher-listed type/page; literal records, not independently
+    all introduced.
+  source_packet: data/raw/native-inventory-ar-complete-v1
+  source_exchange_original: AR-45
+  source_offset_literal: 380
+- exchange: new:native-inventory-ar-complete-v1:AR-46
+  state: AR
+  session: 2023R
+  biennium_literal: '2023'
+  session_kind: Regular Session, 2023
+  measure_type_scope: HB
+  adapter: role_grid
+  query_semantics: Publisher-listed type/page; literal records, not independently
+    all introduced.
+  source_packet: data/raw/native-inventory-ar-complete-v1
+  source_exchange_original: AR-46
+  source_offset_literal: 400
+- exchange: new:native-inventory-ar-complete-v1:AR-47
+  state: AR
+  session: 2023R
+  biennium_literal: '2023'
+  session_kind: Regular Session, 2023
+  measure_type_scope: HB
+  adapter: role_grid
+  query_semantics: Publisher-listed type/page; literal records, not independently
+    all introduced.
+  source_packet: data/raw/native-inventory-ar-complete-v1
+  source_exchange_original: AR-47
+  source_offset_literal: 420
+- exchange: new:native-inventory-ar-complete-v1:AR-48
+  state: AR
+  session: 2023R
+  biennium_literal: '2023'
+  session_kind: Regular Session, 2023
+  measure_type_scope: HB
+  adapter: role_grid
+  query_semantics: Publisher-listed type/page; literal records, not independently
+    all introduced.
+  source_packet: data/raw/native-inventory-ar-complete-v1
+  source_exchange_original: AR-48
+  source_offset_literal: 440
+- exchange: new:native-inventory-ar-complete-v1:AR-49
+  state: AR
+  session: 2023R
+  biennium_literal: '2023'
+  session_kind: Regular Session, 2023
+  measure_type_scope: HB
+  adapter: role_grid
+  query_semantics: Publisher-listed type/page; literal records, not independently
+    all introduced.
+  source_packet: data/raw/native-inventory-ar-complete-v1
+  source_exchange_original: AR-49
+  source_offset_literal: 460
+- exchange: new:native-inventory-ar-complete-v1:AR-50
+  state: AR
+  session: 2023R
+  biennium_literal: '2023'
+  session_kind: Regular Session, 2023
+  measure_type_scope: HB
+  adapter: role_grid
+  query_semantics: Publisher-listed type/page; literal records, not independently
+    all introduced.
+  source_packet: data/raw/native-inventory-ar-complete-v1
+  source_exchange_original: AR-50
+  source_offset_literal: 480
+- exchange: new:native-inventory-ar-complete-v1:AR-51
+  state: AR
+  session: 2023R
+  biennium_literal: '2023'
+  session_kind: Regular Session, 2023
+  measure_type_scope: HB
+  adapter: role_grid
+  query_semantics: Publisher-listed type/page; literal records, not independently
+    all introduced.
+  source_packet: data/raw/native-inventory-ar-complete-v1
+  source_exchange_original: AR-51
+  source_offset_literal: 500
+- exchange: new:native-inventory-ar-complete-v1:AR-52
+  state: AR
+  session: 2023R
+  biennium_literal: '2023'
+  session_kind: Regular Session, 2023
+  measure_type_scope: HB
+  adapter: role_grid
+  query_semantics: Publisher-listed type/page; literal records, not independently
+    all introduced.
+  source_packet: data/raw/native-inventory-ar-complete-v1
+  source_exchange_original: AR-52
+  source_offset_literal: 520
+- exchange: new:native-inventory-ar-complete-v1:AR-53
+  state: AR
+  session: 2023R
+  biennium_literal: '2023'
+  session_kind: Regular Session, 2023
+  measure_type_scope: HB
+  adapter: role_grid
+  query_semantics: Publisher-listed type/page; literal records, not independently
+    all introduced.
+  source_packet: data/raw/native-inventory-ar-complete-v1
+  source_exchange_original: AR-53
+  source_offset_literal: 540
+- exchange: new:native-inventory-ar-complete-v1:AR-54
+  state: AR
+  session: 2023R
+  biennium_literal: '2023'
+  session_kind: Regular Session, 2023
+  measure_type_scope: HB
+  adapter: role_grid
+  query_semantics: Publisher-listed type/page; literal records, not independently
+    all introduced.
+  source_packet: data/raw/native-inventory-ar-complete-v1
+  source_exchange_original: AR-54
+  source_offset_literal: 560
+- exchange: new:native-inventory-ar-complete-v1:AR-55
+  state: AR
+  session: 2023R
+  biennium_literal: '2023'
+  session_kind: Regular Session, 2023
+  measure_type_scope: HB
+  adapter: role_grid
+  query_semantics: Publisher-listed type/page; literal records, not independently
+    all introduced.
+  source_packet: data/raw/native-inventory-ar-complete-v1
+  source_exchange_original: AR-55
+  source_offset_literal: 580
+- exchange: new:native-inventory-ar-complete-v1:AR-56
+  state: AR
+  session: 2023R
+  biennium_literal: '2023'
+  session_kind: Regular Session, 2023
+  measure_type_scope: HB
+  adapter: role_grid
+  query_semantics: Publisher-listed type/page; literal records, not independently
+    all introduced.
+  source_packet: data/raw/native-inventory-ar-complete-v1
+  source_exchange_original: AR-56
+  source_offset_literal: 600
+- exchange: new:native-inventory-ar-complete-v1:AR-106
+  state: AR
+  session: 2023R
+  biennium_literal: '2023'
+  session_kind: Regular Session, 2023
+  measure_type_scope: HB
+  adapter: role_grid
+  query_semantics: Publisher-listed type/page; literal records, not independently
+    all introduced.
+  source_packet: data/raw/native-inventory-ar-complete-v1
+  source_exchange_original: AR-106
+  source_offset_literal: 620
+- exchange: new:native-inventory-ar-complete-v1:AR-107
+  state: AR
+  session: 2023R
+  biennium_literal: '2023'
+  session_kind: Regular Session, 2023
+  measure_type_scope: HB
+  adapter: role_grid
+  query_semantics: Publisher-listed type/page; literal records, not independently
+    all introduced.
+  source_packet: data/raw/native-inventory-ar-complete-v1
+  source_exchange_original: AR-107
+  source_offset_literal: 640
+- exchange: new:native-inventory-ar-complete-v1:AR-108
+  state: AR
+  session: 2023R
+  biennium_literal: '2023'
+  session_kind: Regular Session, 2023
+  measure_type_scope: HB
+  adapter: role_grid
+  query_semantics: Publisher-listed type/page; literal records, not independently
+    all introduced.
+  source_packet: data/raw/native-inventory-ar-complete-v1
+  source_exchange_original: AR-108
+  source_offset_literal: 660
+- exchange: new:native-inventory-ar-complete-v1:AR-109
+  state: AR
+  session: 2023R
+  biennium_literal: '2023'
+  session_kind: Regular Session, 2023
+  measure_type_scope: HB
+  adapter: role_grid
+  query_semantics: Publisher-listed type/page; literal records, not independently
+    all introduced.
+  source_packet: data/raw/native-inventory-ar-complete-v1
+  source_exchange_original: AR-109
+  source_offset_literal: 680
+- exchange: new:native-inventory-ar-complete-v1:AR-110
+  state: AR
+  session: 2023R
+  biennium_literal: '2023'
+  session_kind: Regular Session, 2023
+  measure_type_scope: HB
+  adapter: role_grid
+  query_semantics: Publisher-listed type/page; literal records, not independently
+    all introduced.
+  source_packet: data/raw/native-inventory-ar-complete-v1
+  source_exchange_original: AR-110
+  source_offset_literal: 700
+- exchange: new:native-inventory-ar-complete-v1:AR-111
+  state: AR
+  session: 2023R
+  biennium_literal: '2023'
+  session_kind: Regular Session, 2023
+  measure_type_scope: HB
+  adapter: role_grid
+  query_semantics: Publisher-listed type/page; literal records, not independently
+    all introduced.
+  source_packet: data/raw/native-inventory-ar-complete-v1
+  source_exchange_original: AR-111
+  source_offset_literal: 720
+- exchange: new:native-inventory-ar-complete-v1:AR-112
+  state: AR
+  session: 2023R
+  biennium_literal: '2023'
+  session_kind: Regular Session, 2023
+  measure_type_scope: HB
+  adapter: role_grid
+  query_semantics: Publisher-listed type/page; literal records, not independently
+    all introduced.
+  source_packet: data/raw/native-inventory-ar-complete-v1
+  source_exchange_original: AR-112
+  source_offset_literal: 740
+- exchange: new:native-inventory-ar-complete-v1:AR-113
+  state: AR
+  session: 2023R
+  biennium_literal: '2023'
+  session_kind: Regular Session, 2023
+  measure_type_scope: HB
+  adapter: role_grid
+  query_semantics: Publisher-listed type/page; literal records, not independently
+    all introduced.
+  source_packet: data/raw/native-inventory-ar-complete-v1
+  source_exchange_original: AR-113
+  source_offset_literal: 760
+- exchange: new:native-inventory-ar-complete-v1:AR-114
+  state: AR
+  session: 2023R
+  biennium_literal: '2023'
+  session_kind: Regular Session, 2023
+  measure_type_scope: HB
+  adapter: role_grid
+  query_semantics: Publisher-listed type/page; literal records, not independently
+    all introduced.
+  source_packet: data/raw/native-inventory-ar-complete-v1
+  source_exchange_original: AR-114
+  source_offset_literal: 780
+- exchange: new:native-inventory-ar-complete-v1:AR-115
+  state: AR
+  session: 2023R
+  biennium_literal: '2023'
+  session_kind: Regular Session, 2023
+  measure_type_scope: HB
+  adapter: role_grid
+  query_semantics: Publisher-listed type/page; literal records, not independently
+    all introduced.
+  source_packet: data/raw/native-inventory-ar-complete-v1
+  source_exchange_original: AR-115
+  source_offset_literal: 800
+- exchange: new:native-inventory-ar-complete-v1:AR-116
+  state: AR
+  session: 2023R
+  biennium_literal: '2023'
+  session_kind: Regular Session, 2023
+  measure_type_scope: HB
+  adapter: role_grid
+  query_semantics: Publisher-listed type/page; literal records, not independently
+    all introduced.
+  source_packet: data/raw/native-inventory-ar-complete-v1
+  source_exchange_original: AR-116
+  source_offset_literal: 820
+- exchange: new:native-inventory-ar-complete-v1:AR-57
+  state: AR
+  session: 2023R
+  biennium_literal: '2023'
+  session_kind: Regular Session, 2023
+  measure_type_scope: HB
+  adapter: role_grid
+  query_semantics: Publisher-listed type/page; literal records, not independently
+    all introduced.
+  source_packet: data/raw/native-inventory-ar-complete-v1
+  source_exchange_original: AR-57
+  source_offset_literal: 840
+- exchange: new:native-inventory-ar-complete-v1:AR-08
+  state: AR
+  session: 2023R
+  biennium_literal: '2023'
+  session_kind: Regular Session, 2023
+  measure_type_scope: HCMR
+  adapter: role_grid
+  query_semantics: Publisher-listed type/page; literal records, not independently
+    all introduced.
+  source_packet: data/raw/native-inventory-ar-complete-v1
+  source_exchange_original: AR-08
+  source_offset_literal: 0
+- exchange: new:native-inventory-ar-complete-v1:AR-09
+  state: AR
+  session: 2023R
+  biennium_literal: '2023'
+  session_kind: Regular Session, 2023
+  measure_type_scope: HCR
+  adapter: role_grid
+  query_semantics: Publisher-listed type/page; literal records, not independently
+    all introduced.
+  source_packet: data/raw/native-inventory-ar-complete-v1
+  source_exchange_original: AR-09
+  source_offset_literal: 0
+- exchange: new:native-inventory-ar-complete-v1:AR-11
+  state: AR
+  session: 2023R
+  biennium_literal: '2023'
+  session_kind: Regular Session, 2023
+  measure_type_scope: HJR
+  adapter: role_grid
+  query_semantics: Publisher-listed type/page; literal records, not independently
+    all introduced.
+  source_packet: data/raw/native-inventory-ar-complete-v1
+  source_exchange_original: AR-11
+  source_offset_literal: 0
+- exchange: new:native-inventory-ar-complete-v1:AR-12
+  state: AR
+  session: 2023R
+  biennium_literal: '2023'
+  session_kind: Regular Session, 2023
+  measure_type_scope: HMR
+  adapter: role_grid
+  query_semantics: Publisher-listed type/page; literal records, not independently
+    all introduced.
+  source_packet: data/raw/native-inventory-ar-complete-v1
+  source_exchange_original: AR-12
+  source_offset_literal: 0
+- exchange: new:native-inventory-ar-complete-v1:AR-14
+  state: AR
+  session: 2023R
+  biennium_literal: '2023'
+  session_kind: Regular Session, 2023
+  measure_type_scope: HR
+  adapter: role_grid
+  query_semantics: Publisher-listed type/page; literal records, not independently
+    all introduced.
+  source_packet: data/raw/native-inventory-ar-complete-v1
+  source_exchange_original: AR-14
+  source_offset_literal: 0
+- exchange: new:native-inventory-ar-complete-v1:AR-58
+  state: AR
+  session: 2023R
+  biennium_literal: '2023'
+  session_kind: Regular Session, 2023
+  measure_type_scope: HR
+  adapter: role_grid
+  query_semantics: Publisher-listed type/page; literal records, not independently
+    all introduced.
+  source_packet: data/raw/native-inventory-ar-complete-v1
+  source_exchange_original: AR-58
+  source_offset_literal: 20
+- exchange: new:native-inventory-ar-complete-v1:AR-59
+  state: AR
+  session: 2023R
+  biennium_literal: '2023'
+  session_kind: Regular Session, 2023
+  measure_type_scope: HR
+  adapter: role_grid
+  query_semantics: Publisher-listed type/page; literal records, not independently
+    all introduced.
+  source_packet: data/raw/native-inventory-ar-complete-v1
+  source_exchange_original: AR-59
+  source_offset_literal: 40
+- exchange: new:native-inventory-ar-complete-v1:AR-60
+  state: AR
+  session: 2023R
+  biennium_literal: '2023'
+  session_kind: Regular Session, 2023
+  measure_type_scope: HR
+  adapter: role_grid
+  query_semantics: Publisher-listed type/page; literal records, not independently
+    all introduced.
+  source_packet: data/raw/native-inventory-ar-complete-v1
+  source_exchange_original: AR-60
+  source_offset_literal: 60
+- exchange: new:native-inventory-ar-complete-v1:AR-61
+  state: AR
+  session: 2023R
+  biennium_literal: '2023'
+  session_kind: Regular Session, 2023
+  measure_type_scope: HR
+  adapter: role_grid
+  query_semantics: Publisher-listed type/page; literal records, not independently
+    all introduced.
+  source_packet: data/raw/native-inventory-ar-complete-v1
+  source_exchange_original: AR-61
+  source_offset_literal: 80
+- exchange: inherited:native-inventory-ar-id-nh-v1:AR-06
+  state: AR
+  session: 2023R
+  biennium_literal: '2023'
+  session_kind: Regular Session, 2023
+  measure_type_scope: SB
+  adapter: role_grid
+  query_semantics: Publisher-listed type/page; literal records, not independently
+    all introduced.
+  source_packet: data/raw/native-inventory-ar-id-nh-v1
+  source_exchange_original: AR-06
+  source_offset_literal: 0
+- exchange: new:native-inventory-ar-complete-v1:AR-62
+  state: AR
+  session: 2023R
+  biennium_literal: '2023'
+  session_kind: Regular Session, 2023
+  measure_type_scope: SB
+  adapter: role_grid
+  query_semantics: Publisher-listed type/page; literal records, not independently
+    all introduced.
+  source_packet: data/raw/native-inventory-ar-complete-v1
+  source_exchange_original: AR-62
+  source_offset_literal: 20
+- exchange: new:native-inventory-ar-complete-v1:AR-63
+  state: AR
+  session: 2023R
+  biennium_literal: '2023'
+  session_kind: Regular Session, 2023
+  measure_type_scope: SB
+  adapter: role_grid
+  query_semantics: Publisher-listed type/page; literal records, not independently
+    all introduced.
+  source_packet: data/raw/native-inventory-ar-complete-v1
+  source_exchange_original: AR-63
+  source_offset_literal: 40
+- exchange: new:native-inventory-ar-complete-v1:AR-64
+  state: AR
+  session: 2023R
+  biennium_literal: '2023'
+  session_kind: Regular Session, 2023
+  measure_type_scope: SB
+  adapter: role_grid
+  query_semantics: Publisher-listed type/page; literal records, not independently
+    all introduced.
+  source_packet: data/raw/native-inventory-ar-complete-v1
+  source_exchange_original: AR-64
+  source_offset_literal: 60
+- exchange: new:native-inventory-ar-complete-v1:AR-65
+  state: AR
+  session: 2023R
+  biennium_literal: '2023'
+  session_kind: Regular Session, 2023
+  measure_type_scope: SB
+  adapter: role_grid
+  query_semantics: Publisher-listed type/page; literal records, not independently
+    all introduced.
+  source_packet: data/raw/native-inventory-ar-complete-v1
+  source_exchange_original: AR-65
+  source_offset_literal: 80
+- exchange: new:native-inventory-ar-complete-v1:AR-66
+  state: AR
+  session: 2023R
+  biennium_literal: '2023'
+  session_kind: Regular Session, 2023
+  measure_type_scope: SB
+  adapter: role_grid
+  query_semantics: Publisher-listed type/page; literal records, not independently
+    all introduced.
+  source_packet: data/raw/native-inventory-ar-complete-v1
+  source_exchange_original: AR-66
+  source_offset_literal: 100
+- exchange: new:native-inventory-ar-complete-v1:AR-67
+  state: AR
+  session: 2023R
+  biennium_literal: '2023'
+  session_kind: Regular Session, 2023
+  measure_type_scope: SB
+  adapter: role_grid
+  query_semantics: Publisher-listed type/page; literal records, not independently
+    all introduced.
+  source_packet: data/raw/native-inventory-ar-complete-v1
+  source_exchange_original: AR-67
+  source_offset_literal: 120
+- exchange: new:native-inventory-ar-complete-v1:AR-68
+  state: AR
+  session: 2023R
+  biennium_literal: '2023'
+  session_kind: Regular Session, 2023
+  measure_type_scope: SB
+  adapter: role_grid
+  query_semantics: Publisher-listed type/page; literal records, not independently
+    all introduced.
+  source_packet: data/raw/native-inventory-ar-complete-v1
+  source_exchange_original: AR-68
+  source_offset_literal: 140
+- exchange: new:native-inventory-ar-complete-v1:AR-69
+  state: AR
+  session: 2023R
+  biennium_literal: '2023'
+  session_kind: Regular Session, 2023
+  measure_type_scope: SB
+  adapter: role_grid
+  query_semantics: Publisher-listed type/page; literal records, not independently
+    all introduced.
+  source_packet: data/raw/native-inventory-ar-complete-v1
+  source_exchange_original: AR-69
+  source_offset_literal: 160
+- exchange: new:native-inventory-ar-complete-v1:AR-70
+  state: AR
+  session: 2023R
+  biennium_literal: '2023'
+  session_kind: Regular Session, 2023
+  measure_type_scope: SB
+  adapter: role_grid
+  query_semantics: Publisher-listed type/page; literal records, not independently
+    all introduced.
+  source_packet: data/raw/native-inventory-ar-complete-v1
+  source_exchange_original: AR-70
+  source_offset_literal: 180
+- exchange: new:native-inventory-ar-complete-v1:AR-71
+  state: AR
+  session: 2023R
+  biennium_literal: '2023'
+  session_kind: Regular Session, 2023
+  measure_type_scope: SB
+  adapter: role_grid
+  query_semantics: Publisher-listed type/page; literal records, not independently
+    all introduced.
+  source_packet: data/raw/native-inventory-ar-complete-v1
+  source_exchange_original: AR-71
+  source_offset_literal: 200
+- exchange: new:native-inventory-ar-complete-v1:AR-72
+  state: AR
+  session: 2023R
+  biennium_literal: '2023'
+  session_kind: Regular Session, 2023
+  measure_type_scope: SB
+  adapter: role_grid
+  query_semantics: Publisher-listed type/page; literal records, not independently
+    all introduced.
+  source_packet: data/raw/native-inventory-ar-complete-v1
+  source_exchange_original: AR-72
+  source_offset_literal: 220
+- exchange: new:native-inventory-ar-complete-v1:AR-73
+  state: AR
+  session: 2023R
+  biennium_literal: '2023'
+  session_kind: Regular Session, 2023
+  measure_type_scope: SB
+  adapter: role_grid
+  query_semantics: Publisher-listed type/page; literal records, not independently
+    all introduced.
+  source_packet: data/raw/native-inventory-ar-complete-v1
+  source_exchange_original: AR-73
+  source_offset_literal: 240
+- exchange: new:native-inventory-ar-complete-v1:AR-74
+  state: AR
+  session: 2023R
+  biennium_literal: '2023'
+  session_kind: Regular Session, 2023
+  measure_type_scope: SB
+  adapter: role_grid
+  query_semantics: Publisher-listed type/page; literal records, not independently
+    all introduced.
+  source_packet: data/raw/native-inventory-ar-complete-v1
+  source_exchange_original: AR-74
+  source_offset_literal: 260
+- exchange: new:native-inventory-ar-complete-v1:AR-75
+  state: AR
+  session: 2023R
+  biennium_literal: '2023'
+  session_kind: Regular Session, 2023
+  measure_type_scope: SB
+  adapter: role_grid
+  query_semantics: Publisher-listed type/page; literal records, not independently
+    all introduced.
+  source_packet: data/raw/native-inventory-ar-complete-v1
+  source_exchange_original: AR-75
+  source_offset_literal: 280
+- exchange: new:native-inventory-ar-complete-v1:AR-76
+  state: AR
+  session: 2023R
+  biennium_literal: '2023'
+  session_kind: Regular Session, 2023
+  measure_type_scope: SB
+  adapter: role_grid
+  query_semantics: Publisher-listed type/page; literal records, not independently
+    all introduced.
+  source_packet: data/raw/native-inventory-ar-complete-v1
+  source_exchange_original: AR-76
+  source_offset_literal: 300
+- exchange: new:native-inventory-ar-complete-v1:AR-77
+  state: AR
+  session: 2023R
+  biennium_literal: '2023'
+  session_kind: Regular Session, 2023
+  measure_type_scope: SB
+  adapter: role_grid
+  query_semantics: Publisher-listed type/page; literal records, not independently
+    all introduced.
+  source_packet: data/raw/native-inventory-ar-complete-v1
+  source_exchange_original: AR-77
+  source_offset_literal: 320
+- exchange: new:native-inventory-ar-complete-v1:AR-78
+  state: AR
+  session: 2023R
+  biennium_literal: '2023'
+  session_kind: Regular Session, 2023
+  measure_type_scope: SB
+  adapter: role_grid
+  query_semantics: Publisher-listed type/page; literal records, not independently
+    all introduced.
+  source_packet: data/raw/native-inventory-ar-complete-v1
+  source_exchange_original: AR-78
+  source_offset_literal: 340
+- exchange: new:native-inventory-ar-complete-v1:AR-79
+  state: AR
+  session: 2023R
+  biennium_literal: '2023'
+  session_kind: Regular Session, 2023
+  measure_type_scope: SB
+  adapter: role_grid
+  query_semantics: Publisher-listed type/page; literal records, not independently
+    all introduced.
+  source_packet: data/raw/native-inventory-ar-complete-v1
+  source_exchange_original: AR-79
+  source_offset_literal: 360
+- exchange: new:native-inventory-ar-complete-v1:AR-80
+  state: AR
+  session: 2023R
+  biennium_literal: '2023'
+  session_kind: Regular Session, 2023
+  measure_type_scope: SB
+  adapter: role_grid
+  query_semantics: Publisher-listed type/page; literal records, not independently
+    all introduced.
+  source_packet: data/raw/native-inventory-ar-complete-v1
+  source_exchange_original: AR-80
+  source_offset_literal: 380
+- exchange: new:native-inventory-ar-complete-v1:AR-81
+  state: AR
+  session: 2023R
+  biennium_literal: '2023'
+  session_kind: Regular Session, 2023
+  measure_type_scope: SB
+  adapter: role_grid
+  query_semantics: Publisher-listed type/page; literal records, not independently
+    all introduced.
+  source_packet: data/raw/native-inventory-ar-complete-v1
+  source_exchange_original: AR-81
+  source_offset_literal: 400
+- exchange: new:native-inventory-ar-complete-v1:AR-82
+  state: AR
+  session: 2023R
+  biennium_literal: '2023'
+  session_kind: Regular Session, 2023
+  measure_type_scope: SB
+  adapter: role_grid
+  query_semantics: Publisher-listed type/page; literal records, not independently
+    all introduced.
+  source_packet: data/raw/native-inventory-ar-complete-v1
+  source_exchange_original: AR-82
+  source_offset_literal: 420
+- exchange: new:native-inventory-ar-complete-v1:AR-83
+  state: AR
+  session: 2023R
+  biennium_literal: '2023'
+  session_kind: Regular Session, 2023
+  measure_type_scope: SB
+  adapter: role_grid
+  query_semantics: Publisher-listed type/page; literal records, not independently
+    all introduced.
+  source_packet: data/raw/native-inventory-ar-complete-v1
+  source_exchange_original: AR-83
+  source_offset_literal: 440
+- exchange: new:native-inventory-ar-complete-v1:AR-84
+  state: AR
+  session: 2023R
+  biennium_literal: '2023'
+  session_kind: Regular Session, 2023
+  measure_type_scope: SB
+  adapter: role_grid
+  query_semantics: Publisher-listed type/page; literal records, not independently
+    all introduced.
+  source_packet: data/raw/native-inventory-ar-complete-v1
+  source_exchange_original: AR-84
+  source_offset_literal: 460
+- exchange: new:native-inventory-ar-complete-v1:AR-85
+  state: AR
+  session: 2023R
+  biennium_literal: '2023'
+  session_kind: Regular Session, 2023
+  measure_type_scope: SB
+  adapter: role_grid
+  query_semantics: Publisher-listed type/page; literal records, not independently
+    all introduced.
+  source_packet: data/raw/native-inventory-ar-complete-v1
+  source_exchange_original: AR-85
+  source_offset_literal: 480
+- exchange: new:native-inventory-ar-complete-v1:AR-86
+  state: AR
+  session: 2023R
+  biennium_literal: '2023'
+  session_kind: Regular Session, 2023
+  measure_type_scope: SB
+  adapter: role_grid
+  query_semantics: Publisher-listed type/page; literal records, not independently
+    all introduced.
+  source_packet: data/raw/native-inventory-ar-complete-v1
+  source_exchange_original: AR-86
+  source_offset_literal: 500
+- exchange: new:native-inventory-ar-complete-v1:AR-87
+  state: AR
+  session: 2023R
+  biennium_literal: '2023'
+  session_kind: Regular Session, 2023
+  measure_type_scope: SB
+  adapter: role_grid
+  query_semantics: Publisher-listed type/page; literal records, not independently
+    all introduced.
+  source_packet: data/raw/native-inventory-ar-complete-v1
+  source_exchange_original: AR-87
+  source_offset_literal: 520
+- exchange: new:native-inventory-ar-complete-v1:AR-88
+  state: AR
+  session: 2023R
+  biennium_literal: '2023'
+  session_kind: Regular Session, 2023
+  measure_type_scope: SB
+  adapter: role_grid
+  query_semantics: Publisher-listed type/page; literal records, not independently
+    all introduced.
+  source_packet: data/raw/native-inventory-ar-complete-v1
+  source_exchange_original: AR-88
+  source_offset_literal: 540
+- exchange: new:native-inventory-ar-complete-v1:AR-89
+  state: AR
+  session: 2023R
+  biennium_literal: '2023'
+  session_kind: Regular Session, 2023
+  measure_type_scope: SB
+  adapter: role_grid
+  query_semantics: Publisher-listed type/page; literal records, not independently
+    all introduced.
+  source_packet: data/raw/native-inventory-ar-complete-v1
+  source_exchange_original: AR-89
+  source_offset_literal: 560
+- exchange: new:native-inventory-ar-complete-v1:AR-90
+  state: AR
+  session: 2023R
+  biennium_literal: '2023'
+  session_kind: Regular Session, 2023
+  measure_type_scope: SB
+  adapter: role_grid
+  query_semantics: Publisher-listed type/page; literal records, not independently
+    all introduced.
+  source_packet: data/raw/native-inventory-ar-complete-v1
+  source_exchange_original: AR-90
+  source_offset_literal: 580
+- exchange: new:native-inventory-ar-complete-v1:AR-19
+  state: AR
+  session: 2023R
+  biennium_literal: '2023'
+  session_kind: Regular Session, 2023
+  measure_type_scope: SCR
+  adapter: role_grid
+  query_semantics: Publisher-listed type/page; literal records, not independently
+    all introduced.
+  source_packet: data/raw/native-inventory-ar-complete-v1
+  source_exchange_original: AR-19
+  source_offset_literal: 0
+- exchange: new:native-inventory-ar-complete-v1:AR-21
+  state: AR
+  session: 2023R
+  biennium_literal: '2023'
+  session_kind: Regular Session, 2023
+  measure_type_scope: SJR
+  adapter: role_grid
+  query_semantics: Publisher-listed type/page; literal records, not independently
+    all introduced.
+  source_packet: data/raw/native-inventory-ar-complete-v1
+  source_exchange_original: AR-21
+  source_offset_literal: 0
+- exchange: new:native-inventory-ar-complete-v1:AR-22
+  state: AR
+  session: 2023R
+  biennium_literal: '2023'
+  session_kind: Regular Session, 2023
+  measure_type_scope: SMR
+  adapter: role_grid
+  query_semantics: Publisher-listed type/page; literal records, not independently
+    all introduced.
+  source_packet: data/raw/native-inventory-ar-complete-v1
+  source_exchange_original: AR-22
+  source_offset_literal: 0
+- exchange: new:native-inventory-ar-complete-v1:AR-24
+  state: AR
+  session: 2023R
+  biennium_literal: '2023'
+  session_kind: Regular Session, 2023
+  measure_type_scope: SR
+  adapter: role_grid
+  query_semantics: Publisher-listed type/page; literal records, not independently
+    all introduced.
+  source_packet: data/raw/native-inventory-ar-complete-v1
+  source_exchange_original: AR-24
+  source_offset_literal: 0
+- exchange: new:native-inventory-ar-complete-v1:AR-91
+  state: AR
+  session: 2023R
+  biennium_literal: '2023'
+  session_kind: Regular Session, 2023
+  measure_type_scope: SR
+  adapter: role_grid
+  query_semantics: Publisher-listed type/page; literal records, not independently
+    all introduced.
+  source_packet: data/raw/native-inventory-ar-complete-v1
+  source_exchange_original: AR-91
+  source_offset_literal: 20
+- exchange: new:native-inventory-ar-complete-v1:AR-92
+  state: AR
+  session: 2023R
+  biennium_literal: '2023'
+  session_kind: Regular Session, 2023
+  measure_type_scope: SR
+  adapter: role_grid
+  query_semantics: Publisher-listed type/page; literal records, not independently
+    all introduced.
+  source_packet: data/raw/native-inventory-ar-complete-v1
+  source_exchange_original: AR-92
+  source_offset_literal: 40
+- exchange: new:native-inventory-ar-complete-v1:AR-93
+  state: AR
+  session: 2023R
+  biennium_literal: '2023'
+  session_kind: Regular Session, 2023
+  measure_type_scope: SR
+  adapter: role_grid
+  query_semantics: Publisher-listed type/page; literal records, not independently
+    all introduced.
+  source_packet: data/raw/native-inventory-ar-complete-v1
+  source_exchange_original: AR-93
+  source_offset_literal: 60
+- exchange: new:native-inventory-ar-complete-v1:AR-06
+  state: AR
+  session: 2023S1
+  biennium_literal: '2023'
+  session_kind: First Extraordinary Session, 2023
+  measure_type_scope: HB
+  adapter: role_grid
+  query_semantics: Publisher-listed type/page; literal records, not independently
+    all introduced.
+  source_packet: data/raw/native-inventory-ar-complete-v1
+  source_exchange_original: AR-06
+  source_offset_literal: 0
+- exchange: new:native-inventory-ar-complete-v1:AR-15
+  state: AR
+  session: 2023S1
+  biennium_literal: '2023'
+  session_kind: First Extraordinary Session, 2023
+  measure_type_scope: HR
+  adapter: role_grid
+  query_semantics: Publisher-listed type/page; literal records, not independently
+    all introduced.
+  source_packet: data/raw/native-inventory-ar-complete-v1
+  source_exchange_original: AR-15
+  source_offset_literal: 0
+- exchange: new:native-inventory-ar-complete-v1:AR-17
+  state: AR
+  session: 2023S1
+  biennium_literal: '2023'
+  session_kind: First Extraordinary Session, 2023
+  measure_type_scope: SB
+  adapter: role_grid
+  query_semantics: Publisher-listed type/page; literal records, not independently
+    all introduced.
+  source_packet: data/raw/native-inventory-ar-complete-v1
+  source_exchange_original: AR-17
+  source_offset_literal: 0
+- exchange: new:native-inventory-ar-complete-v1:AR-25
+  state: AR
+  session: 2023S1
+  biennium_literal: '2023'
+  session_kind: First Extraordinary Session, 2023
+  measure_type_scope: SR
+  adapter: role_grid
+  query_semantics: Publisher-listed type/page; literal records, not independently
+    all introduced.
+  source_packet: data/raw/native-inventory-ar-complete-v1
+  source_exchange_original: AR-25
+  source_offset_literal: 0
+- exchange: new:native-inventory-ar-complete-v1:AR-07
+  state: AR
+  session: 2024F
+  biennium_literal: '2023'
+  session_kind: Fiscal Session, 2024
+  measure_type_scope: HB
+  adapter: role_grid
+  query_semantics: Publisher-listed type/page; literal records, not independently
+    all introduced.
+  source_packet: data/raw/native-inventory-ar-complete-v1
+  source_exchange_original: AR-07
+  source_offset_literal: 0
+- exchange: new:native-inventory-ar-complete-v1:AR-94
+  state: AR
+  session: 2024F
+  biennium_literal: '2023'
+  session_kind: Fiscal Session, 2024
+  measure_type_scope: HB
+  adapter: role_grid
+  query_semantics: Publisher-listed type/page; literal records, not independently
+    all introduced.
+  source_packet: data/raw/native-inventory-ar-complete-v1
+  source_exchange_original: AR-94
+  source_offset_literal: 20
+- exchange: new:native-inventory-ar-complete-v1:AR-95
+  state: AR
+  session: 2024F
+  biennium_literal: '2023'
+  session_kind: Fiscal Session, 2024
+  measure_type_scope: HB
+  adapter: role_grid
+  query_semantics: Publisher-listed type/page; literal records, not independently
+    all introduced.
+  source_packet: data/raw/native-inventory-ar-complete-v1
+  source_exchange_original: AR-95
+  source_offset_literal: 40
+- exchange: new:native-inventory-ar-complete-v1:AR-96
+  state: AR
+  session: 2024F
+  biennium_literal: '2023'
+  session_kind: Fiscal Session, 2024
+  measure_type_scope: HB
+  adapter: role_grid
+  query_semantics: Publisher-listed type/page; literal records, not independently
+    all introduced.
+  source_packet: data/raw/native-inventory-ar-complete-v1
+  source_exchange_original: AR-96
+  source_offset_literal: 60
+- exchange: new:native-inventory-ar-complete-v1:AR-97
+  state: AR
+  session: 2024F
+  biennium_literal: '2023'
+  session_kind: Fiscal Session, 2024
+  measure_type_scope: HB
+  adapter: role_grid
+  query_semantics: Publisher-listed type/page; literal records, not independently
+    all introduced.
+  source_packet: data/raw/native-inventory-ar-complete-v1
+  source_exchange_original: AR-97
+  source_offset_literal: 80
+- exchange: new:native-inventory-ar-complete-v1:AR-10
+  state: AR
+  session: 2024F
+  biennium_literal: '2023'
+  session_kind: Fiscal Session, 2024
+  measure_type_scope: HCR
+  adapter: role_grid
+  query_semantics: Publisher-listed type/page; literal records, not independently
+    all introduced.
+  source_packet: data/raw/native-inventory-ar-complete-v1
+  source_exchange_original: AR-10
+  source_offset_literal: 0
+- exchange: new:native-inventory-ar-complete-v1:AR-13
+  state: AR
+  session: 2024F
+  biennium_literal: '2023'
+  session_kind: Fiscal Session, 2024
+  measure_type_scope: HMR
+  adapter: role_grid
+  query_semantics: Publisher-listed type/page; literal records, not independently
+    all introduced.
+  source_packet: data/raw/native-inventory-ar-complete-v1
+  source_exchange_original: AR-13
+  source_offset_literal: 0
+- exchange: new:native-inventory-ar-complete-v1:AR-16
+  state: AR
+  session: 2024F
+  biennium_literal: '2023'
+  session_kind: Fiscal Session, 2024
+  measure_type_scope: HR
+  adapter: role_grid
+  query_semantics: Publisher-listed type/page; literal records, not independently
+    all introduced.
+  source_packet: data/raw/native-inventory-ar-complete-v1
+  source_exchange_original: AR-16
+  source_offset_literal: 0
+- exchange: new:native-inventory-ar-complete-v1:AR-98
+  state: AR
+  session: 2024F
+  biennium_literal: '2023'
+  session_kind: Fiscal Session, 2024
+  measure_type_scope: HR
+  adapter: role_grid
+  query_semantics: Publisher-listed type/page; literal records, not independently
+    all introduced.
+  source_packet: data/raw/native-inventory-ar-complete-v1
+  source_exchange_original: AR-98
+  source_offset_literal: 20
+- exchange: new:native-inventory-ar-complete-v1:AR-99
+  state: AR
+  session: 2024F
+  biennium_literal: '2023'
+  session_kind: Fiscal Session, 2024
+  measure_type_scope: HR
+  adapter: role_grid
+  query_semantics: Publisher-listed type/page; literal records, not independently
+    all introduced.
+  source_packet: data/raw/native-inventory-ar-complete-v1
+  source_exchange_original: AR-99
+  source_offset_literal: 40
+- exchange: new:native-inventory-ar-complete-v1:AR-100
+  state: AR
+  session: 2024F
+  biennium_literal: '2023'
+  session_kind: Fiscal Session, 2024
+  measure_type_scope: HR
+  adapter: role_grid
+  query_semantics: Publisher-listed type/page; literal records, not independently
+    all introduced.
+  source_packet: data/raw/native-inventory-ar-complete-v1
+  source_exchange_original: AR-100
+  source_offset_literal: 60
+- exchange: new:native-inventory-ar-complete-v1:AR-18
+  state: AR
+  session: 2024F
+  biennium_literal: '2023'
+  session_kind: Fiscal Session, 2024
+  measure_type_scope: SB
+  adapter: role_grid
+  query_semantics: Publisher-listed type/page; literal records, not independently
+    all introduced.
+  source_packet: data/raw/native-inventory-ar-complete-v1
+  source_exchange_original: AR-18
+  source_offset_literal: 0
+- exchange: new:native-inventory-ar-complete-v1:AR-101
+  state: AR
+  session: 2024F
+  biennium_literal: '2023'
+  session_kind: Fiscal Session, 2024
+  measure_type_scope: SB
+  adapter: role_grid
+  query_semantics: Publisher-listed type/page; literal records, not independently
+    all introduced.
+  source_packet: data/raw/native-inventory-ar-complete-v1
+  source_exchange_original: AR-101
+  source_offset_literal: 20
+- exchange: new:native-inventory-ar-complete-v1:AR-102
+  state: AR
+  session: 2024F
+  biennium_literal: '2023'
+  session_kind: Fiscal Session, 2024
+  measure_type_scope: SB
+  adapter: role_grid
+  query_semantics: Publisher-listed type/page; literal records, not independently
+    all introduced.
+  source_packet: data/raw/native-inventory-ar-complete-v1
+  source_exchange_original: AR-102
+  source_offset_literal: 40
+- exchange: new:native-inventory-ar-complete-v1:AR-103
+  state: AR
+  session: 2024F
+  biennium_literal: '2023'
+  session_kind: Fiscal Session, 2024
+  measure_type_scope: SB
+  adapter: role_grid
+  query_semantics: Publisher-listed type/page; literal records, not independently
+    all introduced.
+  source_packet: data/raw/native-inventory-ar-complete-v1
+  source_exchange_original: AR-103
+  source_offset_literal: 60
+- exchange: new:native-inventory-ar-complete-v1:AR-104
+  state: AR
+  session: 2024F
+  biennium_literal: '2023'
+  session_kind: Fiscal Session, 2024
+  measure_type_scope: SB
+  adapter: role_grid
+  query_semantics: Publisher-listed type/page; literal records, not independently
+    all introduced.
+  source_packet: data/raw/native-inventory-ar-complete-v1
+  source_exchange_original: AR-104
+  source_offset_literal: 80
+- exchange: new:native-inventory-ar-complete-v1:AR-20
+  state: AR
+  session: 2024F
+  biennium_literal: '2023'
+  session_kind: Fiscal Session, 2024
+  measure_type_scope: SCR
+  adapter: role_grid
+  query_semantics: Publisher-listed type/page; literal records, not independently
+    all introduced.
+  source_packet: data/raw/native-inventory-ar-complete-v1
+  source_exchange_original: AR-20
+  source_offset_literal: 0
+- exchange: new:native-inventory-ar-complete-v1:AR-23
+  state: AR
+  session: 2024F
+  biennium_literal: '2023'
+  session_kind: Fiscal Session, 2024
+  measure_type_scope: SMR
+  adapter: role_grid
+  query_semantics: Publisher-listed type/page; literal records, not independently
+    all introduced.
+  source_packet: data/raw/native-inventory-ar-complete-v1
+  source_exchange_original: AR-23
+  source_offset_literal: 0
+- exchange: new:native-inventory-ar-complete-v1:AR-26
+  state: AR
+  session: 2024F
+  biennium_literal: '2023'
+  session_kind: Fiscal Session, 2024
+  measure_type_scope: SR
+  adapter: role_grid
+  query_semantics: Publisher-listed type/page; literal records, not independently
+    all introduced.
+  source_packet: data/raw/native-inventory-ar-complete-v1
+  source_exchange_original: AR-26
+  source_offset_literal: 0
+- exchange: new:native-inventory-ar-complete-v1:AR-105
+  state: AR
+  session: 2024F
+  biennium_literal: '2023'
+  session_kind: Fiscal Session, 2024
+  measure_type_scope: SR
+  adapter: role_grid
+  query_semantics: Publisher-listed type/page; literal records, not independently
+    all introduced.
+  source_packet: data/raw/native-inventory-ar-complete-v1
+  source_exchange_original: AR-105
+  source_offset_literal: 20
+- exchange: inherited:native-inventory-ar-id-nh-v1:AR-09
+  state: AR
+  session: 2024S2
+  biennium_literal: '2023'
+  session_kind: Second Extraordinary Session, 2024
+  measure_type_scope: HB
+  adapter: role_grid
+  query_semantics: Publisher-listed type/page; literal records, not independently
+    all introduced.
+  source_packet: data/raw/native-inventory-ar-id-nh-v1
+  source_exchange_original: AR-09
+  source_offset_literal: 0
+- exchange: inherited:native-inventory-ar-id-nh-v1:AR-11
+  state: AR
+  session: 2024S2
+  biennium_literal: '2023'
+  session_kind: Second Extraordinary Session, 2024
+  measure_type_scope: HMR
+  adapter: role_grid
+  query_semantics: Publisher-listed type/page; literal records, not independently
+    all introduced.
+  source_packet: data/raw/native-inventory-ar-id-nh-v1
+  source_exchange_original: AR-11
+  source_offset_literal: 0
+- exchange: inherited:native-inventory-ar-id-nh-v1:AR-10
+  state: AR
+  session: 2024S2
+  biennium_literal: '2023'
+  session_kind: Second Extraordinary Session, 2024
+  measure_type_scope: HR
+  adapter: role_grid
+  query_semantics: Publisher-listed type/page; literal records, not independently
+    all introduced.
+  source_packet: data/raw/native-inventory-ar-id-nh-v1
+  source_exchange_original: AR-10
+  source_offset_literal: 0
+- exchange: inherited:native-inventory-ar-id-nh-v1:AR-12
+  state: AR
+  session: 2024S2
+  biennium_literal: '2023'
+  session_kind: Second Extraordinary Session, 2024
+  measure_type_scope: SB
+  adapter: role_grid
+  query_semantics: Publisher-listed type/page; literal records, not independently
+    all introduced.
+  source_packet: data/raw/native-inventory-ar-id-nh-v1
+  source_exchange_original: AR-12
+  source_offset_literal: 0
+- exchange: inherited:native-inventory-ar-id-nh-v1:AR-14
+  state: AR
+  session: 2024S2
+  biennium_literal: '2023'
+  session_kind: Second Extraordinary Session, 2024
+  measure_type_scope: SMR
+  adapter: role_grid
+  query_semantics: Publisher-listed type/page; literal records, not independently
+    all introduced.
+  source_packet: data/raw/native-inventory-ar-id-nh-v1
+  source_exchange_original: AR-14
+  source_offset_literal: 0
+- exchange: inherited:native-inventory-ar-id-nh-v1:AR-13
+  state: AR
+  session: 2024S2
+  biennium_literal: '2023'
+  session_kind: Second Extraordinary Session, 2024
+  measure_type_scope: SR
+  adapter: role_grid
+  query_semantics: Publisher-listed type/page; literal records, not independently
+    all introduced.
+  source_packet: data/raw/native-inventory-ar-id-nh-v1
+  source_exchange_original: AR-13
+  source_offset_literal: 0
+complete_census_groups:
+- state: AR
+  session: 2023R
+  measure_type: HB
+  exchanges:
+  - new:native-inventory-ar-complete-v1:AR-05
+  - new:native-inventory-ar-complete-v1:AR-27
+  - new:native-inventory-ar-complete-v1:AR-28
+  - new:native-inventory-ar-complete-v1:AR-29
+  - new:native-inventory-ar-complete-v1:AR-30
+  - new:native-inventory-ar-complete-v1:AR-31
+  - new:native-inventory-ar-complete-v1:AR-32
+  - new:native-inventory-ar-complete-v1:AR-33
+  - new:native-inventory-ar-complete-v1:AR-34
+  - new:native-inventory-ar-complete-v1:AR-35
+  - new:native-inventory-ar-complete-v1:AR-36
+  - new:native-inventory-ar-complete-v1:AR-37
+  - new:native-inventory-ar-complete-v1:AR-38
+  - new:native-inventory-ar-complete-v1:AR-39
+  - new:native-inventory-ar-complete-v1:AR-40
+  - new:native-inventory-ar-complete-v1:AR-41
+  - new:native-inventory-ar-complete-v1:AR-42
+  - new:native-inventory-ar-complete-v1:AR-43
+  - new:native-inventory-ar-complete-v1:AR-44
+  - new:native-inventory-ar-complete-v1:AR-45
+  - new:native-inventory-ar-complete-v1:AR-46
+  - new:native-inventory-ar-complete-v1:AR-47
+  - new:native-inventory-ar-complete-v1:AR-48
+  - new:native-inventory-ar-complete-v1:AR-49
+  - new:native-inventory-ar-complete-v1:AR-50
+  - new:native-inventory-ar-complete-v1:AR-51
+  - new:native-inventory-ar-complete-v1:AR-52
+  - new:native-inventory-ar-complete-v1:AR-53
+  - new:native-inventory-ar-complete-v1:AR-54
+  - new:native-inventory-ar-complete-v1:AR-55
+  - new:native-inventory-ar-complete-v1:AR-56
+  - new:native-inventory-ar-complete-v1:AR-106
+  - new:native-inventory-ar-complete-v1:AR-107
+  - new:native-inventory-ar-complete-v1:AR-108
+  - new:native-inventory-ar-complete-v1:AR-109
+  - new:native-inventory-ar-complete-v1:AR-110
+  - new:native-inventory-ar-complete-v1:AR-111
+  - new:native-inventory-ar-complete-v1:AR-112
+  - new:native-inventory-ar-complete-v1:AR-113
+  - new:native-inventory-ar-complete-v1:AR-114
+  - new:native-inventory-ar-complete-v1:AR-115
+  - new:native-inventory-ar-complete-v1:AR-116
+  - new:native-inventory-ar-complete-v1:AR-57
+  rule: all_pages_exact_successor_and_terminal_plus_no_duplicate_native_identity
+- state: AR
+  session: 2023R
+  measure_type: HCMR
+  exchanges:
+  - new:native-inventory-ar-complete-v1:AR-08
+  rule: all_pages_exact_successor_and_terminal_plus_no_duplicate_native_identity
+- state: AR
+  session: 2023R
+  measure_type: HCR
+  exchanges:
+  - new:native-inventory-ar-complete-v1:AR-09
+  rule: all_pages_exact_successor_and_terminal_plus_no_duplicate_native_identity
+- state: AR
+  session: 2023R
+  measure_type: HJR
+  exchanges:
+  - new:native-inventory-ar-complete-v1:AR-11
+  rule: all_pages_exact_successor_and_terminal_plus_no_duplicate_native_identity
+- state: AR
+  session: 2023R
+  measure_type: HMR
+  exchanges:
+  - new:native-inventory-ar-complete-v1:AR-12
+  rule: all_pages_exact_successor_and_terminal_plus_no_duplicate_native_identity
+- state: AR
+  session: 2023R
+  measure_type: HR
+  exchanges:
+  - new:native-inventory-ar-complete-v1:AR-14
+  - new:native-inventory-ar-complete-v1:AR-58
+  - new:native-inventory-ar-complete-v1:AR-59
+  - new:native-inventory-ar-complete-v1:AR-60
+  - new:native-inventory-ar-complete-v1:AR-61
+  rule: all_pages_exact_successor_and_terminal_plus_no_duplicate_native_identity
+- state: AR
+  session: 2023R
+  measure_type: SB
+  exchanges:
+  - inherited:native-inventory-ar-id-nh-v1:AR-06
+  - new:native-inventory-ar-complete-v1:AR-62
+  - new:native-inventory-ar-complete-v1:AR-63
+  - new:native-inventory-ar-complete-v1:AR-64
+  - new:native-inventory-ar-complete-v1:AR-65
+  - new:native-inventory-ar-complete-v1:AR-66
+  - new:native-inventory-ar-complete-v1:AR-67
+  - new:native-inventory-ar-complete-v1:AR-68
+  - new:native-inventory-ar-complete-v1:AR-69
+  - new:native-inventory-ar-complete-v1:AR-70
+  - new:native-inventory-ar-complete-v1:AR-71
+  - new:native-inventory-ar-complete-v1:AR-72
+  - new:native-inventory-ar-complete-v1:AR-73
+  - new:native-inventory-ar-complete-v1:AR-74
+  - new:native-inventory-ar-complete-v1:AR-75
+  - new:native-inventory-ar-complete-v1:AR-76
+  - new:native-inventory-ar-complete-v1:AR-77
+  - new:native-inventory-ar-complete-v1:AR-78
+  - new:native-inventory-ar-complete-v1:AR-79
+  - new:native-inventory-ar-complete-v1:AR-80
+  - new:native-inventory-ar-complete-v1:AR-81
+  - new:native-inventory-ar-complete-v1:AR-82
+  - new:native-inventory-ar-complete-v1:AR-83
+  - new:native-inventory-ar-complete-v1:AR-84
+  - new:native-inventory-ar-complete-v1:AR-85
+  - new:native-inventory-ar-complete-v1:AR-86
+  - new:native-inventory-ar-complete-v1:AR-87
+  - new:native-inventory-ar-complete-v1:AR-88
+  - new:native-inventory-ar-complete-v1:AR-89
+  - new:native-inventory-ar-complete-v1:AR-90
+  rule: all_pages_exact_successor_and_terminal_plus_no_duplicate_native_identity
+- state: AR
+  session: 2023R
+  measure_type: SCR
+  exchanges:
+  - new:native-inventory-ar-complete-v1:AR-19
+  rule: all_pages_exact_successor_and_terminal_plus_no_duplicate_native_identity
+- state: AR
+  session: 2023R
+  measure_type: SJR
+  exchanges:
+  - new:native-inventory-ar-complete-v1:AR-21
+  rule: all_pages_exact_successor_and_terminal_plus_no_duplicate_native_identity
+- state: AR
+  session: 2023R
+  measure_type: SMR
+  exchanges:
+  - new:native-inventory-ar-complete-v1:AR-22
+  rule: all_pages_exact_successor_and_terminal_plus_no_duplicate_native_identity
+- state: AR
+  session: 2023R
+  measure_type: SR
+  exchanges:
+  - new:native-inventory-ar-complete-v1:AR-24
+  - new:native-inventory-ar-complete-v1:AR-91
+  - new:native-inventory-ar-complete-v1:AR-92
+  - new:native-inventory-ar-complete-v1:AR-93
+  rule: all_pages_exact_successor_and_terminal_plus_no_duplicate_native_identity
+- state: AR
+  session: 2023S1
+  measure_type: HB
+  exchanges:
+  - new:native-inventory-ar-complete-v1:AR-06
+  rule: all_pages_exact_successor_and_terminal_plus_no_duplicate_native_identity
+- state: AR
+  session: 2023S1
+  measure_type: HR
+  exchanges:
+  - new:native-inventory-ar-complete-v1:AR-15
+  rule: all_pages_exact_successor_and_terminal_plus_no_duplicate_native_identity
+- state: AR
+  session: 2023S1
+  measure_type: SB
+  exchanges:
+  - new:native-inventory-ar-complete-v1:AR-17
+  rule: all_pages_exact_successor_and_terminal_plus_no_duplicate_native_identity
+- state: AR
+  session: 2023S1
+  measure_type: SR
+  exchanges:
+  - new:native-inventory-ar-complete-v1:AR-25
+  rule: all_pages_exact_successor_and_terminal_plus_no_duplicate_native_identity
+- state: AR
+  session: 2024F
+  measure_type: HB
+  exchanges:
+  - new:native-inventory-ar-complete-v1:AR-07
+  - new:native-inventory-ar-complete-v1:AR-94
+  - new:native-inventory-ar-complete-v1:AR-95
+  - new:native-inventory-ar-complete-v1:AR-96
+  - new:native-inventory-ar-complete-v1:AR-97
+  rule: all_pages_exact_successor_and_terminal_plus_no_duplicate_native_identity
+- state: AR
+  session: 2024F
+  measure_type: HCR
+  exchanges:
+  - new:native-inventory-ar-complete-v1:AR-10
+  rule: all_pages_exact_successor_and_terminal_plus_no_duplicate_native_identity
+- state: AR
+  session: 2024F
+  measure_type: HMR
+  exchanges:
+  - new:native-inventory-ar-complete-v1:AR-13
+  rule: all_pages_exact_successor_and_terminal_plus_no_duplicate_native_identity
+- state: AR
+  session: 2024F
+  measure_type: HR
+  exchanges:
+  - new:native-inventory-ar-complete-v1:AR-16
+  - new:native-inventory-ar-complete-v1:AR-98
+  - new:native-inventory-ar-complete-v1:AR-99
+  - new:native-inventory-ar-complete-v1:AR-100
+  rule: all_pages_exact_successor_and_terminal_plus_no_duplicate_native_identity
+- state: AR
+  session: 2024F
+  measure_type: SB
+  exchanges:
+  - new:native-inventory-ar-complete-v1:AR-18
+  - new:native-inventory-ar-complete-v1:AR-101
+  - new:native-inventory-ar-complete-v1:AR-102
+  - new:native-inventory-ar-complete-v1:AR-103
+  - new:native-inventory-ar-complete-v1:AR-104
+  rule: all_pages_exact_successor_and_terminal_plus_no_duplicate_native_identity
+- state: AR
+  session: 2024F
+  measure_type: SCR
+  exchanges:
+  - new:native-inventory-ar-complete-v1:AR-20
+  rule: all_pages_exact_successor_and_terminal_plus_no_duplicate_native_identity
+- state: AR
+  session: 2024F
+  measure_type: SMR
+  exchanges:
+  - new:native-inventory-ar-complete-v1:AR-23
+  rule: all_pages_exact_successor_and_terminal_plus_no_duplicate_native_identity
+- state: AR
+  session: 2024F
+  measure_type: SR
+  exchanges:
+  - new:native-inventory-ar-complete-v1:AR-26
+  - new:native-inventory-ar-complete-v1:AR-105
+  rule: all_pages_exact_successor_and_terminal_plus_no_duplicate_native_identity
+- state: AR
+  session: 2024S2
+  measure_type: HB
+  exchanges:
+  - inherited:native-inventory-ar-id-nh-v1:AR-09
+  rule: all_pages_exact_successor_and_terminal_plus_no_duplicate_native_identity
+- state: AR
+  session: 2024S2
+  measure_type: HMR
+  exchanges:
+  - inherited:native-inventory-ar-id-nh-v1:AR-11
+  rule: all_pages_exact_successor_and_terminal_plus_no_duplicate_native_identity
+- state: AR
+  session: 2024S2
+  measure_type: HR
+  exchanges:
+  - inherited:native-inventory-ar-id-nh-v1:AR-10
+  rule: all_pages_exact_successor_and_terminal_plus_no_duplicate_native_identity
+- state: AR
+  session: 2024S2
+  measure_type: SB
+  exchanges:
+  - inherited:native-inventory-ar-id-nh-v1:AR-12
+  rule: all_pages_exact_successor_and_terminal_plus_no_duplicate_native_identity
+- state: AR
+  session: 2024S2
+  measure_type: SMR
+  exchanges:
+  - inherited:native-inventory-ar-id-nh-v1:AR-14
+  rule: all_pages_exact_successor_and_terminal_plus_no_duplicate_native_identity
+- state: AR
+  session: 2024S2
+  measure_type: SR
+  exchanges:
+  - inherited:native-inventory-ar-id-nh-v1:AR-13
+  rule: all_pages_exact_successor_and_terminal_plus_no_duplicate_native_identity

@@ -255,6 +255,7 @@ def freeze_session_cohort(metadata: Path, native: Path, preview: Path, output: P
         "bills": site._bound_input(meta["inputs"]["bills"]),
         "abstracts": site._bound_input(meta["inputs"]["abstracts"]),
         "date_ledger": site._bound_input(meta["inputs"]["ledger"]),
+        "style": site.ROOT / "web/preview.css",
         **{key: site._bound_input(value) for key, value in proofs.items()},
     }
     partitions = {}
@@ -308,6 +309,7 @@ def freeze_session_cohort(metadata: Path, native: Path, preview: Path, output: P
     output.mkdir(parents=True)
     (output / "sources").mkdir()
     (output / "producers").mkdir()
+    shutil.copyfile(paths["style"], output / "preview.css")
     for path in producers:
         shutil.copyfile(path, output / "producers" / path.name)
     for _, contract, spec in reviewed.values():
@@ -390,17 +392,20 @@ def freeze_session_cohort(metadata: Path, native: Path, preview: Path, output: P
     (output / "index.html").write_text(
         '<!doctype html><html lang="en"><meta charset="utf-8">'
         '<meta name="viewport" content="width=device-width,initial-scale=1">'
-        '<title>Unpublished legislative-session comparison</title><main>'
-        '<h1>Legislative-session comparison</h1><p>Local research evidence, unpublished.</p>'
+        '<title>Unpublished legislative-session comparison</title>'
+        '<link rel="stylesheet" href="preview.css"><main>'
+        '<p class="eyebrow">Local research / unpublished</p>'
+        '<h1>Legislative-session comparison</h1>'
         f'<p>{html.escape(LIMITATIONS)}</p><ul>{links}</ul>'
         '<p><a download href="session_members.jsonl">Complete member records, original bill '
         'fields, abstracts and native references</a> · '
         '<a download href="excluded_native_contexts.jsonl">All excluded native contexts</a> · '
         '<a download href="state_comparison.csv">All 50 states</a></p>'
-        '<table><caption>Calendar cohort is unchanged; None means unknown, not zero.</caption>'
+        '<div class="table-wrap"><table>'
+        '<caption>Calendar cohort is unchanged; None means unknown, not zero.</caption>'
         '<thead><tr><th>State</th><th>Session evidence</th><th>Calendar candidates</th>'
         '<th>Session members</th><th>Session-only members</th><th>Missing retained text</th>'
-        f'</tr></thead><tbody>{table}</tbody></table></main></html>\n', encoding="utf-8",
+        f'</tr></thead><tbody>{table}</tbody></table></div></main></html>\n', encoding="utf-8",
     )
     after = {key: _snapshot(path) for key, path in paths.items()}
     _require(before == after, "immutable source inputs changed while freezing")

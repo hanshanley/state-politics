@@ -732,7 +732,7 @@ Neither value is chosen as a filing/introduction date. No Maine HTTP,
 canonical rewrite or cohort admission occurred.
 
 The opt-in `--native-session-scope` export uses only the fixed reviewed
-`ny-2023-2024` and `il-103rd` scope contracts, requiring an explicit compatible
+`ny-2023-2024`, `il-103rd` and `tx-88r-retained` scope contracts, requiring an explicit compatible
 `--native-evidence`. It preserves complete text for exact canonical matches
 outside the metadata candidate cohort. Native session/proof selectors do not
 infer dates. Source-only/wrong-session contexts are never assigned aliases,
@@ -741,9 +741,95 @@ and candidate views are excluded to prevent double counting.
 New York contributes 46,776 views / 23,388 references and canonical IDs;
 Illinois 5,189 views / references / IDs. These 51,965 additional views are
 **publisher-session-bound source evidence, not new eligible-cycle measures**.
+V7 additionally exposes 84 retained Texas views / 60 IDs through the
+literal 88R-to-88 crosswalk: total additional views are 52,049. Primary
+candidate-native views remain unchanged. All 419 older source exports are
+byte-identical; no new Texas HTTP or filing-date inference occurred.
 Original candidate-native views remain 39,576 across 27,444 candidate IDs.
 All extra fields, date dispositions, reader alternatives and false approvals
 survive, and other states/sessions remain unknown rather than zero.
+
+## Shared bounded source recovery and all-state catalog
+
+`state_politics.bills.native_inventory` separates explicitly authorized,
+paced physical capture from offline declarative replay. Closed packets
+must not be resumed merely because a numerical allowance remains.
+Robots/redirect/error/retry exchanges count, original bodies/headers
+survive, and historical usage remains unknown. Default missing-policy
+handling remains conservative; a specifically authorized opt-in covers
+404/410 only under RFC 9309 section 2.3.1.3. It does not authorize access
+or bypass actual Disallow, auth, rate, TLS or challenge restrictions.
+
+Replay already retained final LA/RI evidence without any HTTP:
+
+```bash
+.venv/bin/python -I -B -m state_politics.bills.native_inventory replay \
+  --raw data/raw/native-inventory-la-ri-completion-v1 \
+  --config conf/native_inventory_la_complete.yml \
+  --baseline data/processed/bill-document-reference-inventory-v4 \
+  --out data/processed/native-inventory-la-ri-REPLAY-UNUSED
+```
+
+Its actual final manifest is
+`717ead624f3272b680c32fe8a54b57d5a9fcf424185300dc65e8365f986a8cfb`.
+All 37 LA query groups and six complete publisher selector scopes were
+independently replayed; 5,300 observations contain 3,996 identities,
+including 1,304 ACT-subset repetitions. RI's actual bill-status origin
+disallows robots; target data remains unrecovered. Seven accepted LA
+pages were reused byte-identically. No original policy body was fetched.
+
+Full finite-page/type aggregation also has a reusable offline producer,
+not a private per-state report patch:
+
+```bash
+.venv/bin/python -I -B -m state_politics.bills.native_inventory_aggregate \
+  --base-packet data/processed/native-inventory-ar-complete-v1 \
+  --raw-projection-manifest data/raw/native-inventory-ar-complete-projection-v1/manifest.json \
+  --capture-manifest data/raw/native-inventory-ar-complete-v1/manifest.json \
+  --contract conf/native_inventory_ar_aggregate.yml \
+  --out data/processed/native-inventory-ar-aggregate-REPLAY-UNUSED
+```
+
+The actual production AR v3 manifest is
+`c3723323c437c1835cf40392d75e57a30c50257f08c62fa8ec069fd85864fc44`.
+Its 1,991 identities / 119 pages / 29 type groups preserve original
+single-page diagnostic failures while proving the complete declared
+queries through exact source edges and narrowly bound aliases. Parent
+production replay reproduces all 25 artifacts. No HTTP or source
+certification occurs in aggregation.
+
+One registry then selects the effective source packet per state, avoiding
+double counting of superseded prefixes without deleting their evidence:
+
+```bash
+.venv/bin/python -I -B -m state_politics.bills.study_inventory \
+  --registry conf/study_inventory_packets.yml \
+  --metadata data/processed/study-abstract-evidence-2023-2024-v3 \
+  --tracker docs/STATE_PROGRESS.md \
+  --out data/processed/native-inventory-catalog-REPLAY-UNUSED
+```
+
+The actual catalog `data/processed/native-inventory-catalog-2023-2024-v2/`
+has manifest
+`2029d93fc3fe65b56c18017be4843d0fc93fd777875cc3eb586d6b45d8a81700`.
+It exports 50 state rows and 11,711 complete original source observations
+with 10,357 native identity observations; 1,354 repetitions remain
+explicit. HI's 39,499 filenames are separate reference candidates, not
+extra measures or originals. All selected original processed/raw files,
+headers, metadata, source-only records and capture exceptions are copied
+unchanged under `packets/`, with complete paths/hashes in the manifest.
+Parent verification receipt:
+`data/processed/native-inventory-catalog-parent-verification-20261021-v2.json`,
+SHA-256 `fe200a927276b6bc33568c911b7e396747322a4ad77daded105519fb2cf1d675`.
+
+Unregistered states in this particular channel are unknown, not zero
+activity; existing accepted native-text packets remain separate.
+No new policy originals, actual filing dates or introduced universes
+are claimed. The historical NH discovery redirect's 161 missing bytes
+remain a declared exception; do not label the entire transport archive
+complete. Data/source permissions and all scientific gates remain
+unchanged. Source/model/generated bytes are local and Git-ignored;
+pushing code/manifests in documentation is not a backup of those bytes.
 
 ## Separate verified publisher-session comparison
 
@@ -751,25 +837,25 @@ survive, and other states/sessions remain unknown rather than zero.
 .venv/bin/python -I -B -m state_politics.analysis.prepare_session_cohort \
   --metadata data/processed/study-abstract-evidence-2023-2024-v3 \
   --native data/processed/study-native-overlap-2023-2024-v14 \
-  --preview data/preview-cycle-evidence-v6 \
-  --scope ny-2023-2024 --scope il-103rd \
+  --preview data/preview-cycle-evidence-v7 \
+  --scope ny-2023-2024 --scope il-103rd --scope tx-88r-retained \
   --out data/processed/verified-session-comparison-2023-2024-REPLAY
 ```
 
-Outputs must not exist. The actual v2 has 37,644 full member records and
-metadata views, 6,827 calendar overlaps, 30,817 session-only members,
-59,193 complete native views, 2,699 members lacking retained text and
-64 preserved negative contexts. Each member retains original canonical
+Outputs must not exist. The actual v3 has 49,450 full member records and
+metadata views, 15,854 calendar overlaps, 33,596 session-only members,
+65,322 complete native views, 8,486 members lacking retained text and
+67 preserved negative contexts. Each member retains original canonical
 bill fields, every abstract and the complete unchanged source-date CSV
 record, including dates outside the calendar window. No date is inferred.
 Physical native references are not counted as extra bills.
 
 Manifest:
-`5188b96eb36fa8aebc4b409fc621b7d829cfb5718b1b90e1b47e6051f266b979`.
+`25114b926fdb74d6947c67839da216e6e9b59620e61ff792652396d8242c1dc1`.
 Independent complete-field/native-byte receipt:
-`data/processed/session-comparison-parent-verification-20261021-v2.json`,
-SHA-256 `621b8992e8351b1c2edf81d7cb5fdec1988fb56bd37c00836a432c3f8a106c3e`.
-The 48 other states remain unsupplied/unknown for this particular frame;
+`data/processed/session-comparison-parent-verification-20261021-v3.json`,
+SHA-256 `6605102a548f004fd461347329147a460347c95cc7e81e7ad290623df52f08dd`.
+The 47 other states remain unsupplied/unknown for this particular frame;
 the original 157,598 calendar candidates and all scientific gates are unchanged.
 
 ## Model-blind human annotation and one local workspace
@@ -791,9 +877,10 @@ population-accuracy reference.
   --output data/human-review-native-REPLAY
 
 .venv/bin/python -I -B scripts/serve_research.py \
-  --evidence data/preview-cycle-evidence-v6 \
-  --sessions data/processed/verified-session-comparison-2023-2024-v2 \
+  --evidence data/preview-cycle-evidence-v7 \
+  --sessions data/processed/verified-session-comparison-2023-2024-v3 \
   --review data/human-review-native-20261021-v3 \
+  --sources data/processed/native-inventory-catalog-2023-2024-v2 \
   --port 8765
 ```
 
@@ -830,6 +917,58 @@ different pseudonyms nor agreement certify identity, independence or gold.
 No imported packet automatically enters training/evaluation or changes
 provisional-loader refusal. No real annotations currently exist.
 
+The subsequent classifier-validation step is also implemented, using the
+existing evaluator rather than rewriting human reviewers as assistants or
+duplicating metrics. The actual pre-annotation plan is
+`data/human-review-evaluation-plan-20261021-v1/`, SHA-256
+`9d5bdf784c97e21b7ead18be9389bbe00e8b7f6e15d38c17910214b74bf4725f`.
+It fixes exactly the two existing models and .8 confidence/.2 margin/
+temperature 1, complete-window inference, resolved two-rater agreements
+as primary and separate full-rater sensitivities. It retains 41 artifacts
+and binds the original weights without copying them. All five runtime
+source files and both original checkpoints are checked for drift.
+
+To independently freeze a new plan before any real annotations:
+
+```bash
+.venv/bin/python -I -B -m state_politics.analysis.human_review freeze-evaluation-plan \
+  --packet data/human-review-native-20261021-v3 --raters 2 \
+  --model mixed_full_document data/models/modernbert-native-document-curriculum-20261021-v1 \
+    data/labels/cycle-native-document-curriculum-20261021-v1/labels.jsonl \
+  --model reviewed_only data/models/modernbert-reviewed-only-20261021-v1 \
+    data/labels/cycle-reviewed-only-experiment-20261021-v1/labels.jsonl \
+  --output data/human-review-evaluation-plan-NEW-UNUSED
+```
+
+**Only after complete real annotations**, export challenge-only advisory
+references against the already frozen actual plan:
+
+```bash
+.venv/bin/python -I -B -m state_politics.analysis.human_review export-references \
+  --plan data/human-review-evaluation-plan-20261021-v1 \
+  --annotations REAL_REVIEW_A_JSON --review-b REAL_REVIEW_B_JSON \
+  --output data/human-evaluation-references-UNIQUE
+.venv/bin/python -I -B -m state_politics.analysis.modernbert \
+  --inputs data/human-evaluation-references-UNIQUE/primary-advisory-evaluation-references.jsonl \
+  --out data/human-evaluation-mixed-primary-predictions-UNIQUE.jsonl \
+  --topics data/human-review-evaluation-plan-20261021-v1/packet/complete-inputs/topics.yml \
+  --split challenge --checkpoint data/models/modernbert-native-document-curriculum-20261021-v1 \
+  --allow-provisional
+.venv/bin/python -I -B -m state_politics.analysis.human_review score-references \
+  --references data/human-evaluation-references-UNIQUE \
+  --model-alias mixed_full_document --role primary \
+  --predictions data/human-evaluation-mixed-primary-predictions-UNIQUE.jsonl \
+  --output data/human-evaluation-mixed-primary-advisory-report-UNIQUE.json
+```
+
+Apply the same predeclared policy to `reviewed_only` and both
+`sensitivity_review_a_all` / `sensitivity_review_b_all` roles, preserving
+their separate input/reference files. An empty agreed primary cannot be
+replaced with a fabricated score. The loader rejects converting these
+references into training rows. Actual human inputs remain unannotated and
+unpredicted; the only executed end-to-end scoring proof uses explicitly
+synthetic references/logits and is not classifier validation.
+
 ## Unpublished cycle-evidence explorer
 
 ```bash
@@ -841,7 +980,8 @@ provisional-loader refusal. No real annotations currently exist.
   --metadata-token-plan data/processed/study-metadata-token-plan-2023-2024-v2 \
   --receipt-evidence data/processed/maine-source-receipt-evidence-2023-2024-v1 \
   --native-session-scope ny-2023-2024 --native-session-scope il-103rd \
-  --out data/preview-cycle-evidence-v6
+  --native-session-scope tx-88r-retained \
+  --out data/preview-cycle-evidence-v7
 ```
 
 Evidence mode defaults to metadata v3 and platform evidence v5, with matching
@@ -850,7 +990,7 @@ attach these default optional bundles; pass compatible explicit directories.
 The output includes all 50 state coverage rows / 100 organization rows,
 complete metadata/platform texts, lazy state partitions, full-text gzip
 downloads and `downloads/build_manifest.json`. The current build manifest is
-`3a1cf3e980502edefde3121af229baebccb38e0a076e8813966f8ab9da90a0d9`.
+`ae02b9ef09d755ce59cdf814059b2ceb15bce1c56abd82371d3dc92e4c86abd9`.
 Receipt/session additions are explicit opt-ins only; the default/custom
 metadata behavior does not silently attach them. Build producers are archived
 with their exact source hashes. V3–v5 remain preserved.
@@ -859,7 +999,7 @@ For interactive use, serve the output with a local static HTTP server:
 
 ```bash
 .venv/bin/python -I -B -m http.server 8765 \
-  --bind 127.0.0.1 --directory data/preview-cycle-evidence-v6
+  --bind 127.0.0.1 --directory data/preview-cycle-evidence-v7
 ```
 
 No server is left running by the build or verification. JavaScript fetches
@@ -878,7 +1018,7 @@ Maine's empty cycle query explicitly retains the wider 9,877-context inventory
 and missing-date distinction. Real Chromium exercised pagination, complete
 query downloads, literal-markup safety, keyboard, mobile and no-JS behavior.
 
-The actual enriched preview exports 39,576 complete native text views /
+The primary candidate channel exports 39,576 complete native text views /
 27,512 source references / 27,444 distinct candidate bills. It does not
 embed raw PDFs or certify original-stage identity. Planning statistics are
 in a separate `token_plan` namespace; original metadata token fields remain

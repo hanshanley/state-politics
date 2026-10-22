@@ -191,30 +191,31 @@ No untouched-holdout, human-gold, causal or release claim is made.
 
 The calendar definition remains unchanged, but it no longer prevents
 inspection of a separate verified publisher-session frame. The actual
-`data/processed/verified-session-comparison-2023-2024-v2/` contains
-**37,644 exact NY/IL session members**, including **30,817 outside the
-calendar-candidate cohort** and 6,827 overlapping it. All original bill
+`data/processed/verified-session-comparison-2023-2024-v3/` contains
+**49,450 exact NY/IL/TX session members**, including **33,596 outside the
+calendar-candidate cohort** and 15,854 overlapping it. All original bill
 fields, full abstract alternatives, complete source-date ledger records
-and 37,644 native reference contexts survive.
+and 49,450 native reference contexts survive.
 
-There are **59,193 complete native views for 34,945 members**, with **2,699
+There are **65,322 complete native views for 40,964 members**, with **8,486
 members explicitly lacking retained native text**. This does not invent
-originals for those gaps. All 64 unmatched/source-only native contexts
+originals for those gaps. All 67 unmatched/source-only native contexts
 remain in a separate full-record export, never aliased to a known bill.
-All 50 states are accounted for; the other 48 have no supplied reviewed
+All 50 states are accounted for; the other 47 have no supplied reviewed
 session scope, not zero activity. Original calendar membership, actual
 dates, reader alternatives and all false approval flags are unchanged.
 
 The complete native streams are byte-identical to the original bound
 preview partitions, including large-integer provenance and Unicode.
 Independent parent replay verifies every member's original bill fields,
-all 37,644 date-ledger records, original context alternatives and all
-59,193 text hashes. Manifest:
-`5188b96eb36fa8aebc4b409fc621b7d829cfb5718b1b90e1b47e6051f266b979`.
+all 49,450 date-ledger records, original context alternatives and all
+65,322 text hashes. Manifest:
+`25114b926fdb74d6947c67839da216e6e9b59620e61ff792652396d8242c1dc1`.
 Parent receipt:
-`621b8992e8351b1c2edf81d7cb5fdec1988fb56bd37c00836a432c3f8a106c3e`.
+`6605102a548f004fd461347329147a460347c95cc7e81e7ad290623df52f08dd`.
 This is a source comparison, not a new primary denominator, introduced
-universe, model admission, state closure or scientific result.
+universe, model admission, state closure or scientific result. The earlier
+NY/IL-only v2 remains preserved unchanged.
 
 ## Human validation workflow and genuinely unannotated inputs
 
@@ -250,6 +251,24 @@ session comparison and blind review in one loopback-only workspace. It
 serves only unchanged manifest-listed artifacts, not the whole data
 directory, and performs no publication, collection or classification.
 
+Human review also connects to the existing classifier evaluator without
+manual label rewriting. A pre-annotation plan freezes exactly the mixed
+full-document and reviewed-only checkpoints, their original training
+labels/weights, taxonomy and unchanged .8/.2/1 decision policy. Primary
+scoring is predeclared as resolved two-rater agreements only; complete
+per-rater sensitivities and disagreements remain separate. The actual
+28-input packet is still unannotated and unpredicted.
+
+Plan: `data/human-review-evaluation-plan-20261021-v1/`, SHA-256
+`9d5bdf784c97e21b7ead18be9389bbe00e8b7f6e15d38c17910214b74bf4725f`.
+Parent verification checked 41 retained plan artifacts, five live runtime
+sources and 20 original model/training/weight bindings, receipt
+`432a3c4bf762d2b5d18842db6aaa41243c2b160b68f081586342bed0d2c9c26e`.
+The shared example loader accepts these explicit self-attested references
+only as challenge/evaluation data and rejects changing them to training.
+No human identity is rewritten as an assistant identity. Only synthetic
+fixtures have been exported/scored; their results are not model accuracy.
+
 ## Additional source evidence without date-cohort expansion
 
 Maine's retained source now has a complete separate receipt packet:
@@ -274,9 +293,21 @@ The national cohort stays **157,598 candidate contexts / 159,315 metadata
 views**, with **39,576 candidate-native views**. Added receipt/session sources
 do not change these denominators, party timing, platform applicability or
 model approval. Full text and source records survive in complete downloads.
-The actual latest preview is `data/preview-cycle-evidence-v6/`, manifest
+The later v7 extension additionally exposes **84 retained Texas 88R views /
+60 canonical IDs**, under the exact existing 88R-to-88 session crosswalk
+and checksum-bound registry specification. It does not collect again or
+infer filing dates. Total additional source views are now **52,049**;
+combined with 39,576 candidate-native views, **91,625 complete native views**
+are inspectable. Every one of the 419 prior source exports remains
+byte-identical, and the 84 new texts match the original immutable index.
+Current preview: `data/preview-cycle-evidence-v7/`, manifest
+`ae02b9ef09d755ce59cdf814059b2ceb15bce1c56abd82371d3dc92e4c86abd9`.
+Parent v7 receipt:
+`data/processed/texas-session-v7-parent-verification-20261021-v2.json`,
+SHA-256 `036d69d8bc7abcd69d01ece9dd0682a5a032d75562a537e279c6786e3d12e5bb`.
+The earlier v6 remains preserved with manifest
 `3a1cf3e980502edefde3121af229baebccb38e0a076e8813966f8ab9da90a0d9`.
-Parent reconciliation verifies 109 input hash/stat bindings, 483 output
+For v6, parent reconciliation verifies 109 input hash/stat bindings, 483 output
 hashes/byte counts, all 91,541 native text-view hashes against the original
 bound index and all 415 prior data exports unchanged. Its receipt is
 `data/processed/complete-source-explorer-parent-verification-20261021-v1.json`,
@@ -317,6 +348,78 @@ compatibility and annotation provenance remain unapproved; none was added
 to training or evaluation. Full raw bytes and complete records are retained,
 not merely links or metadata counts.
 
+## Bounded native-list recovery and all-state catalog
+
+The previously unassigned inventory states now have an actual bounded
+official-source recovery record, not another mocked collector pilot.
+One shared capture/declarative replay mechanism retains complete publisher
+fields, literal source dates, every physical request/error/redirect,
+raw entities and persistent limits. Historical use remains unknown;
+newly authorized increments are not a claim that earlier usage was zero.
+Accepted closed scopes were not recollected.
+
+| State | Effective source observations / identities | Actual recovered scope |
+| --- | ---: | --- |
+| AR | 1,991 / 1,991 | All four 2023/2024 regular/fiscal/extraordinary publisher sessions: 119 pages, 29 type groups; seven old pages reused |
+| LA | 5,300 / 3,996 | All 37 publisher type queries across six regular/extraordinary sessions; 1,304 ACT-subset repetitions preserved |
+| NH | 1,996 / 1,996 | Complete returned 2023/2024 queries, 675 and 1,321 records; not an independently verified introduced universe |
+| ND | 1,006 / 1,006 | Complete embedded regular/special publisher lists; literal action dates are not introduction dates |
+| NV | 1,156 / 1,106 | Three complete query lists plus 50 preserved prefix repetitions; literal starred identities are not silently repaired |
+| HI | 262 / 262 | Passed-bill subset only; 39,499 filename entries remain a separate reference inventory, not recovered policy texts |
+
+ID discovery is robots-restricted; NE/VT census endpoints are disallowed;
+the actual RI bill-status origin disallows access to `/`. MS stopped on
+TLS verification failure, not a proven robots prohibition. WY stopped
+conservatively on a reCAPTCHA JavaScript literal, not a proven WAF denial
+or solved challenge. These are explicit unrecovered scopes, not zero
+legislative activity. AL/SC prior discovery limits are unchanged.
+
+Two tightly coupled data-recovery bugs were fixed rather than hidden.
+Missing `robots.txt` 404/410 responses can be handled only by explicit
+operator opt-in; conservative defaults remain unchanged. This implements
+the optional unavailable-policy behavior in RFC 9309 section 2.3.1.3,
+not independent collection authorization or a bypass of actual
+Disallow/auth/rate/challenge restrictions. A second fix validates full
+finite publisher page/type graphs and exact evidenced URL aliases, rather
+than wrongly requiring each individual page to contain the entire query.
+AR's original false-negative diagnostics remain preserved separately.
+
+The final all-state catalog is
+`data/processed/native-inventory-catalog-2023-2024-v2/`, manifest
+`2029d93fc3fe65b56c18017be4843d0fc93fd777875cc3eb586d6b45d8a81700`.
+It retains **11,711 complete effective source observations / 10,357
+native identity observations**. The **1,354 repetitions** are not counted
+as new identities. A reviewed nonoverlapping state-to-packet registry
+replaces old AR/LA prefixes for counting while retaining all old evidence.
+Every original source field, raw file, auxiliary/filename inventory and
+negative disposition survives. Parent replay checked 1,013 artifact
+hashes, 991 original copied files and every effective source record:
+`fe200a927276b6bc33568c911b7e396747322a4ad77daded105519fb2cf1d675`.
+
+**No policy original was downloaded by this metadata pass.** No native
+introduced universe, canonical join, filing date, model, state-science
+closure or operative platform is certified. The historical NH-04
+discovery redirect lost 161 received bytes before a transport bug was
+fixed; that entity remains explicitly unrecoverable, never reconstructed.
+Its complete census response entities are retained. The entire historical
+archive is therefore not claimed to have every received byte.
+
+All new runs are closed; unused numerical allowance is not dispatch
+authority. The tracker now has **6 closed source scopes, 21 partial,
+21 blocked and 2 inventory**, with zero end-to-end scientifically completed
+states. The original 157,598 calendar candidates are unchanged.
+
+The loopback workspace optionally exposes this fourth catalog alongside
+the evidence explorer, session comparison and human review. Actual
+single-Chromium verification covered all five routes and downloaded the
+entire 84-record Texas query: **3,666,694 original bytes**, identical to its
+NDJSON partition. No actual human decision was created; all helpers
+stopped. Browser receipt:
+`3627ff83a5b5b9b0cba0ea677f5b5dae03cce51f38d10802629601da60b13988`.
+The final integrated changed-surface suite passed **375 tests**, including
+real Chromium. This is engineering validation, not scientific admission
+or a repair of the separately documented 34 legacy missing-artifact failures.
+
 ## Shared partial-native indexes and unpublished explorer
 
 The native registry now indexes **28 packets across 26 states**. Shared
@@ -355,7 +458,7 @@ literal search, pagination and complete filtered-query downloads. Keyboard,
 mobile and no-JS coverage/download access were exercised in real Chromium.
 Maine explicitly distinguishes its missing cycle-date cohort from 9,877 wider
 retained contexts. Search scope is the selected state/source, not national
-full-text search. The explicit native bundle now exports **39,576 complete
+full-text search. The candidate-date native channel exports **39,576 complete
 text views / 27,512 source references / 27,444 distinct candidate bills**;
 raw PDFs are not embedded. The token plan has a separate display/download
 namespace, preserving the original null metadata token fields. Planning is

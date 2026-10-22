@@ -151,12 +151,50 @@ already counted candidate IDs and retain all reader/reference alternatives.
 They do not infer filing dates or change the six closed scopes. This fills
 an evidence-inspection gap, not a new native-census or scientific closure.
 
+V7 adds another **84 retained Texas 88R views / 60 IDs**, without HTTP or
+date inference. The combined explorer now exposes 91,625 complete native
+views. A separate NY/IL/TX session comparison preserves 49,450 original
+member/date records and 65,322 full native views, including explicit
+missing-text records. It does not replace the 157,598 calendar candidates.
+
+## Latest bounded native-metadata recovery
+
+All newly assigned native-list tasks have returned; **no collector is
+currently running**. AR's four publisher sessions contain 1,991 identities,
+with every one of 119 pages / 29 type groups accounted for. LA's six
+2023/2024 sessions contain 3,996 identities in 5,300 observations across
+37 type queries; 1,304 ACT-subset observations are preserved, not counted
+as new measures. NH contributes 1,996 returned query records, ND 1,006
+embedded list records, NV 1,106 identities / 1,156 observations and HI
+262 passed-bill records plus a separate 39,499-entry filename inventory.
+
+These are publisher metadata scopes, **not introduced-universe,
+original-text, canonical-join or scientific certification**. No new
+policy original was downloaded by this metadata pass. All source fields,
+raw captures, query bounds, duplicates, incomplete scopes and permission
+failures remain available. Exact source restrictions for ID/MS/NE/RI/VT/WY
+are below; AL/SC allowances remain unchanged. Missing `robots.txt` handling
+is explicitly selected for 404/410 only, never a bypass of actual
+Disallow/auth/rate/challenge restrictions.
+
+The shared catalog uses one reviewed effective packet per state, retaining
+older packets without summing superseded AR/LA prefixes or NV duplicates.
+See [bounded recovery and limitations](AUDIT_STATUS.md#bounded-native-list-recovery-and-all-state-catalog).
+The complete source-accounting checkpoints remain CA/CO/NC/OH/SD/WI;
+**no state is complete end to end**.
+
 The final reviewed-only classifier experiment is complete, not an active
 collector or a newly approved model. Its small native assistant diagnostic
 reached 18/19 classified precision at 19/36 coverage, with lower decision
 accuracy than the mixed full-document model. Metadata and platform
 decisions also regressed; no state or scientific gate is closed by this
 experiment. See the [completed model comparison](AUDIT_STATUS.md#complete-native-input-review-not-metadata-only-validation).
+
+The local human-review workflow now has 28 genuinely unannotated complete
+inputs, 52 alternatives and all 50 states accounted for. A pre-annotation
+plan fixes both existing model checkpoints and the evaluation policy;
+challenge-only human references cannot be converted into training rows.
+This makes independent review executable, not already performed.
 
 For subsequent recovery, use a common pipeline: **native cohort -> exact
 record join -> missing-original retrieval -> shared extraction/validation ->
@@ -173,7 +211,9 @@ Keep blocked work out of collection, preserve request history and restrictions,
 and update this current table on acceptance. Platform applicability, attribution
 and classifier approval remain separate project-wide gates, not 50 separate
 training campaigns. This is the operating contract; common collection adapters
-are not implemented by the offline matrix command.
+are not implemented by the offline matrix command. The separate
+`native_inventory` command supplies shared bounded capture/declarative replay;
+the matrix and catalog remain offline and do not authorize requests.
 
 ## How to use this list
 
@@ -198,7 +238,7 @@ pushing this tracker is not a backup of their bytes.
 
 ## All 50 states
 
-Current distribution: **6 closed scopes, 15 partial, 15 blocked, 14 inventory,
+Current distribution: **6 closed scopes, 21 partial, 21 blocked, 2 inventory,
 0 in progress**. These categories describe legislative evidence, not scientific
 certification or the completeness of either party's platforms.
 
@@ -207,53 +247,53 @@ certification or the completeness of either party's platforms.
 | Alabama (AL) | Inventory | Dedicated offline inventory completed: 11,847 measures across 12 stored sessions, 23,164 versions, 23,169 links and 18,294 sources. Two measures lack versions/links. Native census, actual boundaries and original texts remain unverified. | [Returned inventories](#current-assignments) |
 | Alaska (AK) | Blocked | Blocked-evidence packet replayed; official robots restriction retained. Native census, actual boundaries and originals unknown. | [Initial-state audits](AUDIT_STATUS.md) |
 | Arizona (AZ) | Partial | Initial v2 reconstruction accepted; four PDFs and four total HTML views, not four pairs. Native census, original-version proof and boundaries remain unresolved. | [Initial-state audits](AUDIT_STATUS.md) |
-| Arkansas (AR) | Inventory | No dedicated native legislative closure recorded. Recover native census/source contract before claiming text completeness. | [National inventory](AUDIT_STATUS.md#all-state-document-reference-inventory-and-retrieval) |
+| Arkansas (AR) | Partial | Complete publisher-listed 2023R/2023S1/2024F/2024S2 metadata: 1,991 identities, 119 pages and 29 type groups. Exact finite-page/alias proof independently replayed; seven accepted pages reused. No introduced-universe, filing-date, original-text or scientific closure; retrieve only named missing originals, not the census again. | [Bounded native recovery](AUDIT_STATUS.md#bounded-native-list-recovery-and-all-state-catalog) |
 | California (CA) | Closed scope | Reuse the accepted 2023–2024 native archive from the wider five-biennium capture; do not extend older/newer coverage. Wider-archive counts are not cycle denominators. Regular/special contexts and filing-time interpretation remain distinct. | [Complete archives](AUDIT_STATUS.md#california-complete-native-archive-and-introduced-source-candidates) |
 | Colorado (CO) | Closed scope | 2023/2024 regular cohort: 1,459 identities, 1,457 PDFs and two explicit reference gaps; whole archive and actual final-17 replay accepted. Resolve SB 23-214/HB 24-1430 references and separate special-session scope, not a repeat of the 1,457-PDF collection. | [Colorado closure](AUDIT_STATUS.md#colorado-regular-session-source-census-and-full-continuation) |
 | Connecticut (CT) | Blocked | Initial v2 blocked-evidence reconstruction accepted; zero originals. Native census/boundaries unknown and official robots restriction retained. | [Initial-state audits](AUDIT_STATUS.md) |
 | Delaware (DE) | Blocked | Blocked-evidence packet replayed; robots redirects ended in Page Not Found. Native census/boundaries unknown; zero originals. | [Initial-state audits](AUDIT_STATUS.md) |
 | Florida (FL) | Partial | Exact reconciliation completed: all 2,868 supplied inputs are 2019/2020 session contexts, with zero observed target-cycle overlap. All 1,847 qualifying date observations are Senate-side; 2,008 target-session-labelled contexts lack introduction dates. Establish native 2023–2024 universe/originals and House dates, not another historical replay or the 2019 SB186 correction gap. | [Cycle reconciliation](AUDIT_STATUS.md#florida-cycle-source-reconciliation) |
 | Georgia (GA) | Blocked | Blocked-evidence reconstruction accepted; sessions API returned 401 and collection stopped. Native census unknown; zero originals. | [Parallel native recovery](AUDIT_STATUS.md#additional-parallel-native-source-recovery) |
-| Hawaii (HI) | Inventory | No dedicated native legislative closure recorded; platform-training evidence is not legislative source closure. | [National inventory](AUDIT_STATUS.md#all-state-document-reference-inventory-and-retrieval) |
-| Idaho (ID) | Inventory | No dedicated native legislative closure recorded; establish native cohort and original-version evidence. | [National inventory](AUDIT_STATUS.md#all-state-document-reference-inventory-and-retrieval) |
+| Hawaii (HI) | Partial | 262 passed-bill source records and 39,499 separate publisher filename entries retained. Passed subset and filename candidates are not an all-introduced census or recovered text. Preserve scope and original-version gaps; platform evidence remains separate. | [Bounded native recovery](AUDIT_STATUS.md#bounded-native-list-recovery-and-all-state-catalog) |
+| Idaho (ID) | Blocked | Official-source discovery returned a binding robots restriction; zero direct native HTTP or originals. Native census remains unknown, not zero activity; no alternate-host or cache workaround authorized. | [Bounded native recovery](AUDIT_STATUS.md#bounded-native-list-recovery-and-all-state-catalog) |
 | Illinois (IL) | Blocked | Initial sources/body repair/stopped-prefix evidence remain accepted; actual collection closure is still open. Shared GA-103 export now exposes 5,189 further complete retained views outside the candidate-date cohort, separate from 5,508 candidate views. No new collection, date inference or closure credit; prior 1,925-pending/two-partial campaign accounting remains distinct. | [Illinois audit](AUDIT_STATUS.md#illinois-103rd-general-assembly-native-census-and-original-html) |
 | Indiana (IN) | Blocked | Canonical-only 2,362-context target inventory and blocked packet accepted; no native census, original or actual boundary. Historical legislative request count unknown; new HTTP allowance is zero. | [Indiana current evidence](AUDIT_STATUS.md) |
 | Iowa (IA) | Blocked | Bounded native/source reconstruction accepted, not acquisition-policy acceptance. HTTP500 block responses and post-block requests retained; collection stopped and further HTTP unauthorized. | [Initial-state audits](AUDIT_STATUS.md) |
 | Kansas (KS) | Partial | Initial r2 native cohort has 1,558 rows versus 1,559 canonical contexts; seven introduced PDFs, not full text closure. SR1742 nonmatch and historical request accounting remain open. | [Initial-state audits](AUDIT_STATUS.md) |
 | Kentucky (KY) | Partial | 3,005 native regular contexts; 30 genuine introduced PDFs and two withdrawal gaps accepted. Offline full-driver/readiness proof accepted separately; remaining genuine originals and historical request reconciliation are not completed. | [Kentucky current evidence](AUDIT_STATUS.md) |
-| Louisiana (LA) | Inventory | No dedicated native legislative closure recorded; scanned party-platform evidence is a different source type. | [National inventory](AUDIT_STATUS.md#all-state-document-reference-inventory-and-retrieval) |
+| Louisiana (LA) | Partial | All 37 publisher type queries across six 2023/2024 regular/extraordinary sessions retained: 3,996 identities / 5,300 observations, including 1,304 repeated ACT-subset observations. Seven HB pages reused unchanged. No original texts, exact filing dates, introduced-universe or analytical certification; do not repeat the accepted queries. | [Bounded native recovery](AUDIT_STATUS.md#bounded-native-list-recovery-and-all-state-catalog) |
 | Maine (ME) | Blocked | Official robots restriction retained; no native originals/census. Offline receipt packet preserves all 9,877 contexts/166,141 actions, 61 unique date-agreeing origin receipts and one LD 2081 discrepancy. Receipt is not filing/introduction; no target-cohort admission or renewed HTTP. | [Receipt evidence](AUDIT_STATUS.md#additional-source-evidence-without-date-cohort-expansion) |
 | Maryland (MD) | Partial | Initial v2 reconstruction and native 5,012-row inventory accepted; eight selected contexts, ten PDFs including calendars. Actual boundaries, special-session closure and remaining introduced texts are open. | [Initial-state audits](AUDIT_STATUS.md) |
 | Massachusetts (MA) | Partial | Initial v3 reconstruction accepted; 50 observed native rows and zero original PDFs, not a complete introduced-bill census. Actual boundaries and native introduced scope remain open. | [Initial-state audits](AUDIT_STATUS.md) |
 | Michigan (MI) | Partial | 4,043 native contexts and 32 genuine PDFs accepted. Offline full-campaign/transport-readiness evidence is separate; remaining 4,011 official originals are not recovered by mocked transport. | [Initial packet](AUDIT_STATUS.md#michigan-initial-packet-independent-v3-reconstruction-accepted) |
 | Minnesota (MN) | Partial | Initial publisher-listed 11,146-identity inventory and 31 original pairs accepted; SR61 selected gap, cross-year contexts and introduced-universe proof remain open. | [Parallel native recovery](AUDIT_STATUS.md#additional-parallel-native-source-recovery) |
-| Mississippi (MS) | Inventory | No dedicated native legislative closure recorded; establish native cohort and original-version evidence. | [National inventory](AUDIT_STATUS.md#all-state-document-reference-inventory-and-retrieval) |
+| Mississippi (MS) | Blocked | Native discovery stopped on TLS verification failure, not a proven publisher robots prohibition. No response entity or originals recovered; census remains unknown. Do not disable certificate verification or claim zero activity. | [Bounded native recovery](AUDIT_STATUS.md#bounded-native-list-recovery-and-all-state-catalog) |
 | Missouri (MO) | Blocked | Native reconciliation, genuine 1,152-PDF stopped prefix, private recovery and header supplement accepted. Next-32 mocked proof reaches 1,184, not genuine collection; remaining full 4,960-context campaign is not closed. | [Stopped-prefix recovery](AUDIT_STATUS.md#missouri-actual-collector-failure-and-post-exit-recovery-gate) |
 | Montana (MT) | Partial | Shared date-only integration retains 1,640 guarded formal native observations inside 2023–2024, including 213 calendar-2024 prefilings in session 2025. No policy originals are supplied by this date profile. Prioritize cycle policy texts/conflicts, not missing 2019 histories or out-of-window 2025 events. | [Native/history evidence](AUDIT_STATUS.md#native-montana-universe-and-draftformal-identity-reconciliation) |
-| Nebraska (NE) | Inventory | No dedicated native legislative closure recorded. Nonpartisan legislature stays unavailable for D/R attribution; party-platform training evidence is separate. | [National inventory](AUDIT_STATUS.md#all-state-document-reference-inventory-and-retrieval) |
-| Nevada (NV) | Inventory | No dedicated native legislative closure recorded; recovered party-platform PDF does not close bill sources. | [National inventory](AUDIT_STATUS.md#all-state-document-reference-inventory-and-retrieval) |
-| New Hampshire (NH) | Inventory | No dedicated native legislative closure recorded; establish native cohort and original-version evidence. | [National inventory](AUDIT_STATUS.md#all-state-document-reference-inventory-and-retrieval) |
+| Nebraska (NE) | Blocked | Official census endpoints are robots-disallowed; collection stopped and statewide census/originals remain unknown. Nonpartisan legislature stays unavailable for D/R attribution; no party inference or endpoint workaround. | [Bounded native recovery](AUDIT_STATUS.md#bounded-native-list-recovery-and-all-state-catalog) |
+| Nevada (NV) | Partial | Three publisher query lists recovered: 1,106 native identities in 1,156 observations. Fifty prefix duplicates and seven literal starred identities remain distinct source evidence, not silent aliases. No introduced-universe, original-version or full-text certification. | [Bounded native recovery](AUDIT_STATUS.md#bounded-native-list-recovery-and-all-state-catalog) |
+| New Hampshire (NH) | Partial | Complete returned publisher queries: 675 records for 2023 and 1,321 for 2024. Not an all-introduced census: retained national contexts differ by 267/3. Current-version links are not originals. One historical 161-byte discovery redirect entity is unrecoverable and explicit; complete census entities are retained. | [Bounded native recovery](AUDIT_STATUS.md#bounded-native-list-recovery-and-all-state-catalog) |
 | New Jersey (NJ) | Blocked | Blocked-evidence replay accepted; HTTP403 stop retained. Native census/boundaries unknown; zero originals. Canonical biennia are not native introduced counts. | [Parallel native recovery](AUDIT_STATUS.md#additional-parallel-native-source-recovery) |
 | New Mexico (NM) | Partial | Bounded 87-reference/36-bill recovery, wrong-session attachment quarantine and separate substitute OCR preserved. Complete native universe and original policy-text coverage remain open. | [Native recovery](AUDIT_STATUS.md#new-mexico-native-recovery-and-cross-session-quarantine) |
 | New York (NY) | Blocked | Existing terminal/forensic evidence remains bound; A255 lifecycle anomaly and unsealed final-43 tail still block closure. Shared exact-session export exposes 46,776 further retained reader views across 23,388 canonical IDs outside candidate dates; 1,720 candidate views remain separate. No inferred dates, new collection or closure credit. | [Additional session evidence](AUDIT_STATUS.md#additional-source-evidence-without-date-cohort-expansion) |
 | North Carolina (NC) | Closed scope | Complete 2023/2024 2,004-PDF native source archive and actual final-20 replay accepted; two numeric identities unresolved and canonical HB311 unmatched. Statewide native version-list collection is a separate, unfinished task. | [Whole archive and tail](AUDIT_STATUS.md#north-carolina-publisher-census-and-full-original-source-continuation) |
-| North Dakota (ND) | Inventory | No dedicated native legislative closure recorded; scanned party resolutions/OCR are separate from legislative sources. | [National inventory](AUDIT_STATUS.md#all-state-document-reference-inventory-and-retrieval) |
+| North Dakota (ND) | Partial | Complete embedded regular/special publisher lists retain 1,006 native source records, fields and literal action dates. These dates are not inferred introductions; no policy originals or introduced-universe certification. Party resolutions/OCR remain separate. | [Bounded native recovery](AUDIT_STATUS.md#bounded-native-list-recovery-and-all-state-catalog) |
 | Ohio (OH) | Closed scope | Complete 135th cohort accounting: 2,279 contexts, 2,267 PDF/HTML pairs, five PDF-only and seven unsupported originals; genuine whole/final-7 replay accepted. HB45/HB412 native nonmatches remain explicit. | [Genuine archive replay](AUDIT_STATUS.md#full-campaign-preparation-gates-pennsylvania-ohio-and-missouri) |
 | Oklahoma (OK) | Partial | Bounded introduced-cover source evidence retained; no statewide native census or full source closure established. Party/platform recovery is separate. | [Reference recovery](AUDIT_STATUS.md#all-state-document-reference-inventory-and-retrieval) |
 | Oregon (OR) | Partial | Initial native reconstruction: 3,263 current listed identities and 32 PDFs. Full 3,261-regular-cohort mocked preparation is not genuine remaining-text recovery; pacing/history/introduced-universe closure stays open. | [Initial-state audits](AUDIT_STATUS.md) |
 | Pennsylvania (PA) | Blocked | Initial 62 PDF/HTML originals and actual stopped-prefix evidence accepted; collector failed at gapped checkpoint. Offline parser/driver successor proof is not resumed official collection; full 4,786-native cohort remains unclosed. | [Campaign gates and actual stop](AUDIT_STATUS.md#full-campaign-preparation-gates-pennsylvania-ohio-and-missouri) |
-| Rhode Island (RI) | Inventory | No dedicated native legislative closure recorded; establish native cohort and original-version evidence. | [National inventory](AUDIT_STATUS.md#all-state-document-reference-inventory-and-retrieval) |
+| Rhode Island (RI) | Blocked | Actual official bill-status origin explicitly disallows robots access to `/`; stopped before substantive queries. Earlier 100 mixed-scope search hits remain auxiliary, not target census records. Native census/originals remain unknown; no alternate-host workaround. | [Bounded native recovery](AUDIT_STATUS.md#bounded-native-list-recovery-and-all-state-catalog) |
 | South Carolina (SC) | Inventory | Dedicated offline inventory completed: 17,229 measures across five stored biennia, 42,676 versions, 58,488 links and 17,229 sources. Ten measures lack versions/links. Native census, actual boundaries and original texts remain unverified. | [Returned inventories](#current-assignments) |
 | South Dakota (SD) | Closed scope | Reuse the 2023–2024 portion of the accepted complete 14-session 2018–2026 capture and its paired-reader inputs; no further older/newer recovery required. Wide-archive totals are not cycle denominators; retained identity/year exceptions stay attached. | [Complete introduced documents](AUDIT_STATUS.md#complete-introduced-pdf-capture-exact-page-replay-and-header-format-review) |
 | Tennessee (TN) | Blocked | Blocked-evidence replay accepted; first official robots exchange disallowed access. Native census/boundaries unknown; zero originals. | [Initial-state audits](AUDIT_STATUS.md) |
-| Texas (TX) | Blocked | 88R native census, first-batch source archive and body/input projection accepted. Genuine full-source/final-15 closure not accepted; v8/v9 tooling and actual campaign state must not be called complete from older progress reports. | [Texas source campaign](AUDIT_STATUS.md#texas-88r-filed-census-and-bounded-original-text-recovery) |
+| Texas (TX) | Blocked | Existing 88R census/body/input evidence remains accepted, but full-source/final-15 closure is unaccepted. V7 exposes 84 further complete retained views / 60 IDs outside candidate dates under the explicit 88R-to-88 scope; no new HTTP, dates or closure credit. Old v8/v9 tooling is not completion. | [Texas source campaign](AUDIT_STATUS.md#texas-88r-filed-census-and-bounded-original-text-recovery) |
 | Utah (UT) | Blocked | Bounded reconstruction of 1,863 general-session rows and seven PDF/HTML originals accepted only as reconstruction. Collection-policy acceptance withheld; historical usage unknown and further HTTP unauthorized. | [Utah current evidence](AUDIT_STATUS.md) |
-| Vermont (VT) | Inventory | No dedicated native legislative closure recorded; establish native cohort and original-version evidence. | [National inventory](AUDIT_STATUS.md#all-state-document-reference-inventory-and-retrieval) |
+| Vermont (VT) | Blocked | Official introduced-measure endpoint is robots-disallowed; collection stopped. Native census and originals remain unknown, not zero activity; do not use another endpoint to bypass the restriction. | [Bounded native recovery](AUDIT_STATUS.md#bounded-native-list-recovery-and-all-state-catalog) |
 | Virginia (VA) | Partial | Initial 6,458 distinct introduced identities, two PDFs and twelve HTML views accepted; 166 canonical-only 2023 contexts and 6,446 native originals remain outside recovered original scope. | [Parallel native recovery](AUDIT_STATUS.md#additional-parallel-native-source-recovery) |
 | Washington (WA) | Partial | Complete retained version/roster reconciliation and bounded native documents for all 241 non-test recovery targets. Not statewide full text: SR8601 version conflict, HB2379 primary-sponsor gap and other metadata gaps remain. | [Original-document cohort](AUDIT_STATUS.md#original-document-recovery-and-a-version-note-conflict) |
 | West Virginia (WV) | Partial | Bounded DOCX introduced-cover/session evidence retained; main-document-only extraction is not full statewide source closure. | [Reference recovery](AUDIT_STATUS.md#all-state-document-reference-inventory-and-retrieval) |
 | Wisconsin (WI) | Closed scope | Genuine 2023/2024 2,655-PDF archive, whole/final-31 and full paired-reader input replay accepted. Retained identity negatives and legal/filing-time questions stay explicit; do not redo the collection or mark it still running from old tasks. | [Native campaign](AUDIT_STATUS.md#wisconsin-native-preparation-and-canonical-replay-gate) |
-| Wyoming (WY) | Inventory | No dedicated native legislative closure recorded; establish native cohort and original-version evidence. | [National inventory](AUDIT_STATUS.md#all-state-document-reference-inventory-and-retrieval) |
+| Wyoming (WY) | Blocked | Acquisition-policy uncertainty: a JavaScript reCAPTCHA literal triggered a conservative halt, not a proven WAF denial or solved challenge. No native census/originals recovered; further network remains unauthorized under the closed scope. | [Bounded native recovery](AUDIT_STATUS.md#bounded-native-list-recovery-and-all-state-catalog) |
 
 ## Current assignments
 

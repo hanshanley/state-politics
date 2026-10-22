@@ -45,6 +45,11 @@ NATIVE_SESSION_SCOPES = {
         "packet_root": "data/processed/retained-campaign-input-index-2023-2024-v1/IL",
         "packet_spec_sha256": "9328f3c3f8c8df2b77dad21625e804b7091e275ea2feea5fe25e25d7664d8835",
     },
+    "tx-88r-retained": {
+        "state": "TX", "session_identifier": "88",
+        "packet_root": "data/processed/retained-supplement-input-index-2023-2024-v1/TX",
+        "packet_spec_sha256": "499691e7105f0f81f50c549425e2325bf83be6abfd570b3cff2e340b1b68f227",
+    },
 }
 SESSION_SCOPE_LABEL = (
     "Publisher-session-bound evidence OUTSIDE candidate date cohort; "

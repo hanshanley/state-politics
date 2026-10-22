@@ -1,0 +1,119 @@
+schema_version: 1
+purpose: Strict offline AR aggregate contract; publisher-listed completeness only,
+  never collection authority.
+bindings:
+  base_manifest: fe2a6517b239684993263bacc95f4a3881d7a32153724ed22291c22b05709483
+  projection_manifest: 36aa3f5daf83433bb15f9792630597e87095d39564a390e41ff34a4a3000d0f5
+  capture_manifest: c694a8d60b9f5358a5ab63596301c6d6b0d5a5615788350bad2d77766a0fcb67
+frozen_parser:
+  path: ../data/raw/native-inventory-ar-complete-v1/producer_snapshot.py
+  sha256: 033e874423e982d6b27b7b2cdb3a35db96fe9d152b398630920741d12e2812a4
+scope_configuration:
+  path: native_inventory_ar_complete.yml
+  sha256: 967bdd1103dc2c383ad2310e625765761776fa9c1afc71a43494b0f4282dca3a
+page_identity_witness:
+  type_selector:
+    tag: input
+    attrs:
+      name: type
+  type_attribute: value
+  record_detail_path: /Bills/Detail
+  session_query_key: ddBienniumSession
+  session_value_template: 2023/{session}
+type_index_query_key: type
+exact_aliases:
+- alias_id: footer-first:2023R:HB
+  session: 2023R
+  type: HB
+  target_page: 1
+  source_url: https://www.arkleg.state.ar.us/Bills/ViewBills?start=0&type=HB&ddBienniumSession=2023%2F2023R
+  target_request_url: https://www.arkleg.state.ar.us/Bills/ViewBills?type=HB&ddBienniumSession=2023%2F2023R
+  target_exchange: new:native-inventory-ar-complete-v1:AR-05
+  state: AR
+  kind: footer_first
+- alias_id: footer-first:2023R:HR
+  session: 2023R
+  type: HR
+  target_page: 1
+  source_url: https://www.arkleg.state.ar.us/Bills/ViewBills?start=0&type=HR&ddBienniumSession=2023%2F2023R
+  target_request_url: https://www.arkleg.state.ar.us/Bills/ViewBills?type=HR&ddBienniumSession=2023%2F2023R
+  target_exchange: new:native-inventory-ar-complete-v1:AR-14
+  state: AR
+  kind: footer_first
+- alias_id: footer-first:2023R:SB
+  session: 2023R
+  type: SB
+  target_page: 1
+  source_url: https://www.arkleg.state.ar.us/Bills/ViewBills?start=0&type=SB&ddBienniumSession=2023%2F2023R
+  target_request_url: https://www.arkleg.state.ar.us/Bills/ViewBills?ddBienniumSession=2023%2F2023R&start=0&type=SB
+  target_exchange: inherited:native-inventory-ar-id-nh-v1:AR-06
+  state: AR
+  kind: footer_first
+- alias_id: footer-first:2023R:SR
+  session: 2023R
+  type: SR
+  target_page: 1
+  source_url: https://www.arkleg.state.ar.us/Bills/ViewBills?start=0&type=SR&ddBienniumSession=2023%2F2023R
+  target_request_url: https://www.arkleg.state.ar.us/Bills/ViewBills?type=SR&ddBienniumSession=2023%2F2023R
+  target_exchange: new:native-inventory-ar-complete-v1:AR-24
+  state: AR
+  kind: footer_first
+- alias_id: footer-first:2024F:HB
+  session: 2024F
+  type: HB
+  target_page: 1
+  source_url: https://www.arkleg.state.ar.us/Bills/ViewBills?start=0&type=HB&ddBienniumSession=2023%2F2024F
+  target_request_url: https://www.arkleg.state.ar.us/Bills/ViewBills?type=HB&ddBienniumSession=2023%2F2024F
+  target_exchange: new:native-inventory-ar-complete-v1:AR-07
+  state: AR
+  kind: footer_first
+- alias_id: footer-first:2024F:HR
+  session: 2024F
+  type: HR
+  target_page: 1
+  source_url: https://www.arkleg.state.ar.us/Bills/ViewBills?start=0&type=HR&ddBienniumSession=2023%2F2024F
+  target_request_url: https://www.arkleg.state.ar.us/Bills/ViewBills?type=HR&ddBienniumSession=2023%2F2024F
+  target_exchange: new:native-inventory-ar-complete-v1:AR-16
+  state: AR
+  kind: footer_first
+- alias_id: footer-first:2024F:SB
+  session: 2024F
+  type: SB
+  target_page: 1
+  source_url: https://www.arkleg.state.ar.us/Bills/ViewBills?start=0&type=SB&ddBienniumSession=2023%2F2024F
+  target_request_url: https://www.arkleg.state.ar.us/Bills/ViewBills?type=SB&ddBienniumSession=2023%2F2024F
+  target_exchange: new:native-inventory-ar-complete-v1:AR-18
+  state: AR
+  kind: footer_first
+- alias_id: footer-first:2024F:SR
+  session: 2024F
+  type: SR
+  target_page: 1
+  source_url: https://www.arkleg.state.ar.us/Bills/ViewBills?start=0&type=SR&ddBienniumSession=2023%2F2024F
+  target_request_url: https://www.arkleg.state.ar.us/Bills/ViewBills?type=SR&ddBienniumSession=2023%2F2024F
+  target_exchange: new:native-inventory-ar-complete-v1:AR-26
+  state: AR
+  kind: footer_first
+- alias_id: type-index-first:2023R:SB
+  session: 2023R
+  type: SB
+  target_page: 1
+  source_url: https://www.arkleg.state.ar.us/Bills/ViewBills?type=SB&ddBienniumSession=2023%2F2023R
+  target_request_url: https://www.arkleg.state.ar.us/Bills/ViewBills?ddBienniumSession=2023%2F2023R&start=0&type=SB
+  target_exchange: inherited:native-inventory-ar-id-nh-v1:AR-06
+  state: AR
+  kind: type_index
+  corroborating_alias_id: footer-first:2023R:SB
+legacy_diagnostics:
+  report: legacy_generic/report.json
+  type_indexes: legacy_generic/publisher_type_index_status.json
+  explanation: Frozen generic page==pages==1 was a single-document diagnostic, not
+    multipage full-query completeness. 2023R SB also had one exact first-page URL
+    mismatch (explicit start=0 and parameter order). All literal legacy diagnostics
+    survive unchanged; the source index and complete finite page graph, plus only
+    these named source-observed aliases, determine authoritative aggregate coverage.
+  selected_option_limitation: Publisher HTML may mark multiple session options selected.
+    Session identity uses every returned record detail URL and hidden type, never
+    a unique-selected-option assumption.
+  certification: Publisher-listed metadata completeness is not introduced-universe,
+    original, canonical, event-date or scientific approval.

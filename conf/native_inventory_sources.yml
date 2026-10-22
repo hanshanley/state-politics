@@ -1,0 +1,148 @@
+schema_version: 1
+purpose: Offline declarative adapters for the bounded AR/ID/NH census attempt.
+collection_authority: None; use the separately frozen raw authorization and physical exchange ledger.
+state_status:
+  AR: partial_regular_census_prefix_and_complete_publisher_listed_2024S2_types
+  ID: stopped_official_discovery_robots_restriction_no_native_http
+  NH: complete_2023_2024_publisher_query_results_not_all_introduced_universe
+scope_limitations:
+  AR:
+    - Regular 2023 Senate first page only, 20 rows; Page 1 of 30 is not a complete census.
+    - All six type links from the 2024 second extraordinary session index were retrieved; each reports Page 1 of 1.
+    - The 2023 first extraordinary and 2024 fiscal sessions were discovered but not collected.
+    - No date is inferred from the 2023 biennium label or 2024S2 session identifier.
+  ID:
+    - Official-domain discovery reported a non-retryable robots block. No substantive request or alternate host was attempted.
+    - Zero observed native records means unrecovered/unknown, not zero legislative activity.
+  NH:
+    - Unfiltered publisher Session Year 2023 and 2024 queries return 675 and 1321 rows respectively.
+    - These are complete returned query lists, not a certified all-introduced universe; retained national contexts have different totals.
+    - Carryovers and overlapping legislative years remain separate source contexts; session year and hearing date are not introduction evidence.
+    - The discovered dynamic metadata bulk is explicitly 2026 and cannot replace historical 2023/2024 metadata.
+    - Publisher PDF links explicitly v=current and unversioned HTML links do not prove introduced/original versions.
+canonical_session_candidate_aliases:
+  AR:
+    2023R: "2023"
+    2024S2: 2024S2
+type_indexes:
+  - exchange: AR-08
+    state: AR
+    session: 2024S2
+    link_selector:
+      tag: a
+      attrs_contain: {href: "/Bills/ViewBills?"}
+adapters:
+  role_grid:
+    record_selector:
+      tag: div
+      attrs: {role: row}
+      requires: [aria-rowindex]
+    identifier_selector:
+      tag: a
+      attrs_contain: {href: "/Bills/Detail?"}
+    bill_types: [HB, SB]
+    fields:
+      title:
+        tag: div
+        attrs: {aria-colindex: "2"}
+      sponsor:
+        tag: div
+        attrs: {aria-colindex: "3"}
+      all_source_cells:
+        tag: div
+        attrs: {role: gridcell}
+    pagination:
+      page_regex: 'Page (?P<page>\d+) of (?P<pages>\d+)'
+      link_selector:
+        - {tag: div, classes: [tableSectionFooter]}
+        - {tag: a, requires: [href]}
+  bill_articles:
+    record_selector: {tag: article, classes: [bill]}
+    identifier_selector: {tag: h3}
+    session_selector: {tag: p, classes: [session-year]}
+    session_regex: 'Session Year (?P<session>\d{4})'
+    bill_types: [HB, SB]
+    fields:
+      title:
+        - {tag: div, classes: [bill-detail]}
+        - {tag: p}
+      full_source_identity: {tag: div, classes: [bill-ident]}
+      full_source_detail: {tag: div, classes: [bill-detail]}
+    date_labels:
+      "Next/Last Hearing:": hearing_or_unspecified_time_not_filing_or_introduction
+    pagination:
+      count_regex: 'Bills Found\s*:\s*(?P<count>\d+)'
+pages:
+  - exchange: AR-06
+    state: AR
+    session: 2023R
+    biennium_literal: "2023"
+    session_kind: Regular Session, 2023
+    measure_type_scope: SB
+    adapter: role_grid
+    query_semantics: Publisher-listed Senate Bills; incomplete 20-row prefix of 30 pages.
+  - exchange: AR-09
+    state: AR
+    session: 2024S2
+    biennium_literal: "2023"
+    session_kind: Second Extraordinary Session, 2024
+    measure_type_scope: HB
+    adapter: role_grid
+    query_semantics: Complete publisher-listed type page, not independent introduced-universe proof.
+  - exchange: AR-10
+    state: AR
+    session: 2024S2
+    biennium_literal: "2023"
+    session_kind: Second Extraordinary Session, 2024
+    measure_type_scope: HR
+    adapter: role_grid
+    query_semantics: Complete publisher-listed type page, not independent introduced-universe proof.
+  - exchange: AR-11
+    state: AR
+    session: 2024S2
+    biennium_literal: "2023"
+    session_kind: Second Extraordinary Session, 2024
+    measure_type_scope: HMR
+    adapter: role_grid
+    query_semantics: Complete publisher-listed type page, not independent introduced-universe proof.
+  - exchange: AR-12
+    state: AR
+    session: 2024S2
+    biennium_literal: "2023"
+    session_kind: Second Extraordinary Session, 2024
+    measure_type_scope: SB
+    adapter: role_grid
+    query_semantics: Complete publisher-listed type page, not independent introduced-universe proof.
+  - exchange: AR-13
+    state: AR
+    session: 2024S2
+    biennium_literal: "2023"
+    session_kind: Second Extraordinary Session, 2024
+    measure_type_scope: SR
+    adapter: role_grid
+    query_semantics: Complete publisher-listed type page, not independent introduced-universe proof.
+  - exchange: AR-14
+    state: AR
+    session: 2024S2
+    biennium_literal: "2023"
+    session_kind: Second Extraordinary Session, 2024
+    measure_type_scope: SMR
+    adapter: role_grid
+    query_semantics: Complete publisher-listed type page, not independent introduced-universe proof.
+  - exchange: NH-10
+    state: NH
+    session: "2023"
+    session_kind: Publisher Session Year; regular/special and carryover not established by query
+    adapter: bill_articles
+    query_semantics: Unfiltered POST txtsessionyear=2023; exact publisher count and all returned articles.
+  - exchange: NH-11
+    state: NH
+    session: "2024"
+    session_kind: Publisher Session Year; regular/special and carryover not established by query
+    adapter: bill_articles
+    query_semantics: Unfiltered POST txtsessionyear=2024; exact publisher count and all returned articles.
+auxiliary_delimited_sources:
+  - exchange: NH-06
+    sep: "|"
+    encoding: utf-8-sig
+    target_scope_status: Explicit 2026 metadata bulk; retained unchanged but outside target historical scope.

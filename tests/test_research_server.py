@@ -117,3 +117,30 @@ def test_workspace_cli_does_not_resolve_away_a_linked_bundle(research_bundle, tm
             "--evidence", str(linked), "--sessions", str(root),
             "--review", str(root), "--port", "0",
         ])
+
+
+def test_workspace_adds_native_catalog_only_when_explicitly_bound(research_bundle):
+    root, _, manifest, data = research_bundle
+    native = {
+        "status": "complete_all_state_native_inventory_catalog_not_scientific_admission",
+        "publication": False, "model_input_approved": False, "analytical_admission": False,
+        "artifacts": manifest["outputs"],
+    }
+    (root / "manifest.json").write_text(json.dumps(native))
+    bundles = {
+        "evidence": MODULE["bind_bundle"](root, "evidence"),
+        "sources": MODULE["bind_bundle"](root, "sources"),
+    }
+    handler = functools.partial(MODULE["ResearchHandler"], bundles=bundles)
+    with ThreadingHTTPServer(("127.0.0.1", 0), handler) as server:
+        thread = threading.Thread(target=server.serve_forever)
+        thread.start()
+        try:
+            address = f"http://127.0.0.1:{server.server_port}"
+            with urllib.request.urlopen(address + "/") as response:
+                assert b"/sources/index.html" in response.read()
+            with urllib.request.urlopen(address + "/sources/index.html") as response:
+                assert response.read() == data
+        finally:
+            server.shutdown()
+            thread.join()

@@ -127,8 +127,23 @@ def load_examples(path: Path | str, codes: list[int]) -> list[dict]:
             if any(
                 not isinstance(row.get(key), str) or not row[key].strip()
                 for key in review_fields
-            ) or row["reviewer_type"] not in ("human", "assistant", "local_model"):
+            ) or row["reviewer_type"] not in (
+                "human", "assistant", "local_model", "human_self_attested",
+            ):
                 raise ValueError(f"row {number}: incomplete target-label review provenance")
+            if row["reviewer_type"] == "human_self_attested" and (
+                row.get("evaluation_reference_schema") != "self_attested_human_evaluation_v1"
+                or row["split"] != "challenge" or row["domain"] != "bill"
+                or row.get("human_provenance") != "SELF_ATTESTED_HUMAN_NOT_IDENTITY_CERTIFIED"
+                or row.get("evaluation_only") is not True
+                or any(row.get(flag) is not False for flag in (
+                    "human_gold", "independent_gold", "canonical_gold", "training_admission",
+                    "model_input_approved", "filing_time_text_certified", "analytical_admission",
+                ))
+            ):
+                raise ValueError(
+                    f"row {number}: self-attested references are advisory evaluation only"
+                )
             if re.fullmatch(r"\d{4}-\d{2}-\d{2}", row["reviewed_on"]) is None:
                 raise ValueError(f"row {number}: invalid review date")
             date.fromisoformat(row["reviewed_on"])

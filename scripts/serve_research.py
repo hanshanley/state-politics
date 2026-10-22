@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Serve only three explicitly bound unpublished research bundles on loopback."""
+"""Serve only explicitly bound unpublished research bundles on loopback."""
 
 from __future__ import annotations
 
@@ -19,6 +19,7 @@ MANIFESTS = {
     "evidence": "downloads/build_manifest.json",
     "sessions": "manifest.json",
     "review": "human_packet_manifest.json",
+    "sources": "manifest.json",
 }
 HOME = b"""<!doctype html><html lang="en"><meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
@@ -38,6 +39,7 @@ receipt observations, explicit gaps, and complete query downloads.</p></article>
 <article><h2><a href="/sessions/index.html">Legislative-session comparison</a></h2>
 <p>Verified publisher-session membership, original metadata and date observations.
 This separate frame does not replace calendar eligibility or invent filing dates.</p></article>
+@@SOURCE_INVENTORY@@
 <article><h2><a href="/review/human-review.html">Model-blind human review</a></h2>
 <p>Unseen complete inputs and source alternatives, rubric-guided annotation,
 local drafts, and independently validated exports. No predictions are shown.</p></article>
@@ -86,11 +88,15 @@ def bind_bundle(directory, kind):
         ):
             raise ValueError("unpublished evidence preview required")
         files = manifest["outputs"]
-    elif kind == "sessions":
-        if manifest.get("status") != (
-            "complete_verified_session_comparison_not_primary_cohort_or_scientific_admission"
-        ) or manifest.get("publication") is not False:
-            raise ValueError("unpublished session comparison required")
+    elif kind in {"sessions", "sources"}:
+        expected_status = {
+            "sessions": (
+                "complete_verified_session_comparison_not_primary_cohort_or_scientific_admission"
+            ),
+            "sources": "complete_all_state_native_inventory_catalog_not_scientific_admission",
+        }[kind]
+        if manifest.get("status") != expected_status or manifest.get("publication") is not False:
+            raise ValueError("unpublished source comparison required")
         files = manifest["artifacts"]
     else:
         if (
@@ -147,13 +153,21 @@ class ResearchHandler(BaseHTTPRequestHandler):
             self.send_error(403, "Loopback Host required")
             return
         if path == "/":
+            inventory = b"""<article><h2><a href="/sources/index.html">
+Native-source collection ledger</a></h2><p>All-state collection status,
+original publisher metadata, explicit source restrictions, and retained raw
+responses. Filename lists and repeated observations are not new bills or
+recovered original texts.</p></article>"""
+            home = HOME.replace(
+                b"@@SOURCE_INVENTORY@@", inventory if "sources" in self.bundles else b"",
+            )
             self.send_response(200)
             self.send_header("Content-Type", "text/html; charset=utf-8")
-            self.send_header("Content-Length", str(len(HOME)))
+            self.send_header("Content-Length", str(len(home)))
             self.send_header("Cache-Control", "no-store")
             self.end_headers()
             if send_body:
-                self.wfile.write(HOME)
+                self.wfile.write(home)
             return
         parts = path.split("/")
         if (
@@ -207,9 +221,11 @@ def main(argv=None):
     parser.add_argument("--evidence", type=Path, required=True)
     parser.add_argument("--sessions", type=Path, required=True)
     parser.add_argument("--review", type=Path, required=True)
+    parser.add_argument("--sources", type=Path)
     parser.add_argument("--port", type=int, default=8765)
     args = parser.parse_args(argv)
-    bundles = {kind: bind_bundle(getattr(args, kind), kind) for kind in MANIFESTS}
+    bundles = {kind: bind_bundle(getattr(args, kind), kind)
+               for kind in MANIFESTS if getattr(args, kind) is not None}
     handler = functools.partial(ResearchHandler, bundles=bundles)
     with ThreadingHTTPServer(("127.0.0.1", args.port), handler) as server:
         print(f"Unpublished research workspace: http://127.0.0.1:{server.server_port}/", flush=True)

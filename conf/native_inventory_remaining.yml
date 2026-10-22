@@ -1,0 +1,188 @@
+schema_version: 1
+purpose: Offline adapters for the fresh bounded HI LA MS ND NE NV RI VT WY inventory.
+collection_authority: None; authority is the separately frozen raw authorization.
+state_status:
+  HI: observed_passed_bill_subset_and_complete_publisher_file_indexes_not_measure_census
+  LA: blocked_robots_http404_native_census_unknown
+  MS: blocked_initial_robots_tls_failure_native_census_unknown
+  ND: complete_publisher_embedded_2023_regular_and_special_lists_not_introduced_universe
+  NE: blocked_publisher_census_endpoints_disallowed_native_census_unknown
+  NV: complete_three_publisher_2023_session_queries_not_introduced_universe
+  RI: blocked_official_search_origin_robots_http404_native_census_unknown
+  VT: blocked_publisher_introduced_endpoint_disallowed_native_census_unknown
+  WY: blocked_robots_http404_native_census_unknown
+scope_limitations:
+  HI:
+    - HI-03 is the complete returned 262-row 2024 bills-passed query, not all measures.
+    - Displayed SD/HD/CD suffixes are retained literally; current versions are not originals.
+    - HI-04 and HI-07 are full publisher file directories, including bills and nonbills, not measure censuses or full-original downloads.
+    - Directory dates and sizes are literal file metadata, never filing/introduction evidence.
+    - Individual-measure metadata links require undeclared www.capitol.hawaii.gov; no request was sent to that origin and wider census discovery stopped.
+    - 2023 special-session coverage and all-introduced calendar-year coverage remain unknown.
+  LA:
+    - First robots response was HTTP404; no substantive request, retry or alternate origin.
+    - Regular and special-session measures for both target years remain unknown, not zero.
+  MS:
+    - Initial robots TLS certificate verification failed; no retry, disabled verification or other-origin workaround.
+    - No HTTP response entity was received; zero-byte failure receipt is not a missing returned body.
+    - Regular and extraordinary-session censuses remain unknown, not zero.
+  ND:
+    - One complete embedded index contains 990 Regular session 202301 and 16 Special session 202302 records.
+    - Publisher JavaScript filters and sorts the fully embedded list locally; no remote pagination is declared.
+    - Native session contexts stay separate; canonical assembly 68 mappings are unresolved comparison candidates only.
+    - Publisher-listed bills, concurrent resolutions and memorial resolutions are preserved, not certified all-introduced counts.
+    - Last-action dates, including Filed with Secretary of State actions, are not inferred filing/introduction dates.
+    - No 2024-dated prefilings in later assembly contexts were collected or inferred.
+  NE:
+    - Publisher date/introducer census forms require robots-disallowed search_by_date.php or search_by_introducer.php; neither was requested.
+    - An empty bill-number form POST returned the search form rather than census records; its entire response is retained, not completion credit.
+    - Native regular/special counts are unknown; retained canonical 108 and 108S1 contexts are not native censuses.
+    - Nebraska is nonpartisan; D/R attribution remains unavailable and is not invented.
+  NV:
+    - Regular-session All page-size value 2147483647 is literally offered by the publisher, not an invented pagination override.
+    - The regular All-results response has 1096 records; both 2023 special-session queries have 5 each.
+    - An earlier 50-row regular prefix is a distinct retained observation, not 50 additional identities.
+    - Native starred identifiers are retained separately, including previous-session variants; exact-key candidates are not aliases or certified joins.
+    - Session-list comparisons do not certify an all-introduced 2023/2024 universe, filing dates or full text.
+    - No Reports path, account, paid tracker, per-bill text or undeclared search origin was requested.
+  RI:
+    - Main-origin robots was retained; the explicitly declared official bill-search origin then returned HTTP404 for robots.
+    - State stopped immediately; no other origin or historical text endpoint was used as a workaround.
+    - Both target-year measure censuses remain unknown, not zero.
+  VT:
+    - Archived All Bills page requires bill/loadBillsIntroduced/2024, explicitly disallowed by archived robots.
+    - No disallowed endpoint, search-form workaround or alternate route was requested.
+    - Empty client table is an application shell, not a zero-bill or complete census.
+  WY:
+    - First robots response was HTTP404; no substantive request or www alternate-origin continuation.
+    - Historical 2020 application-shell/API evidence is not reused as a 2023/2024 census.
+    - Both target-year censuses remain unknown, not zero.
+canonical_session_candidate_aliases:
+  ND:
+    "202301": "68"
+    "202302": "68"
+  NV:
+    82nd2023: "82"
+    34th2023Special: 2023Special34
+    35th2023Special: 2023Special35
+adapters:
+  hawaii_report:
+    record_selector:
+      - {tag: table, attrs: {id: GridViewReports}}
+      - {tag: tr}
+    identifier_selector: {tag: a, classes: [report]}
+    identifier_regex: '(?P<kind>[A-Za-z]+)\s*0*(?P<number>\d+)(?P<suffix>.*)'
+    native_identity_includes_suffix: true
+    bill_types: [HB, SB]
+    fields:
+      all_source_columns: {tag: td}
+      all_source_spans: {tag: span}
+    pagination:
+      count_regex: '(?P<count>\d+) records returned\.'
+  north_dakota_regular:
+    record_selector: {tag: a, classes: [card-link], attrs_contain: {href: "regular/bill-overview/"}}
+    identifier_selector: {tag: h4, classes: [bill-name]}
+    publisher_record_key_attribute: id
+    bill_types: [HB, SB]
+    fields: &nd_fields
+      bill_number: {tag: li, classes: [bill-number]}
+      measure_type: {tag: li, classes: [measure-type]}
+      chamber: {tag: li, classes: [chamber]}
+      session: {tag: li, classes: [session]}
+      assembly: {tag: li, classes: [assembly]}
+      session_type: {tag: li, classes: [session-type]}
+      primary_sponsor: {tag: li, classes: [primary-sponsor]}
+      house_sponsors: {tag: li, classes: [house-sponsors]}
+      senate_sponsors: {tag: li, classes: [senate-sponsors]}
+      committee: {tag: li, classes: [committee]}
+      last_action: {tag: li, classes: [last-action]}
+      last_action_date: {tag: li, classes: [last-action-date]}
+      agency: {tag: li, classes: [agency]}
+      status: {tag: li, classes: [status]}
+      all_source_list_values: {tag: li}
+      title: {tag: p, classes: [title]}
+      all_source_paragraphs: {tag: p}
+    literal_date_selectors: &nd_dates
+      - label: last-action-date
+        selector: {tag: li, classes: [last-action-date]}
+        date_basis: publisher_last_action_not_filing_or_introduction
+    pagination: {}
+  north_dakota_special:
+    record_selector: {tag: a, classes: [card-link], attrs_contain: {href: "special/bill-overview/"}}
+    identifier_selector: {tag: h4, classes: [bill-name]}
+    publisher_record_key_attribute: id
+    bill_types: [HB, SB]
+    fields: *nd_fields
+    literal_date_selectors: *nd_dates
+    pagination: {}
+  nevada_list_fragment:
+    record_selector: {tag: div, classes: [row]}
+    record_prefix_selector: {tag: input, attrs_contain: {name: ".ContentKey"}}
+    identifier_selector: {tag: a, attrs_contain: {href: "/Bill/"}}
+    identifier_regex: '(?P<kind>[A-Za-z]+)\s*0*(?P<number>\d+)(?P<suffix>\*?)'
+    native_identity_includes_suffix: true
+    canonical_candidate_requires_literal_suffix: true
+    bill_types: [AB, SB]
+    fields:
+      all_source_columns: {tag: div}
+    pagination:
+      count_regex: '\d+-\d+\s+of\s+(?P<count>\d+)\s+results'
+      range_regex: '(?P<start>\d+)-(?P<end>\d+)\s+of\s+\d+\s+results'
+      page_parameter: Page
+      size_parameter: Filters.PageSize
+      default_page_size: 50
+      link_selector: {tag: a, attrs: {rel: next}}
+      terminal_regex: '</script>\s*</div>\s*</form></div>\s*\Z'
+pages:
+  - exchange: HI-03
+    state: HI
+    session: "2024"
+    session_kind: Publisher year=2024 bills-passed report; carryovers retained, not inferred introduction year
+    adapter: hawaii_report
+    measure_type_scope: HB,SB_bills_that_passed_legislature_only
+    query_semantics: Full returned 262-row passed-bills query, explicitly not all measures.
+  - exchange: ND-03
+    state: ND
+    session: "202301"
+    session_kind: Regular
+    biennium_literal: 2023-24 (68th)
+    adapter: north_dakota_regular
+    query_semantics: All embedded regular-session cards in the fully archived assembly index; client-side filter only.
+  - exchange: ND-03
+    state: ND
+    session: "202302"
+    session_kind: Special
+    biennium_literal: 2023-24 (68th)
+    adapter: north_dakota_special
+    query_semantics: All embedded special-session cards in the same archive; source session remains separate.
+  - exchange: NV-04
+    state: NV
+    session: 82nd2023
+    session_kind: 82nd (2023) Session
+    adapter: nevada_list_fragment
+    query_semantics: Initial default 50-row prefix of 1096, later superseded for query completeness but not erased.
+  - exchange: NV-05
+    state: NV
+    session: 82nd2023
+    session_kind: 82nd (2023) Session
+    adapter: nevada_list_fragment
+    query_semantics: Publisher All page-size option with titles; exactly 1-1096 of 1096 returned records.
+  - exchange: NV-10
+    state: NV
+    session: 34th2023Special
+    session_kind: 34th (2023) Special Session
+    adapter: nevada_list_fragment
+    query_semantics: Entire publisher special-session Bill List tab; exactly 1-5 of 5 returned records.
+  - exchange: NV-11
+    state: NV
+    session: 35th2023Special
+    session_kind: 35th (2023) Special Session
+    adapter: nevada_list_fragment
+    query_semantics: Entire publisher special-session Bill List tab; exactly 1-5 of 5 returned records.
+auxiliary_file_indexes:
+  - exchange: HI-04
+    session: "2024"
+    filename_identity_regex: '(?P<kind>[A-Za-z]+)(?P<number>\d+)(?P<suffix>[^.]*)\.(?P<format>pdf|htm|html)'
+  - exchange: HI-07
+    session: "2023"
+    filename_identity_regex: '(?P<kind>[A-Za-z]+)(?P<number>\d+)(?P<suffix>[^.]*)\.(?P<format>pdf|htm|html)'

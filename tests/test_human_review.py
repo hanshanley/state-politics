@@ -18,8 +18,11 @@ from state_politics.analysis.human_review import (
     SCHEMA,
     build,
     compare,
+    export_references,
+    freeze_evaluation_plan,
     import_annotation,
     load_packet,
+    score_references,
     strict_json,
     validate_annotation,
 )
@@ -275,3 +278,238 @@ def test_persist_browser_fixture(packet):
     assert target.is_relative_to(data_root)
     _, root = packet
     shutil.copytree(root, target)
+
+
+@pytest.fixture
+def evaluation(packet, tmp_path):
+    from state_politics.analysis.human_review import POLICY
+    from state_politics.analysis.modernbert import (
+        INPUT_CONSTRUCTION,
+        MODEL_ID,
+        MODEL_REVISION,
+        WINDOWING,
+    )
+    from state_politics.analysis.taxonomy import load_topics
+
+    _, root = packet
+    codes = [t.code for t in load_topics(root / "complete-inputs/topics.yml")]
+    checkpoint = tmp_path / "synthetic-checkpoint"
+    checkpoint.mkdir()
+    # These are provenance fixtures, never loadable models or real model executions.
+    for name in ("model.safetensors", "config.json", "tokenizer.json", "tokenizer_config.json"):
+        (checkpoint / name).write_bytes(b'{"scope":"SYNTHETIC, not real weights"}\n')
+    training = tmp_path / "synthetic-training.jsonl"
+    write_jsonl(training, [{
+        "record_id": "synthetic-training-unique", "group_id": "synthetic-training-only",
+        "split": "train", "domain": "bill", "text": "A disjoint control corpus of invented tokens.",
+        "source_url": "urn:synthetic:training", "label_origin": "external_coded",
+        "label_version": "synthetic-fixture", "evidence_tier": "synthetic",
+        "topic": 6, "abstention_reason": None,
+    }])
+    write_json(checkpoint / "training_manifest.json", {
+        "schema_version": 2, "model_id": MODEL_ID, "base_revision": MODEL_REVISION,
+        "status": "provisional", "topic_codes": codes, "output_codes": [*codes, None],
+        "taxonomy_sha256": binding(root / "complete-inputs/topics.yml")["sha256"],
+        "labels_sha256": binding(training)["sha256"], "decision": POLICY,
+        "training_abstention_count": 1,
+        "input": {"max_tokens": 1024, "overlap": 128, "construction": INPUT_CONSTRUCTION,
+                  "windowing": WINDOWING},
+        "complete_document_coverage": {"n_discarded_source_tokens": 0},
+        "checkpoint_files": {
+            path.name: binding(path)["sha256"] for path in checkpoint.iterdir()
+        },
+    })
+    return root, checkpoint, training
+
+
+def synthetic_logits(plan, rows, path):
+    model = plan["models"]["synthetic"]
+    outputs = model["output_codes"]
+    write_jsonl(path, [{
+        "record_id": row["record_id"], "input_sha256": row["input_sha256"],
+        "input_domain": "bill", "model_run": model["training_manifest_sha256"],
+        "base_model_run": model["training_manifest_sha256"],
+        "taxonomy_sha256": plan["taxonomy_sha256"], "output_codes": outputs,
+        "calibration_sha256": None, "n_discarded_tokens": 0, "n_input_tokens": 10,
+        "logits": [[20.0 if code == row["topic"] else -20.0 for code in outputs]],
+    } for row in rows])
+
+
+def test_human_evaluation_bridge_existing_pipeline_end_to_end(evaluation, tmp_path):
+    from state_politics.analysis import evaluate_topics
+    from state_politics.analysis.train_topics import load_examples
+
+    root, checkpoint, training = evaluation
+    plan_root = tmp_path / "plan"
+    plan = freeze_evaluation_plan(root, plan_root, [("synthetic", checkpoint, training)])
+    a, b = completed(root), completed(root, "synthetic-rater-b")
+    b["decisions"][0].update(topic=20)
+    first, second = tmp_path / "a.json", tmp_path / "b.json"
+    write_json(first, a)
+    write_json(second, b)
+    references = tmp_path / "references"
+    result = export_references(plan_root, first, references, second)
+    assert result["n_primary"] == 1
+    assert result["disputed_record_ids"] == [a["decisions"][0]["record_id"]]
+    assert (references / "review-a-annotations-only.json").read_bytes() == first.read_bytes()
+    assert (references / "review-b-annotations-only.json").read_bytes() == second.read_bytes()
+    assert json.loads((references / "self-attested-comparison.json").read_bytes())[
+        "all_original_reviews"
+    ] == {"a": a, "b": b}
+    for role, description in result["reference_files"].items():
+        path = references / description["file"]
+        rows = load_examples(path, plan["models"]["synthetic"]["output_codes"][:-1])
+        for row in rows:
+            key = "b" if role == "sensitivity_review_b_all" else "a"
+            original = next(d for d in (b if key == "b" else a)["decisions"]
+                            if d["record_id"] == row["record_id"])
+            assert all(row[field] == original[field] for field in original)
+            assert row["reviewer_type"] == "human_self_attested"
+            assert all(row[flag] is False for flag in FLAGS)
+            assert row["split"] == "challenge" and row["evaluation_only"] is True
+        predictions = tmp_path / f"{role}-synthetic-logits.jsonl"
+        synthetic_logits(plan, rows, predictions)
+        output = tmp_path / f"{role}-advisory-report.json"
+        score_references(references, "synthetic", role, predictions, output)
+        report = json.loads(output.read_bytes())
+        assert report["metrics"]["decision_accuracy"] == 1.0
+        assert report["reviewer_types"] == {"human_self_attested": len(rows)}
+        assert report["human_evaluation_context"]["human_gold"] is False
+    primary = result["reference_files"]["primary"]["file"]
+    direct = tmp_path / "direct-existing-evaluator.json"
+    assert evaluate_topics.main([
+        "--labels", str(references / primary),
+        "--training-manifest", str(plan_root / "models/synthetic/training_manifest.json"),
+        "--training-labels", str(plan_root / "models/synthetic/training-labels.jsonl"),
+        "--topics", str(plan_root / "packet/complete-inputs/topics.yml"),
+        "--predictions", str(tmp_path / "primary-synthetic-logits.jsonl"),
+        "--policy", str(plan_root / "policy.json"), "--split", "challenge", "--out", str(direct),
+    ]) == 0
+    assert json.loads(direct.read_bytes())["reviewer_types"] == {"human_self_attested": 1}
+
+
+@pytest.mark.parametrize("failure", ["missing", "foreign", "partial", "changed-model"])
+def test_reference_export_refuses_invalid_reviews_or_models(evaluation, tmp_path, failure):
+    root, checkpoint, training = evaluation
+    plan_root = tmp_path / "plan"
+    freeze_evaluation_plan(root, plan_root, [("synthetic", checkpoint, training)])
+    a, b = completed(root), completed(root, "synthetic-rater-b")
+    first, second = tmp_path / "a.json", tmp_path / "b.json"
+    if failure == "foreign":
+        b["packet_id"] = "foreign"
+    if failure == "partial":
+        b["decisions"].pop()
+    write_json(first, a)
+    write_json(second, b)
+    if failure == "changed-model":
+        path = checkpoint / "tokenizer.json"
+        path.write_bytes(path.read_bytes() + b" ")
+    with pytest.raises(ValueError):
+        export_references(plan_root, first, tmp_path / "bad", None if failure == "missing"
+                          else second)
+    assert not (tmp_path / "bad").exists()
+
+
+def test_plan_refuses_training_overlap_on_any_alternative(evaluation, tmp_path):
+    root, checkpoint, training = evaluation
+    rows = read_jsonl(training)
+    alternatives = read_jsonl(root / "complete-inputs/selected_alternative_views.jsonl")
+    rows[0].update(group_id=alternatives[0]["bill_id"])
+    write_jsonl(training, rows)
+    path = checkpoint / "training_manifest.json"
+    manifest = json.loads(path.read_bytes())
+    manifest["labels_sha256"] = binding(training)["sha256"]
+    write_json(path, manifest)
+    with pytest.raises(ValueError, match="reservation overlap"):
+        freeze_evaluation_plan(root, tmp_path / "bad", [("synthetic", checkpoint, training)])
+    assert not (tmp_path / "bad").exists()
+
+
+@pytest.mark.parametrize("raters", [1, 2])
+def test_unresolved_mixed_reasons_are_preserved_not_scored_primary(evaluation, tmp_path, raters):
+    root, checkpoint, training = evaluation
+    plan_root = tmp_path / "plan"
+    freeze_evaluation_plan(root, plan_root, [("synthetic", checkpoint, training)], raters=raters)
+    a, b = completed(root), completed(root, "synthetic-rater-b")
+    for annotation in (a, b):
+        annotation["decisions"][0].update(topic=None, abstention_reason="mixed_policy")
+        annotation["decisions"][1].update(topic=None, abstention_reason="rubric_ambiguity")
+    first, second = tmp_path / "a.json", tmp_path / "b.json"
+    write_json(first, a)
+    write_json(second, b)
+    references = tmp_path / "references"
+    result = export_references(plan_root, first, references, second if raters == 2 else None)
+    assert result["n_primary"] == 0
+    rows = read_jsonl(references / result["reference_files"]["sensitivity_review_a_all"]["file"])
+    assert [row["abstention_reason"] for row in rows] == ["mixed_policy", "rubric_ambiguity"]
+    with pytest.raises(ValueError, match="no eligible"):
+        score_references(references, "synthetic", "primary", tmp_path / "unused", tmp_path / "out")
+
+
+def test_shared_loader_cannot_promote_advisory_humans_to_training(evaluation, tmp_path):
+    from state_politics.analysis.train_topics import load_examples
+
+    root, checkpoint, training = evaluation
+    plan_root = tmp_path / "plan"
+    plan = freeze_evaluation_plan(root, plan_root, [("synthetic", checkpoint, training)], raters=1)
+    first = tmp_path / "a.json"
+    write_json(first, completed(root))
+    references = tmp_path / "references"
+    result = export_references(plan_root, first, references)
+    rows = read_jsonl(references / result["reference_files"]["primary"]["file"])
+    path = tmp_path / "not-training.jsonl"
+    for field, value in (("split", "train"), ("human_gold", True), ("evaluation_only", 1)):
+        invalid = copy.deepcopy(rows)
+        invalid[0][field] = value
+        write_jsonl(path, invalid)
+        with pytest.raises(ValueError, match="advisory evaluation only"):
+            load_examples(path, plan["models"]["synthetic"]["output_codes"][:-1])
+
+
+@pytest.mark.parametrize("failure", ["foreign-run", "discarded", "boolean-zero", "partial"])
+def test_scoring_refuses_foreign_or_partial_prediction_evidence(evaluation, tmp_path, failure):
+    root, checkpoint, training = evaluation
+    plan_root = tmp_path / "plan"
+    plan = freeze_evaluation_plan(root, plan_root, [("synthetic", checkpoint, training)], raters=1)
+    first = tmp_path / "a.json"
+    write_json(first, completed(root))
+    references = tmp_path / "references"
+    receipt = export_references(plan_root, first, references)
+    rows = read_jsonl(references / receipt["reference_files"]["sensitivity_review_a_all"]["file"])
+    predictions = tmp_path / "predictions.jsonl"
+    synthetic_logits(plan, rows, predictions)
+    predicted = read_jsonl(predictions)
+    if failure == "partial":
+        predicted.pop()
+    else:
+        field, value = {
+            "foreign-run": ("model_run", "foreign"),
+            "discarded": ("n_discarded_tokens", 1),
+            "boolean-zero": ("n_discarded_tokens", False),
+        }[failure]
+        predicted[0][field] = value
+    write_jsonl(predictions, predicted)
+    with pytest.raises((ValueError, SystemExit)):
+        score_references(references, "synthetic", "sensitivity_review_a_all",
+                         predictions, tmp_path / "bad-report.json")
+    assert not (tmp_path / "bad-report.json").exists()
+
+
+def test_scoring_reconstructs_references_instead_of_trusting_rebound_files(evaluation, tmp_path):
+    root, checkpoint, training = evaluation
+    plan_root = tmp_path / "plan"
+    plan = freeze_evaluation_plan(root, plan_root, [("synthetic", checkpoint, training)], raters=1)
+    first = tmp_path / "a.json"
+    write_json(first, completed(root))
+    references = tmp_path / "references"
+    receipt = export_references(plan_root, first, references)
+    path = references / receipt["reference_files"]["primary"]["file"]
+    rows = read_jsonl(path)
+    rows[0]["topic"] = 20
+    write_jsonl(path, rows)
+    receipt["reference_files"]["primary"].update(binding(path))
+    write_json(references / "evaluation_reference_manifest.json", receipt)
+    predictions = tmp_path / "predictions.jsonl"
+    synthetic_logits(plan, rows, predictions)
+    with pytest.raises(ValueError, match="exact annotations/predeclared subset"):
+        score_references(references, "synthetic", "primary", predictions, tmp_path / "bad-report")

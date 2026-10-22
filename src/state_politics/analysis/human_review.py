@@ -3,6 +3,9 @@
 Build only from ``prepare_native_review freeze`` output. Serve the resulting
 directory on 127.0.0.1, never publish it. Imported annotations are self-attestations,
 not verified identities, canonical training labels, human gold, or model approval.
+Freeze an evaluation plan before annotation, export complete validated reviews as
+advisory challenge references, then score saved logits through evaluate_topics.
+No action here runs a model or grants training/gold admission.
 """
 
 from __future__ import annotations
@@ -10,15 +13,18 @@ from __future__ import annotations
 import argparse
 import json
 import re
+import shlex
 import shutil
+import sys
 import zipfile
-from datetime import date
+from datetime import UTC, date, datetime
 from pathlib import Path
 
 from .prepare_cycle_review import (
     ABSTENTIONS,
     FALSE_FLAGS,
     STATES,
+    Reservation,
     assert_binding,
     binding,
     canonical,
@@ -29,6 +35,7 @@ from .prepare_cycle_review import (
 )
 from .prepare_native_review import compare_reviews, validate_native, view_key
 from .taxonomy import load_topics
+from .train_topics import load_examples, validate_split_isolation
 
 SCHEMA = "local_self_attested_human_review_v1"
 ATTESTATION = "SELF_ATTESTED_HUMAN_NOT_IDENTITY_CERTIFIED"
@@ -54,6 +61,9 @@ ENVELOPE_FIELDS = {
     "all_records_reviewed_in_full", "no_model_assistance", "decisions",
 }
 REVIEWER = re.compile(r"[A-Za-z0-9][A-Za-z0-9_-]{2,47}\Z")
+EVALUATION_SCHEMA = "self_attested_human_evaluation_v1"
+POLICY = {"temperature": 1.0, "min_confidence": 0.8, "min_margin": 0.2}
+PRIMARY_EXCLUDED_REASONS = ("mixed_policy", "rubric_ambiguity")
 
 
 def strict_json(raw: bytes | str):
@@ -401,14 +411,386 @@ def compare(root: Path, first: Path, second: Path, output: Path) -> dict:
     return report
 
 
+def _model_evidence(checkpoint: Path, training: Path, packet: Path) -> dict:
+    from .modernbert import (
+        INPUT_CONSTRUCTION,
+        MODEL_ID,
+        MODEL_REVISION,
+        WINDOWING,
+        checked_output_codes,
+    )
+
+    taxonomy = packet / "complete-inputs/topics.yml"
+    codes = [topic.code for topic in load_topics(taxonomy)]
+    path = checkpoint / "training_manifest.json"
+    manifest = strict_json(path.read_bytes())
+    files = manifest.get("checkpoint_files", {})
+    construction = manifest.get("input", {})
+    if (
+        manifest.get("model_id") != MODEL_ID or manifest.get("base_revision") != MODEL_REVISION
+        or manifest.get("status") != "provisional" or manifest.get("schema_version") != 2
+        or manifest.get("taxonomy_sha256") != binding(taxonomy)["sha256"]
+        or manifest.get("topic_codes") != codes
+        or manifest.get("labels_sha256") != binding(training)["sha256"]
+        or manifest.get("decision") != POLICY
+        or construction.get("construction") != INPUT_CONSTRUCTION
+        or construction.get("windowing") != WINDOWING
+        or type(construction.get("max_tokens")) is not int
+        or not 32 <= construction["max_tokens"] <= 8192
+        or type(construction.get("overlap")) is not int
+        or not 0 <= construction["overlap"] < construction["max_tokens"] - 16
+        or manifest.get("complete_document_coverage", {}).get("n_discarded_source_tokens") != 0
+        or not isinstance(files, dict)
+        or not {"model.safetensors", "config.json", "tokenizer.json",
+                "tokenizer_config.json"} <= files.keys()
+    ):
+        raise ValueError("model/training/taxonomy/full-coverage policy differs from fixed plan")
+    if checked_output_codes(codes, manifest.get("output_codes")) != [*codes, None]:
+        raise ValueError("planned rejection-output mapping required")
+    rows = load_examples(training, codes)
+    if not any(row["split"] == "train" for row in rows):
+        raise ValueError("original complete training evidence has no training rows")
+    _, records = load_packet(packet)
+    reserve = Reservation(rows)
+    _, _, alternatives = frozen_inputs(packet / "complete-inputs")
+    if any(reserve.overlap(row) for row in alternatives):
+        raise ValueError("training/source reservation overlap with human packet")
+    validate_split_isolation([
+        *rows, *({**row, "split": "challenge", "domain": "bill",
+                  "label_origin": "reviewed_target"} for row in records),
+    ])
+    original = {str(path.resolve()): binding(path), str(training.resolve()): binding(training)}
+    for name, expected in files.items():
+        candidate = checkpoint / safe_name(name)
+        actual = binding(candidate)
+        if actual["sha256"] != expected:
+            raise ValueError(f"changed checkpoint file: {name}")
+        original[str(candidate.resolve())] = actual
+    return {
+        "checkpoint": str(checkpoint.resolve()), "training_labels": str(training.resolve()),
+        "original_bindings": original, "training_manifest_sha256": binding(path)["sha256"],
+        "training_labels_sha256": binding(training)["sha256"], "input": construction,
+        "output_codes": manifest["output_codes"],
+        "training_unit_policy": manifest.get("training_unit_policy"),
+        "complete_document_coverage": manifest["complete_document_coverage"],
+        "decision_status": manifest.get("decision_status"),
+    }
+
+
+def freeze_evaluation_plan(
+    packet: Path, output: Path, models: list[tuple[str, Path, Path]], *, raters: int = 2,
+) -> dict:
+    """Snapshot a pre-annotation plan; hash models without loading or running them."""
+    if output.exists():
+        raise FileExistsError("refusing overwrite of frozen evaluation plan")
+    if type(raters) is not int or raters not in (1, 2) or not models:
+        raise ValueError("one/two predeclared raters and explicit fixed models required")
+    manifest, records = load_packet(packet)
+    if not records or any((packet / name).exists() for name in (
+        "annotations-only.json", "decisions-only.jsonl", "import_receipt.json",
+    )):
+        raise ValueError("freeze plan before annotations on an unannotated nonempty packet")
+    aliases = [alias for alias, _, _ in models]
+    if len(set(aliases)) != len(aliases) or any(
+        not re.fullmatch(r"[a-z][a-z0-9_-]{0,47}", alias) for alias in aliases
+    ):
+        raise ValueError("unique safe model aliases required")
+    evidence = {alias: _model_evidence(checkpoint, training, packet)
+                for alias, checkpoint, training in models}
+    output.mkdir(parents=True)
+    shutil.copytree(packet, output / "packet")
+    write_json(output / "policy.json", POLICY)
+    code = Path(__file__).resolve().parent
+    for name in ("human_review.py", "train_topics.py", "evaluate_topics.py",
+                 "modernbert.py", "taxonomy.py"):
+        destination = output / "code" / name
+        destination.parent.mkdir(exist_ok=True)
+        shutil.copyfile(code / name, destination)
+    for alias, model in evidence.items():
+        destination = output / "models" / alias
+        destination.mkdir(parents=True)
+        shutil.copyfile(model["training_labels"], destination / "training-labels.jsonl")
+        for original, expected in model["original_bindings"].items():
+            source = Path(original)
+            assert_binding(source, expected)
+            if source.name != "model.safetensors" and original != model["training_labels"]:
+                shutil.copyfile(source, destination / source.name)
+        model["training_snapshot"] = f"models/{alias}/training-labels.jsonl"
+        model["manifest_snapshot"] = f"models/{alias}/training_manifest.json"
+    artifacts = {p.relative_to(output).as_posix(): binding(p)
+                 for p in sorted(output.rglob("*")) if p.is_file()}
+    plan = {
+        "schema": EVALUATION_SCHEMA, "status": "frozen_before_human_annotations_no_predictions",
+        "created_at": datetime.now(UTC).isoformat(),
+        "packet_id": manifest["packet_id"],
+        "source_manifest_sha256": manifest["source_manifest_sha256"],
+        "taxonomy_sha256": manifest["complete_inputs"]["topics.yml"]["sha256"],
+        "raters": raters, "models": evidence, "decision": POLICY,
+        "inference": {"strict_inference_unchanged": True, "full_token_coverage": True,
+                      "n_discarded_tokens": 0, "calibration": None},
+        "primary": "agreed_resolved_only" if raters == 2 else "single_rater_resolved_only",
+        "primary_excluded_reasons": list(PRIMARY_EXCLUDED_REASONS),
+        "sensitivities": ["review_a_all", "review_b_all"] if raters == 2 else ["review_a_all"],
+        "disagreements": "preserve both exact envelopes; no winner; never primary",
+        "model_comparison": (
+            "report all predeclared models; no result-dependent model/threshold choice"
+        ),
+        "human_provenance": ATTESTATION, "artifacts": artifacts,
+        "evaluation_only": True, **dict.fromkeys(FLAGS, False),
+    }
+    for model in evidence.values():
+        for original, expected in model["original_bindings"].items():
+            assert_binding(Path(original), expected)
+    write_json(output / "evaluation_plan.json", plan)
+    return plan
+
+
+def load_evaluation_plan(root: Path) -> dict:
+    plan = strict_json((root / "evaluation_plan.json").read_bytes())
+    if (
+        plan.get("schema") != EVALUATION_SCHEMA
+        or plan.get("status") != "frozen_before_human_annotations_no_predictions"
+        or plan.get("decision") != POLICY
+        or type(plan.get("raters")) is not int or plan["raters"] not in (1, 2)
+        or plan.get("primary_excluded_reasons") != list(PRIMARY_EXCLUDED_REASONS)
+        or plan.get("human_provenance") != ATTESTATION
+        or plan.get("evaluation_only") is not True
+        or any(plan.get(flag) is not False for flag in FLAGS)
+    ):
+        raise ValueError("invalid frozen advisory evaluation plan/policy")
+    for name, expected in plan["artifacts"].items():
+        path = (root / name).resolve()
+        if not path.is_relative_to(root.resolve()):
+            raise ValueError("unsafe plan artifact")
+        assert_binding(path, expected)
+    for model in plan["models"].values():
+        for original, expected in model["original_bindings"].items():
+            assert_binding(Path(original), expected)
+    for name in ("human_review.py", "train_topics.py", "evaluate_topics.py",
+                 "modernbert.py", "taxonomy.py"):
+        assert_binding(Path(__file__).resolve().parent / name, plan["artifacts"][f"code/{name}"])
+    manifest, _ = load_packet(root / "packet")
+    if (
+        manifest["packet_id"] != plan["packet_id"]
+        or manifest["source_manifest_sha256"] != plan["source_manifest_sha256"]
+        or manifest["complete_inputs"]["topics.yml"]["sha256"] != plan["taxonomy_sha256"]
+    ):
+        raise ValueError("foreign packet/source/taxonomy in frozen evaluation plan")
+    return plan
+
+
+def _reference_sets(plan: dict, records: list[dict], annotations: dict):
+    decisions = {key: {row["record_id"]: row for row in annotation["decisions"]}
+                 for key, annotation in annotations.items()}
+    agreed = [
+        row["record_id"] for row in records if plan["raters"] == 1 or all(
+            decisions["a"][row["record_id"]][field] == decisions["b"][row["record_id"]][field]
+            for field in ("topic", "abstention_reason")
+        )
+    ]
+    primary = [key for key in agreed
+               if decisions["a"][key]["abstention_reason"] not in PRIMARY_EXCLUDED_REASONS]
+    roles = {"primary": ("a", primary),
+             **{f"sensitivity_review_{key}_all": (key, [r["record_id"] for r in records])
+                for key in decisions}}
+    return decisions, agreed, primary, roles
+
+
+def _reference_rows(plan, plan_binding, records, decisions, annotation_bindings, role, selection):
+    review, selected = selection
+    return [{
+        **original, **decisions[review][original["record_id"]],
+        "split": "challenge", "domain": "bill", "text_sha256": original["input_sha256"],
+        "source_url": f"urn:state-politics:human-evaluation:{original['input_sha256']}",
+        "label_origin": "reviewed_target", "label_version": EVALUATION_SCHEMA,
+        "evidence_tier": "self_attested_human_advisory_evaluation_not_gold",
+        "evaluation_reference_schema": EVALUATION_SCHEMA,
+        "evaluation_role": role, "evaluation_only": True,
+        "human_provenance": ATTESTATION, "human_packet_id": plan["packet_id"],
+        "evaluation_plan": plan_binding, "original_annotation_bindings": annotation_bindings,
+        "original_human_reviews": {r: decisions[r][original["record_id"]] for r in decisions},
+        "reference_basis": "identical explicit verdicts only" if role == "primary"
+        and plan["raters"] == 2 else "unmodified self-attested individual review",
+        **dict.fromkeys(FLAGS, False),
+    } for original in records if original["record_id"] in selected]
+
+
+def export_references(plan_root: Path, first: Path, output: Path, second: Path | None = None):
+    """Export reviewed references, not canonical labels, after complete validation."""
+    if output.exists():
+        raise FileExistsError("refusing overwrite of advisory evaluation references")
+    plan = load_evaluation_plan(plan_root)
+    if (second is not None) != (plan["raters"] == 2):
+        raise ValueError("complete annotations for the predeclared number of raters required")
+    packet = plan_root / "packet"
+    paths = {"a": first, **({"b": second} if second is not None else {})}
+    raw = {key: path.read_bytes() for key, path in paths.items()}
+    annotations = {key: strict_json(value) for key, value in raw.items()}
+    for annotation in annotations.values():
+        validate_annotation(packet, annotation)
+    if second and annotations["a"]["reviewer_id"] == annotations["b"]["reviewer_id"]:
+        raise ValueError(
+            "two distinct self-attested pseudonyms required, not certified independence"
+        )
+    _, records = load_packet(packet)
+    # Repeat reservations at the admission boundary, including all source alternatives.
+    for model in plan["models"].values():
+        _model_evidence(Path(model["checkpoint"]), Path(model["training_labels"]), packet)
+    decisions, agreed, primary, roles = _reference_sets(plan, records, annotations)
+    output.mkdir(parents=True)
+    for key, value in raw.items():
+        (output / f"review-{key}-annotations-only.json").write_bytes(value)
+    if second:
+        compare(packet, first, second, output / "self-attested-comparison.json")
+    annotation_bindings = {key: binding(output / f"review-{key}-annotations-only.json")
+                           for key in raw}
+    reference_files = {}
+    plan_binding = binding(plan_root / "evaluation_plan.json")
+    for role, selection in roles.items():
+        rows = _reference_rows(
+            plan, plan_binding, records, decisions, annotation_bindings, role, selection,
+        )
+        name = f"{role}-advisory-evaluation-references.jsonl"
+        write_jsonl(output / name, rows)
+        if rows:
+            codes = [t.code for t in load_topics(packet / "complete-inputs/topics.yml")]
+            loaded = load_examples(output / name, codes)
+            for model in plan["models"].values():
+                validate_split_isolation([
+                    *load_examples(plan_root / model["training_snapshot"], codes), *loaded,
+                ])
+        reference_files[role] = {"file": name, "n_references": len(rows), **binding(output / name)}
+    result = {
+        "schema": EVALUATION_SCHEMA,
+        "status": "advisory_evaluation_references_not_gold_or_training",
+        "packet_id": plan["packet_id"], "plan_root": str(plan_root.resolve()),
+        "evaluation_plan": binding(plan_root / "evaluation_plan.json"),
+        "original_annotation_bindings": annotation_bindings,
+        "reference_files": reference_files, "n_primary": len(primary),
+        "agreed_record_ids": agreed,
+        "disputed_record_ids": [r["record_id"] for r in records if r["record_id"] not in agreed],
+        "agreed_unresolved_excluded_from_primary": [key for key in agreed if key not in primary],
+        "comparison": binding(output / "self-attested-comparison.json") if second else None,
+        "human_provenance": ATTESTATION, "evaluation_only": True, **dict.fromkeys(FLAGS, False),
+    }
+    write_json(output / "evaluation_reference_manifest.json", result)
+    return result
+
+
+def score_references(
+    references: Path, model_alias: str, role: str, predictions: Path, output: Path,
+):
+    """Strict provenance wrapper; all scores come from the existing evaluate_topics CLI."""
+    from . import evaluate_topics
+
+    if output.exists():
+        raise FileExistsError("refusing overwrite of advisory evaluation report")
+    receipt = strict_json((references / "evaluation_reference_manifest.json").read_bytes())
+    plan_root = Path(receipt["plan_root"])
+    plan = load_evaluation_plan(plan_root)
+    assert_binding(plan_root / "evaluation_plan.json", receipt["evaluation_plan"])
+    if (
+        receipt.get("schema") != EVALUATION_SCHEMA or receipt.get("packet_id") != plan["packet_id"]
+        or receipt.get("human_provenance") != ATTESTATION
+        or receipt.get("evaluation_only") is not True
+        or any(receipt.get(flag) is not False for flag in FLAGS)
+        or set(receipt["original_annotation_bindings"]) != (
+            {"a", "b"} if plan["raters"] == 2 else {"a"}
+        )
+    ):
+        raise ValueError("invalid advisory reference manifest/provenance")
+    if model_alias not in plan["models"] or role not in receipt["reference_files"]:
+        raise ValueError("model/role not predeclared")
+    reference = receipt["reference_files"][role]
+    if not reference["n_references"]:
+        raise ValueError("no eligible references for this predeclared role; no score fabricated")
+    path = references / safe_name(reference["file"])
+    assert_binding(path, reference)
+    annotations = {}
+    for key, expected in receipt["original_annotation_bindings"].items():
+        annotation_path = references / f"review-{safe_name(key)}-annotations-only.json"
+        assert_binding(annotation_path, expected)
+        annotations[key] = strict_json(annotation_path.read_bytes())
+        validate_annotation(plan_root / "packet", annotations[key])
+    if plan["raters"] == 2:
+        if annotations["a"]["reviewer_id"] == annotations["b"]["reviewer_id"]:
+            raise ValueError("two distinct self-attested pseudonyms required")
+        assert_binding(references / "self-attested-comparison.json", receipt["comparison"])
+    _, records = load_packet(plan_root / "packet")
+    decisions, _, _, roles = _reference_sets(plan, records, annotations)
+    if set(receipt["reference_files"]) != set(roles):
+        raise ValueError("missing/extra predeclared reference roles")
+    for name, selection in roles.items():
+        description = receipt["reference_files"][name]
+        reference_path = references / safe_name(description["file"])
+        assert_binding(reference_path, description)
+        expected = _reference_rows(
+            plan, receipt["evaluation_plan"], records, decisions,
+            receipt["original_annotation_bindings"], name, selection,
+        )
+        if json_lines(reference_path) != expected or description["n_references"] != len(expected):
+            raise ValueError("references differ from exact annotations/predeclared subset")
+    model = plan["models"][model_alias]
+    for row in json_lines(predictions):
+        if (
+            row.get("model_run") != model["training_manifest_sha256"]
+            or row.get("base_model_run") != model["training_manifest_sha256"]
+            or row.get("taxonomy_sha256") != plan["taxonomy_sha256"]
+            or row.get("calibration_sha256") is not None
+            or type(row.get("n_discarded_tokens")) is not int or row["n_discarded_tokens"] != 0
+            or type(row.get("n_input_tokens")) is not int or row["n_input_tokens"] < 1
+        ):
+            raise ValueError(
+                "prediction model/policy/full-token-coverage provenance differs from plan"
+            )
+    command = [
+        "--labels", str(path), "--training-manifest", str(plan_root / model["manifest_snapshot"]),
+        "--training-labels", str(plan_root / model["training_snapshot"]),
+        "--predictions", str(predictions),
+        "--topics", str(plan_root / "packet/complete-inputs/topics.yml"),
+        "--split", "challenge", "--policy", str(plan_root / "policy.json"), "--out", str(output),
+    ]
+    evaluate_topics.main(command)
+    report = strict_json(output.read_bytes())
+    report.update(evaluation_only=True, **dict.fromkeys(FLAGS, False))
+    report["human_evaluation_context"] = {
+        "status": "self_attested_advisory_evaluation_not_gold",
+        "role": role, "human_provenance": ATTESTATION,
+        "evaluation_reference_manifest": binding(references / "evaluation_reference_manifest.json"),
+        "evaluation_plan": receipt["evaluation_plan"],
+        "original_annotation_bindings": receipt["original_annotation_bindings"],
+        "identity_and_independence": "self-attested, not certified",
+        "historical_metric_key_notice": "gold_abstention_count is not a gold-status claim",
+        "existing_evaluator_invocation": shlex.join([
+            sys.executable, "-m", "state_politics.analysis.evaluate_topics", *command,
+        ]),
+        "evaluation_only": True, **dict.fromkeys(FLAGS, False),
+    }
+    write_json(output, report)
+    return {
+        "status": "evaluated_self_attested_advisory_not_gold", "n_primary": receipt["n_primary"],
+    }
+
+
 def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("action", choices=("build", "validate", "import", "compare"))
+    parser.add_argument("action", choices=(
+        "build", "validate", "import", "compare", "freeze-evaluation-plan",
+        "export-references", "score-references",
+    ))
     parser.add_argument("--frozen", type=Path)
     parser.add_argument("--packet", type=Path)
     parser.add_argument("--annotations", type=Path)
     parser.add_argument("--review-b", type=Path)
     parser.add_argument("--output", type=Path)
+    parser.add_argument("--plan", type=Path)
+    parser.add_argument("--model", nargs=3, action="append", default=[],
+                        metavar=("ALIAS", "CHECKPOINT", "TRAINING_LABELS"))
+    parser.add_argument("--raters", type=int, choices=(1, 2), default=2)
+    parser.add_argument("--references", type=Path)
+    parser.add_argument("--model-alias")
+    parser.add_argument("--role", default="primary")
+    parser.add_argument("--predictions", type=Path)
     args = parser.parse_args()
     if args.action == "build" and args.frozen and args.output:
         result = build(args.frozen, args.output)
@@ -423,11 +805,23 @@ def main() -> None:
         args.packet, args.annotations, args.review_b, args.output,
     )):
         result = compare(args.packet, args.annotations, args.review_b, args.output)
+    elif args.action == "freeze-evaluation-plan" and args.packet and args.output:
+        result = freeze_evaluation_plan(args.packet, args.output, [
+            (alias, Path(checkpoint), Path(training)) for alias, checkpoint, training in args.model
+        ], raters=args.raters)
+    elif args.action == "export-references" and args.plan and args.annotations and args.output:
+        result = export_references(args.plan, args.annotations, args.output, args.review_b)
+    elif args.action == "score-references" and all((
+        args.references, args.model_alias, args.predictions, args.output,
+    )):
+        result = score_references(
+            args.references, args.model_alias, args.role, args.predictions, args.output,
+        )
     else:
         parser.error("required paths missing; see action and --help")
     print(json.dumps({key: result[key] for key in (
         "status", "packet_id", "n_selected", "n_decisions", "validated_decisions",
-        "n_agreed", "n_disputed",
+        "n_agreed", "n_disputed", "n_primary",
     ) if key in result}))
 
 

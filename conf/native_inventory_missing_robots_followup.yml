@@ -1,0 +1,130 @@
+schema_version: 1
+purpose: Offline metadata replay for explicitly authorized LA RI WY absent-robots follow-up.
+collection_authority: None; the new frozen authorization governs, not this adapter.
+state_status:
+  LA: complete_publisher_2023_regular_HB_query_only_other_types_and_2024_unknown
+  RI: unknown_target_census_unverified_mixed_date_search_results_and_form400
+  WY: unknown_census_collector_halt_on_recaptcha_literal_in_archived_javascript
+scope_limitations:
+  LA:
+    - Explicit parent opt-in treats only complete absent robots404/410 as unavailable policy, not an express disallow or independent authorization.
+    - Exactly661 publisher-listed2023 regular HB identities were recovered across all7 observed pages.
+    - An additional100-row first-page observation from the page-size control is retained separately, not additional identities.
+    - Show100 Items control offers at most100; no invented All or oversized page-size value was used.
+    - Other2023 type options were observed but not collected;2024 regular/special and2023 special censuses remain unknown.
+    - Empty-summary search did not establish a census and redirected to a2026 search form; that response is not target metadata.
+    - Anonymous same-origin publisher session cookies were reused from exact retained Set-Cookie headers; no login or account.
+    - Author, current status, Considered column and complete subject/title row remain literal; no filing/introduction dates inferred.
+    - Known prior1 plus new14 equals aggregate15; all remaining dispatch is closed.
+  RI:
+    - Same-origin complete robots404 with an empty chunked entity was reused under the explicit narrower absence policy.
+    - Historical2023 Billtext GET returned100 mixed-date/cross-directory search hits, including2026 testimony; filter semantics were not verified.
+    - Entire result table,401 rows and all106 links are retained only as auxiliary unverified source evidence, not native target measures.
+    - Source links include an undeclared internal hostname; none were requested or treated as valid document authorization.
+    - Submission of the same public form fields using POST returned400 with an empty complete entity; no retry or alternate-origin continuation.
+    - Native2023/2024 measure counts, dates and original stages remain unknown, not zero.
+  WY:
+    - Same-origin complete IIS robots404 was reused under explicit opt-in; original closed packet was not resumed.
+    - Official2024 entrypoint and two literal public application bundles were captured completely.
+    - Generic conservative detector halted on the substring captcha within a JavaScript reCAPTCHA integration, not an actual returned challenge page.
+    - This is a collector false-positive/unsupported-source limitation, not proof of an express publisher robots/WAF denial.
+    - Halt retained; no stop override, alternative host or subsequent native request was attempted.
+    - Native2023/2024 censuses and date/identity/full-original evidence remain unknown.
+canonical_session_candidate_aliases:
+  LA:
+    23RS: "2023"
+adapters:
+  louisiana_paired_rows:
+    record_selector:
+      - {tag: table, classes: [ResultsListTable]}
+      - {tag: tr}
+    record_suffix_selector: {tag: tr}
+    record_suffix_required_selector: {tag: span, attrs_contain: {id: LabelKWordAndSTitle}}
+    identifier_selector: {tag: a, attrs_contain: {id: "_HyperLink1"}}
+    bill_types: [HB, SB]
+    fields:
+      all_source_columns: {tag: td}
+      all_source_spans: {tag: span}
+      current_status: {tag: span, attrs_contain: {id: LabelStatus}}
+      considered_literal: {tag: span, attrs_contain: {id: LabelConsidered}}
+      subject_and_full_title: {tag: span, attrs_contain: {id: LabelKWordAndSTitle}}
+    pagination:
+      count_regex: 'There are (?P<count>\d+) Instruments in this List'
+      link_selector:
+        - {tag: span, attrs_contain: {id: DataPager1}}
+        - {tag: a, requires: [href]}
+      postback:
+        current_page_selector:
+          - {tag: span, attrs_contain: {id: DataPager1}}
+          - {tag: span}
+        target_regex: "javascript:__doPostBack\\('(?P<target>[^']+)',''\\)"
+pages:
+  - exchange: LA-07
+    state: LA
+    session: 23RS
+    session_kind: Search Results from2023 Regular Session
+    measure_type_scope: HB
+    adapter: louisiana_paired_rows
+    query_semantics: Publisher HB1-661 range; source current-page1 of7,100 rows.
+  - exchange: LA-08
+    state: LA
+    session: 23RS
+    session_kind: Search Results from2023 Regular Session
+    measure_type_scope: HB
+    adapter: louisiana_paired_rows
+    query_semantics: Separate repeated first-page100 observation while opening offered page-size choices; not an additional query page.
+  - exchange: LA-09
+    state: LA
+    session: 23RS
+    session_kind: Search Results from2023 Regular Session
+    measure_type_scope: HB
+    adapter: louisiana_paired_rows
+    query_semantics: Exact publisher postback page2 of7.
+  - exchange: LA-10
+    state: LA
+    session: 23RS
+    session_kind: Search Results from2023 Regular Session
+    measure_type_scope: HB
+    adapter: louisiana_paired_rows
+    query_semantics: Exact publisher postback page3 of7.
+  - exchange: LA-11
+    state: LA
+    session: 23RS
+    session_kind: Search Results from2023 Regular Session
+    measure_type_scope: HB
+    adapter: louisiana_paired_rows
+    query_semantics: Exact publisher postback page4 of7.
+  - exchange: LA-12
+    state: LA
+    session: 23RS
+    session_kind: Search Results from2023 Regular Session
+    measure_type_scope: HB
+    adapter: louisiana_paired_rows
+    query_semantics: Exact publisher postback page5 of7.
+  - exchange: LA-13
+    state: LA
+    session: 23RS
+    session_kind: Search Results from2023 Regular Session
+    measure_type_scope: HB
+    adapter: louisiana_paired_rows
+    query_semantics: Exact publisher postback page6 of7.
+  - exchange: LA-14
+    state: LA
+    session: 23RS
+    session_kind: Search Results from2023 Regular Session
+    measure_type_scope: HB
+    adapter: louisiana_paired_rows
+    query_semantics: Exact publisher postback terminal page7 of7,61 rows.
+paginated_queries:
+  - state: LA
+    session: 23RS
+    measure_type_scope: HB
+    exchanges: [LA-08, LA-09, LA-10, LA-11, LA-12, LA-13, LA-14]
+    query_semantics: All7 finite publisher HB range pages;661 distinct source identities; no all-measure or calendar-date-universe certification.
+auxiliary_html_sources:
+  - exchange: RI-02
+    record_selector: {tag: table, classes: [summary]}
+    fields:
+      every_source_row: {tag: tr}
+      every_source_cell: {tag: td}
+    target_scope_status: Requested2023 Billtext filter not verified; mixed2023/2026 and other source contexts; no target measure/date/identity credit.

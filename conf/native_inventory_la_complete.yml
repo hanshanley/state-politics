@@ -1,0 +1,1574 @@
+schema_version: 1
+purpose: Actual remaining Louisiana publisher session/type censuses and Rhode Island native-origin negative proof.
+collection_authority: None; the separately frozen named LA150 and RI10 increments govern.
+state_status:
+  LA: complete_publisher_listed_2023_2024_regular_extraordinary_session_type_queries_not_introduced_universe
+  RI: blocked_actual_official_bill_status_origin_explicit_robots_disallow_target_census_unknown
+scope_limitations:
+  LA:
+  - All37 offered type queries across six regular/extraordinary sessions are complete returned publisher lists,
+    not an introduced universe or source closure.
+  - Seven complete accepted2023HB pages are reused with exact original manifest/body/header proof, without new native
+    requests.
+  - ACT queries list enacted subsets of underlying HB/SB measures; their1304 record observations are not1304 additional
+    native identities or original-stage proof.
+  - Organizational and veto contexts have literal no-associated-bills notices, not proof of zero introductions or
+    zero legislative activity.
+  - Four one-result queries redirected to native BillInfo metadata; no linked policy-text, Original, PDF, DOC or
+    version body was fetched.
+  - Every main result row and its complete following subject/title row are preserved; singleton metadata retains
+    its entire source HTML and all fields/links.
+  - Anonymous publisher context cookies were retained while ordinary public query page state was reset between types;
+    no login/account, robots/WAF bypass, identity change or request-history reset.
+  - The initial HR query entered page2 using publisher-carried page state; all three distinct pages are retained
+    and verified without re-fetching page2.
+  - An empty HSR offset response was retained as a diagnostic, never interpreted as zero activity; the legitimate
+    fresh-query response has all five records.
+  - All filing/introduction dates, originals, canonical joins, science/model/analytical admission remain uncertified.
+  RI:
+  - Official archived Bills and Laws page links HTTPS status.rilegislature.gov Bill Status/History.
+  - Counted native-origin robots response is HTTP200 with32 complete bytes explicitly Disallow /.
+  - State stopped before any substantive status-origin HTTP; no alternate route, different origin, historical endpoint
+    or generic Search workaround.
+  - Both target-year native censuses remain unknown, not zero.
+canonical_session_candidate_aliases:
+  LA:
+    23RS: '2023'
+    231ES: 2023s1
+    24RS: '2024'
+    241ES: 2024s1
+    242ES: 2024s2
+    243ES: 2024s3
+adapters:
+  louisiana_paired_rows:
+    record_selector:
+    - tag: table
+      classes:
+      - ResultsListTable
+    - tag: tr
+    record_suffix_selector:
+      tag: tr
+    record_suffix_required_selector:
+      tag: span
+      attrs_contain:
+        id: LabelKWordAndSTitle
+    identifier_selector:
+      tag: a
+      attrs_contain:
+        id: _HyperLink1
+    include_query_context: true
+    bill_types:
+    - HB
+    - SB
+    fields:
+      all_source_columns:
+        tag: td
+      all_source_spans:
+        tag: span
+      current_status:
+        tag: span
+        attrs_contain:
+          id: LabelStatus
+      considered_literal:
+        tag: span
+        attrs_contain:
+          id: LabelConsidered
+      subject_and_full_title:
+        tag: span
+        attrs_contain:
+          id: LabelKWordAndSTitle
+    pagination:
+      count_regex: There are (?P<count>\d+) Instruments in this List
+      link_selector:
+      - tag: span
+        attrs_contain:
+          id: DataPager1
+      - tag: a
+        requires:
+        - href
+      postback:
+        current_page_selector:
+        - tag: span
+          attrs_contain:
+            id: DataPager1
+        - tag: span
+        target_regex: javascript:__doPostBack\('(?P<target>[^']+)',''\)
+        implicit_single_page_count_satisfied: true
+        query_entry_submit_field: ctl00$ctl00$PageBody$PageContent$btnSearchByInstRange
+  louisiana_singleton_metadata:
+    record_selector:
+      tag: html
+    identifier_selector:
+      tag: title
+    session_selector:
+      tag: span
+      attrs_contain:
+        id: LabelSession
+    include_query_context: true
+    publisher_record_key_query_parameter: i
+    bill_types:
+    - HB
+    - SB
+    fields:
+      all_source_cells:
+        tag: td
+      all_source_spans:
+        tag: span
+      complete_subject_and_title:
+        tag: span
+        attrs_contain:
+          id: LabelShortTitle
+      current_status:
+        tag: span
+        attrs_contain:
+          id: LabelCurrentStatus
+      all_source_action_tables:
+        tag: table
+    pagination: {}
+pages:
+- exchange: LA-REUSE-08
+  state: LA
+  session: 23RS
+  session_kind: 2023 Regular Session
+  measure_type_scope: HB
+  adapter: louisiana_paired_rows
+  query_entry_fields:
+    ctl00$ctl00$PageBody$PageContent$ddlInstTypes2: HB-661
+    ctl00$ctl00$PageBody$PageContent$tbBillNumStart: '1'
+    ctl00$ctl00$PageBody$PageContent$tbBillNumStop: '661'
+  query_semantics: Publisher 2023 Regular Session HB range1..661; all source columns and complete paired subject/title
+    row; no introduction/original certification.
+- exchange: LA-REUSE-09
+  state: LA
+  session: 23RS
+  session_kind: 2023 Regular Session
+  measure_type_scope: HB
+  adapter: louisiana_paired_rows
+  query_entry_fields:
+    ctl00$ctl00$PageBody$PageContent$ddlInstTypes2: HB-661
+    ctl00$ctl00$PageBody$PageContent$tbBillNumStart: '1'
+    ctl00$ctl00$PageBody$PageContent$tbBillNumStop: '661'
+  query_semantics: Publisher 2023 Regular Session HB range1..661; all source columns and complete paired subject/title
+    row; no introduction/original certification.
+- exchange: LA-REUSE-10
+  state: LA
+  session: 23RS
+  session_kind: 2023 Regular Session
+  measure_type_scope: HB
+  adapter: louisiana_paired_rows
+  query_entry_fields:
+    ctl00$ctl00$PageBody$PageContent$ddlInstTypes2: HB-661
+    ctl00$ctl00$PageBody$PageContent$tbBillNumStart: '1'
+    ctl00$ctl00$PageBody$PageContent$tbBillNumStop: '661'
+  query_semantics: Publisher 2023 Regular Session HB range1..661; all source columns and complete paired subject/title
+    row; no introduction/original certification.
+- exchange: LA-REUSE-11
+  state: LA
+  session: 23RS
+  session_kind: 2023 Regular Session
+  measure_type_scope: HB
+  adapter: louisiana_paired_rows
+  query_entry_fields:
+    ctl00$ctl00$PageBody$PageContent$ddlInstTypes2: HB-661
+    ctl00$ctl00$PageBody$PageContent$tbBillNumStart: '1'
+    ctl00$ctl00$PageBody$PageContent$tbBillNumStop: '661'
+  query_semantics: Publisher 2023 Regular Session HB range1..661; all source columns and complete paired subject/title
+    row; no introduction/original certification.
+- exchange: LA-REUSE-12
+  state: LA
+  session: 23RS
+  session_kind: 2023 Regular Session
+  measure_type_scope: HB
+  adapter: louisiana_paired_rows
+  query_entry_fields:
+    ctl00$ctl00$PageBody$PageContent$ddlInstTypes2: HB-661
+    ctl00$ctl00$PageBody$PageContent$tbBillNumStart: '1'
+    ctl00$ctl00$PageBody$PageContent$tbBillNumStop: '661'
+  query_semantics: Publisher 2023 Regular Session HB range1..661; all source columns and complete paired subject/title
+    row; no introduction/original certification.
+- exchange: LA-REUSE-13
+  state: LA
+  session: 23RS
+  session_kind: 2023 Regular Session
+  measure_type_scope: HB
+  adapter: louisiana_paired_rows
+  query_entry_fields:
+    ctl00$ctl00$PageBody$PageContent$ddlInstTypes2: HB-661
+    ctl00$ctl00$PageBody$PageContent$tbBillNumStart: '1'
+    ctl00$ctl00$PageBody$PageContent$tbBillNumStop: '661'
+  query_semantics: Publisher 2023 Regular Session HB range1..661; all source columns and complete paired subject/title
+    row; no introduction/original certification.
+- exchange: LA-REUSE-14
+  state: LA
+  session: 23RS
+  session_kind: 2023 Regular Session
+  measure_type_scope: HB
+  adapter: louisiana_paired_rows
+  query_entry_fields:
+    ctl00$ctl00$PageBody$PageContent$ddlInstTypes2: HB-661
+    ctl00$ctl00$PageBody$PageContent$tbBillNumStart: '1'
+    ctl00$ctl00$PageBody$PageContent$tbBillNumStop: '661'
+  query_semantics: Publisher 2023 Regular Session HB range1..661; all source columns and complete paired subject/title
+    row; no introduction/original certification.
+- exchange: LA-05
+  state: LA
+  session: 23RS
+  session_kind: 2023 Regular Session
+  measure_type_scope: HCR
+  adapter: louisiana_paired_rows
+  query_entry_fields:
+    ctl00$ctl00$PageBody$PageContent$ddlInstTypes2: HCR-147
+    ctl00$ctl00$PageBody$PageContent$tbBillNumStart: '1'
+    ctl00$ctl00$PageBody$PageContent$tbBillNumStop: '147'
+  query_semantics: Publisher 2023 Regular Session HCR range1..147; all source columns and complete paired subject/title
+    row; no introduction/original certification.
+- exchange: LA-06
+  state: LA
+  session: 23RS
+  session_kind: 2023 Regular Session
+  measure_type_scope: HCR
+  adapter: louisiana_paired_rows
+  query_entry_fields:
+    ctl00$ctl00$PageBody$PageContent$ddlInstTypes2: HCR-147
+    ctl00$ctl00$PageBody$PageContent$tbBillNumStart: '1'
+    ctl00$ctl00$PageBody$PageContent$tbBillNumStop: '147'
+  query_semantics: Publisher 2023 Regular Session HCR range1..147; all source columns and complete paired subject/title
+    row; no introduction/original certification.
+- exchange: LA-08
+  state: LA
+  session: 23RS
+  session_kind: 2023 Regular Session
+  measure_type_scope: HR
+  adapter: louisiana_paired_rows
+  query_entry_fields:
+    ctl00$ctl00$PageBody$PageContent$ddlInstTypes2: HR-297
+    ctl00$ctl00$PageBody$PageContent$tbBillNumStart: '1'
+    ctl00$ctl00$PageBody$PageContent$tbBillNumStop: '297'
+  query_semantics: Publisher 2023 Regular Session HR range1..297; all source columns and complete paired subject/title
+    row; no introduction/original certification.
+- exchange: LA-07
+  state: LA
+  session: 23RS
+  session_kind: 2023 Regular Session
+  measure_type_scope: HR
+  adapter: louisiana_paired_rows
+  query_entry_fields:
+    ctl00$ctl00$PageBody$PageContent$ddlInstTypes2: HR-297
+    ctl00$ctl00$PageBody$PageContent$tbBillNumStart: '1'
+    ctl00$ctl00$PageBody$PageContent$tbBillNumStop: '297'
+  query_semantics: Publisher 2023 Regular Session HR range1..297; all source columns and complete paired subject/title
+    row; no introduction/original certification.
+- exchange: LA-09
+  state: LA
+  session: 23RS
+  session_kind: 2023 Regular Session
+  measure_type_scope: HR
+  adapter: louisiana_paired_rows
+  query_entry_fields:
+    ctl00$ctl00$PageBody$PageContent$ddlInstTypes2: HR-297
+    ctl00$ctl00$PageBody$PageContent$tbBillNumStart: '1'
+    ctl00$ctl00$PageBody$PageContent$tbBillNumStop: '297'
+  query_semantics: Publisher 2023 Regular Session HR range1..297; all source columns and complete paired subject/title
+    row; no introduction/original certification.
+- exchange: LA-11
+  state: LA
+  session: 23RS
+  session_kind: 2023 Regular Session
+  measure_type_scope: HSR
+  adapter: louisiana_paired_rows
+  query_entry_fields:
+    ctl00$ctl00$PageBody$PageContent$ddlInstTypes2: HSR-5
+    ctl00$ctl00$PageBody$PageContent$tbBillNumStart: '1'
+    ctl00$ctl00$PageBody$PageContent$tbBillNumStop: '5'
+  query_semantics: Publisher 2023 Regular Session HSR range1..5; all source columns and complete paired subject/title
+    row; no introduction/original certification.
+- exchange: LA-12
+  state: LA
+  session: 23RS
+  session_kind: 2023 Regular Session
+  measure_type_scope: SB
+  adapter: louisiana_paired_rows
+  query_entry_fields:
+    ctl00$ctl00$PageBody$PageContent$ddlInstTypes2: SB-233
+    ctl00$ctl00$PageBody$PageContent$tbBillNumStart: '1'
+    ctl00$ctl00$PageBody$PageContent$tbBillNumStop: '233'
+  query_semantics: Publisher 2023 Regular Session SB range1..233; all source columns and complete paired subject/title
+    row; no introduction/original certification.
+- exchange: LA-13
+  state: LA
+  session: 23RS
+  session_kind: 2023 Regular Session
+  measure_type_scope: SB
+  adapter: louisiana_paired_rows
+  query_entry_fields:
+    ctl00$ctl00$PageBody$PageContent$ddlInstTypes2: SB-233
+    ctl00$ctl00$PageBody$PageContent$tbBillNumStart: '1'
+    ctl00$ctl00$PageBody$PageContent$tbBillNumStop: '233'
+  query_semantics: Publisher 2023 Regular Session SB range1..233; all source columns and complete paired subject/title
+    row; no introduction/original certification.
+- exchange: LA-14
+  state: LA
+  session: 23RS
+  session_kind: 2023 Regular Session
+  measure_type_scope: SB
+  adapter: louisiana_paired_rows
+  query_entry_fields:
+    ctl00$ctl00$PageBody$PageContent$ddlInstTypes2: SB-233
+    ctl00$ctl00$PageBody$PageContent$tbBillNumStart: '1'
+    ctl00$ctl00$PageBody$PageContent$tbBillNumStop: '233'
+  query_semantics: Publisher 2023 Regular Session SB range1..233; all source columns and complete paired subject/title
+    row; no introduction/original certification.
+- exchange: LA-15
+  state: LA
+  session: 23RS
+  session_kind: 2023 Regular Session
+  measure_type_scope: SCR
+  adapter: louisiana_paired_rows
+  query_entry_fields:
+    ctl00$ctl00$PageBody$PageContent$ddlInstTypes2: SCR-66
+    ctl00$ctl00$PageBody$PageContent$tbBillNumStart: '1'
+    ctl00$ctl00$PageBody$PageContent$tbBillNumStop: '66'
+  query_semantics: Publisher 2023 Regular Session SCR range1..66; all source columns and complete paired subject/title
+    row; no introduction/original certification.
+- exchange: LA-16
+  state: LA
+  session: 23RS
+  session_kind: 2023 Regular Session
+  measure_type_scope: SR
+  adapter: louisiana_paired_rows
+  query_entry_fields:
+    ctl00$ctl00$PageBody$PageContent$ddlInstTypes2: SR-208
+    ctl00$ctl00$PageBody$PageContent$tbBillNumStart: '1'
+    ctl00$ctl00$PageBody$PageContent$tbBillNumStop: '208'
+  query_semantics: Publisher 2023 Regular Session SR range1..208; all source columns and complete paired subject/title
+    row; no introduction/original certification.
+- exchange: LA-17
+  state: LA
+  session: 23RS
+  session_kind: 2023 Regular Session
+  measure_type_scope: SR
+  adapter: louisiana_paired_rows
+  query_entry_fields:
+    ctl00$ctl00$PageBody$PageContent$ddlInstTypes2: SR-208
+    ctl00$ctl00$PageBody$PageContent$tbBillNumStart: '1'
+    ctl00$ctl00$PageBody$PageContent$tbBillNumStop: '208'
+  query_semantics: Publisher 2023 Regular Session SR range1..208; all source columns and complete paired subject/title
+    row; no introduction/original certification.
+- exchange: LA-18
+  state: LA
+  session: 23RS
+  session_kind: 2023 Regular Session
+  measure_type_scope: SR
+  adapter: louisiana_paired_rows
+  query_entry_fields:
+    ctl00$ctl00$PageBody$PageContent$ddlInstTypes2: SR-208
+    ctl00$ctl00$PageBody$PageContent$tbBillNumStart: '1'
+    ctl00$ctl00$PageBody$PageContent$tbBillNumStop: '208'
+  query_semantics: Publisher 2023 Regular Session SR range1..208; all source columns and complete paired subject/title
+    row; no introduction/original certification.
+- exchange: LA-19
+  state: LA
+  session: 23RS
+  session_kind: 2023 Regular Session
+  measure_type_scope: ACT
+  adapter: louisiana_paired_rows
+  query_entry_fields:
+    ctl00$ctl00$PageBody$PageContent$ddlInstTypes2: ACT-466
+    ctl00$ctl00$PageBody$PageContent$tbBillNumStart: '1'
+    ctl00$ctl00$PageBody$PageContent$tbBillNumStop: '466'
+  query_semantics: Publisher 2023 Regular Session ACT range1..466; exact returned source list page; ACT is an enacted
+    underlying-bill subset, not additional introduced identities.
+- exchange: LA-20
+  state: LA
+  session: 23RS
+  session_kind: 2023 Regular Session
+  measure_type_scope: ACT
+  adapter: louisiana_paired_rows
+  query_entry_fields:
+    ctl00$ctl00$PageBody$PageContent$ddlInstTypes2: ACT-466
+    ctl00$ctl00$PageBody$PageContent$tbBillNumStart: '1'
+    ctl00$ctl00$PageBody$PageContent$tbBillNumStop: '466'
+  query_semantics: Publisher 2023 Regular Session ACT range1..466; exact returned source list page; ACT is an enacted
+    underlying-bill subset, not additional introduced identities.
+- exchange: LA-21
+  state: LA
+  session: 23RS
+  session_kind: 2023 Regular Session
+  measure_type_scope: ACT
+  adapter: louisiana_paired_rows
+  query_entry_fields:
+    ctl00$ctl00$PageBody$PageContent$ddlInstTypes2: ACT-466
+    ctl00$ctl00$PageBody$PageContent$tbBillNumStart: '1'
+    ctl00$ctl00$PageBody$PageContent$tbBillNumStop: '466'
+  query_semantics: Publisher 2023 Regular Session ACT range1..466; exact returned source list page; ACT is an enacted
+    underlying-bill subset, not additional introduced identities.
+- exchange: LA-22
+  state: LA
+  session: 23RS
+  session_kind: 2023 Regular Session
+  measure_type_scope: ACT
+  adapter: louisiana_paired_rows
+  query_entry_fields:
+    ctl00$ctl00$PageBody$PageContent$ddlInstTypes2: ACT-466
+    ctl00$ctl00$PageBody$PageContent$tbBillNumStart: '1'
+    ctl00$ctl00$PageBody$PageContent$tbBillNumStop: '466'
+  query_semantics: Publisher 2023 Regular Session ACT range1..466; exact returned source list page; ACT is an enacted
+    underlying-bill subset, not additional introduced identities.
+- exchange: LA-23
+  state: LA
+  session: 23RS
+  session_kind: 2023 Regular Session
+  measure_type_scope: ACT
+  adapter: louisiana_paired_rows
+  query_entry_fields:
+    ctl00$ctl00$PageBody$PageContent$ddlInstTypes2: ACT-466
+    ctl00$ctl00$PageBody$PageContent$tbBillNumStart: '1'
+    ctl00$ctl00$PageBody$PageContent$tbBillNumStop: '466'
+  query_semantics: Publisher 2023 Regular Session ACT range1..466; exact returned source list page; ACT is an enacted
+    underlying-bill subset, not additional introduced identities.
+- exchange: LA-27
+  state: LA
+  session: 243ES
+  session_kind: 2024 Third Extraordinary Session
+  measure_type_scope: HB
+  adapter: louisiana_paired_rows
+  query_entry_fields:
+    ctl00$ctl00$PageBody$PageContent$ddlInstTypes2: HB-25
+    ctl00$ctl00$PageBody$PageContent$tbBillNumStart: '1'
+    ctl00$ctl00$PageBody$PageContent$tbBillNumStop: '25'
+  query_semantics: Publisher 2024 Third Extraordinary Session HB range1..25; all source columns and complete paired
+    subject/title row; no introduction/original certification.
+- exchange: LA-28
+  state: LA
+  session: 243ES
+  session_kind: 2024 Third Extraordinary Session
+  measure_type_scope: SB
+  adapter: louisiana_paired_rows
+  query_entry_fields:
+    ctl00$ctl00$PageBody$PageContent$ddlInstTypes2: SB-9
+    ctl00$ctl00$PageBody$PageContent$tbBillNumStart: '1'
+    ctl00$ctl00$PageBody$PageContent$tbBillNumStop: '9'
+  query_semantics: Publisher 2024 Third Extraordinary Session SB range1..9; all source columns and complete paired
+    subject/title row; no introduction/original certification.
+- exchange: LA-30
+  state: LA
+  session: 243ES
+  session_kind: 2024 Third Extraordinary Session
+  measure_type_scope: SCR
+  adapter: louisiana_singleton_metadata
+  query_entry_fields:
+    ctl00$ctl00$PageBody$PageContent$ddlInstTypes2: SCR-1
+    ctl00$ctl00$PageBody$PageContent$tbBillNumStart: '1'
+    ctl00$ctl00$PageBody$PageContent$tbBillNumStop: '1'
+  query_semantics: Publisher 2024 Third Extraordinary Session SCR range1..1; one uniquely matched native metadata
+    response after a counted source redirect, not a policy-text body.
+- exchange: LA-31
+  state: LA
+  session: 243ES
+  session_kind: 2024 Third Extraordinary Session
+  measure_type_scope: SR
+  adapter: louisiana_paired_rows
+  query_entry_fields:
+    ctl00$ctl00$PageBody$PageContent$ddlInstTypes2: SR-2
+    ctl00$ctl00$PageBody$PageContent$tbBillNumStart: '1'
+    ctl00$ctl00$PageBody$PageContent$tbBillNumStop: '2'
+  query_semantics: Publisher 2024 Third Extraordinary Session SR range1..2; all source columns and complete paired
+    subject/title row; no introduction/original certification.
+- exchange: LA-32
+  state: LA
+  session: 243ES
+  session_kind: 2024 Third Extraordinary Session
+  measure_type_scope: ACT
+  adapter: louisiana_paired_rows
+  query_entry_fields:
+    ctl00$ctl00$PageBody$PageContent$ddlInstTypes2: ACT-19
+    ctl00$ctl00$PageBody$PageContent$tbBillNumStart: '1'
+    ctl00$ctl00$PageBody$PageContent$tbBillNumStop: '19'
+  query_semantics: Publisher 2024 Third Extraordinary Session ACT range1..19; exact returned source list page; ACT
+    is an enacted underlying-bill subset, not additional introduced identities.
+- exchange: LA-36
+  state: LA
+  session: 24RS
+  session_kind: 2024 Regular Session
+  measure_type_scope: HB
+  adapter: louisiana_paired_rows
+  query_entry_fields:
+    ctl00$ctl00$PageBody$PageContent$ddlInstTypes2: HB-982
+    ctl00$ctl00$PageBody$PageContent$tbBillNumStart: '1'
+    ctl00$ctl00$PageBody$PageContent$tbBillNumStop: '982'
+  query_semantics: Publisher 2024 Regular Session HB range1..982; all source columns and complete paired subject/title
+    row; no introduction/original certification.
+- exchange: LA-37
+  state: LA
+  session: 24RS
+  session_kind: 2024 Regular Session
+  measure_type_scope: HB
+  adapter: louisiana_paired_rows
+  query_entry_fields:
+    ctl00$ctl00$PageBody$PageContent$ddlInstTypes2: HB-982
+    ctl00$ctl00$PageBody$PageContent$tbBillNumStart: '1'
+    ctl00$ctl00$PageBody$PageContent$tbBillNumStop: '982'
+  query_semantics: Publisher 2024 Regular Session HB range1..982; all source columns and complete paired subject/title
+    row; no introduction/original certification.
+- exchange: LA-38
+  state: LA
+  session: 24RS
+  session_kind: 2024 Regular Session
+  measure_type_scope: HB
+  adapter: louisiana_paired_rows
+  query_entry_fields:
+    ctl00$ctl00$PageBody$PageContent$ddlInstTypes2: HB-982
+    ctl00$ctl00$PageBody$PageContent$tbBillNumStart: '1'
+    ctl00$ctl00$PageBody$PageContent$tbBillNumStop: '982'
+  query_semantics: Publisher 2024 Regular Session HB range1..982; all source columns and complete paired subject/title
+    row; no introduction/original certification.
+- exchange: LA-39
+  state: LA
+  session: 24RS
+  session_kind: 2024 Regular Session
+  measure_type_scope: HB
+  adapter: louisiana_paired_rows
+  query_entry_fields:
+    ctl00$ctl00$PageBody$PageContent$ddlInstTypes2: HB-982
+    ctl00$ctl00$PageBody$PageContent$tbBillNumStart: '1'
+    ctl00$ctl00$PageBody$PageContent$tbBillNumStop: '982'
+  query_semantics: Publisher 2024 Regular Session HB range1..982; all source columns and complete paired subject/title
+    row; no introduction/original certification.
+- exchange: LA-40
+  state: LA
+  session: 24RS
+  session_kind: 2024 Regular Session
+  measure_type_scope: HB
+  adapter: louisiana_paired_rows
+  query_entry_fields:
+    ctl00$ctl00$PageBody$PageContent$ddlInstTypes2: HB-982
+    ctl00$ctl00$PageBody$PageContent$tbBillNumStart: '1'
+    ctl00$ctl00$PageBody$PageContent$tbBillNumStop: '982'
+  query_semantics: Publisher 2024 Regular Session HB range1..982; all source columns and complete paired subject/title
+    row; no introduction/original certification.
+- exchange: LA-41
+  state: LA
+  session: 24RS
+  session_kind: 2024 Regular Session
+  measure_type_scope: HB
+  adapter: louisiana_paired_rows
+  query_entry_fields:
+    ctl00$ctl00$PageBody$PageContent$ddlInstTypes2: HB-982
+    ctl00$ctl00$PageBody$PageContent$tbBillNumStart: '1'
+    ctl00$ctl00$PageBody$PageContent$tbBillNumStop: '982'
+  query_semantics: Publisher 2024 Regular Session HB range1..982; all source columns and complete paired subject/title
+    row; no introduction/original certification.
+- exchange: LA-42
+  state: LA
+  session: 24RS
+  session_kind: 2024 Regular Session
+  measure_type_scope: HB
+  adapter: louisiana_paired_rows
+  query_entry_fields:
+    ctl00$ctl00$PageBody$PageContent$ddlInstTypes2: HB-982
+    ctl00$ctl00$PageBody$PageContent$tbBillNumStart: '1'
+    ctl00$ctl00$PageBody$PageContent$tbBillNumStop: '982'
+  query_semantics: Publisher 2024 Regular Session HB range1..982; all source columns and complete paired subject/title
+    row; no introduction/original certification.
+- exchange: LA-43
+  state: LA
+  session: 24RS
+  session_kind: 2024 Regular Session
+  measure_type_scope: HB
+  adapter: louisiana_paired_rows
+  query_entry_fields:
+    ctl00$ctl00$PageBody$PageContent$ddlInstTypes2: HB-982
+    ctl00$ctl00$PageBody$PageContent$tbBillNumStart: '1'
+    ctl00$ctl00$PageBody$PageContent$tbBillNumStop: '982'
+  query_semantics: Publisher 2024 Regular Session HB range1..982; all source columns and complete paired subject/title
+    row; no introduction/original certification.
+- exchange: LA-44
+  state: LA
+  session: 24RS
+  session_kind: 2024 Regular Session
+  measure_type_scope: HB
+  adapter: louisiana_paired_rows
+  query_entry_fields:
+    ctl00$ctl00$PageBody$PageContent$ddlInstTypes2: HB-982
+    ctl00$ctl00$PageBody$PageContent$tbBillNumStart: '1'
+    ctl00$ctl00$PageBody$PageContent$tbBillNumStop: '982'
+  query_semantics: Publisher 2024 Regular Session HB range1..982; all source columns and complete paired subject/title
+    row; no introduction/original certification.
+- exchange: LA-45
+  state: LA
+  session: 24RS
+  session_kind: 2024 Regular Session
+  measure_type_scope: HB
+  adapter: louisiana_paired_rows
+  query_entry_fields:
+    ctl00$ctl00$PageBody$PageContent$ddlInstTypes2: HB-982
+    ctl00$ctl00$PageBody$PageContent$tbBillNumStart: '1'
+    ctl00$ctl00$PageBody$PageContent$tbBillNumStop: '982'
+  query_semantics: Publisher 2024 Regular Session HB range1..982; all source columns and complete paired subject/title
+    row; no introduction/original certification.
+- exchange: LA-46
+  state: LA
+  session: 24RS
+  session_kind: 2024 Regular Session
+  measure_type_scope: HCR
+  adapter: louisiana_paired_rows
+  query_entry_fields:
+    ctl00$ctl00$PageBody$PageContent$ddlInstTypes2: HCR-140
+    ctl00$ctl00$PageBody$PageContent$tbBillNumStart: '1'
+    ctl00$ctl00$PageBody$PageContent$tbBillNumStop: '140'
+  query_semantics: Publisher 2024 Regular Session HCR range1..140; all source columns and complete paired subject/title
+    row; no introduction/original certification.
+- exchange: LA-47
+  state: LA
+  session: 24RS
+  session_kind: 2024 Regular Session
+  measure_type_scope: HCR
+  adapter: louisiana_paired_rows
+  query_entry_fields:
+    ctl00$ctl00$PageBody$PageContent$ddlInstTypes2: HCR-140
+    ctl00$ctl00$PageBody$PageContent$tbBillNumStart: '1'
+    ctl00$ctl00$PageBody$PageContent$tbBillNumStop: '140'
+  query_semantics: Publisher 2024 Regular Session HCR range1..140; all source columns and complete paired subject/title
+    row; no introduction/original certification.
+- exchange: LA-48
+  state: LA
+  session: 24RS
+  session_kind: 2024 Regular Session
+  measure_type_scope: HCSR
+  adapter: louisiana_paired_rows
+  query_entry_fields:
+    ctl00$ctl00$PageBody$PageContent$ddlInstTypes2: HCSR-2
+    ctl00$ctl00$PageBody$PageContent$tbBillNumStart: '1'
+    ctl00$ctl00$PageBody$PageContent$tbBillNumStop: '2'
+  query_semantics: Publisher 2024 Regular Session HCSR range1..2; all source columns and complete paired subject/title
+    row; no introduction/original certification.
+- exchange: LA-49
+  state: LA
+  session: 24RS
+  session_kind: 2024 Regular Session
+  measure_type_scope: HR
+  adapter: louisiana_paired_rows
+  query_entry_fields:
+    ctl00$ctl00$PageBody$PageContent$ddlInstTypes2: HR-355
+    ctl00$ctl00$PageBody$PageContent$tbBillNumStart: '1'
+    ctl00$ctl00$PageBody$PageContent$tbBillNumStop: '355'
+  query_semantics: Publisher 2024 Regular Session HR range1..355; all source columns and complete paired subject/title
+    row; no introduction/original certification.
+- exchange: LA-50
+  state: LA
+  session: 24RS
+  session_kind: 2024 Regular Session
+  measure_type_scope: HR
+  adapter: louisiana_paired_rows
+  query_entry_fields:
+    ctl00$ctl00$PageBody$PageContent$ddlInstTypes2: HR-355
+    ctl00$ctl00$PageBody$PageContent$tbBillNumStart: '1'
+    ctl00$ctl00$PageBody$PageContent$tbBillNumStop: '355'
+  query_semantics: Publisher 2024 Regular Session HR range1..355; all source columns and complete paired subject/title
+    row; no introduction/original certification.
+- exchange: LA-51
+  state: LA
+  session: 24RS
+  session_kind: 2024 Regular Session
+  measure_type_scope: HR
+  adapter: louisiana_paired_rows
+  query_entry_fields:
+    ctl00$ctl00$PageBody$PageContent$ddlInstTypes2: HR-355
+    ctl00$ctl00$PageBody$PageContent$tbBillNumStart: '1'
+    ctl00$ctl00$PageBody$PageContent$tbBillNumStop: '355'
+  query_semantics: Publisher 2024 Regular Session HR range1..355; all source columns and complete paired subject/title
+    row; no introduction/original certification.
+- exchange: LA-52
+  state: LA
+  session: 24RS
+  session_kind: 2024 Regular Session
+  measure_type_scope: HR
+  adapter: louisiana_paired_rows
+  query_entry_fields:
+    ctl00$ctl00$PageBody$PageContent$ddlInstTypes2: HR-355
+    ctl00$ctl00$PageBody$PageContent$tbBillNumStart: '1'
+    ctl00$ctl00$PageBody$PageContent$tbBillNumStop: '355'
+  query_semantics: Publisher 2024 Regular Session HR range1..355; all source columns and complete paired subject/title
+    row; no introduction/original certification.
+- exchange: LA-53
+  state: LA
+  session: 24RS
+  session_kind: 2024 Regular Session
+  measure_type_scope: HSR
+  adapter: louisiana_paired_rows
+  query_entry_fields:
+    ctl00$ctl00$PageBody$PageContent$ddlInstTypes2: HSR-8
+    ctl00$ctl00$PageBody$PageContent$tbBillNumStart: '1'
+    ctl00$ctl00$PageBody$PageContent$tbBillNumStop: '8'
+  query_semantics: Publisher 2024 Regular Session HSR range1..8; all source columns and complete paired subject/title
+    row; no introduction/original certification.
+- exchange: LA-54
+  state: LA
+  session: 24RS
+  session_kind: 2024 Regular Session
+  measure_type_scope: SB
+  adapter: louisiana_paired_rows
+  query_entry_fields:
+    ctl00$ctl00$PageBody$PageContent$ddlInstTypes2: SB-509
+    ctl00$ctl00$PageBody$PageContent$tbBillNumStart: '1'
+    ctl00$ctl00$PageBody$PageContent$tbBillNumStop: '509'
+  query_semantics: Publisher 2024 Regular Session SB range1..509; all source columns and complete paired subject/title
+    row; no introduction/original certification.
+- exchange: LA-55
+  state: LA
+  session: 24RS
+  session_kind: 2024 Regular Session
+  measure_type_scope: SB
+  adapter: louisiana_paired_rows
+  query_entry_fields:
+    ctl00$ctl00$PageBody$PageContent$ddlInstTypes2: SB-509
+    ctl00$ctl00$PageBody$PageContent$tbBillNumStart: '1'
+    ctl00$ctl00$PageBody$PageContent$tbBillNumStop: '509'
+  query_semantics: Publisher 2024 Regular Session SB range1..509; all source columns and complete paired subject/title
+    row; no introduction/original certification.
+- exchange: LA-56
+  state: LA
+  session: 24RS
+  session_kind: 2024 Regular Session
+  measure_type_scope: SB
+  adapter: louisiana_paired_rows
+  query_entry_fields:
+    ctl00$ctl00$PageBody$PageContent$ddlInstTypes2: SB-509
+    ctl00$ctl00$PageBody$PageContent$tbBillNumStart: '1'
+    ctl00$ctl00$PageBody$PageContent$tbBillNumStop: '509'
+  query_semantics: Publisher 2024 Regular Session SB range1..509; all source columns and complete paired subject/title
+    row; no introduction/original certification.
+- exchange: LA-57
+  state: LA
+  session: 24RS
+  session_kind: 2024 Regular Session
+  measure_type_scope: SB
+  adapter: louisiana_paired_rows
+  query_entry_fields:
+    ctl00$ctl00$PageBody$PageContent$ddlInstTypes2: SB-509
+    ctl00$ctl00$PageBody$PageContent$tbBillNumStart: '1'
+    ctl00$ctl00$PageBody$PageContent$tbBillNumStop: '509'
+  query_semantics: Publisher 2024 Regular Session SB range1..509; all source columns and complete paired subject/title
+    row; no introduction/original certification.
+- exchange: LA-58
+  state: LA
+  session: 24RS
+  session_kind: 2024 Regular Session
+  measure_type_scope: SB
+  adapter: louisiana_paired_rows
+  query_entry_fields:
+    ctl00$ctl00$PageBody$PageContent$ddlInstTypes2: SB-509
+    ctl00$ctl00$PageBody$PageContent$tbBillNumStart: '1'
+    ctl00$ctl00$PageBody$PageContent$tbBillNumStop: '509'
+  query_semantics: Publisher 2024 Regular Session SB range1..509; all source columns and complete paired subject/title
+    row; no introduction/original certification.
+- exchange: LA-59
+  state: LA
+  session: 24RS
+  session_kind: 2024 Regular Session
+  measure_type_scope: SB
+  adapter: louisiana_paired_rows
+  query_entry_fields:
+    ctl00$ctl00$PageBody$PageContent$ddlInstTypes2: SB-509
+    ctl00$ctl00$PageBody$PageContent$tbBillNumStart: '1'
+    ctl00$ctl00$PageBody$PageContent$tbBillNumStop: '509'
+  query_semantics: Publisher 2024 Regular Session SB range1..509; all source columns and complete paired subject/title
+    row; no introduction/original certification.
+- exchange: LA-60
+  state: LA
+  session: 24RS
+  session_kind: 2024 Regular Session
+  measure_type_scope: SCR
+  adapter: louisiana_paired_rows
+  query_entry_fields:
+    ctl00$ctl00$PageBody$PageContent$ddlInstTypes2: SCR-83
+    ctl00$ctl00$PageBody$PageContent$tbBillNumStart: '1'
+    ctl00$ctl00$PageBody$PageContent$tbBillNumStop: '83'
+  query_semantics: Publisher 2024 Regular Session SCR range1..83; all source columns and complete paired subject/title
+    row; no introduction/original certification.
+- exchange: LA-61
+  state: LA
+  session: 24RS
+  session_kind: 2024 Regular Session
+  measure_type_scope: SR
+  adapter: louisiana_paired_rows
+  query_entry_fields:
+    ctl00$ctl00$PageBody$PageContent$ddlInstTypes2: SR-180
+    ctl00$ctl00$PageBody$PageContent$tbBillNumStart: '1'
+    ctl00$ctl00$PageBody$PageContent$tbBillNumStop: '180'
+  query_semantics: Publisher 2024 Regular Session SR range1..180; all source columns and complete paired subject/title
+    row; no introduction/original certification.
+- exchange: LA-62
+  state: LA
+  session: 24RS
+  session_kind: 2024 Regular Session
+  measure_type_scope: SR
+  adapter: louisiana_paired_rows
+  query_entry_fields:
+    ctl00$ctl00$PageBody$PageContent$ddlInstTypes2: SR-180
+    ctl00$ctl00$PageBody$PageContent$tbBillNumStart: '1'
+    ctl00$ctl00$PageBody$PageContent$tbBillNumStop: '180'
+  query_semantics: Publisher 2024 Regular Session SR range1..180; all source columns and complete paired subject/title
+    row; no introduction/original certification.
+- exchange: LA-63
+  state: LA
+  session: 24RS
+  session_kind: 2024 Regular Session
+  measure_type_scope: SSR
+  adapter: louisiana_paired_rows
+  query_entry_fields:
+    ctl00$ctl00$PageBody$PageContent$ddlInstTypes2: SSR-3
+    ctl00$ctl00$PageBody$PageContent$tbBillNumStart: '1'
+    ctl00$ctl00$PageBody$PageContent$tbBillNumStop: '3'
+  query_semantics: Publisher 2024 Regular Session SSR range1..3; all source columns and complete paired subject/title
+    row; no introduction/original certification.
+- exchange: LA-64
+  state: LA
+  session: 24RS
+  session_kind: 2024 Regular Session
+  measure_type_scope: ACT
+  adapter: louisiana_paired_rows
+  query_entry_fields:
+    ctl00$ctl00$PageBody$PageContent$ddlInstTypes2: ACT-792
+    ctl00$ctl00$PageBody$PageContent$tbBillNumStart: '1'
+    ctl00$ctl00$PageBody$PageContent$tbBillNumStop: '792'
+  query_semantics: Publisher 2024 Regular Session ACT range1..792; exact returned source list page; ACT is an enacted
+    underlying-bill subset, not additional introduced identities.
+- exchange: LA-65
+  state: LA
+  session: 24RS
+  session_kind: 2024 Regular Session
+  measure_type_scope: ACT
+  adapter: louisiana_paired_rows
+  query_entry_fields:
+    ctl00$ctl00$PageBody$PageContent$ddlInstTypes2: ACT-792
+    ctl00$ctl00$PageBody$PageContent$tbBillNumStart: '1'
+    ctl00$ctl00$PageBody$PageContent$tbBillNumStop: '792'
+  query_semantics: Publisher 2024 Regular Session ACT range1..792; exact returned source list page; ACT is an enacted
+    underlying-bill subset, not additional introduced identities.
+- exchange: LA-66
+  state: LA
+  session: 24RS
+  session_kind: 2024 Regular Session
+  measure_type_scope: ACT
+  adapter: louisiana_paired_rows
+  query_entry_fields:
+    ctl00$ctl00$PageBody$PageContent$ddlInstTypes2: ACT-792
+    ctl00$ctl00$PageBody$PageContent$tbBillNumStart: '1'
+    ctl00$ctl00$PageBody$PageContent$tbBillNumStop: '792'
+  query_semantics: Publisher 2024 Regular Session ACT range1..792; exact returned source list page; ACT is an enacted
+    underlying-bill subset, not additional introduced identities.
+- exchange: LA-67
+  state: LA
+  session: 24RS
+  session_kind: 2024 Regular Session
+  measure_type_scope: ACT
+  adapter: louisiana_paired_rows
+  query_entry_fields:
+    ctl00$ctl00$PageBody$PageContent$ddlInstTypes2: ACT-792
+    ctl00$ctl00$PageBody$PageContent$tbBillNumStart: '1'
+    ctl00$ctl00$PageBody$PageContent$tbBillNumStop: '792'
+  query_semantics: Publisher 2024 Regular Session ACT range1..792; exact returned source list page; ACT is an enacted
+    underlying-bill subset, not additional introduced identities.
+- exchange: LA-68
+  state: LA
+  session: 24RS
+  session_kind: 2024 Regular Session
+  measure_type_scope: ACT
+  adapter: louisiana_paired_rows
+  query_entry_fields:
+    ctl00$ctl00$PageBody$PageContent$ddlInstTypes2: ACT-792
+    ctl00$ctl00$PageBody$PageContent$tbBillNumStart: '1'
+    ctl00$ctl00$PageBody$PageContent$tbBillNumStop: '792'
+  query_semantics: Publisher 2024 Regular Session ACT range1..792; exact returned source list page; ACT is an enacted
+    underlying-bill subset, not additional introduced identities.
+- exchange: LA-69
+  state: LA
+  session: 24RS
+  session_kind: 2024 Regular Session
+  measure_type_scope: ACT
+  adapter: louisiana_paired_rows
+  query_entry_fields:
+    ctl00$ctl00$PageBody$PageContent$ddlInstTypes2: ACT-792
+    ctl00$ctl00$PageBody$PageContent$tbBillNumStart: '1'
+    ctl00$ctl00$PageBody$PageContent$tbBillNumStop: '792'
+  query_semantics: Publisher 2024 Regular Session ACT range1..792; exact returned source list page; ACT is an enacted
+    underlying-bill subset, not additional introduced identities.
+- exchange: LA-70
+  state: LA
+  session: 24RS
+  session_kind: 2024 Regular Session
+  measure_type_scope: ACT
+  adapter: louisiana_paired_rows
+  query_entry_fields:
+    ctl00$ctl00$PageBody$PageContent$ddlInstTypes2: ACT-792
+    ctl00$ctl00$PageBody$PageContent$tbBillNumStart: '1'
+    ctl00$ctl00$PageBody$PageContent$tbBillNumStop: '792'
+  query_semantics: Publisher 2024 Regular Session ACT range1..792; exact returned source list page; ACT is an enacted
+    underlying-bill subset, not additional introduced identities.
+- exchange: LA-71
+  state: LA
+  session: 24RS
+  session_kind: 2024 Regular Session
+  measure_type_scope: ACT
+  adapter: louisiana_paired_rows
+  query_entry_fields:
+    ctl00$ctl00$PageBody$PageContent$ddlInstTypes2: ACT-792
+    ctl00$ctl00$PageBody$PageContent$tbBillNumStart: '1'
+    ctl00$ctl00$PageBody$PageContent$tbBillNumStop: '792'
+  query_semantics: Publisher 2024 Regular Session ACT range1..792; exact returned source list page; ACT is an enacted
+    underlying-bill subset, not additional introduced identities.
+- exchange: LA-75
+  state: LA
+  session: 242ES
+  session_kind: 2024 Second Extraordinary Session
+  measure_type_scope: HB
+  adapter: louisiana_paired_rows
+  query_entry_fields:
+    ctl00$ctl00$PageBody$PageContent$ddlInstTypes2: HB-23
+    ctl00$ctl00$PageBody$PageContent$tbBillNumStart: '1'
+    ctl00$ctl00$PageBody$PageContent$tbBillNumStop: '23'
+  query_semantics: Publisher 2024 Second Extraordinary Session HB range1..23; all source columns and complete paired
+    subject/title row; no introduction/original certification.
+- exchange: LA-76
+  state: LA
+  session: 242ES
+  session_kind: 2024 Second Extraordinary Session
+  measure_type_scope: SB
+  adapter: louisiana_paired_rows
+  query_entry_fields:
+    ctl00$ctl00$PageBody$PageContent$ddlInstTypes2: SB-15
+    ctl00$ctl00$PageBody$PageContent$tbBillNumStart: '1'
+    ctl00$ctl00$PageBody$PageContent$tbBillNumStop: '15'
+  query_semantics: Publisher 2024 Second Extraordinary Session SB range1..15; all source columns and complete paired
+    subject/title row; no introduction/original certification.
+- exchange: LA-78
+  state: LA
+  session: 242ES
+  session_kind: 2024 Second Extraordinary Session
+  measure_type_scope: SCR
+  adapter: louisiana_singleton_metadata
+  query_entry_fields:
+    ctl00$ctl00$PageBody$PageContent$ddlInstTypes2: SCR-1
+    ctl00$ctl00$PageBody$PageContent$tbBillNumStart: '1'
+    ctl00$ctl00$PageBody$PageContent$tbBillNumStop: '1'
+  query_semantics: Publisher 2024 Second Extraordinary Session SCR range1..1; one uniquely matched native metadata
+    response after a counted source redirect, not a policy-text body.
+- exchange: LA-79
+  state: LA
+  session: 242ES
+  session_kind: 2024 Second Extraordinary Session
+  measure_type_scope: SR
+  adapter: louisiana_paired_rows
+  query_entry_fields:
+    ctl00$ctl00$PageBody$PageContent$ddlInstTypes2: SR-2
+    ctl00$ctl00$PageBody$PageContent$tbBillNumStart: '1'
+    ctl00$ctl00$PageBody$PageContent$tbBillNumStop: '2'
+  query_semantics: Publisher 2024 Second Extraordinary Session SR range1..2; all source columns and complete paired
+    subject/title row; no introduction/original certification.
+- exchange: LA-80
+  state: LA
+  session: 242ES
+  session_kind: 2024 Second Extraordinary Session
+  measure_type_scope: ACT
+  adapter: louisiana_paired_rows
+  query_entry_fields:
+    ctl00$ctl00$PageBody$PageContent$ddlInstTypes2: ACT-22
+    ctl00$ctl00$PageBody$PageContent$tbBillNumStart: '1'
+    ctl00$ctl00$PageBody$PageContent$tbBillNumStop: '22'
+  query_semantics: Publisher 2024 Second Extraordinary Session ACT range1..22; exact returned source list page;
+    ACT is an enacted underlying-bill subset, not additional introduced identities.
+- exchange: LA-84
+  state: LA
+  session: 241ES
+  session_kind: 2024 First Extraordinary Session
+  measure_type_scope: HB
+  adapter: louisiana_paired_rows
+  query_entry_fields:
+    ctl00$ctl00$PageBody$PageContent$ddlInstTypes2: HB-19
+    ctl00$ctl00$PageBody$PageContent$tbBillNumStart: '1'
+    ctl00$ctl00$PageBody$PageContent$tbBillNumStop: '19'
+  query_semantics: Publisher 2024 First Extraordinary Session HB range1..19; all source columns and complete paired
+    subject/title row; no introduction/original certification.
+- exchange: LA-86
+  state: LA
+  session: 241ES
+  session_kind: 2024 First Extraordinary Session
+  measure_type_scope: HCR
+  adapter: louisiana_singleton_metadata
+  query_entry_fields:
+    ctl00$ctl00$PageBody$PageContent$ddlInstTypes2: HCR-1
+    ctl00$ctl00$PageBody$PageContent$tbBillNumStart: '1'
+    ctl00$ctl00$PageBody$PageContent$tbBillNumStop: '1'
+  query_semantics: Publisher 2024 First Extraordinary Session HCR range1..1; one uniquely matched native metadata
+    response after a counted source redirect, not a policy-text body.
+- exchange: LA-87
+  state: LA
+  session: 241ES
+  session_kind: 2024 First Extraordinary Session
+  measure_type_scope: SB
+  adapter: louisiana_paired_rows
+  query_entry_fields:
+    ctl00$ctl00$PageBody$PageContent$ddlInstTypes2: SB-10
+    ctl00$ctl00$PageBody$PageContent$tbBillNumStart: '1'
+    ctl00$ctl00$PageBody$PageContent$tbBillNumStop: '10'
+  query_semantics: Publisher 2024 First Extraordinary Session SB range1..10; all source columns and complete paired
+    subject/title row; no introduction/original certification.
+- exchange: LA-89
+  state: LA
+  session: 241ES
+  session_kind: 2024 First Extraordinary Session
+  measure_type_scope: SCR
+  adapter: louisiana_singleton_metadata
+  query_entry_fields:
+    ctl00$ctl00$PageBody$PageContent$ddlInstTypes2: SCR-1
+    ctl00$ctl00$PageBody$PageContent$tbBillNumStart: '1'
+    ctl00$ctl00$PageBody$PageContent$tbBillNumStop: '1'
+  query_semantics: Publisher 2024 First Extraordinary Session SCR range1..1; one uniquely matched native metadata
+    response after a counted source redirect, not a policy-text body.
+- exchange: LA-90
+  state: LA
+  session: 241ES
+  session_kind: 2024 First Extraordinary Session
+  measure_type_scope: SR
+  adapter: louisiana_paired_rows
+  query_entry_fields:
+    ctl00$ctl00$PageBody$PageContent$ddlInstTypes2: SR-2
+    ctl00$ctl00$PageBody$PageContent$tbBillNumStart: '1'
+    ctl00$ctl00$PageBody$PageContent$tbBillNumStop: '2'
+  query_semantics: Publisher 2024 First Extraordinary Session SR range1..2; all source columns and complete paired
+    subject/title row; no introduction/original certification.
+- exchange: LA-91
+  state: LA
+  session: 241ES
+  session_kind: 2024 First Extraordinary Session
+  measure_type_scope: ACT
+  adapter: louisiana_paired_rows
+  query_entry_fields:
+    ctl00$ctl00$PageBody$PageContent$ddlInstTypes2: ACT-3
+    ctl00$ctl00$PageBody$PageContent$tbBillNumStart: '1'
+    ctl00$ctl00$PageBody$PageContent$tbBillNumStop: '3'
+  query_semantics: Publisher 2024 First Extraordinary Session ACT range1..3; exact returned source list page; ACT
+    is an enacted underlying-bill subset, not additional introduced identities.
+- exchange: LA-95
+  state: LA
+  session: 231ES
+  session_kind: 2023 First Extraordinary Session
+  measure_type_scope: HB
+  adapter: louisiana_paired_rows
+  query_entry_fields:
+    ctl00$ctl00$PageBody$PageContent$ddlInstTypes2: HB-2
+    ctl00$ctl00$PageBody$PageContent$tbBillNumStart: '1'
+    ctl00$ctl00$PageBody$PageContent$tbBillNumStop: '2'
+  query_semantics: Publisher 2023 First Extraordinary Session HB range1..2; all source columns and complete paired
+    subject/title row; no introduction/original certification.
+- exchange: LA-96
+  state: LA
+  session: 231ES
+  session_kind: 2023 First Extraordinary Session
+  measure_type_scope: SR
+  adapter: louisiana_paired_rows
+  query_entry_fields:
+    ctl00$ctl00$PageBody$PageContent$ddlInstTypes2: SR-4
+    ctl00$ctl00$PageBody$PageContent$tbBillNumStart: '1'
+    ctl00$ctl00$PageBody$PageContent$tbBillNumStop: '4'
+  query_semantics: Publisher 2023 First Extraordinary Session SR range1..4; all source columns and complete paired
+    subject/title row; no introduction/original certification.
+- exchange: LA-97
+  state: LA
+  session: 231ES
+  session_kind: 2023 First Extraordinary Session
+  measure_type_scope: ACT
+  adapter: louisiana_paired_rows
+  query_entry_fields:
+    ctl00$ctl00$PageBody$PageContent$ddlInstTypes2: ACT-2
+    ctl00$ctl00$PageBody$PageContent$tbBillNumStart: '1'
+    ctl00$ctl00$PageBody$PageContent$tbBillNumStop: '2'
+  query_semantics: Publisher 2023 First Extraordinary Session ACT range1..2; exact returned source list page; ACT
+    is an enacted underlying-bill subset, not additional introduced identities.
+paginated_queries:
+- id: LA:23RS:HB
+  state: LA
+  session: 23RS
+  measure_type_scope: HB
+  source_type_option_literal: HB-661
+  exchanges:
+  - LA-REUSE-08
+  - LA-REUSE-09
+  - LA-REUSE-10
+  - LA-REUSE-11
+  - LA-REUSE-12
+  - LA-REUSE-13
+  - LA-REUSE-14
+  query_semantics: Complete publisher finite range query verified against its printed count and all observed pages;
+    not all-introduced or full-original proof.
+- id: LA:23RS:HCR
+  state: LA
+  session: 23RS
+  measure_type_scope: HCR
+  source_type_option_literal: HCR-147
+  exchanges:
+  - LA-05
+  - LA-06
+  query_semantics: Complete publisher finite range query verified against its printed count and all observed pages;
+    not all-introduced or full-original proof.
+- id: LA:23RS:HR
+  state: LA
+  session: 23RS
+  measure_type_scope: HR
+  source_type_option_literal: HR-297
+  exchanges:
+  - LA-08
+  - LA-07
+  - LA-09
+  query_semantics: Complete publisher finite range query verified against its printed count and all observed pages;
+    not all-introduced or full-original proof.
+- id: LA:23RS:HSR
+  state: LA
+  session: 23RS
+  measure_type_scope: HSR
+  source_type_option_literal: HSR-5
+  exchanges:
+  - LA-11
+  query_semantics: Complete publisher finite range query verified against its printed count and all observed pages;
+    not all-introduced or full-original proof.
+- id: LA:23RS:SB
+  state: LA
+  session: 23RS
+  measure_type_scope: SB
+  source_type_option_literal: SB-233
+  exchanges:
+  - LA-12
+  - LA-13
+  - LA-14
+  query_semantics: Complete publisher finite range query verified against its printed count and all observed pages;
+    not all-introduced or full-original proof.
+- id: LA:23RS:SCR
+  state: LA
+  session: 23RS
+  measure_type_scope: SCR
+  source_type_option_literal: SCR-66
+  exchanges:
+  - LA-15
+  query_semantics: Complete publisher finite range query verified against its printed count and all observed pages;
+    not all-introduced or full-original proof.
+- id: LA:23RS:SR
+  state: LA
+  session: 23RS
+  measure_type_scope: SR
+  source_type_option_literal: SR-208
+  exchanges:
+  - LA-16
+  - LA-17
+  - LA-18
+  query_semantics: Complete publisher finite range query verified against its printed count and all observed pages;
+    not all-introduced or full-original proof.
+- id: LA:23RS:ACT
+  state: LA
+  session: 23RS
+  measure_type_scope: ACT
+  source_type_option_literal: ACT-466
+  exchanges:
+  - LA-19
+  - LA-20
+  - LA-21
+  - LA-22
+  - LA-23
+  query_semantics: Complete publisher finite range query verified against its printed count and all observed pages;
+    not all-introduced or full-original proof.
+- id: LA:243ES:HB
+  state: LA
+  session: 243ES
+  measure_type_scope: HB
+  source_type_option_literal: HB-25
+  exchanges:
+  - LA-27
+  query_semantics: Complete publisher finite range query verified against its printed count and all observed pages;
+    not all-introduced or full-original proof.
+- id: LA:243ES:SB
+  state: LA
+  session: 243ES
+  measure_type_scope: SB
+  source_type_option_literal: SB-9
+  exchanges:
+  - LA-28
+  query_semantics: Complete publisher finite range query verified against its printed count and all observed pages;
+    not all-introduced or full-original proof.
+- id: LA:243ES:SCR
+  state: LA
+  session: 243ES
+  measure_type_scope: SCR
+  source_type_option_literal: SCR-1
+  exchanges:
+  - LA-30
+  query_semantics: Publisher range query redirects to its unique matching native metadata record; not a printed
+    all-introduced count
+- id: LA:243ES:SR
+  state: LA
+  session: 243ES
+  measure_type_scope: SR
+  source_type_option_literal: SR-2
+  exchanges:
+  - LA-31
+  query_semantics: Complete publisher finite range query verified against its printed count and all observed pages;
+    not all-introduced or full-original proof.
+- id: LA:243ES:ACT
+  state: LA
+  session: 243ES
+  measure_type_scope: ACT
+  source_type_option_literal: ACT-19
+  exchanges:
+  - LA-32
+  query_semantics: Complete publisher finite range query verified against its printed count and all observed pages;
+    not all-introduced or full-original proof.
+- id: LA:24RS:HB
+  state: LA
+  session: 24RS
+  measure_type_scope: HB
+  source_type_option_literal: HB-982
+  exchanges:
+  - LA-36
+  - LA-37
+  - LA-38
+  - LA-39
+  - LA-40
+  - LA-41
+  - LA-42
+  - LA-43
+  - LA-44
+  - LA-45
+  query_semantics: Complete publisher finite range query verified against its printed count and all observed pages;
+    not all-introduced or full-original proof.
+- id: LA:24RS:HCR
+  state: LA
+  session: 24RS
+  measure_type_scope: HCR
+  source_type_option_literal: HCR-140
+  exchanges:
+  - LA-46
+  - LA-47
+  query_semantics: Complete publisher finite range query verified against its printed count and all observed pages;
+    not all-introduced or full-original proof.
+- id: LA:24RS:HCSR
+  state: LA
+  session: 24RS
+  measure_type_scope: HCSR
+  source_type_option_literal: HCSR-2
+  exchanges:
+  - LA-48
+  query_semantics: Complete publisher finite range query verified against its printed count and all observed pages;
+    not all-introduced or full-original proof.
+- id: LA:24RS:HR
+  state: LA
+  session: 24RS
+  measure_type_scope: HR
+  source_type_option_literal: HR-355
+  exchanges:
+  - LA-49
+  - LA-50
+  - LA-51
+  - LA-52
+  query_semantics: Complete publisher finite range query verified against its printed count and all observed pages;
+    not all-introduced or full-original proof.
+- id: LA:24RS:HSR
+  state: LA
+  session: 24RS
+  measure_type_scope: HSR
+  source_type_option_literal: HSR-8
+  exchanges:
+  - LA-53
+  query_semantics: Complete publisher finite range query verified against its printed count and all observed pages;
+    not all-introduced or full-original proof.
+- id: LA:24RS:SB
+  state: LA
+  session: 24RS
+  measure_type_scope: SB
+  source_type_option_literal: SB-509
+  exchanges:
+  - LA-54
+  - LA-55
+  - LA-56
+  - LA-57
+  - LA-58
+  - LA-59
+  query_semantics: Complete publisher finite range query verified against its printed count and all observed pages;
+    not all-introduced or full-original proof.
+- id: LA:24RS:SCR
+  state: LA
+  session: 24RS
+  measure_type_scope: SCR
+  source_type_option_literal: SCR-83
+  exchanges:
+  - LA-60
+  query_semantics: Complete publisher finite range query verified against its printed count and all observed pages;
+    not all-introduced or full-original proof.
+- id: LA:24RS:SR
+  state: LA
+  session: 24RS
+  measure_type_scope: SR
+  source_type_option_literal: SR-180
+  exchanges:
+  - LA-61
+  - LA-62
+  query_semantics: Complete publisher finite range query verified against its printed count and all observed pages;
+    not all-introduced or full-original proof.
+- id: LA:24RS:SSR
+  state: LA
+  session: 24RS
+  measure_type_scope: SSR
+  source_type_option_literal: SSR-3
+  exchanges:
+  - LA-63
+  query_semantics: Complete publisher finite range query verified against its printed count and all observed pages;
+    not all-introduced or full-original proof.
+- id: LA:24RS:ACT
+  state: LA
+  session: 24RS
+  measure_type_scope: ACT
+  source_type_option_literal: ACT-792
+  exchanges:
+  - LA-64
+  - LA-65
+  - LA-66
+  - LA-67
+  - LA-68
+  - LA-69
+  - LA-70
+  - LA-71
+  query_semantics: Complete publisher finite range query verified against its printed count and all observed pages;
+    not all-introduced or full-original proof.
+- id: LA:242ES:HB
+  state: LA
+  session: 242ES
+  measure_type_scope: HB
+  source_type_option_literal: HB-23
+  exchanges:
+  - LA-75
+  query_semantics: Complete publisher finite range query verified against its printed count and all observed pages;
+    not all-introduced or full-original proof.
+- id: LA:242ES:SB
+  state: LA
+  session: 242ES
+  measure_type_scope: SB
+  source_type_option_literal: SB-15
+  exchanges:
+  - LA-76
+  query_semantics: Complete publisher finite range query verified against its printed count and all observed pages;
+    not all-introduced or full-original proof.
+- id: LA:242ES:SCR
+  state: LA
+  session: 242ES
+  measure_type_scope: SCR
+  source_type_option_literal: SCR-1
+  exchanges:
+  - LA-78
+  query_semantics: Publisher range response redirects to one matching native metadata record, not a printed introduced-universe
+    count
+- id: LA:242ES:SR
+  state: LA
+  session: 242ES
+  measure_type_scope: SR
+  source_type_option_literal: SR-2
+  exchanges:
+  - LA-79
+  query_semantics: Complete publisher finite range query verified against its printed count and all observed pages;
+    not all-introduced or full-original proof.
+- id: LA:242ES:ACT
+  state: LA
+  session: 242ES
+  measure_type_scope: ACT
+  source_type_option_literal: ACT-22
+  exchanges:
+  - LA-80
+  query_semantics: Complete publisher finite range query verified against its printed count and all observed pages;
+    not all-introduced or full-original proof.
+- id: LA:241ES:HB
+  state: LA
+  session: 241ES
+  measure_type_scope: HB
+  source_type_option_literal: HB-19
+  exchanges:
+  - LA-84
+  query_semantics: Complete publisher finite range query verified against its printed count and all observed pages;
+    not all-introduced or full-original proof.
+- id: LA:241ES:HCR
+  state: LA
+  session: 241ES
+  measure_type_scope: HCR
+  source_type_option_literal: HCR-1
+  exchanges:
+  - LA-86
+  query_semantics: Publisher range response redirects to one matching native metadata record, not a printed introduced-universe
+    count
+- id: LA:241ES:SB
+  state: LA
+  session: 241ES
+  measure_type_scope: SB
+  source_type_option_literal: SB-10
+  exchanges:
+  - LA-87
+  query_semantics: Complete publisher finite range query verified against its printed count and all observed pages;
+    not all-introduced or full-original proof.
+- id: LA:241ES:SCR
+  state: LA
+  session: 241ES
+  measure_type_scope: SCR
+  source_type_option_literal: SCR-1
+  exchanges:
+  - LA-89
+  query_semantics: Publisher range response redirects to one matching native metadata record, not a printed introduced-universe
+    count
+- id: LA:241ES:SR
+  state: LA
+  session: 241ES
+  measure_type_scope: SR
+  source_type_option_literal: SR-2
+  exchanges:
+  - LA-90
+  query_semantics: Complete publisher finite range query verified against its printed count and all observed pages;
+    not all-introduced or full-original proof.
+- id: LA:241ES:ACT
+  state: LA
+  session: 241ES
+  measure_type_scope: ACT
+  source_type_option_literal: ACT-3
+  exchanges:
+  - LA-91
+  query_semantics: Complete publisher finite range query verified against its printed count and all observed pages;
+    not all-introduced or full-original proof.
+- id: LA:231ES:HB
+  state: LA
+  session: 231ES
+  measure_type_scope: HB
+  source_type_option_literal: HB-2
+  exchanges:
+  - LA-95
+  query_semantics: Complete publisher finite range query verified against its printed count and all observed pages;
+    not all-introduced or full-original proof.
+- id: LA:231ES:SR
+  state: LA
+  session: 231ES
+  measure_type_scope: SR
+  source_type_option_literal: SR-4
+  exchanges:
+  - LA-96
+  query_semantics: Complete publisher finite range query verified against its printed count and all observed pages;
+    not all-introduced or full-original proof.
+- id: LA:231ES:ACT
+  state: LA
+  session: 231ES
+  measure_type_scope: ACT
+  source_type_option_literal: ACT-2
+  exchanges:
+  - LA-97
+  query_semantics: Complete publisher finite range query verified against its printed count and all observed pages;
+    not all-introduced or full-original proof.
+publisher_scope_indexes:
+- state: LA
+  session: 23RS
+  exchange: LA-04
+  option_selector:
+  - tag: select
+    attrs_contain:
+      name: ddlInstTypes2
+  - tag: option
+  query_ids_by_option_value:
+    HB-661: LA:23RS:HB
+    HCR-147: LA:23RS:HCR
+    HR-297: LA:23RS:HR
+    HSR-5: LA:23RS:HSR
+    SB-233: LA:23RS:SB
+    SCR-66: LA:23RS:SCR
+    SR-208: LA:23RS:SR
+    ACT-466: LA:23RS:ACT
+- state: LA
+  session: 243ES
+  exchange: LA-26
+  option_selector:
+  - tag: select
+    attrs_contain:
+      name: ddlInstTypes2
+  - tag: option
+  query_ids_by_option_value:
+    HB-25: LA:243ES:HB
+    SB-9: LA:243ES:SB
+    SCR-1: LA:243ES:SCR
+    SR-2: LA:243ES:SR
+    ACT-19: LA:243ES:ACT
+- state: LA
+  session: 24RS
+  exchange: LA-35
+  option_selector:
+  - tag: select
+    attrs_contain:
+      name: ddlInstTypes2
+  - tag: option
+  query_ids_by_option_value:
+    HB-982: LA:24RS:HB
+    HCR-140: LA:24RS:HCR
+    HCSR-2: LA:24RS:HCSR
+    HR-355: LA:24RS:HR
+    HSR-8: LA:24RS:HSR
+    SB-509: LA:24RS:SB
+    SCR-83: LA:24RS:SCR
+    SR-180: LA:24RS:SR
+    SSR-3: LA:24RS:SSR
+    ACT-792: LA:24RS:ACT
+- state: LA
+  session: 242ES
+  exchange: LA-74
+  option_selector:
+  - tag: select
+    attrs_contain:
+      name: ddlInstTypes2
+  - tag: option
+  query_ids_by_option_value:
+    HB-23: LA:242ES:HB
+    SB-15: LA:242ES:SB
+    SCR-1: LA:242ES:SCR
+    SR-2: LA:242ES:SR
+    ACT-22: LA:242ES:ACT
+- state: LA
+  session: 241ES
+  exchange: LA-83
+  option_selector:
+  - tag: select
+    attrs_contain:
+      name: ddlInstTypes2
+  - tag: option
+  query_ids_by_option_value:
+    HB-19: LA:241ES:HB
+    HCR-1: LA:241ES:HCR
+    SB-10: LA:241ES:SB
+    SCR-1: LA:241ES:SCR
+    SR-2: LA:241ES:SR
+    ACT-3: LA:241ES:ACT
+- state: LA
+  session: 231ES
+  exchange: LA-94
+  option_selector:
+  - tag: select
+    attrs_contain:
+      name: ddlInstTypes2
+  - tag: option
+  query_ids_by_option_value:
+    HB-2: LA:231ES:HB
+    SR-4: LA:231ES:SR
+    ACT-2: LA:231ES:ACT
+publisher_session_index:
+  exchange: LA-01
+  option_selector:
+  - tag: select
+    attrs_contain:
+      name: ddlSessions
+  - tag: option
+  target_label_regex: '^202[34] '
+  query_scope_label_regex: Regular Session|Extraordinary Session
+  other_contexts:
+    24OS:
+      exchange: LA-99
+      notice: There are no bills associated with the 2024 Organizational Session.
+    23VS:
+      exchange: LA-101
+      notice: There are no bills associated with the 2023 Veto Session. Search the previous session to see those
+        vetoed bills.

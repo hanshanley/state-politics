@@ -168,6 +168,8 @@ def build_preview(
 
 
 def main(argv=None):
+    from state_politics.site_evidence import NATIVE_SESSION_SCOPES
+
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument(
         "--coverage", type=Path, default=ROOT / "data/processed/source_coverage.json"
@@ -207,9 +209,10 @@ def main(argv=None):
     )
     parser.add_argument(
         "--native-session-scope", action="append", default=[],
-        choices=("ny-2023-2024", "il-103rd"),
+        choices=sorted(NATIVE_SESSION_SCOPES),
         help="Opt-in fixed reviewed publisher session OUTSIDE candidate date cohort; repeat "
-        "to include both. Requires explicit compatible --native-evidence, never date admission",
+        "to include selected scopes. Requires explicit compatible --native-evidence, "
+        "never date admission",
     )
     args = parser.parse_args(argv)
     if args.native_session_scope and not (args.cycle_evidence and args.native_evidence):
