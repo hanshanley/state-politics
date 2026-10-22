@@ -10,6 +10,7 @@ import json
 import runpy
 import shutil
 import sys
+import zipfile
 from pathlib import Path
 
 import matplotlib
@@ -29,7 +30,7 @@ from state_politics.platforms.dataverse import coverage_matrix  # noqa: E402
 from state_politics.plotting import charts, theme  # noqa: E402
 
 SOURCES = {
-    "metadata": "data/processed/study-abstract-evidence-2023-2024-v3",
+    "metadata": "data/processed/study-abstract-evidence-2023-2024-v4",
     "native": "data/processed/native-inventory-catalog-2023-2024-v2",
     "sessions": "data/processed/verified-session-comparison-2023-2024-v3",
 }
@@ -63,6 +64,30 @@ NOTICE = (
     "Evidence inspection and assistant-reviewed development diagnostics, not validated "
     "party-policy findings. Source scopes are not completed studies. Models remain "
     "provisional; no human gold, new predictions, publication or scientific approval."
+)
+RECOVERED_PACKETS = {
+    "platforms": "data/processed/recovered-platform-graph-inputs-20261022-v1",
+    "outcomes": "data/processed/cycle-outcome-evidence-20261022-v2",
+    "arkansas": "data/processed/native-text-ar-20261022-v3",
+    "caucus": "data/processed/recovered-platform-graph-inputs-20261022-v2",
+    "caucus_capture": "data/processed/platform-graph-inputs-caucus-followup-20261022-v2",
+}
+RECOVERED_GRAPHS = (
+    ("platforms", "modern_collection_outcomes", "modern_collection_status_counts.csv",
+     "Modern platform collection observations",
+     "Original snapshot outcomes, not operative 2023-2024 platform coverage"),
+    ("platforms", "retained_response_bodies", "capture_ledger.csv",
+     "Retained responses and repeated bodies",
+     "All 1,559 capture attempts; repetitions and failures remain visible"),
+    ("platforms", "modern_collection_metadata_years", "modern_metadata_year_counts.csv",
+     "Years recorded in the recovered source tables",
+     "Metadata years are not adoption dates or cycle-applicability certification"),
+    ("outcomes", "pooled_recorded_stages", "pooled_recorded_stages.csv",
+     "Pooled recorded legislative stages",
+     "Law-eligible bills; all retained action dates, not party comparisons or final outcomes"),
+    ("outcomes", "state_recorded_stages", "state_recorded_stages.csv",
+     "Recorded stages by state",
+     "Source classification evidence, not classifier policy labels or final legal dispositions"),
 )
 
 
@@ -105,6 +130,111 @@ def source_table(root: Path, kind: str, name: str, inputs: dict) -> pd.DataFrame
     if len(frame) != 50 or frame["state"].nunique() != 50:
         raise ValueError(f"all fifty unique states required: {kind}")
     return frame.sort_values("state").reset_index(drop=True)
+
+
+def recovery_packet(root: Path, directory: str, inputs: dict) -> dict[str, Path]:
+    path = checked_file(root, f"{directory}/manifest.json", inputs)
+    manifest = json.loads(path.read_bytes())
+    if (
+        manifest.get("analytical_admission") is not False
+        or manifest.get("scientific_approval") is not False
+    ):
+        raise ValueError("recovered research packets must remain explicitly unapproved")
+    files = manifest.get("files", manifest.get("artifacts"))
+    if not isinstance(files, dict) or not files:
+        raise ValueError("a complete hash-bound recovery packet is required")
+    result = {"manifest.json": path}
+    for name, expected in files.items():
+        relative = Path(name)
+        if relative.is_absolute() or ".." in relative.parts or name == "manifest.json":
+            raise ValueError("invalid recovery artifact path")
+        result[name] = checked_file(root, f"{directory}/{name}", inputs, expected)
+    return result
+
+
+def archive_packet(files: dict[str, Path], output: Path) -> dict:
+    with zipfile.ZipFile(
+        output, "x", compression=zipfile.ZIP_DEFLATED, compresslevel=1, allowZip64=True,
+    ) as archive:
+        for name, path in sorted(files.items()):
+            archive.write(path, name)
+    return {
+        "path": f"research-data/{output.name}", "files": len(files),
+        "uncompressed_bytes": sum(path.stat().st_size for path in files.values()),
+        **binding(output),
+    }
+
+
+def arkansas_rows(files: dict[str, Path]) -> pd.DataFrame:
+    contexts = pd.read_parquet(files["context_inventory.parquet"])
+    views = pd.read_parquet(files["source_view_inputs.parquet"])
+    if (
+        contexts["context_id"].duplicated().any()
+        or views.duplicated(["context_id", "reader"]).any()
+        or not set(views["context_id"]) <= set(contexts["context_id"])
+    ):
+        raise ValueError("native context and complete-reader identities must reconcile")
+    counts = views.groupby("context_id").size()
+    if not counts.eq(2).all():
+        raise ValueError("two complete reader alternatives required per captured PDF")
+    contexts = contexts.assign(
+        complete_pdf_context=contexts["context_id"].isin(counts.index),
+        complete_reader_views=contexts["context_id"].map(counts).fillna(0).astype(int),
+    )
+    result = contexts.groupby("native_session_identifier", sort=True).agg(
+        native_metadata_contexts=("context_id", "size"),
+        complete_pdf_contexts=("complete_pdf_context", "sum"),
+        complete_reader_views=("complete_reader_views", "sum"),
+    ).reset_index()
+    result["metadata_only_contexts"] = (
+        result["native_metadata_contexts"] - result["complete_pdf_contexts"]
+    )
+    return result
+
+
+def recovered_graphs(output: Path, packets: dict, arkansas: pd.DataFrame) -> list[dict]:
+    figures = []
+    for kind, name, table, title, subtitle in RECOVERED_GRAPHS:
+        for suffix in ("png", "svg"):
+            shutil.copy2(packets[kind][f"{name}.{suffix}"], output / "graphs" / f"{name}.{suffix}")
+        data_name = f"{kind}_{table}"
+        shutil.copy2(packets[kind][table], output / "chart-data" / data_name)
+        figures.append({
+            "name": name, "title": title, "subtitle": subtitle,
+            "chart_data": f"chart-data/{data_name}",
+            "rendering": "unchanged_graph_from_hash_bound_recovery_packet",
+            "source_packet": RECOVERED_PACKETS[kind],
+        })
+    fig, ax = plt.subplots(figsize=(11, 5))
+    ax.barh(
+        arkansas["native_session_identifier"], arkansas["complete_pdf_contexts"],
+        color=theme.BLUE, label="Complete PDF / both readers",
+    )
+    ax.barh(
+        arkansas["native_session_identifier"], arkansas["metadata_only_contexts"],
+        left=arkansas["complete_pdf_contexts"], color=theme.GOLD, label="Metadata only",
+    )
+    for position, row in enumerate(arkansas.itertuples()):
+        ax.text(
+            row.native_metadata_contexts + 25, position,
+            f"{row.complete_pdf_contexts:,} of {row.native_metadata_contexts:,} have text",
+            va="center", fontsize=10,
+        )
+    ax.invert_yaxis()
+    ax.set_xlim(0, arkansas["native_metadata_contexts"].max() * 1.30)
+    ax.set_xlabel("Retained publisher metadata contexts")
+    ax.legend(loc="lower right")
+    count_axis(ax)
+    figure = save(
+        fig, output / "graphs", "arkansas_native_text", "Arkansas: text recovered, gaps preserved",
+        "149 complete publisher-linked PDFs / 298 reader alternatives across four sessions",
+        "Source: native-text-ar v3. The closed 150-exchange batch does not complete the "
+        "1,991-context native inventory. Printed identity/session observations do not certify "
+        "original or filing-time versions. No introduction dates or policy labels inferred.",
+    )
+    figure["chart_data"] = "chart-data/arkansas_text_by_session.csv"
+    figures.append(figure)
+    return figures
 
 
 def diagnostic_rows(root: Path, inputs: dict) -> pd.DataFrame:
@@ -220,7 +350,7 @@ def render_graphs(out, tracker, metadata, native, sessions, diagnostics, histori
     figures.append(save(
         fig, out, "bill_evidence_by_state", "The retained 2023-2024 bill evidence",
         "Distinct candidate contexts, not source views or a certified introduced-bill universe",
-        "Source: hash-bound study-abstract-evidence v3 state matrix. Abstract and native-text "
+        "Source: hash-bound study-abstract-evidence v4 state matrix. Abstract and native-text "
         "columns overlap and must not be added together. Missing native channels stay unknown, "
         "not zero. No calendar candidates means no qualifying date evidence, not no activity.",
     ))
@@ -356,7 +486,7 @@ def render_graphs(out, tracker, metadata, native, sessions, diagnostics, histori
     return figures
 
 
-def gallery(output: Path, figures: list[dict], legacy: list[str]):
+def gallery(output: Path, figures: list[dict], legacy: list[str], research: dict):
     def card(name, title, text, directory, extra=""):
         return (
             f'<article><h2>{html.escape(title)}</h2><p>{html.escape(text)}</p>'
@@ -376,6 +506,11 @@ def gallery(output: Path, figures: list[dict], legacy: list[str]):
         f'<li><a href="chart-data/{path.name}">{path.name}</a></li>'
         for path in sorted((output / "chart-data").glob("*.csv"))
     )
+    research_downloads = "".join(
+        f'<li><a href="{row["path"]}" download>{html.escape(name)}: complete research packet '
+        f'(ZIP, {row["bytes"] / 1024 / 1024:.1f} MiB)</a></li>'
+        for name, row in research.items()
+    )
     (output / "index.html").write_text(
         '<!doctype html><html lang="en"><meta charset="utf-8">'
         '<meta name="viewport" content="width=device-width,initial-scale=1">'
@@ -384,10 +519,17 @@ def gallery(output: Path, figures: list[dict], legacy: list[str]):
         'max-width:1100px;margin:40px auto;padding:0 24px}'
         f'article{{border-top:1px solid {theme.GRID};padding:20px 0}}'
         f'p{{color:{theme.MUTED}}}img{{max-width:100%;height:auto}}'
-        f'a{{color:{theme.BLUE}}}h1,h2{{font-weight:normal}}</style><main>'
+        f'a{{color:{theme.BLUE};overflow-wrap:anywhere}}h1,h2{{font-weight:normal}}</style><main>'
         '<p>LOCAL / UNPUBLISHED</p><h1>State politics: recreated graphs</h1>'
         f'<p>{html.escape(NOTICE)}</p><h2>Freshly rendered graphs</h2>{fresh}'
         f'<h2>Complete chart data</h2><ul>{downloads}</ul>'
+        '<h2>Complete recovered research records</h2><p>These ZIPs include full evidence '
+        'texts, original table rows, actions, votes, sponsorships, or native PDFs and '
+        'reader pages as appropriate, plus source manifests. They are not metadata-only '
+        'downloads. Caucus evidence remains separate from party platforms; the Kentucky '
+        'page states 2024 priorities but does not certify operative adoption. Its capture '
+        'remains closed after a generic challenge-literal stop.</p>'
+        f'<ul>{research_downloads}</ul>'
         '<h2>Legacy reference images</h2><p>The original numerical inputs for most '
         'analytical figures are missing. These copies preserve the old images only; '
         f'they are not new 2023-2024 findings.</p>{old}</main></html>',
@@ -416,6 +558,17 @@ def recreate(root: Path, output: Path) -> dict:
         if set(frame["state"]) != set(tracker["state"]):
             raise ValueError("state tables disagree with the current fifty-state tracker")
     diagnostics = diagnostic_rows(root, inputs)
+    packets = {
+        name: recovery_packet(root, directory, inputs)
+        for name, directory in RECOVERED_PACKETS.items()
+    }
+    outcome_manifest = json.loads(packets["outcomes"]["manifest.json"].read_bytes())
+    producer = outcome_manifest["inputs"]["producer"]
+    producer_path = root / "src/state_politics/analysis/cycle_outcome_evidence.py"
+    packets["outcomes"]["source-code/cycle_outcome_evidence.py"] = checked_file(
+        root, producer_path.relative_to(root).as_posix(), inputs, producer,
+    )
+    arkansas = arkansas_rows(packets["arkansas"])
     historical_path = checked_file(root, "data/processed/platforms_historical.parquet", inputs)
     historical = coverage_matrix(pd.read_parquet(historical_path))
     legacy = sorted(path for path in (root / "outputs").glob("*.png") if path.is_file())
@@ -428,7 +581,7 @@ def recreate(root: Path, output: Path) -> dict:
     )
     for path in producers:
         inputs[f"producer:{path.name}"] = binding(path)
-    for name in ("graphs", "chart-data", "legacy-reference", "producers"):
+    for name in ("graphs", "chart-data", "legacy-reference", "producers", "research-data"):
         (output / name).mkdir(parents=True)
     for path in producers:
         shutil.copy2(path, output / "producers" / path.name)
@@ -439,15 +592,21 @@ def recreate(root: Path, output: Path) -> dict:
         "session_calendar_comparison": sessions,
         "classifier_metrics": diagnostics,
         "historical_platform_coverage": historical,
+        "arkansas_text_by_session": arkansas,
     }
     for name, frame in tables.items():
         frame.to_csv(output / "chart-data" / f"{name}.csv", index=False)
     figures = render_graphs(
         output / "graphs", tracker, metadata, native, sessions, diagnostics, historical,
     )
+    figures.extend(recovered_graphs(output, packets, arkansas))
+    research = {
+        name: archive_packet(files, output / "research-data" / f"{name}.zip")
+        for name, files in packets.items()
+    }
     for path in legacy:
         shutil.copy2(path, output / "legacy-reference" / path.name)
-    gallery(output, figures, [path.name for path in legacy])
+    gallery(output, figures, [path.name for path in legacy], research)
     for relative, expected in inputs.items():
         if not relative.startswith("producer:") and binding(root / relative) != expected:
             raise ValueError(f"graph source changed during rendering: {relative}")
@@ -463,7 +622,10 @@ def recreate(root: Path, output: Path) -> dict:
         "notice": NOTICE, "fresh_graphs": figures, "legacy_images_copied_not_regenerated": [
             path.name for path in legacy
         ],
-        "complete_chart_tables": list(tables), "inputs": inputs, "artifacts": artifacts,
+        "complete_chart_tables": sorted(
+            path.stem for path in (output / "chart-data").glob("*.csv")
+        ),
+        "complete_research_packets": research, "inputs": inputs, "artifacts": artifacts,
         "source_collection": False, "model_execution": False, "model_promotion": False,
         "publication": False, "scientific_certification": "not_performed",
     }

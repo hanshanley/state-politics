@@ -20,25 +20,77 @@ be bound explicitly before regenerated outputs can support the narrowed study.
 
 ```bash
 .venv/bin/python -I -B scripts/recreate_graphs.py \
-  --out-dir outputs/recreated-2023-2024-v2
+  --out-dir outputs/recreated-2023-2024-v4
 ```
 
-Open `outputs/recreated-2023-2024-v2/index.html` locally. The bundle contains seven
-fresh graphs in PNG and SVG, six complete chart-data CSVs and a hash manifest.
-It also archives the exact four plotting producers. It uses saved evidence
+Open `outputs/recreated-2023-2024-v4/index.html` locally. The bundle contains 13
+current evidence graphs in PNG and SVG, 12 complete chart-data CSVs, five complete
+research-packet ZIPs and a hash manifest. It also archives the exact four main
+plotting producers and the recovered producers within their research packets.
+It uses saved evidence
 tables and existing development diagnostics without
 collecting sources or executing a classifier. Missing native channels remain
 unknown, repeated metadata observations are not inflated into new identities,
 and assistant-reviewed diagnostics are not independent human validation.
 
 The historical corpus-recency graph is faithfully rebuilt from the retained
-historical records, not treated as operative 2023–2024 platform coverage.
+historical records, not treated as operative 2023–2024 platform coverage. New collection-observation and recorded-stage graphs use the
+actual recovered inputs; the Arkansas chart separates 149 complete PDF contexts
+from 1,842 metadata-only contexts. ZIPs contain full text/records, native pages
+and PDFs where applicable, not metadata-only substitutes. Caucus source text and
+its permanently closed capture are separate from party platforms.
 The original 13 PNGs are copied unchanged into `legacy-reference/`, clearly
 separate from freshly rendered graphs: most old analytical source tables are
 missing, so those images are **not** claimed to have been regenerated or
-validated. No party-topic, trend or outcome results are invented to fill them.
+validated. No party-topic, trend or D/R outcome results are invented to fill them.
 Existing output directories are refused; use a new `outputs/recreated-*`
 directory for another run. Generated bundles are local and Git-ignored.
+
+## October 22 recovered inputs
+
+The accepted packets are:
+
+| Packet | Complete retained evidence |
+|---|---|
+| `data/processed/recovered-platform-graph-inputs-20261022-v1` | Both original modern table snapshots, 202 original rows, 3,917 full evidence views, 1,559 capture attempts and repetition/failure accounting. |
+| `data/processed/cycle-outcome-evidence-20261022-v2` | 157,598 candidate contexts, 1,509,874 selected actions and complete selected vote/count/sponsorship tables. |
+| `data/processed/native-text-ar-20261022-v3` | 1,991 source metadata contexts, 149 complete PDFs / 298 reader alternatives, every reader page, raw exchanges and exact identity/session observations. |
+| `data/processed/recovered-platform-graph-inputs-20261022-v2` | Additive Kentucky Republican caucus native text and literal 2024 heading/link spans; not a replacement for the v1 collection packet. |
+| `data/processed/platform-graph-inputs-caucus-followup-20261022-v2` | Closed two-exchange caucus capture, preflight, raw bytes and generic challenge-literal stop evidence. |
+
+Read-only verification of the two recovered analytical-input packets:
+
+```bash
+.venv/bin/python -I -B -m state_politics.platforms.graph_inputs \
+  --out data/processed/recovered-platform-graph-inputs-20261022-v1 --verify-only
+.venv/bin/python -I -B -m state_politics.analysis.cycle_outcome_evidence \
+  --verify-packet data/processed/cycle-outcome-evidence-20261022-v2
+```
+
+An offline rebuild of the calendar action packet uses `--source-dir data/processed`,
+`--cohort-dir data/processed/study-abstract-evidence-2023-2024-v3` and a **new**
+`--out-dir`. Its original v3 calendar cohort is unchanged by metadata v4.
+Recorded stages use all retained action dates, including before/after the
+calendar window, under the existing highest-stage precedence; they are not
+final chronological/legal outcomes or a party comparison. The original values
+behind 104 corrected missing-versus-unclassified action labels remain retained.
+
+Offline Arkansas projection can be repeated without any network:
+
+```bash
+.venv/bin/python -I -B -m state_politics.bills.native_text project \
+  --raw data/raw/native-text-ar-20261022-v1 \
+  --source data/processed/native-inventory-ar-complete-v3 \
+  --metadata data/processed/study-abstract-evidence-2023-2024-v3 \
+  --out data/processed/native-text-ar-NEW-UNUSED
+```
+
+Do not restart either closed collector. Arkansas's operator-selected 150-exchange
+batch is exhausted; Kentucky's unused allowance is permanently closed after its
+generic literal stop. No access restriction was removed. The native packet
+archives the exact pre-update tracker and reviewed session crosswalk.
+Printed identity/session evidence does not certify original/filing-time versions,
+adoption, analytical labels or any new dates.
 
 ## Separate 2023–2024 source-date ledger
 
@@ -191,11 +243,12 @@ No HTTP, PDF/HTML re-extraction or repeated campaign-closure audit runs here.
 .venv/bin/python -I -B -m state_politics.bills.study_native_overlap \
   --matrix-dir data/processed/study-matrix-2023-2024-v1 \
   --registry conf/study_native_packets.yml \
-  --out-dir data/processed/study-native-overlap-2023-2024-v14
+  --out-dir data/processed/study-native-overlap-2023-2024-v15
 ```
 
-The registry pins **28 packets across 26 states**, retaining earlier accepted
-scopes while adding the common partial/campaign indexes and MT date observations.
+The registry pins **29 packets across 27 states**, retaining earlier accepted
+scopes while adding the common partial/campaign indexes, MT date observations
+and the 149 captured Arkansas PDF contexts.
 It selects the California 2023–2024 packet **and** the wider
 archive: the latter contains source-dated 2024 prefilings in a 2025–2026
 session, which cannot be excluded by session-name substring. Canonical source
@@ -224,14 +277,14 @@ download: complete original strings remain in the bound input tables.
 Alternative readers never count as additional measures. Unregistered states
 retain null packet counts rather than zero recovery.
 
-The current v14 manifest is
-`867eb6c6adfcbc8274114819f561794567cd60eb860b399fb1b33a6faac4e60e`.
-It indexes **118,009 raw contexts / 128,486 alternative views**, including
-15,433 source-only contexts and 102,365 unique canonical bills with native
+The current v15 manifest is
+`7443e4fe0c0079f2ac4d58161e555e33999418dcd03ebeeedf09822d53b188b7`.
+It indexes **120,000 raw contexts / 128,784 alternative views**, including
+17,275 source-only contexts and 102,514 unique canonical bills with native
 contexts. The separate bill aggregate prevents physical-reference inflation
 while retaining every raw context. Conflicting native dates remain null with
 an explicit conflict status; they are never resolved by earliest/latest.
-Its 52,237 introduction-observed missing-text contexts reflect wider
+Its 54,117 introduction-observed missing-text contexts reflect wider
 registered scope, not a cycle denominator.
 
 Opt-in missing identities and negative-flag source-only rules do not weaken
@@ -290,8 +343,8 @@ rather than dropping records or changing earlier artifacts.
 .venv/bin/python -I -B -m state_politics.bills.study_filing \
   --window-dir data/processed/study-window-2023-2024-v2 \
   --actions data/processed/bill_actions.parquet \
-  --matrix-dir data/processed/study-native-overlap-2023-2024-v14 \
-  --out-dir data/processed/study-filing-2023-2024-v4
+  --matrix-dir data/processed/study-native-overlap-2023-2024-v15 \
+  --out-dir data/processed/study-filing-2023-2024-v5
 ```
 
 The earlier source-window ledger intentionally counted only coded
@@ -321,10 +374,12 @@ semantics: all 1,090,369 results exactly match the committed original function
 and every accepted introduction-ledger field. The final filing output was
 also compared field-for-field with that ledger and its raw action export with
 the original source table; the 50-state union counts and retained native columns
-reconcile exactly. Current v4 manifest:
+reconcile exactly. Current v5 manifest:
+`ea2a13427e9d0860de5d2a829c0afc8afae1fc24ddfb8ab415e0f4849a1e73c3`.
+It consumes native v15, preserving the original filing ledger/actions while
+updating native fields. V4 remains preserved with manifest
 `9be1ee10f4269774646a0e117e04873ed2914004f0e46df3652ff97072c31ce0`.
-It consumes native v14, preserving the original filing ledger/actions while
-updating native fields. V3 remains preserved with manifest
+V3 remains preserved with manifest
 `a0824a1b5cfd25ae9ade853f01ea7d023dbf9932ebdacbc0511ca4c48b2423d3`.
 V2 remains
 preserved with manifest
@@ -399,10 +454,10 @@ description extraction when all relevant input bytes remain identical.
 ```bash
 .venv/bin/python -I -B -m state_politics.bills.study_abstracts \
   --data-dir data/processed \
-  --filing-dir data/processed/study-filing-2023-2024-v4 \
-  --native-dir data/processed/study-native-overlap-2023-2024-v14 \
+  --filing-dir data/processed/study-filing-2023-2024-v5 \
+  --native-dir data/processed/study-native-overlap-2023-2024-v15 \
   --description-dir data/processed/study-description-evidence-2023-2024-v1 \
-  --out-dir data/processed/study-abstract-evidence-2023-2024-v3
+  --out-dir data/processed/study-abstract-evidence-2023-2024-v4
 ```
 
 This exports `bill_evidence.parquet`, `abstract_evidence.parquet`,
@@ -421,8 +476,8 @@ Source tests, drafts and procedural title-only cases are flagged, not dropped
 or falsely admitted. All model/training/filing-time/analytical approval flags
 remain false; no tokenizer or classifier runs in this producer.
 
-Manifest:
-`38bf92a35831fe6ca75003f16caf2fce3354f48f54208bbf11a2b09d79b76c9d`.
+Current v4 manifest:
+`725663244d667bf5d639d33780bcbbf8994c5d52ea9c701d1ff0bddeb04d6f27`.
 Exact source fields, full strings/input hashes and all 50 prior matrix rows
 reconcile to original extraction and upstream evidence.
 V1 remains unchanged with manifest
@@ -430,8 +485,11 @@ V1 remains unchanged with manifest
 V2 remains preserved with manifest
 `69af46267bdc8c6ce4adb02a1bf4ec6ab1c06eee897f75af4efd38fd7611616b`:
 its metadata-view and abstract artifacts were byte-identical to v1.
-V3 adds 1,640 MT date candidates; the complete abstract artifact is still
-byte-identical. It consumes the manifest-declared canonical native-bill
+V3 adds 1,640 MT date candidates; v4 updates only native-presence fields and
+lineage for the Arkansas recovery. Complete metadata-view and abstract
+artifacts remain byte-identical to v3, whose manifest is
+`38bf92a35831fe6ca75003f16caf2fce3354f48f54208bbf11a2b09d79b76c9d`.
+It consumes the manifest-declared canonical native-bill
 aggregate, not duplicate raw references. A corrupt declared aggregate fails
 rather than silently falling back.
 
@@ -998,32 +1056,36 @@ synthetic references/logits and is not classifier validation.
 ```bash
 .venv/bin/python -I -B scripts/build_site.py \
   --cycle-evidence \
-  --bill-evidence data/processed/study-abstract-evidence-2023-2024-v3 \
+  --bill-evidence data/processed/study-abstract-evidence-2023-2024-v4 \
   --platform-evidence data/processed/platform-study-evidence-2023-2024-v5 \
-  --native-evidence data/processed/study-native-overlap-2023-2024-v14 \
+  --native-evidence data/processed/study-native-overlap-2023-2024-v15 \
   --metadata-token-plan data/processed/study-metadata-token-plan-2023-2024-v2 \
   --receipt-evidence data/processed/maine-source-receipt-evidence-2023-2024-v1 \
   --native-session-scope ny-2023-2024 --native-session-scope il-103rd \
   --native-session-scope tx-88r-retained \
-  --out data/preview-cycle-evidence-v7
+  --out data/preview-cycle-evidence-v8
 ```
 
-Evidence mode defaults to metadata v3 and platform evidence v5, with matching
-native v14 / token-plan v2 enrichments. Custom metadata does not silently
-attach these default optional bundles; pass compatible explicit directories.
+The current explicit build uses metadata v4 / native v15, with the unchanged
+platform evidence v5 and token-plan v2. The latter is reusable because the
+complete 159,315-view metadata input Parquet is byte-identical to v3.
+CLI defaults remain the earlier metadata v3 / native v14 selection; custom
+metadata does not silently attach optional bundles. Pass the compatible
+explicit directories above.
 The output includes all 50 state coverage rows / 100 organization rows,
 complete metadata/platform texts, lazy state partitions, full-text gzip
 downloads and `downloads/build_manifest.json`. The current build manifest is
-`ae02b9ef09d755ce59cdf814059b2ceb15bce1c56abd82371d3dc92e4c86abd9`.
+`8837aa090fb3552df4e3a6f9a977b81f5941e2c79b3c094193db09c1e24be886`.
 Receipt/session additions are explicit opt-ins only; the default/custom
 metadata behavior does not silently attach them. Build producers are archived
-with their exact source hashes. V3–v5 remain preserved.
+with their exact source hashes. Earlier builds remain preserved. V8 exposes
+91,923 complete native views, including 298 new Arkansas alternatives.
 
 For interactive use, serve the output with a local static HTTP server:
 
 ```bash
 .venv/bin/python -I -B -m http.server 8765 \
-  --bind 127.0.0.1 --directory data/preview-cycle-evidence-v7
+  --bind 127.0.0.1 --directory data/preview-cycle-evidence-v8
 ```
 
 No server is left running by the build or verification. JavaScript fetches

@@ -4,6 +4,78 @@ The existing figures and analytical conclusions are **legacy, not revalidated fi
 The current changes repair infrastructure and preserve evidence; they do not certify a
 replacement classifier or establish complete contemporary coverage.
 
+## October 22 missing-input and native-text recovery
+
+The new recovery fills actual source and graph-input gaps; it does not certify
+the existing party-policy findings.
+
+| Evidence | Actual recovery | Remaining limitation |
+|---|---|---|
+| Modern collection inputs | Two exact original source-table snapshots, 202 original rows, 3,917 complete evidence views and all 1,559 capture attempts; 1,440 responses, 119 failures and repeated bodies remain distinct. | The 107 original filter acceptances are not verified operative platforms. All 100 organization applicability statuses remain unresolved. |
+| Calendar action/vote evidence | All 157,598 candidate contexts, 1,509,874 selected raw actions, 170,586 vote events, 586,131 vote-count rows, 287,355 vote-party-count rows and 744,384 sponsorships. | No defensible D/R bill comparison: 155,470 source bill-party labels are unknown and 2,128 nonpartisan. No current-party backfill. |
+| Arkansas native text | 149 complete publisher-linked PDFs, 298 complete reader alternatives; every captured document has matching printed identity/state/session observations and a unique existing calendar-candidate join. | The other 1,842 native metadata contexts remain uncollected. The captured versions may be current/engrossed, not demonstrated filing-time originals. |
+| Kentucky Republican caucus | Complete received 6,157-character native text, an explicit 2024 priority-session heading and eight actual priority-section bill links; two empty links remain explicit. | Legislative caucus, not party platform. Adoption/applicability unresolved. The generic challenge-literal capture stop remains permanently closed, not reclassified as a proven WAF or bypassed. |
+
+The shared registry now uses **native v15 / 29 packets / 27 states**, with
+128,784 indexed native views. Filing v5 and metadata v4 retain the exact
+151,615 coded-event union, 157,598 calendar candidates, 50,959 abstract records
+and 159,315 metadata input views. The complete metadata-view Parquet is
+byte-identical to v3, so the existing token-plan v2 remains valid without
+retokenization or inference. The local-only v8 explorer now exposes **91,923
+native views**, including 39,874 primary-candidate views across 27,593 contexts.
+Its build manifest is
+`8837aa090fb3552df4e3a6f9a977b81f5941e2c79b3c094193db09c1e24be886`.
+
+Recorded-stage recovery corrects 104 legacy `no_action_data` labels to
+unclassified action histories while preserving the original values. There
+are 128,628 ordinary law-eligible source bills, separate from 28,908 other
+measures, 59 draft requests and three source test records. Stages use the
+existing highest-stage precedence across **all retained action dates**, not
+a December 2024 cutoff, final chronological event or legal certification.
+The selected actions include 8,239 before-cycle and 49,899 after-cycle rows.
+Pooled/state stage graphs are not D/R outcomes or policy-topic results.
+
+Arkansas used a new operator-selected 150-physical-exchange allowance:
+one fresh robots response plus 149 PDF responses, 37,442,320 retained bytes.
+It is exhausted and closed, with no further dispatch permitted. Previously
+known usage remains counted and older usage remains explicitly unknown.
+Kentucky used two exchanges under a separate maximum-15 allowance; its
+unused remainder is closed. No restrictions were lifted or later-year
+caucus sources substituted. Raw ledgers and all response entities are retained.
+
+Local packets are `recovered-platform-graph-inputs-20261022-v1`,
+`cycle-outcome-evidence-20261022-v2`, `native-text-ar-20261022-v3`,
+and the additive Kentucky `recovered-platform-graph-inputs-20261022-v2`,
+with its separate closed capture packet. Earlier Arkansas projections and
+the initial manifest-schema integration failure remain preserved diagnostics.
+The final native packet follows the shared `files` manifest contract instead
+of weakening the national join or rewriting old packets.
+
+The 50-state tracker remains **six closed scopes / 21 partial / 21 blocked /
+two inventory**, with **zero scientifically completed states**. Original
+labels, frozen human-review runtime, model weights and publication boundaries
+remain unchanged. No actual human annotations, classifier execution, model
+promotion or themarginoferror.com integration occurred. Generated research
+data and previews remain local/Git-ignored; a code push is not their backup.
+
+The current gallery is `outputs/recreated-2023-2024-v4/index.html`: **13
+PNG/SVG pairs, 12 complete chart CSVs and five complete research ZIPs**, with
+the 13 old images retained separately as unvalidated references. Actual
+Chromium inspection found long new CSV filenames overflowing the v3 mobile
+gallery; v3 and its failed 413-versus-390-width assertion remain preserved.
+V4 wraps download labels and passes actual 1,440/390 CSS-pixel checks, all
+26 images decoded, no JavaScript errors or external page requests. Its actual
+47,065,700-byte Arkansas ZIP download matches the source hash; the complete
+298-view query download is 12,222,266 bytes and byte-identical to its original
+full-text JSONL. No metadata-only download replaced it.
+
+The focused integration suite passed **201 tests**; the full repository
+regression passed **1,704 tests**, with real browser checks. As in the previous
+assurance pass, the legacy artifact-report-writing test was excluded rather
+than overwriting its original failed report. The final CSS adjustment was
+then exercised against the actual gallery in Chromium. These results do not
+remove the known legacy missing-artifact or scientific-validation gates.
+
 ## October 21 engineering assurance recheck
 
 The fresh repository-wide code run passed **1,641 tests**, including configured real

@@ -1,6 +1,6 @@
 # State completion tracker
 
-Updated **October 21, 2026**. This is the current dispatch list, not a claim that
+Updated **October 22, 2026**. This is the current dispatch list, not a claim that
 historical progress messages describe processes still running.
 
 **Active study window: January 1, 2023 through December 31, 2024.** Work on
@@ -96,7 +96,7 @@ packet limitation. Separately, native introduction fields provide date evidence
 for 3,463 CA/SD text contexts with unresolved canonical source dates. Another
 569 cycle-relevant native/source date differences remain explicit for review.
 These date observations do not silently change admission or tracker status.
-The current v14 registry indexes **28 packets / 26 states**. The bounded
+The current v15 registry indexes **29 packets / 27 states**. The bounded
 MI/MD/MN/KY/AZ/KS/OR/VA selections preserve 164 contexts / 337 views, with
 text for 156 contexts. Additional retained campaign projections are normalized
 without new HTTP or extraction. Native indexes distinguish raw markup,
@@ -104,14 +104,14 @@ ancillary histories, wrong-session documents and unavailable originals from
 policy-reader views. MT contributes guarded native date observations, not
 policy text; OK/WV contribute explicit zero-view contexts.
 
-The combined wider-scope inventory has 118,009 raw contexts, 102,365 unique
-canonical bills with native contexts and 128,486 indexed views. Reference
+The combined wider-scope inventory has 120,000 raw contexts, 102,514 unique
+canonical bills with native contexts and 128,784 indexed views. Reference
 contexts and alternatives remain preserved, but bill-level counters no longer
 count physical references as separate bills. These are not target-cycle
 denominators or newly closed states. MT adds 1,640 literal in-window native
 introduction observations, including 213 calendar-2024 prefilings in session
 2025; draft requests and ancillary histories are not policy originals.
-The current combined `study-filing-2023-2024-v4/state_matrix.csv` preserves those
+The current combined `study-filing-2023-2024-v5/state_matrix.csv` preserves those
 native columns and adds distinct source-coded filing and deduplicated union
 counts. Use this final matrix for current source-event triage, not the older
 introduction-only counts alone.
@@ -129,7 +129,10 @@ covers every tokenizer-produced source token without truncation but grants no
 classifier or analytical approval. Metadata v3 adds the MT date candidates
 under the separate native-date channel, now 5,122 records. Token-plan v2 covers
 159,315 complete metadata views and 10,059,370 source tokens; source-date,
-model and analytical approvals remain separate.
+model and analytical approvals remain separate. Metadata v4 updates native-text
+presence for 149 Arkansas contexts without changing any calendar candidates,
+abstracts or complete metadata inputs; token-plan v2 remains bound to their
+byte-identical metadata-view artifact.
 
 The [local evidence explorer](REPRODUCIBILITY.md#unpublished-cycle-evidence-explorer)
 provides all-state/organization coverage, complete metadata/platform text,
@@ -152,7 +155,8 @@ They do not infer filing dates or change the six closed scopes. This fills
 an evidence-inspection gap, not a new native-census or scientific closure.
 
 V7 adds another **84 retained Texas 88R views / 60 IDs**, without HTTP or
-date inference. The combined explorer now exposes 91,625 complete native
+date inference. V8 adds 298 complete Arkansas reader views from 149 newly
+captured publisher-linked PDFs. The combined explorer now exposes 91,923 complete native
 views. A separate NY/IL/TX session comparison preserves 49,450 original
 member/date records and 65,322 full native views, including explicit
 missing-text records. It does not replace the 157,598 calendar candidates.
@@ -247,7 +251,7 @@ certification or the completeness of either party's platforms.
 | Alabama (AL) | Inventory | Dedicated offline inventory completed: 11,847 measures across 12 stored sessions, 23,164 versions, 23,169 links and 18,294 sources. Two measures lack versions/links. Native census, actual boundaries and original texts remain unverified. | [Returned inventories](#current-assignments) |
 | Alaska (AK) | Blocked | Blocked-evidence packet replayed; official robots restriction retained. Native census, actual boundaries and originals unknown. | [Initial-state audits](AUDIT_STATUS.md) |
 | Arizona (AZ) | Partial | Initial v2 reconstruction accepted; four PDFs and four total HTML views, not four pairs. Native census, original-version proof and boundaries remain unresolved. | [Initial-state audits](AUDIT_STATUS.md) |
-| Arkansas (AR) | Partial | Complete publisher-listed 2023R/2023S1/2024F/2024S2 metadata: 1,991 identities, 119 pages and 29 type groups. Exact finite-page/alias proof independently replayed; seven accepted pages reused. No introduced-universe, filing-date, original-text or scientific closure; retrieve only named missing originals, not the census again. | [Bounded native recovery](AUDIT_STATUS.md#bounded-native-list-recovery-and-all-state-catalog) |
+| Arkansas (AR) | Partial | Complete four-session metadata: 1,991 identities, 119 pages and 29 type groups. New closed batch retains 149 publisher-linked PDFs / 298 complete reader views, all printed identity/session matched and calendar-candidate joined. The remaining 1,842 contexts are metadata-only; original/filing-time versions remain unverified. Do not recollect the census or reopen the closed 150-exchange allowance. | [October 22 recovery](AUDIT_STATUS.md#october-22-missing-input-and-native-text-recovery) |
 | California (CA) | Closed scope | Reuse the accepted 2023–2024 native archive from the wider five-biennium capture; do not extend older/newer coverage. Wider-archive counts are not cycle denominators. Regular/special contexts and filing-time interpretation remain distinct. | [Complete archives](AUDIT_STATUS.md#california-complete-native-archive-and-introduced-source-candidates) |
 | Colorado (CO) | Closed scope | 2023/2024 regular cohort: 1,459 identities, 1,457 PDFs and two explicit reference gaps; whole archive and actual final-17 replay accepted. Resolve SB 23-214/HB 24-1430 references and separate special-session scope, not a repeat of the 1,457-PDF collection. | [Colorado closure](AUDIT_STATUS.md#colorado-regular-session-source-census-and-full-continuation) |
 | Connecticut (CT) | Blocked | Initial v2 blocked-evidence reconstruction accepted; zero originals. Native census/boundaries unknown and official robots restriction retained. | [Initial-state audits](AUDIT_STATUS.md) |
