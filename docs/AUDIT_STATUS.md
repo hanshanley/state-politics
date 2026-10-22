@@ -4,13 +4,13 @@ The existing figures and analytical conclusions are **legacy, not revalidated fi
 The current changes repair infrastructure and preserve evidence; they do not certify a
 replacement classifier or establish complete contemporary coverage.
 
-## Additional research-corpus recovery in progress
+## Additional exact research-corpus recovery
 
-The renewed remaining-gap pass has recovered **2,070 previously missing candidate
-contexts / 2,306 complete source views**: New Hampshire 981 contexts / 1,217
-views and Illinois 1,089 / 1,089. This is actual new source text, not the earlier
+The renewed remaining-gap pass has recovered **2,079 previously missing candidate
+contexts / 2,315 complete source views**: New Hampshire 981 contexts / 1,217
+views, Illinois 1,089 / 1,089 and Texas 9 / 9. This is actual new source text, not the earlier
 123,182 searchable-record recovery counted again. The complete packet is
-`data/processed/research-corpus-text-20261022-v2/`.
+`data/processed/research-corpus-text-20261022-v4/`.
 
 These third-party cleaned texts come from the pinned public MTSU corpus revision
 `d4f15948c8af7733df9aa70ce68b14a65dec3d82`; complete downloaded JSON files
@@ -46,9 +46,46 @@ selecting one. Keys remain uninterpreted strings, not assumed external bill IDs;
 the raw ancestor files and all removed metadata are retained without duplicating
 body text in query records. Earlier packets remain unchanged.
 
-The new offline producer and 19 focused tests pass. Shared explorer/graph
-integration and further independently recoverable corpus subsets are in progress;
-the v11/v6 deliverables below remain the earlier accepted checkpoint.
+A further GPT-6.1 Sol recovery replayed all 143,272 TX/MS records: nine exact
+TX contexts (regular and separately identified called sessions) and zero MS
+matches. Own printed/certified numbers and existing session names are required;
+no special-session suffix or effective-year guess is used. The combined
+packet preserves all 103,113 NH/IL/TX source records and row dispositions,
+complete current/ancestor files and both exact producer modules.
+UT/AL/MI/RI yielded zero further matches after a corrected whole-text review
+of 108,142 records; genuine fragments, unresolved own identities and every
+disposition remain available rather than being promoted to bodies.
+
+The current deliverables are **explorer v14 / gallery v9**, with **128,455 of
+157,598 existing candidate contexts** having some retained text and **29,143**
+explicit remaining gaps. All source types stay separate. The new offline producer
+passes 23 focused tests; final full code assurance passed **1,754 tests**, with
+zero failures/errors/skips and real browser cases. All **165 documentation
+checks** pass. The separate actual artifact audit remains **407/441**, with
+exactly the same **34 missing-output failures**, not scientific certification.
+Its new report is `data/research-corpus-current-artifact-audit-20261022-v2.json`.
+
+Independent parent verification reconciles all 103,113 current source rows,
+2,315 complete matched records, 12,340 original keyed ancestors and 2,546
+exact original-record references. All 636 explorer / 67 gallery output hashes,
+50 plain/gzip partition pairs and 16 complete research ZIP members verify;
+528 older non-code evidence outputs remain byte-identical. Every retained
+field in the remaining gap queue is unchanged.
+Receipt: `data/research-corpus-parent-verification-20261022-v2.json`.
+
+Actual Chromium passed desktop/mobile checks and downloaded the complete
+207,580,035-byte research ZIP and all NH 1,217 / IL 1,089 / TX nine query
+records with exact hashes. The entire 1,407,706-character source rendered
+with its exact SHA-256, including restored original metadata. No JavaScript
+errors or external HTTP requests occurred.
+Receipt: `data/corpus-workspace-browser-proof-20261022-v2/receipt.json`.
+All 41 frozen plan artifacts, five runtime files, 20 original model/label
+bindings and the unannotated human packet remain unchanged after final tests.
+Both actual helper ports are closed. Six useful fixture receipts were archived;
+only nine explicitly owned scratch trees and two stopped browser profiles were
+removed. Genuine source packets, complete downloads and failed diagnostics stay
+retained. No human decisions, model execution/promotion or publication occurred.
+The v11/v6 figures and assurance below describe the earlier historical checkpoint.
 
 ## National retained-text recovery from the omitted search table
 

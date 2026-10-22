@@ -176,7 +176,7 @@ observation, not verification of every upstream right or cleaning step.
 The credited corpus publisher is an intermediary; legislative bodies are the
 originating institutions represented in the printed source text.
 
-Complete NH/IL JSON files match the pinned tree's advertised LFS SHA-256 and
+Complete NH/IL/TX JSON files match the pinned tree's advertised LFS SHA-256 and
 byte counts. Original text/title/summary fields and duplicate records are
 preserved. Printed state, assembly/session and bill identities link only
 existing missing-text candidates. Source summaries are neither independent

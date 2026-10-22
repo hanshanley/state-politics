@@ -161,10 +161,16 @@ def test_snapshot_preserves_complete_source_fields_errors_and_separate_version_s
     assert (out / "downloads/producers/site_snapshot_text.py").is_file()
 
 
+@pytest.mark.parametrize("with_ancestry", [False, True])
 def test_research_corpus_exports_complete_alternatives_without_new_bill_admission(
-    cycle_bundle, tmp_path,
+    cycle_bundle, tmp_path, with_ancestry,
 ):
-    from state_politics.bills.research_corpus_text import REVISION, SOURCE_FILES, recover
+    from state_politics.bills.research_corpus_text import (
+        ANCESTOR_FILES,
+        REVISION,
+        SOURCE_FILES,
+        recover,
+    )
 
     metadata, platform, *_ = cycle_bundle
     for name in ("bill_evidence", "abstract_evidence", "candidate_metadata_views"):
@@ -200,13 +206,22 @@ def test_research_corpus_exports_complete_alternatives_without_new_bill_admissio
     write_json(source / "mtsu-file-tree.json", [{
         "path": raw.name, "size": raw.stat().st_size, "lfs": {"oid": sha256_file(raw)},
     }])
+    if with_ancestry:
+        old = source / ANCESTOR_FILES["NH"]
+        write_json(old, {
+            f"0000{index}": {**row, "source_file": f"HB0-{index}.json"}
+            for index, row in enumerate(records)
+        })
+        write_json(source / "mtsu-original-file-tree.json", [{
+            "path": old.name, "size": old.stat().st_size, "lfs": {"oid": sha256_file(old)},
+        }])
     contexts = pq.read_table(metadata / "bill_evidence.parquet").to_pylist()
     gap = source / "gap.parquet"
     pq.write_table(pa.Table.from_pylist([
         {**row, "neither_source_observed": True} for row in contexts if row["state"] == "NH"
     ]), gap)
     packet = tmp_path / "corpus-packet"
-    recover(source, gap, packet, states=("NH",))
+    recover(source, gap, packet, states=("NH",), source_ancestry=with_ancestry)
     out = tmp_path / "corpus-preview"
     manifest = build_cycle_preview(metadata, platform, out, research_corpus_evidence=packet)
     assert manifest["counts"]["n_cycle_contexts"] == 14
@@ -218,6 +233,10 @@ def test_research_corpus_exports_complete_alternatives_without_new_bill_admissio
         out / "evidence/corpus-NH.jsonl"
     ).read_text().split("\n") if line]
     assert [row["source_record"] for row in exported] == records
+    if with_ancestry:
+        assert [row["source_ancestry"][0]["original_dataset_key"] for row in exported] == [
+            "00000", "00001",
+        ]
     assert gzip.decompress((out / "downloads/corpus-NH.jsonl.gz").read_bytes()) == (
         out / "evidence/corpus-NH.jsonl"
     ).read_bytes()

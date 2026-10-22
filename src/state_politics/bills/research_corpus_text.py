@@ -13,6 +13,10 @@ from pathlib import Path
 import pyarrow as pa
 import pyarrow.parquet as pq
 
+from state_politics.bills.research_texas_identity import (
+    matches_texas_session,
+    parse_texas_identity,
+)
 from state_politics.provenance import sha256_file
 
 SCHEMA = "state-politics.research-corpus-text.v1"
@@ -25,6 +29,7 @@ DATASET = (
 SOURCE_FILES = {
     "NH": "reordered_cleaned_data_NH.json",
     "IL": "reordered_cleaned_data_IL.json",
+    "TX": "TX_2009-Oct_2025_cleaned.json",
 }
 ANCESTOR_FILES = {"NH": "cleaned_bills_NH.json", "IL": "cleaned_data_IL.json"}
 FLAGS = (
@@ -83,7 +88,7 @@ def _illinois_resolution(text):
     return session, identifier, [number, venue]
 
 
-def printed_identity(state: str, text: str) -> dict | None:
+def printed_identity(state: str, text: str, context=None) -> dict | None:
     """Use printed identity/session/state, never titles or effective-date guesses."""
     head = text[:1200]
     if state == "NH":
@@ -110,6 +115,15 @@ def printed_identity(state: str, text: str) -> dict | None:
             if resolution is None:
                 return None
             session, identifier, matches = resolution
+    elif state == "TX":
+        parsed = parse_texas_identity(text)
+        if not parsed["valid"] or context is None or not matches_texas_session(parsed, context):
+            return None
+        return {
+            "state": state, "session_identifier": context["session_identifier"],
+            "identifier": parsed["identifier"], "printed_evidence": parsed["printed_evidence"],
+            "printed_session_descriptor": parsed["session"],
+        }
     else:
         raise ValueError(f"unsupported research corpus state: {state}")
     clause = BODY_CLAUSE.search(text)
@@ -165,7 +179,7 @@ def _ancestry(source_dir, out, states, bindings):
     target.mkdir()
     shutil.copy2(source_dir / tree_name, target / tree_name)
     indexes = {}
-    for state in states:
+    for state in (state for state in states if state in ANCESTOR_FILES):
         name = ANCESTOR_FILES[state]
         require(bindings[str(source_dir / name)] == {
             "bytes": tree[name]["size"], "sha256": tree[name]["lfs"]["oid"],
@@ -194,7 +208,7 @@ def recover(
     paths += [source_dir / SOURCE_FILES[state] for state in states]
     if source_ancestry:
         paths += [source_dir / "mtsu-original-file-tree.json"]
-        paths += [source_dir / ANCESTOR_FILES[state] for state in states]
+        paths += [source_dir / ANCESTOR_FILES[state] for state in states if state in ANCESTOR_FILES]
     require(all(p.is_file() and p.resolve() == p for p in paths), "linked or missing input")
     metadata = _json(source_dir / "mtsu-dataset-metadata.json")
     require(metadata["sha"] == REVISION and metadata["cardData"]["license"] == "apache-2.0",
@@ -206,8 +220,10 @@ def recover(
     require(all(r["neither_source_observed"] is True for r in candidates),
             "only the explicit existing missing-text queue may be recovered")
     index = defaultdict(list)
+    by_identifier = defaultdict(list)
     for row in candidates:
         index[row["state"], row["session_identifier"], row["identifier"]].append(row)
+        by_identifier[row["state"], row["identifier"]].append(row)
     before = {str(p): _binding(p) for p in paths}
     for state in states:
         name = SOURCE_FILES[state]
@@ -221,6 +237,8 @@ def recover(
     for name in ("mtsu-dataset-metadata.json", "mtsu-file-tree.json"):
         shutil.copy2(source_dir / name, out / name)
     shutil.copy2(Path(__file__), out / "producer/research_corpus_text.py")
+    shutil.copy2(Path(__file__).with_name("research_texas_identity.py"),
+                 out / "producer/research_texas_identity.py")
     ancestors = _ancestry(source_dir, out, states, before) if source_ancestry else {}
     views, dispositions, counts = [], [], Counter()
     by_bill = Counter()
@@ -233,13 +251,25 @@ def recover(
             require(isinstance(record, dict), f"non-object source row {name}:{ordinal}")
             text = record.get("text")
             require(text is None or isinstance(text, str), f"non-string body {name}:{ordinal}")
-            identity = printed_identity(state, text or "")
-            matches = (
-                index.get((state, identity["session_identifier"], identity["identifier"]), [])
-                if identity else []
-            )
+            if state == "TX":
+                parsed = parse_texas_identity(text or "")
+                matches = [
+                    candidate for candidate in by_identifier.get(
+                        (state, parsed.get("identifier")), [],
+                    ) if parsed["valid"] and matches_texas_session(parsed, candidate)
+                ]
+                identity = printed_identity(state, text, matches[0]) if len(matches) == 1 else None
+                resolved = parsed["valid"]
+                reason = parsed.get("reason")
+            else:
+                identity = printed_identity(state, text or "")
+                matches = (
+                    index.get((state, identity["session_identifier"], identity["identifier"]), [])
+                    if identity else []
+                )
+                resolved, reason = identity is not None, None
             disposition = (
-                "unresolved_printed_identity_or_body" if identity is None
+                "unresolved_printed_identity_or_body" if not resolved
                 else "not_remaining_candidate" if not matches
                 else "ambiguous_remaining_identity" if len(matches) != 1
                 else "exact_existing_gap_identity"
@@ -250,6 +280,7 @@ def recover(
                 "disposition": disposition,
                 "printed_session": identity["session_identifier"] if identity else None,
                 "printed_identifier": identity["identifier"] if identity else None,
+                "source_identity_reason": reason,
             })
             if disposition != "exact_existing_gap_identity":
                 continue
@@ -271,7 +302,7 @@ def recover(
                 **dict.fromkeys(FLAGS, False),
             })
             if source_ancestry:
-                views[-1]["source_ancestry"] = ancestors[state].get(_signature(record), [])
+                views[-1]["source_ancestry"] = ancestors.get(state, {}).get(_signature(record), [])
     require(bool(views), "no exact remaining identities with complete source bodies recovered")
     with (out / "views.jsonl").open("w") as handle:
         for row in views:
@@ -384,7 +415,7 @@ def load_corpus(directory: Path, metadata=None):
         require(all(row[field] == context[field] == current[row["bill_id"]][field]
                     for field in ("state", "identifier", "session_identifier")),
                 "candidate identity mismatch")
-        identity = printed_identity(row["state"], text)
+        identity = printed_identity(row["state"], text, original_gap[row["bill_id"]])
         require(identity == row["source_identity"]
                 and all(identity[field] == row[field]
                         for field in ("state", "identifier", "session_identifier")),
@@ -415,6 +446,10 @@ def load_corpus(directory: Path, metadata=None):
         require(manifest["source_ancestry_revision"] == ANCESTOR_REVISION,
                 "original-source revision")
         for state in {row["state"] for row in rows}:
+            if state not in ANCESTOR_FILES:
+                require(all(not row["source_ancestry"] for row in rows if row["state"] == state),
+                        "unbound state ancestry")
+                continue
             name = ANCESTOR_FILES[state]
             path = directory / "source-ancestry" / name
             require(f"source-ancestry/{name}" in pins, "unbound ancestor source")

@@ -29,21 +29,31 @@ certified complete.
 
 ## Additional exact research-text recovery
 
-The next missing-queue pass recovered **2,070 further candidate contexts / 2,306
+The next missing-queue pass recovered **2,079 further candidate contexts / 2,315
 complete original source views**: New Hampshire 981 / 1,217 and Illinois
-1,089 / 1,089. These independently published cleaned texts require exact printed
+1,089 / 1,089 and Texas 9 / 9. These independently published cleaned texts require exact printed
 state, legislative session and bill identity, not title-only matching. Illinois
 resolutions' written-out assembly declarations and constitutional-amendment
 aliases are retained with their literal source spans; line numbers are not
 stripped from stored bodies. All 12,340 original NH/IL records and every
 unmatched/rejected disposition remain in the complete research packet.
 
-Combined native/snapshot/research-text availability is **128,446 of 157,598
-existing candidate contexts**. The remaining **29,152** are in
-`outputs/recreated-2023-2024-v8/chart-data/missing_retained_text.parquet`.
-The new immutable packet is `data/processed/research-corpus-text-20261022-v2/`;
-the current explorer/gallery are `data/preview-cycle-evidence-v13/` and
-`outputs/recreated-2023-2024-v8/`. Earlier versions remain preserved.
+Combined native/snapshot/research-text availability is **128,455 of 157,598
+existing candidate contexts**. The remaining **29,143** are in
+`outputs/recreated-2023-2024-v9/chart-data/missing_retained_text.parquet`.
+The new immutable packet is `data/processed/research-corpus-text-20261022-v4/`;
+the current explorer/gallery are `data/preview-cycle-evidence-v14/` and
+`outputs/recreated-2023-2024-v9/`. Earlier versions remain preserved.
+
+All 103,113 current NH/IL/TX source records and every source-row disposition
+are retained. Exact older NH/IL source records additionally restore dataset
+keys and source filenames removed by later cleaning: 12,340 complete keyed
+originals, with all 2,546 matching references retained for 2,306 current views.
+Keys remain uninterpreted strings, not assumed external IDs. Texas matches
+use own printed/certified numbers and existing regular/called-session names,
+never suffix guesses or cited-bill/effective-year substitution. Separate
+UT/AL/MI/RI/MS corpus investigations yielded no admissible additional matches;
+this is a bounded source finding, not publisher absence.
 
 Existing 2024 prefilings in later-labelled sessions stay in their original
 candidate cohort; no new dates or bills are admitted. Third-party cleaned text

@@ -1009,6 +1009,9 @@ def build_cycle_preview(
         producer_paths["research_corpus_text.py"] = (
             Path(__file__).with_name("bills") / "research_corpus_text.py"
         )
+        producer_paths["research_texas_identity.py"] = (
+            Path(__file__).with_name("bills") / "research_texas_identity.py"
+        )
     archive_producers = bool(
         native_session_scopes or snapshot_text_evidence or research_corpus_evidence
     )

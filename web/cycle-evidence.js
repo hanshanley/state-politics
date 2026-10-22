@@ -183,9 +183,12 @@ if (typeof document !== "undefined") {
           "note corpus-observation"));
         if (row.source_ancestry) {
           article.append(element("p",
-            `${row.source_ancestry.length} exact original keyed-record reference(s) retained. `
-            + "Original dataset keys and source filenames are visible in complete provenance; "
-            + "keys are not interpreted as external bill IDs.", "note"));
+            row.source_ancestry.length
+              ? `${row.source_ancestry.length} exact original keyed-record reference(s) retained. `
+                + "Original dataset keys and source filenames are visible in complete provenance; "
+                + "keys are not interpreted as external bill IDs."
+              : "No keyed ancestor metadata is supplied for this source; this is not a claim that none exists.",
+            "note"));
         }
         article.append(sourceText("Read complete research-corpus text (unaltered source string)",
           row.source_record.text));

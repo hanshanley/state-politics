@@ -218,3 +218,40 @@ def test_original_keyed_records_restore_removed_metadata_without_arbitrary_dedup
         repin(out, "views.jsonl")
         with pytest.raises(ValueError, match="complete original ancestor"):
             load_corpus(out)
+
+
+@pytest.mark.parametrize("style", ["browser", "draft", "called", "certification"])
+def test_texas_own_session_and_identifier_do_not_come_from_citations_or_suffix_guesses(style):
+    context = {"state": "TX", "identifier": "HB 77", "session_identifier": "88",
+               "session_name": "88th Legislature (2023)"}
+    operative = (
+        "BE IT ENACTED BY THE LEGISLATURE OF THE STATE OF TEXAS: "
+        "SECTION 1. The board shall publish a complete annual report describing "
+        "its findings and shall make that report publicly available to all residents."
+    )
+    if style == "certification":
+        context["identifier"] = "SR 77"
+        text = (
+            "WHEREAS, The members recognize important public service; "
+            "RESOLVED, That the Senate of the 88th Legislature of the State of Texas, "
+            "Regular Session, request a complete public report on the program "
+            "established by H.B. No. 999. I certify that S.R. No. 77 was adopted."
+        )
+    else:
+        header = {
+            "browser": "88(R) HB 77-Introduced version-Bill Text 88R1834 CAE-F H.B. No. 77",
+            "draft": "88R1834 CAE-F\n1\nH.B.\n2\nNo.\n77\n",
+            "called": "88(3) HB 77-Introduced version-Bill Text 88S30123 AMF-F H.B. No. 77",
+        }[style]
+        if style == "called":
+            context.update(session_identifier="existing-special-namespace",
+                           session_name="88th Legislature, 3rd Called Session (2023)")
+        text = header + " AN ACT " + operative + " H.B. No. 999 is cited; effective July 1, 2024."
+    identity = printed_identity("TX", text, context)
+    assert identity["identifier"] == context["identifier"]
+    assert identity["session_identifier"] == context["session_identifier"]
+    assert all(text[span["start"]:span["end"]] == span["text"]
+               for span in identity["printed_evidence"])
+    assert printed_identity("TX", text, {**context, "session_name": "2024 Regular Session"}) is None
+    assert printed_identity("TX", text.replace("STATE OF TEXAS", "STATE OF MISSISSIPPI")
+                            .replace("State of Texas", "State of Mississippi"), context) is None
