@@ -4,6 +4,37 @@ The existing figures and analytical conclusions are **legacy, not revalidated fi
 The current changes repair infrastructure and preserve evidence; they do not certify a
 replacement classifier or establish complete contemporary coverage.
 
+## Additional research-corpus recovery in progress
+
+The renewed remaining-gap pass has recovered **2,060 previously missing candidate
+contexts / 2,296 complete source views**: New Hampshire 981 contexts / 1,217
+views and Illinois 1,079 / 1,079. This is actual new source text, not the earlier
+123,182 searchable-record recovery counted again. The complete packet is
+`data/processed/research-corpus-text-20261022-v1/`.
+
+These third-party cleaned texts come from the pinned public MTSU corpus revision
+`d4f15948c8af7733df9aa70ce68b14a65dec3d82`; complete downloaded JSON files
+match the provider's advertised LFS hashes. Joins require printed state,
+session and bill identities plus a substantive body clause, never title-only
+similarity, effective dates or a filename-derived year. All original fields,
+duplicate alternatives and unmatched-row dispositions remain preserved.
+Already-admitted 2024 prefilings in later-labelled sessions stay within the
+existing cohort; no new bills or dates are admitted.
+
+Independent offline inspections found no additional qualifying bodies in the
+unused retained dump tables or unindexed native captures. The public Hawaii
+corpus is explicitly 2025-only; Maryland's cleaned rows mostly lack sufficient
+printed session identity. Neither is counted as recovered target text.
+The independent govbot repositories' historical session catalogs do not establish
+coverage: their actual HI/NJ/IL folders contain only 2026/222/104th cohorts.
+Closed publisher collectors were not reopened. The new source remains
+**not publisher-original or introduced-version certified**, and every
+model/training/party/scientific/publication gate remains false.
+
+The new offline producer and 13 focused tests pass. Shared explorer/graph
+integration and further independently recoverable corpus subsets are in progress;
+the v11/v6 deliverables below remain the earlier accepted checkpoint.
+
 ## National retained-text recovery from the omitted search table
 
 The earlier eleven-table extraction omitted
