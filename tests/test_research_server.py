@@ -25,9 +25,9 @@ def research_bundle(tmp_path):
     manifest = {
         "schema": "local_cycle_evidence_preview_v1",
         "publication_status": "local_only_unpublished",
-        "model_input_approved": False, "analytical_admission": False,
-        "outputs": {"index.html": {"sha256": hashlib.sha256(data).hexdigest(),
-                                    "bytes": len(data)}},
+        "model_input_approved": False,
+        "analytical_admission": False,
+        "outputs": {"index.html": {"sha256": hashlib.sha256(data).hexdigest(), "bytes": len(data)}},
     }
     path = root / "downloads/build_manifest.json"
     path.write_text(json.dumps(manifest))
@@ -59,20 +59,26 @@ def test_workspace_serves_exact_bytes_and_manifest_bound_links(research_http, re
     with urllib.request.urlopen(address + "/evidence/index.html") as response:
         assert response.read() == research_bundle[3]
         assert response.headers["X-Content-Type-Options"] == "nosniff"
-    with urllib.request.urlopen(urllib.request.Request(
-        address + "/evidence/index.html", method="HEAD",
-    )) as response:
+    with urllib.request.urlopen(
+        urllib.request.Request(
+            address + "/evidence/index.html",
+            method="HEAD",
+        )
+    ) as response:
         assert response.read() == b""
         assert int(response.headers["Content-Length"]) == len(research_bundle[3])
 
 
-@pytest.mark.parametrize(("path", "status"), [
-    ("/evidence/private-not-an-artifact.txt", 404),
-    ("/evidence/%2e%2e/private.txt", 400),
-    ("/evidence/%5c..%5cprivate.txt", 400),
-    ("/evidence//index.html", 400),
-    ("/other/index.html", 404),
-])
+@pytest.mark.parametrize(
+    ("path", "status"),
+    [
+        ("/evidence/private-not-an-artifact.txt", 404),
+        ("/evidence/%2e%2e/private.txt", 400),
+        ("/evidence/%5c..%5cprivate.txt", 400),
+        ("/evidence//index.html", 400),
+        ("/other/index.html", 404),
+    ],
+)
 def test_workspace_refuses_unbound_and_traversal_paths(research_http, path, status):
     address, _ = research_http
     with pytest.raises(urllib.error.HTTPError) as caught:
@@ -87,9 +93,12 @@ def test_workspace_refuses_changed_file_and_foreign_host(research_http):
         urllib.request.urlopen(address + "/evidence/index.html")
     assert caught.value.code == 409
     with pytest.raises(urllib.error.HTTPError) as caught:
-        urllib.request.urlopen(urllib.request.Request(
-            address + "/", headers={"Host": "other.test"},
-        ))
+        urllib.request.urlopen(
+            urllib.request.Request(
+                address + "/",
+                headers={"Host": "other.test"},
+            )
+        )
     assert caught.value.code == 403
 
 
@@ -113,17 +122,27 @@ def test_workspace_cli_does_not_resolve_away_a_linked_bundle(research_bundle, tm
     linked = tmp_path / "linked-bundle"
     linked.symlink_to(root, target_is_directory=True)
     with pytest.raises(ValueError, match="non-symlink"):
-        MODULE["main"]([
-            "--evidence", str(linked), "--sessions", str(root),
-            "--review", str(root), "--port", "0",
-        ])
+        MODULE["main"](
+            [
+                "--evidence",
+                str(linked),
+                "--sessions",
+                str(root),
+                "--review",
+                str(root),
+                "--port",
+                "0",
+            ]
+        )
 
 
 def test_workspace_adds_native_catalog_only_when_explicitly_bound(research_bundle):
     root, _, manifest, data = research_bundle
     native = {
         "status": "complete_all_state_native_inventory_catalog_not_scientific_admission",
-        "publication": False, "model_input_approved": False, "analytical_admission": False,
+        "publication": False,
+        "model_input_approved": False,
+        "analytical_admission": False,
         "artifacts": manifest["outputs"],
     }
     (root / "manifest.json").write_text(json.dumps(native))
@@ -146,27 +165,47 @@ def test_workspace_adds_native_catalog_only_when_explicitly_bound(research_bundl
             thread.join()
 
 
-def graph_bundle(research_bundle):
+def graph_bundle(research_bundle, *, topics=False):
     root, _, manifest, _ = research_bundle
     body = b"PK-complete-research-payload-not-metadata"
     (root / "complete.zip").write_bytes(body)
     graph = {
         "status": "recreated_evidence_graphs_and_separate_legacy_references",
         "scientific_certification": "not_performed",
-        "source_collection": False, "model_execution": False,
-        "model_promotion": False, "publication": False,
+        "source_collection": False,
+        "model_execution": False,
+        "model_promotion": False,
+        "publication": False,
         "artifacts": {
             **manifest["outputs"],
             "complete.zip": {"sha256": hashlib.sha256(body).hexdigest(), "bytes": len(body)},
         },
     }
+    if topics:
+        graph.update(
+            status="complete_provisional_topic_graphs_not_scientific_validation",
+            inference_was_executed=True,
+            **dict.fromkeys(
+                (
+                    "model_input_approved",
+                    "analytical_admission",
+                    "scientific_approval",
+                    "training_admission",
+                    "filing_time_text_certified",
+                    "publication_approved",
+                    "party_attribution_approved",
+                ),
+                False,
+            ),
+        )
     (root / "manifest.json").write_text(json.dumps(graph))
     return root, graph, body
 
 
-def test_workspace_explicit_graph_mount_serves_complete_zip_and_no_unbound_files(research_bundle):
-    root, _, body = graph_bundle(research_bundle)
-    bindings = {"graphs": MODULE["bind_bundle"](root, "graphs")}
+@pytest.mark.parametrize("kind", ["graphs", "topics"])
+def test_workspace_graph_mount_preserves_complete_downloads(research_bundle, kind):
+    root, _, body = graph_bundle(research_bundle, topics=kind == "topics")
+    bindings = {kind: MODULE["bind_bundle"](root, kind)}
     handler = functools.partial(MODULE["ResearchHandler"], bundles=bindings)
     with ThreadingHTTPServer(("127.0.0.1", 0), handler) as server:
         thread = threading.Thread(target=server.serve_forever)
@@ -174,24 +213,34 @@ def test_workspace_explicit_graph_mount_serves_complete_zip_and_no_unbound_files
         try:
             address = f"http://127.0.0.1:{server.server_port}"
             with urllib.request.urlopen(address + "/") as response:
-                assert b"/graphs/index.html" in response.read()
-            with urllib.request.urlopen(address + "/graphs/complete.zip") as response:
+                home = response.read()
+                assert f"/{kind}/index.html".encode() in home
+                if kind == "topics":
+                    assert b"Blind reviewers must not inspect" in home
+            with urllib.request.urlopen(address + f"/{kind}/complete.zip") as response:
                 assert response.read() == body
                 assert int(response.headers["Content-Length"]) == len(body)
             with pytest.raises(urllib.error.HTTPError) as caught:
-                urllib.request.urlopen(address + "/graphs/private-not-an-artifact.txt")
+                urllib.request.urlopen(address + f"/{kind}/private-not-an-artifact.txt")
             assert caught.value.code == 404
         finally:
             server.shutdown()
             thread.join()
 
 
-@pytest.mark.parametrize(("flag", "value"), [
-    ("publication", True), ("analytical_admission", True),
-    ("model_execution", True), ("scientific_certification", "certified"),
-])
+@pytest.mark.parametrize(
+    ("flag", "value"),
+    [
+        ("publication", True),
+        ("analytical_admission", True),
+        ("model_execution", True),
+        ("scientific_certification", "certified"),
+    ],
+)
 def test_graph_mount_does_not_accept_publication_or_scientific_approval(
-    research_bundle, flag, value,
+    research_bundle,
+    flag,
+    value,
 ):
     root, manifest, _ = graph_bundle(research_bundle)
     manifest[flag] = value
@@ -209,3 +258,21 @@ def test_only_graph_bundles_may_be_bound_under_outputs(research_bundle, monkeypa
     MODULE["bind_bundle"](destination, "graphs")
     with pytest.raises(ValueError, match="non-symlink"):
         MODULE["bind_bundle"](destination, "evidence")
+
+
+@pytest.mark.parametrize(
+    ("flag", "value"),
+    [
+        ("inference_was_executed", False),
+        ("publication_approved", True),
+        ("scientific_certification", "certified"),
+    ],
+)
+def test_topic_mount_rejects_unperformed_inference_or_claimed_approval(
+    research_bundle, flag, value
+):
+    root, manifest, _ = graph_bundle(research_bundle, topics=True)
+    manifest[flag] = value
+    (root / "manifest.json").write_text(json.dumps(manifest))
+    with pytest.raises(ValueError, match="complete unapproved provisional"):
+        MODULE["bind_bundle"](root, "topics")

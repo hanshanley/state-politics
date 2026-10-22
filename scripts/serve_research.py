@@ -21,6 +21,7 @@ MANIFESTS = {
     "review": "human_packet_manifest.json",
     "sources": "manifest.json",
     "graphs": "manifest.json",
+    "topics": "manifest.json",
 }
 HOME = b"""<!doctype html><html lang="en"><meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
@@ -42,6 +43,7 @@ receipt observations, explicit gaps, and complete query downloads.</p></article>
 This separate frame does not replace calendar eligibility or invent filing dates.</p></article>
 @@SOURCE_INVENTORY@@
 @@RECOVERED_GRAPHS@@
+@@TOPIC_GRAPHS@@
 <article><h2><a href="/review/human-review.html">Model-blind human review</a></h2>
 <p>Unseen complete inputs and source alternatives, rubric-guided annotation,
 local drafts, and independently validated exports. No predictions are shown.</p></article>
@@ -68,29 +70,63 @@ def sha256(path):
 
 def bind_bundle(directory, kind):
     directory = directory.absolute()
-    roots = (ROOT / "data", ROOT / "outputs") if kind == "graphs" else (ROOT / "data",)
+    roots = (ROOT / "data", ROOT / "outputs") if kind in {"graphs", "topics"} else (ROOT / "data",)
     if (
-        kind not in MANIFESTS or not directory.is_dir() or directory.is_symlink()
+        kind not in MANIFESTS
+        or not directory.is_dir()
+        or directory.is_symlink()
         or directory.resolve() != directory
         or not any(directory != root and directory.is_relative_to(root) for root in roots)
     ):
-        raise ValueError("use an explicit non-symlink research bundle under project data/ "
-                         "(or outputs/ for graphs)")
+        raise ValueError(
+            "use an explicit non-symlink research bundle under project data/ "
+            "(or outputs/ for graph bundles)"
+        )
     manifest_name = MANIFESTS[kind]
     manifest_path = directory / manifest_name
     if not manifest_path.is_file() or manifest_path.resolve() != manifest_path:
         raise ValueError("missing or linked research manifest")
     manifest = json.loads(manifest_path.read_bytes())
-    if kind == "graphs":
+    if kind == "topics":
+        if (
+            manifest.get("status") != "complete_provisional_topic_graphs_not_scientific_validation"
+            or manifest.get("scientific_certification") != "not_performed"
+            or manifest.get("inference_was_executed") is not True
+            or any(
+                manifest.get(flag) is not False
+                for flag in (
+                    "model_promotion",
+                    "publication",
+                    "model_input_approved",
+                    "analytical_admission",
+                    "scientific_approval",
+                    "training_admission",
+                    "filing_time_text_certified",
+                    "publication_approved",
+                    "party_attribution_approved",
+                )
+            )
+        ):
+            raise ValueError("complete unapproved provisional topic graphs required")
+        files = manifest["artifacts"]
+    elif kind == "graphs":
         if (
             manifest.get("status") != "recreated_evidence_graphs_and_separate_legacy_references"
             or manifest.get("scientific_certification") != "not_performed"
-            or any(manifest.get(flag) is not False
-                   for flag in ("source_collection", "model_execution", "model_promotion",
-                                "publication"))
-            or any(manifest[flag] is not False
-                   for flag in ("model_input_approved", "analytical_admission")
-                   if flag in manifest)
+            or any(
+                manifest.get(flag) is not False
+                for flag in (
+                    "source_collection",
+                    "model_execution",
+                    "model_promotion",
+                    "publication",
+                )
+            )
+            or any(
+                manifest[flag] is not False
+                for flag in ("model_input_approved", "analytical_admission")
+                if flag in manifest
+            )
         ):
             raise ValueError("unapproved offline evidence graph bundle required")
         files = manifest["artifacts"]
@@ -120,27 +156,38 @@ def bind_bundle(directory, kind):
         if (
             manifest.get("schema") != "local_self_attested_human_review_v1"
             or manifest.get("status") != "local_only_unpublished_unannotated"
-            or any(manifest.get(flag) is not False
-                   for flag in ("human_gold", "independent_gold", "canonical_gold"))
+            or any(
+                manifest.get(flag) is not False
+                for flag in ("human_gold", "independent_gold", "canonical_gold")
+            )
         ):
             raise ValueError("unapproved model-blind review packet required")
         files = {
             **manifest["assets"],
-            **{f"complete-inputs/{name}": value
-               for name, value in manifest["complete_inputs"].items()},
+            **{
+                f"complete-inputs/{name}": value
+                for name, value in manifest["complete_inputs"].items()
+            },
             "ui-data.json": manifest["ui_data"],
             "complete-inputs.zip": manifest["complete_inputs_zip"],
         }
-    files = {**files, manifest_name: {
-        "sha256": sha256(manifest_path), "bytes": manifest_path.stat().st_size,
-    }}
+    files = {
+        **files,
+        manifest_name: {
+            "sha256": sha256(manifest_path),
+            "bytes": manifest_path.stat().st_size,
+        },
+    }
     bindings = {}
     for name, expected in files.items():
         path = directory / name
         if (
-            not name or name.startswith("/") or "\\" in name
+            not name
+            or name.startswith("/")
+            or "\\" in name
             or any(part in {"", ".", ".."} for part in name.split("/"))
-            or not path.is_file() or path.resolve() != path
+            or not path.is_file()
+            or path.resolve() != path
         ):
             raise ValueError(f"unsafe or missing research artifact: {name}")
         if path.stat().st_size != expected["bytes"] or sha256(path) != expected["sha256"]:
@@ -177,14 +224,25 @@ original publisher metadata, explicit source restrictions, and retained raw
 responses. Filename lists and repeated observations are not new bills or
 recovered original texts.</p></article>"""
             home = HOME.replace(
-                b"@@SOURCE_INVENTORY@@", inventory if "sources" in self.bundles else b"",
+                b"@@SOURCE_INVENTORY@@",
+                inventory if "sources" in self.bundles else b"",
             )
             graphs = b"""<article><h2><a href="/graphs/index.html">
 Recovered graphs and complete data</a></h2><p>Source-qualified figures, complete
 chart tables and full research ZIPs, including native PDFs and reader text.
 Old images remain separately labelled, not regenerated findings.</p></article>"""
             home = home.replace(
-                b"@@RECOVERED_GRAPHS@@", graphs if "graphs" in self.bundles else b"",
+                b"@@RECOVERED_GRAPHS@@",
+                graphs if "graphs" in self.bundles else b"",
+            )
+            topics = b"""<article><h2><a href="/topics/index.html">
+Provisional classifier topics</a></h2><p>Complete model-assigned topic graphs,
+abstention denominators, full inference texts and predictions. Not validated
+findings or party positions. Blind reviewers must not inspect these predictions
+before submitting their independent annotations.</p></article>"""
+            home = home.replace(
+                b"@@TOPIC_GRAPHS@@",
+                topics if "topics" in self.bundles else b"",
             )
             self.send_response(200)
             self.send_header("Content-Type", "text/html; charset=utf-8")
@@ -196,7 +254,8 @@ Old images remain separately labelled, not regenerated findings.</p></article>""
             return
         parts = path.split("/")
         if (
-            not path.startswith("/") or "\\" in path
+            not path.startswith("/")
+            or "\\" in path
             or any(part in {"", ".", ".."} for part in parts[1:])
         ):
             self.send_error(400, "Invalid bundle path")
@@ -212,7 +271,9 @@ Old images remain separately labelled, not regenerated findings.</p></article>""
             return
         target, expected = binding
         if (
-            directory.is_symlink() or not target.is_file() or target.resolve() != target
+            directory.is_symlink()
+            or not target.is_file()
+            or target.resolve() != target
             or fingerprint(target) != expected
         ):
             self.send_error(409, "Bound artifact changed; restart with a verified bundle")
@@ -228,7 +289,8 @@ Old images remain separately labelled, not regenerated findings.</p></article>""
                 return
             self.send_response(200)
             self.send_header(
-                "Content-Type", mimetypes.guess_type(name)[0] or "application/octet-stream",
+                "Content-Type",
+                mimetypes.guess_type(name)[0] or "application/octet-stream",
             )
             self.send_header("Content-Length", str(expected[0]))
             self.send_header("Cache-Control", "no-store")
@@ -247,12 +309,23 @@ def main(argv=None):
     parser.add_argument("--sessions", type=Path, required=True)
     parser.add_argument("--review", type=Path, required=True)
     parser.add_argument("--sources", type=Path)
-    parser.add_argument("--graphs", type=Path,
-                        help="Optional explicit local graph bundle with full research downloads")
+    parser.add_argument(
+        "--graphs",
+        type=Path,
+        help="Optional explicit local graph bundle with full research downloads",
+    )
+    parser.add_argument(
+        "--topics",
+        type=Path,
+        help="Optional complete provisional topic graphs; not blind-review inputs",
+    )
     parser.add_argument("--port", type=int, default=8765)
     args = parser.parse_args(argv)
-    bundles = {kind: bind_bundle(getattr(args, kind), kind)
-               for kind in MANIFESTS if getattr(args, kind) is not None}
+    bundles = {
+        kind: bind_bundle(getattr(args, kind), kind)
+        for kind in MANIFESTS
+        if getattr(args, kind) is not None
+    }
     handler = functools.partial(ResearchHandler, bundles=bundles)
     with ThreadingHTTPServer(("127.0.0.1", args.port), handler) as server:
         print(f"Unpublished research workspace: http://127.0.0.1:{server.server_port}/", flush=True)

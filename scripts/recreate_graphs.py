@@ -146,6 +146,7 @@ def recovery_packet(
         if (
             manifest.get("schema") not in (
                 ARCHIVE_SCHEMA, "state-politics.lawatlas-archive-text.v1",
+                "state-politics.maryland-archive-text.v1",
             )
             or not all(manifest.get("approvals", {}).get(flag) is False for flag in FLAGS)
         ):
@@ -747,7 +748,7 @@ def recreate(
         ROOT / "src/state_politics/plotting/charts.py",
     ) + (tuple(
         ROOT / "src/state_politics/bills" / name
-        for name in ("archive_text.py", "lawatlas_text.py")
+        for name in ("archive_text.py", "lawatlas_text.py", "maryland_archive_text.py")
     ) if archive_directories else ())
     for path in producers:
         inputs[f"producer:{path.name}"] = binding(path)

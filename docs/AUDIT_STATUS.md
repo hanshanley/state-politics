@@ -4,7 +4,79 @@ The existing figures and analytical conclusions are **legacy, not revalidated fi
 The current changes repair infrastructure and preserve evidence; they do not certify a
 replacement classifier or establish complete contemporary coverage.
 
-## Additional independent-archive recovery
+## Requested population inference and topic graphs
+
+The user has now explicitly requested actual inference and topic graphs,
+not only coverage figures. A **research-only metadata population run has
+completed**, frozen before prediction in
+`data/processed/cycle-topic-inference-metadata-20261022-v1/`: all **159,315
+complete title/abstract views / 157,598 existing calendar candidates**.
+It uses the saved reviewed-only checkpoint `2660bca...`, unchanged
+temperature 1 / confidence 0.8 / margin 0.2, without training or tuning.
+This does not promote the model or make any source/filing-time approval true.
+
+Actual MPS execution completed all 50 state partitions in 461 seconds:
+**89,950 bill-level topic assignments / 67,648 abstentions**, with all
+159,315 views retained. Source-test/procedural exclusions account explicitly
+for 942 views / 6,748 planned tokens; the remaining 10,052,622 source-view
+tokens / 159,204 windows were encoded without unexplained token loss.
+These are descriptive model counts, not independently measured accuracy.
+Pooled bounded-window inference reproduces the existing
+saved classifier on eight actual complete CA inputs / 12,955 source tokens:
+identical topics, abstention reasons, token counts and spans; maximum logit
+difference 0.0000172. This is implementation parity, **not accuracy validation**.
+All source text/alternatives, raw records, logits and provenance remain saved.
+One bill counts once per evidence tier; source-view disagreement abstains.
+
+The new runner's focused checks and workspace integration pass 33 tests.
+The topic renderer refuses incomplete population runs and preserves
+all-candidate denominators, abstentions and unknown text cells. Its ZIPs
+include complete original inference texts and predictions, not chart
+metadata alone. Optional `--topics` serves these results separately from
+model-blind human review; blind reviewers must not inspect model outputs
+before annotation. No party or operative-platform comparison is authorized
+by unresolved affiliations/applicability.
+
+A separate retained-full-text run is now actually executing from
+`data/processed/cycle-topic-inference-retained-text-20261022-v1/`, with all
+**174,316 full body alternatives**, including the new Maryland views.
+Its real persisted Alaska results verify readiness; it is not merely a launch.
+Metadata views are not silently replaced by later bill versions.
+The original human packet, predeclared two-model human-evaluation plan,
+five frozen runtime files, training labels/weights and scientific gates
+remain unchanged. Preference confirmation was unavailable; the explicit
+inference request is implemented only as clearly marked provisional
+research, not new independent-review or certification approval.
+
+## Latest Maryland source recovery
+
+The renewed bounded predecessor investigation adds **563 Maryland contexts /
+1,070 complete source views**, with 3,210 exact printed identity spans.
+All are existing calendar-2024 prefilings in the original 2025-labelled
+session; no date, session alias or new bill is invented. Availability becomes
+**136,022 / 157,598**, leaving **21,576** observed text gaps.
+`data/processed/maryland-archive-text-20261022-v1/` has manifest
+`dc620e189324c6be284fc12fe6635cb4bbaac9c7536a861b608b9843703667ed`.
+
+The complete pinned predecessor archive reconstructs all 33,167 Git blobs.
+The normalized adapter preserves 1,755 copied original evidence files,
+every source field/alternative/prologue, all 57 rejected views and the
+6,672 bounded negative contexts across inspected source scopes. Source
+identity requires literal state, session and own bill number; no year or
+date is guessed from a filename. Original source/date/classifier approvals
+remain false. Complete original raw text stays available even where the
+inference view explicitly excludes a machine-extraction prologue.
+
+The actual routed loader replays against current metadata, verifies every
+new context is in the previous missing-text queue and preserves the complete
+existing cohort. Integrated parent source/inference/workspace tests pass
+136 cases, including actual browser cases. Predecessor OK/NE/CT source
+findings remain bounded negatives. A separate historical OpenStates JSON
+lead stopped at the explicit authentication requirement after two direct
+requests; no archive or SQL access was attempted afterward, and its zero
+recovery is not a finding about archive contents.
+
+## Preceding independent-archive recovery
 
 The newest pass has recovered **7,004 additional existing candidate contexts /
 7,875 complete views**, without repeating the dump/MTSU/native audits or

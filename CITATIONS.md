@@ -229,3 +229,21 @@ retained. Public HTTP responses alone do not prove blanket attachment rights.
 The different Hawaii lead's explicit account restriction remains binding for
 that lead; this study is not a way around it. No general redistribution or
 filing-time approval is asserted.
+
+Windy Civi Pipelines. *Maryland data pipeline*, immutable commit
+`0e17cc31f8830462eed3caaf578a9f0a370ec79d`, accessed 2026-10-22.
+Repository: `windy-civi-pipelines/md-data-pipeline`. Complete root Git tree:
+`0a68f74d4cbeb9902d308245851d7e702dea97ba`; downloaded tar SHA-256:
+`d47c374e8f5da1455b9bc1a74bdc1c61d34bafc24e1293890b3c9148ab43f9f4`.
+All 33,167 blobs reconstruct the complete pinned tree. The matched materials
+are 2025-session bill views joined only to already retained 2024 prefiling
+contexts, not a newly inferred 2023/2024 session universe.
+
+The originating institution is the Maryland legislature; this intermediary
+archive/extractor is not publisher-original or filing-time certification.
+Complete original extraction strings retain their machine prologues; exact
+source-bound body starts permit explicitly separate inference inputs.
+The packet preserves all 1,755 original copied evidence files and every
+negative/rejected disposition. No standalone data license was observed in
+the complete archive. Local research retention does not confer redistribution,
+publication, model certification or event-time party approval.

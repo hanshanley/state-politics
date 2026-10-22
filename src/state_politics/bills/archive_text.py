@@ -328,6 +328,10 @@ def load_archive(directory: Path, metadata=None):
         from state_politics.bills.lawatlas_text import load_lawatlas
 
         return load_lawatlas(directory, metadata)
+    if manifest.get("schema") == "state-politics.maryland-archive-text.v1":
+        from state_politics.bills.maryland_archive_text import load_maryland
+
+        return load_maryland(directory, metadata)
     require(manifest["schema"] == SCHEMA and manifest["provider"] == PROVIDER
             and manifest["source_commit"] == COMMIT
             and manifest["country_git_tree"] == COUNTRY_TREE, "pinned archive source/schema")

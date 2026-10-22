@@ -1016,7 +1016,7 @@ def build_cycle_preview(
             Path(__file__).with_name("bills") / "research_texas_identity.py"
         )
     if archive_text_evidence:
-        for name in ("archive_text.py", "lawatlas_text.py"):
+        for name in ("archive_text.py", "lawatlas_text.py", "maryland_archive_text.py"):
             producer_paths[name] = Path(__file__).with_name("bills") / name
     archive_producers = bool(
         native_session_scopes or snapshot_text_evidence or research_corpus_evidence

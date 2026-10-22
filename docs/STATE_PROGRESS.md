@@ -27,7 +27,35 @@ not that the state has no data. Platform recovery is separate from the
 legislative status in this table; no state's operative-platform coverage is
 certified complete.
 
-## Additional independent-archive recovery
+## Latest Maryland recovery and topic inference
+
+A further predecessor-archive pass recovers **563 additional Maryland
+contexts / 1,070 complete views**, all exact existing 2024 prefilings in the
+already retained **2025-labelled session**. No date is inferred from that
+label and no new cohort member is admitted. Packet:
+`data/processed/maryland-archive-text-20261022-v1/`, manifest
+`dc620e189324c6be284fc12fe6635cb4bbaac9c7536a861b608b9843703667ed`.
+Every original record, raw archive member, prologue, source alternative,
+57 rejected views and bounded negative disposition remains retained.
+
+Retained-text availability is now **136,022 / 157,598 contexts**;
+**21,576** remain without observed text. Maryland's gaps fall from 990 to
+**427**. The new source explorer is `data/preview-cycle-evidence-v16/`;
+the source graph/queue bundle is `outputs/recreated-2023-2024-v11/`.
+OK/NE/CT predecessor checks were bounded negatives for the inspected trees,
+not universal historical absence. Older OpenStates session-JSON catalog
+authentication requirements were honored; no archive or SQL request followed
+that stop. Those completed scopes should not be repeated without new evidence.
+
+Actual provisional metadata inference has also completed: **159,315 full
+title/abstract views / 157,598 existing contexts**, yielding **89,950 model
+topic assignments and 67,648 abstentions** after source-alternative consensus.
+This is not independently validated accuracy or source-version approval.
+A separate complete retained-text inference pass is running; it does not
+silently substitute metadata for unavailable body text. No party/platform
+comparison or scientifically completed state is claimed.
+
+## Preceding independent-archive recovery
 
 The latest source pass recovers **7,004 more existing contexts / 7,875 complete
 views**: **NJ 7,003 contexts / 7,874 views; NE one context / one view**.

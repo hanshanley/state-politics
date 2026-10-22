@@ -202,6 +202,73 @@ context field and authorizes no automatic collection. The coverage CSV keeps
 separate research-corpus-only and independent-archive-only columns; the plot
 combines their color without inflating totals. All approval flags remain false.
 
+## Provisional population topic inference
+
+The user has requested actual inference and topic graphs, not only source
+coverage charts. The saved reviewed-only ModernBERT checkpoint can be run
+explicitly for **research-only descriptive assignments** at its unchanged
+temperature 1 / confidence 0.8 / margin 0.2 policy. It is not independently
+certified or promoted. Source/model/party/filing-time/publication approvals
+remain false. No new training, threshold tuning or human labels are involved.
+Metadata inference and retained-full-text inference are separate evidence
+tiers; later or unknown source versions are not certified filing-time text.
+
+Freeze into a new directory before running:
+
+```bash
+.venv/bin/python -I -B -m state_politics.analysis.cycle_topics freeze \
+  --preview data/preview-cycle-evidence-v15 \
+  --checkpoint data/models/modernbert-reviewed-only-20261021-v1 \
+  --tiers metadata \
+  --out-dir data/processed/cycle-topic-inference-metadata-NEW
+
+HF_HUB_OFFLINE=1 TRANSFORMERS_OFFLINE=1 \
+  .venv/bin/python -I -B -m state_politics.analysis.cycle_topics run \
+  --directory data/processed/cycle-topic-inference-metadata-NEW \
+  --tier metadata --allow-provisional --batch-size 32
+
+.venv/bin/python -I -B -m state_politics.analysis.cycle_topics summarize \
+  --directory data/processed/cycle-topic-inference-metadata-NEW --tier metadata
+
+.venv/bin/python -I -B scripts/recreate_topic_graphs.py \
+  --directory data/processed/cycle-topic-inference-metadata-NEW \
+  --tiers metadata --out-dir outputs/topic-inference-2023-2024-NEW
+```
+
+Use a separate freeze with `--tiers retained_text` for a full-text pass.
+Full bodies and all source alternatives are retained, not truncated or
+silently replaced by titles. The archive's machine-generated prologue is
+excluded only by its exact source-bound span; the complete original string
+still travels in the inference input/download. Empty/error snapshot rows
+do not become bill-body inputs. Missing full text remains an explicit
+unavailable context, not a topic zero or a hidden metadata fallback.
+
+Every selected view has complete original source fields, input/source hashes,
+token/window spans, full logits and the frozen model/taxonomy identity.
+Cross-document window batching reuses the unchanged per-document decision
+rule. Exact repeated input strings reuse a persistent cache; logical
+source-view token totals are not misrepresented as actual encoder work.
+Completed state outputs, input files, model/policy and batch configuration
+are bound for resume. Interrupted outputs are preserved, not silently
+overwritten, and invalid caches/changed outputs fail explicitly.
+
+A bill counts once per tier. All its supplied usable views must agree on
+the same non-null topic; disagreements or abstaining alternatives produce
+an explicit bill-level abstention. Topic shares use all candidate contexts,
+with abstentions visible. No-candidate or entirely unavailable state/topic
+cells remain unknown. The three topic graphs show assigned counts,
+state assignment/abstention coverage and all-candidate state/topic shares;
+they do not estimate accuracy, ideology, policy agreement or party positions.
+
+Graph ZIPs include **every complete selected-tier inference input and
+prediction**, raw source-view fields, bill assignments and frozen producers,
+not only chart metadata. An optional `--topics` argument to
+`scripts/serve_research.py` mounts a completed topic gallery beside the
+existing source graphs. It never exposes models/cache/unlisted files or
+executes inference. Blind human reviewers must not inspect these predictions
+before independently submitting annotations; the human-review packet and
+its frozen evaluation plan remain separate and unchanged.
+
 ## October 22 recovered inputs
 
 The accepted packets are:
