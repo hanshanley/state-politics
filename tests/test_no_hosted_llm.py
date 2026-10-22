@@ -7,6 +7,7 @@ provider import or endpoint appears anywhere in the source tree.
 
 from __future__ import annotations
 
+import os
 from pathlib import Path
 
 from state_politics.compute import audit_source_tree, describe_hardware, select_device
@@ -89,3 +90,22 @@ def test_audit_is_not_disabled_by_a_parent_directory_name(tmp_path):
     nested.mkdir(parents=True)
     (nested / "bad.py").write_text("import " + "open" + "ai\n", encoding="utf-8")
     assert audit_source_tree(nested), "audit must not skip a repo living under 'data/'"
+
+
+def test_audit_prunes_excluded_trees_before_scanning(tmp_path, monkeypatch):
+    excluded = {tmp_path / "data", tmp_path / "node_modules"}
+    for directory in excluded:
+        directory.mkdir()
+        (directory / "ignored.py").write_text(f"import {_BANNED_MODULE}\n", encoding="utf-8")
+    source = tmp_path / "src" / "nested" / "policy.py"
+    source.parent.mkdir(parents=True)
+    source.write_text(f"import {_BANNED_MODULE}\n", encoding="utf-8")
+    original_scandir = os.scandir
+
+    def scandir(directory):
+        assert Path(directory) not in excluded, "audit descended into an excluded tree"
+        return original_scandir(directory)
+
+    monkeypatch.setattr(os, "scandir", scandir)
+    violations = audit_source_tree(tmp_path)
+    assert [violation.path for violation in violations] == [source]

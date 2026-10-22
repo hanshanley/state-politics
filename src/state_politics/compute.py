@@ -22,6 +22,7 @@ it does not fit large unquantized models, so model choices should stay within it
 
 from __future__ import annotations
 
+import os
 import platform
 import re
 import subprocess
@@ -197,14 +198,9 @@ def audit_source_tree(
 
 
 def _python_files(root: Path, skip_dirs: set[str]) -> Iterator[Path]:
-    for path in root.rglob("*.py"):
-        # Compare only the parts *below* root: matching the absolute path would silently
-        # disable the audit for a repo that happens to live under a directory called
-        # "data", "venv" or similar.
-        try:
-            relative_parts = path.relative_to(root).parts
-        except ValueError:  # pragma: no cover - rglob always yields paths under root
-            relative_parts = path.parts
-        if any(part in skip_dirs for part in relative_parts):
-            continue
-        yield path
+    for directory, children, files in os.walk(root):
+        # Filtering rglob results still traverses the entire excluded corpus.
+        children[:] = [name for name in children if name not in skip_dirs]
+        for name in files:
+            if name.endswith(".py") and name not in skip_dirs:
+                yield Path(directory) / name

@@ -4,6 +4,30 @@ The existing figures and analytical conclusions are **legacy, not revalidated fi
 The current changes repair infrastructure and preserve evidence; they do not certify a
 replacement classifier or establish complete contemporary coverage.
 
+## October 21 engineering assurance recheck
+
+The fresh repository-wide code run passed **1,641 tests**, including configured real
+Chromium checks. One legacy artifact-audit test was excluded to avoid overwriting its
+original report; the actual audit ran separately to a new report and passed **340/374
+checks**, retaining the **exact same 34 missing-artifact failures**. This is not a
+green end-to-end research audit.
+
+The broader run exposed a source-audit bottleneck: filtering `rglob` results still
+traversed the enormous excluded data tree. The local-only compute guard now prunes
+excluded directories before descent. A regression fails on the prior implementation
+and verifies that nested source violations remain detectable without entering excluded
+trees. All eleven local-only guard tests pass; the actual repository source scan took
+0.12 seconds in this recheck. Imports, endpoints and model policies are unchanged.
+
+Fresh verification also bound **1,488 served artifacts**, **1,042 original input
+digests**, and the frozen human-evaluation artifacts, runtime sources and original
+model weights. All five actual local workspace routes and the complete 84-record Texas
+query download passed in Chromium; helpers were stopped. The 28-input human packet
+remains unannotated. Python lint, both browser-script syntax checks and all 149 public
+documentation checks passed. Detailed receipts are saved locally under
+`data/assurance-*20261021-v*.{json,xml,log}`; source bundles and scientific gates are
+unchanged. No model promotion, publication or additional state completion is implied.
+
 **October 21 scope reduction:** the active study is now **January 1, 2023 through
 December 31, 2024**, choosing the earlier of the user's two permitted cycles.
 Only legislative measures introduced/filed in that window and platforms applicable
