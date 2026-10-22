@@ -87,3 +87,40 @@ def test_native_graph_counts_contexts_separately_from_reader_alternatives(tmp_pa
 def test_native_graph_cannot_claim_two_readers_when_one_is_missing(tmp_path):
     with pytest.raises(ValueError, match="two complete reader"):
         GRAPH["arkansas_rows"](native_files(tmp_path, missing_reader=True))
+
+
+def test_snapshot_native_union_counts_exact_bills_once_and_keeps_unknown_native_counts(
+    tmp_path, monkeypatch,
+):
+    metadata = tmp_path / GRAPH["SOURCES"]["metadata"]
+    metadata.mkdir(parents=True)
+    bills = pd.DataFrame({
+        "bill_id": ["a", "b", "c", "d"], "state": ["CA", "AK", "CA", "AK"],
+        "n_indexed_native_views": [2, None, 2, None],
+    })
+    source = metadata / "bill_evidence.parquet"
+    bills.to_parquet(source)
+    (metadata / "manifest.json").write_text(json.dumps({
+        "artifacts": {"bill_evidence.parquet": {
+            "sha256": hashlib.sha256(source.read_bytes()).hexdigest(),
+            "bytes": source.stat().st_size,
+        }},
+    }))
+    inventory = tmp_path / "snapshot.parquet"
+    pd.DataFrame({
+        "bill_id": bills["bill_id"], "state": bills["state"],
+        "nonempty_bound_noerror": [True, True, False, False],
+    }).to_parquet(inventory)
+    monkeypatch.setitem(GRAPH["snapshot_coverage"].__globals__, "read_tracker",
+                        lambda _: pd.DataFrame({"state": ["AK", "CA"]}))
+    coverage, missing = GRAPH["snapshot_coverage"](
+        tmp_path, {"context_inventory.parquet": inventory}, {},
+    )
+    counts = coverage.set_index("state")
+    assert counts.loc["CA", ["candidate_contexts", "both_sources", "native_only"]].tolist() == [
+        2, 1, 1,
+    ]
+    assert counts.loc["AK", ["candidate_contexts", "snapshot_only",
+                              "neither_source_observed"]].tolist() == [2, 1, 1]
+    assert missing["bill_id"].tolist() == ["d"]
+    assert pd.isna(missing.iloc[0]["n_indexed_native_views"])

@@ -48,6 +48,7 @@
       <p class="note" id="token-plan-scope">@@TOKEN_PLAN_NOTE@@
         No filing-time eligibility, classification accuracy or analytical admission is established.</p>
       <p id="native-scope">@@NATIVE_NOTE@@</p>
+      @@SNAPSHOT_NOTE@@
       <p>Platform captures, historical/table views and alternate extractions overlap.
         @@DATE_CANDIDATE_COUNT@@ source-date candidate views are not @@DATE_CANDIDATE_COUNT@@
         certified platforms. Metadata-year hints are not adoption dates; older adoption does
@@ -66,6 +67,7 @@
         <label for="collection">Source type
           <select id="collection"><option value="bill_metadata">Bill title / abstract metadata</option>
             @@NATIVE_OPTION@@
+            @@SNAPSHOT_OPTION@@
             @@SESSION_OPTION@@
             @@RECEIPT_OPTION@@
             <option value="platform">Platform evidence views</option></select>
@@ -97,6 +99,7 @@
         context, hashes and unapproved/null flags. Platform records retain complete source
         strings and provenance. @@NATIVE_DOWNLOAD_NOTE@@ @@RECEIPT_DOWNLOAD_NOTE@@
         @@SESSION_DOWNLOAD_NOTE@@</p>
+      @@SNAPSHOT_DOWNLOAD_NOTE@@
       <div id="evidence"></div>
       <nav id="pagination" aria-label="Evidence pages" hidden>
         <button id="previous" type="button">Previous views</button>
@@ -127,6 +130,7 @@
     </section>
     @@RECEIPT_SECTION@@
     @@SESSION_SECTION@@
+    @@SNAPSHOT_SECTION@@
     <section aria-labelledby="org-coverage-heading">
       <h2 id="org-coverage-heading">All 100 organizations: unresolved applicability</h2>
       <p class="note">View counts overlap across captures and extractions; they do not count

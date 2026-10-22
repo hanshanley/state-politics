@@ -4,6 +4,55 @@ The existing figures and analytical conclusions are **legacy, not revalidated fi
 The current changes repair infrastructure and preserve evidence; they do not certify a
 replacement classifier or establish complete contemporary coverage.
 
+## National retained-text recovery from the omitted search table
+
+The earlier eleven-table extraction omitted
+**`opencivicdata_searchablebill.raw_text`** even though the retained October
+dump contained substantive bodies. A bounded schema/TOC inspection found the
+omission; an offline extraction now preserves **all 157,598 existing calendar
+candidate source records**, with **123,182 nonempty bodies across 46 states**
+and **1,449,133,084 nonempty-text characters**. No state bill was downloaded.
+
+All nonempty bodies have exact selected-version-link → version → bill foreign
+keys and no provider error flag. This is technical source binding, **not
+introduced-version or legal-text certification**. The source may be an amended,
+current or later version; original version notes/dates remain unchanged.
+Creation timestamps do not become filing dates. All 34,416 missing/empty
+records, 34,212 provider-error flags and 22,552 unresolved references (all
+empty-text records) remain visible. Another 641 whitespace-only characters are
+preserved rather than stripped or treated as substantive bodies.
+
+The sealed packet is
+`data/processed/retained-dump-gap-recovery-20261022-v1/`, manifest
+`sealed_manifest.json`, SHA-256
+`b56c1264c545c168e946eef1b7e10016d807409d8f7b153b4df3c2947ae96cce`.
+It contains complete source Parquet, all 135,046 selected version/link pairs,
+context/state accounting and exact producer/validation evidence. The original
+2,415,741,227-byte full-record JSONL and supplementary bill extras/citations
+remain retained separately and in the complete research ZIP.
+No new dated-party evidence was found in the bounded membership-extras check.
+
+The tracked `retained_dump_text` CLI now supports exact-cohort extraction from
+an explicit retained dump, so this source is not dependent on an ignored
+one-off driver or silently omitted from future recovery. It does not alter the
+historical eleven-table extraction/manifest or rewrite original sources.
+
+**Current deliverables:** `data/preview-cycle-evidence-v11/` exports all source
+records and full original raw_text/search_vector/all_titles/error fields in
+separate state snapshot partitions. No summaries are prepended, no text is
+truncated and metadata token plans do not purport to cover these new bodies.
+`outputs/recreated-2023-2024-v6/` contains **14 PNG/SVG graph pairs, 13 complete
+chart CSVs, six complete research ZIPs** and the explicit remaining-text queue.
+The snapshot ZIP includes all 39 declared recovery/inspection members.
+
+De-duplicated native/snapshot availability is **126,376 of 157,598 existing
+candidate contexts**: 24,399 overlap, 98,783 snapshot-only and 3,194 native-only.
+The remaining **31,222** contexts are an explicit queue, not zero activity or
+permission to reopen closed collectors. These are availability counts, not a
+certified policy denominator. The six native source closures and all independent
+human, operative-platform, historical-party and model-promotion gates remain
+unchanged. Nothing is published or added to themarginoferror.com.
+
 ## October 22 missing-input and native-text recovery
 
 The new recovery fills actual source and graph-input gaps; it does not certify

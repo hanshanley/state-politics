@@ -45,6 +45,160 @@ def write_jsonl(path, rows):
     ), encoding="utf-8")
 
 
+@pytest.fixture
+def snapshot_bundle(cycle_bundle, tmp_path):
+    from state_politics.site_snapshot_text import FLAGS, STATUS
+
+    metadata, *_ = cycle_bundle
+    directory = tmp_path / "snapshot"
+    directory.mkdir()
+    contexts, originals, links, versions = [], [], [], []
+    source_contexts = pq.read_table(metadata / "bill_evidence.parquet").to_pylist()
+    for index, source in enumerate(source_contexts):
+        text = SOURCE_TEXT if index == 0 else " \n\f\u2028" if index == 2 else None
+        has_text = bool(text and text.strip())
+        bill_id, link_id, version_id = source["bill_id"], f"link:{index}", f"version:{index}"
+        originals.append({
+            "source_row_ordinal": index + 1, "id": str(index), "bill_id": bill_id,
+            "version_link_id": link_id, "raw_text": text, "is_error": "f" if has_text else "t",
+            "created_at": "2026-10-01 00:00:00+00", "search_vector": "'unchanged':1",
+            "all_titles": source["title"],
+        })
+        contexts.append({
+            **{key: source[key] for key in (
+                "bill_id", "state", "identifier", "session_identifier",
+            )},
+            "searchablebill_id": str(index), "version_link_id": link_id,
+            "version_id": version_id, "exact_version_foreign_keys": True,
+            "raw_text_sha256": digest(text or ""),
+            "raw_text_n_characters": len(text or ""), "has_raw_text": has_text,
+            "nonempty_bound_noerror": has_text,
+            "source_reference_status": "exact_version_foreign_keys",
+            "source_url": "https://example.gov/version",
+            **dict.fromkeys(FLAGS, False),
+        })
+        links.append({
+            "id": link_id, "bill_id": bill_id, "version_id": version_id,
+            "url": "https://example.gov/version", "media_type": "application/pdf",
+        })
+        versions.append({
+            "id": version_id, "bill_id": bill_id, "note": "Current Version",
+            "date": "2025-01-01", "extras": "{}", "classification": "{}",
+        })
+    for name, rows in (
+        ("context_inventory", contexts), ("searchablebill", originals),
+        ("version_links", links), ("versions", versions),
+    ):
+        pq.write_table(pa.Table.from_pylist(rows), directory / f"{name}.parquet")
+    coverage = [{
+        "state": state, "context_rows": sum(row["state"] == state for row in contexts),
+        "nonempty_retained_rows": int(state == "TX"),
+        "error_flagged_rows": sum(row["state"] == state and not row["has_raw_text"]
+                                  for row in contexts),
+    } for state in sorted(STATES)]
+    csv.write_csv(pa.Table.from_pylist(coverage), directory / "state_text_coverage.csv")
+    for name in ("interface.json", "report.json"):
+        write_json(directory / name, {})
+    write_json(directory / "sealed_manifest.json", {
+        "schema_version": 1, "status": STATUS, "approvals": dict.fromkeys(FLAGS, False),
+        "validation": {"all_context_to_source_record_bindings_verified": True},
+        "packet_artifacts": {
+            path.name: {"sha256": sha256_file(path), "bytes": path.stat().st_size}
+            for path in directory.iterdir() if path.is_file()
+        },
+    })
+    return directory, originals
+
+
+def repin_snapshot(directory):
+    manifest = json.loads((directory / "sealed_manifest.json").read_text())
+    for name in manifest["packet_artifacts"]:
+        path = directory / name
+        manifest["packet_artifacts"][name] = {
+            "sha256": sha256_file(path), "bytes": path.stat().st_size,
+        }
+    write_json(directory / "sealed_manifest.json", manifest)
+
+
+def test_snapshot_preserves_complete_source_fields_errors_and_separate_version_scope(
+    cycle_bundle, snapshot_bundle, tmp_path,
+):
+    metadata, platform, *_ = cycle_bundle
+    snapshot, originals = snapshot_bundle
+    out = tmp_path / "preview"
+    manifest = build_cycle_preview(
+        metadata, platform, out, snapshot_text_evidence=snapshot,
+    )
+    assert manifest["counts"]["snapshot_text"] == {
+        "n_records": 14, "n_nonempty_retained_texts": 1,
+        "raw_text_characters": len(SOURCE_TEXT) + len(" \n\f\u2028"),
+        "nonempty_raw_text_characters": len(SOURCE_TEXT), "states_with_nonempty_text": 1,
+        "filing_time_text_certified": False,
+    }
+    assert manifest["counts"]["n_cycle_contexts"] == 14
+    with gzip.open(out / "downloads/snapshot-TX.jsonl.gz", "rt") as handle:
+        rows = [json.loads(line) for line in handle if line.strip()]
+    assert len(rows) == 12
+    for row, original in zip(rows, originals[:12], strict=True):
+        assert row["source_record"] == {
+            key: value for key, value in original.items() if key != "source_row_ordinal"
+        }
+        assert row["source_row_ordinal"] == original["source_row_ordinal"]
+        assert row["source_version"]["version"]["note"] == "Current Version"
+        assert row["filing_time_text_certified"] is False
+        assert row["source_date_or_party_inferred"] is False
+        assert "token_plan" not in row and "text" not in row
+    assert rows[0]["source_record"]["raw_text"] == SOURCE_TEXT
+    assert rows[1]["source_record"]["raw_text"] is None
+    assert rows[2]["source_record"]["raw_text"] == " \n\f\u2028"
+    assert rows[2]["snapshot"]["has_nonempty_raw_text"] is False
+    assert rows[1]["snapshot"]["provider_flags"] == {"is_error": "t"}
+    document = (out / "index.html").read_text()
+    assert 'value="snapshot_text"' in document
+    assert document.count("complete source records and retained text</a>") == 50
+    assert "not introduced text" in document
+    assert (out / "evidence/snapshot-ME.jsonl").read_bytes() == b""
+    assert (out / "downloads/producers/site_snapshot_text.py").is_file()
+
+
+@pytest.mark.parametrize("defect", ["scope", "version", "body", "approval", "linked_manifest"])
+def test_snapshot_rejects_wrong_scope_version_body_and_approval(
+    cycle_bundle, snapshot_bundle, tmp_path, defect,
+):
+    metadata, platform, *_ = cycle_bundle
+    directory, _ = snapshot_bundle
+    if defect == "linked_manifest":
+        target = directory.parent / "linked-source-manifest.json"
+        shutil.copyfile(directory / "sealed_manifest.json", target)
+        (directory / "sealed_manifest.json").unlink()
+        (directory / "sealed_manifest.json").symlink_to(target)
+        with pytest.raises(ValueError, match="linked sealed manifest"):
+            build_cycle_preview(
+                metadata, platform, tmp_path / "bad-preview", snapshot_text_evidence=directory,
+            )
+        return
+    if defect == "version":
+        path = directory / "versions.parquet"
+        rows = pq.read_table(path).to_pylist()
+        rows[0]["bill_id"] = "another-bill"
+    elif defect == "body":
+        path = directory / "searchablebill.parquet"
+        rows = pq.read_table(path).to_pylist()
+        rows[0]["raw_text"] = "same identity but fabricated replacement body"
+    else:
+        path = directory / "context_inventory.parquet"
+        rows = pq.read_table(path).to_pylist()
+        rows[0]["state" if defect == "scope" else "model_input_approved"] = (
+            "AK" if defect == "scope" else True
+        )
+    pq.write_table(pa.Table.from_pylist(rows), path)
+    repin_snapshot(directory)
+    with pytest.raises(ValueError, match="incompatible snapshot text"):
+        build_cycle_preview(
+            metadata, platform, tmp_path / "bad-preview", snapshot_text_evidence=directory,
+        )
+
+
 def digest(text):
     return hashlib.sha256(text.encode()).hexdigest()
 

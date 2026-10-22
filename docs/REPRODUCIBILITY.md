@@ -20,11 +20,11 @@ be bound explicitly before regenerated outputs can support the narrowed study.
 
 ```bash
 .venv/bin/python -I -B scripts/recreate_graphs.py \
-  --out-dir outputs/recreated-2023-2024-v4
+  --out-dir outputs/recreated-2023-2024-v6
 ```
 
-Open `outputs/recreated-2023-2024-v4/index.html` locally. The bundle contains 13
-current evidence graphs in PNG and SVG, 12 complete chart-data CSVs, five complete
+Open `outputs/recreated-2023-2024-v6/index.html` locally. The bundle contains 14
+current evidence graphs in PNG and SVG, 13 complete chart-data CSVs, six complete
 research-packet ZIPs and a hash manifest. It also archives the exact four main
 plotting producers and the recovered producers within their research packets.
 It uses saved evidence
@@ -45,6 +45,51 @@ missing, so those images are **not** claimed to have been regenerated or
 validated. No party-topic, trend or D/R outcome results are invented to fill them.
 Existing output directories are refused; use a new `outputs/recreated-*`
 directory for another run. Generated bundles are local and Git-ignored.
+
+## Complete retained searchable-bill text
+
+The omitted search-index table is now recovered in
+`data/processed/retained-dump-gap-recovery-20261022-v1/`. Its
+`sealed_manifest.json` is
+`b56c1264c545c168e946eef1b7e10016d807409d8f7b153b4df3c2947ae96cce`.
+It preserves all 157,598 selected source rows, 123,182 nonempty bodies,
+full search_vector/all_titles/error fields and all 135,046 selected link/version
+pairs. Complete original JSONL and supplementary extras/citations remain in the
+separately sealed inspection packet and the gallery's complete snapshot ZIP.
+The field-bearing source is **provider-selected snapshot text, not necessarily
+an introduced or original version**; all admission flags remain false.
+
+Future extraction uses the tracked opt-in command below, not a rewrite of the
+historical eleven-table extraction. The actual source extraction is already
+complete; use a genuinely **new output directory** for any replay.
+
+```bash
+PG_RESTORE="$PWD/data/tools/Postgres.app/Contents/Versions/18/bin/pg_restore" \
+  .venv/bin/python -I -B -m state_politics.bills.retained_dump_text \
+  --dump data/raw/openstates/2026-10-public.pgdump \
+  --candidate-cohort data/processed/cycle-outcome-evidence-20261022-v2/source_bills.parquet \
+  --out-dir data/processed/retained-search-index-NEW-UNUSED
+```
+
+The command streams only the named source table and retains every matching
+original record/ordinal, including duplicates, missing strings and provider
+errors. It performs no network call, date/party inference, tokenization or model
+execution. The original normalization/source-version binding producers are
+archived in the complete recovery packet. Index creation timestamps and version
+notes/dates are never substituted for filing dates.
+
+The current explorer explicitly includes this source with
+`--snapshot-text data/processed/retained-dump-gap-recovery-20261022-v1`.
+Its fifty state JSONL/gzip partitions preserve every full original field, raw_text
+and selected version/link row. Whitespace-only strings remain unchanged and
+separately counted, rather than being stripped or advertised as substantive
+bodies. The metadata token plan still covers metadata only, not these new texts.
+
+`chart-data/retained_text_coverage.csv` de-duplicates native/snapshot availability:
+126,376 candidate contexts have some retained text; 31,222 do not in the supplied
+inputs. `chart-data/missing_retained_text.parquet` contains the complete remaining
+queue and explicitly authorizes no collection. Counts overlap between sources;
+do not add them or interpret unknown native channels as publisher absence.
 
 ## October 22 recovered inputs
 
@@ -960,10 +1005,11 @@ population-accuracy reference.
   --output data/human-review-native-REPLAY
 
 .venv/bin/python -I -B scripts/serve_research.py \
-  --evidence data/preview-cycle-evidence-v7 \
+  --evidence data/preview-cycle-evidence-v11 \
   --sessions data/processed/verified-session-comparison-2023-2024-v3 \
   --review data/human-review-native-20261021-v3 \
   --sources data/processed/native-inventory-catalog-2023-2024-v2 \
+  --graphs outputs/recreated-2023-2024-v6 \
   --port 8765
 ```
 
@@ -971,6 +1017,8 @@ Open the printed loopback address. The server checks complete artifact
 hashes at startup and changed-file fingerprints before serving, permits
 only manifest-listed paths and binds only 127.0.0.1. It does not expose the
 repository or all of `data/`, create symlinks/copies, publish or load models.
+The optional graph mount serves its exact manifest-listed ZIP/CSV/Parquet/image
+artifacts under `/graphs/`; no other bundle may be mounted from `outputs/`.
 Human packet manifest:
 `a1fa21d6842f34ebc6bebb8ea51261abce1448b757dfa116bc5157823b7df457`.
 
@@ -1061,10 +1109,11 @@ synthetic references/logits and is not classifier validation.
   --platform-evidence data/processed/platform-study-evidence-2023-2024-v5 \
   --native-evidence data/processed/study-native-overlap-2023-2024-v15 \
   --metadata-token-plan data/processed/study-metadata-token-plan-2023-2024-v2 \
+  --snapshot-text data/processed/retained-dump-gap-recovery-20261022-v1 \
   --receipt-evidence data/processed/maine-source-receipt-evidence-2023-2024-v1 \
   --native-session-scope ny-2023-2024 --native-session-scope il-103rd \
   --native-session-scope tx-88r-retained \
-  --out data/preview-cycle-evidence-v8
+  --out data/preview-cycle-evidence-v11
 ```
 
 The current explicit build uses metadata v4 / native v15, with the unchanged
@@ -1076,17 +1125,19 @@ explicit directories above.
 The output includes all 50 state coverage rows / 100 organization rows,
 complete metadata/platform texts, lazy state partitions, full-text gzip
 downloads and `downloads/build_manifest.json`. The current build manifest is
-`8837aa090fb3552df4e3a6f9a977b81f5941e2c79b3c094193db09c1e24be886`.
+`0a04fa86cdac4895c4e3148df03fa34b6afe84c45d78720b49793f1c190660d1`.
 Receipt/session additions are explicit opt-ins only; the default/custom
 metadata behavior does not silently attach them. Build producers are archived
-with their exact source hashes. Earlier builds remain preserved. V8 exposes
-91,923 complete native views, including 298 new Arkansas alternatives.
+with their exact source hashes. Earlier builds remain preserved. V11 retains
+91,923 complete native views and separately exposes 157,598 complete snapshot
+records, of which 123,182 have nonempty retained text. These are not extra bills,
+introduced-version certification or additional tokenized model inputs.
 
 For interactive use, serve the output with a local static HTTP server:
 
 ```bash
 .venv/bin/python -I -B -m http.server 8765 \
-  --bind 127.0.0.1 --directory data/preview-cycle-evidence-v8
+  --bind 127.0.0.1 --directory data/preview-cycle-evidence-v11
 ```
 
 No server is left running by the build or verification. JavaScript fetches

@@ -129,15 +129,18 @@ if (typeof document !== "undefined") {
       const sessionText = row.source_type === "native_session_text";
       const native = row.source_type === "native_text" || sessionText;
       const receipt = row.source_type === "source_receipt";
+      const snapshot = row.source_type === "snapshot_text";
       article.append(element("h3", receipt
         ? `${row.state} / ${row.identifier} — source-receipt observation only`
         : sessionText
           ? `${row.state} / ${row.identifier} / ${row.session_identifier} — publisher-session source only`
-        : bill || native
+        : bill || native || snapshot
           ? `${row.state} / ${row.identifier} / ${row.session_identifier} — ${row.title ?? "No title"}`
         : `${row.state} / ${row.party} — ${row.record_kind}`));
       article.append(element("p", receipt
         ? `Action: ${row.source_action.action_id} · Bill: ${row.bill_id} · Session: ${row.source_bill.session_identifier}`
+        : snapshot
+        ? `View: ${row.view_id} · Bill: ${row.bill_id} · Retained provider snapshot, not an introduced-version certification`
         : bill || native
         ? `View: ${row.view_id} · Bill: ${row.bill_id} · `
           + (native ? `Native context: ${row.context_id}` : `Abstract: ${row.abstract_id ?? "none"}`)
@@ -168,6 +171,29 @@ if (typeof document !== "undefined") {
         }, null, 2)));
         article.append(sourceText("Inspect all original bill metadata and source context fields",
           JSON.stringify(row.source_context, null, 2)));
+      } else if (snapshot) {
+        article.append(element("p",
+          `Retained nonempty text: ${row.snapshot.has_nonempty_raw_text} · `
+          + `Version-link binding: ${row.snapshot.version_binding_status}. `
+          + "This is the provider-selected search text in the retained dump snapshot, not "
+          + "necessarily an original or introduced version. Error flags, missing text and "
+          + "unresolved versions remain visible; source text is never silently replaced.",
+          "note snapshot-observation"));
+        article.append(element("p",
+          `Provider flags (unaltered): ${JSON.stringify(row.snapshot.provider_flags)}. `
+          + "No introduction date, filing-time party, token plan, model prediction, training "
+          + "or analytical approval is inferred from this text.", "note"));
+        const url = safeSourceURL(row.snapshot.source_url);
+        if (url) {
+          const link = element("a", "Selected version URL (external; not fetched by this preview)");
+          link.href = url;
+          link.rel = "noreferrer noopener";
+          article.append(link);
+        }
+        article.append(sourceText("Read complete retained snapshot raw_text (unaltered)",
+          row.source_record.raw_text));
+        article.append(sourceText("Inspect complete selected version/link binding",
+          JSON.stringify(row.source_version, null, 2)));
       } else if (bill) {
         const context = row.bill_context;
         const cohortNote = {
@@ -293,6 +319,7 @@ if (typeof document !== "undefined") {
     const platform = collection.value === "platform";
     const receipt = collection.value === "source_receipt";
     const sessionText = collection.value === "native_session_text";
+    const snapshot = collection.value === "snapshot_text";
     document.getElementById("receipt-status-label").hidden = !receipt;
     receiptStatus.disabled = !receipt;
     party.disabled = !platform || state.value === "outside";
@@ -302,7 +329,16 @@ if (typeof document !== "undefined") {
       .find(row => row.dataset.state === state.value);
     const sessionCoverage = [...document.querySelectorAll("#session-coverage tbody tr")]
       .find(row => row.dataset.state === state.value);
-    document.getElementById("selection-scope").textContent = sessionText
+    const snapshotCoverage = [...document.querySelectorAll("#snapshot-coverage tbody tr")]
+      .find(row => row.dataset.state === state.value);
+    document.getElementById("selection-scope").textContent = snapshot
+      ? (snapshotCoverage
+        ? `${state.value}: ${snapshotCoverage.dataset.records} candidate snapshot records, `
+          + `${snapshotCoverage.dataset.nonempty} with retained nonempty raw_text. `
+          + "Selected versions may be amended/later; retained errors and missing text are not "
+          + "new bills or evidence of no activity. No filing-time or model admission."
+        : "No retained snapshot-text packet was supplied for this selection; coverage is unknown.")
+      : sessionText
       ? (sessionCoverage?.dataset.sessionProvided === "true"
         ? `${state.value}: ${sessionCoverage.dataset.views} full publisher-session source views / `
           + `${sessionCoverage.dataset.references} source references / ${sessionCoverage.dataset.bills} unique canonical bill IDs. `
@@ -346,7 +382,9 @@ if (typeof document !== "undefined") {
       }
       document.getElementById(count).textContent = `${visible} ${label} rows`;
     }
-    for (const row of document.querySelectorAll("#receipt-coverage tbody tr, #session-coverage tbody tr")) {
+    for (const row of document.querySelectorAll(
+      "#receipt-coverage tbody tr, #session-coverage tbody tr, #snapshot-coverage tbody tr",
+    )) {
       row.hidden = Boolean(state.value && row.dataset.state !== state.value);
     }
   }
@@ -390,6 +428,7 @@ if (typeof document !== "undefined") {
         : collection.value === "native_text" ? [`native-${state.value}`]
         : collection.value === "source_receipt" ? [`receipts-${state.value}`]
         : collection.value === "native_session_text" ? [`native-session-${state.value}`]
+        : collection.value === "snapshot_text" ? [`snapshot-${state.value}`]
         : state.value === "outside" ? ["platform-outside"]
           : (party.value ? [party.value] : ["D", "R"]).map(code => `platform-${state.value}-${code}`);
       const groups = await Promise.all(names.map(async name => {

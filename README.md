@@ -21,6 +21,12 @@ and analytical claims are legacy results, not revalidated findings.
 See the [50-state progress tracker](docs/STATE_PROGRESS.md) for completed source
 cohorts and remaining work, and the [research status](docs/AUDIT_STATUS.md) for evidence.
 
+The retained-dump recovery now exposes **123,182 nonempty snapshot-text records**;
+combined with native reader evidence, **126,376 existing calendar candidates**
+have some retained text. Source versions and classifications remain uncertified.
+The local graph bundle includes complete research downloads and an explicit
+remaining-text queue; see the [recovery commands](docs/REPRODUCIBILITY.md#complete-retained-searchable-bill-text).
+
 ## Setup
 
 Requires Python 3.11+ and uv. From the repository root:

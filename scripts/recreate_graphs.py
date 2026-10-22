@@ -71,6 +71,7 @@ RECOVERED_PACKETS = {
     "arkansas": "data/processed/native-text-ar-20261022-v3",
     "caucus": "data/processed/recovered-platform-graph-inputs-20261022-v2",
     "caucus_capture": "data/processed/platform-graph-inputs-caucus-followup-20261022-v2",
+    "snapshot": "data/processed/retained-dump-gap-recovery-20261022-v1",
 }
 RECOVERED_GRAPHS = (
     ("platforms", "modern_collection_outcomes", "modern_collection_status_counts.csv",
@@ -132,23 +133,42 @@ def source_table(root: Path, kind: str, name: str, inputs: dict) -> pd.DataFrame
     return frame.sort_values("state").reset_index(drop=True)
 
 
-def recovery_packet(root: Path, directory: str, inputs: dict) -> dict[str, Path]:
-    path = checked_file(root, f"{directory}/manifest.json", inputs)
+def recovery_packet(root: Path, directory: str, inputs: dict, *, snapshot=False) -> dict[str, Path]:
+    manifest_name = "sealed_manifest.json" if snapshot else "manifest.json"
+    path = checked_file(root, f"{directory}/{manifest_name}", inputs)
     manifest = json.loads(path.read_bytes())
-    if (
+    if snapshot:
+        if (
+            manifest.get("status")
+            != "complete_bounded_retained_dump_gap_recovery_not_scientific_certification"
+            or not manifest.get("approvals")
+            or any(value is not False for value in manifest["approvals"].values())
+        ):
+            raise ValueError("unapproved sealed snapshot recovery required")
+        files = manifest["packet_artifacts"]
+    elif (
         manifest.get("analytical_admission") is not False
         or manifest.get("scientific_approval") is not False
     ):
         raise ValueError("recovered research packets must remain explicitly unapproved")
-    files = manifest.get("files", manifest.get("artifacts"))
+    else:
+        files = manifest.get("files", manifest.get("artifacts"))
     if not isinstance(files, dict) or not files:
         raise ValueError("a complete hash-bound recovery packet is required")
-    result = {"manifest.json": path}
+    result = {manifest_name: path}
     for name, expected in files.items():
         relative = Path(name)
-        if relative.is_absolute() or ".." in relative.parts or name == "manifest.json":
+        if relative.is_absolute() or ".." in relative.parts or name == manifest_name:
             raise ValueError("invalid recovery artifact path")
         result[name] = checked_file(root, f"{directory}/{name}", inputs, expected)
+    if snapshot:
+        for name, expected in manifest["inspection_artifacts"].items():
+            source = Path(expected["path"])
+            if not source.is_relative_to(root / "data/processed"):
+                raise ValueError("snapshot inspection must remain within processed research data")
+            result[f"original-inspection/{name}"] = checked_file(
+                root, source.relative_to(root).as_posix(), inputs, expected,
+            )
     return result
 
 
@@ -190,6 +210,71 @@ def arkansas_rows(files: dict[str, Path]) -> pd.DataFrame:
         result["native_metadata_contexts"] - result["complete_pdf_contexts"]
     )
     return result
+
+
+def snapshot_coverage(root, packet, inputs):
+    base = SOURCES["metadata"]
+    manifest = json.loads((root / base / "manifest.json").read_bytes())
+    metadata = checked_file(
+        root, f"{base}/bill_evidence.parquet", inputs,
+        manifest["artifacts"]["bill_evidence.parquet"],
+    )
+    bills = pd.read_parquet(metadata)
+    contexts = pd.read_parquet(packet["context_inventory.parquet"])
+    if (
+        bills["bill_id"].duplicated().any() or contexts["bill_id"].duplicated().any()
+        or set(bills["bill_id"]) != set(contexts["bill_id"])
+    ):
+        raise ValueError("snapshot text must match every exact existing candidate identity")
+    joined = bills.merge(contexts.add_prefix("snapshot_"), left_on="bill_id",
+                         right_on="snapshot_bill_id", validate="one_to_one")
+    if not joined["state"].equals(joined["snapshot_state"]):
+        raise ValueError("snapshot state identity conflict")
+    joined["native_text_observed"] = joined["n_indexed_native_views"].gt(0).fillna(False)
+    joined["snapshot_text_observed"] = joined["snapshot_nonempty_bound_noerror"]
+    joined["both_sources"] = joined["native_text_observed"] & joined["snapshot_text_observed"]
+    joined["native_only"] = joined["native_text_observed"] & ~joined["snapshot_text_observed"]
+    joined["snapshot_only"] = joined["snapshot_text_observed"] & ~joined["native_text_observed"]
+    joined["neither_source_observed"] = ~(
+        joined["native_text_observed"] | joined["snapshot_text_observed"]
+    )
+    grouped = joined.groupby("state").agg(
+        candidate_contexts=("bill_id", "size"), both_sources=("both_sources", "sum"),
+        native_only=("native_only", "sum"), snapshot_only=("snapshot_only", "sum"),
+        neither_source_observed=("neither_source_observed", "sum"),
+    )
+    grouped = grouped.reindex(sorted(read_tracker(root / "docs/STATE_PROGRESS.md")["state"]),
+                              fill_value=0).reset_index()
+    return grouped, joined.loc[joined["neither_source_observed"]].copy()
+
+
+def snapshot_graph(output, coverage):
+    fig, ax = plt.subplots(figsize=(13, 16))
+    left = np.zeros(len(coverage))
+    for column, label, color in (
+        ("both_sources", "Both retained sources", theme.GREEN),
+        ("snapshot_only", "Snapshot text only", theme.BLUE),
+        ("native_only", "Native reader text only", theme.GOLD),
+        ("neither_source_observed", "No text observed in these inputs", theme.GRID),
+    ):
+        values = coverage[column]
+        ax.barh(coverage["state"], values, left=left, color=color, label=label, height=0.65)
+        left += values.to_numpy()
+    ax.invert_yaxis()
+    count_axis(ax)
+    ax.set_xlabel("Existing calendar-candidate contexts")
+    ax.legend(loc="lower right", fontsize=9)
+    figure = save(
+        fig, output / "graphs", "retained_snapshot_text_coverage",
+        "Recovered text without double-counting bills",
+        "Complete provider-selected snapshot text complements retained native reader views",
+        "Source: sealed retained-dump recovery and unchanged metadata v4. Snapshot versions "
+        "may be amended/later, not introduced originals. Source overlap is de-duplicated by "
+        "exact bill ID. Unregistered native channels remain unknown; no observed text is "
+        "not publisher absence. Empty/no-candidate states do not mean no legislative activity.",
+    )
+    figure["chart_data"] = "chart-data/retained_text_coverage.csv"
+    return figure
 
 
 def recovered_graphs(output: Path, packets: dict, arkansas: pd.DataFrame) -> list[dict]:
@@ -506,6 +591,12 @@ def gallery(output: Path, figures: list[dict], legacy: list[str], research: dict
         f'<li><a href="chart-data/{path.name}">{path.name}</a></li>'
         for path in sorted((output / "chart-data").glob("*.csv"))
     )
+    if (output / "chart-data/missing_retained_text.parquet").is_file():
+        downloads += (
+            '<li><a href="chart-data/missing_retained_text.parquet" download>'
+            'Complete remaining no-retained-text queue (Parquet; no collection authorization)'
+            '</a></li>'
+        )
     research_downloads = "".join(
         f'<li><a href="{row["path"]}" download>{html.escape(name)}: complete research packet '
         f'(ZIP, {row["bytes"] / 1024 / 1024:.1f} MiB)</a></li>'
@@ -559,7 +650,7 @@ def recreate(root: Path, output: Path) -> dict:
             raise ValueError("state tables disagree with the current fifty-state tracker")
     diagnostics = diagnostic_rows(root, inputs)
     packets = {
-        name: recovery_packet(root, directory, inputs)
+        name: recovery_packet(root, directory, inputs, snapshot=name == "snapshot")
         for name, directory in RECOVERED_PACKETS.items()
     }
     outcome_manifest = json.loads(packets["outcomes"]["manifest.json"].read_bytes())
@@ -569,6 +660,7 @@ def recreate(root: Path, output: Path) -> dict:
         root, producer_path.relative_to(root).as_posix(), inputs, producer,
     )
     arkansas = arkansas_rows(packets["arkansas"])
+    retained_text, missing_text = snapshot_coverage(root, packets["snapshot"], inputs)
     historical_path = checked_file(root, "data/processed/platforms_historical.parquet", inputs)
     historical = coverage_matrix(pd.read_parquet(historical_path))
     legacy = sorted(path for path in (root / "outputs").glob("*.png") if path.is_file())
@@ -593,6 +685,7 @@ def recreate(root: Path, output: Path) -> dict:
         "classifier_metrics": diagnostics,
         "historical_platform_coverage": historical,
         "arkansas_text_by_session": arkansas,
+        "retained_text_coverage": retained_text,
     }
     for name, frame in tables.items():
         frame.to_csv(output / "chart-data" / f"{name}.csv", index=False)
@@ -600,6 +693,8 @@ def recreate(root: Path, output: Path) -> dict:
         output / "graphs", tracker, metadata, native, sessions, diagnostics, historical,
     )
     figures.extend(recovered_graphs(output, packets, arkansas))
+    figures.append(snapshot_graph(output, retained_text))
+    missing_text.to_parquet(output / "chart-data/missing_retained_text.parquet", index=False)
     research = {
         name: archive_packet(files, output / "research-data" / f"{name}.zip")
         for name, files in packets.items()
@@ -626,6 +721,10 @@ def recreate(root: Path, output: Path) -> dict:
             path.stem for path in (output / "chart-data").glob("*.csv")
         ),
         "complete_research_packets": research, "inputs": inputs, "artifacts": artifacts,
+        "missing_retained_text_queue": {
+            "path": "chart-data/missing_retained_text.parquet", "contexts": len(missing_text),
+            "automatic_collection_authorized": False,
+        },
         "source_collection": False, "model_execution": False, "model_promotion": False,
         "publication": False, "scientific_certification": "not_performed",
     }

@@ -27,6 +27,35 @@ not that the state has no data. Platform recovery is separate from the
 legislative status in this table; no state's operative-platform coverage is
 certified complete.
 
+## Retained-text availability after the national dump recovery
+
+The previously omitted PostgreSQL `opencivicdata_searchablebill` table contains
+**123,182 nonempty, exact-version-bound texts across 46 states**, totaling
+1,449,133,084 nonempty-text characters. All 157,598 source records, including
+34,416 missing/empty records and 34,212 provider errors, are now retained and
+exposed separately in the local explorer. These are provider-selected snapshot
+versions, not certified introduced originals; no source date or party is inferred.
+
+De-duplicating these records with existing native reader text yields **126,376
+candidate contexts with some retained text**, adding **98,783** previously
+uncovered contexts. The exact remaining **31,222-context** queue is
+`outputs/recreated-2023-2024-v6/chart-data/missing_retained_text.parquet`;
+it preserves original metadata/error/version fields and authorizes no collection.
+The all-state counts are in `chart-data/retained_text_coverage.csv`.
+
+Every **existing calendar candidate** has some retained text in **AK, AR, CA,
+CO, FL, MN, NC, NY, OH, SD and WI**. This availability checkpoint is not a
+whole-session/native-census, original-version, classifier or state-study closure.
+Maine's empty calendar cohort is not a completion claim. The legislative status
+categories below therefore remain **6 closed / 21 partial / 21 blocked /
+2 inventory**, with zero scientifically completed states.
+
+The current explorer is `data/preview-cycle-evidence-v11/`; the current graph/data
+gallery is `outputs/recreated-2023-2024-v6/`. Source snapshots, native views and
+metadata remain separate overlapping evidence channels, never additional bills.
+Closed collector allowances and publisher restrictions are unchanged. This
+recovery required no new bill downloads and does not reopen those campaigns.
+
 ## Cycle inclusion and stopping rules
 
 Use publisher-native annual/biennial sessions and verified filing/introduction

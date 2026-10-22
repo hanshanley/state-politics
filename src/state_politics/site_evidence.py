@@ -21,6 +21,7 @@ from state_politics.bills.openstates_dump import STATE_CODES
 from state_politics.bills.study_native_overlap import _field, normalize_packet
 from state_politics.bills.study_window import _snapshot
 from state_politics.provenance import sha256_file
+from state_politics.site_snapshot_text import export_snapshot
 
 ROOT = Path(__file__).resolve().parents[2]
 STATES = frozenset(state.upper() for state in STATE_CODES)
@@ -963,6 +964,7 @@ def build_cycle_preview(
     native_evidence: Path | None = None, metadata_token_plan: Path | None = None,
     receipt_evidence: Path | None = None,
     native_session_scopes: tuple[str, ...] = (),
+    snapshot_text_evidence: Path | None = None,
 ) -> dict:
     """Build an unpublished preview into a fresh ignored directory, after validating inputs."""
     data = (ROOT / "data").resolve()
@@ -985,6 +987,7 @@ def build_cycle_preview(
                 for source in (
                     metadata_dir, platform_dir, native_evidence, metadata_token_plan,
                     receipt_evidence,
+                    snapshot_text_evidence,
                 ) if source is not None),
         "output overlaps source bundle",
     )
@@ -997,6 +1000,9 @@ def build_cycle_preview(
         producer_paths["study_native_overlap.py"] = (
             Path(__file__).with_name("bills") / "study_native_overlap.py"
         )
+    if snapshot_text_evidence:
+        producer_paths["site_snapshot_text.py"] = Path(__file__).with_name("site_snapshot_text.py")
+    archive_producers = bool(native_session_scopes or snapshot_text_evidence)
     producer_sources = {name: path.read_bytes() for name, path in producer_paths.items()}
     producer_pins = {
         name: hashlib.sha256(source).hexdigest() for name, source in producer_sources.items()
@@ -1043,10 +1049,21 @@ def build_cycle_preview(
     out.mkdir(parents=True, exist_ok=True)
     (out / "evidence").mkdir()
     (out / "downloads").mkdir()
-    if native_session_scopes:
+    if archive_producers:
         (out / "downloads/producers").mkdir()
         for name, source in producer_sources.items():
             (out / "downloads/producers" / name).write_bytes(source)
+    snapshot_counts, snapshot_coverage, snapshot_pins = {}, [], {}
+    if snapshot_text_evidence:
+        snapshot_counts, snapshot_coverage, snapshot_pins, _ = export_snapshot(
+            snapshot_text_evidence, out, tables[0].to_pylist(), STATES,
+        )
+        for source, target in (
+            ("sealed_manifest.json", "snapshot_source_manifest.json"),
+            ("state_text_coverage.csv", "snapshot_state_coverage.csv"),
+            ("report.json", "snapshot_source_report.json"),
+        ):
+            shutil.copyfile(snapshot_text_evidence / source, out / "downloads" / target)
     for state in sorted(STATES):
         views, _, _ = _bill_rows(state, tables)
         for view in views:
@@ -1196,7 +1213,57 @@ def build_cycle_preview(
             '<th scope="col">Full original fields download</th>'
             '</tr></thead><tbody>' + "".join(receipt_rows) + '</tbody></table></div></section>'
         )
+    snapshot_section = ""
+    if snapshot_text_evidence:
+        snapshot_rows = []
+        for row in snapshot_coverage:
+            state = row["state"]
+            snapshot_rows.append(
+                f'<tr data-state="{state}" data-records="{row["context_rows"]}" '
+                f'data-nonempty="{row["nonempty_retained_rows"]}">'
+                f'<td>{state}</td><td>{row["context_rows"]:,}</td>'
+                f'<td>{row["nonempty_retained_rows"]:,}</td>'
+                f'<td>{row["error_flagged_rows"]:,}</td>'
+                f'<td><a download href="downloads/snapshot-{state}.jsonl.gz">'
+                f'{state} complete source records and retained text</a></td></tr>'
+            )
+        snapshot_section = (
+            '<section aria-labelledby="snapshot-heading"><h2 id="snapshot-heading">'
+            'Retained search-text snapshot: version-bound, not introduced text</h2>'
+            '<p>Complete selected source records include raw_text, search_vector, all_titles, '
+            'provider errors and exact selected version/link metadata. Missing and error rows '
+            'are preserved, not filled from another version. Index creation timestamps are '
+            'not filing dates; nonempty text and source metadata do not certify introduced '
+            'versions, party affiliation or model inputs. A zero candidate count, including '
+            'Maine, is not zero source activity outside this calendar frame.</p>'
+            '<div class="table-wrap" tabindex="0" aria-label="Retained snapshot text coverage">'
+            '<table id="snapshot-coverage"><caption>All fifty states; overlapping with native '
+            'and metadata sources, not additional bills</caption><thead><tr>'
+            '<th scope="col">State</th><th scope="col">Candidate source records</th>'
+            '<th scope="col">Nonempty retained text</th><th scope="col">Provider errors</th>'
+            '<th scope="col">Complete records download</th></tr></thead><tbody>'
+            + "".join(snapshot_rows) + '</tbody></table></div></section>'
+        )
     fields = {
+        "@@SNAPSHOT_SECTION@@": snapshot_section,
+        "@@SNAPSHOT_OPTION@@": (
+            '<option value="snapshot_text">Retained snapshot text (selected version, '
+            'not certified introduced)</option>' if snapshot_text_evidence else ""
+        ),
+        "@@SNAPSHOT_NOTE@@": (
+            f'<p id="snapshot-scope"><strong>{snapshot_counts["n_nonempty_retained_texts"]:,} '
+            'candidate contexts have nonempty retained snapshot text.</strong> '
+            f'All {snapshot_counts["n_records"]:,} source records, including errors/missing '
+            'text, are preserved. This provider-selected text is separate from publisher-native '
+            'reader views and may be amended/later. No introduced-version or model approval.</p>'
+            if snapshot_text_evidence else ""
+        ),
+        "@@SNAPSHOT_DOWNLOAD_NOTE@@": (
+            '<p class="note">Snapshot downloads retain every original source field and full '
+            'raw_text without truncation, all provider flags, and exact selected version/link '
+            'records. Source row ordinals remain explicit. They do not prepend summaries, '
+            'replace missing versions or authorize model use.</p>' if snapshot_text_evidence else ""
+        ),
         "@@SESSION_SECTION@@": session_section,
         "@@SESSION_OPTION@@": (
             '<option value="native_session_text">Publisher-session native text '
@@ -1280,7 +1347,7 @@ def build_cycle_preview(
         ) + ("".join(
             f' · <a download href="downloads/producers/{name}">'
             f'Archived producer source: {name}</a>' for name in producer_paths
-        ) if native_session_scopes else ""),
+        ) if archive_producers else ""),
         "@@NATIVE_DOWNLOAD_NOTE@@": (
             "Native downloads contain every matching complete stored native string, exact "
             "candidate mapping, reader/root identity, source lineage and original caveats; "
@@ -1315,7 +1382,13 @@ def build_cycle_preview(
                 _snapshot(Path(entry["path"])) == entry,
                 "receipt source changed during build (SHA/seven-stat)",
             )
-    if native_session_scopes:
+    if snapshot_text_evidence:
+        _require(
+            all(sha256_file(snapshot_text_evidence / name) == digest
+                for name, digest in snapshot_pins.items()),
+            "snapshot source changed during build",
+        )
+    if archive_producers:
         for name, path in producer_paths.items():
             _require(
                 sha256_file(path) == producer_pins[name]
@@ -1405,13 +1478,22 @@ def build_cycle_preview(
             "Optional Maine receipt observations are separate evidence, never bill/native/model "
             "cohort members. Other states' receipt coverage is unknown; both dates persist.",
         )
-    if native_session_scopes:
+    if archive_producers:
         manifest["producer_archive"] = {
             name: {
                 "path": f"downloads/producers/{name}", "sha256": producer_pins[name],
                 "original_path": str(path.relative_to(ROOT)),
             } for name, path in producer_paths.items()
         }
+    if snapshot_text_evidence:
+        manifest["inputs"]["snapshot_text"] = snapshot_pins
+        manifest["counts"]["snapshot_text"] = snapshot_counts
+        manifest["limitations"].append(
+            "Retained searchable-bill text is source-snapshot/version bound, not certified "
+            "introduced/native original text. Error and missing rows remain complete; index "
+            "timestamps and source version notes do not establish filing-time dates or parties.",
+        )
+    if native_session_scopes:
         manifest["inputs"]["native_session_scopes"] = session_bindings
         manifest["counts"]["native_session_source_evidence"] = {
             "scopes": session_counts, "other_states_and_sessions": "unknown_not_supplied",

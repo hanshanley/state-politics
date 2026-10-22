@@ -144,3 +144,68 @@ def test_workspace_adds_native_catalog_only_when_explicitly_bound(research_bundl
         finally:
             server.shutdown()
             thread.join()
+
+
+def graph_bundle(research_bundle):
+    root, _, manifest, _ = research_bundle
+    body = b"PK-complete-research-payload-not-metadata"
+    (root / "complete.zip").write_bytes(body)
+    graph = {
+        "status": "recreated_evidence_graphs_and_separate_legacy_references",
+        "scientific_certification": "not_performed",
+        "source_collection": False, "model_execution": False,
+        "model_promotion": False, "publication": False,
+        "artifacts": {
+            **manifest["outputs"],
+            "complete.zip": {"sha256": hashlib.sha256(body).hexdigest(), "bytes": len(body)},
+        },
+    }
+    (root / "manifest.json").write_text(json.dumps(graph))
+    return root, graph, body
+
+
+def test_workspace_explicit_graph_mount_serves_complete_zip_and_no_unbound_files(research_bundle):
+    root, _, body = graph_bundle(research_bundle)
+    bindings = {"graphs": MODULE["bind_bundle"](root, "graphs")}
+    handler = functools.partial(MODULE["ResearchHandler"], bundles=bindings)
+    with ThreadingHTTPServer(("127.0.0.1", 0), handler) as server:
+        thread = threading.Thread(target=server.serve_forever)
+        thread.start()
+        try:
+            address = f"http://127.0.0.1:{server.server_port}"
+            with urllib.request.urlopen(address + "/") as response:
+                assert b"/graphs/index.html" in response.read()
+            with urllib.request.urlopen(address + "/graphs/complete.zip") as response:
+                assert response.read() == body
+                assert int(response.headers["Content-Length"]) == len(body)
+            with pytest.raises(urllib.error.HTTPError) as caught:
+                urllib.request.urlopen(address + "/graphs/private-not-an-artifact.txt")
+            assert caught.value.code == 404
+        finally:
+            server.shutdown()
+            thread.join()
+
+
+@pytest.mark.parametrize(("flag", "value"), [
+    ("publication", True), ("analytical_admission", True),
+    ("model_execution", True), ("scientific_certification", "certified"),
+])
+def test_graph_mount_does_not_accept_publication_or_scientific_approval(
+    research_bundle, flag, value,
+):
+    root, manifest, _ = graph_bundle(research_bundle)
+    manifest[flag] = value
+    (root / "manifest.json").write_text(json.dumps(manifest))
+    with pytest.raises(ValueError, match="unapproved offline"):
+        MODULE["bind_bundle"](root, "graphs")
+
+
+def test_only_graph_bundles_may_be_bound_under_outputs(research_bundle, monkeypatch):
+    root, _, _ = graph_bundle(research_bundle)
+    monkeypatch.setitem(MODULE["bind_bundle"].__globals__, "ROOT", root.parent)
+    destination = root.parent / "outputs" / "graphs"
+    destination.parent.mkdir()
+    root.rename(destination)
+    MODULE["bind_bundle"](destination, "graphs")
+    with pytest.raises(ValueError, match="non-symlink"):
+        MODULE["bind_bundle"](destination, "evidence")

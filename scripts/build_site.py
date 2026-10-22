@@ -204,6 +204,10 @@ def main(argv=None):
         help="Optional tokenization plan; default v2 only with the default metadata selection",
     )
     parser.add_argument(
+        "--snapshot-text", type=Path,
+        help="Optional sealed retained searchable-bill text, never introduced-version admission",
+    )
+    parser.add_argument(
         "--receipt-evidence", type=Path,
         help="Explicit optional Maine receipt packet; separate evidence, no cohort admission",
     )
@@ -236,6 +240,8 @@ def main(argv=None):
             optional["native_evidence"] = args.native_evidence or DEFAULT_NATIVE
         if args.metadata_token_plan or default_evidence:
             optional["metadata_token_plan"] = args.metadata_token_plan or DEFAULT_TOKEN_PLAN
+        if args.snapshot_text:
+            optional["snapshot_text_evidence"] = args.snapshot_text
         if args.receipt_evidence:
             optional["receipt_evidence"] = args.receipt_evidence
         if args.native_session_scope:
@@ -247,8 +253,13 @@ def main(argv=None):
         print(json.dumps(result["counts"], sort_keys=True))
         print(f"build manifest sha256: {sha256_file(args.out / 'downloads/build_manifest.json')}")
         return 0
-    if args.native_evidence or args.metadata_token_plan or args.receipt_evidence:
-        parser.error("optional native/token-plan/receipt evidence requires --cycle-evidence")
+    if (
+        args.native_evidence or args.metadata_token_plan
+        or args.receipt_evidence or args.snapshot_text
+    ):
+        parser.error(
+            "optional native/token-plan/receipt/snapshot evidence requires --cycle-evidence",
+        )
     result = build_preview(
         args.coverage, args.historical, args.out, recovery_path=args.recovery,
     )

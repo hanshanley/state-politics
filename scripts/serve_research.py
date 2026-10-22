@@ -20,6 +20,7 @@ MANIFESTS = {
     "sessions": "manifest.json",
     "review": "human_packet_manifest.json",
     "sources": "manifest.json",
+    "graphs": "manifest.json",
 }
 HOME = b"""<!doctype html><html lang="en"><meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
@@ -40,6 +41,7 @@ receipt observations, explicit gaps, and complete query downloads.</p></article>
 <p>Verified publisher-session membership, original metadata and date observations.
 This separate frame does not replace calendar eligibility or invent filing dates.</p></article>
 @@SOURCE_INVENTORY@@
+@@RECOVERED_GRAPHS@@
 <article><h2><a href="/review/human-review.html">Model-blind human review</a></h2>
 <p>Unseen complete inputs and source alternatives, rubric-guided annotation,
 local drafts, and independently validated exports. No predictions are shown.</p></article>
@@ -66,22 +68,38 @@ def sha256(path):
 
 def bind_bundle(directory, kind):
     directory = directory.absolute()
+    roots = (ROOT / "data", ROOT / "outputs") if kind == "graphs" else (ROOT / "data",)
     if (
         kind not in MANIFESTS or not directory.is_dir() or directory.is_symlink()
-        or directory.resolve() != directory or not directory.is_relative_to(ROOT / "data")
+        or directory.resolve() != directory
+        or not any(directory != root and directory.is_relative_to(root) for root in roots)
     ):
-        raise ValueError("use an explicit non-symlink bundle under project data/")
+        raise ValueError("use an explicit non-symlink research bundle under project data/ "
+                         "(or outputs/ for graphs)")
     manifest_name = MANIFESTS[kind]
     manifest_path = directory / manifest_name
     if not manifest_path.is_file() or manifest_path.resolve() != manifest_path:
         raise ValueError("missing or linked research manifest")
     manifest = json.loads(manifest_path.read_bytes())
-    if (
+    if kind == "graphs":
+        if (
+            manifest.get("status") != "recreated_evidence_graphs_and_separate_legacy_references"
+            or manifest.get("scientific_certification") != "not_performed"
+            or any(manifest.get(flag) is not False
+                   for flag in ("source_collection", "model_execution", "model_promotion",
+                                "publication"))
+            or any(manifest[flag] is not False
+                   for flag in ("model_input_approved", "analytical_admission")
+                   if flag in manifest)
+        ):
+            raise ValueError("unapproved offline evidence graph bundle required")
+        files = manifest["artifacts"]
+    elif (
         manifest.get("model_input_approved") is not False
         or manifest.get("analytical_admission") is not False
     ):
         raise ValueError("research bundles must remain explicitly unapproved")
-    if kind == "evidence":
+    elif kind == "evidence":
         if (
             manifest.get("schema") != "local_cycle_evidence_preview_v1"
             or manifest.get("publication_status") != "local_only_unpublished"
@@ -98,7 +116,7 @@ def bind_bundle(directory, kind):
         if manifest.get("status") != expected_status or manifest.get("publication") is not False:
             raise ValueError("unpublished source comparison required")
         files = manifest["artifacts"]
-    else:
+    elif kind == "review":
         if (
             manifest.get("schema") != "local_self_attested_human_review_v1"
             or manifest.get("status") != "local_only_unpublished_unannotated"
@@ -161,6 +179,13 @@ recovered original texts.</p></article>"""
             home = HOME.replace(
                 b"@@SOURCE_INVENTORY@@", inventory if "sources" in self.bundles else b"",
             )
+            graphs = b"""<article><h2><a href="/graphs/index.html">
+Recovered graphs and complete data</a></h2><p>Source-qualified figures, complete
+chart tables and full research ZIPs, including native PDFs and reader text.
+Old images remain separately labelled, not regenerated findings.</p></article>"""
+            home = home.replace(
+                b"@@RECOVERED_GRAPHS@@", graphs if "graphs" in self.bundles else b"",
+            )
             self.send_response(200)
             self.send_header("Content-Type", "text/html; charset=utf-8")
             self.send_header("Content-Length", str(len(home)))
@@ -222,6 +247,8 @@ def main(argv=None):
     parser.add_argument("--sessions", type=Path, required=True)
     parser.add_argument("--review", type=Path, required=True)
     parser.add_argument("--sources", type=Path)
+    parser.add_argument("--graphs", type=Path,
+                        help="Optional explicit local graph bundle with full research downloads")
     parser.add_argument("--port", type=int, default=8765)
     args = parser.parse_args(argv)
     bundles = {kind: bind_bundle(getattr(args, kind), kind)
