@@ -48,6 +48,12 @@ SEALED_PRODUCERS = {
         "bytes": 31283,
     },
 }
+WRAPPED_PRODUCERS = {
+    "23343ed2edc6a4b38e8a32808079e2507bf6c4048def1f30debcd345437adab5": {
+        "sha256": "361cd72d242bf3b7bcdd2af50ecc84046a109f9f52acf2c1e4d02b065f6bf1e8",
+        "bytes": 32680,
+    },
+}
 PRODUCTS = {
     "views.jsonl", "source_dispositions.jsonl", "candidate_dispositions.jsonl",
     "context_inventory.parquet", "input_gap_queue.parquet", "report.json",
@@ -331,6 +337,94 @@ def printed_identity(text, context, *, legacy_identity_profile=False):
     return identity
 
 
+def _carryover_actions(source, manifest, originals):
+    evidence = manifest.get("explicit_carryover_evidence")
+    if evidence is None:
+        return {}
+    require(type(evidence) is dict and set(evidence) == {
+        "schema", "extraction_manifest", "extraction_manifest_sha256", "actions",
+    } and evidence["schema"] == "state-politics.original-carryover-actions.v1",
+        "unsupported explicit carryover evidence")
+    extraction_name, actions_name = (
+        _relative(evidence["extraction_manifest"]), _relative(evidence["actions"]),
+    )
+    require(extraction_name != actions_name
+            and {extraction_name, actions_name} <= manifest["artifacts"].keys(),
+            "carryover source members missing")
+    require(_binding(source / extraction_name)["sha256"]
+            == _hash(evidence["extraction_manifest_sha256"]),
+            "original extraction manifest changed")
+    extraction = _json(source / extraction_name)
+    require(extraction["status"] == "complete_extraction_not_source_certification"
+            and extraction["scientific_certification"] == "not_performed"
+            and extraction["artifacts"]["bill_actions.parquet"]["sha256"]
+            == _binding(source / actions_name)["sha256"]
+            and extraction["artifacts"]["bill_actions.parquet"]["rows"]
+            == pq.read_metadata(source / actions_name).num_rows,
+            "carryover actions do not match the original complete extraction")
+    ids = [row["bill_id"] for row in originals if row["state"] == "HI"]
+    rows = pq.read_table(source / actions_name, filters=[
+        ("bill_id", "in", ids), ("state", "=", "HI"),
+    ]).to_pylist() if ids else []
+    by_id = {}
+    for row in rows:
+        require(type(row) is dict and all(type(row[key]) is str for key in (
+            "action_id", "bill_id", "state", "date", "description",
+            "classification", "organization_id",
+        )), "untyped original carryover action")
+        by_id.setdefault(row["bill_id"], []).append(row)
+    return by_id
+
+
+def _explicit_carryover_identity(text, context, actions):
+    if (context["state"] != "HI" or context["session_identifier"] != "2024"
+            or context["identifier"].split()[0] not in {"HB", "SB"}
+            or type(context.get("source_introduction_date")) is not str
+            or not context["source_introduction_date"].startswith("2023-")
+            or type(context.get("origin_introduction_action_ids")) is not str
+            or type(context.get("from_organization_id")) is not str):
+        return None
+    origin_ids = _decode(context["origin_introduction_action_ids"])
+    require(type(origin_ids) is list and all(type(value) is str for value in origin_ids),
+            "untyped original introduction action IDs")
+    carry = [
+        row for row in actions if row["bill_id"] == context["bill_id"]
+        and row["state"] == "HI" and row["classification"] == "carried-over"
+        and row["description"] == "Carried over to 2024 Regular Session."
+        and re.fullmatch(r"2023-\d{2}-\d{2}", row["date"])
+        and row["date"] > context["source_introduction_date"]
+    ]
+    introduced = [
+        row for row in actions if row["bill_id"] == context["bill_id"]
+        and row["state"] == "HI" and row["action_id"] in origin_ids
+        and row["date"] == context["source_introduction_date"]
+        and row["organization_id"] == context["from_organization_id"]
+    ]
+    if len(carry) != 1 or not origin_ids or {row["action_id"] for row in introduced} != set(
+        origin_ids
+    ):
+        return None
+    # Check the actual printed venue separately; never replace the original context.
+    printed = printed_identity(text, {
+        "state": context["state"], "identifier": context["identifier"],
+        "session_identifier": "2023", "title": context["title"],
+    })
+    if printed is None:
+        return None
+    return {
+        **printed, "session_identifier": context["session_identifier"],
+        "source_relation": "original_bill_specific_carryover_action_and_printed_own_identity",
+        "explicit_original_carryover_evidence": {
+            "original_bill_id": context["bill_id"],
+            "original_context_session_identifier": context["session_identifier"],
+            "actual_printed_year": printed["printed_year"],
+            "carryover_actions": carry, "original_origin_introduction_actions": introduced,
+            "original_dates_sessions_and_unknowns_preserved": True,
+            "native_URL_alias_or_filing_time_version_not_asserted": True,
+        },
+    }
+
+
 def _source(source, expected_sha):
     manifest_path = source / "manifest.json"
     require(_binding(manifest_path)["sha256"] == _hash(expected_sha),
@@ -386,6 +480,7 @@ def _replay(source, queue_path, source_sha, queue_sha, *, legacy_identity_profil
     originals = queue.to_pylist()
     require(len({row["bill_id"] for row in originals}) == len(originals),
             "duplicate original gap context")
+    carryover = _carryover_actions(source, source_manifest, originals)
     views, dispositions, counts = [], [], {}
     for response in responses.values():
         parts = urlsplit(response["url"])
@@ -438,6 +533,20 @@ def _replay(source, queue_path, source_sha, queue_sha, *, legacy_identity_profil
                     identity = printed_identity(
                         text, context, legacy_identity_profile=legacy_identity_profile,
                     )
+                    if identity is None and context["bill_id"] in carryover:
+                        identity = _explicit_carryover_identity(
+                            text, context, carryover[context["bill_id"]],
+                        )
+                        if identity is not None:
+                            evidence = source_manifest["explicit_carryover_evidence"]
+                            identity["explicit_original_carryover_evidence"]["action_source"] = {
+                                "path": "source-evidence/" + evidence["actions"],
+                                **source_manifest["artifacts"][evidence["actions"]],
+                                "extraction_manifest_path":
+                                    "source-evidence/" + evidence["extraction_manifest"],
+                                "extraction_manifest_sha256":
+                                    evidence["extraction_manifest_sha256"],
+                            }
                     if identity is None:
                         disposition["disposition"] = (
                             "printed_own_identity_or_year_conflict_not_a_fill"
@@ -512,6 +621,11 @@ def _replay(source, queue_path, source_sha, queue_sha, *, legacy_identity_profil
         "approval_flags": dict.fromkeys(FLAGS, False),
         "encoder_calls": 0, "publication": False,
     }
+    if "explicit_carryover_evidence" in source_manifest:
+        report["explicit_carryover_evidence"] = source_manifest["explicit_carryover_evidence"]
+        report["counts"]["n_action_proven_carryover_views"] = sum(
+            "explicit_original_carryover_evidence" in view["source_identity"] for view in views
+        )
     return {
         "views.jsonl": views, "source_dispositions.jsonl": dispositions,
         "candidate_dispositions.jsonl": candidate_dispositions,
@@ -592,7 +706,11 @@ def load_billcam(directory, metadata=None, *, source_manifest_sha256=None, gap_q
         _relative(name)
         require(_equal(_binding(root / name), value), f"normalized artifact changed: {name}")
         pins[name] = value["sha256"]
-    producer = SEALED_PRODUCERS.get(pins["manifest.json"], _binding(Path(__file__).absolute()))
+    producer = SEALED_PRODUCERS.get(
+        pins["manifest.json"], WRAPPED_PRODUCERS.get(
+            pins["manifest.json"], _binding(Path(__file__).absolute()),
+        ),
+    )
     require(_equal(artifacts["producer/billcam_text.py"], producer),
             "installed/archived producer mismatch")
     source = _root(root / "source-evidence")

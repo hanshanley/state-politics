@@ -289,3 +289,126 @@ def test_exact_sealed_legacy_profile_does_not_rewrite_prior_negative_views(
     current = out.with_name("current-normalized")
     build(source, current)
     assert len(archive.load_billcam(current)[0]) == 2
+
+
+def add_explicit_carryover_source(source):
+    rows = pq.read_table(source / "input_gap_queue.parquet").to_pylist()
+    rows[1].update(
+        source_introduction_date="2023-01-19",
+        origin_introduction_action_ids='["original-intro-sb"]',
+        from_organization_id="original-senate",
+    )
+    for row in rows:
+        row.setdefault("origin_introduction_action_ids", None)
+        row.setdefault("from_organization_id", None)
+    pq.write_table(pa.Table.from_pylist(rows), source / "input_gap_queue.parquet")
+    actions = [
+        {
+            "action_id": "original-intro-sb", "bill_id": "original-sb", "state": "HI",
+            "date": "2023-01-19", "description": "Introduced.",
+            "classification": "introduction", "organization_id": "original-senate",
+        },
+        {
+            "action_id": "original-carry-sb", "bill_id": "original-sb", "state": "HI",
+            "date": "2023-12-11", "description": "Carried over to 2024 Regular Session.",
+            "classification": "carried-over", "organization_id": "original-legislature",
+        },
+    ]
+    (source / "carryover-evidence").mkdir()
+    action_path = source / "carryover-evidence/bill_actions.parquet"
+    pq.write_table(pa.Table.from_pylist(actions), action_path)
+    extraction_path = source / "carryover-evidence/original-extraction.json"
+    write_json(extraction_path, {
+        "status": "complete_extraction_not_source_certification",
+        "scientific_certification": "not_performed",
+        "artifacts": {"bill_actions.parquet": {
+            "sha256": archive._binding(action_path)["sha256"], "rows": len(actions),
+        }},
+    })
+    ledger = list(archive._rows(source / "request-ledger.jsonl"))
+    for row in ledger:
+        if "/bill-texts/WrongYearSBText" in row["url"]:
+            path = source / row["body"]
+            path.write_bytes(path.read_bytes().replace(
+                b"RELATING TO OVERSIGHT.", b"RELATING TO PROJECTS.",
+            ))
+            row["body_binding"] = archive._binding(path)
+    archive._write_rows(source / "request-ledger.jsonl", ledger)
+    manifest = archive._json(source / "manifest.json")
+    manifest["input_gap_queue"] = archive._binding(source / "input_gap_queue.parquet")
+    manifest["explicit_carryover_evidence"] = {
+        "schema": "state-politics.original-carryover-actions.v1",
+        "extraction_manifest": extraction_path.relative_to(source).as_posix(),
+        "extraction_manifest_sha256": archive._binding(extraction_path)["sha256"],
+        "actions": action_path.relative_to(source).as_posix(),
+    }
+    manifest["artifacts"] = {
+        path.relative_to(source).as_posix(): archive._binding(path)
+        for path in source.rglob("*") if path.is_file() and path != source / "manifest.json"
+    }
+    write_json(source / "manifest.json", manifest)
+    return rows[1], actions
+
+
+def test_explicit_original_actions_recover_body_without_rewriting_printed_or_context_year(
+    packet_source,
+):
+    source, _, out = packet_source
+    original, actions = add_explicit_carryover_source(source)
+    manifest = build(source, out)
+    views, contexts, _, _ = archive.load_billcam(out)
+    recovered = next(view for view in views if view["bill_id"] == "original-sb")
+    assert len(views) == 3 and manifest["counts"]["n_action_proven_carryover_views"] == 1
+    assert next(row for row in contexts if row["bill_id"] == "original-sb") == original
+    identity = recovered["source_identity"]
+    assert identity["printed_year"] == "2023" and identity["session_identifier"] == "2024"
+    proof = identity["explicit_original_carryover_evidence"]
+    assert proof["carryover_actions"] == [actions[1]]
+    assert proof["original_origin_introduction_actions"] == [actions[0]]
+    assert recovered["original_target_context"] == original
+    assert recovered["bill_specific_carryover_status_inferred"] is False
+    assert recovered["native_URL_alias_inferred"] is False
+    assert all(recovered[flag] is False for flag in archive.FLAGS)
+    assert "THIRTY-SECOND LEGISLATURE, 2023" in recovered["text"]
+    assert "SECTION 99." in recovered["text"] and "Full source passage." in recovered["text"]
+    for span in identity["printed_evidence"]:
+        assert recovered["text"][span["start"]:span["end"]] == span["text"]
+
+
+@pytest.mark.parametrize("missing", [
+    "carryover", "introduction", "wrong_bill", "wrong_chamber", "quoted_not_carried",
+])
+def test_dates_and_other_bill_or_unclassified_mentions_are_not_carryover_proof(
+    packet_source, missing,
+):
+    source, _, _ = packet_source
+    original, actions = add_explicit_carryover_source(source)
+    text, _ = archive._body(body_page(
+        "https://billcam.com/bill-texts/ActualBody",
+        document(2890, "SB", "2023").replace("RELATING TO OVERSIGHT.", "RELATING TO PROJECTS."),
+    ), "https://billcam.com/bill-texts/ActualBody")
+    if missing == "carryover":
+        actions.pop()
+    elif missing == "introduction":
+        actions.pop(0)
+    elif missing == "wrong_bill":
+        actions[1]["bill_id"] = "another-bill"
+    elif missing == "wrong_chamber":
+        actions[0]["organization_id"] = "another-chamber"
+    else:
+        actions[1]["classification"] = ""
+    assert archive._explicit_carryover_identity(text, original, actions) is None
+    assert archive.printed_identity(text, original) is None
+
+
+def test_action_evidence_rebound_without_original_extraction_fails_closed(packet_source):
+    source, _, out = packet_source
+    _, actions = add_explicit_carryover_source(source)
+    actions[1]["bill_id"] = "another-bill"
+    path = source / "carryover-evidence/bill_actions.parquet"
+    pq.write_table(pa.Table.from_pylist(actions), path)
+    manifest = archive._json(source / "manifest.json")
+    manifest["artifacts"][path.relative_to(source).as_posix()] = archive._binding(path)
+    write_json(source / "manifest.json", manifest)
+    with pytest.raises(ValueError, match="do not match the original complete extraction"):
+        build(source, out)
