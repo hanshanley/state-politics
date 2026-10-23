@@ -27,7 +27,46 @@ not that the state has no data. Platform recovery is separate from the
 legislative status in this table; no state's operative-platform coverage is
 certified complete.
 
-## Latest independently published Hawaii body recovery
+## Latest complete identified Hawaii archive frontier
+
+The two **disjoint** BillCam normalized packets add **399 original Hawaii
+contexts / 832 complete published HTML views / 9,370,186 body characters**.
+Use the first 111-context packet together with
+`data/processed/billcam-hi-retained-html-delta-20261023-v1/`, manifest
+`588d4280d8476623864527595969c751f2bff2085b2f687e6098c51d1b95a89d`.
+The delta's 288 contexts are selected only from the exact 19,354-row
+original-gap subset remaining after those first 111, preserving every
+original field, null, schema and ID. Do not add the earlier two-context
+prototype again.
+
+Every one of the **426 original missing-context leads** identified in the
+three finite published subject queries has now been processed. Own printed
+identity/year and full-source rules admit 399; the other 27 are not counted
+as fills or silently resolved through carryover, aliases or date inference.
+This closes the identified frontier, not Hawaii's legislative inventory or
+any other publication. The first 16-GET probe and 500-GET wave remain
+closed; the identified follow-up used its separate 800 allowance and the
+41-record tail used **105 / 300** separately declared GETs. The known
+cumulative total is **1,421**, with no prior budget reset, repeated body
+request, original-publisher retrieval or relaxed access stop.
+
+Actual independent Chromium inert-DOM checks confirm the complete source
+character streams for all **253 + 579** supplied views, with zero publisher
+network requests or source-script execution. This is source-preservation
+evidence, not human topic accuracy, native authenticity or scientific approval.
+Provider metadata, all offered version references, unsupported/conflicting
+alternatives, complete raw HTML and failed/duplicate observations survive.
+
+The source union now covers **138,532 / 157,598 original candidate
+contexts**, leaving **19,066** unavailable, including **6,390 HI**.
+Eight archive packets cover **10,077 distinct contexts / 12,072 views**.
+These are source-availability counts, separate from the actual versioned
+inference runs. Native channel statuses and every date, party, model,
+rights, human-review and publication gate remain unchanged. The native
+scope table below does not turn this independent archive into publisher
+closure or a statewide census.
+
+## Preceding first-wave independently published Hawaii recovery
 
 An independently served BillCam cache adds **111 exact original Hawaii
 contexts / 253 complete published HTML views / 5,027,861 retained body

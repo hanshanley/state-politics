@@ -364,3 +364,28 @@ and current sponsor sessions do not establish 2023/2024 party affiliations.
 No rights, introduced-version, model-accuracy, source, scientific or
 publication approval is granted. A subsequent identified-document follow-up
 has its own explicit scope and accounting; it does not reset this closed wave.
+
+The subsequently enumerated document frontier was completed through a
+separate 800-GET follow-up and a final 105-GET tail under its own 300
+allowance. Together with the closed 16 + 500 wave, the known cumulative
+total is 1,421 GETs; no original allowance was reset or native source stop
+reopened. Source:
+`data/processed/billcam-hi-identified-tail-20261023-v1/`, manifest
+`3ceff25fa1b2951b06a4bb2cc83eb71839fe8a6ab4d0328ec60e057a983317a9`.
+A lossless inventory map preserves every byte of the closed preceding
+source packet, including prior ledger prefixes and overwritten operational
+reports, without recursively duplicating another complete source tree.
+
+The disjoint normalized delta is
+`data/processed/billcam-hi-retained-html-delta-20261023-v1/`, manifest
+`588d4280d8476623864527595969c751f2bff2085b2f687e6098c51d1b95a89d`:
+288 further original contexts / 579 HTML views / 4,342,325 body characters.
+It is built against the exact original queue minus the first 111 accepted
+contexts, not a new cohort. Together the two normalized packets retain
+399 contexts / 832 views; all 426 original missing-context leads from the
+three subject queries were processed. The other 27 are not admitted under
+the strict identity/source profile, not declared nonexistent legislation.
+Both independent actual Chromium inert-DOM audits preserve every supplied
+non-whitespace source character in order without executing source scripts
+or requesting external resources. These checks are not human accuracy or
+native-original certification.
