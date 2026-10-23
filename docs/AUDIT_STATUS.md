@@ -28,9 +28,9 @@ difference 0.0000172. This is implementation parity, **not accuracy validation**
 All source text/alternatives, raw records, logits and provenance remain saved.
 One bill counts once per evidence tier; source-view disagreement abstains.
 
-The complete code regression passes **1,819 tests**, with no failures, errors
-or skips; the public-documentation audit separately passes 174 checks.
-The fresh actual artifact audit is **416 / 450**, with exactly the same
+The preceding complete code regression passes **1,819 tests**, with no failures,
+errors or skips; its public-documentation audit separately passes 174 checks.
+That actual artifact audit is **416 / 450**, with exactly the same
 34 known missing-output failures. These results do not certify the science.
 The topic renderer refuses incomplete population runs and preserves
 all-candidate denominators, abstentions and unknown text cells. Its ZIPs
@@ -59,12 +59,63 @@ execution; it is not merely a launch. It is not complete, and no retained-text
 topic gallery is claimed. A long wall-clock interval without a state checkpoint
 does not alone establish a stall; continued cache writes and CPU activity were
 observed during the retry. No duplicate job or speculative restart was launched.
+At a later saved audit snapshot, **13 completed state partitions / 34,226
+full-text views** independently replay: 96,513,642 logical source-view tokens
+and 132,995 windows, with every input hash, saved-logit decision and complete
+token/window span checked. The tokenizer-only audit makes no additional
+encoder calls and leaves the running job unchanged. Its 34,620 candidate
+contexts comprise 11,421 assignments, 14,228 abstentions and 8,971 unavailable
+body contexts; these are **partial-scope counts, not completed national results
+or accuracy**. Receipt:
+`data/cycle-topic-completed-full-text-states-replay-20261022-v1.json`.
 Metadata views are not silently replaced by later bill versions.
 The original human packet, predeclared two-model human-evaluation plan,
 five frozen runtime files, training labels/weights and scientific gates
 remain unchanged. Preference confirmation was unavailable; the explicit
 inference request is implemented only as clearly marked provisional
 research, not new independent-review or certification approval.
+
+## Latest independent library recovery
+
+The new source pass recovers **14 additional existing New Jersey contexts /
+40 reader views / 20 separate source versions** from independent State Library
+compilations. The complete eight PDFs / 231 physical pages remain preserved
+in both readers: all 462 reader-page records, including 234 ancillary records.
+A two-page checklist contributes zero policy bodies, not an invented successful
+join. Both readers' literal text remains unchanged, including extraction quirks.
+Current-metadata replay confirms every original gap-row field, exact existing
+identity, date and cohort membership remains unchanged.
+
+Packet `data/processed/nj-library-text-20261022-v4/`, manifest
+`43dd2b81cc743101a147f4fc81391c5be78a7320df38ac19e33f5fbf92d329d7`,
+brings availability to **136,036 / 157,598**, with **21,562 gaps** remaining.
+The parent source/parser/routing/graph/cache checks pass **72 tests** and lint.
+Another **159 evidence/site/workspace tests** pass, including the real browser
+cases. Actual Chromium also checks all six current workspace mounts and the
+three topic images at 1440/390 CSS pixels, downloads the complete 15,947,057-byte
+library ZIP and 246,963,676-byte / 7,914-view New Jersey query with exact hashes,
+and renders a full 55,000-character newly recovered body without loss.
+All browser helpers exited; no publication server is left running.
+The two source-proven reprint boundary repairs preserve complete A5179 [2R]
+pages 3–17 and A5225 [3R] pages 3–20; they do not suppress orphan/folio/version
+checks. Older first-four-PDF v1 still replays, and both failed larger builds
+remain preserved. A source session witness stays separate from policy input;
+an enacted version is never silently described as introduced text.
+
+All 19 new direct HTTP responses, including three redirect bodies, remain
+retained in the separate discovery packet. One earlier non-corpus GitHub
+identity response from the failed research attempt was not retained; no whole
+historical-network completeness is claimed. The known 20-request allowance is
+closed. Hawaii's paid corpus access was not bypassed, and an unavailable user
+response did not authorize a new native collection batch.
+No existing publisher collector, human label or classifier policy is changed.
+The running full-text freeze remains immutable; the new source joins a later
+version through independently tested completed-cache reuse.
+The graph consumer now supplies original Arrow metadata to strict source
+loaders rather than Pandas-converted NaNs. This fixes a real null-versus-NaN
+replay failure without weakening field validation or changing the existing
+plot/export DataFrame. Focused regressions and the actual v12 rebuild pass;
+the first failed graph log remains preserved.
 
 ## Latest Maryland source recovery
 

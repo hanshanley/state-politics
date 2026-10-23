@@ -332,6 +332,10 @@ def load_archive(directory: Path, metadata=None):
         from state_politics.bills.maryland_archive_text import load_maryland
 
         return load_maryland(directory, metadata)
+    if manifest.get("schema") == "state-politics.nj-library-text.v1":
+        from state_politics.bills.nj_library_text import load_nj_library
+
+        return load_nj_library(directory, metadata)
     require(manifest["schema"] == SCHEMA and manifest["provider"] == PROVIDER
             and manifest["source_commit"] == COMMIT
             and manifest["country_git_tree"] == COUNTRY_TREE, "pinned archive source/schema")

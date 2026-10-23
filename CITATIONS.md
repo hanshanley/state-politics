@@ -247,3 +247,19 @@ The packet preserves all 1,755 original copied evidence files and every
 negative/rejected disposition. No standalone data license was observed in
 the complete archive. Local research retention does not confer redistribution,
 publication, model certification or event-time party approval.
+
+New Jersey State Library. *New Jersey Legislative Histories: 2023*, accessed
+2026-10-22. Collection:
+https://repo.njstatelib.org/collections/f596cfea-88be-454e-9c43-acb0c0f8c18c.
+The library's compiled PDFs retain introduced bills, separately identified
+enacted versions, companion bills and ancillary statements/checklists.
+The originating legislative institution remains the New Jersey Legislature;
+the library compilation is a distinct archive, not filing-time certification.
+
+Complete captured PDFs, public item metadata, original catalogue records,
+robots policy, response bodies/headers and explicit redirect entities are
+retained in `data/processed/remaining-hi-nj-independent-corpus-20261022-v1/`.
+Both PDF readers and all ancillary pages remain separate evidence. A
+checklist-only PDF is not a recovered bill body, and another version's
+printed session witness is not appended to the policy input. No blanket
+redistribution, introduced-version, model or publication approval is inferred.

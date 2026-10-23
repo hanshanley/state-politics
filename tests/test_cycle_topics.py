@@ -251,6 +251,53 @@ def test_poisoned_cache_cannot_silently_change_the_saved_single_topic_decision(j
             cycle.predict_input_block(model, rows, cache, 4)
 
 
+def test_new_source_freeze_reuses_completed_cache_without_changing_original_job(job):
+    directory, model, text, prologue = job
+    cycle.run(directory, tier="retained_text", allow_provisional=True)
+    calls = model.model.calls
+    original = {
+        name: cycle.binding(directory / name)
+        for name in (
+            "inference_plan.json", "inputs/retained_text-NJ.jsonl",
+            "predictions/retained_text-NJ.jsonl", "prediction_cache.sqlite",
+        )
+    }
+    preview = directory.with_name("preview")
+    source = preview / "evidence/archive-NJ.jsonl"
+    rows = [row for _, row in cycle.records(source)]
+    extra = {
+        **rows[0], "view_id": "archive:new-complete-source",
+        "text": prologue + text + "\nA newly recovered final provision.",
+    }
+    with source.open("a") as stream:
+        cycle.write_row(stream, extra)
+    manifest_path = preview / "downloads/build_manifest.json"
+    manifest = cycle.read(manifest_path)
+    manifest["outputs"]["evidence/archive-NJ.jsonl"] = cycle.binding(source)
+    cycle.write_json(manifest_path, manifest)
+    extended = directory.with_name("extension")
+    first = cycle.read(directory / "inference_plan.json")
+    second = cycle.freeze(
+        preview, Path(first["checkpoint"]), extended, tiers=("retained_text",),
+    )
+    assert first["contexts"] == second["contexts"]
+    assert first["model_run"] == second["model_run"]
+    assert first["decision"] == second["decision"]
+    with sqlite3.connect(
+        f"file:{directory / 'prediction_cache.sqlite'}?mode=ro", uri=True,
+    ) as old_cache, sqlite3.connect(extended / "prediction_cache.sqlite") as new_cache:
+        old_cache.backup(new_cache)
+    cycle.run(extended, tier="retained_text", allow_provisional=True)
+    assert model.model.calls == calls + 1
+    summary = cycle.summarize(extended, "retained_text")
+    assert summary["contexts"] == 1 and summary["source_views"] == 2
+    assert all(cycle.binding(directory / name) == pin for name, pin in original.items())
+    frozen = [row for _, row in cycle.records(extended / "inputs/retained_text-NJ.jsonl")]
+    assert [cycle.input_text(row) for row in frozen] == [
+        text, text + "\nA newly recovered final provision.",
+    ]
+
+
 def test_complete_reviewed_withdrawal_cover_abstains_without_title_fallback():
     text = (
         "SECOND REGULAR SESSION [WITHDRAWN] SENATE BILL NO. 961 "

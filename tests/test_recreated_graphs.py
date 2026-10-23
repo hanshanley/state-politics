@@ -119,15 +119,23 @@ def test_snapshot_native_union_counts_exact_bills_once_and_keeps_unknown_native_
                         lambda _: pd.DataFrame({"state": ["AK", "CA"]}))
     optional = {}
     if corpus_bill:
+        def load_corpus(_, original_metadata):
+            assert original_metadata[1]["n_indexed_native_views"] is None
+            return [], [{"bill_id": corpus_bill}], {}, {}
+
         monkeypatch.setitem(
             GRAPH["snapshot_coverage"].__globals__, "load_corpus",
-            lambda *_: ([], [{"bill_id": corpus_bill}], {}, {}),
+            load_corpus,
         )
         optional["corpus_directory"] = tmp_path / "corpus"
     if archive_bills:
+        def load_archive(path, original_metadata):
+            assert original_metadata[1]["n_indexed_native_views"] is None
+            return [], [{"bill_id": archive_bills[int(path.name)]}], {}, {}
+
         monkeypatch.setitem(
             GRAPH["snapshot_coverage"].__globals__, "load_archive",
-            lambda path, _: ([], [{"bill_id": archive_bills[int(path.name)]}], {}, {}),
+            load_archive,
         )
         optional["archive_directories"] = tuple(
             tmp_path / str(index) for index in range(len(archive_bills))

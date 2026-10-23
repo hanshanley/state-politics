@@ -24,12 +24,13 @@ be bound explicitly before regenerated outputs can support the narrowed study.
   --archive-text data/processed/independent-archive-text-20261022-v2 \
   --archive-text data/processed/lawatlas-text-evidence-20261022-v1 \
   --archive-text data/processed/maryland-archive-text-20261022-v1 \
-  --out-dir outputs/recreated-2023-2024-v11
+  --archive-text data/processed/nj-library-text-20261022-v4 \
+  --out-dir outputs/recreated-2023-2024-v12
 ```
 
-Open `outputs/recreated-2023-2024-v11/index.html` locally. The bundle contains 14
-current evidence graphs in PNG and SVG, 13 complete chart-data CSVs, ten complete
-research-packet ZIPs and a hash manifest. It also archives the exact seven
+Open `outputs/recreated-2023-2024-v12/index.html` locally. The bundle contains 14
+current evidence graphs in PNG and SVG, 13 complete chart-data CSVs, eleven complete
+research-packet ZIPs and a hash manifest. It also archives the exact eight
 plotting/source-consumer producers and the recovered producers within their research packets.
 It uses saved evidence
 tables and existing development diagnostics without
@@ -221,6 +222,33 @@ The complete Maryland source ZIP contains all 1,766 packet members, not just
 the new query metadata. The packet does not certify filing-time versions,
 redistribution rights, scientific completeness or further collection.
 
+### Independent State Library bill texts
+
+`data/processed/nj-library-text-20261022-v4/` recovers 14 additional existing
+New Jersey session-220 contexts, retaining 40 reader views / 20 source versions.
+All eight complete PDFs / 231 physical pages are preserved in both readers;
+228 reader pages form bill versions and 234 remain ancillary evidence.
+A two-page checklist contributes no policy body. Exact source-proven reprint
+boundaries preserve complete second/third reprints rather than dropping their
+continuations; pypdf's literal spacing remains unchanged.
+
+The archive loader strictly replays all original fields, identity/session
+witnesses, page dispositions, raw HTTP evidence and full source texts.
+The source manifest is
+`43dd2b81cc743101a147f4fc81391c5be78a7320df38ac19e33f5fbf92d329d7`.
+The v12 union becomes **136,036 / 157,598 contexts with some retained text;
+21,562 remaining**. The complete source ZIP includes the compiled originals,
+both full reader-page records and every retained alternative, not just
+query metadata. Introduced/enacted versions remain distinct and uncertified
+for filing-time analysis; all scientific/model/publication approvals stay false.
+The v12 graph manifest is
+`e63db541f7d044ab454c1b6f4be5f1b491ab31a272e4db0feb114e25c874c034`.
+
+```bash
+.venv/bin/python -I -B -m state_politics.bills.nj_library_text verify \
+  --directory data/processed/nj-library-text-20261022-v4
+```
+
 ## Provisional population topic inference
 
 The user has requested actual inference and topic graphs, not only source
@@ -236,7 +264,7 @@ Freeze into a new directory before running:
 
 ```bash
 .venv/bin/python -I -B -m state_politics.analysis.cycle_topics freeze \
-  --preview data/preview-cycle-evidence-v16 \
+  --preview data/preview-cycle-evidence-v17 \
   --checkpoint data/models/modernbert-reviewed-only-20261021-v1 \
   --tiers metadata \
   --out-dir data/processed/cycle-topic-inference-metadata-NEW
@@ -301,6 +329,48 @@ existing source graphs. It never exposes models/cache/unlisted files or
 executes inference. Blind human reviewers must not inspect these predictions
 before independently submitting annotations; the human-review packet and
 its frozen evaluation plan remain separate and unchanged.
+
+### Adding recovered text without repeating completed encoder work
+
+Never modify an active or completed freeze to attach later source evidence.
+After accepting a new evidence preview, freeze it into a **new** retained-text
+job using the same checkpoint and policy. Only after the original full-text
+run completes, copy its exact-input cache with SQLite's read-only backup API:
+
+```python
+import sqlite3
+from pathlib import Path
+from state_politics.analysis.cycle_topics import checked_job, read
+
+source = Path("data/processed/cycle-topic-inference-retained-text-20261022-v1").absolute()
+target = Path("data/processed/cycle-topic-inference-retained-text-NEW").absolute()
+progress = read(source / "progress-retained_text.json")
+assert progress["status"] == "complete_provisional_inference_not_scientific_validation"
+assert len(progress["states"]) == 50
+old, new = checked_job(source), checked_job(target)
+for key in (
+    "model_run", "decision", "taxonomy_sha256", "contexts", "n_contexts",
+    "producer", "frozen_inference_runtime", "scope", "source_alternative_policy",
+    "source_selection", "inference_engine", "padded_window_token_budget",
+):
+    assert old[key] == new[key], key
+assert not (target / "progress-retained_text.json").exists()
+assert not (target / "prediction_cache.sqlite").exists()
+with sqlite3.connect(
+    f"file:{source / 'prediction_cache.sqlite'}?mode=ro", uri=True,
+) as original, sqlite3.connect(target / "prediction_cache.sqlite") as copied:
+    original.backup(copied)
+```
+
+Run and summarize the new job normally with the unchanged batch size 32.
+The runner validates each reused input/model/logit decision and encodes only
+genuinely new text. Repeated source views still retain their own identities
+and original fields. All alternatives are reaggregated in the new version,
+including newly recovered views of previously unavailable bills.
+The original job, cache, inputs and predictions remain unchanged. A focused
+integration regression verifies that a new source freeze makes only the new
+encoder call while preserving every original job binding. This is an
+extension procedure, not a claim that the current full-text run has finished.
 
 ## October 22 recovered inputs
 
@@ -1216,11 +1286,11 @@ population-accuracy reference.
   --output data/human-review-native-REPLAY
 
 .venv/bin/python -I -B scripts/serve_research.py \
-  --evidence data/preview-cycle-evidence-v16 \
+  --evidence data/preview-cycle-evidence-v17 \
   --sessions data/processed/verified-session-comparison-2023-2024-v3 \
   --review data/human-review-native-20261021-v3 \
   --sources data/processed/native-inventory-catalog-2023-2024-v2 \
-  --graphs outputs/recreated-2023-2024-v11 \
+  --graphs outputs/recreated-2023-2024-v12 \
   --topics outputs/topic-inference-2023-2024-v2 \
   --port 8765
 ```
@@ -1328,13 +1398,14 @@ synthetic references/logits and is not classifier validation.
   --archive-text data/processed/independent-archive-text-20261022-v2 \
   --archive-text data/processed/lawatlas-text-evidence-20261022-v1 \
   --archive-text data/processed/maryland-archive-text-20261022-v1 \
+  --archive-text data/processed/nj-library-text-20261022-v4 \
   --receipt-evidence data/processed/maine-source-receipt-evidence-2023-2024-v1 \
   --native-session-scope ny-2023-2024 --native-session-scope il-103rd \
   --native-session-scope tx-88r-retained \
-  --out data/preview-cycle-evidence-v16
+  --out data/preview-cycle-evidence-v17
 ```
 
-The current explicit build adds all three independent archives to metadata v4 /
+The current explicit build adds all four independent archives to metadata v4 /
 native v15 and research-corpus v4, with the unchanged
 platform evidence v5 and token-plan v2. The latter is reusable because the
 complete 159,315-view metadata input Parquet is byte-identical to v3.
@@ -1355,11 +1426,20 @@ The preserved v15 manifest is
 742 bound outputs and all 7,875 new archive views, including all alternatives.
 All 632 non-code exports from v14 remain byte-identical. The v10 gallery
 manifest is `245d39f6f730f39b379e38f5728d21b06ecd31498238f49f6f83c456cc3b0322`.
-The current v16 manifest is
+The preserved v16 manifest is
 `0087426c82a729b7b30b56a8502f80aaf6e2daeeb547a3f9dcf79345622dc965`:
 745 bound outputs, including all 1,070 additional Maryland alternatives.
 Exactly five existing v15 outputs change: the index, two archived consumers
 and the two Maryland archive exports; all other 737 outputs remain identical.
+V17 adds the independent library packet without changing metadata, calendar
+membership, the token plan or any prior Maryland/NE source view. Existing
+New Jersey archive exports retain the earlier views and add all 40 library
+alternatives. The source gallery's complete missing-text queue preserves
+every original field for its 21,562 remaining contexts.
+Its manifest is
+`07699c0d0cf37cb3c36533b220d8ca2473d34e08ac30571685ef452f60119809`:
+748 bound outputs. The v12 source gallery has 75 bound artifacts; the separate
+completed metadata topic gallery remains unchanged.
 Receipt/session additions are explicit opt-ins only; the default/custom
 metadata behavior does not silently attach them. Build producers are archived
 with their exact source hashes. Earlier builds remain preserved. V11 retains
@@ -1371,7 +1451,7 @@ For interactive use, serve the output with a local static HTTP server:
 
 ```bash
 .venv/bin/python -I -B -m http.server 8765 \
-  --bind 127.0.0.1 --directory data/preview-cycle-evidence-v16
+  --bind 127.0.0.1 --directory data/preview-cycle-evidence-v17
 ```
 
 No server is left running by the build or verification. JavaScript fetches

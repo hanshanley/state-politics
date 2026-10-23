@@ -24,9 +24,10 @@ cohorts and remaining work, and the [research status](docs/AUDIT_STATUS.md) for 
 The retained dump exposes **123,182 nonempty snapshot-text records**. Additional
 printed-header joins recover **2,079 previously missing contexts** from independent
 research text. Independent archived bill records now add **7,004 more contexts**,
-mostly New Jersey; a further **563 Maryland contexts** now bring combined
-availability to **136,022 of 157,598 existing calendar candidates**, with
-**21,576 remaining gaps**. Complete alternative views and
+mostly New Jersey; a further **563 Maryland contexts** and **14 contexts from
+independent library compilations** bring combined availability to
+**136,036 of 157,598 existing calendar candidates**, with
+**21,562 remaining gaps**. Complete alternative views and
 original source metadata are retained. Source versions, archive extraction,
 research-corpus cleaning and classifications remain uncertified.
 The local graph bundle includes complete research downloads and an explicit

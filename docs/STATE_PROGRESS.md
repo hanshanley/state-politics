@@ -1,6 +1,6 @@
 # State completion tracker
 
-Updated **October 22, 2026**. This is the current dispatch list, not a claim that
+Updated **October 23, 2026**. This is the current dispatch list, not a claim that
 historical progress messages describe processes still running.
 
 **Active study window: January 1, 2023 through December 31, 2024.** Work on
@@ -27,7 +27,31 @@ not that the state has no data. Platform recovery is separate from the
 legislative status in this table; no state's operative-platform coverage is
 certified complete.
 
-## Latest Maryland recovery and topic inference
+## Latest independent library recovery
+
+Independent New Jersey State Library compilations recover **14 additional
+existing contexts / 40 reader views / 20 source versions**. All eight original
+PDFs and 231 physical pages are retained in both readers, including all
+ancillary pages. A checklist-only PDF contributes zero bill bodies; separately
+identified introduced and enacted versions are not conflated. Source-proven
+second/third reprints retain their complete continuation pages and literal
+reader differences.
+
+Packet: `data/processed/nj-library-text-20261022-v4/`, manifest
+`43dd2b81cc743101a147f4fc81391c5be78a7320df38ac19e33f5fbf92d329d7`.
+Every joined record is in the previous missing-text queue with unchanged
+original fields, dates and cohort membership. Availability is now
+**136,036 / 157,598 contexts**, leaving **21,562** text gaps. New Jersey has
+**1,735** remaining gaps. Current source outputs are
+`data/preview-cycle-evidence-v17/` and `outputs/recreated-2023-2024-v12/`.
+This independent archive does not reopen publishers, certify filing-time
+versions, infer party affiliations or change the state-status distribution.
+
+The active full-text inference remains bound to its earlier freeze. New
+evidence requires a subsequent version with validated exact-input cache
+reuse, never mutation of that running job or silent replacement of its inputs.
+
+## Preceding Maryland recovery and topic inference
 
 A further predecessor-archive pass recovers **563 additional Maryland
 contexts / 1,070 complete views**, all exact existing 2024 prefilings in the
@@ -38,10 +62,10 @@ label and no new cohort member is admitted. Packet:
 Every original record, raw archive member, prologue, source alternative,
 57 rejected views and bounded negative disposition remains retained.
 
-Retained-text availability is now **136,022 / 157,598 contexts**;
+After that pass, retained-text availability was **136,022 / 157,598 contexts**;
 **21,576** remain without observed text. Maryland's gaps fall from 990 to
-**427**. The new source explorer is `data/preview-cycle-evidence-v16/`;
-the source graph/queue bundle is `outputs/recreated-2023-2024-v11/`.
+**427**. That pass's source explorer is `data/preview-cycle-evidence-v16/`;
+its source graph/queue bundle is `outputs/recreated-2023-2024-v11/`.
 OK/NE/CT predecessor checks were bounded negatives for the inspected trees,
 not universal historical absence. Older OpenStates session-JSON catalog
 authentication requirements were honored; no archive or SQL request followed

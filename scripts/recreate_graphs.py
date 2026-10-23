@@ -20,6 +20,7 @@ matplotlib.use("Agg")
 import matplotlib.pyplot as plt  # noqa: E402
 import numpy as np  # noqa: E402
 import pandas as pd  # noqa: E402
+import pyarrow.parquet as pq  # noqa: E402
 from matplotlib.ticker import PercentFormatter, StrMethodFormatter  # noqa: E402
 
 ROOT = Path(__file__).resolve().parent.parent
@@ -147,6 +148,7 @@ def recovery_packet(
             manifest.get("schema") not in (
                 ARCHIVE_SCHEMA, "state-politics.lawatlas-archive-text.v1",
                 "state-politics.maryland-archive-text.v1",
+                "state-politics.nj-library-text.v1",
             )
             or not all(manifest.get("approvals", {}).get(flag) is False for flag in FLAGS)
         ):
@@ -242,6 +244,8 @@ def snapshot_coverage(root, packet, inputs, *, corpus_directory=None, archive_di
         manifest["artifacts"]["bill_evidence.parquet"],
     )
     bills = pd.read_parquet(metadata)
+    # Strict source replay needs original nulls, not Pandas' NaN conversions.
+    original_metadata = pq.read_table(metadata).to_pylist()
     contexts = pd.read_parquet(packet["context_inventory.parquet"])
     if (
         bills["bill_id"].duplicated().any() or contexts["bill_id"].duplicated().any()
@@ -263,7 +267,7 @@ def snapshot_coverage(root, packet, inputs, *, corpus_directory=None, archive_di
     original_gaps = set(joined.loc[joined["neither_source_observed"], "bill_id"])
     extra = {}
     if corpus_directory is not None:
-        _, corpus_contexts, _, _ = load_corpus(corpus_directory, bills.to_dict("records"))
+        _, corpus_contexts, _, _ = load_corpus(corpus_directory, original_metadata)
         corpus_ids = {row["bill_id"] for row in corpus_contexts}
         if not corpus_ids <= set(joined.loc[joined["neither_source_observed"], "bill_id"]):
             raise ValueError("research recovery must cover only exact remaining source gaps")
@@ -273,7 +277,7 @@ def snapshot_coverage(root, packet, inputs, *, corpus_directory=None, archive_di
     if archive_directories:
         archive_ids = set()
         for directory in archive_directories:
-            _, contexts, _, _ = load_archive(directory, bills.to_dict("records"))
+            _, contexts, _, _ = load_archive(directory, original_metadata)
             archive_ids.update(row["bill_id"] for row in contexts)
         if not archive_ids <= original_gaps:
             raise ValueError("archive recovery must cover only exact remaining source gaps")
@@ -748,7 +752,10 @@ def recreate(
         ROOT / "src/state_politics/plotting/charts.py",
     ) + (tuple(
         ROOT / "src/state_politics/bills" / name
-        for name in ("archive_text.py", "lawatlas_text.py", "maryland_archive_text.py")
+        for name in (
+            "archive_text.py", "lawatlas_text.py", "maryland_archive_text.py",
+            "nj_library_text.py",
+        )
     ) if archive_directories else ())
     for path in producers:
         inputs[f"producer:{path.name}"] = binding(path)

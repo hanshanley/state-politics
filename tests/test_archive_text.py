@@ -99,6 +99,27 @@ def repin(out, name):
     json_file(p, m)
 
 
+def test_library_packet_routes_to_its_strict_loader_without_changing_metadata(
+    tmp_path, monkeypatch,
+):
+    from state_politics.bills import nj_library_text as library
+
+    json_file(tmp_path / "manifest.json", {"schema": "state-politics.nj-library-text.v1"})
+    metadata = {"unchanged_original_context": None}
+    expected = (
+        ["complete reader view"], ["complete context"], {"raw": "pin"}, {"source": "library"},
+    )
+    calls = []
+
+    def load(directory, original_metadata):
+        calls.append((directory, original_metadata))
+        return expected
+
+    monkeypatch.setattr(library, "load_nj_library", load)
+    assert archive.load_archive(tmp_path, metadata) is expected
+    assert calls == [(tmp_path, metadata)] and calls[0][1] is metadata
+
+
 def test_full_archive_records_markup_bindings_and_original_gap_values_are_preserved(source):
     path, queue, out, _ = source
     archive.recover(path, queue, out)
