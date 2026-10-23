@@ -51,22 +51,18 @@ query/body. Both browser helpers exited and the preview port is closed.
 binds all 745 explorer, 73 source-gallery and 13 topic-gallery artifacts,
 the complete source/inference ZIP members and unchanged human/model bindings.
 
-A separate retained-full-text run is now actually executing from
+A separate retained-full-text run has completed from
 `data/processed/cycle-topic-inference-retained-text-20261022-v1/`, with all
 **174,316 full body alternatives**, including the new Maryland views.
-Persisted state outputs and its actively growing exact-input cache verify
-execution; it is not merely a launch. It is not complete, and no retained-text
-topic gallery is claimed. A long wall-clock interval without a state checkpoint
-does not alone establish a stall; continued cache writes and CPU activity were
-observed during the retry. No duplicate job or speculative restart was launched.
-At a later saved audit snapshot, **13 completed state partitions / 34,226
-full-text views** independently replay: 96,513,642 logical source-view tokens
-and 132,995 windows, with every input hash, saved-logit decision and complete
-token/window span checked. The tokenizer-only audit makes no additional
-encoder calls and leaves the running job unchanged. Its 34,620 candidate
-contexts comprise 11,421 assignments, 14,228 abstentions and 8,971 unavailable
-body contexts; these are **partial-scope counts, not completed national results
-or accuracy**. Receipt:
+All 50 partitions finish with **63,089 assignments / 72,933 abstentions /
+21,576 unavailable body contexts**. Logical source-view totals are
+584,371,720 tokens / 765,016 windows, including exact-input cache reuse;
+these are not counts of unique encoder work. The actual baseline gallery,
+`outputs/topic-inference-retained-text-2023-2024-v1/`, contains three PNG/SVG
+pairs and a complete 108-member / 1,665,574,822-byte inference ZIP.
+Full parent replay is in progress; completion of inference is not independent
+accuracy validation. The earlier **13-state / 34,226-view** tokenizer/logit
+replay remains a preserved partial proof, not the new full-population proof:
 `data/cycle-topic-completed-full-text-states-replay-20261022-v1.json`.
 Metadata views are not silently replaced by later bill versions.
 The original human packet, predeclared two-model human-evaluation plan,
@@ -109,8 +105,22 @@ historical-network completeness is claimed. The known 20-request allowance is
 closed. Hawaii's paid corpus access was not bypassed, and an unavailable user
 response did not authorize a new native collection batch.
 No existing publisher collector, human label or classifier policy is changed.
-The running full-text freeze remains immutable; the new source joins a later
+The completed full-text freeze remains immutable; the new source joins a later
 version through independently tested completed-cache reuse.
+
+The first real library-inclusive freeze exposed an incorrect source flag:
+library views claimed a generated archive prologue despite having none.
+The strict consumer stopped at `policy_section_start` before creating an
+inference plan or running a model. The failed freeze and log remain preserved.
+A focused regression reproduces that failure. The source adapter now declares
+the absence of a machine prologue, retaining every complete source string;
+the inference producer and its boundary validation remain unchanged.
+New packet `data/processed/nj-library-text-20261023-v5/` has manifest
+`a27a57b4f72d43f0fc4235713e23b994bebc1a39f49f2284c2a990c1aa70df30`.
+All 62 source/router/inference tests pass. Both exact sealed older v1/v4
+packets still strictly replay with their original flags, rather than being
+rewritten or generally exempted from validation. The correction does not
+recover additional contexts or certify source versions.
 The graph consumer now supplies original Arrow metadata to strict source
 loaders rather than Pandas-converted NaNs. This fixes a real null-versus-NaN
 replay failure without weakening field validation or changing the existing
@@ -131,9 +141,9 @@ library ZIP members, every remaining original gap field and all 7,874 prior
 New Jersey views replay unchanged where expected. Nine useful browser-fixture
 receipts are archived; only 13 inspected owned fixture trees and two stopped
 isolated browser profiles were removed. Original sources, failed real builds,
-JUnit files, actual downloads and the active inference/cache are retained.
+JUnit files, actual downloads and the completed inference/cache are retained.
 Generated source data and graphs remain local and Git-ignored: pushing code
-does not back up those data or certify the still-unfinished full-text run.
+does not back up those data or certify the provisional classifications.
 
 ## Latest Maryland source recovery
 

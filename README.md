@@ -35,7 +35,10 @@ remaining-text queue; see the [recovery commands](docs/REPRODUCIBILITY.md#indepe
 
 Provisional topic inference has completed on every title/abstract view:
 **89,950 candidate bills receive a model topic; 67,648 abstain**. A separate
-full-retained-text pass is running. These are model assignments, not validated
+full-retained-text baseline has also completed: **63,089 assignments,
+72,933 abstentions and 21,576 unavailable bodies**. Its later library-evidence
+extension and independent computational replay are in progress.
+These are model assignments, not validated
 policy findings or party positions; see the
 [inference contract](docs/REPRODUCIBILITY.md#provisional-population-topic-inference).
 

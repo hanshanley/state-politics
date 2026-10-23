@@ -49,6 +49,13 @@ FIRST4_PRODUCER = {
     "sha256": "5089089aa6e2fa23620ab6088e8ff152c0603d21ffbd0714616144847ae1fd74",
     "bytes": 51557,
 }
+LEGACY_PRODUCERS = {
+    FIRST4_MANIFEST_SHA256: FIRST4_PRODUCER,
+    "43dd2b81cc743101a147f4fc81391c5be78a7320df38ac19e33f5fbf92d329d7": {
+        "sha256": "30d7b5cc7ba3ad8c864f92ea7d6d3ee6d19364aad9bf08f51874801faf591952",
+        "bytes": 54426,
+    },
+}
 TOOLS = {"pymupdf": "1.28.0", "pypdf": "6.14.2"}
 FLAGS = (
     "scientific_approval", "model_input_approved", "training_admission",
@@ -797,7 +804,7 @@ def _view(page_rows, version, context, entry, reader, ordinal):
         },
         "selected_page_ranges": ranges, "page_separator": "\n",
         "archive_provider": PROVIDER, "source_status": STATUS,
-        "archive_generated_prologue_preserved": True, **dict.fromkeys(FLAGS, False),
+        "archive_generated_prologue_preserved": False, **dict.fromkeys(FLAGS, False),
     }
 
 
@@ -1030,13 +1037,17 @@ def load_nj_library(root, metadata=None):
     require(all(_equal(binding, artifacts[f"source-evidence/{name}"])
                 for name, binding in source_inventory.items()), "source inventory mismatch")
     producer = _binding(directory / "producer/nj_library_text.py")
-    # Only the exact sealed first4 manifest may retain the pre-fix producer.
+    legacy_producer = LEGACY_PRODUCERS.get(pins["manifest.json"])
     require(producer == _binding(_regular(Path(__file__).absolute()))
-            or (pins["manifest.json"] == FIRST4_MANIFEST_SHA256 and producer == FIRST4_PRODUCER),
+            or producer == legacy_producer,
             "producer module mismatch")
     result = _replay(source, directory / "input_gap_queue.parquet",
                      manifest["additional_batch_sha256"])
     expected_views, expected_contexts, pages, docs, versions, dispositions, report, _ = result
+    if legacy_producer is not None:
+        # Preserve the two exact sealed packets, including their incorrect prologue flag.
+        for row in expected_views:
+            row["archive_generated_prologue_preserved"] = True
     rows = _jsonl(directory / "views.jsonl")
     require(_equal(rows, expected_views),
             "complete bill text/identity/span/queue/false-flag replay mismatch")

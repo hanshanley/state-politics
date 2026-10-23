@@ -182,6 +182,21 @@ def test_rejects_ambiguous_or_missing_continuation_boundaries(change):
         nj.separate_versions(pages)
 
 
+def test_library_views_enter_inference_without_a_fabricated_machine_prologue(packet):
+    from state_politics.analysis.cycle_topics import input_text, make_input
+
+    out, _, _, _ = packet
+    rows, _, _, _ = nj.load_nj_library(out)
+    for ordinal, row in enumerate(rows, 1):
+        unit = make_input(row, "retained_text", "evidence/archive-NJ.jsonl", ordinal)
+        assert row["archive_generated_prologue_preserved"] is False
+        assert unit["source_text_span"] == [0, len(row["text"])]
+        assert unit["archive_machine_prologue_excluded_from_inference"] is False
+        assert unit["input_sha256"] == row["raw_text_sha256"]
+        assert input_text(unit) == row["text"]
+        assert unit["original_source_view"] == row
+
+
 def test_both_readers_full_unicode_text_spans_layout_and_original_rows(packet):
     out, _, queue, originals = packet
     rows, contexts, pins, manifest = nj.load_nj_library(out, originals)
@@ -242,7 +257,7 @@ def test_metadata_join_rejects_identity_dates_or_duplicate_changes(packet, chang
 
 
 @pytest.mark.parametrize("change", [
-    "crop", "identity_span", "promote_flag", "mistyped_false", "context", "layout",
+    "crop", "identity_span", "promote_flag", "mistyped_false", "context", "layout", "prologue",
 ])
 def test_rehashing_corrupt_output_does_not_bypass_full_replay(packet, change):
     out, _, _, _ = packet
@@ -268,6 +283,8 @@ def test_rehashing_corrupt_output_does_not_bypass_full_replay(packet, change):
             rows[0]["source_identity"]["printed_evidence"][0]["start"] += 1
         elif change == "promote_flag":
             rows[0]["scientific_approval"] = True
+        elif change == "prologue":
+            rows[0]["archive_generated_prologue_preserved"] = True
         else:
             rows[0]["training_admission"] = 0
         nj._write_rows(out / name, rows)

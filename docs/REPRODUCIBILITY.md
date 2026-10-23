@@ -259,7 +259,7 @@ The comparable tracked-input artifact audit is
 `data/nj-library-tracked-artifact-audit-20261023-v2.json`:
 418 / 452 checks, with the same 34 legacy missing-output failures.
 These receipts do not certify source versions, independent accuracy or
-completion of the separately running full-text inference.
+independent accuracy of the separate full-text inference.
 
 ## Provisional population topic inference
 
@@ -306,9 +306,14 @@ The ZIP retains all complete source-view inputs and predictions.
 Use a separate freeze with `--tiers retained_text` for a full-text pass.
 The actual separate job
 `data/processed/cycle-topic-inference-retained-text-20261022-v1/` freezes
-174,316 full-body alternatives from v16. It is still running; no completed
-retained-text summary or topic gallery is claimed. Do not launch a duplicate
-or edit its hash-bound producer/runtime while it is active.
+174,316 full-body alternatives from v16. It completed all 50 states with
+63,089 assignments / 72,933 abstentions / 21,576 unavailable body contexts.
+Its three actual graph pairs and complete 108-member inference ZIP are in
+`outputs/topic-inference-retained-text-2023-2024-v1/`.
+The 584,371,720 token / 765,016 window totals include repeated source-view
+cache reuse, not unique encoder work. Full parent replay and the separate
+library-inclusive extension are in progress. Preserve the completed freeze
+and its hash-bound producer/runtime rather than rerunning or editing it.
 Full bodies and all source alternatives are retained, not truncated or
 silently replaced by titles. The archive's machine-generated prologue is
 excluded only by its exact source-bound span; the complete original string
@@ -382,7 +387,8 @@ including newly recovered views of previously unavailable bills.
 The original job, cache, inputs and predictions remain unchanged. A focused
 integration regression verifies that a new source freeze makes only the new
 encoder call while preserving every original job binding. This is an
-extension procedure, not a claim that the current full-text run has finished.
+extension procedure, not independent validation or permission to alter the
+completed baseline.
 
 ## October 22 recovered inputs
 
