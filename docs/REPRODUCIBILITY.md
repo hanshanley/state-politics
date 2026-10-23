@@ -31,18 +31,18 @@ be bound explicitly before regenerated outputs can support the narrowed study.
   --archive-text data/processed/billcam-hi-retained-html-delta-20261023-v1 \
   --archive-text data/processed/billcam-four-subject-html-20261023-v1 \
   --archive-text data/processed/billcam-wrapped-heading-html-20261023-v1 \
-  --archive-text data/processed/govbot-exact-original-documents-20261023-v1 \
-  --archive-text data/processed/published-ai-corpus-documents-20261023-v1 \
+  --archive-text data/processed/govbot-exact-original-documents-20261023-v2 \
+  --archive-text data/processed/published-ai-corpus-documents-20261023-v2 \
   --out-dir outputs/recreated-2023-2024-REPLAY
 ```
 
-The accepted local build is `outputs/recreated-2023-2024-v20/index.html`.
+The accepted local build is `outputs/recreated-2023-2024-v22/index.html`.
 The command above requires a fresh output directory. The bundle contains 14
 current evidence graphs in PNG and SVG, 13 complete chart-data CSVs, nineteen complete
 research-packet ZIPs and a hash manifest. It also archives the exact fifteen
 plotting/source-consumer producers and the recovered producers within their research packets.
 The current bundle has **nineteen** complete research ZIPs, 90 bound artifacts
-and manifest `39fbf88c814395b55a2f253f9961aedf44ccae99aaee2383b57b18fed64e98cc`.
+and manifest `88d5798dfd3b681df9c1dc478428422d4b708fb9cc2eab3552d26038ebb8e2b8`.
 All seventeen preceding source ZIPs remain byte-identical.
 It uses saved evidence
 tables and existing development diagnostics without
@@ -169,9 +169,9 @@ required alongside all ten preceding archives, not replacements for them:
 - `data/processed/govbot-exact-original-documents-20261023-v2/`: three MT 2025
   contexts, 76 PDF file/version occurrences and 152 paired-reader views; manifest
   `8edb6c6de1f0af693092ba5d67d09ab0780898d304843f7ad14776241a1431d4`.
-- `data/processed/published-ai-corpus-documents-20261023-v1/`: 27 contexts
+- `data/processed/published-ai-corpus-documents-20261023-v2/`: 27 contexts
   across thirteen states and 27 complete published `Bill_Text` bodies; manifest
-  `114e8fdc585a52d469a0df1469a19e5b78f788aa9163dbdb3c1d0d47df951cd2`.
+  `207702b7bf4bdaac9e8fc61a55d385beb25edf55adef5c963d8c6e9a765aef4e`.
 
 ```bash
 .venv/bin/python -I -B -m state_politics.bills.govbot_text build \
@@ -222,7 +222,7 @@ The complete discrepancy inventory preserves those original values without
 repair, including the correctly recovered RI H 5866 2023 context despite its
 provider `Year=2024`.
 
-The v20 source union is **138,978 / 157,598** original contexts with some
+The v22 source union is **138,978 / 157,598** original contexts with some
 retained text; **18,620** remain unavailable, including **5,967 HI**.
 Twelve independent archives cover 10,523 distinct contexts / 12,872 views.
 Both new complete research ZIPs preserve all packet members and negatives.
@@ -233,6 +233,95 @@ External human-benchmark discovery is unresolved, not replaced with the CSV's
 AI annotations. The metadata-only Florida capture stops at a retained robots403;
 bounded archival alternatives stop at explicit robots/challenge restrictions.
 No external labels, CSV field headers or scores enter the frozen human plan.
+
+### Current actual full-document inference
+
+The completed job is
+`data/processed/cycle-topic-inference-retained-text-20261023-v11/`, frozen
+from the 771-artifact v26 explorer with **178,243 views / 157,598 original
+contexts**. Actual conservative source consensus yields **64,900 classified /
+74,078 abstained / 18,620 unavailable**. The thirty newly observed contexts
+produce **eight provisional assignments / 22 abstentions**; uncertainty is
+not replaced with forced labels. All **157,568 other whole assignment rows**
+and all 178,064 preceding view predictions remain unchanged.
+
+The observer extends the completed v8 cache through a read-only backup and
+calls the original unchanged encoder for exactly **41 new strings / 253,863
+tokens / 314 windows**, repeating zero old inputs. All 179 new views remain
+separate, including same-body provider versions and both PDF readers.
+Logical all-view totals are **596,816,865 tokens / 781,368 windows**, with
+615 explicitly excluded source tokens separate. No model weights, thresholds,
+training labels, source dates, frozen scientific runtimes or human-plan
+bindings change; metadata inference is not rerun.
+
+The actual encoder execution is preserved in completed v10. The comparison
+guard then refuses a v1 descriptive uncertainty key ending `_certified`.
+Published-source v2 renames only that observation, not a body or approval;
+the exact v1 producer/profile still reproduces its historical packet.
+Final v11 copies the completed v10 cache read-only and explicitly forbids
+every nonempty encoder call. All **178,243 prediction rows / fifty state
+prediction files / 157,598 assignment rows** remain byte-identical; only
+27 source-observation metadata rows change. The first observer's overstrict
+rejection of an empty no-op call is retained as a diagnostic; the corrected
+observer permits only the original empty-list no-op, never a real encoder
+input. Receipt: `data/cross-state-zero-encoder-replay-20261023-v1.json`.
+The strict comparison guard itself is unchanged.
+
+```bash
+.venv/bin/python -I -B scripts/recreate_topic_graphs.py \
+  --directory data/processed/cycle-topic-inference-retained-text-20261023-v11 \
+  --tiers retained_text --out-dir outputs/topic-inference-retained-text-REPLAY
+.venv/bin/python -I -B scripts/compare_cycle_topic_inputs.py \
+  --metadata-gallery outputs/topic-inference-2023-2024-v2 \
+  --retained-text-gallery outputs/topic-inference-retained-text-2023-2024-v9 \
+  --out-dir outputs/topic-input-comparison-REPLAY
+```
+
+The actual body gallery is
+`outputs/topic-inference-retained-text-2023-2024-v9/`: thirteen artifacts,
+manifest `c171ec5cad159a201e6ce6ab1c8bb7be5539ad9e942402ac943f2f9e865db3a2`.
+Its complete 108-member research archive is **1,724,918,983 bytes**, SHA-256
+`ba3442a84e12346355750a601d84c6bb492236d04459f6d5f1d840d168126858`.
+The actual assignments are 25,964,882 bytes, SHA-256
+`0e09725b9ef5dbde09a4b9cdaa9059f2c589af26742b31f6ea3e6371d1875133`.
+
+Future prediction-cache extensions must start from **completed v11**, never
+the superseded unexecuted v9: **167,978 rows / 749,453,312 bytes**, SHA-256
+`5fcab211a7885bccb6fde48351eeaeb71365e0f1328df1cc5bf4e3a2069809c0`.
+The matching independent token cache is
+`data/cycle-topic-independent-token-verification-cache-20261023-v8.sqlite`;
+its original 167,937-row v7 baseline is backed up read-only and preserved.
+The final cache holds 167,978 independently verified strings / 40,054,784
+bytes, SHA-256
+`658923403c935e0cc24680b0ff4e207dc8d6770c36c4dd7a2aabed649da17ba6`.
+Archived observer source:
+`data/cross-state-cache-extension-executed-source-20261023-v1.py`.
+That source replays this exact v8-to-v10 encoder increment; it is not a generic
+future-wave script or permission to rerun the full encoder population.
+
+Exact source and assignment receipts are
+`data/cross-state-source-union-replay-20261023-v3.json` and
+`data/cross-state-assignment-reconciliation-20261023-v2.json`.
+These establish computational/source consistency, not independent human
+accuracy, filing-time text, party positions or publication approval.
+
+The final comparison is `outputs/topic-input-comparison-2023-2024-v7/`:
+22 artifacts, manifest
+`9b77d2429c4aa33a0a88999965f67f3f83f08702d04e0fb8cc6ef17ad7dac999`.
+Among 138,978 paired contexts, 41,898 have the same assigned topic, 6,104
+different assigned topics, 43,205 both abstain and 47,771 exactly one abstains;
+18,620 unavailable bodies remain separate. All seven comparison tables and
+all fifty states, including empty Maine, are independently reconciled.
+Both complete inference ZIPs are independent byte-identical copies, not
+metadata-only substitutes.
+
+Final complete replay:
+`data/cross-state-complete-inference-replay-20261023-v2.json`.
+Every saved input/logit/decision, conservative source consensus, complete
+token/window span, original context and 108 ZIP members is rechecked with
+zero encoder passes and zero new tokenizations. The original v10 replay,
+failed strict-guard comparison log, empty-no-op observer diagnostic and
+all previous snapshots remain preserved.
 
 ### Preceding NJ and independent PDF baseline
 
@@ -460,7 +549,7 @@ identity profile without rewriting previous accepted or rejected records.
   --out-dir data/processed/billcam-wrapped-heading-REPLAY
 ```
 
-The actual latest job is
+The preceding wrapped-heading job is
 `data/processed/cycle-topic-inference-retained-text-20261023-v8/`, from the
 **763-artifact v23** preview: **178,064 views / 157,598 original contexts**,
 **64,892 classified / 74,056 abstained / 18,650 unavailable**.
@@ -485,7 +574,7 @@ summarized and must not be overwritten.
   --out-dir outputs/topic-input-comparison-REPLAY
 ```
 
-Future prediction-cache extensions must start from **completed v8**:
+The preceding completed v8 prediction cache was:
 167,937 rows / 749,195,264 bytes, SHA-256
 `37a31f1792a52226efb1b5b5f9ed4a607952c46c7bb18e619226acc1ffeb0f1f`.
 The matching independent token cache is
@@ -726,7 +815,7 @@ Freeze into a new directory before running:
 
 ```bash
 .venv/bin/python -I -B -m state_politics.analysis.cycle_topics freeze \
-  --preview data/preview-cycle-evidence-v23 \
+  --preview data/preview-cycle-evidence-v26 \
   --checkpoint data/models/modernbert-reviewed-only-20261021-v1 \
   --tiers metadata \
   --out-dir data/processed/cycle-topic-inference-metadata-NEW
@@ -1942,22 +2031,41 @@ synthetic references/logits and is not classifier validation.
   --archive-text data/processed/billcam-hi-retained-html-delta-20261023-v1 \
   --archive-text data/processed/billcam-four-subject-html-20261023-v1 \
   --archive-text data/processed/billcam-wrapped-heading-html-20261023-v1 \
+  --archive-text data/processed/govbot-exact-original-documents-20261023-v2 \
+  --archive-text data/processed/published-ai-corpus-documents-20261023-v2 \
   --receipt-evidence data/processed/maine-source-receipt-evidence-2023-2024-v1 \
   --native-session-scope ny-2023-2024 --native-session-scope il-103rd \
   --native-session-scope tx-88r-retained \
   --out data/preview-cycle-evidence-REPLAY
 ```
 
-The accepted build is `data/preview-cycle-evidence-v23/`; reproduction requires
-a fresh output directory. It adds all ten independent archives to metadata v4 /
+The accepted displayed build is `data/preview-cycle-evidence-v27/`; reproduction requires
+a fresh output directory. It adds all twelve independent archives to metadata v4 /
 native v15 and research-corpus v4, with the unchanged
 platform evidence v5 and token-plan v2. The latter is reusable because the
 complete 159,315-view metadata input Parquet is byte-identical to v3.
 CLI defaults remain the earlier metadata v3 / native v14 selection; custom
 metadata does not silently attach optional bundles. Pass the compatible
 explicit directories above.
-The current 763-artifact build manifest is
-`68374642b0b0e3c090ca03fb7214ead9ea5c7916b747643b7b14490d31e3154a`.
+The current 771-artifact build manifest is
+`f1df0481e6a5f11481bb376713cb144fcdb3a64ec2180bdf3afe2ec381944a7d`.
+V27 is a verified UI-only successor to v26, the actual frozen v11 model
+source: all **770 other exported artifacts are byte-identical**. Only the
+browser script changes. Published-corpus rows now use the independent-text
+renderer rather than falling through to the platform renderer; complete
+policy text, publisher-prologue spans and all original metadata are visible.
+No source, model input, prediction, assignment or encoder work changes.
+The permanent real-Chromium regression covers literal markup, full text,
+original metadata, complete downloads, keyboard, mobile and no-JS behavior.
+UI-only proof: `data/cross-state-ui-only-replay-20261023-v1.json`.
+Final real-Chromium workspace proof:
+`data/cross-state-browser-workspace-20261023-v2/receipt.json`. It checks
+39 complete new-source body streams, fifteen full-state queries, nineteen
+complete byte-identical downloads, all fourteen source SVGs and
+desktop/mobile layouts. The separate helper-cleanup receipt confirms all
+processes exited; no JavaScript exceptions or external source requests
+occur. The failed v1 attempt is retained as a diagnostic, not a successful
+check. The permanent published-corpus browser fixture independently passes.
 The output includes all 50 state coverage rows / 100 organization rows,
 complete metadata/platform texts, lazy state partitions, full-text gzip
 downloads and `downloads/build_manifest.json`. The earlier v11 build manifest is

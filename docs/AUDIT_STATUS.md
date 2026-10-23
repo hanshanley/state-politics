@@ -36,8 +36,8 @@ A separate checksum-verified Zenodo publication retains all **2,571 CSV
 records / 29 fields** after three controlled GETs. Own printed identity checks
 recover **27 original contexts across thirteen states / 27 complete published
 bodies / 228,679 policy characters**:
-`data/processed/published-ai-corpus-documents-20261023-v1/`, manifest
-`114e8fdc585a52d469a0df1469a19e5b78f788aa9163dbdb3c1d0d47df951cd2`.
+`data/processed/published-ai-corpus-documents-20261023-v2/`, manifest
+`207702b7bf4bdaac9e8fc61a55d385beb25edf55adef5c963d8c6e9a765aef4e`.
 Every original field, duplicate, negative and exact publisher-prologue/body
 span survives. A full metadata audit finds **74 provider years disagreeing
 with their literal version-date year**. RI H 5866 keeps the provider's 2024
@@ -54,12 +54,58 @@ reopen or recount those scopes.
 
 The first-pass v24 explorer / v20 source gallery and exact 173-view union
 proof are preserved unchanged. The superseded v9 is a frozen **unexecuted**
-178,237-view snapshot, not an additional completed inference. Corrected source
-outputs and actual inference are regenerated separately; a source-availability
-increase alone is not a classification result. Current focused regression is
-**195 passes / three opt-in browser skips**, not the entire project suite.
+178,237-view snapshot, not an additional completed inference. The actual v10
+run completes **178,243 views**, yielding **64,900 classified / 74,078
+abstained / 18,620 unavailable**. Thirty new contexts yield eight provisional
+assignments and 22 abstentions; all **157,568 other whole assignment rows**
+and all 178,064 prior predictions are unchanged. Only **41 new strings /
+253,863 tokens / 314 windows** reach the original encoder. Independent
+complete token/logit/window/consensus and 108-member ZIP replay passes,
+without loading an encoder or claiming human accuracy.
+
+The strict comparison guard then catches an ambiguous true uncertainty
+observation whose name ends `_certified`; it is not an actual approval.
+The producer now names it `source_cleaning_and_native_edition_uncertainty_preserved`.
+All real false certification flags, 27 bodies, IDs, dates, hashes and source
+records are unchanged. Exact v1-manifest/producer replay preserves every old
+byte/decision. The guard is not relaxed and no model is retuned; final
+metadata-corrected execution reuses saved predictions with the encoder
+explicitly forbidden. Correction:
+`data/processed/published-corpus-observation-correction-20261023-v1.json`.
+Completed **v11** now preserves every one of v10's 178,243 predictions and
+all 157,598 assignment rows byte-for-byte, with **zero additional encoder
+inputs**. Its final independent replay checks all logits, decisions, original
+contexts, source consensus, tokens/windows and 108 ZIP members using the
+unchanged independently verified token cache, with zero new tokenizations.
+All seven comparison tables preserve 138,978 paired contexts, the separate
+18,620 missing bodies and all fifty states; disagreements are not accuracy
+measurements. The full workspace check also exposes an omitted browser type:
+published-corpus rows fall through to platform rendering. The renderer now
+handles them explicitly, retains full bodies/prologues/source metadata and
+keeps AI fields outside policy inputs. A permanent actual-Chromium regression
+passes. **V27** changes only the browser script; all 770 other v26 source/model
+exports are byte-identical, so frozen v11 and every classification stay intact.
+Current unpublished outputs are **v27** explorer,
+`outputs/recreated-2023-2024-v22/`,
+`outputs/topic-inference-retained-text-2023-2024-v9/` and
+`outputs/topic-input-comparison-2023-2024-v7/`.
+Current focused regression is **220 passes / three opt-in browser skips**,
+not the entire project suite.
+The permanent real-browser fixture also passes with Chromium enabled.
+The final actual workspace check passes **39 exact complete body streams**,
+all **fifteen full-state query downloads** (including 1,460 HI and 8,169 NJ
+views), both new complete source ZIPs, both full inference ZIPs, fourteen
+source SVGs and desktop/mobile layouts. All nineteen browser downloads are
+byte-identical to the saved full sources. There are no JavaScript or
+external-request errors and every helper process exits. The earlier failed
+browser attempt and missing synthetic-report fixture diagnostic remain
+preserved; neither was presented as successful validation.
+Receipts: `data/cross-state-browser-workspace-20261023-v2/receipt.json`,
+`helper_cleanup.json` and the separate permanent-browser regression XML.
 The first comparable tracked audit is **430 / 464**, with exactly the same
 34 legacy failures and every other baseline report field unchanged.
+The final comparable v4 audit has those same 430 / 464 results, not a
+fabricated all-green scientific certification.
 
 External human-benchmark discovery remains unresolved: actual MinIO
 robots403, Dropbox robots restrictions and a Harvard robot challenge stay
