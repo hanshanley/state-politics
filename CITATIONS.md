@@ -1,7 +1,8 @@
 # Citations
 
 This project credits the organizations and authors who **collected** each dataset, not merely the API
-or platform that redistributes it. Every source below was fetched and verified on the stated access date.
+or platform that redistributes it. Acquisition receipts identify the versions actually retained;
+historical declarations, failed leads and unresolved rights are distinguished below.
 
 ---
 
@@ -36,18 +37,35 @@ the update archive as authoritative.
 
 ## 2. State legislative bills, votes, and legislators
 
-> Open States / Plural Policy (2026). *Open States Bulk Data: 2026-07 public PostgreSQL dump and
+> Open States / Plural Policy (2026). *Open States Bulk Data: 2026-10 public PostgreSQL dump and
 > current legislator CSV files* [Data set]. Plural Policy. https://open.pluralpolicy.com/data/.
-> Released under a public domain dedication. Accessed 2026-08-01.
+> Provider public-domain dedication; individual source rights remain unapproved here.
+> Target-study dump accessed 2026-10-18.
 
 Open States collects this data by scraping official state legislative websites; those legislatures are
 the ultimate originating source, and Open States is the collecting and standardizing organization.
 
-**Verified:** public PostgreSQL dump `2026-07-public.pgdump`, 10,711,908,617 bytes, last modified
+**Current target-study source:** the actual retained dump is
+`data/raw/openstates/2026-10-public.pgdump`, **10,768,629,207 bytes**, SHA-256
+`6aa8341edc9ec251f4fb1eafb134b3415e72296e5391e05b39aded5e1ae2580c`.
+Its original fetch records one HTTP 200 at **2026-10-18T16:07:19Z**.
+The original extraction manifest is
+`data/processed/bill_extraction_manifest.json`, SHA-256
+`9a3555e5194ac3d45ab30c4107df4f720ad40f3ce85e040fa5336138d8ee8a29`;
+its complete retained action table has 9,002,451 rows. Original fetch
+metadata does not retain ETag or Last-Modified, so neither is invented.
+The October 23 metadata follow-up encounters `data.openstates.org/robots.txt`
+HTTP 403 and stops without probing/redownloading the bulk object or bypassing
+the account-gated session JSON route. No newer object version is established.
+
+**Historical July declaration, not the current extraction:** the earlier provenance
+records `2026-07-public.pgdump`, 10,711,908,617 bytes, last modified
 2026-07-01, SHA-256
 `e4b8eb6d40d2da768074dab29bbf0d6949b8f24a50d75c5807669edcee5af78c`, no authentication
-required. The extracted outcome corpus includes 8,954,085 bill actions and 869,001 bill-linked
-vote events. Per-state current legislator CSVs are public for all 50 states.
+required, accessed 2026-08-01. That earlier outcome corpus records 8,954,085
+bill actions and 869,001 bill-linked vote events. The July dump is not the
+retained file used by the current study and is not reverified here. Per-state
+current legislator CSVs are a separate source from filing-time party evidence.
 
 ---
 
@@ -335,6 +353,35 @@ state and LegiScan source URLs, local-copy paths, version IDs and stage/date
 claims. That metadata is not independently certified source-transfer history;
 neither those native URLs nor LegiScan's API/body endpoints were requested.
 
+### Current supplement: explicit original bill actions
+
+Two offline packets recover **213 further original contexts / 229 unique
+complete views / 1,827,636 characters**:
+`data/processed/billcam-action-bound-html-delta-20261023-v1/`
+(manifest `8cd20f56dde8d69ef9e1f8bed694526ecc1eddf091a508a53ff02a02d3f20b23`)
+and `data/processed/billcam-action-bound-html-four-subject-20261023-v1/`
+(manifest `0754dcbf9c7ba56eaf876575be54e232e1641637e58de635721f689eafd5dd37`).
+Each body's own printed 2023 identity is linked to its unchanged 2024
+candidate only through that original bill's explicit carryover event and
+exact origin-introduction action IDs/chamber in the complete original
+Open States action extraction above. Both years, all dates, raw HTML,
+negative decisions and original metadata remain intact; no native URL
+alias or filing-time-originality claim is made.
+
+All old capture artifacts are retained through a lossless replayed map.
+Nine repeated inherited source occurrences remain evidence, not extra
+views or contexts; the active union has 229 views, not the provisional
+238 occurrences. This recovery makes no new body requests and does not
+restart a closed query. Separate public state-search metadata discovery
+uses the publisher's ordinary anonymous form, including its normal
+same-origin CSRF/session workflow, through **two GETs and one POST**.
+It removes its private cookie jar and exports no cookie values, makes no
+account/challenge/native request and is not a statewide census.
+Current controlled BillCam counts are **3,048 GETs plus one POST**.
+No reuse-rights, scientific, classification or publication approval follows.
+
+### Preceding annual-heading-only captures
+
 The first closed wave retains 16 probe GETs and 500 subsequent GETs, with
 all earlier responses, parser failures and explicit corrections preserved.
 The first unsupported underscore-path request was not a verified discovery
@@ -417,7 +464,7 @@ closes after **1,612 / 2,000 GETs**, with no old detail/body request repeated.
 Source: `data/processed/billcam-four-subject-source-20261023-v1/`, manifest
 `fcda8cfced4df5e35630247a49e603d4d1316dccb8ea751b0fb41dad0a07fd82`.
 Together with the preceding 1,421 GETs and separate thirteen-GET discovery,
-the known controlled total is 3,046; the refreshed robots request is not a
+that preceding checkpoint's controlled total is 3,046; the refreshed robots request is not a
 distinct URL, and unrelated transport is not asserted reconstructed or zero.
 
 Strict own-header/context normalization supplies **415 additional original

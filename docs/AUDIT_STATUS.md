@@ -4,7 +4,87 @@ The existing figures and analytical conclusions are **legacy, not revalidated fi
 The current changes repair infrastructure and preserve evidence; they do not certify a
 replacement classifier or establish complete contemporary coverage.
 
-## Cross-state publications and enrolled-header correction: October 23, 2026
+## Explicit original-action recovery and actual inference: October 23, 2026
+
+An opt-in offline proof recovers **213 further original Hawaii contexts /
+229 unique complete views / 1,827,636 characters**. Each requires its exact
+original bill's retained carryover action, matching origin-introduction
+action IDs and chamber, and the body's own matching state, 32nd Legislature,
+typed number and caption. The actual printed 2023 heading and original
+2024 context remain separate; no date repair or annual/native URL alias
+is inferred. The complete original 9,002,451-row action Parquet and extraction
+manifest, all captured bytes and every old negative survive.
+
+The provisional observer initially counted 238 historical source
+occurrences. A strict union check catches nine same-view/body/context
+repetitions in an inherited capture. The active two-packet union contains
+**229**, not 238, views. The redundant nine-view intermediate and failed
+union diagnostic remain preserved but are not selected.
+Active packets are `billcam-action-bound-html-delta-20261023-v1` and
+`billcam-action-bound-html-four-subject-20261023-v1`; exact proof:
+`data/billcam-action-bound-packets-20261023-v2.json`.
+All five preceding BillCam normalizations still replay exactly.
+
+The first gallery preflight also exposes an archived dependency mismatch:
+published-source v2 pins the earlier BillCam helper. Exact v1/v2 dependency
+bindings preserve both historical published packets and their distinct
+observation names; no body, negative, source approval or comparison guard
+changes. The browser now explicitly discloses printed 2023 versus candidate
+2024 and the original-action proof instead of incorrectly claiming equal
+annual headings. The permanent actual-Chromium regression covers that note,
+complete body/metadata and downloads.
+
+Source availability is **139,191 / 157,598**, leaving **18,407** unavailable,
+including **5,754 HI**. Fourteen archival packets cover **10,736 contexts /
+13,101 views**. All 12,872 prior archive view rows, 305 other source
+partitions, twelve other chart tables and nineteen preceding complete
+source ZIPs are unchanged. The current source gallery has fourteen graph
+pairs and **21 complete research ZIPs**.
+
+Actual completed **v12**, frozen from **v28**, processes **178,472 source
+views** with the unchanged model and decision policy. It yields **65,043
+classified / 74,148 abstained / 18,407 unavailable**. The 213 new contexts
+yield **143 provisional assignments / 70 abstentions**. All **157,385 other
+whole assignments** and **178,243 earlier predictions** are unchanged.
+Only **188 new strings / 358,727 tokens / 479 windows** reach the encoder;
+zero old inputs repeat. Full independent saved-logit, token/window,
+source-consensus, assignment and 108-member ZIP replay passes with no
+encoder execution.
+
+The paired comparison preserves **139,191** observed contexts: 42,018 same
+assigned topics, 6,108 different topics, 43,229 both abstaining and 47,836
+exactly one abstaining. The separate 18,407 missing bodies remain visible.
+Every cell of all seven tables and all fifty states is independently
+reconstructed; these differences are not accuracy estimates.
+
+Current unpublished outputs are `data/preview-cycle-evidence-v28/`,
+`outputs/recreated-2023-2024-v23/`,
+`outputs/topic-inference-retained-text-2023-2024-v10/` and
+`outputs/topic-input-comparison-2023-2024-v8/`.
+The actual workspace browser checks **268 exact complete bodies**, including
+all **229 action-bound bodies and their complete original-action/context
+metadata**, fifteen full-state query downloads (1,689 HI / 8,169 NJ views),
+nineteen byte-identical downloads, fourteen SVGs and desktop/mobile layouts.
+JavaScript and external-request errors are zero; all helpers exit.
+Focused regression is **153 passes / three opt-in browser skips**, plus one
+enabled real-Chromium fixture. The full comparable audit remains **430 / 464**
+with the same 34 legacy failures and every baseline report field unchanged.
+
+Receipts are `data/action-bound-source-union-replay-20261023-v1.json`,
+`data/action-bound-cache-extension-20261023-v1.json`,
+`data/action-bound-assignment-reconciliation-20261023-v1.json`,
+`data/action-bound-complete-inference-replay-20261023-v1.json`,
+`data/action-bound-comparison-replay-20261023-v1.json` and
+`data/action-bound-browser-workspace-20261023-v1/{receipt,helper_cleanup}.json`.
+Existing access stops remain binding. A separate ordinary anonymous
+state-search discovery makes two GETs and one POST, not new body requests;
+controlled BillCam totals are 3,048 GETs plus one POST. A public Open States
+metadata check stops at robots403 without downloading a new dump. Broader
+source discovery supplies explicit negatives, not acquisitions or human
+gold. No independent-human, rights, party-time, filing-originality,
+scientific, report or publication gate is closed.
+
+## Preceding cross-state publications and enrolled-header correction: October 23, 2026
 
 The exact-session Govbot inventory inspects all 38 gap states through **107
 logical GitHub CLI invocations**. A distinct targeted capture closes at **161
