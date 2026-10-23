@@ -267,3 +267,44 @@ The corrected v5 normalization declares that these library views contain no
 machine-generated archive prologue. It preserves all original PDF/page strings,
 printed witnesses and versions; no new retrieval or source-date inference
 accompanies that metadata correction.
+
+## 13. Subsequent complete collection and official session-context witnesses
+
+New Jersey State Library. *New Jersey Legislative Histories: 2023*, complete
+finite published collection captured 2026-10-23. The retained twelve catalogue
+pages enumerate 237 items. A new bounded capture adds 229 complete PDFs
+(301,943,898 bytes / 9,952 physical pages), while eight earlier PDFs are reused
+only through exact original published bitstream URLs. All 237 current published
+bitstream sizes match the retained bytes. Source packet:
+`data/processed/nj-library-2023-collection-20261023-v1/`; manifest SHA-256
+`195c78827c877ceb3c9e22ba4d0693585abad4121224c2be78bd0d66ea7ef1de`.
+The original thirteen-response parser failure and its no-refetch continuation
+remain explicit; 479 new exchanges stay under the original 500 allowance.
+This completes that collection capture, not statewide native coverage, successful
+text normalization, filing-time identity or scientific approval.
+
+Oklahoma House of Representatives. *House Completes Bill Filing for 2023
+Session*, January 20, 2023,
+https://www.okhouse.gov/posts/news-20230120_1; and *House Completes Bill Filing
+for 2024 Session*, January 19, 2024,
+https://www.okhouse.gov/posts/news-20230119_1. The latter URL's embedded year
+is not substituted for the page's actual displayed publication date. Full raw
+HTML, visible text nodes, exact raw-source spans and the separately captured
+House rules index remain in
+`data/processed/ok-house-rules-context-20261023-v1/`; manifest SHA-256
+`a59fea589165294a5a1eadaeea5530eeca4e63f67f937a93056cd72d47f8827d`.
+These primary publications establish first-2023 / second-2024 session context
+within the 59th Legislature. They do not establish that a named bill carried
+over, remained pending, was reintroduced or acquired a target-year filing date.
+Both original annual source contexts, exact document pointers and source-body
+authority limitations must remain separate. The retained bodies under review
+are OpenStates snapshot extractions, not upgraded native publisher captures.
+
+The independent Senate context attempt remains an explicitly sealed
+JavaScript/cookie access stop, not a captured source page or permission to try
+an alias. The distinct House publications are not copies of that challenged
+resource. The later all-state LawAtlas/MonQcle attachment lead packet likewise
+preserves its new robots prohibition and zero attachment requests; earlier
+captured PDFs are neither erased nor used to imply current retrieval permission.
+No new body count, source rights, filing-time, model, human-gold or publication
+approval follows merely from these acquisition receipts.

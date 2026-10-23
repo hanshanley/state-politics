@@ -4,6 +4,51 @@ The existing figures and analytical conclusions are **legacy, not revalidated fi
 The current changes repair infrastructure and preserve evidence; they do not certify a
 replacement classifier or establish complete contemporary coverage.
 
+## Renewed source acquisition checkpoint: October 23, 2026
+
+The complete finite public **2023 New Jersey State Library collection** is now
+retained: **237 catalogue items / 12 pages, 229 new PDFs / 9,952 physical PDF
+pages / 301,943,898 PDF bytes**, plus eight previously captured PDFs reused only
+through their exact original published URLs. All 237 published bitstream sizes
+match the retained PDFs. The acquisition consumed **479 new HTTP exchanges**
+under its original 500-request ceiling; the disclosed known aggregate is 499,
+not a claim that unrelated earlier source history is complete or zero.
+The original REST/Angular metadata-field failure, thirteen reused responses,
+both collector versions and immutable first-sixteen subset remain preserved.
+Full seal: `data/processed/nj-library-2023-collection-20261023-v1/manifest.json`,
+SHA-256 `195c78827c877ceb3c9e22ba4d0693585abad4121224c2be78bd0d66ea7ef1de`.
+This is a complete capture of the published collection, **not a complete native
+bill universe or a count of newly recovered candidate bodies**.
+
+Two complete official House announcements and the House rules index separately
+bind Oklahoma's original 2023 and 2024 annual contexts to the 59th Legislature:
+`data/processed/ok-house-rules-context-20261023-v1/`. Four actual exchanges,
+original HTML and exact visible/raw identity spans survive. This supports review
+of a narrow same-legislature document relation, **not session aliases, merged bill
+IDs, inferred filing dates or a claim that any particular bill carried over or
+remained pending**. The 2,000 conditional document-identity candidates and all
+135 excluded witnesses remain distinct from accepted bodies until strict
+source/version/identity replay. Their retained bodies are third-party snapshot
+extractions, not publisher-original PDF captures.
+
+Access restrictions remain binding. The separate Senate context scope stopped
+after robots plus a JavaScript/cookie challenge; no script, cookie, browser or
+host-alias workaround was used. The all-state MonQcle expansion stopped at a
+newly retained `/upload/` robots prohibition after two permitted responses,
+before requesting any attachment. Its 675 source rows, 35 leads and complete
+negative evidence are sealed in
+`data/processed/remaining-lawatlas-attachments-20261023-v1/`.
+Original Hawaii corpus ancestry independently replays all 4,046 records:
+4,033 print a 2025 session and thirteen remain partial/headerless, not silently
+assigned a year. It yields **zero target-year fills** and changes no originals.
+
+This acquisition checkpoint does not alter the preceding accepted
+**136,036 observed-body / 21,562 unavailable-context** totals, training labels,
+frozen runtime, human-evaluation plan or source/scientific/publication approvals.
+New body admission and topic counts require the separately replayed normalization
+and a fresh, cache-reusing inference freeze; downloaded pages alone are not
+classification improvements.
+
 ## Requested population inference and topic graphs
 
 The user has now explicitly requested actual inference and topic graphs,
