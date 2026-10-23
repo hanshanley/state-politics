@@ -4,6 +4,36 @@ The existing figures and analytical conclusions are **legacy, not revalidated fi
 The current changes repair infrastructure and preserve evidence; they do not certify a
 replacement classifier or establish complete contemporary coverage.
 
+## Genuine wrapped-heading defect and offline recovery: October 23, 2026
+
+The independent GPT-6.1 Sol audit accounts for all **206 rejected versions /
+190 original leads**, with 409 original input bindings unchanged. It finds
+zero different still-missing contexts. A focused two-version follow-up proves
+a genuine parser false negative for HB 1993: the source prints
+`THIRTY-SECOND` and `LEGISLATURE, 2024` across a line break, while the reader
+required a literal space. The actual bill and enactment headings are present.
+The supplemental correction preserves the original diagnostic and explicitly
+distinguishes two SB 2351 missing-heading negatives.
+
+The surgical fix accepts actual venue whitespace and retains exact source
+spans; new bill inputs also require a matching own printed caption. It does
+not normalize native URLs or infer annual aliases, filing dates or carryover.
+HB 2699's caption conflict remains excluded. Four exact SHA-pinned historical
+normalizations retain their original identity profile and archived producer,
+so this correction does not rewrite any earlier accepted or rejected record.
+
+An offline lossless projection of the closed capture onto the exact original
+remaining subset recovers **one context / two complete views / 10,687
+characters**, with zero network requests:
+`data/processed/billcam-wrapped-heading-html-20261023-v1/`, manifest
+`23343ed2edc6a4b38e8a32808079e2507bf6c4048def1f30debcd345437adab5`.
+All 6,522 original source artifacts, original fields/nulls/schema/order and
+historical ledgers remain intact. The new packet is disjoint from the
+unchanged 415-context packet. Source availability is now **138,948 / 157,598**,
+leaving **18,650** unavailable; known controlled GETs remain **3,046**.
+Date, party, rights, source-original, human-review and publication gates are
+unchanged. Source availability is separate from the versioned inference below.
+
 ## Completed four-subject source recovery: October 23, 2026
 
 Offline replay of the 426 distinct retained provider details identifies

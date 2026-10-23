@@ -19,6 +19,7 @@ def document(number=2152, kind="HB", year="2024", tail=""):
         f"<div><p>{prefix} NO. {number}</p>"
         f"<p>THIRTY-SECOND LEGISLATURE, {year}</p><p>STATE OF HAWAII</p>"
         "<p>A BILL FOR AN ACT</p>"
+        "<p>RELATING TO OVERSIGHT.</p>"
         "<p>BE IT ENACTED BY THE LEGISLATURE OF THE STATE OF HAWAII:</p>"
         "<p>SECTION 1. anti<span>discrimination</span> &amp; oversight.</p>"
         f"<p>{tail}</p><p>SECTION 99. This Act shall take effect upon approval.</p></div>"
@@ -230,3 +231,61 @@ def test_cited_numbers_or_other_annual_contexts_are_not_own_identity(kind, year)
     )), url)
     context = {"state": "HI", "identifier": "HB 2152", "session_identifier": "2024"}
     assert archive.printed_identity(text, context) is None
+
+
+def test_wrapped_legislature_heading_preserves_literal_source_spans():
+    url = "https://billcam.com/bill-texts/ActualBody"
+    text, _ = archive._body(body_page(url, document().replace(
+        "THIRTY-SECOND LEGISLATURE", "THIRTY-SECOND\n  LEGISLATURE",
+    )), url)
+    context = {"state": "HI", "identifier": "HB 2152", "session_identifier": "2024",
+               "title": "RELATING TO OVERSIGHT."}
+    identity = archive.printed_identity(text, context)
+    assert identity is not None
+    venue = identity["printed_evidence"][1]
+    assert venue["text"] == text[venue["start"]:venue["end"]] == (
+        "THIRTY-SECOND\n  LEGISLATURE, 2024"
+    )
+    assert archive.printed_identity(text, context, legacy_identity_profile=True) is None
+    assert archive.printed_identity(text, {**context, "session_identifier": "2023"}) is None
+    assert archive.printed_identity(text, {**context, "title": "A DIFFERENT PURPOSE."}) is None
+    caption = identity["printed_caption"]
+    assert caption["text"] == text[caption["start"]:caption["end"]] == "RELATING TO OVERSIGHT."
+
+
+def test_exact_sealed_legacy_profile_does_not_rewrite_prior_negative_views(
+    packet_source, monkeypatch,
+):
+    source, _, out = packet_source
+    ledger = list(archive._rows(source / "request-ledger.jsonl"))
+    for row in ledger:
+        path = source / row["body"]
+        path.write_bytes(path.read_bytes().replace(
+            b"THIRTY-SECOND LEGISLATURE", b"THIRTY-SECOND\n  LEGISLATURE",
+        ))
+        row["body_binding"] = archive._binding(path)
+    archive._write_rows(source / "request-ledger.jsonl", ledger)
+    source_manifest = archive._json(source / "manifest.json")
+    source_manifest["artifacts"] = {
+        path.relative_to(source).as_posix(): archive._binding(path)
+        for path in source.rglob("*") if path.is_file() and path.name != "manifest.json"
+    }
+    write_json(source / "manifest.json", source_manifest)
+    current_reader = archive.printed_identity
+
+    def legacy_reader(text, context, *, legacy_identity_profile=False):
+        return current_reader(text, context, legacy_identity_profile=True)
+
+    with monkeypatch.context() as legacy:
+        legacy.setattr(archive, "printed_identity", legacy_reader)
+        build(source, out)
+    with pytest.raises(ValueError, match="replay mismatch"):
+        archive.load_billcam(out)
+    monkeypatch.setitem(
+        archive.SEALED_PRODUCERS, archive._binding(out / "manifest.json")["sha256"],
+        archive._binding(out / "producer/billcam_text.py"),
+    )
+    assert archive.load_billcam(out)[0] == []
+    current = out.with_name("current-normalized")
+    build(source, current)
+    assert len(archive.load_billcam(current)[0]) == 2

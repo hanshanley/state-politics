@@ -27,7 +27,36 @@ not that the state has no data. Platform recovery is separate from the
 legislative status in this table; no state's operative-platform coverage is
 certified complete.
 
-## Latest completed four-subject Hawaii recovery
+## Latest offline wrapped-heading recovery
+
+An independent GPT-6.1 Sol audit of all 206 newly rejected versions finds no
+different still-missing original contexts. Its focused HB 1993 diagnosis
+does identify a genuine reader defect: the printed
+`THIRTY-SECOND` / `LEGISLATURE, 2024` line break was rejected as though the
+venue were absent. Both legislative headings are present; no prologue or
+enactment text is invented. The reader now accepts source whitespace and,
+for new bill inputs, requires the exact own printed caption to match the
+unchanged candidate title. The unresolved HB 2699 caption conflict remains
+quarantined.
+
+An **offline exact remaining-queue projection**, preserving all 6,522 source
+artifacts through a lossless inventory map, recovers **one further original
+context / two complete views / 10,687 characters** with **zero requests**:
+`data/processed/billcam-wrapped-heading-html-20261023-v1/`, manifest
+`23343ed2edc6a4b38e8a32808079e2507bf6c4048def1f30debcd345437adab5`.
+The original 415-context packet is unchanged and remains required. Exact
+SHA-pinned historical reader profiles preserve every prior packet and
+negative disposition rather than silently rewriting old normalizations.
+
+Availability is **138,948 / 157,598 original contexts**, leaving **18,650**
+unavailable, including **5,974 HI**. Ten archives cover 10,493 distinct
+contexts / 12,693 views. The four disjoint BillCam packets total **815
+contexts / 1,453 views / 14,055,184 characters**. Historical GETs in the
+projected packet are preserved, not counted again: known controlled requests
+remain **3,046**. No date, source URL alias, carryover, party, rights,
+native-original, human-accuracy, scientific or publication inference is made.
+
+## Preceding completed four-subject Hawaii recovery
 
 Four additional published catalogues retain all **187 pages / 3,707 result
 occurrences / 3,603 distinct provider records**, including two repeated

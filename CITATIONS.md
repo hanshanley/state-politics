@@ -426,3 +426,28 @@ leads remain unadmitted, not nonexistent. Prior scopes and publisher/account
 stops remain closed; original dates, titles, session IDs, unknowns and all
 approval gates are unchanged. No inference or human-accuracy result follows
 from source capture alone.
+
+### Offline wrapped-heading correction, with all prior packets preserved
+
+The independent rejected-document audit identifies no different-context
+fills. Its narrower HB 1993 diagnosis proves the source's actual line break
+between `THIRTY-SECOND` and `LEGISLATURE, 2024`; the original reader's literal
+space check rejected both otherwise complete versions. Both legislative
+headings are present. The separate superseding diagnostic distinguishes this
+case from two SB 2351 versions with genuinely absent headings.
+
+The corrected reader preserves exact source spans and requires matching
+own printed bill captions; it does not infer dates, aliases or carryover.
+HB 2699's conflicting caption is not admitted. An offline projection of the
+same immutable capture onto the exact remaining 18,651-row original subset
+recovers HB 1993 as **one context / two views / 10,687 characters**:
+`data/processed/billcam-wrapped-heading-html-20261023-v1/`, manifest
+`23343ed2edc6a4b38e8a32808079e2507bf6c4048def1f30debcd345437adab5`.
+Projection source manifest:
+`0f56ea100ff074ba61565add690a5c6b857008844ff025f48d92be30b094e74f`.
+All 6,522 original source artifacts and original context fields survive
+unchanged; the lossless map reconstructs the original captured packet.
+No new request is issued and no historical ledger is counted twice.
+Exact SHA-pinned legacy profiles preserve earlier normalized packets,
+including their previous negative dispositions. Source, scientific,
+native-original, date/party and publication gates remain false.

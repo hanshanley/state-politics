@@ -39,6 +39,14 @@ SEALED_PRODUCERS = {
         "sha256": "4db8b8317ee1125557318618424b0ab09704ff409495fe7e4200086ef23770ea",
         "bytes": 30135,
     },
+    "588d4280d8476623864527595969c751f2bff2085b2f687e6098c51d1b95a89d": {
+        "sha256": "c49a62630d6019e2531298ff7da811f7db395a45eff27f9dca837354e523c9ff",
+        "bytes": 31283,
+    },
+    "801644d9387b094f142e544a638e13e3a942d9d31eecf8c181d6345ae674c15e": {
+        "sha256": "c49a62630d6019e2531298ff7da811f7db395a45eff27f9dca837354e523c9ff",
+        "bytes": 31283,
+    },
 }
 PRODUCTS = {
     "views.jsonl", "source_dispositions.jsonl", "candidate_dispositions.jsonl",
@@ -271,11 +279,15 @@ def _targets(bill, originals):
     return matches, "matched_original_candidate_pending_printed_header"
 
 
-def printed_identity(text, context):
+def printed_identity(text, context, *, legacy_identity_profile=False):
     head = text[:2000]
     own = re.search(r"\b([HS])\.\s*(?:([CJ])\.\s*)?([BR])\.\s*NO\.\s*(\d+)\b",
                     head, re.I)
-    venue = re.search(r"THIRTY-SECOND LEGISLATURE,\s*(2023|2024)\b", head)
+    venue_pattern = (
+        r"THIRTY-SECOND LEGISLATURE,\s*(2023|2024)\b" if legacy_identity_profile
+        else r"THIRTY-SECOND\s+LEGISLATURE,\s*(2023|2024)\b"
+    )
+    venue = re.search(venue_pattern, head)
     state = re.search(r"\bSTATE\s+OF\s+HAWAII\b", head)
     if not own or not venue or not state:
         return None
@@ -285,13 +297,23 @@ def printed_identity(text, context):
             or context["session_identifier"] not in (year, f"{year} Regular Session")):
         return None
     compact = " ".join(text.split())
+    caption = None
     if identifier.split()[0] in ("HB", "SB"):
         if ("A BILL FOR AN ACT" not in compact
                 or "BE IT ENACTED BY THE LEGISLATURE OF THE STATE OF HAWAII:" not in compact):
             return None
+        if not legacy_identity_profile:
+            caption = re.search(
+                r"\bA\s+BILL\s+FOR\s+AN\s+ACT\s+(.*?)\s+BE\s+IT\s+ENACTED\b",
+                text, re.S | re.I,
+            )
+            if (caption is None or type(context.get("title")) is not str
+                    or " ".join(caption[1].casefold().split())
+                    != " ".join(context["title"].casefold().split())):
+                return None
     elif "BE IT RESOLVED" not in compact:
         return None
-    return {
+    identity = {
         "state": "HI", "identifier": identifier, "printed_year": year,
         "printed_legislature": "THIRTY-SECOND",
         "session_identifier": context["session_identifier"],
@@ -302,6 +324,11 @@ def printed_identity(text, context):
             for m in (own, venue, state)
         ],
     }
+    if caption is not None:
+        identity["printed_caption"] = {
+            "start": caption.start(1), "end": caption.end(1), "text": caption[1],
+        }
+    return identity
 
 
 def _source(source, expected_sha):
@@ -349,7 +376,7 @@ def _source(source, expected_sha):
     return manifest, report, responses
 
 
-def _replay(source, queue_path, source_sha, queue_sha):
+def _replay(source, queue_path, source_sha, queue_sha, *, legacy_identity_profile=False):
     source_manifest, source_report, responses = _source(source, source_sha)
     require(_binding(queue_path)["sha256"] == _hash(queue_sha)
             and _equal(_binding(queue_path), source_manifest["input_gap_queue"])
@@ -408,7 +435,9 @@ def _replay(source, queue_path, source_sha, queue_sha):
                     )
                 else:
                     context = targets[0]
-                    identity = printed_identity(text, context)
+                    identity = printed_identity(
+                        text, context, legacy_identity_profile=legacy_identity_profile,
+                    )
                     if identity is None:
                         disposition["disposition"] = (
                             "printed_own_identity_or_year_conflict_not_a_fill"
@@ -577,6 +606,7 @@ def load_billcam(directory, metadata=None, *, source_manifest_sha256=None, gap_q
     products, expected_contexts, report = _replay(
         source, root / "input_gap_queue.parquet",
         manifest["source_manifest_sha256"], manifest["gap_queue_sha256"],
+        legacy_identity_profile=pins["manifest.json"] in SEALED_PRODUCERS,
     )
     for name, rows in products.items():
         require(_equal(list(_rows(root / name)), rows), f"full {name} replay mismatch")
