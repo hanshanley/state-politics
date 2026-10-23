@@ -34,6 +34,41 @@ leaving **18,650** unavailable; known controlled GETs remain **3,046**.
 Date, party, rights, source-original, human-review and publication gates are
 unchanged. Source availability is separate from the versioned inference below.
 
+The actual latest inference is now completed and independently replayed:
+`data/processed/cycle-topic-inference-retained-text-20261023-v8/`,
+**178,064 views; 64,892 classified / 74,056 abstained / 18,650 unavailable**.
+The combined latest 416 contexts yield 253 assignments and 163 abstentions;
+all **157,182 other whole assignment rows** and all 177,443 preceding view
+predictions remain unchanged. Read-only completed v6/v7 cache backups feed
+exactly **621 new encoder strings / 1,116,712 tokens / 1,507 windows**, with
+zero old strings repeated. Logical all-view totals are 594,380,337 tokens /
+778,554 windows, with 615 explicit exclusions separate. No weights, thresholds,
+labels, source dates, human plan or frozen scientific runtimes change.
+
+Current unpublished outputs are the **v23** explorer,
+`outputs/recreated-2023-2024-v19/`,
+`outputs/topic-inference-retained-text-2023-2024-v7/` and
+`outputs/topic-input-comparison-2023-2024-v6/`. Independent full replay covers
+every saved decision/token/window, conservative source consensus, exact
+original row and complete 108-member inference ZIP. All seven comparison
+tables preserve the **138,948** paired denominator and all fifty states.
+Actual Chromium verifies fourteen source SVGs, desktop/mobile layouts, full
+1,453-view HI and 8,169-view NJ queries, both new complete source archives,
+both complete inference ZIPs and exact new 54,215-/6,236-character bodies.
+Separate inert-DOM checks pass all 619 + two new source streams; every helper
+exits. Focused parser/archive/explorer/graph regression: **116 passes / three
+opt-in browser skips**, not the entire project suite. The first invocation's
+wrong temporary-directory boundary failure is preserved, then rerun inside
+the required ignored-project data boundary. Human accuracy is still unproven;
+report, operative platforms, event-time party attribution and release remain open.
+
+The final comparable full tracked audit,
+`data/billcam-wrapped-heading-tracked-artifact-audit-20261023-v1.json`, is
+**426 / 460**, with exactly the same 34 legacy missing-output failures and
+every other baseline report field unchanged. It uses the pinned OCR 5.5.2
+runtime. The parser correction does not fabricate those missing analytical
+outputs or turn a computational check into scientific certification.
+
 ## Completed four-subject source recovery: October 23, 2026
 
 Offline replay of the 426 distinct retained provider details identifies

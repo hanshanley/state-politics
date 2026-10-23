@@ -32,9 +32,12 @@ strict retained-document relations add **2,000 Oklahoma contexts**, preserving
 their distinct original annual sessions and exact source pointers. Independently
 published Hawaii HTML adds **399 contexts / 832 full views / 9,370,186 body
 characters**. All 426 original-context leads in the three bounded subject queries
-were processed; conflicting or unsupported sources are not fills. Combined
-availability is **138,532 of 157,598 existing candidate contexts**, with
-**19,066 remaining gaps**. These are not certified unique-legislation or
+were processed. Four further complete catalogues recover **415 contexts / 619
+views**; fixing a real wrapped-heading parser defect recovers **one further
+context / two views**, entirely offline. All earlier source packets and negative
+dispositions remain unchanged; conflicting captions are not silently admitted.
+Combined availability is **138,948 of 157,598 existing candidate contexts**, with
+**18,650 remaining gaps**. These are not certified unique-legislation or
 filing-cohort counts. Complete alternative views and
 original source metadata are retained. Source versions, archive extraction,
 research-corpus cleaning and classifications remain uncertified.
@@ -43,16 +46,16 @@ remaining-text queue; see the [recovery commands](docs/REPRODUCIBILITY.md#indepe
 
 Provisional topic inference is complete: title/abstract evidence yields
 **89,950 assignments / 67,648 abstentions**; retained bodies yield
-**64,639 assignments / 73,893 abstentions / 19,066 unavailable bodies**
-across **177,443 full source alternatives**.
-The 399 newly observed contexts produce 204 assignments and 195 abstentions;
-all **157,199 other complete assignment rows** and all 176,611 preceding view
-predictions remain unchanged. Only 832 genuinely new strings were encoded,
+**64,892 assignments / 74,056 abstentions / 18,650 unavailable bodies**
+across **178,064 full source alternatives**.
+The latest 416 newly observed contexts produce 253 assignments and 163 abstentions;
+all **157,182 other complete assignment rows** and all 177,443 preceding view
+predictions remain unchanged. Only 621 genuinely new strings were encoded,
 with no old encoder work repeated and no change to the model or thresholds.
 Local graphs and complete research downloads are in
-`outputs/recreated-2023-2024-v17/`,
-`outputs/topic-inference-retained-text-2023-2024-v5/` and
-`outputs/topic-input-comparison-2023-2024-v4/`.
+`outputs/recreated-2023-2024-v19/`,
+`outputs/topic-inference-retained-text-2023-2024-v7/` and
+`outputs/topic-input-comparison-2023-2024-v6/`.
 The paired-input comparison preserves missingness and abstentions; differences
 between inputs are not accuracy measurements. These remain model assignments,
 not validated policy findings or party positions; see the

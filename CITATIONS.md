@@ -400,6 +400,11 @@ discovery retains thirteen GETs, including a refreshed robots policy:
 This packet explicitly records the auxiliary web-tool observations separately;
 neither unrelated transport nor all historical requests are asserted as zero.
 The published search POST route is not used.
+The scope's auxiliary web-URL list is not a retained exchange ledger and
+does not certify a complete invocation history or transport count. Its
+qualification is preserved in
+`data/billcam-auxiliary-web-scope-correction-20261023-v1.json`; the fresh
+robots policy is independently retained as discovery curl ordinal one.
 
 The new four-subject scope has retained every advertised page for the
 University of Hawaii, expenditure-ceiling, Department of Health and Department
