@@ -1525,10 +1525,39 @@ def test_cycle_cli_optional_sources_work_independently(
 
 
 @pytest.mark.skipif(not os.environ.get("CYCLE_BROWSER_CHROME"), reason="No real browser configured")
-def test_cycle_real_browser_controls_downloads_markup_nojs_and_mobile(cycle_bundle, tmp_path):
+def test_cycle_real_browser_controls_downloads_markup_nojs_and_mobile(
+    cycle_bundle, tmp_path, monkeypatch,
+):
     metadata, platform, *_ = cycle_bundle
+    context = pq.read_table(metadata / "bill_evidence.parquet").to_pylist()[0]
+    directory = tmp_path / "published-corpus"
+    directory.mkdir()
+    write_json(directory / "manifest.json", {"schema": "published-corpus-browser-fixture"})
+    write_json(directory / "report.json", {"synthetic_browser_fixture": True})
+    text = SOURCE_TEXT * 120
+    prologue = "Original publisher metadata, not policy input.\n"
+    view = {
+        **{key: context[key] for key in (
+            "bill_id", "state", "identifier", "session_identifier", "title",
+        )},
+        "view_id": "published-corpus-browser-fixture",
+        "source_type": "published_corpus_text", "text": text,
+        "source_record": {"Bill_Text": prologue + text, "summary": "Not human gold"},
+        "source_identity": {"printed_evidence": []},
+        "publisher_prologue": prologue, "native_body_source_span": [
+            len(prologue), len(prologue + text),
+        ],
+        "archive_generated_prologue_preserved": False,
+        "model_input_approved": False, "training_admission": False, "analytical_admission": False,
+    }
+    monkeypatch.setattr("state_politics.site_evidence.load_archive", lambda *_: (
+        [view], [context], {
+            name: sha256_file(directory / name) for name in ("manifest.json", "report.json")
+        },
+        {"schema": "published-corpus-browser-fixture"},
+    ))
     out = tmp_path / "preview"
-    build_cycle_preview(metadata, platform, out)
+    build_cycle_preview(metadata, platform, out, archive_text_evidence=(directory,))
     result = subprocess.run([
         shutil.which("node"), str(ROOT / "tests/browser_cycle_site.cjs"), str(out),
         str(tmp_path / "browser-check"), os.environ["CYCLE_BROWSER_CHROME"], "fixture",

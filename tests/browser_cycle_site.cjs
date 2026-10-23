@@ -526,6 +526,26 @@ async function terminate(child) {
     const archiveDownloads = [];
     let crossContextProof = null;
     if (hasArchive) {
+      const publishedRows = (await readRows("archive-TX"))
+        .filter(row => row.source_type === "published_corpus_text");
+      if (publishedRows.length) {
+        await change(session, "state", "TX");
+        await change(session, "collection", "archive_text");
+        await search(session, publishedRows[0].view_id);
+        await waitFor(session, `document.querySelector("#evidence article .source-text")?.textContent
+          === ${JSON.stringify(publishedRows[0].text)}`);
+        const notice = await evaluate(session,
+          'document.querySelector(".published-corpus-observation").textContent');
+        assert.ok(notice.includes("not model inputs or human gold"));
+        const metadata = JSON.parse(await evaluate(session,
+          'document.querySelectorAll("#evidence article .source-text")[1].textContent'));
+        assert.equal(metadata.publisher_prologue, publishedRows[0].publisher_prologue);
+        assert.deepEqual(metadata.native_body_source_span, publishedRows[0].native_body_source_span);
+        assert.deepEqual(metadata.source_record, publishedRows[0].source_record);
+        archiveDownloads.push(await download(session, [publishedRows[0]],
+          "published-corpus complete policy body and original source metadata"));
+        await search(session, "");
+      }
       let linked;
       for await (const row of sourceRows("archive-OK")) {
         if (!linked && row.context_relation?.kind === "same_legislature_exact_existing_document_pointer") {

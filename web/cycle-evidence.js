@@ -131,7 +131,10 @@ if (typeof document !== "undefined") {
       const receipt = row.source_type === "source_receipt";
       const snapshot = row.source_type === "snapshot_text";
       const corpus = row.source_type === "research_corpus_text";
-      const archive = row.source_type === "archive_text";
+      const published = row.source_type === "published_corpus_text";
+      const archive = row.source_type === "archive_text" || published;
+      const archiveProvider = row.archive_provider
+        ?? (published ? "independently published research corpus" : "unknown archive");
       const crossContext = archive
         && row.context_relation?.kind === "same_legislature_exact_existing_document_pointer";
       article.append(element("h3", receipt
@@ -148,7 +151,7 @@ if (typeof document !== "undefined") {
         : corpus
         ? `View: ${row.view_id} · Bill: ${row.bill_id} · Independent cleaned research text, not publisher-certified`
         : archive
-        ? `View: ${row.view_id} · Bill: ${row.bill_id} · Archive: ${row.archive_provider} · Not publisher-version certification`
+        ? `View: ${row.view_id} · Bill: ${row.bill_id} · Archive: ${archiveProvider} · Not publisher-version certification`
         : bill || native
         ? `View: ${row.view_id} · Bill: ${row.bill_id} · `
           + (native ? `Native context: ${row.context_id}` : `Abstract: ${row.abstract_id ?? "none"}`)
@@ -195,7 +198,17 @@ if (typeof document !== "undefined") {
             ? "This full string includes the archive's existing machine-generated extraction prologue, not our added summary."
             : "This is the complete retained source extraction, without an added summary."),
           "note archive-observation"));
-        article.append(sourceText("Read complete archived bill text (unaltered)", row.text));
+        if (published) {
+          article.append(element("p",
+            "Complete published Bill_Text policy body; the original publisher prologue is "
+            + "preserved separately with its exact source span. Source cleaning and native "
+            + "edition remain unverified. AI summaries, excerpts, scores and party/control "
+            + "fields are original metadata, not model inputs or human gold.",
+            "note published-corpus-observation"));
+        }
+        article.append(sourceText(published
+          ? "Read complete published bill policy text (unaltered source span)"
+          : "Read complete archived bill text (unaltered)", row.text));
         article.append(sourceText("Inspect printed identity, source version and all original metadata",
           JSON.stringify({source_identity: row.source_identity, source_version: row.source_version,
             source_record: row.source_record, source_members: row.source_members,
@@ -203,7 +216,11 @@ if (typeof document !== "undefined") {
             original_source_context: row.original_source_context,
             original_target_context: row.original_target_context,
             archive_provider: row.archive_provider, archive_commit: row.archive_commit,
-            archive_country_git_tree: row.archive_country_git_tree}, null, 2)));
+            archive_country_git_tree: row.archive_country_git_tree,
+            dataset_url: row.dataset_url, source_csv_sha256: row.source_csv_sha256,
+            source_record_ordinal: row.source_record_ordinal,
+            publisher_prologue: row.publisher_prologue,
+            native_body_source_span: row.native_body_source_span}, null, 2)));
       } else if (corpus) {
         article.append(element("p",
           "Joined by printed state, session and bill identity to an existing candidate. "
