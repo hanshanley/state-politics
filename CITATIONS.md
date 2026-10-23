@@ -564,14 +564,25 @@ unchanged; NCSL, LexisNexis and LegiScan endpoints are not requested here.
 Strict own printed state/session/type/number/body checks recover **27
 original missing contexts across thirteen states / 27 published bodies /
 228,679 policy characters**:
-`data/processed/published-ai-corpus-documents-20261023-v1/`, manifest
-`114e8fdc585a52d469a0df1469a19e5b78f788aa9163dbdb3c1d0d47df951cd2`.
+`data/processed/published-ai-corpus-documents-20261023-v2/`, manifest
+`207702b7bf4bdaac9e8fc61a55d385beb25edf55adef5c963d8c6e9a765aef4e`.
 Every original record/field, duplicate, rejected row and exact
 publisher-prologue/body character boundary is preserved. `Bill_Text` alone
 supplies policy bodies; the source's AI `bill_extracts`, `summary`,
 `analyst_results`, scores and party/control fields are neither classifier
 inputs nor gold labels. No source-original, filing-time, party, human-review,
 scientific or publication approval follows from this recovery.
+
+The v1 packet's true uncertainty observation had an ambiguous name ending
+in `_certified`, so the conservative comparison guard refused it. V2 renames
+only that observation to `source_cleaning_and_native_edition_uncertainty_preserved`;
+all 27 bodies, IDs, dates, unknowns, source records and real false approval
+flags remain identical. The comparison guard is not relaxed. The exact
+historical v1 manifest
+`114e8fdc585a52d469a0df1469a19e5b78f788aa9163dbdb3c1d0d47df951cd2`
+selects its archived producer and old metadata profile without rewriting
+any original packet or completed inference. Correction receipt:
+`data/processed/published-corpus-observation-correction-20261023-v1.json`.
 
 ## 17. External human-benchmark discovery, not acquired reference labels
 

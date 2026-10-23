@@ -43,6 +43,12 @@ SUPPORTED = frozenset((
     "CT", "HI", "IN", "KS", "MD", "MI", "MS", "NE", "OK", "RI", "UT", "VA", "WV",
 ))
 STATUS = "independently_published_cleaned_text_not_original_or_filing_time_certification"
+SEALED_PRODUCERS = {
+    "114e8fdc585a52d469a0df1469a19e5b78f788aa9163dbdb3c1d0d47df951cd2": {
+        "sha256": "f7707aad97b53ba0022e740fedeb9002cc03b09bf0e6f38f3e04081afa6a0681",
+        "bytes": 28378,
+    },
+}
 PROLOGUE = re.compile(
     r"\A(?:19|20)\d{2}[ \t]+([A-Z]{2})[ \t]+([A-Z]+[ \t]+\d+)\r?\n"
     r"Author:[^\r\n]*\r?\nVersion:[^\r\n]*\r?\n"
@@ -289,7 +295,7 @@ def _source(source, source_sha):
     return manifest, inventory
 
 
-def _replay(source, queue_path, source_sha, queue_sha):
+def _replay(source, queue_path, source_sha, queue_sha, *, legacy_observation_name=False):
     _, inventory = _source(source, source_sha)
     require(_binding(queue_path)["sha256"] == _hash(queue_sha), "original gap queue changed")
     table = pq.read_table(queue_path)
@@ -364,7 +370,9 @@ def _replay(source, queue_path, source_sha, queue_sha):
                         "publisher_prologue_not_used_as_own_identity": True,
                         "archive_generated_prologue_preserved": False,
                         "source_status": STATUS,
-                        "source_cleaning_not_reversed_or_native_edition_certified": True,
+                        ("source_cleaning_not_reversed_or_native_edition_certified"
+                         if legacy_observation_name
+                         else "source_cleaning_and_native_edition_uncertainty_preserved"): True,
                         "AI_extracts_summaries_scores_and_parties_not_used": True,
                         "training_admission": False, "source_date_or_party_inferred": False,
                         **dict.fromkeys(FLAGS, False),
@@ -488,7 +496,12 @@ def load(directory, metadata=None, *, source_manifest_sha256=None, gap_queue_sha
         require(_same(_binding(root / name), expected), f"normalized artifact changed: {name}")
         pins[name] = expected["sha256"]
     for name, path in PRODUCERS.items():
-        require(_same(artifacts["producer/" + name], _binding(path.absolute())),
+        expected = (
+            SEALED_PRODUCERS[pins["manifest.json"]]
+            if name == "published_corpus_text.py" and pins["manifest.json"] in SEALED_PRODUCERS
+            else _binding(path.absolute())
+        )
+        require(_same(artifacts["producer/" + name], expected),
                 f"installed/archived producer mismatch: {name}")
     source = root / "source-evidence"
     source_manifest, _ = _source(source, manifest["source_manifest_sha256"])
@@ -500,6 +513,7 @@ def load(directory, metadata=None, *, source_manifest_sha256=None, gap_queue_sha
     products, expected_contexts, report = _replay(
         source, root / "input_gap_queue.parquet",
         manifest["source_manifest_sha256"], manifest["gap_queue_sha256"],
+        legacy_observation_name=pins["manifest.json"] in SEALED_PRODUCERS,
     )
     for name, rows in products.items():
         with (root / name).open() as stream:

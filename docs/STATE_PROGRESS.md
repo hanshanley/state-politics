@@ -61,13 +61,21 @@ A genuinely separate, checksum-verified Zenodo publication retains all
 **2,571 original CSV records** after three controlled GETs. Reviewed own
 printed identities recover **27 further original contexts across 13 states /
 27 complete published bodies / 228,679 policy characters**:
-`data/processed/published-ai-corpus-documents-20261023-v1/`, manifest
-`114e8fdc585a52d469a0df1469a19e5b78f788aa9163dbdb3c1d0d47df951cd2`.
+`data/processed/published-ai-corpus-documents-20261023-v2/`, manifest
+`207702b7bf4bdaac9e8fc61a55d385beb25edf55adef5c963d8c6e9a765aef4e`.
 All original fields, duplicates, negative rows and source-prologue spans
-survive. Its provider year is derived from version metadata, not canonical
-session authority; AI summaries, excerpts, scores and parties are not
+survive. The provider describes its year as version-derived, but 74 values
+disagree with their literal version-date year; it is not canonical session
+authority. AI summaries, excerpts, scores and parties are not
 classifier inputs or human gold. Cleaning and source-version limitations
 remain explicit.
+
+The strict comparison guard correctly refuses an ambiguously named v1
+uncertainty observation ending in `_certified`. The producer now uses an
+unambiguous uncertainty key; no actual approval flag, body, source field or
+model input changes. The exact v1 manifest/producer preserves its earlier
+bytes and decisions. Metadata-corrected replay reuses completed predictions,
+not a weakened certification guard or additional encoder work.
 
 These two archives are disjoint from each other and the preceding ten:
 **138,978 / 157,598 original contexts** now have some retained text, leaving

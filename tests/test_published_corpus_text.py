@@ -1,12 +1,15 @@
 import csv
 import hashlib
+import importlib.util
 import json
+from pathlib import Path
 
 import pyarrow as pa
 import pyarrow.parquet as pq
 import pytest
 
 from state_politics.analysis.cycle_topics import input_text, make_input
+from state_politics.bills import published_corpus_text
 from state_politics.bills.published_corpus_text import (
     CSV_MEMBER,
     DATASET_URL,
@@ -17,6 +20,13 @@ from state_politics.bills.published_corpus_text import (
     printed_identity,
 )
 from state_politics.provenance import sha256_file
+
+COMPARISON_SPEC = importlib.util.spec_from_file_location(
+    "published_corpus_comparison_contract",
+    Path(__file__).resolve().parents[1] / "scripts/compare_cycle_topic_inputs.py",
+)
+comparison = importlib.util.module_from_spec(COMPARISON_SPEC)
+COMPARISON_SPEC.loader.exec_module(comparison)
 
 HI = (
     "HOUSE OF REPRESENTATIVES\nH.B. NO.\n1607\nTHIRTY-SECOND\nLEGISLATURE, 2024\n"
@@ -144,6 +154,8 @@ def test_full_source_records_metadata_conflicts_and_exact_policy_spans_survive(p
     assert (out / "source-evidence" / CSV_MEMBER).read_bytes() == (source / CSV_MEMBER).read_bytes()
     assert pq.read_table(out / "context_inventory.parquet").schema == pq.read_table(gap).schema
     for view in views:
+        comparison.unapproved(view, required=False)
+        assert view["source_cleaning_and_native_edition_uncertainty_preserved"] is True
         assert all(view[flag] is False for flag in FLAGS)
         assert all(view["text"][span["start"]:span["end"]] == span["text"]
                    for span in view["source_identity"]["printed_evidence"])
@@ -270,3 +282,33 @@ def test_metadata_nulls_and_external_pins_are_not_silently_replaced(packet_sourc
         load(out, contexts)
     with pytest.raises(ValueError, match="external source or queue anchor"):
         load(out, source_manifest_sha256="0" * 64)
+
+
+def test_exact_legacy_profile_preserves_old_observation_but_never_weakens_approval_guard(
+    packet_source, monkeypatch,
+):
+    source, gap, out, _, _ = packet_source
+    recover(source, gap, out)
+    path = out / "views.jsonl"
+    with path.open() as stream:
+        rows = [json.loads(line) for line in stream]
+    for row in rows:
+        value = row.pop("source_cleaning_and_native_edition_uncertainty_preserved")
+        row["source_cleaning_not_reversed_or_native_edition_certified"] = value
+    path.write_text("".join(json.dumps(row) + "\n" for row in rows))
+    repin(out, "views.jsonl")
+    producer = out / "producer/published_corpus_text.py"
+    with producer.open("a") as stream:
+        stream.write("\n# Retained historical producer fixture\n")
+    repin(out, "producer/published_corpus_text.py")
+    anchor = sha256_file(out / "manifest.json")
+    monkeypatch.setitem(published_corpus_text.SEALED_PRODUCERS, anchor, binding(producer))
+    loaded, _, _, _ = load(out)
+    assert loaded == rows
+    with pytest.raises(ValueError, match="approval flag drift"):
+        comparison.unapproved(loaded[0], required=False)
+    manifest = json.loads((out / "manifest.json").read_text())
+    manifest["counts"]["n_retained_views"] += 1
+    write_json(out / "manifest.json", manifest)
+    with pytest.raises(ValueError, match="producer mismatch"):
+        load(out)
