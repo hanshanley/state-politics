@@ -27,16 +27,18 @@ be bound explicitly before regenerated outputs can support the narrowed study.
   --archive-text data/processed/nj-library-text-20261023-v5 \
   --archive-text data/processed/nj-library-collection-text-full-20261023-v1 \
   --archive-text data/processed/ok-retained-context-text-20261023-v2 \
+  --archive-text data/processed/billcam-hi-retained-html-full-20261023-v1 \
+  --archive-text data/processed/billcam-hi-retained-html-delta-20261023-v1 \
   --out-dir outputs/recreated-2023-2024-REPLAY
 ```
 
-The accepted local build is `outputs/recreated-2023-2024-v15/index.html`.
+The accepted local build is `outputs/recreated-2023-2024-v17/index.html`.
 The command above requires a fresh output directory. The bundle contains 14
-current evidence graphs in PNG and SVG, 13 complete chart-data CSVs, thirteen complete
-research-packet ZIPs and a hash manifest. It also archives the exact ten
+current evidence graphs in PNG and SVG, 13 complete chart-data CSVs, fifteen complete
+research-packet ZIPs and a hash manifest. It also archives the exact eleven
 plotting/source-consumer producers and the recovered producers within their research packets.
-The current bundle has **thirteen** complete research ZIPs, 79 bound artifacts
-and manifest `023d98975cbfbf3cb7d594615a20e62e4ed8f316430cfc6499fef246cda1c33b`.
+The current bundle has **fifteen** complete research ZIPs, 82 bound artifacts
+and manifest `3451b7fa9f90721effa0212ef39edbdd44999c22aa3a8762fcce3e4dd60c0829`.
 It uses saved evidence
 tables and existing development diagnostics without
 collecting sources or executing a classifier. Missing native channels remain
@@ -335,9 +337,121 @@ archives**, including the unchanged eight-PDF library v5 packet. None grants
 training, source, filing-time, native, party, human-gold, scientific or
 publication approval.
 
-### Current full-source inference and delivered graphs
+### Independently published HTML and current actual inference
 
-The current retained-body freeze is
+The initial BillCam source packet retains the closed 16 + 500-GET wave,
+including its invalid first URL and catalogue-parser failure:
+`data/processed/billcam-hi-target-source-20261023-v2/`, source manifest
+`a1137754c36f2a4847c458eebaeaf20e33e1b7e4ba983892ccc65c8153e0d54a`.
+The separate identified follow-up and terminal tail retain all prior ledger
+prefixes and every original source byte, without resetting either allowance:
+`data/processed/billcam-hi-identified-tail-20261023-v1/`, manifest
+`3ceff25fa1b2951b06a4bb2cc83eb71839fe8a6ab4d0328ec60e057a983317a9`.
+All three subject catalogues are fully retained as published query results,
+including duplicate rows; that is not a statewide census or a random sample.
+Known capture total: **16 + 500 + 800 + 105 = 1,421 GETs**.
+
+Use **both disjoint** normalized packets, never the two-context prototype:
+`billcam-hi-retained-html-full-20261023-v1` supplies 111 contexts / 253 views,
+manifest `9bfeaefd6fa650f37fe8248f0ba3fff2834979022240cafe67cb24adb5c90c4b`;
+`billcam-hi-retained-html-delta-20261023-v1` supplies 288 / 579, manifest
+`588d4280d8476623864527595969c751f2bff2085b2f687e6098c51d1b95a89d`.
+Together they retain **399 original contexts / 832 views / 9,370,186
+characters**. Original fields, IDs, unknowns and version references survive.
+Own printed state/year/32nd-Legislature/typed-number and provider-context/title
+checks do not infer native URL aliases, carryover, filing dates, historical
+party or rights. Complete source-container HTML remains independently
+available; provider UI/tags/current sponsors are not body inputs or gold.
+
+Exact offline replay, using fresh output directories:
+
+```bash
+.venv/bin/python -I -B -m state_politics.bills.billcam_text build \
+  --source-dir data/processed/billcam-hi-target-source-20261023-v2 \
+  --source-manifest-sha256 a1137754c36f2a4847c458eebaeaf20e33e1b7e4ba983892ccc65c8153e0d54a \
+  --gap-queue outputs/recreated-2023-2024-v15/chart-data/missing_retained_text.parquet \
+  --gap-queue-sha256 5a1579117cf5db171fced211022269c6a03d9f8ae142eb74ec534e050dc32f46 \
+  --out-dir data/processed/billcam-first-REPLAY
+
+.venv/bin/python -I -B -m state_politics.bills.billcam_text build \
+  --source-dir data/processed/billcam-hi-identified-tail-20261023-v1 \
+  --source-manifest-sha256 3ceff25fa1b2951b06a4bb2cc83eb71839fe8a6ab4d0328ec60e057a983317a9 \
+  --gap-queue data/billcam-hi-identified-followup-gap-queue-20261023-v1.parquet \
+  --gap-queue-sha256 55d5bd82e84b7b70d92677208bd4db03f68fec64e2e847d5f32f17317fdfe004 \
+  --out-dir data/processed/billcam-delta-REPLAY
+```
+
+The current retained-body job is
+`data/processed/cycle-topic-inference-retained-text-20261023-v6/`, frozen from
+the 759-artifact v21 preview: **177,443 views / 157,598 original contexts**,
+**64,639 classified / 73,893 abstained / 19,066 unavailable**. The increment
+is 204 classifications and 195 abstentions; all 157,199 other whole assignment
+rows and every preceding view prediction are unchanged. Two read-only backups
+extend the latest completed cache in order, v4 to v5 to v6. Exactly **832 new
+strings / 2,183,697 unique tokens / 2,810 windows** reach the original encoder,
+with no old strings repeated. Logical all-view totals are **593,263,625 tokens /
+777,047 windows**, not unique encoder work. Model, policy, labels and all
+frozen scientific runtimes remain unchanged; metadata inference is not rerun.
+The `run` command must be followed by `summarize` before plotting.
+For a newly completed replay job only:
+
+```bash
+.venv/bin/python -I -B -m state_politics.analysis.cycle_topics summarize \
+  --directory data/processed/cycle-topic-inference-retained-text-NEW \
+  --tier retained_text
+```
+
+The accepted v6 job is already summarized; leave it immutable and regenerate
+its graphs into fresh directories:
+
+```bash
+.venv/bin/python -I -B scripts/recreate_topic_graphs.py \
+  --directory data/processed/cycle-topic-inference-retained-text-20261023-v6 \
+  --tiers retained_text --out-dir outputs/topic-inference-retained-text-REPLAY
+.venv/bin/python -I -B scripts/compare_cycle_topic_inputs.py \
+  --metadata-gallery outputs/topic-inference-2023-2024-v2 \
+  --retained-text-gallery outputs/topic-inference-retained-text-2023-2024-v5 \
+  --out-dir outputs/topic-input-comparison-REPLAY
+```
+
+Future cache extensions must start from completed **v6**, not v4 or v5.
+Its 167,316-row prediction cache is 746,754,048 bytes, SHA-256
+`8989a4489a3c75a69755eefbbf02891c509ad02a108af623505eb8d8e8213626`.
+The separate 167,316-input independent token cache is
+`data/cycle-topic-independent-token-verification-cache-20261023-v5.sqlite`,
+39,911,424 bytes, SHA-256
+`378c9d05e45ee4f6d140a8d1b90af89b76cbc06b68d9d663a0ee9646dbe0c2e9`.
+Copy caches read-only before extension; do not mutate old jobs or repeat
+their encoder work.
+
+The current body gallery is `outputs/topic-inference-retained-text-2023-2024-v5/`,
+manifest `cfe0bd8a3348076fb8d22c73de9f9cfbd2115d8b7c456b1782a3adf0bc4e151a`.
+Its **108-member / 1,714,773,128-byte** full inference ZIP has SHA-256
+`7c788450ca050507a3606ad31c8afb43dee96db1dd57255574c23d6178ea7da8`.
+Comparison: `outputs/topic-input-comparison-2023-2024-v4/`, manifest
+`bbc4d4a7256f30e0efc73f99edec81d35283fe1f24f5a2c69a79cf9a3a013513`.
+The **138,532** paired denominator includes 41,727 same assigned topics,
+6,092 differing topics, 43,106 both abstaining and 47,607 exactly-one
+abstentions. The other 19,066 contexts are unavailable, not disagreements.
+Every original bill field and all seven comparison tables are independently
+reconstructed, including all fifty states and empty Maine. Both complete
+source inference ZIPs are independent byte-identical copies.
+
+Actual Chromium checks complete HI/NJ queries, exact bodies from both new
+packets, all fourteen source SVGs, desktop/mobile layouts and complete source
+and inference ZIP bytes. Separate inert-DOM checks preserve every supplied
+source character stream without source scripts or external traffic.
+These are computational/source/UX checks, not human topic accuracy,
+native-original certification, filing eligibility, party evidence or release.
+Final independent receipts include
+`data/billcam-final-complete-inference-replay-20261023-v1.json`,
+`data/billcam-final-cumulative-assignment-reconciliation-20261023-v1.json`,
+`data/billcam-final-comparison-replay-20261023-v1.json` and
+`data/billcam-final-browser-workspace-20261023-v1/receipt.json`.
+
+### Preceding complete-collection inference and delivered graphs
+
+The preceding retained-body freeze is
 `data/processed/cycle-topic-inference-retained-text-20261023-v4/`, made from the
 754-artifact v19 preview. Its **176,611 views / 157,598 original contexts** produce
 **64,435 assignments / 73,698 abstentions / 19,465 unavailable bodies**.
@@ -364,11 +478,11 @@ unchanged. No metadata inference is rerun.
   --out-dir outputs/topic-input-comparison-REPLAY
 ```
 
-The current body gallery is `outputs/topic-inference-retained-text-2023-2024-v3/`,
+The preceding body gallery is `outputs/topic-inference-retained-text-2023-2024-v3/`,
 manifest `13a0804ddbd386f479c48657eafe678a5953fa61856f61b3c16feb1f6f4fec09`.
 Its full 108-member inference ZIP is 1,704,563,375 bytes, SHA-256
 `b81b33b0ce244a138a5eb3223dde0a4d96dbfed64925efe152028d24af140b9e`.
-The current comparison is `outputs/topic-input-comparison-2023-2024-v2/`,
+The preceding comparison is `outputs/topic-input-comparison-2023-2024-v2/`,
 manifest `0567f781b1d332ecc24f8faa258c17b01084207a09914f425b73b3f552d5cbcf`.
 All **138,133 paired contexts** include abstentions: 41,575 share an assigned
 topic, 6,083 differ, 43,014 both abstain and 47,461 have exactly one abstention.
@@ -401,13 +515,17 @@ PATH="$PWD/data/tools/ocr-5.5.2/bin:$PATH" \
   --require-tracked --report data/REPLAY-tracked-artifact-audit.json
 ```
 
-The actual current report,
+The preceding report,
 `data/new-recovery-tracked-artifact-audit-20261023-v3.json`, is **424 / 458**,
 with precisely the same 34 legacy missing-output failures and every other
 baseline report field unchanged. Its expected nonzero exit is retained.
 An inventory-only invocation is not comparable to that full audit. The
 preserved diagnostic mismatches were not promoted into a successful audit or
 used to fabricate the missing analytical outputs.
+The current comparable report,
+`data/billcam-final-tracked-artifact-audit-20261023-v2.json`, is **426 / 460**:
+the two added checks pass, the same 34 legacy failures remain, and all other
+baseline fields are unchanged.
 
 ## Provisional population topic inference
 
@@ -424,7 +542,7 @@ Freeze into a new directory before running:
 
 ```bash
 .venv/bin/python -I -B -m state_politics.analysis.cycle_topics freeze \
-  --preview data/preview-cycle-evidence-v19 \
+  --preview data/preview-cycle-evidence-v21 \
   --checkpoint data/models/modernbert-reviewed-only-20261021-v1 \
   --tiers metadata \
   --out-dir data/processed/cycle-topic-inference-metadata-NEW
@@ -1636,22 +1754,24 @@ synthetic references/logits and is not classifier validation.
   --archive-text data/processed/nj-library-text-20261023-v5 \
   --archive-text data/processed/nj-library-collection-text-full-20261023-v1 \
   --archive-text data/processed/ok-retained-context-text-20261023-v2 \
+  --archive-text data/processed/billcam-hi-retained-html-full-20261023-v1 \
+  --archive-text data/processed/billcam-hi-retained-html-delta-20261023-v1 \
   --receipt-evidence data/processed/maine-source-receipt-evidence-2023-2024-v1 \
   --native-session-scope ny-2023-2024 --native-session-scope il-103rd \
   --native-session-scope tx-88r-retained \
   --out data/preview-cycle-evidence-REPLAY
 ```
 
-The accepted build is `data/preview-cycle-evidence-v19/`; reproduction requires
-a fresh output directory. It adds all six independent archives to metadata v4 /
+The accepted build is `data/preview-cycle-evidence-v21/`; reproduction requires
+a fresh output directory. It adds all eight independent archives to metadata v4 /
 native v15 and research-corpus v4, with the unchanged
 platform evidence v5 and token-plan v2. The latter is reusable because the
 complete 159,315-view metadata input Parquet is byte-identical to v3.
 CLI defaults remain the earlier metadata v3 / native v14 selection; custom
 metadata does not silently attach optional bundles. Pass the compatible
 explicit directories above.
-The current 754-artifact build manifest is
-`5977f25e0004748c2b25aec8f7a4f08fd1180b62a37c723625fb4e091bfc6ced`.
+The current 759-artifact build manifest is
+`100cb19b3deb155150b049c183912ba92eef459beb501c327bebef10aa1da5f5`.
 The output includes all 50 state coverage rows / 100 organization rows,
 complete metadata/platform texts, lazy state partitions, full-text gzip
 downloads and `downloads/build_manifest.json`. The earlier v11 build manifest is

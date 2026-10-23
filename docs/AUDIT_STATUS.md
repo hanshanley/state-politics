@@ -4,6 +4,72 @@ The existing figures and analytical conclusions are **legacy, not revalidated fi
 The current changes repair infrastructure and preserve evidence; they do not certify a
 replacement classifier or establish complete contemporary coverage.
 
+## Completed independent HTML frontier and actual inference: October 23, 2026
+
+Independent public cached HTML recovers **399 original Hawaii contexts / 832
+full views / 9,370,186 characters**, without new cohort members or rewritten
+dates/IDs. The two normalized packets are disjoint: first 111 / 253, then
+288 / 579 selected from the exact remaining-original queue. Own printed
+state/year/32nd-Legislature/typed-number, exact title/context and source/version
+checks retain all alternatives and explicit negatives. All **426** identified
+original-context leads from the three source-linked subject queries were
+processed; the other 27 remain unadmitted, not declared nonexistent. All 129
+published query pages, repeated rows, raw HTML, failed attempts and ledger
+prefixes survive. Separate finite capture allowances consumed **16 + 500 +
+800 + 105 = 1,421 GETs**; neither budget nor a publisher/account stop was reset.
+This closes that identified frontier, not statewide or all-state coverage.
+
+Source availability is **138,532 / 157,598 original candidate contexts**,
+with **19,066** unavailable, including **6,390 HI**. Eight source archives
+cover 10,077 distinct contexts / 12,072 views. Original/native/carryover,
+filing, temporal-party, rights and scientific approval remain false. Current
+provider sponsor sessions and topic tags are preserved but are not time-bound
+party evidence, model inputs or gold. Complete extraction from the provider
+does not certify the completeness/authenticity of the native original.
+
+Actual full-body inference completes all fifty partitions in
+`data/processed/cycle-topic-inference-retained-text-20261023-v6/`:
+**177,443 views; 64,639 classified / 73,893 abstained / 19,066 unavailable**.
+The 399 newly observed contexts produce 204 assignments and 195 abstentions.
+Every other **157,199 whole assignment rows** and all preceding predictions
+remain unchanged. Sequential read-only backups reuse the completed v4 and v5
+caches; the original encoder processes exactly **832 new strings / 2,183,697
+tokens / 2,810 windows**, with zero repeated old encoder inputs. Logical
+all-view totals are 593,263,625 tokens / 777,047 windows, not unique work.
+All labels, thresholds, weights, frozen runtimes and the unannotated human
+review packet/plan remain unchanged. No metadata inference is rerun.
+
+Current unpublished outputs are the v21 explorer,
+`outputs/recreated-2023-2024-v17/`,
+`outputs/topic-inference-retained-text-2023-2024-v5/`, and
+`outputs/topic-input-comparison-2023-2024-v4/`. They contain complete original
+source/input/prediction ZIPs, not metadata-only substitutes. Independent replay
+reconstructs every saved decision, token/window span, conservative bill
+consensus, original context and complete 108-member inference ZIP without a
+second encoder. All seven comparison tables retain the **138,532** paired
+denominator and all fifty states; unavailable contexts are not disagreement.
+Real Chromium verifies complete queries, exact new source bodies, complete
+downloads, source SVGs and desktop/mobile layouts. Inert-DOM checks independently
+preserve the source character streams of all 832 views without external
+requests or source-script execution. These do not establish human accuracy.
+
+The separate offline audit covers all preceding **176,611 body views / fifty
+states** and independently replays **2,617,690 original document links /
+1,899,909 versions**. Its 135 Oklahoma relations remain conditional. Two
+outside-cohort typed-identity conflicts have explicit retained **2025** Montana
+draft-to-formal mappings, but a targeted stream yields only empty error rows
+with null version-link IDs. All three audit packets are immutable, introduce
+zero bodies and make no global nonexistence claim.
+
+The comparable full tracked audit is **426 / 460**, with exactly the same
+34 legacy missing-output failures and every other baseline report field
+unchanged; the two added checks pass. The pinned OCR 5.5.2 runtime is used.
+The focused combined regression has **196 passes / three opt-in browser
+skips**, with actual browser verification executed separately. Neither this
+nor a completed acquisition is scientific certification. Operative platforms,
+event-time party attribution, independent human labels/calibration, report
+and publication remain open; nothing is integrated into themarginoferror.com.
+
 ## Renewed source acquisition checkpoint: October 23, 2026
 
 The complete finite public **2023 New Jersey State Library collection** is now
@@ -51,7 +117,7 @@ alone are not classification improvements.
 
 ## Requested population inference and topic graphs
 
-### Subsequent complete-source extension
+### Preceding complete-source extension
 
 Strict normalization and the actual v19 preview add **2,097 original missing
 contexts / 2,255 source alternatives**, comprising 97 NJ contexts / 255 complete
@@ -85,7 +151,7 @@ inference ZIP without another encoder call, using a separately cloned
 verification cache. This is computational verification, not independent
 accuracy validation or scientific promotion.
 
-The current source gallery is `outputs/recreated-2023-2024-v15/`, with fourteen
+The preceding source gallery is `outputs/recreated-2023-2024-v15/`, with fourteen
 PNG/SVG pairs, thirteen CSVs and thirteen complete research ZIPs. Its exact
 remaining queue is the preceding original queue minus only the 2,097 supported
 contexts. Parent verification streams and hashes every member of the 2,210-file

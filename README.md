@@ -9,9 +9,10 @@ Topic attention measures neither policy agreement nor legislative achievement.
 
 ## Status
 
-The active study covers **2023–2024 bills and platforms applicable during that
-cycle**. Older and 2025–2026 evidence is retained separately, not required for
-completion or silently pooled into the study.
+The active study covers **2023–2024 calendar filing/introduction candidates and
+platforms applicable during that cycle**. Existing later-session prefilings keep
+their original dates, IDs and session labels. Wider historical/current-cycle
+collections are retained separately, not silently pooled into the study.
 
 Research is in progress. A supervised ModernBERT-base classifier candidate exists,
 but remains provisional and has not been independently certified. Source
@@ -28,9 +29,12 @@ mostly New Jersey; a further **563 Maryland contexts** and **14 contexts from
 independent library compilations** formed the preceding source baseline.
 A full library-collection pass adds **97 contexts / 255 reader views**;
 strict retained-document relations add **2,000 Oklahoma contexts**, preserving
-their distinct original annual sessions and exact source pointers. Combined
-availability is **138,133 of 157,598 existing candidate contexts**, with
-**19,465 remaining gaps**. These are not certified unique-legislation or
+their distinct original annual sessions and exact source pointers. Independently
+published Hawaii HTML adds **399 contexts / 832 full views / 9,370,186 body
+characters**. All 426 original-context leads in the three bounded subject queries
+were processed; conflicting or unsupported sources are not fills. Combined
+availability is **138,532 of 157,598 existing candidate contexts**, with
+**19,066 remaining gaps**. These are not certified unique-legislation or
 filing-cohort counts. Complete alternative views and
 original source metadata are retained. Source versions, archive extraction,
 research-corpus cleaning and classifications remain uncertified.
@@ -38,13 +42,17 @@ The local graph bundle includes complete research downloads and an explicit
 remaining-text queue; see the [recovery commands](docs/REPRODUCIBILITY.md#independent-archived-bill-text).
 
 Provisional topic inference is complete: title/abstract evidence yields
-**89,950 assignments / 67,648 abstentions**; retained bodies, including the
-new evidence, yield **64,435 assignments / 73,698 abstentions /
-19,465 unavailable bodies** across 176,611 full source alternatives.
-All 174,356 preceding view predictions remain unchanged; only 252 genuinely
-uncached full strings were encoded. Local graphs and complete research downloads
-are in `outputs/topic-inference-retained-text-2023-2024-v3/` and
-`outputs/topic-input-comparison-2023-2024-v2/`.
+**89,950 assignments / 67,648 abstentions**; retained bodies yield
+**64,639 assignments / 73,893 abstentions / 19,066 unavailable bodies**
+across **177,443 full source alternatives**.
+The 399 newly observed contexts produce 204 assignments and 195 abstentions;
+all **157,199 other complete assignment rows** and all 176,611 preceding view
+predictions remain unchanged. Only 832 genuinely new strings were encoded,
+with no old encoder work repeated and no change to the model or thresholds.
+Local graphs and complete research downloads are in
+`outputs/recreated-2023-2024-v17/`,
+`outputs/topic-inference-retained-text-2023-2024-v5/` and
+`outputs/topic-input-comparison-2023-2024-v4/`.
 The paired-input comparison preserves missingness and abstentions; differences
 between inputs are not accuracy measurements. These remain model assignments,
 not validated policy findings or party positions; see the
