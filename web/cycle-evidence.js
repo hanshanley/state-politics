@@ -183,8 +183,14 @@ if (typeof document !== "undefined") {
         article.append(sourceText("Inspect all original bill metadata and source context fields",
           JSON.stringify(row.source_context, null, 2)));
       } else if (archive) {
+        const carryover = row.source_identity?.explicit_original_carryover_evidence;
         article.append(element("p",
-          (crossContext
+          (carryover
+            ? `Printed source year ${carryover.actual_printed_year}; `
+              + `unchanged candidate session ${carryover.original_context_session_identifier}. `
+              + "Exact original bill-specific carryover and origin-introduction action IDs "
+              + "support this context link; it is not inferred from annual-session or URL aliases. "
+            : crossContext
             ? `Retained source session ${row.context_relation.source_session_identifier}; `
               + `candidate session ${row.context_relation.target_session_identifier}. `
               + "Exact existing document pointers link distinct annual contexts of the same legislature, "
@@ -197,7 +203,7 @@ if (typeof document !== "undefined") {
           + (row.archive_generated_prologue_preserved
             ? "This full string includes the archive's existing machine-generated extraction prologue, not our added summary."
             : "This is the complete retained source extraction, without an added summary."),
-          "note archive-observation"));
+          "note archive-observation" + (carryover ? " carryover-action-observation" : "")));
         if (published) {
           article.append(element("p",
             "Complete published Bill_Text policy body; the original publisher prologue is "

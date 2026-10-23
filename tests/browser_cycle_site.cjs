@@ -546,6 +546,28 @@ async function terminate(child) {
           "published-corpus complete policy body and original source metadata"));
         await search(session, "");
       }
+      const carryoverRows = (await readRows("archive-TX"))
+        .filter(row => row.source_identity?.explicit_original_carryover_evidence);
+      if (carryoverRows.length) {
+        const row = carryoverRows[0];
+        await change(session, "state", "TX");
+        await change(session, "collection", "archive_text");
+        await search(session, row.view_id);
+        await waitFor(session, `document.querySelector("#evidence article .source-text")?.textContent
+          === ${JSON.stringify(row.text)}`);
+        const note = await evaluate(session,
+          'document.querySelector(".carryover-action-observation").textContent');
+        assert.ok(note.includes("Printed source year 2023"));
+        assert.ok(note.includes("original bill-specific carryover"));
+        assert.ok(note.includes("not inferred from annual-session or URL aliases"));
+        assert.ok(!note.includes("Exact printed state, session and own bill identity match"));
+        const metadata = JSON.parse(await evaluate(session,
+          'document.querySelectorAll("#evidence article .source-text")[1].textContent'));
+        assert.deepEqual(metadata.source_identity, row.source_identity);
+        archiveDownloads.push(await download(session, [row],
+          "complete carryover body and original distinct-year action evidence"));
+        await search(session, "");
+      }
       let linked;
       for await (const row of sourceRows("archive-OK")) {
         if (!linked && row.context_relation?.kind === "same_legislature_exact_existing_document_pointer") {

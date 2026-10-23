@@ -1550,8 +1550,29 @@ def test_cycle_real_browser_controls_downloads_markup_nojs_and_mobile(
         "archive_generated_prologue_preserved": False,
         "model_input_approved": False, "training_admission": False, "analytical_admission": False,
     }
+    carryover = {
+        **{key: context[key] for key in (
+            "bill_id", "state", "identifier", "session_identifier", "title",
+        )},
+        "view_id": "carryover-action-browser-fixture",
+        "source_type": "archive_text", "archive_provider": "Synthetic carryover browser fixture",
+        "text": "Complete synthetic printed 2023 body.\n" + text,
+        "source_record": {"synthetic_browser_fixture": True},
+        "source_identity": {
+            "printed_year": "2023", "session_identifier": context["session_identifier"],
+            "explicit_original_carryover_evidence": {
+                "actual_printed_year": "2023",
+                "original_context_session_identifier": context["session_identifier"],
+                "original_bill_id": context["bill_id"],
+                "carryover_actions": [{"action_id": "synthetic-carryover-action"}],
+                "original_origin_introduction_actions": [{"action_id": "synthetic-origin-action"}],
+            },
+        },
+        "archive_generated_prologue_preserved": False,
+        "model_input_approved": False, "training_admission": False, "analytical_admission": False,
+    }
     monkeypatch.setattr("state_politics.site_evidence.load_archive", lambda *_: (
-        [view], [context], {
+        [view, carryover], [context], {
             name: sha256_file(directory / name) for name in ("manifest.json", "report.json")
         },
         {"schema": "published-corpus-browser-fixture"},

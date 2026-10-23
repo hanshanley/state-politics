@@ -49,6 +49,24 @@ SEALED_PRODUCERS = {
         "bytes": 28378,
     },
 }
+FROZEN_DEPENDENCY_PRODUCERS = {
+    "114e8fdc585a52d469a0df1469a19e5b78f788aa9163dbdb3c1d0d47df951cd2": {
+        "billcam_text.py": {
+            "sha256": "361cd72d242bf3b7bcdd2af50ecc84046a109f9f52acf2c1e4d02b065f6bf1e8",
+            "bytes": 32680,
+        },
+    },
+    "207702b7bf4bdaac9e8fc61a55d385beb25edf55adef5c963d8c6e9a765aef4e": {
+        "published_corpus_text.py": {
+            "sha256": "1a808609944a9bf4fa236ff8de391828647c2ca1f5cd9318a217d0878917a342",
+            "bytes": 29049,
+        },
+        "billcam_text.py": {
+            "sha256": "361cd72d242bf3b7bcdd2af50ecc84046a109f9f52acf2c1e4d02b065f6bf1e8",
+            "bytes": 32680,
+        },
+    },
+}
 PROLOGUE = re.compile(
     r"\A(?:19|20)\d{2}[ \t]+([A-Z]{2})[ \t]+([A-Z]+[ \t]+\d+)\r?\n"
     r"Author:[^\r\n]*\r?\nVersion:[^\r\n]*\r?\n"
@@ -496,11 +514,13 @@ def load(directory, metadata=None, *, source_manifest_sha256=None, gap_queue_sha
         require(_same(_binding(root / name), expected), f"normalized artifact changed: {name}")
         pins[name] = expected["sha256"]
     for name, path in PRODUCERS.items():
-        expected = (
-            SEALED_PRODUCERS[pins["manifest.json"]]
-            if name == "published_corpus_text.py" and pins["manifest.json"] in SEALED_PRODUCERS
-            else _binding(path.absolute())
-        )
+        expected = FROZEN_DEPENDENCY_PRODUCERS.get(pins["manifest.json"], {}).get(name)
+        if expected is None:
+            expected = (
+                SEALED_PRODUCERS[pins["manifest.json"]]
+                if name == "published_corpus_text.py" and pins["manifest.json"] in SEALED_PRODUCERS
+                else _binding(path.absolute())
+            )
         require(_same(artifacts["producer/" + name], expected),
                 f"installed/archived producer mismatch: {name}")
     source = root / "source-evidence"

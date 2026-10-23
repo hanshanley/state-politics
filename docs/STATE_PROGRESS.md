@@ -27,7 +27,62 @@ not that the state has no data. Platform recovery is separate from the
 legislative status in this table; no state's operative-platform coverage is
 certified complete.
 
-## Latest cross-state independent publications
+## Latest explicit-action carryover recovery
+
+An offline follow-up resolves **213 further original Hawaii contexts /
+229 unique complete views / 1,827,636 characters** using actual original
+bill-specific actions, not an assumed annual-session alias. Each accepted
+2024 context has its own retained **"Carried over to 2024 Regular Session."**
+action, the exact original 2023 origin-introduction action IDs and chamber,
+and a cached body's own matching typed number, caption, Hawaii and
+32nd-Legislature/2023 heading. The printed 2023 year and original 2024
+context, dates, source fields and unknowns are both preserved.
+
+The new opt-in packets supplement all twelve preceding archives:
+
+- `data/processed/billcam-action-bound-html-delta-20261023-v1/`,
+  manifest `8cd20f56dde8d69ef9e1f8bed694526ecc1eddf091a508a53ff02a02d3f20b23`:
+  27 contexts / 29 views.
+- `data/processed/billcam-action-bound-html-four-subject-20261023-v1/`,
+  manifest `0754dcbf9c7ba56eaf876575be54e232e1641637e58de635721f689eafd5dd37`:
+  186 contexts / 200 views.
+
+Both contain the complete checksum-bound original 9,002,451-row action
+Parquet, its original extraction manifest and every historical capture
+artifact through a replayed lossless inventory map. No new body request,
+native URL alias, date repair or filing-time-originality claim is made.
+All five historical normalizations, including their negative decisions,
+still replay exactly. The preceding annual-heading-only audit did not
+include this additional explicit original-action proof; its earlier
+negative finding is not a claim that these bill-specific events are absent.
+
+The first observer counted 238 historical source occurrences. Exact
+view-ID/body/context reconciliation finds nine repetitions in an inherited
+capture; the active union contains **229**, not 238, distinct views.
+The redundant nine-view intermediate packet and failed union check remain
+preserved, but that intermediate packet must not be selected alongside the
+two active packets. Proof: `data/billcam-action-bound-packets-20261023-v2.json`.
+
+Source availability is now **139,191 / 157,598 original contexts**; **18,407**
+remain unavailable, including **5,754 HI**. The fourteen archival packets
+cover **10,736 distinct contexts / 13,101 views**. Inference and
+source/topic/comparison galleries have separate execution receipts; adding
+source packets alone does not claim those executions have finished.
+Historical saved outputs retain their original, explicitly versioned counts.
+No human, rights, party-timing, native-original, scientific or publication
+gate is closed.
+
+A separate bounded ordinary anonymous state-only search observes 78,887
+published HI results over 7,889 pages, not a completed census or new bodies.
+It follows the publisher's actual public form and CSRF/session workflow,
+never logs in or executes scripts, removes its private anonymous cookie
+jar and exports no cookie values. Existing subject scopes remain closed;
+controlled BillCam totals are **3,048 GETs plus one POST**, not 3,049 GETs.
+The new public Open States metadata check stops at
+`data.openstates.org/robots.txt` HTTP 403 after four GETs; it does not
+probe or redownload the bulk object or bypass account-gated JSON downloads.
+
+## Preceding cross-state independent publications
 
 The exact-session Govbot inventory closes after **107 logical GitHub CLI
 invocations** across all 38 gap states. A distinct targeted capture closes

@@ -312,3 +312,32 @@ def test_exact_legacy_profile_preserves_old_observation_but_never_weakens_approv
     write_json(out / "manifest.json", manifest)
     with pytest.raises(ValueError, match="producer mismatch"):
         load(out)
+
+
+def test_frozen_dependency_binding_preserves_current_observation_profile_only_for_exact_packet(
+    packet_source, monkeypatch,
+):
+    source, gap, out, _, _ = packet_source
+    recover(source, gap, out)
+    expected, _, _, _ = load(out)
+    dependency = out / "producer/billcam_text.py"
+    with dependency.open("a") as stream:
+        stream.write("\n# Retained historical dependency fixture\n")
+    repin(out, "producer/billcam_text.py")
+    with pytest.raises(ValueError, match="producer mismatch: billcam_text.py"):
+        load(out)
+    anchor = sha256_file(out / "manifest.json")
+    monkeypatch.setitem(published_corpus_text.FROZEN_DEPENDENCY_PRODUCERS, anchor, {
+        "billcam_text.py": binding(dependency),
+    })
+    loaded, _, _, _ = load(out)
+    assert loaded == expected
+    for row in loaded:
+        comparison.unapproved(row, required=False)
+        assert row["source_cleaning_and_native_edition_uncertainty_preserved"] is True
+        assert "source_cleaning_not_reversed_or_native_edition_certified" not in row
+    manifest = json.loads((out / "manifest.json").read_text())
+    manifest["counts"]["n_retained_views"] += 1
+    write_json(out / "manifest.json", manifest)
+    with pytest.raises(ValueError, match="producer mismatch: billcam_text.py"):
+        load(out)
