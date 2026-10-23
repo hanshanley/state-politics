@@ -129,6 +129,15 @@ browser. Its 66 non-rerendered artifacts remain byte-identical to v13.
 All 41 frozen human-plan artifacts, five runtime files and 20 original
 model/label bindings remain unchanged; no actual human annotations, model
 promotion, party inference or publication approval was created.
+The comparable tracked-artifact audit is **420 / 454**, retaining exactly
+the same 34 missing-output failures; every other report field is identical
+to the preceding 418 / 452 audit. Its two added passing checks cover the
+new documented Python files:
+`data/cycle-topic-final-tracked-artifact-audit-20261023-v1.json`.
+The comparison consumer and completion record are saved and pushed in
+`646d1ce1e37836b0478cdf4dcc24458caf2e9cc7` as Hans Hanley without Copilot
+attribution. Generated sources, models and graph bundles remain local and
+Git-ignored; the code push is not their backup or scientific certification.
 
 ## Latest independent library recovery
 

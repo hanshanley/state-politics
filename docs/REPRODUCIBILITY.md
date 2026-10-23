@@ -459,6 +459,14 @@ library ZIP, complete NJ query and original body rendering:
 `data/cycle-topic-final-browser-proof-20261023-v2/receipt.json`.
 All helpers exited. Source versions, classifier accuracy, filing-time
 alignment, independent human evaluation and publication remain uncertified.
+The final comparable tracked-artifact audit,
+`data/cycle-topic-final-tracked-artifact-audit-20261023-v1.json`, reports
+**420 / 454**, with exactly the same 34 legacy missing-output failures
+and all other report fields unchanged. The 178 public-documentation checks
+and targeted source/comparison passes do not turn that red artifact gate
+or the independent scientific gates green. Five inspected owned scratch/profile
+trees were removed only after helper exit; actual sources, failed real builds,
+logs, JUnit files, downloads, caches and model weights remain retained.
 
 ## October 22 recovered inputs
 
