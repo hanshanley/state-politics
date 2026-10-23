@@ -37,19 +37,30 @@ identified introduced and enacted versions are not conflated. Source-proven
 second/third reprints retain their complete continuation pages and literal
 reader differences.
 
-Packet: `data/processed/nj-library-text-20261022-v4/`, manifest
-`43dd2b81cc743101a147f4fc81391c5be78a7320df38ac19e33f5fbf92d329d7`.
+Current packet: `data/processed/nj-library-text-20261023-v5/`, manifest
+`a27a57b4f72d43f0fc4235713e23b994bebc1a39f49f2284c2a990c1aa70df30`.
+It corrects the erroneous generated-prologue flag without changing any
+original source string, identity, page span or version; sealed v1/v4 remain
+preserved and replayable.
 Every joined record is in the previous missing-text queue with unchanged
 original fields, dates and cohort membership. Availability is now
 **136,036 / 157,598 contexts**, leaving **21,562** text gaps. New Jersey has
 **1,735** remaining gaps. Current source outputs are
-`data/preview-cycle-evidence-v17/` and `outputs/recreated-2023-2024-v12/`.
+`data/preview-cycle-evidence-v18/` and `outputs/recreated-2023-2024-v14/`.
 This independent archive does not reopen publishers, certify filing-time
 versions, infer party affiliations or change the state-status distribution.
 
-The active full-text inference remains bound to its earlier freeze. New
-evidence requires a subsequent version with validated exact-input cache
-reuse, never mutation of that running job or silent replacement of its inputs.
+The separate library-inclusive full-text freeze is complete: **174,356
+source views / 157,598 candidates**, yielding **63,099 assignments /
+72,937 abstentions / 21,562 unavailable bodies**. All earlier 174,316 view
+predictions remain unchanged; only 40 new strings were encoded.
+Full computational replay and complete original input/prediction downloads
+are retained. The body-topic gallery is
+`outputs/topic-inference-retained-text-2023-2024-v2/`; the matched-input
+comparison is `outputs/topic-input-comparison-2023-2024-v1/`.
+These are provisional model assignments and input sensitivity, not
+independent accuracy or scientifically completed states. No party/platform
+comparison, human gold or publication approval is inferred.
 
 ## Preceding Maryland recovery and topic inference
 
@@ -75,7 +86,7 @@ Actual provisional metadata inference has also completed: **159,315 full
 title/abstract views / 157,598 existing contexts**, yielding **89,950 model
 topic assignments and 67,648 abstentions** after source-alternative consensus.
 This is not independently validated accuracy or source-version approval.
-A separate complete retained-text inference pass is running; it does not
+A separate complete retained-text inference pass has since completed; it does not
 silently substitute metadata for unavailable body text. No party/platform
 comparison or scientifically completed state is claimed.
 

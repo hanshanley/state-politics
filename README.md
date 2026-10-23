@@ -33,13 +33,15 @@ research-corpus cleaning and classifications remain uncertified.
 The local graph bundle includes complete research downloads and an explicit
 remaining-text queue; see the [recovery commands](docs/REPRODUCIBILITY.md#independent-archived-bill-text).
 
-Provisional topic inference has completed on every title/abstract view:
-**89,950 candidate bills receive a model topic; 67,648 abstain**. A separate
-full-retained-text baseline has also completed: **63,089 assignments,
-72,933 abstentions and 21,576 unavailable bodies**. Its later library-evidence
-extension and independent computational replay are in progress.
-These are model assignments, not validated
-policy findings or party positions; see the
+Provisional topic inference is complete: title/abstract evidence yields
+**89,950 assignments / 67,648 abstentions**; retained bodies, including the
+new library evidence, yield **63,099 assignments / 72,937 abstentions /
+21,562 unavailable bodies**. Local graphs and complete research downloads are
+in `outputs/topic-inference-retained-text-2023-2024-v2/` and
+`outputs/topic-input-comparison-2023-2024-v1/`.
+The paired-input comparison preserves missingness and abstentions; differences
+between inputs are not accuracy measurements. These remain model assignments,
+not validated policy findings or party positions; see the
 [inference contract](docs/REPRODUCIBILITY.md#provisional-population-topic-inference).
 
 ## Setup

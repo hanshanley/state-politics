@@ -263,3 +263,7 @@ Both PDF readers and all ancillary pages remain separate evidence. A
 checklist-only PDF is not a recovered bill body, and another version's
 printed session witness is not appended to the policy input. No blanket
 redistribution, introduced-version, model or publication approval is inferred.
+The corrected v5 normalization declares that these library views contain no
+machine-generated archive prologue. It preserves all original PDF/page strings,
+printed witnesses and versions; no new retrieval or source-date inference
+accompanies that metadata correction.

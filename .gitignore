@@ -5,6 +5,7 @@ data/*
 !data/.gitkeep
 /outputs/recreated-*/
 /outputs/topic-inference-*/
+/outputs/topic-input-comparison-*/
 
 # Large source corpora and dumps
 *.pgdump

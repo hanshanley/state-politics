@@ -60,8 +60,13 @@ All 50 partitions finish with **63,089 assignments / 72,933 abstentions /
 these are not counts of unique encoder work. The actual baseline gallery,
 `outputs/topic-inference-retained-text-2023-2024-v1/`, contains three PNG/SVG
 pairs and a complete 108-member / 1,665,574,822-byte inference ZIP.
-Full parent replay is in progress; completion of inference is not independent
-accuracy validation. The earlier **13-state / 34,226-view** tokenizer/logit
+Full parent replay independently reconstructs all saved logit decisions,
+complete token/window spans, original context fields and bill consensus,
+without another encoder call:
+`data/cycle-topic-complete-full-text-replay-20261023-v1.json`.
+It verifies every complete ZIP member and gallery artifact. Computational
+replay is not independent accuracy validation.
+The earlier **13-state / 34,226-view** tokenizer/logit
 replay remains a preserved partial proof, not the new full-population proof:
 `data/cycle-topic-completed-full-text-states-replay-20261022-v1.json`.
 Metadata views are not silently replaced by later bill versions.
@@ -70,6 +75,60 @@ five frozen runtime files, training labels/weights and scientific gates
 remain unchanged. Preference confirmation was unavailable; the explicit
 inference request is implemented only as clearly marked provisional
 research, not new independent-review or certification approval.
+
+### Completed library-inclusive inference and matched-input graphs
+
+The corrected source preview v18 now freezes a separate job,
+`data/processed/cycle-topic-inference-retained-text-20261023-v3/`.
+The failed v2 freeze remains preserved. Cohort, model, tokenizer/runtime,
+decision policy and inference producer match the completed baseline exactly.
+A read-only SQLite backup seeds a separate cache; observed original encoder
+calls process **only 40 genuinely new strings / 144,143 tokens / 195 windows**.
+All **174,316 prior source-view predictions** and the original cache remain
+unchanged. Receipt: `data/cycle-topic-library-cache-extension-20261023-v1.json`.
+Of the 14 newly available contexts, ten receive a topic and four abstain.
+
+The completed population now contains **174,356 complete body alternatives /
+157,598 candidates**, yielding **63,099 assignments / 72,937 abstentions /
+21,562 unavailable contexts**. Logical source-view totals are
+584,515,863 tokens / 765,211 windows, not unique encoder work.
+`data/cycle-topic-complete-full-text-replay-20261023-v2.json` independently
+replays the complete result, reusing separately copied verified token spans
+for unchanged inputs and tokenizing all 40 new strings. No additional encoder
+or human evaluation is performed.
+
+Actual gallery `outputs/topic-inference-retained-text-2023-2024-v2/` contains
+three PNG/SVG pairs, four complete CSVs and the full 108-member /
+1,665,943,130-byte input/prediction ZIP. The separate
+`outputs/topic-input-comparison-2023-2024-v1/` adds two graph pairs and seven
+complete comparison CSVs, retaining independent full copies of **both**
+original research ZIPs, not metadata-only downloads.
+
+The comparison uses the same **136,036 paired available contexts**, including
+abstentions in topic-share denominators: 40,625 have the same assigned topic,
+5,953 different assigned topics, 42,736 both abstaining and 46,722 exactly one
+tier abstaining. The other 21,562 contexts are unavailable, not disagreements.
+These are input-tier sensitivity counts, **not accuracy or policy agreement**.
+All 50 states remain accounted for; no-candidate and zero-row conditional
+shares remain unknown, not false zeros.
+`data/cycle-topic-input-comparison-independent-replay-20261023-v2.json`
+reconstructs every comparison row, original field and all seven tables
+directly from the two saved assignment Parquets.
+
+Parent targeted runs pass 62 source/router/inference and 48
+comparison/inference/graph cases, with overlap; these are not a new full-suite
+count. Actual Chromium checks six workspace mounts, three body-topic and two
+comparison images at 1440/390 CSS pixels, full metadata/body/library ZIP
+downloads, the complete 7,914-view New Jersey query and a 55,000-character
+library body. No page errors, overflow or external page requests occur.
+All helpers exited. Proof:
+`data/cycle-topic-final-browser-proof-20261023-v2/`.
+The current source gallery v14 is rebound to the updated state tracker;
+all 75 outputs are verified, including freshly decoded SVGs in the actual
+browser. Its 66 non-rerendered artifacts remain byte-identical to v13.
+All 41 frozen human-plan artifacts, five runtime files and 20 original
+model/label bindings remain unchanged; no actual human annotations, model
+promotion, party inference or publication approval was created.
 
 ## Latest independent library recovery
 
@@ -136,7 +195,7 @@ Report: `data/nj-library-tracked-artifact-audit-20261023-v2.json`.
 The earlier 367 / 401 run omitted the optional 51 tracking checks; its report
 and log remain separately retained, not relabelled as the comparable run.
 
-All 836 current explorer/source-gallery/metadata-topic artifacts, all 65
+At that source checkpoint, all 836 explorer/source-gallery/metadata-topic artifacts, all 65
 library ZIP members, every remaining original gap field and all 7,874 prior
 New Jersey views replay unchanged where expected. Nine useful browser-fixture
 receipts are archived; only 13 inspected owned fixture trees and two stopped

@@ -24,11 +24,12 @@ be bound explicitly before regenerated outputs can support the narrowed study.
   --archive-text data/processed/independent-archive-text-20261022-v2 \
   --archive-text data/processed/lawatlas-text-evidence-20261022-v1 \
   --archive-text data/processed/maryland-archive-text-20261022-v1 \
-  --archive-text data/processed/nj-library-text-20261022-v4 \
-  --out-dir outputs/recreated-2023-2024-v12
+  --archive-text data/processed/nj-library-text-20261023-v5 \
+  --out-dir outputs/recreated-2023-2024-REPLAY
 ```
 
-Open `outputs/recreated-2023-2024-v12/index.html` locally. The bundle contains 14
+The accepted local build is `outputs/recreated-2023-2024-v14/index.html`.
+The command above requires a fresh output directory. The bundle contains 14
 current evidence graphs in PNG and SVG, 13 complete chart-data CSVs, eleven complete
 research-packet ZIPs and a hash manifest. It also archives the exact eight
 plotting/source-consumer producers and the recovered producers within their research packets.
@@ -224,7 +225,7 @@ redistribution rights, scientific completeness or further collection.
 
 ### Independent State Library bill texts
 
-`data/processed/nj-library-text-20261022-v4/` recovers 14 additional existing
+`data/processed/nj-library-text-20261023-v5/` retains 14 additional existing
 New Jersey session-220 contexts, retaining 40 reader views / 20 source versions.
 All eight complete PDFs / 231 physical pages are preserved in both readers;
 228 reader pages form bill versions and 234 remain ancillary evidence.
@@ -234,19 +235,26 @@ continuations; pypdf's literal spacing remains unchanged.
 
 The archive loader strictly replays all original fields, identity/session
 witnesses, page dispositions, raw HTTP evidence and full source texts.
-The source manifest is
-`43dd2b81cc743101a147f4fc81391c5be78a7320df38ac19e33f5fbf92d329d7`.
-The v12 union becomes **136,036 / 157,598 contexts with some retained text;
+The current source manifest is
+`a27a57b4f72d43f0fc4235713e23b994bebc1a39f49f2284c2a990c1aa70df30`.
+The v14 union remains **136,036 / 157,598 contexts with some retained text;
 21,562 remaining**. The complete source ZIP includes the compiled originals,
 both full reader-page records and every retained alternative, not just
 query metadata. Introduced/enacted versions remain distinct and uncertified
 for filing-time analysis; all scientific/model/publication approvals stay false.
-The v12 graph manifest is
-`e63db541f7d044ab454c1b6f4be5f1b491ab31a272e4db0feb114e25c874c034`.
+The v14 graph manifest is
+`aa19f6abf32ea11ff795326b2c550058647eabf7192a8d1635c8265a4e25466b`.
+This is a source-metadata correction, not another recovery: v4 incorrectly
+claimed a generated archive prologue where the complete library text has none.
+The strict first extension freeze stopped before inference rather than guessing
+a boundary. V5 changes only that false flag and its archived producer; all
+original strings, page spans, versions, identities and gap fields remain exact.
+Both sealed v1/v4 packets and the failed freeze remain preserved and replayable.
+The inference producer and prologue-boundary validation are unchanged.
 
 ```bash
 .venv/bin/python -I -B -m state_politics.bills.nj_library_text verify \
-  --directory data/processed/nj-library-text-20261022-v4
+  --directory data/processed/nj-library-text-20261023-v5
 ```
 
 The accepted source/current-metadata reconciliation is recorded in
@@ -258,6 +266,10 @@ desktop/mobile proof is under
 The comparable tracked-input artifact audit is
 `data/nj-library-tracked-artifact-audit-20261023-v2.json`:
 418 / 452 checks, with the same 34 legacy missing-output failures.
+The subsequent metadata correction is independently replayed in
+`data/nj-library-prologue-repair-parent-verification-20261023-v2.json`:
+all 748 preview / 75 source-gallery outputs, 65 complete ZIP members and all
+original strings/fields, with only four expected preview exports changed.
 These receipts do not certify source versions, independent accuracy or
 independent accuracy of the separate full-text inference.
 
@@ -276,7 +288,7 @@ Freeze into a new directory before running:
 
 ```bash
 .venv/bin/python -I -B -m state_politics.analysis.cycle_topics freeze \
-  --preview data/preview-cycle-evidence-v17 \
+  --preview data/preview-cycle-evidence-v18 \
   --checkpoint data/models/modernbert-reviewed-only-20261021-v1 \
   --tiers metadata \
   --out-dir data/processed/cycle-topic-inference-metadata-NEW
@@ -312,7 +324,7 @@ Its three actual graph pairs and complete 108-member inference ZIP are in
 `outputs/topic-inference-retained-text-2023-2024-v1/`.
 The 584,371,720 token / 765,016 window totals include repeated source-view
 cache reuse, not unique encoder work. Full parent replay and the separate
-library-inclusive extension are in progress. Preserve the completed freeze
+library-inclusive extension have now completed. Preserve the completed freeze
 and its hash-bound producer/runtime rather than rerunning or editing it.
 Full bodies and all source alternatives are retained, not truncated or
 silently replaced by titles. The archive's machine-generated prologue is
@@ -389,6 +401,64 @@ integration regression verifies that a new source freeze makes only the new
 encoder call while preserving every original job binding. This is an
 extension procedure, not independent validation or permission to alter the
 completed baseline.
+
+The accepted extension is
+`data/processed/cycle-topic-inference-retained-text-20261023-v3/`, frozen from
+preview v18 after the library-prologue repair. It retains **174,356 views**;
+all original context, model, policy, producer and runtime bindings match.
+The original cache is unchanged and all 174,316 prior view predictions are
+identical. Observed original encoder work is exactly **40 new input strings /
+144,143 tokens / 195 windows**, not a repeat of the completed population.
+The final **157,598** bill rows contain **63,099 assignments / 72,937
+abstentions / 21,562 unavailable bodies**. Logical view totals are
+584,515,863 tokens / 765,211 windows. The full parent replay checks all
+decisions, original fields, complete token spans, bill consensus and all
+108 research ZIP members; original and extension proofs are
+`data/cycle-topic-complete-full-text-replay-20261023-v1.json` and `v2.json`.
+The separate new-only encoder/cache proof is
+`data/cycle-topic-library-cache-extension-20261023-v1.json`.
+
+The accepted final body-topic gallery is
+`outputs/topic-inference-retained-text-2023-2024-v2/`; its manifest is
+`7654413cc4e2b5b473a8007abe06778235b0d546b82d3ce35232ae6a0d9ff08f`.
+It contains three PNG/SVG pairs, four CSVs and the complete
+1,665,943,130-byte / 108-member inference ZIP.
+
+### Matched metadata/body comparison
+
+```bash
+.venv/bin/python -I -B scripts/compare_cycle_topic_inputs.py \
+  --metadata-gallery outputs/topic-inference-2023-2024-v2 \
+  --retained-text-gallery outputs/topic-inference-retained-text-2023-2024-v2 \
+  --out-dir outputs/topic-input-comparison-REPLAY
+```
+
+The actual accepted build is
+`outputs/topic-input-comparison-2023-2024-v1/`, manifest
+`950dab8cc1dfa7c7ba39b6302b494bfeb27b69ec492927afe67f17a9c4a52fbf`.
+The consumer needs only the two completed, self-contained source galleries;
+it neither opens their original model paths nor executes inference. It
+verifies every source member, cohort/model/policy identity, false approval
+and original view before creating a fresh output directory.
+
+Two graph pairs show topic-share differences on the **same 136,036 paired
+available candidates**, including abstentions, and row-conditional topic /
+abstention transitions. Seven CSVs include all 157,598 bill-level comparisons,
+national/all-50-state summaries and every topic/transition cell. Empty paired
+groups and zero-denominator transition shares remain unknown; observed zeros
+remain zero. Missing body evidence is not a disagreement, and both abstaining
+is not accuracy. Full text remains in both complete original research ZIPs,
+copied as independent files with exact hashes, alongside source manifests,
+plans and producers. The companion is not a metadata-only download.
+
+Independent reconstruction of every exported row and all seven tables is in
+`data/cycle-topic-input-comparison-independent-replay-20261023-v2.json`.
+The actual six-mount Chromium proof checks final body/comparison galleries
+at desktop/mobile widths, both full inference ZIP downloads, the corrected
+library ZIP, complete NJ query and original body rendering:
+`data/cycle-topic-final-browser-proof-20261023-v2/receipt.json`.
+All helpers exited. Source versions, classifier accuracy, filing-time
+alignment, independent human evaluation and publication remain uncertified.
 
 ## October 22 recovered inputs
 
@@ -1304,12 +1374,12 @@ population-accuracy reference.
   --output data/human-review-native-REPLAY
 
 .venv/bin/python -I -B scripts/serve_research.py \
-  --evidence data/preview-cycle-evidence-v17 \
+  --evidence data/preview-cycle-evidence-v18 \
   --sessions data/processed/verified-session-comparison-2023-2024-v3 \
   --review data/human-review-native-20261021-v3 \
   --sources data/processed/native-inventory-catalog-2023-2024-v2 \
-  --graphs outputs/recreated-2023-2024-v12 \
-  --topics outputs/topic-inference-2023-2024-v2 \
+  --graphs outputs/recreated-2023-2024-v14 \
+  --topics outputs/topic-input-comparison-2023-2024-v1 \
   --port 8765
 ```
 
@@ -1317,6 +1387,9 @@ Open the printed loopback address. The server checks complete artifact
 hashes at startup and changed-file fingerprints before serving, permits
 only manifest-listed paths and binds only 127.0.0.1. It does not expose the
 repository or all of `data/`, create symlinks/copies, publish or load models.
+Use `--topics outputs/topic-inference-retained-text-2023-2024-v2` instead
+to mount the three full-body topic graphs; the comparison mount preserves
+both complete original tier downloads. Blind reviewers must not inspect either.
 The optional graph mount serves its exact manifest-listed ZIP/CSV/Parquet/image
 artifacts under `/graphs/`; no other bundle may be mounted from `outputs/`.
 The optional `/topics/` mount contains provisional model predictions; independent
@@ -1416,14 +1489,15 @@ synthetic references/logits and is not classifier validation.
   --archive-text data/processed/independent-archive-text-20261022-v2 \
   --archive-text data/processed/lawatlas-text-evidence-20261022-v1 \
   --archive-text data/processed/maryland-archive-text-20261022-v1 \
-  --archive-text data/processed/nj-library-text-20261022-v4 \
+  --archive-text data/processed/nj-library-text-20261023-v5 \
   --receipt-evidence data/processed/maine-source-receipt-evidence-2023-2024-v1 \
   --native-session-scope ny-2023-2024 --native-session-scope il-103rd \
   --native-session-scope tx-88r-retained \
-  --out data/preview-cycle-evidence-v17
+  --out data/preview-cycle-evidence-REPLAY
 ```
 
-The current explicit build adds all four independent archives to metadata v4 /
+The accepted build is `data/preview-cycle-evidence-v18/`; reproduction requires
+a fresh output directory. It adds all four independent archives to metadata v4 /
 native v15 and research-corpus v4, with the unchanged
 platform evidence v5 and token-plan v2. The latter is reusable because the
 complete 159,315-view metadata input Parquet is byte-identical to v3.
@@ -1469,7 +1543,7 @@ For interactive use, serve the output with a local static HTTP server:
 
 ```bash
 .venv/bin/python -I -B -m http.server 8765 \
-  --bind 127.0.0.1 --directory data/preview-cycle-evidence-v17
+  --bind 127.0.0.1 --directory data/preview-cycle-evidence-v18
 ```
 
 No server is left running by the build or verification. JavaScript fetches
