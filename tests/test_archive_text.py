@@ -103,6 +103,7 @@ def repin(out, name):
 @pytest.mark.parametrize(("schema", "module", "loader"), [
     ("state-politics.nj-library-text.v1", "nj_library_text", "load_nj_library"),
     ("state-politics.nj-library-collection-text.v1", "nj_library_collection", "load_nj_collection"),
+    ("state-politics.billcam-retained-html.v1", "billcam_text", "load_billcam"),
     (
         "state-politics.ok-retained-context-text.v1",
         "ok_retained_context_text", "load_ok_retained_context",

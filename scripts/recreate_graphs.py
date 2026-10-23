@@ -151,6 +151,7 @@ def recovery_packet(
                 "state-politics.nj-library-text.v1",
                 "state-politics.nj-library-collection-text.v1",
                 "state-politics.ok-retained-context-text.v1",
+                "state-politics.billcam-retained-html.v1",
             )
             or not all(manifest.get("approvals", {}).get(flag) is False for flag in FLAGS)
         ):
@@ -757,6 +758,7 @@ def recreate(
         for name in (
             "archive_text.py", "lawatlas_text.py", "maryland_archive_text.py",
             "nj_library_text.py", "nj_library_collection.py", "ok_retained_context_text.py",
+            "billcam_text.py",
         )
     ) if archive_directories else ())
     for path in producers:
