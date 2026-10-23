@@ -389,3 +389,26 @@ Both independent actual Chromium inert-DOM audits preserve every supplied
 non-whitespace source character in order without executing source scripts
 or requesting external resources. These checks are not human accuracy or
 native-original certification.
+
+### Subsequent published-subject discovery and acquisition in progress
+
+Replaying the 426 retained provider details identifies 945 actually published
+subject links outside the three completed queries. Separate first-page
+discovery retains thirteen GETs, including a refreshed robots policy:
+`data/processed/billcam-new-subject-discovery-20261023-v1/`, manifest
+`e12d3814c4e449ec0c79da93e0a6285be6904ce7775cb232ffa0c521aa58c7ea`.
+This packet explicitly records the auxiliary web-tool observations separately;
+neither unrelated transport nor all historical requests are asserted as zero.
+The published search POST route is not used.
+
+The new four-subject scope has retained every advertised page for the
+University of Hawaii, expenditure-ceiling, Department of Health and Department
+of Education queries: 187 pages, 3,707 occurrences, 3,603 distinct provider
+records and two repeated occurrences. It identifies 605 exact original
+remaining-context leads, not 605 complete bills. The already captured but
+unadmitted provider path is retained as a negative rather than requested again.
+Acquisition of the 604 other provider details and eligible full HTML versions
+continues under a separate 2,000-GET maximum. No source or inference total is
+increased on the basis of this still-open acquisition. Prior scopes and
+publisher/account stops remain closed; original dates, titles, session IDs,
+unknowns and approval gates are not rewritten.

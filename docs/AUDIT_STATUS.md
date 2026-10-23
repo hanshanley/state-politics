@@ -4,6 +4,35 @@ The existing figures and analytical conclusions are **legacy, not revalidated fi
 The current changes repair infrastructure and preserve evidence; they do not certify a
 replacement classifier or establish complete contemporary coverage.
 
+## New published-subject continuation: in progress, October 23, 2026
+
+Offline replay of the 426 distinct retained provider details identifies
+**945 previously unrequested published subject links**, beyond the three
+closed queries. A separate first-page discovery uses **13 GETs**, including
+a fresh retained robots policy, and closes without detail/body requests:
+`data/processed/billcam-new-subject-discovery-20261023-v1/`, manifest
+`e12d3814c4e449ec0c79da93e0a6285be6904ce7775cb232ffa0c521aa58c7ea`.
+The broad health/education queries advertise thousands of pages, not a
+tractable state census. Their first-page observations do not certify absence.
+The public search POST route is observed statically but not requested.
+
+A distinct, bounded **2,000-GET** source scope follows only four actually
+published University of Hawaii, expenditure-ceiling, Department of Health
+and Department of Education catalogues. All **187 pages / 3,707 result
+occurrences / 3,603 distinct provider records** have been retained, including
+two repeated occurrences. Exact original state/year/typed-number/title matching
+identifies **605 still-missing original contexts**. One provider path was
+already captured but unadmitted and is not requested again; **604 new
+provider-detail targets** remain in this acquisition's finite scope.
+
+Body capture in
+`data/processed/billcam-four-subject-source-20261023-v1/` is still running;
+these leads are **not recovered-body or inference credit**. Its original
+allowance, every previously closed source scope and all publisher/account
+stops remain binding. No old body/detail request is repeated. The accepted
+source availability, completed inference, models, labels, human packet and
+publications remain unchanged pending closed-source normalization and replay.
+
 ## Completed independent HTML frontier and actual inference: October 23, 2026
 
 Independent public cached HTML recovers **399 original Hawaii contexts / 832
