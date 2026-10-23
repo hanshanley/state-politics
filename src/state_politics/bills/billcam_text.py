@@ -30,6 +30,16 @@ FLAGS = (
     "bill_specific_carryover_status_inferred", "native_URL_alias_inferred",
 )
 TOOLS = {"python": platform.python_version(), "pyarrow": pa.__version__}
+SEALED_PRODUCERS = {
+    "598e5f6e46f5ecafb22a1972a5324784f4ac51d9aa176c5d6bb5ed7358203487": {
+        "sha256": "4db8b8317ee1125557318618424b0ab09704ff409495fe7e4200086ef23770ea",
+        "bytes": 30135,
+    },
+    "9bfeaefd6fa650f37fe8248f0ba3fff2834979022240cafe67cb24adb5c90c4b": {
+        "sha256": "4db8b8317ee1125557318618424b0ab09704ff409495fe7e4200086ef23770ea",
+        "bytes": 30135,
+    },
+}
 PRODUCTS = {
     "views.jsonl", "source_dispositions.jsonl", "candidate_dispositions.jsonl",
     "context_inventory.parquet", "input_gap_queue.parquet", "report.json",
@@ -553,7 +563,8 @@ def load_billcam(directory, metadata=None, *, source_manifest_sha256=None, gap_q
         _relative(name)
         require(_equal(_binding(root / name), value), f"normalized artifact changed: {name}")
         pins[name] = value["sha256"]
-    require(_equal(artifacts["producer/billcam_text.py"], _binding(Path(__file__).absolute())),
+    producer = SEALED_PRODUCERS.get(pins["manifest.json"], _binding(Path(__file__).absolute()))
+    require(_equal(artifacts["producer/billcam_text.py"], producer),
             "installed/archived producer mismatch")
     source = _root(root / "source-evidence")
     source_manifest, _, _ = _source(source, manifest["source_manifest_sha256"])
@@ -582,9 +593,21 @@ def load_billcam(directory, metadata=None, *, source_manifest_sha256=None, gap_q
     }), "input immutability receipt mismatch")
     context_rows = contexts.to_pylist()
     if metadata is not None:
+        if isinstance(metadata, dict):
+            current = list(metadata.values())
+            require(all(type(row) is dict and row.get("bill_id") == key
+                        for key, row in metadata.items()), "current metadata index/ID mismatch")
+        else:
+            current = metadata.to_pylist() if isinstance(metadata, pa.Table) else list(metadata)
+        by_id = {}
+        for original in current:
+            require(type(original) is dict and type(original.get("bill_id")) is str,
+                    "typed current metadata row/bill_id required")
+            by_id.setdefault(original["bill_id"], []).append(original)
         for row in context_rows:
-            require(row["bill_id"] in metadata, "matched original context no longer exists")
-            original = metadata[row["bill_id"]]
+            matches = by_id.get(row["bill_id"], [])
+            require(len(matches) == 1, "matched original context missing or duplicated")
+            original = matches[0]
             require(all(key in original for key in (
                 "bill_id", "state", "identifier", "session_identifier",
             )) and all(_equal(row[key], value) for key, value in original.items() if key in row),

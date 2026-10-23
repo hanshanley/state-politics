@@ -322,3 +322,45 @@ The separately replayed Oklahoma packet is
 2,000 exact historical-document relations, with all 135 rejected witnesses and
 both original annual contexts preserved. These observed body-source additions
 do not waive the authority, version, date, rights or approval limits above.
+
+## 14. Independently published Hawaii HTML copies
+
+Hawaii State Legislature, originating legislative text; BillCam / DailyClout,
+independently served public cached copies, accessed 2026-10-23. An inspected
+example is the provider's HB 2152 context,
+https://billcam.com/bills/6Xs1uySRd3/g/hb-2152/relating-to-artificial-intelligence,
+and its actually linked full HTML,
+https://billcam.com/bill-texts/BnfQ9OxCv3. Provider metadata retains
+state and LegiScan source URLs, local-copy paths, version IDs and stage/date
+claims. That metadata is not independently certified source-transfer history;
+neither those native URLs nor LegiScan's API/body endpoints were requested.
+
+The first closed wave retains 16 probe GETs and 500 subsequent GETs, with
+all earlier responses, parser failures and explicit corrections preserved.
+The first unsupported underscore-path request was not a verified discovery
+and returned 404; it is not evidence that the correct hyphenated publication
+was missing. Three source-linked subject queries retain all 129 advertised
+pages. Their repeated result rows are preserved rather than silently dropped
+or counted as additional bills. They are not a statewide or random sample.
+Sealed source:
+`data/processed/billcam-hi-target-source-20261023-v2/`, manifest
+`a1137754c36f2a4847c458eebaeaf20e33e1b7e4ba983892ccc65c8153e0d54a`.
+
+Strict offline normalization yields 111 original missing contexts / 253
+complete published HTML views / 5,027,861 body characters:
+`data/processed/billcam-hi-retained-html-full-20261023-v1/`, manifest
+`9bfeaefd6fa650f37fe8248f0ba3fff2834979022240cafe67cb24adb5c90c4b`.
+The entire source container and markup survive; provider UI, topic tags,
+community material and current sponsor data are not appended to model inputs.
+Each supplied version remains separate. A complete provider extraction is
+not certification of the native original's completeness or authenticity.
+
+Admission requires actual own printed state, 32nd Legislature, year and
+typed number, independently matched to the provider context and unchanged
+original candidate title. Conflicting years and identities stay unavailable.
+The distinct literal native URLs are preserved without inferring aliases.
+Provider date fields do not replace original filing/introduction evidence,
+and current sponsor sessions do not establish 2023/2024 party affiliations.
+No rights, introduced-version, model-accuracy, source, scientific or
+publication approval is granted. A subsequent identified-document follow-up
+has its own explicit scope and accounting; it does not reset this closed wave.

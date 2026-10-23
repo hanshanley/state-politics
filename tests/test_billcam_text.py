@@ -207,6 +207,21 @@ def test_source_changes_missing_members_and_metadata_unknowns_fail_closed(packet
         archive.load_billcam(out)
 
 
+@pytest.mark.parametrize("shape", ["rows", "arrow", "indexed"])
+def test_original_metadata_consumer_shapes_and_duplicate_matched_ids(packet_source, shape):
+    source, originals, out = packet_source
+    build(source, out)
+    rows = originals.to_pylist()
+    metadata = (
+        originals if shape == "arrow" else
+        {row["bill_id"]: row for row in rows} if shape == "indexed" else rows
+    )
+    views, contexts, _, _ = archive.load_billcam(out, metadata)
+    assert len(views) == 2 and contexts[0] == rows[0]
+    with pytest.raises(ValueError, match="missing or duplicated"):
+        archive.load_billcam(out, [*rows, rows[0]])
+
+
 @pytest.mark.parametrize(("kind", "year"), [("SB", "2024"), ("HB", "2023")])
 def test_cited_numbers_or_other_annual_contexts_are_not_own_identity(kind, year):
     url = "https://billcam.com/bill-texts/ActualBody"

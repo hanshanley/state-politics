@@ -27,7 +27,53 @@ not that the state has no data. Platform recovery is separate from the
 legislative status in this table; no state's operative-platform coverage is
 certified complete.
 
-## Latest complete-collection and retained-context recovery
+## Latest independently published Hawaii body recovery
+
+An independently served BillCam cache adds **111 exact original Hawaii
+contexts / 253 complete published HTML views / 5,027,861 retained body
+characters**. Every admitted view independently matches its own printed
+Hawaii state, 32nd Legislature, year and typed bill number, plus the
+provider's original context and the unchanged candidate title. Other years,
+conflicting identities, unavailable bodies and unrequested references are
+not fills. Neither `www`/non-`www` native URL aliases nor carryover or
+filing dates are inferred.
+
+Normalized packet:
+`data/processed/billcam-hi-retained-html-full-20261023-v1/`, manifest
+`9bfeaefd6fa650f37fe8248f0ba3fff2834979022240cafe67cb24adb5c90c4b`.
+It contains the initial two-context prototype; do not concatenate both.
+All raw cached HTML, provider metadata, source versions, original context
+fields, character spans, failed attempts and negative dispositions survive.
+Provider topic tags and present-day sponsor data are not training gold,
+body inputs or event-time party evidence.
+
+The closed first wave used **16 probe + 500 subsequent GETs**, not a reset
+of either allowance. All 129 advertised subject-catalogue pages are retained;
+the appropriation query's 2,426 result rows include seven duplicate
+occurrences, leaving 2,419 unique provider IDs in that query. These are
+subject-query observations, not a Hawaii or 50-state legislative census.
+The exhausted body scope leaves an explicitly enumerated 306-record frontier,
+which is being handled under a separately recorded follow-up allowance.
+Existing publisher, account, challenge and attachment stops remain closed.
+
+Retained-source availability is now **138,244 / 157,598 original candidate
+contexts**, leaving **19,354** unavailable, including **6,678 HI**. There are
+no new original cohort members, merged bill IDs, replaced dates or source
+approvals. The preceding six archives remain unchanged; the additional source
+makes **9,789 distinct archive-covered contexts / 11,493 archive views**.
+Native source-status distribution remains **6 closed / 21 partial /
+21 blocked / 2 inventory**; independent human accuracy, platforms, party
+timing, report and publication remain unresolved.
+
+The separate offline all-state pointer audit replays all 176,611 preceding
+body views and the complete original version/link tables. Its 135 remaining
+Oklahoma relations stay conditional, not new fills. The only two
+outside-cohort pointer conflicts have explicit retained **2025** Montana
+draft-to-formal mappings, but both targeted original dump rows contain
+empty error text and no version-link ID. These checks add no bodies and
+do not establish that bodies are absent from other publications.
+
+## Preceding complete-collection and retained-context recovery
 
 The complete finite 2023 New Jersey State Library capture retains **237
 catalogue items / 229 newly captured PDFs / 9,952 physical pages**, plus eight
