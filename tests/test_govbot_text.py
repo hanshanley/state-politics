@@ -28,15 +28,36 @@ def header(kind="SJ", number=1, year="2025"):
     )
 
 
-def pdf_bytes(text, year="2025", last_page=None):
+def pdf_bytes(text, year="2025", last_page=None, complete_pages=None):
     with fitz.open() as document:
-        document.new_page().insert_text((50, 50), text, fontsize=10)
         tail = (f"69th Legislature {year}\nLC 1.1\n"
                 "Last complete source page; never omit this passage.")
-        document.new_page().insert_text(
-            (50, 50), tail if last_page is None else last_page, fontsize=10,
-        )
+        for value in (complete_pages if complete_pages is not None
+                      else [text, tail if last_page is None else last_page]):
+            document.new_page().insert_text((50, 50), value, fontsize=10)
         return document.tobytes()
+
+
+def enrolled_texts():
+    return [
+        "69th Legislature 2025\nSJ 1\n- 1 -\n Authorized Print Version – SJ 1 \n"
+        "ENROLLED BILL\n"
+        "A JOINT RESOLUTION OF THE SENATE AND THE HOUSE OF REPRESENTATIVES OF THE STATE OF \n"
+        "MONTANA ADOPTING THE JOINT LEGISLATIVE RULES.\n"
+        "NOW, THEREFORE, BE IT RESOLVED BY THE SENATE AND THE HOUSE OF REPRESENTATIVES OF \n"
+        "THE STATE OF MONTANA:\nThat the following Joint Rules be adopted:\n"
+        "Complete policy body.\n",
+        "-\nI hereby certify that the within bill,\nSJ 1, originated in the Senate.\n"
+        "___________________________________________\nSecretary of the Senate\n"
+        "___________________________________________\nPresident of the Senate\n"
+        "Signed this _______________________________day\n"
+        "of____________________________________, 2025.\n"
+        "___________________________________________\nSpeaker of the House \n"
+        "Signed this _______________________________day\n"
+        "of____________________________________, 2025.\n",
+        "SENATE JOINT RESOLUTION NO. 1\nINTRODUCED BY T. MCGILLVRAY\n"
+        "BY REQUEST OF THE JOINT RULES COMMITTEE\nADOPTING THE JOINT LEGISLATIVE RULES\n",
+    ]
 
 
 def tree_response(blobs):
@@ -89,7 +110,8 @@ def seal(source):
 
 @pytest.fixture
 def make_source(tmp_path):
-    def make(*, witness_note=None, duplicate_version=False, last_page=None, truncated_root=False):
+    def make(*, witness_note=None, duplicate_version=False, last_page=None,
+             truncated_root=False, enrolled=False):
         source = tmp_path / "source"
         source.mkdir()
         (source / "raw").mkdir()
@@ -148,6 +170,12 @@ def make_source(tmp_path):
                 )
                 for index, (note, text) in enumerate(documents):
                     pdf = state == "MT"
+                    complete_pages = (
+                        enrolled_texts()
+                        if enrolled and identifier == "SJ1" and index == 0 else None
+                    )
+                    if complete_pages is not None:
+                        text = "\f".join(complete_pages)
                     offered.append({
                         "note": note, "date": "", "classification": "",
                         "links": [{"media_type": "application/pdf" if pdf else "text/html",
@@ -155,7 +183,8 @@ def make_source(tmp_path):
                     })
                     stem = f"{base}/files/published_{index}"
                     blobs[stem + (".pdf" if pdf else ".html")] = (
-                        pdf_bytes(text, "2024" if identifier == "SR1" else "2025", last_page)
+                        pdf_bytes(text, "2024" if identifier == "SR1" else "2025",
+                                  last_page, complete_pages)
                         if pdf else text.encode()
                     )
                     printed_note = witness_note if witness_note and index == 0 else note
@@ -355,6 +384,99 @@ def test_literal_hyphenated_venue_and_trailing_line_number_not_LC_alias():
     assert archive.printed_identity(
         text.replace("RESOLUTION NO. 1 1", "RESOLUTION NO. 11"), context,
     ) is None
+
+
+def test_enrolled_own_header_and_exact_terminal_forms_keep_every_reader_page(make_source):
+    source, original, out = make_source(enrolled=True)
+    build(source, out)
+    views, contexts, _, _ = load_archive(out, original)
+    assert len(views) == 2 and len(contexts) == 1
+    for view in views:
+        assert view["n_pages"] == 3 and view["text"].count("\f") == 2
+        assert "Complete policy body." in view["text"]
+        assert "I hereby certify that the within bill" in view["text"]
+        assert view["text"].rstrip().endswith("ADOPTING THE JOINT LEGISLATIVE RULES")
+        identity = view["source_identity"]
+        assert identity["recognition_profile"] == (
+            "reviewed_MT_2025_SJ1_enrolled_with_terminal_forms"
+        )
+        for span in identity["printed_evidence"]:
+            assert view["text"][span["start"]:span["end"]] == span["text"]
+        assert [row["page"] for row in identity["reviewed_terminal_pages"]] == [2, 3]
+        assert all(view[flag] is False for flag in archive.FLAGS)
+    legacy, _, report = archive._replay(
+        source, source / "input_gap_queue.parquet",
+        archive._binding(source / "manifest.json")["sha256"],
+        archive._binding(source / "input_gap_queue.parquet")["sha256"],
+        legacy_identity_profile=True,
+    )
+    assert legacy["views.jsonl"] == []
+    assert report["counts"]["n_rejected_PDF_documents"] == 4
+
+
+@pytest.mark.parametrize("mutation", [
+    "first_number", "last_number", "certificate_number", "first_year", "certificate_year",
+    "missing_certificate", "missing_title", "nonterminal_no_venue", "LC_header",
+    "wrong_caption", "extra_title_policy",
+])
+def test_enrolled_profile_rejects_conflicts_and_missing_or_nonterminal_forms(mutation):
+    texts = enrolled_texts()
+    if mutation == "first_number":
+        texts[0] = texts[0].replace("\nSJ 1\n", "\nSJ 2\n")
+    elif mutation == "last_number":
+        texts[-1] = texts[-1].replace("RESOLUTION NO. 1", "RESOLUTION NO. 2")
+    elif mutation == "certificate_number":
+        texts[-2] = texts[-2].replace("SJ 1,", "SJ 2,")
+    elif mutation == "first_year":
+        texts[0] = texts[0].replace("Legislature 2025", "Legislature 2024")
+    elif mutation == "certificate_year":
+        texts[-2] = texts[-2].replace("2025.", "2024.")
+    elif mutation == "missing_certificate":
+        texts.pop(-2)
+    elif mutation == "missing_title":
+        texts.pop()
+    elif mutation == "nonterminal_no_venue":
+        texts.insert(1, "A substantive policy page lacking a legislature/own header.")
+    elif mutation == "LC_header":
+        texts[0] = texts[0].replace("\nSJ 1\n", "\nLC 1\n")
+    elif mutation == "wrong_caption":
+        texts[0] = texts[0].replace("A JOINT RESOLUTION", "A BILL")
+    else:
+        texts[-1] += "Unreviewed appended policy input.\n"
+    pages = [{"page": i, "reader": "pymupdf", "text": text}
+             for i, text in enumerate(texts, 1)]
+    context = {"state": "MT", "session_identifier": "2025", "identifier": "SJ 1"}
+    assert archive.enrolled_identity(pages, context) is None
+
+
+def test_exact_v1_legacy_manifest_keeps_original_producer_and_negative_replay(make_source):
+    legacy = (Path(__file__).resolve().parents[1] / "data/processed"
+              / "govbot-exact-original-documents-20261023-v1")
+    if not legacy.exists():
+        pytest.skip("local immutable v1 archive is not distributed with the test suite")
+    views, contexts, pins, manifest = load_archive(legacy)
+    assert len(views) == 146 and len(contexts) == 3
+    assert manifest["counts"]["n_rejected_PDF_documents"] == 8
+    assert manifest["packet_artifacts"]["producer/govbot_text.py"] == archive.SEALED_PRODUCERS[
+        pins["manifest.json"]
+    ]
+    assert manifest["packet_artifacts"]["producer/govbot_text.py"] != archive._binding(
+        archive.DEPENDENCIES["govbot_text.py"],
+    )
+    documents = list(archive._rows(legacy / "document_dispositions.jsonl"))
+    enrolled = [row for row in documents if row["published_git_path"].rsplit("/", 1)[-1]
+                in {f"bill_content_SJ0001_{suffix}pdf.pdf" for suffix in ("X", "X1", "X2")}]
+    assert len(enrolled) == 3
+    assert all(row["disposition"] == "printed_own_formal_identity_or_year_unresolved"
+               and all(identity is None for identity in row["reader_identities"].values())
+               for row in enrolled)
+    source, _, out = make_source()
+    build(source, out)
+    producer = "producer/govbot_text.py"
+    (out / producer).write_bytes((legacy / producer).read_bytes())
+    repin(out, producer)
+    with pytest.raises(ValueError, match="installed/archived producer"):
+        load_archive(out)
 
 
 @pytest.mark.parametrize("mode", ["wrong_note", "duplicate_version"])

@@ -31,16 +31,19 @@ be bound explicitly before regenerated outputs can support the narrowed study.
   --archive-text data/processed/billcam-hi-retained-html-delta-20261023-v1 \
   --archive-text data/processed/billcam-four-subject-html-20261023-v1 \
   --archive-text data/processed/billcam-wrapped-heading-html-20261023-v1 \
+  --archive-text data/processed/govbot-exact-original-documents-20261023-v1 \
+  --archive-text data/processed/published-ai-corpus-documents-20261023-v1 \
   --out-dir outputs/recreated-2023-2024-REPLAY
 ```
 
-The accepted local build is `outputs/recreated-2023-2024-v19/index.html`.
+The accepted local build is `outputs/recreated-2023-2024-v20/index.html`.
 The command above requires a fresh output directory. The bundle contains 14
-current evidence graphs in PNG and SVG, 13 complete chart-data CSVs, seventeen complete
-research-packet ZIPs and a hash manifest. It also archives the exact eleven
+current evidence graphs in PNG and SVG, 13 complete chart-data CSVs, nineteen complete
+research-packet ZIPs and a hash manifest. It also archives the exact fifteen
 plotting/source-consumer producers and the recovered producers within their research packets.
-The current bundle has **seventeen** complete research ZIPs, 84 bound artifacts
-and manifest `27a4061cedeac8c20dd6f70cc0dcc1bc7de6cd52a3d9532dbfe88eba586e4bd5`.
+The current bundle has **nineteen** complete research ZIPs, 90 bound artifacts
+and manifest `39fbf88c814395b55a2f253f9961aedf44ccae99aaee2383b57b18fed64e98cc`.
+All seventeen preceding source ZIPs remain byte-identical.
 It uses saved evidence
 tables and existing development diagnostics without
 collecting sources or executing a classifier. Missing native channels remain
@@ -157,7 +160,83 @@ publisher-native or introduced version.
 
 ## Independent archived bill text
 
-The newest offline pass adds **7,004 existing contexts / 7,875 complete views**,
+### Current cross-state independent publications
+
+Two additional, disjoint archives recover **30 original contexts across fourteen
+states / 179 complete supplied views / 10,117,496 policy characters**. They are
+required alongside all ten preceding archives, not replacements for them:
+
+- `data/processed/govbot-exact-original-documents-20261023-v2/`: three MT 2025
+  contexts, 76 PDF file/version occurrences and 152 paired-reader views; manifest
+  `8edb6c6de1f0af693092ba5d67d09ab0780898d304843f7ad14776241a1431d4`.
+- `data/processed/published-ai-corpus-documents-20261023-v1/`: 27 contexts
+  across thirteen states and 27 complete published `Bill_Text` bodies; manifest
+  `114e8fdc585a52d469a0df1469a19e5b78f788aa9163dbdb3c1d0d47df951cd2`.
+
+```bash
+.venv/bin/python -I -B -m state_politics.bills.govbot_text build \
+  --source-dir data/processed/govbot-exact-original-lead-source-20261023-v3 \
+  --source-manifest-sha256 d5ab101b125c8dcf2ee75981b5938b841bea267d645dace9b5cb5378a68643dd \
+  --gap-queue outputs/recreated-2023-2024-v19/chart-data/missing_retained_text.parquet \
+  --gap-queue-sha256 e4a0e7de7c2fb789c5e7bbfa3ed04e04d8763507232f95199b99231a3a19b439 \
+  --out-dir data/processed/govbot-exact-original-documents-REPLAY
+
+.venv/bin/python -I -B -m state_politics.bills.published_corpus_text build \
+  --source-dir data/processed/independent-ai-bill-corpus-source-20261023-v1 \
+  --source-manifest-sha256 27e124cd8f99e58cb50e9e33b9036504fc3eb96a981394991d091441e9cc1ce1 \
+  --gap-queue outputs/recreated-2023-2024-v19/chart-data/missing_retained_text.parquet \
+  --gap-queue-sha256 e4a0e7de7c2fb789c5e7bbfa3ed04e04d8763507232f95199b99231a3a19b439 \
+  --out-dir data/processed/published-ai-corpus-documents-REPLAY
+```
+
+The Govbot packet replays immutable Git membership and all thirty original
+leads, 83 versions, 166 files and both readers' 2,263 PDF pages. Five received
+PDFs remain rejected; whole source bodies are never replaced by amendments,
+drafts, metadata or generated extraction prologues. The distinct 107-invocation
+discovery and 161-total-invocation targeted capture preserve earlier failures
+without budget resets; those are logical CLI, not physical HTTP counts.
+
+The actual-page follow-up fixes a genuine first-page/every-page header
+assumption: three same-byte enrolled SJ 1 occurrences print their own typed
+header on page one, Senate-origin certificate on page 32 and formal title on
+page 33. The narrow corrected profile binds all those own spans and preserves
+all 33 pages in both reader inputs. Six views / 426,810 characters are restored
+offline, not six new contexts. All 146 preceding v1 view rows and original
+source/page bytes remain unchanged. The exact v1 manifest/producer still
+replays its older negative decisions; neither v1 nor its first-pass outputs
+is overwritten. Receipt:
+`data/processed/govbot-enrolled-correction-20261023-v1.json`.
+The superseded v9 job is only a frozen, unexecuted 178,237-view snapshot;
+it has no classifier progress or prediction cache and is not a completed run.
+
+The separately published CSV retains all 2,571 records / 29 original fields,
+including every duplicate and negative. Its complete bytes and advertised MD5
+are verified. Own printed headers, not the non-authoritative provider year,
+establish the relation to unchanged original contexts. All source text and exact
+prologue/body spans survive; AI excerpts, summaries, scores and party/control
+fields remain opaque original metadata, never policy inputs or human gold.
+Original/native completeness, source cleaning, dates and rights remain uncertified.
+The author-described version-year derivation is not assumed correct: all 2,571
+rows are audited and **74** disagree with their literal `Version_Date` year.
+The complete discrepancy inventory preserves those original values without
+repair, including the correctly recovered RI H 5866 2023 context despite its
+provider `Year=2024`.
+
+The v20 source union is **138,978 / 157,598** original contexts with some
+retained text; **18,620** remain unavailable, including **5,967 HI**.
+Twelve independent archives cover 10,523 distinct contexts / 12,872 views.
+Both new complete research ZIPs preserve all packet members and negatives.
+All prior outputs and original rows, unknowns, annual/session keys and access
+stops remain intact. See [source attribution and limits](../CITATIONS.md#15-independently-published-govbot-legislative-archives).
+
+External human-benchmark discovery is unresolved, not replaced with the CSV's
+AI annotations. The metadata-only Florida capture stops at a retained robots403;
+bounded archival alternatives stop at explicit robots/challenge restrictions.
+No external labels, CSV field headers or scores enter the frozen human plan.
+
+### Preceding NJ and independent PDF baseline
+
+The preceding offline pass adds **7,004 existing contexts / 7,875 complete views**,
 mostly NJ, with one additional NE context. Source packets:
 
 - `data/processed/independent-archive-text-20261022-v2/`: pinned NJ mirror,

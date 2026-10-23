@@ -486,20 +486,37 @@ complete nonrecursive root/bills and selected-bill branches establish
 membership of the selected records, not receipt of every MT session blob.
 Git symlinks are preserved structurally and never followed or extracted.
 
-Offline normalization recovers **three original MT 2025 contexts / 73 PDFs /
-146 complete paired-reader views / 9,462,007 characters**:
-`data/processed/govbot-exact-original-documents-20261023-v1/`, manifest
-`dfd21e9aa3651d1afa158d42c526a25560b7c21069682296c78c51b94fb49802`.
+Corrected offline normalization recovers **three original MT 2025 contexts /
+76 PDF file/version occurrences / 152 complete paired-reader views /
+9,888,817 characters**:
+`data/processed/govbot-exact-original-documents-20261023-v2/`, manifest
+`8edb6c6de1f0af693092ba5d67d09ab0780898d304843f7ad14776241a1431d4`.
 Both readers retain every one of 2,263 pages across all 81 received PDFs.
-All 83 provider versions, 166 files, thirty contexts, eight rejected PDFs
+All 83 provider versions, 166 files, thirty contexts, five rejected PDFs
 and exact same-stem published extraction witnesses remain accounted for.
 Provider-generated extraction prologues are not appended to PDF policy
 inputs. Own formal resolution headings, 69th Legislature and printed 2025
 are required; LC abbreviations never substitute for the formal number.
 
+The original v1 gate genuinely misread three enrolled SJ 1 file occurrences:
+the own typed `SJ 1` is on page one, Senate-origin certification on page 32
+and long-form `SENATE JOINT RESOLUTION NO. 1` on page 33. The same raw PDF
+SHA-256, `80243766a01264287aaa459b0624ce313c8b09bbbad13f126cabd3f2b8664588`,
+is retained under three provider versions; these are not three new laws or
+contexts. A narrow enrolled profile corroborates all those own spans in both
+complete readers, recognizes only the two actual terminal page types, and
+retains all 33 pages rather than relaxing ordinary-page identity or trimming
+certificates from model input. Six views / 426,810 characters are restored
+with zero requests. All 146 original v1 view rows and all source/reader bytes
+remain unchanged. The exact v1 manifest
+`dfd21e9aa3651d1afa158d42c526a25560b7c21069682296c78c51b94fb49802`
+selects the old profile/archived producer and reproduces its original
+rejections; it is not silently rewritten. Full correction receipt:
+`data/processed/govbot-enrolled-correction-20261023-v1.json`.
+
 DE's empty version/file lists and NH's conflicting own printed years remain
-unavailable. Drafts, amendment-context instructions and enrolled documents
-missing the required formal heading remain quarantined. No original state
+unavailable. Three drafts and two amendment-context documents remain
+quarantined. No original state
 publisher URL is requested, source stop reopened, annual/session alias
 inferred or native/original/filing-time/party/rights/human-accuracy gate closed.
 
@@ -532,8 +549,15 @@ actual published `v1.0.1-rp-submission` release:
 https://github.com/marksoliman3/Bill_Analyst_Agent.
 Its immutable Git blob is `3362595ae231a576061cd917ba21485b43c97551`,
 31,521 bytes, verified with Git's blob-object hash. It documents source
-cleaning, a 1,500–40,000-character length filter and a provider `Year` derived
-from version metadata. These are not native-completeness or canonical
+cleaning, a 1,500–40,000-character length filter and describes provider `Year`
+as derived from version metadata. A complete retained-row audit nevertheless
+finds **74 of 2,571** `Year` values disagreeing with the literal `Version_Date`
+year. For example, RI H 5866 preserves provider `Year=2024`,
+`Version_Date=03/01/2023` and the body's own January 2023 session; the unchanged
+original 2023 context, not a guessed 2024 alias, is recovered. No source date
+is silently repaired. Full discrepancy inventory:
+`data/published-ai-corpus-provider-year-audit-20261023-v1.json`.
+These metadata descriptions are not native-completeness or canonical
 filing/session certifications. Original source URLs and all unknowns remain
 unchanged; NCSL, LexisNexis and LegiScan endpoints are not requested here.
 

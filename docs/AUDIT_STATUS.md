@@ -4,6 +4,70 @@ The existing figures and analytical conclusions are **legacy, not revalidated fi
 The current changes repair infrastructure and preserve evidence; they do not certify a
 replacement classifier or establish complete contemporary coverage.
 
+## Cross-state publications and enrolled-header correction: October 23, 2026
+
+The exact-session Govbot inventory inspects all 38 gap states through **107
+logical GitHub CLI invocations**. A distinct targeted capture closes at **161
+total logical invocations**, including preserved failed prefixes; these are
+not physical HTTP counts. All thirty original leads, 83 versions, 166 files
+and 153 unique Git-verified blobs remain bound to unchanged original contexts.
+No native publisher is contacted or existing access stop reopened.
+
+Corrected strict normalization recovers **three MT 2025 contexts / 76 PDF
+file/version occurrences / 152 paired-reader views / 9,888,817 characters**:
+`data/processed/govbot-exact-original-documents-20261023-v2/`, manifest
+`8edb6c6de1f0af693092ba5d67d09ab0780898d304843f7ad14776241a1431d4`.
+Both readers retain every one of 2,263 received PDF pages. Three drafts and
+two amendment-context documents remain rejected; empty DE records and NH
+printed-year conflicts are not converted to fills or aliases.
+
+The same GPT-6.1 Sol agent's actual-page follow-up finds a genuine v1
+false-negative, correcting its earlier "missing formal headings" description.
+Three same-byte enrolled SJ 1 files have their own typed header on page one,
+Senate-origin certificate on page 32 and formal title on page 33. A narrow
+profile corroborates all those spans in both readers and recognizes the two
+terminal page types without weakening ordinary-page identity or trimming
+pages. Six views / 426,810 characters are restored entirely offline.
+All 146 preceding v1 view rows and all source/page bytes are unchanged;
+the exact v1 manifest/producer preserves its old decisions and negatives.
+Correction receipt: `data/processed/govbot-enrolled-correction-20261023-v1.json`.
+
+A separate checksum-verified Zenodo publication retains all **2,571 CSV
+records / 29 fields** after three controlled GETs. Own printed identity checks
+recover **27 original contexts across thirteen states / 27 complete published
+bodies / 228,679 policy characters**:
+`data/processed/published-ai-corpus-documents-20261023-v1/`, manifest
+`114e8fdc585a52d469a0df1469a19e5b78f788aa9163dbdb3c1d0d47df951cd2`.
+Every original field, duplicate, negative and exact publisher-prologue/body
+span survives. A full metadata audit finds **74 provider years disagreeing
+with their literal version-date year**. RI H 5866 keeps the provider's 2024
+value and actual 2023 dates/body, correctly recovering the original 2023
+context without repairing dates or inventing an annual alias. AI summaries,
+excerpts, scores and party/control fields never become model inputs or gold.
+
+The disjoint source increment is **30 contexts across fourteen states /
+179 complete views / 10,117,496 policy characters**. Source availability is
+**138,978 / 157,598**, leaving **18,620** unavailable, including **5,967 HI**.
+Twelve independent archives cover 10,523 contexts / 12,872 views. Known
+controlled BillCam GETs remain 3,046; these different publications do not
+reopen or recount those scopes.
+
+The first-pass v24 explorer / v20 source gallery and exact 173-view union
+proof are preserved unchanged. The superseded v9 is a frozen **unexecuted**
+178,237-view snapshot, not an additional completed inference. Corrected source
+outputs and actual inference are regenerated separately; a source-availability
+increase alone is not a classification result. Current focused regression is
+**195 passes / three opt-in browser skips**, not the entire project suite.
+The first comparable tracked audit is **430 / 464**, with exactly the same
+34 legacy failures and every other baseline report field unchanged.
+
+External human-benchmark discovery remains unresolved: actual MinIO
+robots403, Dropbox robots restrictions and a Harvard robot challenge stay
+closed. No external labels, human annotations, classifier tuning, training
+or human-packet/plan mutation is substituted for that missing evidence.
+Native/source-original, filing-time, party, rights, independent-accuracy,
+scientific and publication gates remain open.
+
 ## Genuine wrapped-heading defect and offline recovery: October 23, 2026
 
 The independent GPT-6.1 Sol audit accounts for all **206 rejected versions /

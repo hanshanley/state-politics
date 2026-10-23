@@ -58,6 +58,12 @@ PRODUCTS = {
 }
 PROFILE = {"SR 1": "SENATE RESOLUTION", "SJ 1": "SENATE JOINT RESOLUTION",
            "SJ 2": "SENATE JOINT RESOLUTION"}
+SEALED_PRODUCERS = {
+    "dfd21e9aa3651d1afa158d42c526a25560b7c21069682296c78c51b94fb49802": {
+        "sha256": "772a56c8ab46355aa81c19a9097276b6a6c55614b62eac0434a9b7e671f10fd7",
+        "bytes": 46049,
+    },
+}
 
 
 def require(condition, message):
@@ -413,8 +419,9 @@ def _source(source, expected_sha):
     return manifest, records, tree_report
 
 
-def _span(match):
-    return {"start": match.start(), "end": match.end(), "text": match[0]}
+def _span(match, *, offset=0, group=0):
+    return {"start": offset + match.start(group), "end": offset + match.end(group),
+            "text": match[group]}
 
 
 def _venue(text):
@@ -477,6 +484,82 @@ def printed_identity(text, context):
     }
 
 
+def enrolled_identity(pages, context):
+    """Recognize only the reviewed SJ 1 enrolled body and its two terminal forms."""
+    if (context["state"] != "MT" or context["session_identifier"] != "2025"
+            or context["identifier"] != "SJ 1" or len(pages) < 3
+            or [page["page"] for page in pages] != list(range(1, len(pages) + 1))):
+        return None
+    first = pages[0]["text"]
+    venue = _venue(first)
+    if not venue:
+        return None
+    own = re.match(r"\s*(?P<own>SJ[ \t]+1)(?=[ \t]*\r?$)", first[venue.end():], re.M)
+    enrolled = re.search(r"(?m)^[ \t]*ENROLLED[ \t]+BILL[ \t]*\r?$", first)
+
+    def literal(value):
+        return r"\s+".join(map(re.escape, value.split()))
+
+    caption = re.search(literal(
+        "A JOINT RESOLUTION OF THE SENATE AND THE HOUSE OF REPRESENTATIVES OF THE STATE OF "
+        "MONTANA ADOPTING THE JOINT LEGISLATIVE RULES."
+    ), first)
+    resolved = re.search(literal(
+        "NOW, THEREFORE, BE IT RESOLVED BY THE SENATE AND THE HOUSE OF REPRESENTATIVES OF "
+        "THE STATE OF MONTANA:"
+    ), first)
+    if (not own or not enrolled or not caption or not resolved
+            or not venue.end() + own.end() <= enrolled.start() < enrolled.end()
+            <= caption.start() < caption.end() <= resolved.start()):
+        return None
+    for page in pages[:-2]:
+        header = _page_header(page["text"])
+        if (not header["nonempty"] or not header["printed_venue"]
+                or header["internal_header_token_not_formal_alias"] != ["SJ", "1", None]):
+            return None
+    certificate = re.fullmatch(
+        r"\s*-\s*I\s+hereby\s+certify\s+that\s+the\s+within\s+bill,\s*"
+        r"(?P<own>SJ[ \t]+1),\s+originated\s+in\s+the\s+Senate\.\s*"
+        r"_+\s*Secretary\s+of\s+the\s+Senate\s*"
+        r"_+\s*President\s+of\s+the\s+Senate\s*"
+        r"Signed\s+this\s+_+day\s+of_+,\s+2025\.\s*"
+        r"_+\s*Speaker\s+of\s+the\s+House\s*"
+        r"Signed\s+this\s+_+day\s+of_+,\s+2025\.\s*",
+        pages[-2]["text"],
+    )
+    title = re.fullmatch(
+        r"\s*(?P<own>SENATE[ \t]+JOINT[ \t]+RESOLUTION[ \t]+NO\.[ \t]+1)\s+"
+        + literal(
+            "INTRODUCED BY T. MCGILLVRAY "
+            "BY REQUEST OF THE JOINT RULES COMMITTEE "
+            "ADOPTING THE JOINT LEGISLATIVE RULES"
+        ) + r"\s*", pages[-1]["text"],
+    )
+    if not certificate or not title:
+        return None
+    certificate_offset = sum(len(page["text"]) + 1 for page in pages[:-2])
+    title_offset = certificate_offset + len(pages[-2]["text"]) + 1
+    return {
+        "state": "MT", "identifier": "SJ 1", "session_identifier": "2025",
+        "printed_legislature": "69th", "printed_year": "2025",
+        "recognition_profile": "reviewed_MT_2025_SJ1_enrolled_with_terminal_forms",
+        "source_relation": "printed_own_enrolled_joint_resolution_and_senate_origin_certification",
+        "original_native_URL_equality_or_alias_not_asserted": True,
+        "printed_evidence": [
+            _span(venue), _span(own, offset=venue.end(), group="own"),
+            _span(enrolled), _span(caption), _span(resolved),
+            _span(certificate, offset=certificate_offset),
+            _span(certificate, offset=certificate_offset, group="own"),
+            _span(title, offset=title_offset), _span(title, offset=title_offset, group="own"),
+        ],
+        "reviewed_terminal_pages": [
+            {"page": pages[-2]["page"], "page_type": "enrolled_senate_origin_certification"},
+            {"page": pages[-1]["page"], "page_type": "enrolled_formal_resolution_title"},
+        ],
+        "signature_year_placeholders_not_an_inferred_filing_or_signature_date": True,
+    }
+
+
 def _witness(text, versions):
     prologue, separator, _ = text.partition("\n" + "=" * 80 + "\n")
     notes = re.findall(r"(?m)^Source: versions - ([^\r\n]+)\r?$", prologue)
@@ -527,7 +610,7 @@ def _extract(path, context):
     return _decode(json.dumps(pages)), views, diagnostics
 
 
-def _replay(source, queue_path, source_sha, queue_sha):
+def _replay(source, queue_path, source_sha, queue_sha, *, legacy_identity_profile=False):
     manifest, records, tree_report = _source(source, source_sha)
     capture_report = _json(source / "report.json")
     queue_binding = _binding(queue_path)
@@ -585,18 +668,31 @@ def _replay(source, queue_path, source_sha, queue_sha):
                     "bill_id": context["bill_id"], "published_git_path": name,
                     "source_pdf_sha256": item["captured_object"]["sha256"], **page,
                 })
-            identities, page_headers = {}, []
+            identities, page_headers, enrolled_readers = {}, [], set()
             for view in extracted:
                 selected = [page for page in pages if page["reader"] == view["reader"]]
                 identities[view["reader"]] = printed_identity(selected[0]["text"], context)
+                terminal_types = {}
+                if identities[view["reader"]] is None and not legacy_identity_profile:
+                    enrolled = enrolled_identity(selected, context)
+                    if enrolled is not None:
+                        identities[view["reader"]] = enrolled
+                        enrolled_readers.add(view["reader"])
+                        terminal_types = {
+                            row["page"]: row["page_type"]
+                            for row in enrolled["reviewed_terminal_pages"]
+                        }
                 first = _page_header(selected[0]["text"])["internal_header_token_not_formal_alias"]
                 for page in selected:
                     header = _page_header(page["text"])
-                    page_headers.append({
+                    observation = {
                         "reader": page["reader"], "page": page["page"], **header,
                         "same_literal_header_identity_as_first_reader_page": first is not None
                         and header["internal_header_token_not_formal_alias"] == first,
-                    })
+                    }
+                    if page["page"] in terminal_types:
+                        observation["reviewed_terminal_page_type"] = terminal_types[page["page"]]
+                    page_headers.append(observation)
             if context["state"] != "MT" or context["session_identifier"] != "2025":
                 reason = "outside_reviewed_MT_2025_profile"
             elif version and re.search(
@@ -606,11 +702,18 @@ def _replay(source, queue_path, source_sha, queue_sha):
                 reason = "ancillary_or_amendment_context_not_full_formal_resolution"
             elif reason is None:
                 if (set(identities) != {"pymupdf", "pypdf"}
-                        or any(identity is None for identity in identities.values())):
+                        or any(identity is None for identity in identities.values())
+                        or enrolled_readers and enrolled_readers != {"pymupdf", "pypdf"}):
                     reason = "printed_own_formal_identity_or_year_unresolved"
                 elif not all(
-                    row["nonempty"] and row["printed_venue"]
-                    and row["same_literal_header_identity_as_first_reader_page"]
+                    row["nonempty"] and (
+                        row["printed_venue"]
+                        and row["same_literal_header_identity_as_first_reader_page"]
+                        or row.get("reviewed_terminal_page_type") in {
+                            "enrolled_senate_origin_certification",
+                            "enrolled_formal_resolution_title",
+                        }
+                    )
                     for row in page_headers
                 ):
                     reason = "blank_or_conflicting_complete_reader_page"
@@ -832,7 +935,9 @@ def load_govbot(directory, metadata=None, *, source_manifest_sha256=None, gap_qu
         require(_equal(_binding(root / name), value), f"normalized artifact changed: {name}")
         pins[name] = value["sha256"]
     for name, path in DEPENDENCIES.items():
-        require(_equal(artifacts[f"producer/{name}"], _binding(path)),
+        expected = (SEALED_PRODUCERS.get(pins["manifest.json"], _binding(path))
+                    if name == "govbot_text.py" else _binding(path))
+        require(_equal(artifacts[f"producer/{name}"], expected),
                 "installed/archived producer or extraction dependency mismatch")
     source = _root(root / "source-evidence")
     source_manifest = _json(source / "manifest.json")
@@ -845,6 +950,7 @@ def load_govbot(directory, metadata=None, *, source_manifest_sha256=None, gap_qu
     products, expected_contexts, report = _replay(
         source, root / "input_gap_queue.parquet",
         manifest["source_manifest_sha256"], manifest["gap_queue_sha256"],
+        legacy_identity_profile=pins["manifest.json"] in SEALED_PRODUCERS,
     )
     for name, rows in products.items():
         require(_equal(list(_rows(root / name)), rows), f"full {name} replay mismatch")

@@ -37,14 +37,25 @@ physical HTTP counts. No native publisher is contacted or prior access stop
 reopened.
 
 Strict offline normalization recovers **three original MT 2025 contexts /
-73 complete PDFs / 146 reader views / 9,462,007 characters**:
-`data/processed/govbot-exact-original-documents-20261023-v1/`, manifest
-`dfd21e9aa3651d1afa158d42c526a25560b7c21069682296c78c51b94fb49802`.
+76 complete PDF file/version occurrences / 152 reader views / 9,888,817 characters**:
+`data/processed/govbot-exact-original-documents-20261023-v2/`, manifest
+`8edb6c6de1f0af693092ba5d67d09ab0780898d304843f7ad14776241a1431d4`.
 Both readers preserve all 2,263 pages across the 81 received PDFs, including
-eight rejected documents. The formal printed resolution, 69th Legislature
+five rejected documents. The formal printed resolution, 69th Legislature
 and 2025 must match the unchanged original context. Drafts, amendment
-instructions, missing formal headers, empty DE records and NH year
+instructions, empty DE records and NH year
 conflicts remain explicit negatives, not inferred LC/session aliases.
+
+An actual-page follow-up corrects a genuine v1 false negative in three
+same-byte enrolled SJ 1 occurrences: the own typed header is on page one,
+the Senate-origin certificate on page 32 and the formal title on page 33.
+The narrow corrected profile requires all three, keeps ordinary headers
+on every substantive page and preserves both terminal pages in both full
+reader strings. Six views / 426,810 characters are recovered offline;
+these are not three new contexts or three distinct PDF byte streams.
+All 146 v1 view rows, source bytes, reader pages and original negatives
+remain reproducible through an exact v1-manifest/producer legacy profile.
+Correction: `data/processed/govbot-enrolled-correction-20261023-v1.json`.
 
 A genuinely separate, checksum-verified Zenodo publication retains all
 **2,571 original CSV records** after three controlled GETs. Reviewed own
@@ -61,7 +72,7 @@ remain explicit.
 These two archives are disjoint from each other and the preceding ten:
 **138,978 / 157,598 original contexts** now have some retained text, leaving
 **18,620** unavailable, including **5,967 HI**. The twelve independent
-archives cover **10,523 distinct contexts / 12,866 views**. All existing
+archives cover **10,523 distinct contexts / 12,872 views**. All existing
 native/source-original, filing-date, party, rights, human-accuracy,
 scientific and publication gates remain open. These availability counts
 do not replace the separately versioned inference receipts.
