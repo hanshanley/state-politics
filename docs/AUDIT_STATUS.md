@@ -116,6 +116,24 @@ loaders rather than Pandas-converted NaNs. This fixes a real null-versus-NaN
 replay failure without weakening field validation or changing the existing
 plot/export DataFrame. Focused regressions and the actual v12 rebuild pass;
 the first failed graph log remains preserved.
+The saved source checkpoint is `906d2b8c18d31952ea21366b1815af9da6f38d79`,
+pushed as Hans Hanley without Copilot attribution. After that checkpoint, the
+comparable `--require-tracked` audit reports **418 / 452**, with exactly the
+same 34 missing-output failures and every other report field unchanged from
+the preceding 416 / 450 audit. The two additional passing checks cover the
+new Python files; no failed output or scientific gate was suppressed.
+Report: `data/nj-library-tracked-artifact-audit-20261023-v2.json`.
+The earlier 367 / 401 run omitted the optional 51 tracking checks; its report
+and log remain separately retained, not relabelled as the comparable run.
+
+All 836 current explorer/source-gallery/metadata-topic artifacts, all 65
+library ZIP members, every remaining original gap field and all 7,874 prior
+New Jersey views replay unchanged where expected. Nine useful browser-fixture
+receipts are archived; only 13 inspected owned fixture trees and two stopped
+isolated browser profiles were removed. Original sources, failed real builds,
+JUnit files, actual downloads and the active inference/cache are retained.
+Generated source data and graphs remain local and Git-ignored: pushing code
+does not back up those data or certify the still-unfinished full-text run.
 
 ## Latest Maryland source recovery
 

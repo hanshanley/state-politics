@@ -249,6 +249,18 @@ The v12 graph manifest is
   --directory data/processed/nj-library-text-20261022-v4
 ```
 
+The accepted source/current-metadata reconciliation is recorded in
+`data/nj-library-parent-current-metadata-reconciliation-20261023-v1.json`.
+Complete artifact/query/ZIP and original-field verification is in
+`data/nj-library-parent-delivery-verification-20261023-v1.json`; the actual
+desktop/mobile proof is under
+`data/nj-library-workspace-browser-proof-20261023-v1/`.
+The comparable tracked-input artifact audit is
+`data/nj-library-tracked-artifact-audit-20261023-v2.json`:
+418 / 452 checks, with the same 34 legacy missing-output failures.
+These receipts do not certify source versions, independent accuracy or
+completion of the separately running full-text inference.
+
 ## Provisional population topic inference
 
 The user has requested actual inference and topic graphs, not only source
