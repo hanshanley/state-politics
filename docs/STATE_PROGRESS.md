@@ -27,7 +27,51 @@ not that the state has no data. Platform recovery is separate from the
 legislative status in this table; no state's operative-platform coverage is
 certified complete.
 
-## Latest offline wrapped-heading recovery
+## Latest cross-state independent publications
+
+The exact-session Govbot inventory closes after **107 logical GitHub CLI
+invocations** across all 38 gap states. A distinct targeted capture closes
+after **161 total logical invocations**, including its preserved failed
+prefixes, not 161 additional invocations after those prefixes. These are not
+physical HTTP counts. No native publisher is contacted or prior access stop
+reopened.
+
+Strict offline normalization recovers **three original MT 2025 contexts /
+73 complete PDFs / 146 reader views / 9,462,007 characters**:
+`data/processed/govbot-exact-original-documents-20261023-v1/`, manifest
+`dfd21e9aa3651d1afa158d42c526a25560b7c21069682296c78c51b94fb49802`.
+Both readers preserve all 2,263 pages across the 81 received PDFs, including
+eight rejected documents. The formal printed resolution, 69th Legislature
+and 2025 must match the unchanged original context. Drafts, amendment
+instructions, missing formal headers, empty DE records and NH year
+conflicts remain explicit negatives, not inferred LC/session aliases.
+
+A genuinely separate, checksum-verified Zenodo publication retains all
+**2,571 original CSV records** after three controlled GETs. Reviewed own
+printed identities recover **27 further original contexts across 13 states /
+27 complete published bodies / 228,679 policy characters**:
+`data/processed/published-ai-corpus-documents-20261023-v1/`, manifest
+`114e8fdc585a52d469a0df1469a19e5b78f788aa9163dbdb3c1d0d47df951cd2`.
+All original fields, duplicates, negative rows and source-prologue spans
+survive. Its provider year is derived from version metadata, not canonical
+session authority; AI summaries, excerpts, scores and parties are not
+classifier inputs or human gold. Cleaning and source-version limitations
+remain explicit.
+
+These two archives are disjoint from each other and the preceding ten:
+**138,978 / 157,598 original contexts** now have some retained text, leaving
+**18,620** unavailable, including **5,967 HI**. The twelve independent
+archives cover **10,523 distinct contexts / 12,866 views**. All existing
+native/source-original, filing-date, party, rights, human-accuracy,
+scientific and publication gates remain open. These availability counts
+do not replace the separately versioned inference receipts.
+
+External human-benchmark discovery remains bounded and unresolved. Actual
+MinIO robots403, Dropbox robots restrictions and a Harvard robot challenge
+remain closed; no external labels or invented human annotations enter the
+frozen study plan.
+
+## Preceding offline wrapped-heading recovery
 
 An independent GPT-6.1 Sol audit of all 206 newly rejected versions finds no
 different still-missing original contexts. Its focused HB 1993 diagnosis

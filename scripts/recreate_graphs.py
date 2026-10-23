@@ -152,6 +152,8 @@ def recovery_packet(
                 "state-politics.nj-library-collection-text.v1",
                 "state-politics.ok-retained-context-text.v1",
                 "state-politics.billcam-retained-html.v1",
+                "state-politics.govbot-archived-documents.v1",
+                "state-politics.published-ai-corpus-text.v1",
             )
             or not all(manifest.get("approvals", {}).get(flag) is False for flag in FLAGS)
         ):
@@ -758,9 +760,9 @@ def recreate(
         for name in (
             "archive_text.py", "lawatlas_text.py", "maryland_archive_text.py",
             "nj_library_text.py", "nj_library_collection.py", "ok_retained_context_text.py",
-            "billcam_text.py",
+            "billcam_text.py", "govbot_text.py", "native_text.py", "published_corpus_text.py",
         )
-    ) if archive_directories else ())
+    ) + (ROOT / "src/state_politics/platforms/registry.py",) if archive_directories else ())
     for path in producers:
         inputs[f"producer:{path.name}"] = binding(path)
     for name in ("graphs", "chart-data", "legacy-reference", "producers", "research-data"):

@@ -456,3 +456,122 @@ No new request is issued and no historical ledger is counted twice.
 Exact SHA-pinned legacy profiles preserve earlier normalized packets,
 including their previous negative dispositions. Source, scientific,
 native-original, date/party and publication gates remain false.
+
+## 15. Independently published Govbot legislative archives
+
+State legislatures, originating legislative text; Govbot and the
+`govbot-data` project, independent archival collection. Project:
+https://github.com/chihacknight/govbot. Inspected archives:
+https://github.com/govbot-data/de-legislation,
+https://github.com/govbot-data/mt-legislation and
+https://github.com/govbot-data/nh-legislation. Accessed 2026-10-23.
+GitHub is the delivery intermediary, not the legislative author; rights
+are not inferred from repository hosting.
+
+The exact-original-session inventory inspects all 38 states with remaining
+gaps through 107 logical `gh` invocations. It identifies thirty original
+state/session/typed-number leads in three exact sessions, not a complete
+national bill-text census. Targeted capture closes after **161 total logical
+invocations**, including the retained failed prefixes; discovery's 107 are
+separate. Physical HTTP retries/exchanges are not inferred from CLI counts.
+The closed source, retaining 153 unique Git-verified blobs / 10,195,082 bytes:
+`data/processed/govbot-exact-original-lead-source-20261023-v3/`, manifest
+`d5ab101b125c8dcf2ee75981b5938b841bea267d645dace9b5cb5378a68643dd`.
+
+The immutable DE 153 session tree is
+`9dd4353ce7b94f45d5223627d3ffb47416526408`; MT 2025 is
+`84690ba2d3f4aefeaf839054fa1743bccd8781b2`. DE and NH have complete
+received recursive structure. The MT recursive response is truncated;
+complete nonrecursive root/bills and selected-bill branches establish
+membership of the selected records, not receipt of every MT session blob.
+Git symlinks are preserved structurally and never followed or extracted.
+
+Offline normalization recovers **three original MT 2025 contexts / 73 PDFs /
+146 complete paired-reader views / 9,462,007 characters**:
+`data/processed/govbot-exact-original-documents-20261023-v1/`, manifest
+`dfd21e9aa3651d1afa158d42c526a25560b7c21069682296c78c51b94fb49802`.
+Both readers retain every one of 2,263 pages across all 81 received PDFs.
+All 83 provider versions, 166 files, thirty contexts, eight rejected PDFs
+and exact same-stem published extraction witnesses remain accounted for.
+Provider-generated extraction prologues are not appended to PDF policy
+inputs. Own formal resolution headings, 69th Legislature and printed 2025
+are required; LC abbreviations never substitute for the formal number.
+
+DE's empty version/file lists and NH's conflicting own printed years remain
+unavailable. Drafts, amendment-context instructions and enrolled documents
+missing the required formal heading remain quarantined. No original state
+publisher URL is requested, source stop reopened, annual/session alias
+inferred or native/original/filing-time/party/rights/human-accuracy gate closed.
+
+## 16. Independent published AI-legislation research corpus
+
+> Bhargava, H. K.; Soliman, M. (2026). *The Structure of U.S. State AI Policy:
+> Evidence from a Multi-Dimensional Bill Classification* [Research dataset
+> and accompanying materials]. Zenodo record 20781731.
+> https://zenodo.org/records/20781731. Accessed 2026-10-23.
+
+The authors are credited for compilation and enrichment, NCSL for the
+underlying collected legislative metadata/text, LegiScan for the authors'
+sponsor enrichment, and the state legislatures for the legislative texts.
+The Zenodo record advertises CC BY 4.0; that observation does not certify
+all underlying material's rights or authorize production integration.
+
+A separately bounded capture retains robots, the actual publication page
+and its explicitly linked `Final_Database_10.csv` in **three GETs**:
+`data/processed/independent-ai-bill-corpus-source-20261023-v1/`, manifest
+`27e124cd8f99e58cb50e9e33b9036504fc3eb96a981394991d091441e9cc1ce1`.
+The complete 51,825,469-byte CSV has SHA-256
+`188aba4f4e50c6d0acb3532d143b9a81d9cccdf7c0729ba7ded6410399eff232`;
+its advertised and calculated MD5 are
+`397a13c53e719e64e52725e7995fd8ca`. It preserves all **2,571 rows / 29
+fields**, including original provider records outside the study. None of
+the separately linked human-annotator files is requested.
+
+The authors' construction document is independently retained from the
+actual published `v1.0.1-rp-submission` release:
+https://github.com/marksoliman3/Bill_Analyst_Agent.
+Its immutable Git blob is `3362595ae231a576061cd917ba21485b43c97551`,
+31,521 bytes, verified with Git's blob-object hash. It documents source
+cleaning, a 1,500–40,000-character length filter and a provider `Year` derived
+from version metadata. These are not native-completeness or canonical
+filing/session certifications. Original source URLs and all unknowns remain
+unchanged; NCSL, LexisNexis and LegiScan endpoints are not requested here.
+
+Strict own printed state/session/type/number/body checks recover **27
+original missing contexts across thirteen states / 27 published bodies /
+228,679 policy characters**:
+`data/processed/published-ai-corpus-documents-20261023-v1/`, manifest
+`114e8fdc585a52d469a0df1469a19e5b78f788aa9163dbdb3c1d0d47df951cd2`.
+Every original record/field, duplicate, rejected row and exact
+publisher-prologue/body character boundary is preserved. `Bill_Text` alone
+supplies policy bodies; the source's AI `bill_extracts`, `summary`,
+`analyst_results`, scores and party/control fields are neither classifier
+inputs nor gold labels. No source-original, filing-time, party, human-review,
+scientific or publication approval follows from this recovery.
+
+## 17. External human-benchmark discovery, not acquired reference labels
+
+The Florida Policy Agendas official dataset catalogue,
+https://www.comparativeagendas.net/project/florida/datasets, and published
+methodological descriptions identify a potentially useful historical
+human-coded collection. They do not establish a verified 2023–2024 benchmark
+or a row-level direct crosswalk to this project's taxonomy.
+
+A metadata-only capture stops at an actual MinIO robots403 after **two
+GETs**, before any CSV body, CSV field header or reference-label acquisition:
+`data/processed/florida-policy-agendas-benchmark-discovery-20261023-v1/`,
+manifest `f91ba05e6be96d76649e4a35507f7cab7ae3bfda56d4b5ad9e428e984e4b29cd`.
+That origin remains closed; no direct-file or alternate-endpoint workaround
+is used. The bounded independent-archive follow-up finds a legacy Florida
+codebook pointer blocked by Dropbox robots and an author-documented Harvard
+collection stopped by a robot challenge. Those stops also remain closed.
+The research-agent report is preserved in
+`data/external-human-benchmark-discovery-20261023-v1-followup.json`,
+explicitly as a reported discovery result rather than a reconstructed
+transport ledger.
+
+No external reference labels are acquired or scored, no AI annotation is
+promoted to human gold, and the frozen human packet, evaluation plan,
+training labels, checkpoints and inference policy remain unchanged.
+This is a bounded unresolved discovery, not evidence that an independent
+human benchmark does not exist.

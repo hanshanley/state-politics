@@ -348,6 +348,14 @@ def load_archive(directory: Path, metadata=None):
         from state_politics.bills.billcam_text import load_billcam
 
         return load_billcam(directory, metadata)
+    if manifest.get("schema") == "state-politics.govbot-archived-documents.v1":
+        from state_politics.bills.govbot_text import load_govbot
+
+        return load_govbot(directory, metadata)
+    if manifest.get("schema") == "state-politics.published-ai-corpus-text.v1":
+        from state_politics.bills.published_corpus_text import load as load_published_corpus
+
+        return load_published_corpus(directory, metadata)
     require(manifest["schema"] == SCHEMA and manifest["provider"] == PROVIDER
             and manifest["source_commit"] == COMMIT
             and manifest["country_git_tree"] == COUNTRY_TREE, "pinned archive source/schema")
