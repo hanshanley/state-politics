@@ -23,12 +23,13 @@ be bound explicitly before regenerated outputs can support the narrowed study.
   --research-corpus data/processed/research-corpus-text-20261022-v4 \
   --archive-text data/processed/independent-archive-text-20261022-v2 \
   --archive-text data/processed/lawatlas-text-evidence-20261022-v1 \
-  --out-dir outputs/recreated-2023-2024-v10
+  --archive-text data/processed/maryland-archive-text-20261022-v1 \
+  --out-dir outputs/recreated-2023-2024-v11
 ```
 
-Open `outputs/recreated-2023-2024-v10/index.html` locally. The bundle contains 14
-current evidence graphs in PNG and SVG, 13 complete chart-data CSVs, nine complete
-research-packet ZIPs and a hash manifest. It also archives the exact six
+Open `outputs/recreated-2023-2024-v11/index.html` locally. The bundle contains 14
+current evidence graphs in PNG and SVG, 13 complete chart-data CSVs, ten complete
+research-packet ZIPs and a hash manifest. It also archives the exact seven
 plotting/source-consumer producers and the recovered producers within their research packets.
 It uses saved evidence
 tables and existing development diagnostics without
@@ -202,6 +203,24 @@ context field and authorizes no automatic collection. The coverage CSV keeps
 separate research-corpus-only and independent-archive-only columns; the plot
 combines their color without inflating totals. All approval flags remain false.
 
+### Additional Maryland archive
+
+`data/processed/maryland-archive-text-20261022-v1/` adds 563 previously
+uncovered contexts and 1,070 complete source alternatives. These are existing
+calendar-2024 prefilings with literal **2025 session labels**, not newly admitted
+2023 bills or inferred filing dates. Its normalized adapter preserves original
+metadata, full text, exact printed spans and the extraction prologue; 57 rejected
+views and scoped source negatives remain separate. Its manifest is
+`dc620e189324c6be284fc12fe6635cb4bbaac9c7536a861b608b9843703667ed`.
+
+The v11 source-gallery union is **136,022 / 157,598 contexts with some retained
+text; 21,576 remaining**. Its missing-text Parquet preserves every original
+remaining context field. The gallery manifest is
+`9f712cad707f1f2c8aa3a814be6d61b7c3e97af1b7735475efdc52a61efe0301`.
+The complete Maryland source ZIP contains all 1,766 packet members, not just
+the new query metadata. The packet does not certify filing-time versions,
+redistribution rights, scientific completeness or further collection.
+
 ## Provisional population topic inference
 
 The user has requested actual inference and topic graphs, not only source
@@ -217,7 +236,7 @@ Freeze into a new directory before running:
 
 ```bash
 .venv/bin/python -I -B -m state_politics.analysis.cycle_topics freeze \
-  --preview data/preview-cycle-evidence-v15 \
+  --preview data/preview-cycle-evidence-v16 \
   --checkpoint data/models/modernbert-reviewed-only-20261021-v1 \
   --tiers metadata \
   --out-dir data/processed/cycle-topic-inference-metadata-NEW
@@ -235,7 +254,21 @@ HF_HUB_OFFLINE=1 TRANSFORMERS_OFFLINE=1 \
   --tiers metadata --out-dir outputs/topic-inference-2023-2024-NEW
 ```
 
+The completed metadata run is
+`data/processed/cycle-topic-inference-metadata-20261022-v1/`, frozen from the
+preserved v15 metadata inputs. It processed all 159,315 views / 157,598
+contexts and yielded **89,950 assignments / 67,648 abstentions**.
+Its three actual topic graph pairs, four CSVs and complete 108-member
+inference ZIP are in `outputs/topic-inference-2023-2024-v2/`; manifest
+`0dad7b9f4e871fd4aae93c5d84b17284c7df0d64455105cbe0d6e8d7123c868d`.
+The ZIP retains all complete source-view inputs and predictions.
+
 Use a separate freeze with `--tiers retained_text` for a full-text pass.
+The actual separate job
+`data/processed/cycle-topic-inference-retained-text-20261022-v1/` freezes
+174,316 full-body alternatives from v16. It is still running; no completed
+retained-text summary or topic gallery is claimed. Do not launch a duplicate
+or edit its hash-bound producer/runtime while it is active.
 Full bodies and all source alternatives are retained, not truncated or
 silently replaced by titles. The archive's machine-generated prologue is
 excluded only by its exact source-bound span; the complete original string
@@ -1183,11 +1216,12 @@ population-accuracy reference.
   --output data/human-review-native-REPLAY
 
 .venv/bin/python -I -B scripts/serve_research.py \
-  --evidence data/preview-cycle-evidence-v15 \
+  --evidence data/preview-cycle-evidence-v16 \
   --sessions data/processed/verified-session-comparison-2023-2024-v3 \
   --review data/human-review-native-20261021-v3 \
   --sources data/processed/native-inventory-catalog-2023-2024-v2 \
-  --graphs outputs/recreated-2023-2024-v10 \
+  --graphs outputs/recreated-2023-2024-v11 \
+  --topics outputs/topic-inference-2023-2024-v2 \
   --port 8765
 ```
 
@@ -1197,6 +1231,8 @@ only manifest-listed paths and binds only 127.0.0.1. It does not expose the
 repository or all of `data/`, create symlinks/copies, publish or load models.
 The optional graph mount serves its exact manifest-listed ZIP/CSV/Parquet/image
 artifacts under `/graphs/`; no other bundle may be mounted from `outputs/`.
+The optional `/topics/` mount contains provisional model predictions; independent
+human reviewers must not inspect it before completing their annotations.
 Human packet manifest:
 `a1fa21d6842f34ebc6bebb8ea51261abce1448b757dfa116bc5157823b7df457`.
 
@@ -1291,13 +1327,14 @@ synthetic references/logits and is not classifier validation.
   --research-corpus data/processed/research-corpus-text-20261022-v4 \
   --archive-text data/processed/independent-archive-text-20261022-v2 \
   --archive-text data/processed/lawatlas-text-evidence-20261022-v1 \
+  --archive-text data/processed/maryland-archive-text-20261022-v1 \
   --receipt-evidence data/processed/maine-source-receipt-evidence-2023-2024-v1 \
   --native-session-scope ny-2023-2024 --native-session-scope il-103rd \
   --native-session-scope tx-88r-retained \
-  --out data/preview-cycle-evidence-v15
+  --out data/preview-cycle-evidence-v16
 ```
 
-The current explicit build adds both independent archives to metadata v4 /
+The current explicit build adds all three independent archives to metadata v4 /
 native v15 and research-corpus v4, with the unchanged
 platform evidence v5 and token-plan v2. The latter is reusable because the
 complete 159,315-view metadata input Parquet is byte-identical to v3.
@@ -1313,11 +1350,16 @@ The preserved v14 manifest is
 528 older non-code source exports remain byte-identical. V14 additionally
 exposes all 2,315 complete research-corpus views and restored original metadata,
 without changing candidate admission or metadata token plans.
-The current v15 manifest is
+The preserved v15 manifest is
 `cca5cd91d57bae8ac6f5ce84a2c7110a9a45014f998f18956ebc5bd6eacb984b`:
 742 bound outputs and all 7,875 new archive views, including all alternatives.
 All 632 non-code exports from v14 remain byte-identical. The v10 gallery
 manifest is `245d39f6f730f39b379e38f5728d21b06ecd31498238f49f6f83c456cc3b0322`.
+The current v16 manifest is
+`0087426c82a729b7b30b56a8502f80aaf6e2daeeb547a3f9dcf79345622dc965`:
+745 bound outputs, including all 1,070 additional Maryland alternatives.
+Exactly five existing v15 outputs change: the index, two archived consumers
+and the two Maryland archive exports; all other 737 outputs remain identical.
 Receipt/session additions are explicit opt-ins only; the default/custom
 metadata behavior does not silently attach them. Build producers are archived
 with their exact source hashes. Earlier builds remain preserved. V11 retains
@@ -1329,7 +1371,7 @@ For interactive use, serve the output with a local static HTTP server:
 
 ```bash
 .venv/bin/python -I -B -m http.server 8765 \
-  --bind 127.0.0.1 --directory data/preview-cycle-evidence-v15
+  --bind 127.0.0.1 --directory data/preview-cycle-evidence-v16
 ```
 
 No server is left running by the build or verification. JavaScript fetches

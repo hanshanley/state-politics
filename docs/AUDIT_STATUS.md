@@ -28,7 +28,10 @@ difference 0.0000172. This is implementation parity, **not accuracy validation**
 All source text/alternatives, raw records, logits and provenance remain saved.
 One bill counts once per evidence tier; source-view disagreement abstains.
 
-The new runner's focused checks and workspace integration pass 33 tests.
+The complete code regression passes **1,819 tests**, with no failures, errors
+or skips; the public-documentation audit separately passes 174 checks.
+The fresh actual artifact audit is **416 / 450**, with exactly the same
+34 known missing-output failures. These results do not certify the science.
 The topic renderer refuses incomplete population runs and preserves
 all-candidate denominators, abstentions and unknown text cells. Its ZIPs
 include complete original inference texts and predictions, not chart
@@ -37,10 +40,25 @@ model-blind human review; blind reviewers must not inspect model outputs
 before annotation. No party or operative-platform comparison is authorized
 by unresolved affiliations/applicability.
 
+The actual metadata topic gallery is `outputs/topic-inference-2023-2024-v2/`:
+three PNG/SVG graph pairs, four CSVs and a 273,787,173-byte complete inference
+ZIP with 108 members. Parent replay independently recomputes all 159,315
+view decisions, original token/window accounting and bill-level alternative
+consensus. Actual Chromium verifies all six workspace mounts, desktop/mobile
+layout, all topic images, the complete inference ZIP and the full Maryland
+query/body. Both browser helpers exited and the preview port is closed.
+`data/cycle-topics-maryland-parent-verification-20261022-v1.json` additionally
+binds all 745 explorer, 73 source-gallery and 13 topic-gallery artifacts,
+the complete source/inference ZIP members and unchanged human/model bindings.
+
 A separate retained-full-text run is now actually executing from
 `data/processed/cycle-topic-inference-retained-text-20261022-v1/`, with all
 **174,316 full body alternatives**, including the new Maryland views.
-Its real persisted Alaska results verify readiness; it is not merely a launch.
+Persisted state outputs and its actively growing exact-input cache verify
+execution; it is not merely a launch. It is not complete, and no retained-text
+topic gallery is claimed. A long wall-clock interval without a state checkpoint
+does not alone establish a stall; continued cache writes and CPU activity were
+observed during the retry. No duplicate job or speculative restart was launched.
 Metadata views are not silently replaced by later bill versions.
 The original human packet, predeclared two-model human-evaluation plan,
 five frozen runtime files, training labels/weights and scientific gates
