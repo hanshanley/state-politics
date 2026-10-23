@@ -4,7 +4,7 @@ The existing figures and analytical conclusions are **legacy, not revalidated fi
 The current changes repair infrastructure and preserve evidence; they do not certify a
 replacement classifier or establish complete contemporary coverage.
 
-## New published-subject continuation: in progress, October 23, 2026
+## Completed four-subject source recovery: October 23, 2026
 
 Offline replay of the 426 distinct retained provider details identifies
 **945 previously unrequested published subject links**, beyond the three
@@ -25,13 +25,31 @@ identifies **605 still-missing original contexts**. One provider path was
 already captured but unadmitted and is not requested again; **604 new
 provider-detail targets** remain in this acquisition's finite scope.
 
-Body capture in
-`data/processed/billcam-four-subject-source-20261023-v1/` is still running;
-these leads are **not recovered-body or inference credit**. Its original
-allowance, every previously closed source scope and all publisher/account
-stops remain binding. No old body/detail request is repeated. The accepted
-source availability, completed inference, models, labels, human packet and
-publications remain unchanged pending closed-source normalization and replay.
+Body capture closes in
+`data/processed/billcam-four-subject-source-20261023-v1/`, manifest
+`fcda8cfced4df5e35630247a49e603d4d1316dccb8ea751b0fb41dad0a07fd82`,
+after **1,612 / 2,000 GETs**. All 604 new provider details and every offered
+version are processed without old detail/body requests or allowance resets.
+Known controlled capture is now **3,046 GETs**, including the separate
+thirteen-GET discovery and its refreshed robots policy, not 3,046 distinct
+URLs or all unrelated transport.
+
+Strict original-context and own-header replay admits **415 additional Hawaii
+contexts / 619 complete views / 4,674,311 characters**:
+`data/processed/billcam-four-subject-html-20261023-v1/`, manifest
+`801644d9387b094f142e544a638e13e3a942d9d31eecf8c181d6345ae674c15e`.
+All **605** leads and **825** offered-version dispositions are independently
+reconciled in `data/billcam-four-subject-frontier-replay-20261023-v1.json`.
+The other 190 contexts are unadmitted, not nonexistent or silently joined
+across annual contexts. Nine source archives now retain 10,492 distinct
+contexts / 12,691 views; overall body availability is **138,947 / 157,598**,
+leaving **18,651** unavailable, including **5,975 HI**.
+
+These source counts do not yet represent a new completed inference run:
+the preceding v6 job and its predictions remain immutable while a fresh
+source union and incremental inference are prepared. Original model weights,
+thresholds, labels, human packet, date/party/source approvals, access stops
+and publication gates remain unchanged.
 
 ## Completed independent HTML frontier and actual inference: October 23, 2026
 

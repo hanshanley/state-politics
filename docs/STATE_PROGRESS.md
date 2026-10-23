@@ -27,7 +27,45 @@ not that the state has no data. Platform recovery is separate from the
 legislative status in this table; no state's operative-platform coverage is
 certified complete.
 
-## Latest complete identified Hawaii archive frontier
+## Latest completed four-subject Hawaii recovery
+
+Four additional published catalogues retain all **187 pages / 3,707 result
+occurrences / 3,603 distinct provider records**, including two repeated
+occurrences. Exact original-context matching identifies 605 remaining leads.
+The previously captured but unadmitted provider path is not requested again;
+all 604 new provider details and their offered versions are processed.
+The remaining 190 unsupported original leads are not fills or declarations
+of nonexistence.
+
+Strict offline normalization recovers **415 additional original Hawaii
+contexts / 619 complete views / 4,674,311 characters**:
+`data/processed/billcam-four-subject-html-20261023-v1/`, manifest
+`801644d9387b094f142e544a638e13e3a942d9d31eecf8c181d6345ae674c15e`.
+Use this ninth archive together with both disjoint preceding BillCam packets;
+none replaces or duplicates an earlier packet. Original context fields,
+unknowns, provider versions, complete raw HTML and all negative dispositions
+remain intact.
+
+The separate first-page discovery closes after 13 GETs; the distinct
+four-catalogue/body scope closes after **1,612 / 2,000 GETs**, without a reset
+or old detail/body re-request. Known controlled capture across all scopes is
+**3,046 GETs**. This includes a new robots-policy check, not 3,046 distinct
+URLs or all unrelated historical transport. Closed source:
+`data/processed/billcam-four-subject-source-20261023-v1/`, manifest
+`fcda8cfced4df5e35630247a49e603d4d1316dccb8ea751b0fb41dad0a07fd82`.
+All four queries and every identified lead/version are independently replayed
+in `data/billcam-four-subject-frontier-replay-20261023-v1.json`.
+
+Source availability is **138,947 / 157,598 original candidate contexts**,
+leaving **18,651** unavailable, including **5,975 HI**. Nine archives cover
+10,492 distinct contexts / 12,691 views. Across the three disjoint BillCam
+packets, 814 contexts / 1,451 views / 14,044,497 characters are retained.
+These are source-availability counts, separate from versioned inference
+receipts and output galleries documented in the research status. No native
+channel, original-version, date, party, rights, human-review, scientific or
+publication gate is closed; all existing access stops remain binding.
+
+## Preceding complete identified Hawaii archive frontier
 
 The two **disjoint** BillCam normalized packets add **399 original Hawaii
 contexts / 832 complete published HTML views / 9,370,186 body characters**.

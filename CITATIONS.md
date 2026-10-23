@@ -390,7 +390,7 @@ non-whitespace source character in order without executing source scripts
 or requesting external resources. These checks are not human accuracy or
 native-original certification.
 
-### Subsequent published-subject discovery and acquisition in progress
+### Completed subsequent four-subject discovery and acquisition
 
 Replaying the 426 retained provider details identifies 945 actually published
 subject links outside the three completed queries. Separate first-page
@@ -407,8 +407,22 @@ of Education queries: 187 pages, 3,707 occurrences, 3,603 distinct provider
 records and two repeated occurrences. It identifies 605 exact original
 remaining-context leads, not 605 complete bills. The already captured but
 unadmitted provider path is retained as a negative rather than requested again.
-Acquisition of the 604 other provider details and eligible full HTML versions
-continues under a separate 2,000-GET maximum. No source or inference total is
-increased on the basis of this still-open acquisition. Prior scopes and
-publisher/account stops remain closed; original dates, titles, session IDs,
-unknowns and approval gates are not rewritten.
+Acquisition of all 604 other provider details and eligible full HTML versions
+closes after **1,612 / 2,000 GETs**, with no old detail/body request repeated.
+Source: `data/processed/billcam-four-subject-source-20261023-v1/`, manifest
+`fcda8cfced4df5e35630247a49e603d4d1316dccb8ea751b0fb41dad0a07fd82`.
+Together with the preceding 1,421 GETs and separate thirteen-GET discovery,
+the known controlled total is 3,046; the refreshed robots request is not a
+distinct URL, and unrelated transport is not asserted reconstructed or zero.
+
+Strict own-header/context normalization supplies **415 additional original
+contexts / 619 complete published views / 4,674,311 characters**:
+`data/processed/billcam-four-subject-html-20261023-v1/`, manifest
+`801644d9387b094f142e544a638e13e3a942d9d31eecf8c181d6345ae674c15e`.
+This is a third disjoint packet, not a replacement for the preceding two.
+All 605 original leads and every offered version are accounted for by
+`data/billcam-four-subject-frontier-replay-20261023-v1.json`; 190 original
+leads remain unadmitted, not nonexistent. Prior scopes and publisher/account
+stops remain closed; original dates, titles, session IDs, unknowns and all
+approval gates are unchanged. No inference or human-accuracy result follows
+from source capture alone.
