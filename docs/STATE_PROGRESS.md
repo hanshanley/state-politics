@@ -27,7 +27,45 @@ not that the state has no data. Platform recovery is separate from the
 legislative status in this table; no state's operative-platform coverage is
 certified complete.
 
-## Latest independent library recovery
+## Latest complete-collection and retained-context recovery
+
+The complete finite 2023 New Jersey State Library capture retains **237
+catalogue items / 229 newly captured PDFs / 9,952 physical pages**, plus eight
+exact-original-URL reuses. Strict dual-reader normalization preserves all
+**19,904 reader-page/layout records**, including ancillary and quarantined
+pages. It recovers **97 exact original missing contexts / 255 reader views**;
+unsupported identities, incomplete boundaries and old-content duplicates
+are not counted as recovered bodies. Full packet:
+`data/processed/nj-library-collection-text-full-20261023-v1/`, manifest
+`e8933b0d69ab9a791ef4830e35044fde4022e8df2880f4a9c544426a9f9601a6`.
+The first-sixteen subset is contained in this full archive, not an additional
+source to concatenate.
+
+A separately reviewed Oklahoma source relation recovers **2,000 original
+missing contexts / 14,394,639 complete body characters**:
+`data/processed/ok-retained-context-text-20261023-v2/`, manifest
+`de881d50d6fe4ce29d466e6fc83253ba68b0bf6701555a090aa47bcee40af9d8`.
+Both original 2023-source and 2024-candidate annual contexts remain distinct.
+Complete primary House publications establish their 59th-Legislature context,
+while exact existing document pointers and original nonempty/no-error/version
+foreign keys bind the body. This is not a session alias, bill-ID merge,
+publisher-original certification, or a claim about a named bill's carryover,
+pending status, target-year filing or introduction. All 135 rejected witnesses
+and every original reference remain available.
+
+The combined increment is **2,097 contexts / 2,255 views**, with no new
+canonical cohort members. Retained text now covers **138,133 / 157,598 existing
+candidate contexts**, leaving **19,465** gaps: **1,638 NJ / 1,336 OK**.
+The actual unpublished source preview is `data/preview-cycle-evidence-v19/`,
+with six complete archive inputs / 9,678 distinct archive-covered contexts /
+11,240 archive views. Earlier source packets and outputs remain immutable.
+Source availability is separate from versioned provisional model assignments,
+not evidence of independent accuracy, filing eligibility or unique-legislation
+counts. Native source-status distribution remains **6 closed / 21 partial /
+21 blocked / 2 inventory**; no state, operative platform, event-time party,
+human evaluation, scientific report or publication gate is thereby completed.
+
+## Preceding eight-PDF library recovery
 
 Independent New Jersey State Library compilations recover **14 additional
 existing contexts / 40 reader views / 20 source versions**. All eight original
@@ -37,15 +75,15 @@ identified introduced and enacted versions are not conflated. Source-proven
 second/third reprints retain their complete continuation pages and literal
 reader differences.
 
-Current packet: `data/processed/nj-library-text-20261023-v5/`, manifest
+Packet: `data/processed/nj-library-text-20261023-v5/`, manifest
 `a27a57b4f72d43f0fc4235713e23b994bebc1a39f49f2284c2a990c1aa70df30`.
 It corrects the erroneous generated-prologue flag without changing any
 original source string, identity, page span or version; sealed v1/v4 remain
 preserved and replayable.
 Every joined record is in the previous missing-text queue with unchanged
-original fields, dates and cohort membership. Availability is now
+original fields, dates and cohort membership. Availability at that checkpoint was
 **136,036 / 157,598 contexts**, leaving **21,562** text gaps. New Jersey has
-**1,735** remaining gaps. Current source outputs are
+**1,735** remaining gaps. Its source outputs are
 `data/preview-cycle-evidence-v18/` and `outputs/recreated-2023-2024-v14/`.
 This independent archive does not reopen publishers, certify filing-time
 versions, infer party affiliations or change the state-status distribution.

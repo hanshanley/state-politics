@@ -25,9 +25,13 @@ The retained dump exposes **123,182 nonempty snapshot-text records**. Additional
 printed-header joins recover **2,079 previously missing contexts** from independent
 research text. Independent archived bill records now add **7,004 more contexts**,
 mostly New Jersey; a further **563 Maryland contexts** and **14 contexts from
-independent library compilations** bring combined availability to
-**136,036 of 157,598 existing calendar candidates**, with
-**21,562 remaining gaps**. Complete alternative views and
+independent library compilations** formed the preceding source baseline.
+A full library-collection pass adds **97 contexts / 255 reader views**;
+strict retained-document relations add **2,000 Oklahoma contexts**, preserving
+their distinct original annual sessions and exact source pointers. Combined
+availability is **138,133 of 157,598 existing candidate contexts**, with
+**19,465 remaining gaps**. These are not certified unique-legislation or
+filing-cohort counts. Complete alternative views and
 original source metadata are retained. Source versions, archive extraction,
 research-corpus cleaning and classifications remain uncertified.
 The local graph bundle includes complete research downloads and an explicit
@@ -35,10 +39,12 @@ remaining-text queue; see the [recovery commands](docs/REPRODUCIBILITY.md#indepe
 
 Provisional topic inference is complete: title/abstract evidence yields
 **89,950 assignments / 67,648 abstentions**; retained bodies, including the
-new library evidence, yield **63,099 assignments / 72,937 abstentions /
-21,562 unavailable bodies**. Local graphs and complete research downloads are
-in `outputs/topic-inference-retained-text-2023-2024-v2/` and
-`outputs/topic-input-comparison-2023-2024-v1/`.
+new evidence, yield **64,435 assignments / 73,698 abstentions /
+19,465 unavailable bodies** across 176,611 full source alternatives.
+All 174,356 preceding view predictions remain unchanged; only 252 genuinely
+uncached full strings were encoded. Local graphs and complete research downloads
+are in `outputs/topic-inference-retained-text-2023-2024-v3/` and
+`outputs/topic-input-comparison-2023-2024-v2/`.
 The paired-input comparison preserves missingness and abstentions; differences
 between inputs are not accuracy measurements. These remain model assignments,
 not validated policy findings or party positions; see the

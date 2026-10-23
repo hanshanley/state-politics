@@ -26,10 +26,10 @@ bind Oklahoma's original 2023 and 2024 annual contexts to the 59th Legislature:
 original HTML and exact visible/raw identity spans survive. This supports review
 of a narrow same-legislature document relation, **not session aliases, merged bill
 IDs, inferred filing dates or a claim that any particular bill carried over or
-remained pending**. The 2,000 conditional document-identity candidates and all
-135 excluded witnesses remain distinct from accepted bodies until strict
-source/version/identity replay. Their retained bodies are third-party snapshot
-extractions, not publisher-original PDF captures.
+remained pending**. At the acquisition checkpoint, the 2,000 conditional
+document-identity candidates and all 135 excluded witnesses had not yet been
+admitted through strict source/version/identity replay. Their retained bodies are
+third-party snapshot extractions, not publisher-original PDF captures.
 
 Access restrictions remain binding. The separate Senate context scope stopped
 after robots plus a JavaScript/cookie challenge; no script, cookie, browser or
@@ -42,14 +42,71 @@ Original Hawaii corpus ancestry independently replays all 4,046 records:
 4,033 print a 2025 session and thirteen remain partial/headerless, not silently
 assigned a year. It yields **zero target-year fills** and changes no originals.
 
-This acquisition checkpoint does not alter the preceding accepted
+The acquisition checkpoint alone did not alter the preceding accepted
 **136,036 observed-body / 21,562 unavailable-context** totals, training labels,
 frozen runtime, human-evaluation plan or source/scientific/publication approvals.
-New body admission and topic counts require the separately replayed normalization
-and a fresh, cache-reusing inference freeze; downloaded pages alone are not
-classification improvements.
+Subsequent body admission and topic counts below come from separately replayed
+normalization and a fresh, cache-reusing inference freeze; downloaded pages
+alone are not classification improvements.
 
 ## Requested population inference and topic graphs
+
+### Subsequent complete-source extension
+
+Strict normalization and the actual v19 preview add **2,097 original missing
+contexts / 2,255 source alternatives**, comprising 97 NJ contexts / 255 complete
+reader views and 2,000 Oklahoma retained-context document relations. Both
+original Oklahoma annual sessions remain separate; the original source and
+target metadata, full text, exact pointers and primary session witnesses
+survive. This is research source availability, not a new native, filing-time,
+carryover-status or unique-legislation finding.
+
+The new immutable job,
+`data/processed/cycle-topic-inference-retained-text-20261023-v4/`, completes all
+50 partitions with **176,611 full source views / 157,598 original candidates**:
+**64,435 classified / 73,698 abstained / 19,465 unavailable**.
+Exactly 1,336 newly observed contexts receive a topic and 761 abstain.
+All **155,501 other original assignment rows remain entirely unchanged**,
+including every previously observed body context. All original 174,356 view
+predictions and the 166,232-row preceding cache remain unchanged.
+
+The original pooled encoder actually processes only **252 uncached strings /
+3,256,075 tokens / 4,166 windows**, with zero old strings repeated.
+Logical all-view totals are **591,079,928 tokens / 774,237 windows**, including
+cache reuse. Neither total is misrepresented as unique encoder work.
+The original model, training labels, decision policy, frozen inference runtime
+and human-evaluation plan are unchanged. Receipts:
+`data/new-recovery-cache-extension-20261023-v1.json`,
+`data/new-recovery-bill-decision-reconciliation-20261023-v1.json`, and
+`data/new-recovery-complete-full-text-replay-20261023-v1.json`.
+The latter independently reconstructs every saved logit decision, complete
+token/window span, original context, conservative source consensus and full
+inference ZIP without another encoder call, using a separately cloned
+verification cache. This is computational verification, not independent
+accuracy validation or scientific promotion.
+
+The current source gallery is `outputs/recreated-2023-2024-v15/`, with fourteen
+PNG/SVG pairs, thirteen CSVs and thirteen complete research ZIPs. Its exact
+remaining queue is the preceding original queue minus only the 2,097 supported
+contexts. Parent verification streams and hashes every member of the 2,210-file
+full-library and 76-file Oklahoma source ZIPs. The actual topic and paired-input
+galleries are `outputs/topic-inference-retained-text-2023-2024-v3/` and
+`outputs/topic-input-comparison-2023-2024-v2/`. Paired analysis uses all
+138,133 mutually available contexts, including abstentions; the 19,465
+unavailable contexts are not disagreements.
+Real Chromium checks all six workspace mounts, both actual topic galleries,
+all source images and fourteen source SVGs, complete source/inference ZIPs,
+the 8,169-view NJ query, an exact 1,035,255-character new library body and
+the explicit source-2023 / candidate-2024 disclosure. All helpers exit.
+
+The comparable full tracked-artifact audit is **424 / 458** with exactly the
+same 34 legacy missing-output failures and all other baseline report fields
+unchanged. The correct existing runtime is `data/tools/ocr-5.5.2/bin/tesseract`;
+a bare non-login PATH or the separate 5.5.3 environment is not substituted.
+The 233 passing targeted regressions and three opt-in browser skips are not
+a new whole-project suite result; the actual real-browser runs are separate.
+No party/platform comparison, genuine human annotation, independent accuracy
+measurement, source rights, scientific certification or publication is implied.
 
 The user has now explicitly requested actual inference and topic graphs,
 not only coverage figures. A **research-only metadata population run has

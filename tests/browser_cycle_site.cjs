@@ -221,6 +221,8 @@ async function terminate(child) {
     const hasReceipt = await evaluate(session, 'Boolean(document.querySelector("#collection option[value=source_receipt]"))');
     const hasSessionText = await evaluate(session, 'Boolean(document.querySelector("#collection option[value=native_session_text]"))');
     const hasArchive = await evaluate(session, 'Boolean(document.querySelector("#collection option[value=archive_text]"))');
+    const hasSnapshot = await evaluate(session, 'Boolean(document.querySelector("#collection option[value=snapshot_text]"))');
+    const hasCorpus = await evaluate(session, 'Boolean(document.querySelector("#collection option[value=research_corpus_text]"))');
     const buildManifest = JSON.parse(await fs.readFile(
       path.join(preview, "downloads/build_manifest.json"), "utf8"));
     for (const binding of Object.values(buildManifest.producer_archive || {})) {
@@ -583,10 +585,12 @@ async function terminate(child) {
     await fs.writeFile(path.join(run, "mobile.png"), Buffer.from(screenshot.data, "base64"));
 
     const noJS = await target(base + "/", false);
+    const additionalTextTiers = [hasSnapshot, hasCorpus, hasArchive].filter(Boolean).length;
     assert.equal(await evaluate(noJS.sessionId, 'document.querySelectorAll("tbody tr").length'),
-      150 + (hasReceipt ? 50 : 0) + (hasSessionText ? 50 : 0));
+      150 + (hasReceipt ? 50 : 0) + (hasSessionText ? 50 : 0) + 50 * additionalTextTiers);
     assert.equal(await evaluate(noJS.sessionId, 'document.querySelectorAll("a[download][href$=\'.jsonl.gz\']").length'),
-      (hasNative ? 201 : 151) + (hasReceipt ? 1 : 0) + sessionScopes.length);
+      (hasNative ? 201 : 151) + (hasReceipt ? 1 : 0) + sessionScopes.length
+        + 50 * additionalTextTiers);
     if (hasNative) {
       assert.equal(await evaluate(noJS.sessionId, 'document.querySelectorAll("#state-coverage a[download][href^=\'downloads/native-\']").length'), 50);
     }

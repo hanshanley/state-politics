@@ -308,3 +308,17 @@ preserves its new robots prohibition and zero attachment requests; earlier
 captured PDFs are neither erased nor used to imply current retrieval permission.
 No new body count, source rights, filing-time, model, human-gold or publication
 approval follows merely from these acquisition receipts.
+
+The subsequent offline full-collection normalization retains all 19,904
+independent reader-page/layout records and recovers 97 exact original missing
+NJ contexts / 255 complete reader views. Unsupported, incomplete, ambiguous,
+checklist-only and prior-content duplicates remain explicit negatives, not
+additional recovered bills. The normalized packet is
+`data/processed/nj-library-collection-text-full-20261023-v1/`, manifest
+`e8933b0d69ab9a791ef4830e35044fde4022e8df2880f4a9c544426a9f9601a6`.
+The separately replayed Oklahoma packet is
+`data/processed/ok-retained-context-text-20261023-v2/`, manifest
+`de881d50d6fe4ce29d466e6fc83253ba68b0bf6701555a090aa47bcee40af9d8`:
+2,000 exact historical-document relations, with all 135 rejected witnesses and
+both original annual contexts preserved. These observed body-source additions
+do not waive the authority, version, date, rights or approval limits above.
