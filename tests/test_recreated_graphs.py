@@ -42,6 +42,31 @@ def test_research_archive_preserves_complete_records_and_original_manifest(tmp_p
     assert inputs["source/full_records.jsonl"]["sha256"] == hashlib.sha256(body).hexdigest()
 
 
+@pytest.mark.parametrize("schema", [
+    "state-politics.nj-library-collection-text.v1",
+    "state-politics.ok-retained-context-text.v1",
+])
+def test_new_archive_sources_keep_complete_downloads_without_promoting_approval(tmp_path, schema):
+    directory, original, body = packet(tmp_path)
+    manifest = {
+        "schema": schema, "approvals": dict.fromkeys(GRAPH["FLAGS"], False),
+        "packet_artifacts": original["files"],
+    }
+    path = directory / "manifest.json"
+    path.write_text(json.dumps(manifest))
+    files = GRAPH["recovery_packet"](tmp_path, "source", {}, archive=True)
+    output = tmp_path / "full-archive.zip"
+    GRAPH["archive_packet"](files, output)
+    with zipfile.ZipFile(output) as archive:
+        assert set(archive.namelist()) == {"manifest.json", "full_records.jsonl"}
+        assert archive.read("full_records.jsonl") == body
+        assert archive.read("manifest.json") == path.read_bytes()
+    manifest["approvals"]["model_input_approved"] = True
+    path.write_text(json.dumps(manifest))
+    with pytest.raises(ValueError, match="unapproved independent archive"):
+        GRAPH["recovery_packet"](tmp_path, "source", {}, archive=True)
+
+
 @pytest.mark.parametrize("defect", ["approved", "modified", "escape"])
 def test_recovery_input_rejects_approval_corruption_and_path_escape(tmp_path, defect):
     directory, manifest, _ = packet(tmp_path)

@@ -1018,7 +1018,7 @@ def build_cycle_preview(
     if archive_text_evidence:
         for name in (
             "archive_text.py", "lawatlas_text.py", "maryland_archive_text.py",
-            "nj_library_text.py",
+            "nj_library_text.py", "nj_library_collection.py", "ok_retained_context_text.py",
         ):
             producer_paths[name] = Path(__file__).with_name("bills") / name
     archive_producers = bool(
@@ -1354,7 +1354,10 @@ def build_cycle_preview(
         archive_section = (
             '<section aria-labelledby="archive-heading"><h2 id="archive-heading">'
             'Independent archived bill text: not publisher-version certification</h2>'
-            '<p>Exact printed state, session and own bill identity join existing candidates. '
+            '<p>Printed identity, exact document pointers and retained session evidence join '
+            'existing candidates. Separately reviewed same-legislature annual-context relations '
+            'are not session aliases: original source and candidate sessions remain distinct, '
+            'without target-year filing, introduction or bill-specific carryover certification. '
             'Alternative providers and combined substitutes remain separate complete views, '
             'not extra bills. Archived extraction prologues, when present, remain unaltered '
             'and are not human labels. Original metadata, versions and source-member hashes '

@@ -1,4 +1,5 @@
 import hashlib
+import importlib
 import io
 import json
 import subprocess
@@ -99,12 +100,20 @@ def repin(out, name):
     json_file(p, m)
 
 
-def test_library_packet_routes_to_its_strict_loader_without_changing_metadata(
-    tmp_path, monkeypatch,
+@pytest.mark.parametrize(("schema", "module", "loader"), [
+    ("state-politics.nj-library-text.v1", "nj_library_text", "load_nj_library"),
+    ("state-politics.nj-library-collection-text.v1", "nj_library_collection", "load_nj_collection"),
+    (
+        "state-politics.ok-retained-context-text.v1",
+        "ok_retained_context_text", "load_ok_retained_context",
+    ),
+])
+def test_archive_packet_routes_to_its_strict_loader_without_changing_metadata(
+    tmp_path, monkeypatch, schema, module, loader,
 ):
-    from state_politics.bills import nj_library_text as library
+    library = importlib.import_module(f"state_politics.bills.{module}")
 
-    json_file(tmp_path / "manifest.json", {"schema": "state-politics.nj-library-text.v1"})
+    json_file(tmp_path / "manifest.json", {"schema": schema})
     metadata = {"unchanged_original_context": None}
     expected = (
         ["complete reader view"], ["complete context"], {"raw": "pin"}, {"source": "library"},
@@ -115,7 +124,7 @@ def test_library_packet_routes_to_its_strict_loader_without_changing_metadata(
         calls.append((directory, original_metadata))
         return expected
 
-    monkeypatch.setattr(library, "load_nj_library", load)
+    monkeypatch.setattr(library, loader, load)
     assert archive.load_archive(tmp_path, metadata) is expected
     assert calls == [(tmp_path, metadata)] and calls[0][1] is metadata
 

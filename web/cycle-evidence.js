@@ -132,6 +132,8 @@ if (typeof document !== "undefined") {
       const snapshot = row.source_type === "snapshot_text";
       const corpus = row.source_type === "research_corpus_text";
       const archive = row.source_type === "archive_text";
+      const crossContext = archive
+        && row.context_relation?.kind === "same_legislature_exact_existing_document_pointer";
       article.append(element("h3", receipt
         ? `${row.state} / ${row.identifier} — source-receipt observation only`
         : sessionText
@@ -179,18 +181,27 @@ if (typeof document !== "undefined") {
           JSON.stringify(row.source_context, null, 2)));
       } else if (archive) {
         article.append(element("p",
-          "Exact printed state, session and own bill identity match an existing candidate. "
+          (crossContext
+            ? `Retained source session ${row.context_relation.source_session_identifier}; `
+              + `candidate session ${row.context_relation.target_session_identifier}. `
+              + "Exact existing document pointers link distinct annual contexts of the same legislature, "
+              + "not session aliases or a canonical bill merge. This is not evidence of target-year "
+              + "filing, introduction, reintroduction, carryover or pending status. "
+            : "Exact printed state, session and own bill identity match an existing candidate. ")
           + "Provider alternatives and combined substitutes are not extra bills. Complete "
           + "source metadata and original source-member references remain available. "
           + "No dates, party, introduced version, human gold or model approval are inferred. "
           + (row.archive_generated_prologue_preserved
             ? "This full string includes the archive's existing machine-generated extraction prologue, not our added summary."
-            : "This is the complete retained PDF extraction, without an added summary."),
+            : "This is the complete retained source extraction, without an added summary."),
           "note archive-observation"));
         article.append(sourceText("Read complete archived bill text (unaltered)", row.text));
         article.append(sourceText("Inspect printed identity, source version and all original metadata",
           JSON.stringify({source_identity: row.source_identity, source_version: row.source_version,
             source_record: row.source_record, source_members: row.source_members,
+            context_relation: row.context_relation,
+            original_source_context: row.original_source_context,
+            original_target_context: row.original_target_context,
             archive_provider: row.archive_provider, archive_commit: row.archive_commit,
             archive_country_git_tree: row.archive_country_git_tree}, null, 2)));
       } else if (corpus) {

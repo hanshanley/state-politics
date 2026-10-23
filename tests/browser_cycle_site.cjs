@@ -220,6 +220,7 @@ async function terminate(child) {
     const hasNative = await evaluate(session, 'Boolean(document.querySelector("#collection option[value=native_text]"))');
     const hasReceipt = await evaluate(session, 'Boolean(document.querySelector("#collection option[value=source_receipt]"))');
     const hasSessionText = await evaluate(session, 'Boolean(document.querySelector("#collection option[value=native_session_text]"))');
+    const hasArchive = await evaluate(session, 'Boolean(document.querySelector("#collection option[value=archive_text]"))');
     const buildManifest = JSON.parse(await fs.readFile(
       path.join(preview, "downloads/build_manifest.json"), "utf8"));
     for (const binding of Object.values(buildManifest.producer_archive || {})) {
@@ -507,10 +508,62 @@ async function terminate(child) {
           candidate_excluded_views: values.candidate_excluded_views, searched_views: selected.length });
         await search(session, "");
       }
-      await change(session, "state", "TX");
-      await waitFor(session, 'document.getElementById("evidence-status").textContent.startsWith("Publisher-session source coverage unknown")');
-      assert.equal(await evaluate(session, 'document.getElementById("download-query").disabled'), true);
-      assert.equal(requests.filter(entry => entry.url.includes("native-session-TX")).length, 0);
+      const suppliedStates = Object.values(buildManifest.inputs.native_session_scopes)
+        .map(binding => binding.state);
+      const unknownState = await evaluate(session, `[...document.getElementById("state").options]
+        .map(option => option.value).find(value => /^[A-Z]{2}$/.test(value)
+          && !${JSON.stringify(suppliedStates)}.includes(value))`);
+      if (unknownState) {
+        await change(session, "state", unknownState);
+        await waitFor(session, 'document.getElementById("evidence-status").textContent.startsWith("Publisher-session source coverage unknown")');
+        assert.equal(await evaluate(session, 'document.getElementById("download-query").disabled'), true);
+        assert.equal(requests.filter(entry => entry.url.includes(`native-session-${unknownState}`)).length, 0);
+      }
+    }
+
+    const archiveDownloads = [];
+    let crossContextProof = null;
+    if (hasArchive) {
+      let linked;
+      for await (const row of sourceRows("archive-OK")) {
+        if (!linked && row.context_relation?.kind === "same_legislature_exact_existing_document_pointer") {
+          linked = row;
+        }
+      }
+      if (linked) {
+        await change(session, "state", "OK");
+        await change(session, "collection", "archive_text");
+        await waitFor(session, 'document.getElementById("evidence-status").textContent.startsWith("Views ")');
+        await search(session, linked.view_id);
+        await waitFor(session, 'document.querySelectorAll("#evidence article").length === 1');
+        const notice = await evaluate(session,
+          'document.querySelector("#evidence .archive-observation").textContent');
+        assert.ok(notice.includes(`Retained source session ${linked.context_relation.source_session_identifier}`));
+        assert.ok(notice.includes(`candidate session ${linked.context_relation.target_session_identifier}`));
+        assert.ok(notice.includes("not session aliases or a canonical bill merge"));
+        assert.ok(notice.includes("not evidence of target-year filing"));
+        assert.ok(!notice.includes("Exact printed state, session and own bill identity match"));
+        assert.ok(!notice.includes("retained PDF extraction"));
+        const bodyHash = await evaluate(session, `(async () => {
+          const text = document.querySelector("#evidence article .source-text").textContent;
+          const digest = await crypto.subtle.digest("SHA-256", new TextEncoder().encode(text));
+          return [...new Uint8Array(digest)].map(value => value.toString(16).padStart(2, "0")).join("");
+        })()`);
+        assert.equal(bodyHash, createHash("sha256").update(linked.text).digest("hex"));
+        const provenance = JSON.parse(await evaluate(session,
+          'document.querySelectorAll("#evidence article .source-text")[1].textContent'));
+        assert.deepEqual(provenance.context_relation, linked.context_relation);
+        assert.deepEqual(provenance.original_source_context, linked.original_source_context);
+        assert.deepEqual(provenance.original_target_context, linked.original_target_context);
+        archiveDownloads.push(await download(session, [linked],
+          "OK linked full body and retained original context provenance"));
+        crossContextProof = {
+          view_id: linked.view_id, source: linked.context_relation.source_session_identifier,
+          target: linked.context_relation.target_session_identifier,
+          displayed_body_sha256: bodyHash, distinct_contexts_disclosed: true,
+        };
+        await search(session, "");
+      }
     }
 
     await send("Emulation.setDeviceMetricsOverride", {
@@ -570,13 +623,14 @@ async function terminate(child) {
         "keyboard skip link", "390px mobile layout", "no-JS coverage and full-text links"],
       downloads: [billsDownload, searchDownload, emptyQueryDownload, platformDownload,
         outsideDownload, maineDownload, ...nativeDownloads, ...montanaDownloads, ...receiptDownloads,
-        ...sessionDownloads],
+        ...sessionDownloads, ...archiveDownloads],
       native_full_text: hasNative, verified_metadata_token_plan: Boolean(billRows[0].token_plan),
       maine_missing_cycle_cohort_disclosed: true,
       separate_receipt_evidence: hasReceipt, receipt_observations: receiptRows.length,
       receipt_unknown_states: hasReceipt ? 49 : null,
       receipt_discrepant_dates_preserved: hasReceipt,
       separate_publisher_session_evidence: hasSessionText, publisher_session_scopes: sessionScopes,
+      separate_archive_evidence: hasArchive, original_annual_context_disclosure: crossContextProof,
       archived_producer_source_files: Object.keys(buildManifest.producer_archive || {}).length,
       javascript_exceptions: exceptions.length, no_js_evidence_requests: 0,
     };

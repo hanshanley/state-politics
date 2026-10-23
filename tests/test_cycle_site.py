@@ -307,6 +307,10 @@ def test_independent_archive_exports_preserve_provider_alternatives_and_full_tex
     assert (out / "evidence/archive-ME.jsonl").read_bytes() == b""
     assert (out / "downloads/producers/archive_text.py").is_file()
     assert (out / "downloads/producers/lawatlas_text.py").is_file()
+    for name in ("nj_library_collection.py", "ok_retained_context_text.py"):
+        assert (out / "downloads/producers" / name).read_bytes() == (
+            ROOT / "src/state_politics/bills" / name
+        ).read_bytes()
     document = (out / "index.html").read_text()
     assert 'value="archive_text"' in document
     assert document.count('href="downloads/archive-') == 50

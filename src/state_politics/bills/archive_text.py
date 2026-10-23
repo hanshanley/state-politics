@@ -336,6 +336,14 @@ def load_archive(directory: Path, metadata=None):
         from state_politics.bills.nj_library_text import load_nj_library
 
         return load_nj_library(directory, metadata)
+    if manifest.get("schema") == "state-politics.nj-library-collection-text.v1":
+        from state_politics.bills.nj_library_collection import load_nj_collection
+
+        return load_nj_collection(directory, metadata)
+    if manifest.get("schema") == "state-politics.ok-retained-context-text.v1":
+        from state_politics.bills.ok_retained_context_text import load_ok_retained_context
+
+        return load_ok_retained_context(directory, metadata)
     require(manifest["schema"] == SCHEMA and manifest["provider"] == PROVIDER
             and manifest["source_commit"] == COMMIT
             and manifest["country_git_tree"] == COUNTRY_TREE, "pinned archive source/schema")
