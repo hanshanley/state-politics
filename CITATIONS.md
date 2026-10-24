@@ -353,7 +353,35 @@ state and LegiScan source URLs, local-copy paths, version IDs and stage/date
 claims. That metadata is not independently certified source-transfer history;
 neither those native URLs nor LegiScan's API/body endpoints were requested.
 
-### Current supplement: finite public identity discovery
+### Current supplement: explicit provider-context projection
+
+Already retained records declaring `2023 Regular Session` support **20
+additional original 2024 contexts / 35 complete views / 396,533 characters**.
+The source's own printed 2023 state, venue, typed number and caption must
+match, and the exact original 2024 bill must have its own carryover event
+and origin-introduction action IDs/chamber in the complete original action
+extraction. The provider-declared session is preserved, not rewritten to
+make the existing annual reader accept it. An explicit new source profile
+selects only that action-proven relation; the default reader and every
+old negative/source packet remain unchanged. Conflicting printed venues
+and matching-2024-heading shortcuts are rejected.
+
+The disjoint packets are
+`data/processed/billcam-provider-context-html-delta-20261023-v1/`
+(17 contexts / 26 views; manifest
+`8711b3ed9b15286118b8057d254c7e62fc83f2f4594d1d6f8315c0237ddc5ff4`)
+and `data/processed/billcam-provider-context-html-four-subject-20261023-v1/`
+(3 contexts / 9 views; manifest
+`dffe4352c2bb177433a35ae85eb1e55a78af3f497343a014c2f040cd77a26b3f`).
+Full original captures, metadata, request counters, source bodies and action
+tables are preserved through explicit inventory maps. These are additional
+observed contexts, not new distinct legislation or separate publications.
+No requests are made; controlled totals remain **3,081 GETs / 26 POSTs**.
+Proof: `data/provider-context-packet-replay-20261023-v1.json`.
+All source, filing-time, party, human, rights, model and publication limits
+remain in force.
+
+### Preceding supplement: finite public identity discovery
 
 A predeclared twenty-identity ordinary public search retains 24 successful
 result pages, then closes immediately on an explicit search-login HTTP 401.

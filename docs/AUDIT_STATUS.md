@@ -4,7 +4,59 @@ The existing figures and analytical conclusions are **legacy, not revalidated fi
 The current changes repair infrastructure and preserve evidence; they do not certify a
 replacement classifier or establish complete contemporary coverage.
 
-## Context-qualified published recovery and updated inference: October 23, 2026
+## Provider-context recovery and updated inference: October 24, 2026
+
+The next offline pass recovers **20 original Hawaii 2024 contexts / 35 full
+views / 396,533 policy characters** from retained provider-declared 2023
+records. The prior reader discarded that declared year before checking the
+original context's actual carryover actions. A strict new opt-in projection
+requires matching own single printed 2023 venue, typed number and caption,
+plus the exact original carryover event and origin-introduction IDs/chamber.
+It preserves full provider sessions, original context years/dates, all source
+captures and every prior negative. A matching 2024 heading alone is rejected;
+no annual/session/URL alias or new request is used. Disjoint packets:
+`billcam-provider-context-html-delta-20261023-v1` (17 contexts / 26 views) and
+`billcam-provider-context-html-four-subject-20261023-v1` (3 contexts / 9 views).
+
+Availability is **139,228 / 157,598**, with **18,370** missing, including
+**5,717 HI**. Eighteen archives contain **10,773 contexts / 13,154 views**.
+All 13,119 preceding archive rows, 305 other source partitions, twelve other
+chart tables and 23 preceding complete source ZIPs are unchanged. Current
+outputs are **v31 explorer / v26 source gallery**, with 25 complete ZIPs.
+
+Actual completed **v15**, frozen from v31 and extending completed v14
+read-only, processes **178,525 views**: **65,063 classified / 74,165
+abstained / 18,370 unavailable**. New contexts yield **ten assignments /
+ten abstentions**; all **157,578 other whole assignment rows / 178,490
+preceding predictions** remain unchanged. All 35 supplied strings are
+already cached: the actual run uses **zero new encoder strings/tokens/windows
+and zero old-input repeats**. Full independent token/logit/window/consensus/
+assignment and 108-member inference ZIP replay pass without an encoder.
+
+Current topic/comparison galleries are
+`outputs/topic-inference-retained-text-2023-2024-v13/` and
+`outputs/topic-input-comparison-2023-2024-v11/`. Every paired context and all
+seven tables are independently rebuilt. Real Chromium checks **321 complete
+bodies / 266 full action proofs**, all 35 new complete provider/source/context
+records, fifteen full-state queries, nineteen byte-identical downloads,
+fourteen SVGs and desktop/mobile layouts. JavaScript/external errors are zero;
+all helpers exit. Receipts:
+`data/provider-context-packet-replay-20261023-v1.json`,
+`data/provider-context-source-union-replay-20261023-v1.json`,
+`data/provider-context-assignment-reconciliation-20261023-v1.json`,
+`data/provider-context-complete-inference-replay-20261023-v1.json`,
+`data/provider-context-comparison-replay-20261023-v1.json` and
+`data/provider-context-browser-workspace-20261023-v1/receipt.json`.
+
+An opposite-direction audit of 2,609 retained 2024 detail occurrences finds
+no still-missing 2023 match; no source is admitted. Two residual captured
+bodies genuinely print 2022 or the wrong typed chamber and remain rejected.
+Metadata is not repaired to force an apparent fill.
+Independent human accuracy, operative platforms, event-time party, source
+originality, rights, report and publication remain unresolved. No public-site
+integration or access-stop reopening occurs.
+
+## Preceding context-qualified published recovery and updated inference: October 23, 2026
 
 An offline, complete-original-action proof adds **two original Hawaii 2024
 contexts / two published full views / 7,722 policy characters**. Each own
