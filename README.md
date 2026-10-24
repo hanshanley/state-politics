@@ -73,27 +73,25 @@ research-corpus cleaning and classifications remain uncertified.
 The local graph bundle includes complete research downloads and an explicit
 remaining-text queue; see the [recovery commands](docs/REPRODUCIBILITY.md#independent-archived-bill-text).
 
-The last completed provisional topic-inference snapshot yields
+Completed provisional topic inference yields
 **89,950 assignments / 67,648 abstentions**; retained bodies yield
-**65,065 assignments / 74,179 abstentions / 18,354 unavailable bodies**
-across **178,567 full source alternatives**.
-The sixteen newly observed NJ contexts yield two provisional assignments
-and fourteen abstentions; uncertainty is not replaced with forced labels.
-All **157,582 other complete assignment rows** and all 178,525 preceding view
-predictions remain unchanged. The actual run encodes only the 42 new strings,
-covering 536,323 tokens / 684 windows without discarded tokens or repeated
+**65,080 assignments / 74,186 abstentions / 18,332 unavailable bodies**
+across **178,628 full source alternatives**.
+The newest 22 NJ contexts yield fifteen provisional assignments and seven
+abstentions; uncertainty is not replaced with forced labels.
+All **157,576 other complete assignment rows** and all 178,567 preceding view
+predictions remain unchanged. The actual run encodes only the 61 new strings,
+covering 302,904 tokens / 397 windows without discarded tokens or repeated
 old encoder inputs. No model or threshold changes.
 Local graphs and complete research downloads are in
 `outputs/recreated-2023-2024-v28/`,
-`outputs/topic-inference-retained-text-2023-2024-v14/` and
-`outputs/topic-input-comparison-2023-2024-v12/`.
+`outputs/topic-inference-retained-text-2023-2024-v15/` and
+`outputs/topic-input-comparison-2023-2024-v13/`.
 The unpublished full-text explorer is `data/preview-cycle-evidence-v33/`.
 The source gallery and explorer now contain all twenty-two archives and the
-latest 22-context NJ recovery. Completed full-text inference v16, independent
-saved-token/logit/consensus replay and the paired-input comparison still reflect
-the preceding twenty-archive snapshot; metadata inference is unchanged.
-The newest 22-context source recovery is undergoing separate v17 inference
-and topic-gallery refresh; the completed topic totals above remain v16.
+latest 22-context NJ recovery. Completed full-text inference v17, independent
+saved-token/logit/consensus replay and the paired-input comparison use those
+same actual sources; metadata inference is unchanged.
 The tracked `scripts/audit_cycle_topics.py` independently replays the saved
 whole-source decisions and complete downloads offline without an encoder;
 see the [current-snapshot audit command](docs/REPRODUCIBILITY.md#current-snapshot-replay-versus-the-historical-analysis-audit).
@@ -102,14 +100,14 @@ between inputs are not accuracy measurements. These remain model assignments,
 not validated policy findings or party positions; see the
 [inference contract](docs/REPRODUCIBILITY.md#provisional-population-topic-inference).
 
-Model-blind GPT-6.1 Sol reviews cover **36 recovered Hawaii/NJ contexts /
-77 complete source views**, with 186 exact evidence spans verified.
-Twelve context assignments agree with the advisory review; 22 model abstentions
-have advisory topic proposals, and two contexts remain unresolved in both.
-Four view-level topic disagreements occur within bills on which the model
-already abstains. These are selected-cohort diagnostics, **not independent human
+Model-blind GPT-6.1 Sol reviews cover **58 recovered Hawaii/NJ contexts /
+138 complete source views**, with 324 exact evidence spans verified.
+Twenty-five assigned topics match advisory proposals, two assigned topics differ,
+29 model abstentions have proposals, and two contexts remain unresolved in both.
+The differing construction-permit proposals expose taxonomy ambiguity, not
+established model errors. These are selected-cohort diagnostics, **not independent human
 accuracy or replacement labels**. The complete local casebook and full-source
-download are in `outputs/assistant-advisory-topic-review-2023-2024-v4/`;
+download are in `outputs/assistant-advisory-topic-review-2023-2024-v5/`;
 see the [review contract](docs/REPRODUCIBILITY.md#assistant-advisory-semantic-review).
 
 ## Setup

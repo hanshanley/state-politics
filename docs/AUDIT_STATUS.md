@@ -29,18 +29,51 @@ reconciles all **22 new contexts / 61 complete views / 1,144,522 characters**
 against exact original missing rows and v16 unavailable assignments.
 Source availability is **139,266 / 157,598**, with **18,332** remaining gaps;
 the 22-archive union has 10,811 contexts / 13,257 views. The nineteen new contexts
-are receiving complete model-blind GPT-6.1 Sol review separately.
-Source/model/graph refreshes are separate; the completed inference and gallery
-counts below remain v16 until the next actual run finishes.
+have completed separate full-text model-blind GPT-6.1 Sol review.
+Source/model/graph refreshes remain separate executions.
 Actual source builds are complete: explorer
 `data/preview-cycle-evidence-v33/` has 791 bound artifacts; gallery
 `outputs/recreated-2023-2024-v28/` has 100 artifacts, fourteen recreated
 PNG/SVG pairs and twenty-nine complete research ZIPs.
 All new complete texts are now blindly reviewed: 22 contexts / 61 views /
 1,144,522 characters / 138 exact spans, with zero frozen-human overlap.
-Together with preserved earlier reviews, the prepared casebook covers 58
+Together with preserved earlier reviews, the complete casebook covers 58
 contexts / 138 views / 3,541,560 characters / 324 spans. Its new-model
-comparison is not executed before actual v17 assignments exist.
+comparison uses actual completed v17 assignments, never projected labels.
+Actual v17 yields **65,080 classified / 74,186 abstained / 18,332 unavailable**
+across **178,628 complete source alternatives**. The new contexts yield fifteen
+assignments and seven abstentions; all 157,576 other whole assignment rows and
+178,567 preceding view predictions remain unchanged. Only 61 genuinely new
+strings are encoded: 302,904 tokens / 397 windows, no discarded tokens or old
+encoder repeats. Frozen weights, taxonomy and thresholds remain unchanged.
+Both private complete replay and the tracked read-only token-cache replay pass.
+
+New topic and paired galleries are
+`outputs/topic-inference-retained-text-2023-2024-v15/` and
+`outputs/topic-input-comparison-2023-2024-v13/`. All seven paired tables are
+independently reconstructed for all fifty states and 139,266 observed-body
+contexts. Source-union replay rehashes 1,776 artifacts and preserves all 13,196
+old archive rows, 305 other source partitions, twelve other chart tables and
+twenty-seven preceding complete source ZIPs unchanged.
+
+Casebook `outputs/assistant-advisory-topic-review-2023-2024-v5/` has 25 matching
+assigned-topic proposals, 29 proposals where the model abstains, two unresolved
+in both and two different assigned topics. A 5036 receives model 15 / advisory
+14; S 3551 receives model 15 / advisory 20. These construction-permit bills
+straddle business, development and administrative topics; differing advisory
+proposals are **not established errors or independent accuracy labels**.
+All 32 triage flags remain requests for human adjudication, not corrections.
+The complete 184-member review ZIP includes every full source and all eleven
+blinded review results. Chromium renders all 138 complete UTF-8 texts and verifies
+desktop/mobile layouts and three byte-identical downloads without external
+requests. All original model results and human-evaluation controls stay unchanged.
+The refreshed workspace also renders 424 selected full bodies, including all 61
+new original action/context proofs. It preserves eight pinned-prologue views,
+six whitespace-witness views and two literal reprint covers in the visible
+source metadata. All fourteen source SVGs decode; all nineteen workspace
+downloads are byte-identical, including the complete 8,272-view NJ query.
+Both browser suites finish with no JavaScript errors or external requests;
+every helper exits and only the two inspected temporary profiles are removed.
 There are no new source requests, date repairs or scientific/publication promotions.
 
 ## Original-context NJ recovery and completed output refresh: October 24, 2026
@@ -163,7 +196,7 @@ No reported missing body is filled with an ancillary document.
 
 The independent replay is now a reusable tracked CLI,
 `scripts/audit_cycle_topics.py`, rather than requiring session-private helpers.
-Actual current replay verifies every **178,567 source view / 157,598 original context**,
+Actual current replay verifies every **178,628 source view / 157,598 original context**,
 saved logits, token/window coverage, source-alternative consensus, original
 unknown fields, summary and manifest-bound gallery artifact. The complete
 research ZIP must contain **all 108 required input/prediction/producer members**;
@@ -171,8 +204,9 @@ rebinding a smaller manifest/ZIP does not make missing full text acceptable.
 An externally pinned independent token cache is opened read-only, with explicit
 missing-row failure and unchanged pre/post hashes. No encoder, label change or
 source/model promotion occurs. Receipt:
-`data/nj-context-tracked-current-cycle-audit-20261024-v1.json`.
-The preceding v15 replay remains sealed at
+`data/nj-single-page-tracked-current-cycle-audit-20261024-v1.json`.
+The preceding v16 and v15 replays remain sealed at
+`data/nj-context-tracked-current-cycle-audit-20261024-v1.json` and
 `data/tracked-current-cycle-audit-20261024-v2.json`.
 
 The comparison observer initially compares relative and absolute display paths

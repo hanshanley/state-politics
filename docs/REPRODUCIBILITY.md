@@ -25,10 +25,10 @@ The saved 2023–2024 retained-text snapshot has a tracked offline replay comman
 ```bash
 HF_HUB_OFFLINE=1 TRANSFORMERS_OFFLINE=1 \
   .venv/bin/python -I -B scripts/audit_cycle_topics.py \
-  --job data/processed/cycle-topic-inference-retained-text-20261024-v16 \
-  --gallery outputs/topic-inference-retained-text-2023-2024-v14 \
-  --verified-token-cache data/cycle-topic-independent-token-verification-cache-20261024-v13.sqlite \
-  --verified-token-cache-sha256 344d61bce7857299abef0ecdb28340f8e6391bbbd626a33384c3f2c3436f56d0 \
+  --job data/processed/cycle-topic-inference-retained-text-20261024-v17 \
+  --gallery outputs/topic-inference-retained-text-2023-2024-v15 \
+  --verified-token-cache data/cycle-topic-independent-token-verification-cache-20261024-v14.sqlite \
+  --verified-token-cache-sha256 d7b3d106fe0f71d5edfb18eb90d2c54c7638f0b3958c7c6df1c8003d3662610b \
   --out data/current-cycle-audit-NEW-UNUSED.json
 ```
 
@@ -46,10 +46,10 @@ All fifty state partitions, gallery artifacts and **all 108 required complete ZI
 members** are checked. Required source inputs, predictions or frozen producers
 cannot be omitted by changing the download manifest to match a smaller ZIP.
 The current actual replay is
-`data/nj-context-tracked-current-cycle-audit-20261024-v1.json`: **178,567 views /
+`data/nj-single-page-tracked-current-cycle-audit-20261024-v1.json`: **178,628 views /
 157,598 contexts**, identical saved decisions, counts and byte bindings to the
 independent private replay, with zero encoder passes and no token-cache writes.
-The preceding v15 replay and token v12 remain unchanged.
+The preceding v16/v15 replays and token v13/v12 remain unchanged.
 
 This is a structural/provenance replay, **not independent accuracy validation or
 study completion**. The original full `audit_reproducibility.py --require-tracked`
@@ -100,7 +100,7 @@ research-packet ZIPs and a hash manifest. It also archives the exact fifteen
 plotting/source-consumer producers and the recovered producers within their research packets.
 The current bundle has **twenty-nine** complete research ZIPs, 100 bound artifacts
 and manifest `10801f0dbae9f17f5371201d11400f4247399d553601bd6124113202241c5bab`.
-Independent reconciliation of the twenty-seven preceding source ZIPs is running.
+All twenty-seven preceding source ZIPs remain byte-identical under independent replay.
 It uses saved evidence
 tables and existing development diagnostics without
 collecting sources or executing a classifier. Missing native channels remain
@@ -122,10 +122,10 @@ directory for another run. Generated bundles are local and Git-ignored.
 
 ## Assistant-advisory semantic review
 
-`outputs/assistant-advisory-topic-review-2023-2024-v4/index.html` is a separate
+`outputs/assistant-advisory-topic-review-2023-2024-v5/index.html` is a separate
 private casebook, not a replacement population inference or graph bundle.
-Seven model-blind GPT-6.1 Sol review assignments examine all 36 selected recovered
-Hawaii/NJ contexts and all 77 complete policy views. Every input hash and all 186 exact
+Eleven model-blind GPT-6.1 Sol review assignments examine all 58 selected recovered
+Hawaii/NJ contexts and all 138 complete policy views. Every input hash and all 324 exact
 evidence spans are checked before revealing the frozen model comparison.
 Frozen human evaluation IDs, identities and body hashes are excluded; no
 overlap is found. Original evaluation inputs, predictions and labels remain
@@ -133,24 +133,27 @@ unchanged.
 
 The primary download,
 `research-data/complete_review_inputs_results_and_comparison.zip`, contains
-108 hash-bound members: all complete reviewed texts, original blind inputs,
+184 hash-bound members: all complete reviewed texts, original blind inputs,
 review results, the complete comparison, selected original model predictions
 and assignments, and `executed_verifier.py`. `comparison.csv` is explicitly a
 comparison table, **not a substitute for source-text downloads**.
 The outer manifest binds every artifact and every ZIP member. The selected
 model rows retain their original fields and unknowns.
 
-The comparison records twelve matching assigned topics, 22 model abstentions
-with advisory proposals and two contexts unresolved in both; four individual
-view disagreements remain inside whole-bill model abstentions.
+The comparison records 25 matching assigned-topic proposals, 29 model abstentions
+with advisory proposals, two contexts unresolved in both and two different
+assigned topics. Eleven individual view disagreements remain explicit.
 These are descriptive results for a nonrepresentative cohort. They cannot
 estimate population accuracy or become human gold, training labels,
 analytical assignments, model promotion or publication permission.
 Adjudication flags are a review queue, not automatic corrections.
 All view disagreements enter that queue even if both context results abstain.
-V4 adds that one missing A 5610 flag, retaining all other case fields and selected
-model files unchanged; v3 remains preserved. There are 23 selected triage contexts,
-not 23 established model errors.
+V4 added the missing A 5610 flag; V5 preserves that rule and adds complete
+comparisons for the new 22 contexts. All earlier casebooks stay immutable.
+There are 32 selected triage contexts, not 32 established model errors.
+Construction-permit bills A 5036/S 3551 have model topic 15 and differing
+advisory proposals 14/20. Such taxonomy-boundary disagreement cannot establish
+which label is correct or substitute for independent human adjudication.
 The unchanged population graphs must not be regenerated from these advisory
 proposals as if they were validated labels.
 The preceding 20-context casebooks v1/v2 and their complete 48-member downloads
@@ -278,14 +281,47 @@ including **1,600 NJ / 5,717 HI**. Twenty-two archives contain **10,811 contexts
 `2c13118effff5ffa2c621dd3f11f7d8b2b9de65ec576c0f32fd86a242b75bd05`;
 the recreated source gallery v28 is described above.
 
-Full-text v17 inference and downstream topic/paired galleries are running
-separately against the unchanged frozen v16 model/cache and token v13.
-The new job has 178,628 supplied source views. Final decisions and genuine
-new encoder work must be measured, not projected. The preceding completed
-v16 snapshot and replay command above remain the current actual model baseline.
+Actual full-text v17 inference and downstream galleries are complete against
+the unchanged frozen v16 model/cache and token v13. The job has **178,628
+supplied source views / 157,598 original contexts**, yielding **65,080 classified /
+74,186 abstained / 18,332 unavailable**. The new 22 contexts yield fifteen
+assignments and seven abstentions. Every other 157,576 whole assignment row and
+all 178,567 old per-view predictions remain unchanged. The genuine original
+encoder processes **61 new strings / 302,904 tokens / 397 windows**, with no
+discarded tokens or old encoder repeats. Metadata inference is not rerun.
+
+Topic gallery v15 has 13 artifacts, manifest
+`e4d63894e082a8475bf06200a9e392e1361eb76eb96e01208d3afe9661d90795`;
+paired gallery v13 has 22 artifacts, manifest
+`52338cdf9ba86ab2d38a627a2185916ce0e3e7cbb4a19fc0444f5da3ea472471`.
+The full 108-member inference ZIP has SHA
+`cbb40766c7073f0d7af1bb27c08e54c8b1a2823c37197d020fdd76996993d19f`.
+Source, assignment, paired-table and complete-replay receipts are
+`data/nj-residual-source-union-replay-20261024-v1.json`,
+`data/nj-residual-assignment-reconciliation-20261024-v1.json`,
+`data/nj-residual-comparison-replay-20261024-v1.json` and
+`data/nj-single-page-tracked-current-cycle-audit-20261024-v1.json`.
+Both private and tracked source/logit/token/window/consensus replays pass.
+
+Future extensions must start **completed v17 / token v14**. Its prediction
+cache has **168,286 rows / 751,034,368 bytes**, SHA-256
+`54ab9a5cfb991374993d1faa968196a379d7653a78887180438301032b11d51e`.
+The independent token cache is
+`data/cycle-topic-independent-token-verification-cache-20261024-v14.sqlite`,
+**168,286 strings / 40,128,512 bytes**, SHA-256
+`d7b3d106fe0f71d5edfb18eb90d2c54c7638f0b3958c7c6df1c8003d3662610b`.
+Original v16/v13 caches remain byte-identical and read-only.
 All 61 new complete policy views have separate model-blind advisory reviews
 with 138 verified literal evidence spans; they are not human labels or training
 data. No source request, metadata replacement or approval promotion occurs.
+Real Chromium verifies 424 full workspace bodies, all 61 new action/context
+proofs and byte-identical complete downloads; the full NJ query contains 8,272
+views. Eight prologue witnesses, six whitespace witnesses and two printed
+reprint covers remain visible and match original source metadata exactly.
+All fourteen source SVGs decode. The separate 58-context casebook renders all
+138 complete UTF-8 texts and its complete 184-member review ZIP. Both suites
+pass desktop/mobile layout checks and 22 exact downloads with no external
+requests or JavaScript errors; all owned helpers exit.
 
 ### Preceding original-context New Jersey recovery and inference: October 24, 2026
 
@@ -345,7 +381,8 @@ Independent source and assignment receipts are
 `data/nj-context-source-union-replay-20261024-v1.json` and
 `data/nj-context-assignment-reconciliation-20261024-v1.json`.
 
-Future extensions must start **completed v16 / token v13**. Its prediction
+The preceding v16 / token v13 checkpoint stays preserved; future extensions
+use completed v17 / token v14 above. The historical v16 prediction
 cache has **168,225 rows / 750,690,304 bytes**, SHA-256
 `b7e52e96d73ccf9357a2f9db0d5ebad7694b1ac7168e3bca63138034b0eb774b`.
 The independent token cache is
@@ -422,7 +459,7 @@ these are descriptive input differences, not accuracy measurements.
 Every source and model research download remains a complete packet.
 
 The preceding v15 / token v12 checkpoint remains preserved; future extensions
-use the completed v16 / token v13 checkpoint above. Its historical v15 prediction
+use the completed v17 / token v14 checkpoint above. Its historical v15 prediction
 cache has **168,183 rows / 750,272,512 bytes**, SHA-256
 `788fbfef3118167ddc67be24265e5242922ab8c89bb979e328ddfa4450b646c8`.
 The independently verified cache is
@@ -720,7 +757,7 @@ The actual assignment Parquet is **25,965,041 bytes**, SHA-256
 
 The preceding completed v12 prediction cache has **168,166 rows / 750,219,264 bytes**,
 SHA-256 `83fae74274e49121273c4a043bf21f2acf639ab9018d82a3354122073117f106`.
-Future extensions use **v16 / token v13** above, not this older cache.
+Future extensions use **v17 / token v14** above, not this older cache.
 The preceding independently verified token cache is
 `data/cycle-topic-independent-token-verification-cache-20261023-v9.sqlite`,
 **168,166 strings / 40,087,552 bytes**, SHA-256
@@ -889,7 +926,7 @@ The actual assignments are 25,964,882 bytes, SHA-256
 The preceding completed v11 prediction cache has **167,978 rows /
 749,453,312 bytes**, SHA-256
 `5fcab211a7885bccb6fde48351eeaeb71365e0f1328df1cc5bf4e3a2069809c0`.
-Future extensions use completed **v16 / token v13**, as specified above;
+Future extensions use completed **v17 / token v14**, as specified above;
 neither this historical cache nor the superseded unexecuted v9 is current.
 The preceding matching independent token cache is
 `data/cycle-topic-independent-token-verification-cache-20261023-v8.sqlite`;
