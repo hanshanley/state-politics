@@ -100,6 +100,10 @@ is preserved; successful observers use separate directories for successive
 same-named downloads rather than overwriting the earlier export.
 No source collection, encoder, training, annotation, calibration or promotion
 runs during the build; all scientific/publication gates remain closed.
+The actual tracked audit is
+`data/classification-inspector-post-save-full-audit-20261024-v1.json`:
+446/480, with the same 34 legacy failures and all other preceding report
+fields unchanged. This is not a passing scientific-validation claim.
 
 ### Longer-context and cross-input experiments
 

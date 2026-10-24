@@ -71,6 +71,12 @@ the application or dataset. Forty-two focused regressions pass. Existing site
 regressions have 134 passes and three optional browser-fixture skips, separate
 from the actual browser executions above.
 
+The actual tracked full audit is **446/480**. The new builder and test add two
+passing documentation checks; the same 34 legacy failures and every other
+report field remain identical to 444/478. The nonzero audit exit and unresolved
+scientific certification remain explicit in
+`data/classification-inspector-post-save-full-audit-20261024-v1.json`.
+
 This is an inspection and evidence-access improvement, not another classifier
 experiment, a source fill or human adjudication. All original counts, scores,
 source alternatives, dates/nulls and approval gates remain unchanged.
