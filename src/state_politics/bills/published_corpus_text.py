@@ -314,13 +314,14 @@ def _source(source, source_sha):
 
 
 def _replay(source, queue_path, source_sha, queue_sha, *, legacy_observation_name=False):
-    _, inventory = _source(source, source_sha)
+    source_manifest, inventory = _source(source, source_sha)
     require(_binding(queue_path)["sha256"] == _hash(queue_sha), "original gap queue changed")
     table = pq.read_table(queue_path)
     originals = table.to_pylist()
     require(len({r["bill_id"] for r in originals}) == len(originals)
             and all(r["neither_source_observed"] is True for r in originals),
             "only distinct original missing-text contexts permitted")
+    carryover = billcam_text._carryover_actions(source, source_manifest, originals)
     index = defaultdict(list)
     for row in originals:
         index[row["state"], row["identifier"]].append(row)
@@ -342,10 +343,28 @@ def _replay(source, queue_path, source_sha, queue_sha, *, legacy_observation_nam
                 matches = []
                 if start is not None and state in SUPPORTED:
                     text = record["Bill_Text"][start:]
-                    matches = [
-                        (row, identity) for row in hits
-                        if (identity := printed_identity(text, row)) is not None
-                    ]
+                    for row in hits:
+                        identity = printed_identity(text, row)
+                        if (identity is None and row["bill_id"] in carryover
+                                and printed_identity(
+                                    text, {**row, "session_identifier": "2023"},
+                                ) is not None):
+                            identity = billcam_text._explicit_carryover_identity(
+                                text, row, carryover[row["bill_id"]],
+                            )
+                            if identity is not None:
+                                evidence = source_manifest["explicit_carryover_evidence"]
+                                proof = identity["explicit_original_carryover_evidence"]
+                                proof["action_source"] = {
+                                    "path": "source-evidence/" + evidence["actions"],
+                                    **source_manifest["artifacts"][evidence["actions"]],
+                                    "extraction_manifest_path":
+                                        "source-evidence/" + evidence["extraction_manifest"],
+                                    "extraction_manifest_sha256":
+                                        evidence["extraction_manifest_sha256"],
+                                }
+                        if identity is not None:
+                            matches.append((row, identity))
                 disposition = (
                     "outside_original_fifty_state_population" if state is None
                     else "unparsed_provider_identifier_no_suffix_or_alias_guessed" if not identifier
@@ -372,6 +391,8 @@ def _replay(source, queue_path, source_sha, queue_sha, *, legacy_observation_nam
                 if disposition == "exact_original_gap_own_printed_identity":
                     context, identity = matches[0]
                     view_id = f"published-ai-corpus:{csv_sha}:{ordinal}"
+                    if "explicit_original_carryover_evidence" in identity:
+                        view_id += ":context:" + context["bill_id"]
                     views.append({
                         "view_id": view_id, "source_type": "published_corpus_text",
                         **{key: context[key] for key in (
@@ -433,6 +454,11 @@ def _replay(source, queue_path, source_sha, queue_sha, *, legacy_observation_nam
         "approval_flags": dict.fromkeys(FLAGS, False),
         "new_network_requests": 0, "encoder_calls": 0, "publication": False,
     }
+    if "explicit_carryover_evidence" in source_manifest:
+        report["explicit_carryover_evidence"] = source_manifest["explicit_carryover_evidence"]
+        report["counts"]["n_action_proven_carryover_views"] = sum(
+            "explicit_original_carryover_evidence" in view["source_identity"] for view in views
+        )
     return {
         "views.jsonl": views, "source_row_dispositions.jsonl": dispositions,
         "candidate_dispositions.jsonl": candidate_dispositions,

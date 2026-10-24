@@ -341,3 +341,138 @@ def test_frozen_dependency_binding_preserves_current_observation_profile_only_fo
     write_json(out / "manifest.json", manifest)
     with pytest.raises(ValueError, match="producer mismatch: billcam_text.py"):
         load(out)
+
+
+def with_carryover_evidence(source, gap):
+    contexts = pq.read_table(gap).to_pylist()
+    contexts[0].update(
+        source_introduction_date="2023-01-20",
+        origin_introduction_action_ids='["original-hi-introduction"]',
+        from_organization_id="original-hi-house",
+    )
+    for context in contexts:
+        for key in ("source_introduction_date", "origin_introduction_action_ids",
+                    "from_organization_id"):
+            context.setdefault(key, None)
+    pq.write_table(pa.Table.from_pylist(contexts), gap)
+    actions = [
+        {
+            "action_id": "original-hi-introduction", "bill_id": contexts[0]["bill_id"],
+            "state": "HI", "date": "2023-01-20", "description": "Introduced.",
+            "classification": "introduction", "organization_id": "original-hi-house",
+        },
+        {
+            "action_id": "original-hi-carryover", "bill_id": contexts[0]["bill_id"],
+            "state": "HI", "date": "2023-12-11",
+            "description": "Carried over to 2024 Regular Session.",
+            "classification": "carried-over", "organization_id": "original-hi-legislature",
+        },
+    ]
+    evidence = source / "carryover-evidence"
+    evidence.mkdir()
+    action_path = evidence / "bill_actions.parquet"
+    pq.write_table(pa.Table.from_pylist(actions), action_path)
+    extraction = evidence / "extraction.json"
+    write_json(extraction, {
+        "status": "complete_extraction_not_source_certification",
+        "scientific_certification": "not_performed",
+        "artifacts": {"bill_actions.parquet": {
+            "sha256": sha256_file(action_path), "rows": len(actions),
+        }},
+    })
+    manifest = json.loads((source / "manifest.json").read_bytes())
+    manifest["explicit_carryover_evidence"] = {
+        "schema": "state-politics.original-carryover-actions.v1",
+        "extraction_manifest": extraction.relative_to(source).as_posix(),
+        "extraction_manifest_sha256": sha256_file(extraction),
+        "actions": action_path.relative_to(source).as_posix(),
+    }
+    manifest["artifacts"] = {
+        p.relative_to(source).as_posix(): binding(p)
+        for p in source.rglob("*") if p.is_file() and p != source / "manifest.json"
+    }
+    write_json(source / "manifest.json", manifest)
+    return contexts
+
+
+def test_explicit_carryover_keeps_distinct_original_context_view_ids_and_complete_body(
+    packet_source,
+):
+    source, gap, out, records, contexts = packet_source
+    old_contexts = [
+        {**contexts[0], "bill_id": "original-2023", "session_identifier": "2023 Regular Session"},
+        contexts[1],
+    ]
+    old_gap = gap.with_name("old-gap.parquet")
+    pq.write_table(pa.Table.from_pylist(old_contexts), old_gap)
+    old_out = out.with_name("old-packet")
+    recover(source, old_gap, old_out)
+    old_views, _, _, _ = load(old_out)
+    old_view = next(row for row in old_views if row["bill_id"] == "original-2023")
+    original_old_views = (old_out / "views.jsonl").read_bytes()
+    updated = with_carryover_evidence(source, gap)
+    result = recover(source, gap, out)
+    views, recovered, _, _ = load(out, updated)
+    carry = next(view for view in views
+                 if "explicit_original_carryover_evidence" in view["source_identity"])
+    assert len(views) == 3 and recovered == updated
+    assert result["counts"]["n_action_proven_carryover_views"] == 1
+    assert carry["view_id"] == old_view["view_id"] + ":context:hi1607"
+    assert carry["view_id"] != old_view["view_id"]
+    assert carry["source_record"] == old_view["source_record"] == records[2]
+    assert old_view["session_identifier"] == "2023 Regular Session"
+    assert carry["text"] == old_view["text"]
+    assert carry["source_identity"]["printed_year"] == "2023"
+    assert carry["session_identifier"] == carry["source_identity"]["session_identifier"] == "2024"
+    assert carry["original_target_context"] == updated[0]
+    assert carry["publisher_prologue"] + carry["text"] == records[2]["Bill_Text"]
+    assert (old_out / "views.jsonl").read_bytes() == original_old_views
+    assert all(carry[flag] is False for flag in FLAGS)
+    comparison.unapproved(carry, required=False)
+    assert input_text(make_input(carry, "retained_text", "bound/source", 0)) == carry["text"]
+
+
+@pytest.mark.parametrize("defect", [
+    "missing_event", "wrong_bill", "wrong_caption", "ambiguous_printed_year",
+])
+def test_published_year_difference_needs_its_own_complete_matching_action_proof(
+    packet_source, defect,
+):
+    source, gap, out, records, _ = packet_source
+    contexts = with_carryover_evidence(source, gap)
+    path = source / "carryover-evidence/bill_actions.parquet"
+    actions = pq.read_table(path).to_pylist()
+    if defect == "missing_event":
+        actions[1]["classification"] = ""
+    elif defect == "wrong_bill":
+        actions[1]["bill_id"] = "another-original-bill"
+    elif defect == "wrong_caption":
+        contexts[0]["title"] = "A different original purpose."
+        pq.write_table(pa.Table.from_pylist(contexts), gap)
+    else:
+        records[2]["Bill_Text"] = records[2]["Bill_Text"].replace(
+            "STATE OF HAWAII", "THIRTY-SECOND LEGISLATURE, 2024\nSTATE OF HAWAII", 1,
+        )
+        csv_path = source / CSV_MEMBER
+        with csv_path.open("w", newline="") as stream:
+            writer = csv.DictWriter(stream, fieldnames=list(records[0]))
+            writer.writeheader()
+            writer.writerows(records)
+        inventory = json.loads((source / "dataset-inventory.json").read_bytes())
+        md5 = hashlib.md5(csv_path.read_bytes(), usedforsecurity=False).hexdigest()
+        inventory.update(advertised_md5=md5, actual_md5=md5)
+        inventory["dataset_response"]["body_binding"] = binding(csv_path)
+        write_json(source / "dataset-inventory.json", inventory)
+    pq.write_table(pa.Table.from_pylist(actions), path)
+    extraction = source / "carryover-evidence/extraction.json"
+    original = json.loads(extraction.read_bytes())
+    original["artifacts"]["bill_actions.parquet"]["sha256"] = sha256_file(path)
+    write_json(extraction, original)
+    manifest = json.loads((source / "manifest.json").read_bytes())
+    manifest["explicit_carryover_evidence"]["extraction_manifest_sha256"] = sha256_file(extraction)
+    for name in manifest["artifacts"]:
+        manifest["artifacts"][name] = binding(source / name)
+    write_json(source / "manifest.json", manifest)
+    recover(source, gap, out)
+    assert all("explicit_original_carryover_evidence" not in view["source_identity"]
+               for view in load(out)[0])

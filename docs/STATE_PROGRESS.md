@@ -27,7 +27,36 @@ not that the state has no data. Platform recovery is separate from the
 legislative status in this table; no state's operative-platform coverage is
 certified complete.
 
-## Latest finite public-identity recovery
+## Latest context-qualified published carryover evidence
+
+Two retained published records now support **two additional original 2024
+Hawaii contexts / two full views / 7,722 characters**, without network
+requests. Own printed 2023 identity, exact title and the complete original
+bill's carryover/origin-introduction actions support the relation.
+The original 2024 contexts, actual printed 2023 years, raw source metadata,
+prologues and all prior negative packets remain unchanged.
+
+Packet: `data/processed/published-carryover-documents-20261023-v1/`,
+manifest `2c44d7284ccf5c934871e79dc8a860c33d7cf7fe78260a535daa0367c817f01b`.
+It supplements all fifteen preceding packets. New view IDs explicitly
+include the original context ID; the existing HB 79 source view retains its
+literal `2023 Regular Session` label and original ID. Correction to the
+first observer: only ordinal 1203 already had an accepted published view;
+1205 was retained in the complete CSV but not among the earlier 27 accepted
+views. Neither original label nor membership is rewritten to fit the
+observer's assumptions.
+
+Availability is **139,208 / 157,598 original contexts**, leaving **18,390**
+unavailable, including **5,737 HI**. Sixteen archival packets cover
+**10,753 contexts / 13,119 views**. These are original-context availability
+counts, not new distinct legislation or independent human accuracy.
+Source/model/galleries remain separately executed and versioned.
+Proof: `data/published-carryover-packet-replay-20261023-v2.json`.
+All existing account, search-login, robots, native and challenge stops stay
+binding. No scientific, rights, party-time, filing-originality, human or
+publication gate is closed.
+
+## Preceding finite public-identity recovery
 
 A new bounded public-form discovery retains 24 successful result pages
 before the publisher returns an explicit search-login HTTP 401. That search
