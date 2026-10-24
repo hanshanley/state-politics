@@ -18,6 +18,46 @@ be bound explicitly before regenerated outputs can support the narrowed study.
 
 ## Recreated graph bundle
 
+### Current-snapshot replay versus the historical analysis audit
+
+The saved 2023–2024 retained-text snapshot has a tracked offline replay command:
+
+```bash
+HF_HUB_OFFLINE=1 TRANSFORMERS_OFFLINE=1 \
+  .venv/bin/python -I -B scripts/audit_cycle_topics.py \
+  --job data/processed/cycle-topic-inference-retained-text-20261023-v15 \
+  --gallery outputs/topic-inference-retained-text-2023-2024-v13 \
+  --verified-token-cache data/cycle-topic-independent-token-verification-cache-20261023-v12.sqlite \
+  --verified-token-cache-sha256 000252b2fd9b2679e3dc9f25f6da682978c7cb63f762a4684d365fe2397a9f13 \
+  --out data/current-cycle-audit-NEW-UNUSED.json
+```
+
+The report path must be fresh and outside the immutable inputs. The optional
+cache/path hash pair identifies a previously independently verified tokenizer
+cache; it is opened **read-only**, checked against the frozen tokenizer/runtime
+identity and rehashed afterward. Missing cached verification is an error, not a
+silent fallback. Omit both cache options to independently tokenize every unique
+supplied policy string without an encoder; that mode may take substantially longer.
+Neither mode edits the job, prediction cache, source evidence, graphs or labels.
+
+The command checks every saved source/logit/token/window decision and reconstructs
+all-view consensus against every original context, including unknown fields.
+All fifty state partitions, gallery artifacts and **all 108 required complete ZIP
+members** are checked. Required source inputs, predictions or frozen producers
+cannot be omitted by changing the download manifest to match a smaller ZIP.
+The current actual replay is
+`data/tracked-current-cycle-audit-20261024-v2.json`: **178,525 views / 157,598
+contexts**, identical saved decisions, counts and byte bindings to the preceding
+private replay, with zero encoder passes and no token-cache writes.
+
+This is a structural/provenance replay, **not independent accuracy validation or
+study completion**. The original full `audit_reproducibility.py --require-tracked`
+remains separate and unchanged: its 34 failures are missing legacy
+2018–present platform/party-analysis artifacts and required derivatives. New
+2023–2024 model assignments are not written into those old paths to manufacture
+an apparent pass. Human accuracy, operative platforms, event-time party, source
+rights and publication remain open requirements.
+
 ```bash
 .venv/bin/python -I -B scripts/recreate_graphs.py \
   --research-corpus data/processed/research-corpus-text-20261022-v4 \

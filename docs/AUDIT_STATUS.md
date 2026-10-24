@@ -4,6 +4,44 @@ The existing figures and analytical conclusions are **legacy, not revalidated fi
 The current changes repair infrastructure and preserve evidence; they do not certify a
 replacement classifier or establish complete contemporary coverage.
 
+## Tracked current-snapshot replay and renewed discovery: October 24, 2026
+
+The independent replay is now a reusable tracked CLI,
+`scripts/audit_cycle_topics.py`, rather than requiring session-private helpers.
+Actual replay verifies every **178,525 source view / 157,598 original context**,
+saved logits, token/window coverage, source-alternative consensus, original
+unknown fields, summary and manifest-bound gallery artifact. The complete
+research ZIP must contain **all 108 required input/prediction/producer members**;
+rebinding a smaller manifest/ZIP does not make missing full text acceptable.
+An externally pinned independent token cache is opened read-only, with explicit
+missing-row failure and unchanged pre/post hashes. No encoder, label change or
+source/model promotion occurs. Receipt:
+`data/tracked-current-cycle-audit-20261024-v2.json`.
+
+The comparison observer initially compares relative and absolute display paths
+as strings. Inspection identifies only those two path spellings; the corrected
+reconciliation normalizes those paths explicitly while requiring every scientific
+value and every byte binding to remain identical:
+`data/tracked-cycle-audit-reconciliation-20261024-v2.log`.
+The former observation does not cause any source or model rewrite.
+
+All **34** existing full-audit failures are missing legacy 2018–present platform/
+party-analysis artifacts or required derivatives, not newly introduced snapshot
+corruption. The full legacy audit is not weakened, its failure list is not hidden,
+and current-cycle provisional outputs are not substituted into legacy filenames.
+Structural replay does not resolve independent human accuracy, operative-platform
+evidence, dated party attribution or source-rights requirements.
+
+A fresh GPT-6.1 Sol primary-source search for NE 108th, OK 59th and WV 2023/2024
+finds **zero newly verified publicly downloadable whole-body corpora** within
+its finite scope. Published code omits one advertised corpus; other candidates
+are reports/assessments, lack verified historical coverage, require purchase,
+or stop at a publication HTTP 403. Unknown content is not treated as absent.
+The agent cannot save its prepared record; the parent preserves the visible
+report as a separately identified compilation, not an invented raw HTTP capture:
+`data/independent-text-source-discovery-20261024-v1.json`.
+No body, label or source is admitted and no inherited access stop is reopened.
+
 ## Provider-context recovery and updated inference: October 24, 2026
 
 The next offline pass recovers **20 original Hawaii 2024 contexts / 35 full

@@ -78,6 +78,9 @@ Local graphs and complete research downloads are in
 `outputs/topic-inference-retained-text-2023-2024-v13/` and
 `outputs/topic-input-comparison-2023-2024-v11/`.
 The unpublished full-text explorer is `data/preview-cycle-evidence-v31/`.
+The tracked `scripts/audit_cycle_topics.py` independently replays the saved
+whole-source decisions and complete downloads offline without an encoder;
+see the [current-snapshot audit command](docs/REPRODUCIBILITY.md#current-snapshot-replay-versus-the-historical-analysis-audit).
 The paired-input comparison preserves missingness and abstentions; differences
 between inputs are not accuracy measurements. These remain model assignments,
 not validated policy findings or party positions; see the
