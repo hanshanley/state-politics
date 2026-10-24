@@ -115,11 +115,11 @@ remains separate and unchanged: its 34 failures are missing legacy
 an apparent pass. Human accuracy, operative platforms, event-time party, source
 rights and publication remain open requirements.
 
-The current full audit reports **436/470**, not the preceding **432/466**:
-the two independent-publication adapters and their documented tests add four
-passing Python-file documentation checks. The exact same 34 failures and all
-other report fields remain identical in
-`data/published-va-code-checkpoint-full-audit-20261024-v1.json`.
+The current full audit reports **438/472**, not the preceding **436/470**:
+the full-score producer and its documented test file add two passing Python-file
+documentation checks. The exact same 34 failures and all other report fields
+remain identical to the preceding source/inference audit in
+`data/full-score-diagnostics-code-checkpoint-full-audit-20261024-v1.json`.
 
 ```bash
 .venv/bin/python -I -B scripts/recreate_graphs.py \

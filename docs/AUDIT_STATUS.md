@@ -48,6 +48,11 @@ Both helpers exit; screenshots and exact downloads are retained.
 The manifest is
 `412884a7771d43d01a3bfbdcf4c3060d158f6f6cdfa0fa32898af29370701360`.
 
+The actual full audit is **438/472**, adding two passing documentation checks
+for the new producer/test to the previous 436/470. Its same 34 legacy failures
+and every other report field remain identical; this is not a passing scientific
+audit or a replacement of missing legacy artifacts with model predictions.
+
 This layer does not rerun the encoder, change v19 assignments, relax thresholds,
 alter the frozen human packet or certify model accuracy. It does not add missing
 bodies, establish operative platforms/event-time party attribution, or publish
