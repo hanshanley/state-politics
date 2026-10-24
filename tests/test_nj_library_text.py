@@ -167,6 +167,80 @@ def test_rejects_wrong_printed_session_or_year(old, new, reason):
         nj.printed_identity(_cover("ASSEMBLY", 100).replace(old, new))
 
 
+def test_context_qualified_220_tail_preserves_original_dates_and_full_versions():
+    context = {
+        "bill_id": "ocd-bill/exact-original", "state": "NJ", "identifier": "A 100",
+        "session_identifier": "220", "session_end_date": "2023-12-31",
+        "source_introduction_date": "2024-01-04",
+        "from_organization_id": "ocd-organization/original",
+        "originating_chamber": "lower", "n_origin_introduction_actions": "1",
+        "origin_introduction_action_ids": '["403ef215-b047-4664-888b-da4ca632b87c"]',
+        "original_nullable": None, "original_unicode": "é",
+    }
+    actions = [{
+        "action_id": "403ef215-b047-4664-888b-da4ca632b87c",
+        "bill_id": context["bill_id"], "state": "NJ", "date": "2024-01-04T05:00:00+00:00",
+        "organization_id": context["from_organization_id"], "description": "Introduced",
+        "classification": "introduction|referral-committee", "chamber": "lower",
+    }]
+    qualified = {"original_context": context, "origin_introduction_actions": actions}
+    pages = [_cover("ASSEMBLY", 100).replace("MAY 8, 2023", "JANUARY 4, 2024"),
+             _texts()[4]]
+    with pytest.raises(ValueError, match="year"):
+        nj.separate_versions(pages)
+    versions, dispositions = nj.separate_versions(
+        pages, context_qualified_introductions={"A 100": qualified},
+    )
+    assert versions[0]["page_ordinals"] == [1, 2]
+    assert len(dispositions) == 2
+    proof = versions[0]["original_context_introduction_proof"]
+    assert proof["original_context"] == context
+    assert proof["original_context"]["session_end_date"] == "2023-12-31"
+    assert proof["printed_introduction_date"] == "2024-01-04"
+    assert proof["source_date_or_session_end_inferred"] is False
+    span = proof["printed_date_span"]
+    assert pages[0][span["start"]:span["end"]] == span["text"]
+    section_pages = [pages[0], pages[1].replace(
+        "2. This act shall take effect immediately.",
+        "2. Sections 1 and 2 of this act shall take e ffect immediately.",
+    )]
+    section_versions, _ = nj.separate_versions(
+        section_pages, context_qualified_introductions={"A 100": qualified},
+    )
+    effective = section_versions[0]["section_specific_effective_clause_evidence"]
+    full = "\n".join(section_pages)
+    assert full[effective["start"]:effective["end"]] == effective["text"]
+    assert "take e ffect" in effective["text"]
+    with pytest.raises(ValueError, match="effective section"):
+        nj.separate_versions([
+            _cover("ASSEMBLY", 100), section_pages[1],
+        ])
+    for change in (
+        {"source_introduction_date": "2024-01-03"},
+        {"identifier": "A 101"},
+        {"session_identifier": "221"},
+        {"origin_introduction_action_ids": "[]"},
+        {"n_origin_introduction_actions": 2},
+    ):
+        with pytest.raises(ValueError, match="context"):
+            nj.separate_versions(
+                pages, context_qualified_introductions={"A 100": {
+                    "original_context": {**context, **change},
+                    "origin_introduction_actions": actions,
+                }},
+            )
+    for change in ({"date": "2024-01-03"}, {"organization_id": "another-chamber"},
+                   {"bill_id": "ocd-bill/another"}, {"chamber": "upper"},
+                   {"classification": "referral-committee"}):
+        with pytest.raises(ValueError, match="context"):
+            nj.separate_versions(
+                pages, context_qualified_introductions={"A 100": {
+                    "original_context": context,
+                    "origin_introduction_actions": [{**actions[0], **change}],
+                }},
+            )
+
+
 @pytest.mark.parametrize("change", ["folio", "number", "lost_final_header", "unknown_boundary"])
 def test_rejects_ambiguous_or_missing_continuation_boundaries(change):
     pages = _texts()

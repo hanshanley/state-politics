@@ -29,6 +29,7 @@ import shutil
 import stat
 import warnings
 from collections import Counter, defaultdict
+from datetime import datetime
 from pathlib import Path, PurePosixPath
 from urllib.parse import urlsplit
 
@@ -55,6 +56,14 @@ LEGACY_PRODUCERS = {
         "sha256": "30d7b5cc7ba3ad8c864f92ea7d6d3ee6d19364aad9bf08f51874801faf591952",
         "bytes": 54426,
     },
+}
+STRICT_2023_PRODUCER = {
+    "sha256": "072353f61a0c9cd74a5cd8fc74b9b5caea70945c0a21b3d6d8120788914bef70",
+    "bytes": 54845,
+}
+COMPATIBLE_PRODUCERS = {
+    "a27a57b4f72d43f0fc4235713e23b994bebc1a39f49f2284c2a990c1aa70df30":
+        STRICT_2023_PRODUCER,
 }
 TOOLS = {"pymupdf": "1.28.0", "pypdf": "6.14.2"}
 FLAGS = (
@@ -254,9 +263,12 @@ _COVER = re.compile(
 )
 
 
-def printed_identity(text, page_ordinal=1):
+def printed_identity(text, page_ordinal=1, *, context_qualified_introductions=None):
     """Require an own bill cover, not a fiscal/committee/checklist or cited header."""
     require(type(text) is str, "literal complete cover string required")
+    require(context_qualified_introductions is None
+            or type(context_qualified_introductions) is dict,
+            "explicit context-qualified introduction map required")
     own = _COVER.match(text)
     require(own is not None, "not an own typed bill cover")
     require(own["session"] == "220th LEGISLATURE", "wrong printed session")
@@ -264,7 +276,81 @@ def printed_identity(text, page_ordinal=1):
         r"(?m)^[ \t]*INTRODUCED[ \t]+[A-Z]+[ \t]+[0-9]{1,2},[ \t]+(20[0-9]{2})[ \t]*$",
         text, "introduced year",
     )
-    require(intro[1] in {"2022", "2023"}, "wrong printed cover year for session 220")
+    context_proof = None
+    if intro[1] not in {"2022", "2023"}:
+        identifier = _identifier(own["kind"], own["number"])
+        qualified = (context_qualified_introductions or {}).get(identifier)
+        require(intro[1] == "2024" and type(qualified) is dict
+                and set(qualified) == {"original_context", "origin_introduction_actions"},
+                "wrong printed cover year for session 220")
+        context, actions = qualified["original_context"], qualified["origin_introduction_actions"]
+        require(type(context) is dict and type(actions) is list and bool(actions),
+                "original context and actual original introduction actions required")
+        try:
+            printed_date = datetime.strptime(
+                intro[0].strip().removeprefix("INTRODUCED").strip(), "%B %d, %Y",
+            ).date().isoformat()
+        except ValueError as exc:
+            raise ValueError("incompatible NJ library archive: invalid printed introduction date") from exc
+        ids = context.get("origin_introduction_action_ids")
+        require(type(ids) is str, "explicit original origin-introduction IDs required")
+        ids = _decode(ids)
+        require(all(type(row) is dict and all(type(row.get(key)) is str for key in (
+            "action_id", "bill_id", "state", "date", "organization_id",
+            "description", "classification", "chamber",
+        )) for row in actions), "typed complete original introduction actions required")
+        action_dates = []
+        for row in actions:
+            try:
+                calendar_date = datetime.fromisoformat(row["date"]).date().isoformat()
+            except ValueError as exc:
+                raise ValueError("incompatible NJ library archive: invalid original action date") from exc
+            require(row["date"].split("T")[0] == calendar_date,
+                    "literal ISO calendar date required, without timezone conversion")
+            action_dates.append(calendar_date)
+        require(
+            context.get("state") == "NJ" and context.get("session_identifier") == "220"
+            and context.get("identifier") == identifier
+            and type(context.get("bill_id")) is str
+            and context["bill_id"].startswith("ocd-bill/")
+            and type(context.get("from_organization_id")) is str
+            and context["from_organization_id"].startswith("ocd-organization/")
+            and context.get("originating_chamber")
+            == {"ASSEMBLY": "lower", "SENATE": "upper"}[own["kind"]]
+            and context.get("source_introduction_date") == printed_date
+            and type(ids) is list and bool(ids)
+            and all(type(value) is str and bool(value) for value in ids)
+            and len(set(ids)) == len(ids)
+            and (
+                type(context.get("n_origin_introduction_actions")) is int
+                and context["n_origin_introduction_actions"] == len(ids)
+                or type(context.get("n_origin_introduction_actions")) is str
+                and context["n_origin_introduction_actions"] == str(len(ids))
+            )
+            and {row["action_id"] for row in actions} == set(ids)
+            and all(value == printed_date for value in action_dates)
+            and all(row["bill_id"] == context["bill_id"] and row["state"] == "NJ"
+                    and row["organization_id"] == context["from_organization_id"]
+                    and row["chamber"] == context["originating_chamber"]
+                    and "introduction" in row["classification"].split("|")
+                    for row in actions),
+            "printed introduction does not match the exact original context",
+        )
+        context_proof = {
+            "relation": "own_printed_220_session_and_exact_original_introduction_date",
+            "printed_introduction_date": printed_date,
+            "printed_date_span": _match_span(
+                text, intro, "printed_full_introduction_date", page_ordinal,
+            ),
+            "original_context": context,
+            "original_origin_introduction_actions": actions,
+            "original_context_sha256": _sha(
+                json.dumps(context, sort_keys=True, ensure_ascii=False, allow_nan=False).encode(),
+            ),
+            "original_context_fields_and_session_end_preserved": True,
+            "action_date_comparison": "literal_ISO_calendar_date_without_timezone_conversion",
+            "source_date_or_session_end_inferred": False,
+        }
     version = _one(
         r"(?m)^[ \t]*CURRENT VERSION OF TEXT[ \t]*\r?\n(?P<version>[\s\S]+)\Z",
         text, "version",
@@ -276,7 +362,7 @@ def printed_identity(text, page_ordinal=1):
         version_end -= 1
     require(version_start < version_end and "Sponsored by:" in text and "SYNOPSIS" in text,
             "incomplete own cover/version")
-    return {
+    result = {
         "state": "NJ", "identifier": _identifier(own["kind"], own["number"]),
         "session_identifier": "220", "printed_cover_year": intro[1],
         "identity_spans": [
@@ -288,6 +374,9 @@ def printed_identity(text, page_ordinal=1):
         "version_span": _span(text, version_start, version_end,
                               "printed_version_text", page_ordinal),
     }
+    if context_proof is not None:
+        result["original_context_introduction_proof"] = context_proof
+    return result
 
 
 def _continuation(text, page):
@@ -385,7 +474,7 @@ def _checklist_only(page_texts):
     )
 
 
-def separate_versions(page_texts):
+def separate_versions(page_texts, *, context_qualified_introductions=None):
     """Return complete contiguous own versions and all-page dispositions.
 
     Unknown boundaries, orphan typed continuations, or contradictory folios are
@@ -395,7 +484,9 @@ def separate_versions(page_texts):
             and all(type(text) is str and text.strip() for text in page_texts),
             "complete nonempty reader pages required")
     covers = {
-        i: printed_identity(text, i + 1)
+        i: printed_identity(
+            text, i + 1, context_qualified_introductions=context_qualified_introductions,
+        )
         for i, text in enumerate(page_texts) if _COVER.match(text)
     }
     enacted = {i: value for i, text in enumerate(page_texts)
@@ -430,6 +521,9 @@ def separate_versions(page_texts):
             external = cover["identity_spans"]
             version = first["version_span"]
             printed_year = first["printed_law_year"]
+        context_proof = (identity if kind == "bill_cover" else cover).get(
+            "original_context_introduction_proof",
+        )
         ordinals = [index + 1]
         continuations = []
         cursor, folio = index + 1, 2
@@ -459,8 +553,15 @@ def separate_versions(page_texts):
             folio += 1
         require(len(ordinals) >= 2, "missing complete bill continuation")
         body = "\n".join(page_texts[p - 1] for p in ordinals)
+        section_effective = re.search(
+            r"(?m)^[ \t]*[1-9][0-9]*\.[ \t]+[Ss]ections?[ \t]+[0-9]+"
+            r"(?:(?:[ \t]+(?:and|through)|,)[ \t]+[0-9]+)*[ \t]+of[ \t]+this[ \t]+act"
+            r"[ \t]+shall[ \t]+take[ \t]+e[ \t]*ffect\b",
+            body,
+        ) if context_proof is not None else None
         require("AN ACT" in body and "BE IT ENACTED" in body
-                and re.search(r"This\s+act\s+shall\s+take\s+effect", body),
+                and (re.search(r"This\s+act\s+shall\s+take\s+effect", body)
+                     or section_effective is not None),
                 "missing complete own legislative body/effective section")
         statements = []
         for ordinal in ordinals:
@@ -486,6 +587,14 @@ def separate_versions(page_texts):
             "statement_spans": statements, "boundary": boundary,
             "complete_contiguous_pages": True, "no_policy_page_cropping": True,
         }
+        if context_proof is not None:
+            item["original_context_introduction_proof"] = context_proof
+        if section_effective is not None:
+            item["section_specific_effective_clause_evidence"] = {
+                "scope": "complete_contiguous_version_text",
+                "start": section_effective.start(), "end": section_effective.end(),
+                "text": section_effective[0],
+            }
         versions.append(item)
         for ordinal in ordinals:
             require(ordinal - 1 not in selected, "overlapping complete bill versions")
@@ -1038,8 +1147,9 @@ def load_nj_library(root, metadata=None):
                 for name, binding in source_inventory.items()), "source inventory mismatch")
     producer = _binding(directory / "producer/nj_library_text.py")
     legacy_producer = LEGACY_PRODUCERS.get(pins["manifest.json"])
+    compatible_producer = COMPATIBLE_PRODUCERS.get(pins["manifest.json"])
     require(producer == _binding(_regular(Path(__file__).absolute()))
-            or producer == legacy_producer,
+            or producer == legacy_producer or producer == compatible_producer,
             "producer module mismatch")
     result = _replay(source, directory / "input_gap_queue.parquet",
                      manifest["additional_batch_sha256"])

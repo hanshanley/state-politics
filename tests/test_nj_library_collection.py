@@ -195,6 +195,94 @@ def _source(work, *, texts=None, status="immutable_first16_subset", duplicate_by
     return source, queue, _seal(source, status), originals
 
 
+def test_context_evidence_recovers_tail_and_preserves_exact_original_subset(work, monkeypatch):
+    texts = [
+        text.replace("MAY 8, 2023", "JANUARY 4, 2024").replace(
+            "approved May 9, 2023", "approved January 16, 2024",
+        ) for text in _pages()
+    ]
+    source, queue, _, originals = _source(work, texts=texts)
+    original = {
+        **originals[0], "session_end_date": "2023-12-31",
+        "source_introduction_date": "2024-01-04",
+        "from_organization_id": "ocd-organization/lower", "originating_chamber": "lower",
+        "n_origin_introduction_actions": "1", "origin_introduction_action_ids": '["actual-A"]',
+    }
+    originals[0] = original
+    table = pa.Table.from_pylist(originals)
+    pq.write_table(table, queue)
+    shutil.copyfile(queue, source / "input-gap-queue.parquet")
+    scope = old._json(source / "scope.json")
+    scope["original_queue"] = {"path": str(queue), **old._binding(queue)}
+    old._write(source / "scope.json", scope)
+    source_sha = _seal(source)
+    subset = work / "current-original-subset.parquet"
+    pq.write_table(table.slice(0, 1), subset)
+    evidence = work / "context-inputs"
+    evidence.mkdir()
+    upper = {
+        **original, "bill_id": "ocd-bill/200", "identifier": "S 200",
+        "from_organization_id": "ocd-organization/upper", "originating_chamber": "upper",
+        "origin_introduction_action_ids": '["actual-S"]',
+    }
+    old._write_rows(evidence / "contexts.jsonl", [original, upper])
+    actions = [{
+        "action_id": action_id, "bill_id": row["bill_id"], "state": "NJ",
+        "date": "2024-01-04T05:00:00+00:00", "description": "Introduced",
+        "classification": "introduction|referral-committee",
+        "organization_id": row["from_organization_id"], "chamber": row["originating_chamber"],
+    } for row, action_id in [(original, "actual-A"), (upper, "actual-S")]]
+    pq.write_table(pa.Table.from_pylist(actions), evidence / "bill_actions.parquet")
+    old._write(evidence / "bill_extraction_manifest.json", {
+        "status": "complete_extraction_not_source_certification",
+        "scientific_certification": "not_performed", "artifacts": {
+            "bill_actions.parquet": {
+                **old._binding(evidence / "bill_actions.parquet"), "rows": 2,
+            },
+        },
+    })
+    monkeypatch.setattr(nj, "ORIGINAL_CONTEXTS_SHA256",
+                        old._binding(evidence / "contexts.jsonl")["sha256"])
+    monkeypatch.setattr(nj, "ORIGINAL_EXTRACTION_SHA256",
+                        old._binding(evidence / "bill_extraction_manifest.json")["sha256"])
+    old._write(evidence / "manifest.json", {
+        "schema": nj.CONTEXT_SCHEMA, "artifacts": {
+            name: old._binding(evidence / name) for name in (
+                "contexts.jsonl", "bill_actions.parquet", "bill_extraction_manifest.json",
+            )
+        },
+    })
+    evidence_sha = old._binding(evidence / "manifest.json")["sha256"]
+    out = work / "tail-packet"
+    nj.build_nj_collection(
+        source, subset, out, source_manifest_sha256=source_sha,
+        gap_queue_sha256=old._binding(subset)["sha256"],
+        context_evidence=evidence, context_evidence_sha256=evidence_sha,
+    )
+    views, contexts, _, manifest = nj.load_nj_collection(
+        out, context_evidence_sha256=evidence_sha,
+    )
+    assert contexts == [original]
+    assert len(views) == manifest["counts"]["context_qualified_tail_views"] == 4
+    assert all(view["source_version"]["original_context_introduction_proof"]
+               ["original_context"]["session_end_date"] == "2023-12-31" for view in views)
+    assert all(view["source_version"]["original_context_introduction_proof"]
+               ["original_origin_introduction_actions"][0]["date"]
+               == "2024-01-04T05:00:00+00:00" for view in views)
+    assert pq.read_metadata(out / "context-evidence/bill_actions.parquet").num_rows == 2
+    with pytest.raises(ValueError, match="external context"):
+        nj.load_nj_collection(out, context_evidence_sha256="0" * 64)
+    changed = work / "changed-subset.parquet"
+    pq.write_table(pa.Table.from_pylist([{**original, "session_end_date": "2024-01-08"}]), changed)
+    with pytest.raises(ValueError, match="whole-row subset"):
+        nj.build_nj_collection(
+            source, changed, work / "rejected", source_manifest_sha256=source_sha,
+            gap_queue_sha256=old._binding(changed)["sha256"],
+            context_evidence=evidence, context_evidence_sha256=evidence_sha,
+        )
+    assert not (work / "rejected").exists()
+
+
 def _full_source(work):
     source, queue, _, originals = _source(work)
     batch = old._json(source / "source-batch.json")

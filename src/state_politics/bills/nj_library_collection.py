@@ -11,6 +11,12 @@ the original queue. Verify can additionally receive those external anchors.
 The archived producer sources are compared with the installed modules; replay
 does not execute code from a packet.
 
+An optional context-evidence directory and its SHA256 enable exact 2024
+introductions printed in legislature 220. It contains the complete frozen
+original context corpus, original action table and extraction manifest.
+Only an unchanged whole-row subset of the original source queue is permitted;
+the contradictory original session-end metadata is never repaired.
+
     python -m state_politics.bills.nj_library_collection build \
       --source-dir SEALED --source-manifest-sha256 SHA256 \
       --gap-queue QUEUE --gap-queue-sha256 SHA256 --out-dir NEW
@@ -43,7 +49,17 @@ SOURCE_STATUSES = {
     "immutable_first16_subset": "sealed_first16_subset_not_complete_collection",
     "closed_complete_collection_capture": "closed_complete_collection_capture",
 }
+CONTEXT_SCHEMA = "state-politics.original-nj-tail-introductions.v1"
+ORIGINAL_CONTEXTS_SHA256 = "854ecd4e37ba2f160c8dc46fca92f9b47bbcf29c82939a7726855eaaea304431"
+ORIGINAL_EXTRACTION_SHA256 = "9a3555e5194ac3d45ab30c4107df4f720ad40f3ce85e040fa5336138d8ee8a29"
 SEALED_PRODUCERS = {
+    "e8933b0d69ab9a791ef4830e35044fde4022e8df2880f4a9c544426a9f9601a6": {
+        "producer/nj_library_collection.py": {
+            "sha256": "c7fe4468c5cb17cf821a9140edc7d1b09b8bafdcb54d1d8237c910e4620a66c7",
+            "bytes": 54245,
+        },
+        "producer/nj_library_text.py": legacy.STRICT_2023_PRODUCER,
+    },
     "6a436837b31b8f635b47dfa34fb88e3f0e9ccc3f350ab9313f019399183a70b4": {
         "producer/nj_library_collection.py": {
             "sha256": "e7714c3b2eb11e65694be8bb47eb61a13ec469d789846956666d3040457feafe",
@@ -461,7 +477,7 @@ def _source(source, manifest_sha256):
     return manifest, batch, ledger
 
 
-def _separate(page_rows):
+def _separate(page_rows, *, context_qualified_introductions=None):
     if any(p["errors"] or type(p["text"]) is not str or not p["text"].strip()
            for p in page_rows):
         return [], [{
@@ -470,7 +486,10 @@ def _separate(page_rows):
             "reason": "reader_error_or_empty_page_no_ocr_or_substitution",
         } for p in page_rows], "reader_error_or_empty_page_no_ocr_or_substitution"
     try:
-        versions, dispositions = legacy.separate_versions([p["text"] for p in page_rows])
+        versions, dispositions = legacy.separate_versions(
+            [p["text"] for p in page_rows],
+            context_qualified_introductions=context_qualified_introductions,
+        )
     except ValueError as exc:
         prefix = "incompatible NJ library archive: "
         require(str(exc).startswith(prefix), "unexpected separation failure")
@@ -594,14 +613,98 @@ def _view(page_rows, version, context, entry, reader, ordinal, ledger_name, sour
     return row
 
 
-def _replay(source, queue_path, source_sha256, queue_sha256):
+def _context_introductions(directory, manifest_sha256):
+    directory = legacy._root(directory)
+    manifest_path = legacy._regular(directory / "manifest.json")
+    require(legacy._binding(manifest_path)["sha256"] == _hash(manifest_sha256),
+            "context-evidence manifest anchor changed")
+    manifest = legacy._json(manifest_path)
+    names = {"contexts.jsonl", "bill_actions.parquet", "bill_extraction_manifest.json"}
+    require(set(manifest) == {"schema", "artifacts"}
+            and manifest["schema"] == CONTEXT_SCHEMA
+            and set(manifest["artifacts"]) == names
+            and _tree(directory) == names | {"manifest.json"},
+            "complete original context/action evidence required")
+    for name, expected in manifest["artifacts"].items():
+        require(legacy._binding(legacy._regular(directory / name)) == expected,
+                f"original context evidence changed: {name}")
+    require(manifest["artifacts"]["contexts.jsonl"]["sha256"] == ORIGINAL_CONTEXTS_SHA256
+            and manifest["artifacts"]["bill_extraction_manifest.json"]["sha256"]
+            == ORIGINAL_EXTRACTION_SHA256,
+            "original frozen population/extraction trust anchors changed")
+    extraction = legacy._json(directory / "bill_extraction_manifest.json")
+    require(extraction["status"] == "complete_extraction_not_source_certification"
+            and extraction["scientific_certification"] == "not_performed"
+            and extraction["artifacts"]["bill_actions.parquet"]["sha256"]
+            == manifest["artifacts"]["bill_actions.parquet"]["sha256"]
+            and extraction["artifacts"]["bill_actions.parquet"]["rows"]
+            == pq.read_metadata(directory / "bill_actions.parquet").num_rows,
+            "actions do not match the complete original extraction")
+    contexts, seen = {}, set()
+    with (directory / "contexts.jsonl").open("rb") as stream:
+        for line in stream:
+            row = legacy._decode(line)
+            require(type(row) is dict and type(row.get("bill_id")) is str
+                    and row["bill_id"] not in seen, "duplicate or untyped original context")
+            seen.add(row["bill_id"])
+            if (row.get("state") == "NJ" and row.get("session_identifier") == "220"
+                    and re.fullmatch(r"[AS] [1-9][0-9]*", row.get("identifier", ""))
+                    and type(row.get("source_introduction_date")) is str
+                    and row["source_introduction_date"].startswith("2024-")):
+                require(row["identifier"] not in contexts, "ambiguous original tail context")
+                contexts[row["identifier"]] = row
+    require(bool(contexts), "no explicit original tail-session contexts")
+    actions = pq.read_table(directory / "bill_actions.parquet", filters=[
+        ("state", "=", "NJ"),
+        ("bill_id", "in", [row["bill_id"] for row in contexts.values()]),
+    ]).to_pylist()
+    qualified = {}
+    for identifier, row in contexts.items():
+        ids = legacy._decode(row["origin_introduction_action_ids"])
+        require(type(ids) is list and all(type(value) is str for value in ids),
+                "typed original introduction-action ID list required")
+        qualified[identifier] = {
+            "original_context": row,
+            "origin_introduction_actions": [
+                action for action in actions
+                if action["bill_id"] == row["bill_id"] and action["action_id"] in ids
+            ],
+        }
+    inventory = dict(manifest["artifacts"])
+    inventory["manifest.json"] = legacy._binding(manifest_path)
+    return qualified, inventory
+
+
+def _gap_queue(source, queue_path, queue_sha256, *, allow_original_subset=False):
+    queue_binding = legacy._binding(legacy._regular(queue_path))
+    require(queue_binding["sha256"] == _hash(queue_sha256),
+            "caller-pinned queue hash changed")
+    original = pq.read_table(source / "input-gap-queue.parquet")
+    gap = pq.read_table(queue_path)
+    if not allow_original_subset:
+        require(queue_binding == legacy._binding(source / "input-gap-queue.parquet"),
+                "caller-pinned original queue hash/size mismatch")
+    else:
+        require(gap.schema.equals(original.schema, check_metadata=True),
+                "original gap queue schema changed")
+        by_id = {row["bill_id"]: row for row in original.to_pylist()}
+        require(len(by_id) == original.num_rows, "duplicate original source queue ID")
+        rows = gap.to_pylist()
+        require(len({row["bill_id"] for row in rows}) == len(rows)
+                and all(row["bill_id"] in by_id
+                        and legacy._equal(row, by_id[row["bill_id"]]) for row in rows),
+                "tail queue is not an exact whole-row subset of the original queue")
+    return gap
+
+
+def _replay(source, queue_path, source_sha256, queue_sha256, *,
+            context_qualified_introductions=None):
     source_manifest, batch, ledger = _source(source, source_sha256)
     ledger_name = _ledger_name(source)
-    queue_binding = legacy._binding(legacy._regular(queue_path))
-    require(queue_binding["sha256"] == _hash(queue_sha256)
-            and queue_binding == source_manifest["artifacts"]["input-gap-queue.parquet"],
-            "caller-pinned original queue hash/size mismatch")
-    gap = pq.read_table(queue_path)
+    gap = _gap_queue(
+        source, queue_path, queue_sha256,
+        allow_original_subset=context_qualified_introductions is not None,
+    )
     originals = gap.to_pylist()
     by_key, bill_ids = defaultdict(list), set()
     for index, row in enumerate(originals):
@@ -646,7 +749,9 @@ def _replay(source, queue_path, source_sha256, queue_sha256):
                     "text_preserved_in_full": True, "reason": reason,
                 } for p in page_rows]
             else:
-                source_versions, source_dispositions, reason = _separate(page_rows)
+                source_versions, source_dispositions, reason = _separate(
+                    page_rows, context_qualified_introductions=context_qualified_introductions,
+                )
             structures[reader] = [
                 (v["identifier"], v["kind"], v["page_ordinals"], v["boundary"])
                 for v in source_versions
@@ -774,6 +879,18 @@ def _replay(source, queue_path, source_sha256, queue_sha256):
                                 for e in batch["new_pdfs"] + batch["reused_pdfs"]}
         ],
     }
+    if context_qualified_introductions is not None:
+        report["limits"] = {
+            **LIMITS,
+            "printed_identity_profile": "Default own 220th covers, plus 2024 covers only "
+            "with an exact unchanged original context and matching original origin-introduction "
+            "action IDs, organization, chamber and literal ISO calendar date. No timezone "
+            "conversion, session-end repair or implied filing-time certification.",
+        }
+        counts["context_qualified_tail_views"] = sum(
+            "original_context_introduction_proof" in row["source_version"] for row in views
+        )
+        report["original_gap_queue_relation"] = "exact_whole_row_subset_of_original_source_queue"
     if ledger_name == "request-ledger.jsonl":
         prefix = legacy._jsonl(source / "seed-request-ledger.jsonl")
         counts["retained_inherited_prefix_records"] = len(prefix)
@@ -812,7 +929,8 @@ def _producers():
 
 
 def build_nj_collection(source_directory, gap_queue, out_directory, *,
-                        source_manifest_sha256, gap_queue_sha256):
+                        source_manifest_sha256, gap_queue_sha256,
+                        context_evidence=None, context_evidence_sha256=None):
     """Build a new ignored packet from caller-pinned, genuinely sealed inputs."""
     source = legacy._root(source_directory)
     queue = legacy._regular(Path(gap_queue).absolute())
@@ -823,9 +941,17 @@ def build_nj_collection(source_directory, gap_queue, out_directory, *,
             and not queue.is_relative_to(out), "input/output overlap")
     source_sha, queue_sha = _hash(source_manifest_sha256), _hash(gap_queue_sha256)
     source_manifest, _, _ = _source(source, source_sha)
-    require(legacy._binding(queue) == source_manifest["artifacts"]["input-gap-queue.parquet"]
-            and legacy._binding(queue)["sha256"] == queue_sha,
-            "caller-pinned original complete queue mismatch")
+    require((context_evidence is None) == (context_evidence_sha256 is None),
+            "context evidence requires both a directory and external manifest SHA256")
+    qualified, context_inventory = None, {}
+    if context_evidence is not None:
+        context_evidence = legacy._root(context_evidence)
+        require(not context_evidence.is_relative_to(out) and not out.is_relative_to(context_evidence),
+                "context-evidence/output overlap")
+        qualified, context_inventory = _context_introductions(
+            context_evidence, context_evidence_sha256,
+        )
+    _gap_queue(source, queue, queue_sha, allow_original_subset=qualified is not None)
     source_names = set(source_manifest["artifacts"]) | {"manifest.json"}
     before = {name: legacy._binding(source / name) for name in sorted(source_names)}
     before_queue = legacy._binding(queue)
@@ -834,9 +960,12 @@ def build_nj_collection(source_directory, gap_queue, out_directory, *,
     evidence = out / "source-evidence"
     for name in sorted(source_names):
         legacy._copy(source / name, evidence / name)
+    for name in context_inventory:
+        legacy._copy(context_evidence / name, out / "context-evidence" / name)
     legacy._copy(queue, out / "input_gap_queue.parquet")
     products, contexts, report = _replay(evidence, out / "input_gap_queue.parquet",
-                                        source_sha, queue_sha)
+                                        source_sha, queue_sha,
+                                        context_qualified_introductions=qualified)
     for name, rows in products.items():
         legacy._write_rows(out / name, rows)
     pq.write_table(contexts, out / "context_inventory.parquet")
@@ -850,15 +979,24 @@ def build_nj_collection(source_directory, gap_queue, out_directory, *,
         before_producers == {name: legacy._binding(path) for name, path in _producers().items()},
         "producer dependencies changed during normalization",
     )
-    legacy._write(out / "consumed_input_hashes.json", {
+    consumed = {
         "before": before, "after": after, "original_queue_before": before_queue,
         "original_queue_after": legacy._binding(queue),
         "all_original_inputs_unchanged": True,
         "scope": "explicit_sealed_packet_only_not_parent_root_or_entire_transport_history",
-    })
+    }
+    if context_inventory:
+        require(context_inventory == {
+            name: legacy._binding(legacy._regular(context_evidence / name))
+            for name in context_inventory
+        }, "original context evidence changed during normalization")
+        consumed["context_introduction_evidence_before"] = context_inventory
+        consumed["context_introduction_evidence_after"] = context_inventory
+    legacy._write(out / "consumed_input_hashes.json", consumed)
     for name, path in _producers().items():
         legacy._copy(path, out / name)
     artifacts = PRODUCTS | {"source-evidence/" + name for name in source_names}
+    artifacts |= {"context-evidence/" + name for name in context_inventory}
     manifest = {
         "schema": SCHEMA, "provider": PROVIDER, "status": STATUS,
         "source_manifest_sha256": source_sha, "gap_queue_sha256": queue_sha,
@@ -866,6 +1004,8 @@ def build_nj_collection(source_directory, gap_queue, out_directory, *,
         "source_packet_status": source_manifest["status"], "counts": report["counts"],
         "packet_artifacts": {name: legacy._binding(out / name) for name in sorted(artifacts)},
     }
+    if context_inventory:
+        manifest["context_introduction_evidence_sha256"] = context_evidence_sha256
     legacy._write(out / "manifest.json", manifest)
     del products, contexts, report
     load_nj_collection(out, source_manifest_sha256=source_sha, gap_queue_sha256=queue_sha)
@@ -873,7 +1013,7 @@ def build_nj_collection(source_directory, gap_queue, out_directory, *,
 
 
 def load_nj_collection(root, metadata=None, *, source_manifest_sha256=None,
-                       gap_queue_sha256=None):
+                       gap_queue_sha256=None, context_evidence_sha256=None):
     """Independently re-extract and replay; return (views, contexts, pins, manifest).
 
     Metadata follows the archive loader contract: exact bill/state/session/type,
@@ -884,10 +1024,14 @@ def load_nj_collection(root, metadata=None, *, source_manifest_sha256=None,
     directory = legacy._root(root)
     manifest_path = legacy._regular(directory / "manifest.json")
     manifest = legacy._json(manifest_path)
-    require(type(manifest) is dict and set(manifest) == {
+    required_fields = {
         "schema", "provider", "status", "source_manifest_sha256", "gap_queue_sha256",
         "tools", "approvals", "source_packet_status", "counts", "packet_artifacts",
-    }, "invalid normalized manifest fields")
+    }
+    require(type(manifest) is dict, "typed normalized manifest required")
+    if "context_introduction_evidence_sha256" in manifest:
+        required_fields.add("context_introduction_evidence_sha256")
+    require(set(manifest) == required_fields, "invalid normalized manifest fields")
     require(manifest["schema"] == SCHEMA and manifest["provider"] == PROVIDER
             and manifest["status"] == STATUS and legacy._equal(manifest["tools"], TOOLS)
             and legacy._equal(manifest["approvals"], dict.fromkeys(FLAGS, False)),
@@ -912,18 +1056,32 @@ def load_nj_collection(root, metadata=None, *, source_manifest_sha256=None,
         expected = historical[name] if historical else legacy._binding(path)
         require(artifacts[name] == expected, "installed producer dependency mismatch")
         if historical and name == "producer/nj_library_text.py":
-            require(expected == legacy._binding(path), "historical extraction dependency changed")
+            require(expected in (legacy._binding(path), legacy.STRICT_2023_PRODUCER),
+                    "historical extraction dependency changed")
+    qualified, context_inventory = None, {}
+    if "context_introduction_evidence_sha256" in manifest:
+        context_sha = _hash(manifest["context_introduction_evidence_sha256"])
+        if context_evidence_sha256 is not None:
+            require(context_sha == _hash(context_evidence_sha256),
+                    "external context evidence anchor changed")
+        qualified, context_inventory = _context_introductions(
+            directory / "context-evidence", context_sha,
+        )
+    else:
+        require(context_evidence_sha256 is None, "expected context evidence is missing")
     source = legacy._root(directory / "source-evidence")
     source_manifest, _, _ = _source(source, manifest["source_manifest_sha256"])
     source_names = set(source_manifest["artifacts"]) | {"manifest.json"}
     source_inventory = {name: legacy._binding(source / name) for name in sorted(source_names)}
     require(set(artifacts) == PRODUCTS | {"source-evidence/" + n for n in source_names}
+            | {"context-evidence/" + n for n in context_inventory}
             and legacy._equal(legacy._json(directory / "source_inventory.json"), source_inventory)
             and manifest["source_packet_status"] == source_manifest["status"],
             "finite source inventory/status mismatch")
     products, expected_contexts, report = _replay(
         source, directory / "input_gap_queue.parquet",
         manifest["source_manifest_sha256"], manifest["gap_queue_sha256"],
+        context_qualified_introductions=qualified,
     )
     for name, rows in products.items():
         with (directory / name).open("rb") as stream:
@@ -939,12 +1097,17 @@ def load_nj_collection(root, metadata=None, *, source_manifest_sha256=None,
             and legacy._equal(manifest["counts"], report["counts"]),
             "complete report/count replay mismatch")
     queue_binding = artifacts["input_gap_queue.parquet"]
-    require(legacy._equal(legacy._json(directory / "consumed_input_hashes.json"), {
+    expected_consumed = {
         "before": source_inventory, "after": source_inventory,
         "original_queue_before": queue_binding, "original_queue_after": queue_binding,
         "all_original_inputs_unchanged": True,
         "scope": "explicit_sealed_packet_only_not_parent_root_or_entire_transport_history",
-    }), "original input before/after receipt replay mismatch")
+    }
+    if context_inventory:
+        expected_consumed["context_introduction_evidence_before"] = context_inventory
+        expected_consumed["context_introduction_evidence_after"] = context_inventory
+    require(legacy._equal(legacy._json(directory / "consumed_input_hashes.json"), expected_consumed),
+            "original input before/after receipt replay mismatch")
     context_rows = contexts.to_pylist()
     if metadata is not None:
         legacy._current_metadata(context_rows, metadata)
@@ -960,17 +1123,24 @@ def main(argv=None):
     build.add_argument("--gap-queue", type=Path, required=True)
     build.add_argument("--gap-queue-sha256", required=True)
     build.add_argument("--out-dir", type=Path, required=True)
+    build.add_argument("--context-evidence", type=Path,
+                       help="complete pinned original context/action evidence for 220th tail covers")
+    build.add_argument("--context-evidence-sha256",
+                       help="external SHA256 of the context-evidence manifest")
     verify = commands.add_parser("verify", aliases=["replay"])
     verify.add_argument("--directory", type=Path, required=True)
     verify.add_argument("--metadata", type=Path)
     verify.add_argument("--source-manifest-sha256")
     verify.add_argument("--gap-queue-sha256")
+    verify.add_argument("--context-evidence-sha256")
     args = parser.parse_args(argv)
     if args.command == "build":
         manifest = build_nj_collection(
             args.source_dir, args.gap_queue, args.out_dir,
             source_manifest_sha256=args.source_manifest_sha256,
             gap_queue_sha256=args.gap_queue_sha256,
+            context_evidence=args.context_evidence,
+            context_evidence_sha256=args.context_evidence_sha256,
         )
     else:
         metadata = (
@@ -980,6 +1150,7 @@ def main(argv=None):
             args.directory, metadata,
             source_manifest_sha256=args.source_manifest_sha256,
             gap_queue_sha256=args.gap_queue_sha256,
+            context_evidence_sha256=args.context_evidence_sha256,
         )
     print(json.dumps({"schema": SCHEMA, "counts": manifest["counts"]}, indent=2))
     return 0
