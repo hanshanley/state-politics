@@ -85,17 +85,19 @@ report fields are preserved in
   --archive-text data/processed/published-carryover-documents-20261023-v1 \
   --archive-text data/processed/billcam-provider-context-html-delta-20261023-v1 \
   --archive-text data/processed/billcam-provider-context-html-four-subject-20261023-v1 \
+  --archive-text data/processed/nj-library-tail-context-text-20261024-v1 \
+  --archive-text data/processed/nj-library-effective-context-text-20261024-v1 \
   --out-dir outputs/recreated-2023-2024-REPLAY
 ```
 
-The accepted local build is `outputs/recreated-2023-2024-v26/index.html`.
+The accepted local build is `outputs/recreated-2023-2024-v27/index.html`.
 The command above requires a fresh output directory. The bundle contains 14
-current evidence graphs in PNG and SVG, 13 complete chart-data CSVs, twenty-five complete
+current evidence graphs in PNG and SVG, 13 complete chart-data CSVs, twenty-seven complete
 research-packet ZIPs and a hash manifest. It also archives the exact fifteen
 plotting/source-consumer producers and the recovered producers within their research packets.
-The current bundle has **twenty-five** complete research ZIPs, 96 bound artifacts
-and manifest `17afa324480d378692b180fb019ab70eceb02932889344965856fa6c344364a4`.
-All twenty-three preceding source ZIPs remain byte-identical.
+The current bundle has **twenty-seven** complete research ZIPs, 98 bound artifacts
+and manifest `33b948ac1643b366aa3996aa3234fbaaeb1c10cda407b06c873b1c13a398a1a6`.
+Independent reconciliation of the twenty-five preceding source ZIPs is running.
 It uses saved evidence
 tables and existing development diagnostics without
 collecting sources or executing a classifier. Missing native channels remain
@@ -242,7 +244,43 @@ publisher-native or introduced version.
 
 ## Independent archived bill text
 
-### Current provider-context recovery and completed inference: October 24, 2026
+### Current original-context New Jersey recovery: October 24, 2026
+
+Two offline packets add **16 original contexts / 42 complete reader views /
+2,000,505 policy characters**. The tail profile recovers six January 2024
+introductions whose own covers print the 220th Legislature. The separate
+all-original-date profile recovers ten further contexts using fourth-reprint
+recognition, exact source-spacing evidence and bounded version quarantine.
+Every accepted view has complete original bill-specific introduction evidence.
+Literal ISO calendar components are compared without timezone conversion;
+original timestamps and the contradictory `2023-12-31` session end are preserved.
+
+The packets are `data/processed/nj-library-tail-context-text-20261024-v1/`
+(6 contexts / 16 views; manifest
+`3922c090c6d937385c57818b9a3f065ebee1f6168a3cedc9b842b8095e5bdeae`)
+and `data/processed/nj-library-effective-context-text-20261024-v1/`
+(10 contexts / 26 views; manifest
+`81771d07dc9f41a79547193e26e220bfa71015e57d912eb587ad749373d426ab`).
+Both retain the complete supplied PDF collection, both reader outputs and
+complete original context/action reference files. Their queues are exact,
+disjoint whole-row/schema subsets of the original missing-context queue.
+Four accepted views expose quarantined same-bill alternatives. Two views bind
+one exact unlabelled PDF page using the pinned PDF, all three reader-page hashes
+and both printed same-bill/reprint/folio neighbours. No header, folio or source
+character is inserted.
+
+Combined receipt `data/nj-context-packet-replay-20261024-v1.json` has SHA
+`ea104ae0dc0d5743778d48d2021dcc707d6162639b249ce977b9e5bcb2e20653`.
+Availability is **139,244 / 157,598**, with **18,354** remaining, including
+**1,622 NJ / 5,717 HI**. Twenty archives contain **10,789 contexts / 13,196 views**.
+Actual explorer v32 has 787 artifacts, manifest
+`8bff39638fa30416e33e3f394995932c96801965c456a208869597772befd78a`.
+Source gallery v27 is described above. Fresh v16 inference is running;
+the preceding completed model/token baseline below remains v15 / v12.
+No source request, date repair, human-label change or scientific/rights/
+party-time/publication promotion occurs.
+
+### Preceding provider-context recovery and completed inference: October 24, 2026
 
 Two disjoint opt-in packets recover **20 original 2024 Hawaii contexts /
 35 complete views / 396,533 policy characters** from already retained

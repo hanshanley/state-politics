@@ -4,7 +4,32 @@ The existing figures and analytical conclusions are **legacy, not revalidated fi
 The current changes repair infrastructure and preserve evidence; they do not certify a
 replacement classifier or establish complete contemporary coverage.
 
-## Full-context semantic review and finite provider probes: October 24, 2026
+## Original-context NJ recovery and recreated source outputs: October 24, 2026
+
+Two separately replayed offline library packets add **16 original contexts /
+42 complete reader views / 2,000,505 policy characters**. Exact original
+introduction-action IDs, organizations, chambers and literal calendar dates
+support the source relations. Original timestamps, printed years and contradictory
+session-end metadata remain unchanged. Bounded unproven same-bill alternatives
+remain excluded and visible; one exact-PDF page bridge retains null extracted
+header/folio fields instead of inserting text.
+
+Actual source builds completed: `data/preview-cycle-evidence-v32/` has 787 bound
+artifacts; `outputs/recreated-2023-2024-v27/` has 98, fourteen recreated PNG/SVG
+graphs and twenty-seven complete research ZIPs. Twenty archival packets now
+contain **10,789 contexts / 13,196 views**. Source availability is
+**139,244 / 157,598**, leaving **18,354** gaps, including **1,622 NJ / 5,717 HI**.
+The source receipt is `data/nj-context-packet-replay-20261024-v1.json`.
+
+Five model-blind GPT-6.1 Sol review assignments cover all sixteen NJ contexts
+and 42 complete texts, with **110 exact evidence spans** mechanically verified.
+Together with the preceding Hawaii review, there are 36 contexts / 77 views /
+2,397,038 characters / 186 spans. These are selected assistant-advisory diagnostics,
+not human gold or evidence of accuracy. Fresh v16 inference and downstream model
+comparisons are running separately; completed v15 remains the last actual model
+baseline. No human, scientific, party-time, source-rights or publication gate closes.
+
+## Preceding full-context semantic review and finite provider probes: October 24, 2026
 
 Two model-blind GPT-6.1 Sol reviewers read **all 20 latest recovered original
 contexts / 35 complete views / 396,533 policy characters** against the official

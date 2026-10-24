@@ -56,28 +56,36 @@ merging the printed 2023 and original 2024 sessions.
 A separate explicit action-bound projection of retained provider-declared 2023
 records recovers **20 further original contexts / 35 full views / 396,533
 characters**, without rewriting provider sessions or making new requests.
-Combined availability is **139,228 of 157,598 existing candidate contexts**, with
-**18,370 remaining gaps**. These are not certified unique-legislation or
+Two original-action-qualified New Jersey library packets recover **16 more
+contexts / 42 complete reader views / 2,000,505 policy characters**. Exact
+original introduction evidence supports January 2024 tail-session covers;
+bounded reprints and extraction-spacing fixes preserve all uncertain source
+alternatives, original dates and contradictory session-end metadata.
+Combined availability is **139,244 of 157,598 existing candidate contexts**, with
+**18,354 remaining gaps**. These are not certified unique-legislation or
 filing-cohort counts. Complete alternative views and
 original source metadata are retained. Source versions, archive extraction,
 research-corpus cleaning and classifications remain uncertified.
 The local graph bundle includes complete research downloads and an explicit
 remaining-text queue; see the [recovery commands](docs/REPRODUCIBILITY.md#independent-archived-bill-text).
 
-Provisional topic inference is complete: title/abstract evidence yields
+The preceding completed provisional topic-inference snapshot yields
 **89,950 assignments / 67,648 abstentions**; retained bodies yield
 **65,063 assignments / 74,165 abstentions / 18,370 unavailable bodies**
 across **178,525 full source alternatives**.
-The latest twenty newly observed contexts yield ten provisional assignments
+The preceding twenty newly observed contexts yield ten provisional assignments
 and ten abstentions; uncertainty elsewhere is not replaced with forced labels.
 All **157,578 other complete assignment rows** and all 178,490 preceding view
 predictions remain unchanged. All 35 supplied texts were already cached:
 the actual new run needs no encoder work and changes no model or threshold.
 Local graphs and complete research downloads are in
-`outputs/recreated-2023-2024-v26/`,
+`outputs/recreated-2023-2024-v27/`,
 `outputs/topic-inference-retained-text-2023-2024-v13/` and
 `outputs/topic-input-comparison-2023-2024-v11/`.
-The unpublished full-text explorer is `data/preview-cycle-evidence-v31/`.
+The unpublished full-text explorer is `data/preview-cycle-evidence-v32/`.
+The source gallery and explorer now contain all twenty archives and the
+sixteen additional NJ contexts. Full-text inference v16 is running separately;
+the topic totals and topic/comparison galleries above still describe completed v15.
 The tracked `scripts/audit_cycle_topics.py` independently replays the saved
 whole-source decisions and complete downloads offline without an encoder;
 see the [current-snapshot audit command](docs/REPRODUCIBILITY.md#current-snapshot-replay-versus-the-historical-analysis-audit).
@@ -86,7 +94,7 @@ between inputs are not accuracy measurements. These remain model assignments,
 not validated policy findings or party positions; see the
 [inference contract](docs/REPRODUCIBILITY.md#provisional-population-topic-inference).
 
-Model-blind GPT-6.1 Sol reviewers have now examined all **20 latest recovered
+Model-blind GPT-6.1 Sol reviewers examined the preceding **20 recovered Hawaii
 contexts / 35 complete source views**, with 76 exact evidence spans verified.
 Ten context assignments agree with the advisory review; nine model abstentions
 have advisory topic proposals, and one context remains unresolved in both.
@@ -95,6 +103,9 @@ already abstains. These are selected-cohort diagnostics, **not independent human
 accuracy or replacement labels**. The complete local casebook and full-source
 download are in `outputs/assistant-advisory-topic-review-2023-2024-v2/`;
 see the [review contract](docs/REPRODUCIBILITY.md#assistant-advisory-semantic-review).
+Further blind reviews cover all **16 added NJ contexts / 42 complete views**,
+with 110 exact spans verified. The combined 36-context, 77-view cohort remains
+assistant-advisory evidence; its comparison with the new model snapshot is pending.
 
 ## Setup
 
