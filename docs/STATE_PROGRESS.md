@@ -27,7 +27,47 @@ not that the state has no data. Platform recovery is separate from the
 legislative status in this table; no state's operative-platform coverage is
 certified complete.
 
-## Latest independent-publication Delaware recovery
+## Latest independently published Delaware and Nevada recovery
+
+Two complete offline packets now recover **46 original contexts / 112 complete
+source views / 6,353,892 characters**: six Delaware contexts and forty original
+Nevada prefilings. Every recovered context was unavailable in completed model
+v17 and in the original 18,332-row source gap queue; all original rows, dates,
+nulls and source fields remain unchanged.
+
+The Nevada packet binds the complete original national bill-version and
+version-link tables to all 143 exact original document URLs, then replays every
+received independent stored extraction and its provider foreign keys. It
+retains 100 complete formal-bill views, including all forty introduced-text
+views whose printed prefiling dates match their existing records. Forty-three
+amendment documents remain separate negatives, not complete-bill substitutes.
+All 350 offered document occurrences survive; 207 other attachments are
+explicitly unrequested, including account-gated exhibits. The original 2024
+contexts are not renamed using 2025 publication/session labels or URL aliases.
+Full source text and original reference tables remain downloadable, not
+metadata-only pointers. Raw publisher PDF/HTML bytes and filing-time truth are
+not certified by these third-party extractions.
+
+Nevada packet:
+`data/processed/billcommons-nv83-original-context-text-20261024-v1/`,
+manifest `21dbaf6d4b955c32ba684c0620855251135224e49a97bbbcb023bb69e30b1299`.
+The combined independently bound source receipt is
+`data/billcommons-combined-context-packet-replay-20261024-v1.json`.
+Availability is **139,312 / 157,598**, leaving **18,286** gaps,
+including **422 DE / 73 NV / 1,600 NJ / 5,717 HI**. Twenty-four archives
+contain **10,857 contexts / 13,369 views**.
+
+Known controlled Bill Commons capture totals are 231 GETs, with the successful
+quota-terminal response and all prior ledger prefixes retained rather than
+requested again. The publisher's reset and twenty-per-minute limit are
+honored; no native, account, authorization or HTTP-429 workaround occurs.
+Full-text model v17 and its galleries remain the last completed downstream
+baseline. One combined source/model/gallery refresh is prepared from the
+actual packets, not projected labels, and has not executed yet.
+No scientific, human, platform, event-time party, rights, report, publication
+or public-integration gate is closed.
+
+## Preceding independent-publication Delaware recovery
 
 A new independently replayed Bill Commons packet recovers **six original
 Delaware contexts / twelve complete source views / 301,396 characters**:
@@ -55,9 +95,9 @@ downstream baseline; new inference and graph executions have not occurred.
 
 The complete blinded advisory review reads all twelve actual source strings
 and verifies 28 literal spans, with no frozen-human overlap. It is not human
-gold, accuracy certification or replacement labels. The separate finite
-Nevada original-reference recovery is still in progress and is not included
-in these counts. No scientific, party, source-rights, human, report,
+gold, accuracy certification or replacement labels. At this earlier checkpoint,
+the separate Nevada original-reference recovery was still in progress and
+was excluded from those counts. No scientific, party, source-rights, human, report,
 publication or public-integration gate is closed.
 
 ## Preceding residual New Jersey library recovery

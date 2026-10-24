@@ -526,6 +526,33 @@ async function terminate(child) {
     const archiveDownloads = [];
     let crossContextProof = null;
     if (hasArchive) {
+      const storedRows = (await readRows("archive-TX"))
+        .filter(row => row.archive_provider === "Bill Commons");
+      for (const row of storedRows) {
+        await change(session, "state", "TX");
+        await change(session, "collection", "archive_text");
+        await search(session, row.view_id);
+        await waitFor(session, `document.querySelector("#evidence article .source-text")?.textContent
+          === ${JSON.stringify(row.text)}`);
+        const notice = await evaluate(session,
+          'document.querySelector(".stored-text-observation").textContent');
+        assert.ok(notice.includes(row.source_session.identifier));
+        assert.ok(notice.includes(row.source_session.start_date));
+        assert.ok(notice.includes(row.source_session.end_date));
+        assert.ok(notice.includes(row.original_target_context.source_introduction_date));
+        assert.ok(notice.includes("do not override original context dates"));
+        assert.ok(notice.includes("raw publisher PDF/HTML bytes"));
+        assert.ok(!notice.includes("Exact printed state, session and own bill identity match"));
+        const metadata = JSON.parse(await evaluate(session,
+          'document.querySelectorAll("#evidence article .source-text")[1].textContent'));
+        assert.deepEqual(metadata.source_session, row.source_session);
+        assert.deepEqual(metadata.original_target_context, row.original_target_context);
+        assert.equal(metadata.raw_publisher_PDF_or_HTML_bytes_supplied, false);
+        assert.equal(metadata.provider_dates_preserved_not_original_context_overrides, true);
+        archiveDownloads.push(await download(session, [row],
+          "complete stored extraction and separate original/provider session metadata"));
+        await search(session, "");
+      }
       const publishedRows = (await readRows("archive-TX"))
         .filter(row => row.source_type === "published_corpus_text");
       if (publishedRows.length) {

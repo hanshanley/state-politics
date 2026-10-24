@@ -135,6 +135,7 @@ if (typeof document !== "undefined") {
       const archive = row.source_type === "archive_text" || published;
       const archiveProvider = row.archive_provider
         ?? (published ? "independently published research corpus" : "unknown archive");
+      const storedArchive = archive && archiveProvider === "Bill Commons";
       const crossContext = archive
         && row.context_relation?.kind === "same_legislature_exact_existing_document_pointer";
       article.append(element("h3", receipt
@@ -185,7 +186,15 @@ if (typeof document !== "undefined") {
       } else if (archive) {
         const carryover = row.source_identity?.explicit_original_carryover_evidence;
         article.append(element("p",
-          (carryover
+          (storedArchive
+            ? `Independent stored-text extraction. Original candidate session ${row.session_identifier}; `
+              + `original recorded introduction ${row.original_target_context?.source_introduction_date || "unknown"}. `
+              + `Provider session ${row.source_session?.identifier ?? "unknown"} has published dates `
+              + `${row.source_session?.start_date ?? "unknown"} through ${row.source_session?.end_date ?? "unknown"}. `
+              + "These provider dates do not override original context dates. Exact original context/document "
+              + "evidence is preserved below; raw publisher PDF/HTML bytes, filing-time alignment and "
+              + "independent reader truth remain unverified. "
+            : carryover
             ? `Printed source year ${carryover.actual_printed_year}; `
               + `unchanged candidate session ${carryover.original_context_session_identifier}. `
               + "Exact original bill-specific carryover and origin-introduction action IDs "
@@ -203,7 +212,8 @@ if (typeof document !== "undefined") {
           + (row.archive_generated_prologue_preserved
             ? "This full string includes the archive's existing machine-generated extraction prologue, not our added summary."
             : "This is the complete retained source extraction, without an added summary."),
-          "note archive-observation" + (carryover ? " carryover-action-observation" : "")));
+          "note archive-observation" + (carryover ? " carryover-action-observation" : "")
+            + (storedArchive ? " stored-text-observation" : "")));
         if (published) {
           article.append(element("p",
             "Complete published Bill_Text policy body; the original publisher prologue is "
@@ -218,6 +228,10 @@ if (typeof document !== "undefined") {
         article.append(sourceText("Inspect printed identity, source version and all original metadata",
           JSON.stringify({source_identity: row.source_identity, source_version: row.source_version,
             source_record: row.source_record, source_members: row.source_members,
+            source_session: row.source_session,
+            raw_publisher_PDF_or_HTML_bytes_supplied: row.raw_publisher_PDF_or_HTML_bytes_supplied,
+            provider_dates_preserved_not_original_context_overrides:
+              row.provider_dates_preserved_not_original_context_overrides,
             context_relation: row.context_relation,
             original_source_context: row.original_source_context,
             original_target_context: row.original_target_context,

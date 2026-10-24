@@ -352,6 +352,10 @@ def load_archive(directory: Path, metadata=None):
         from state_politics.bills.billcommons_text import load_billcommons
 
         return load_billcommons(directory, metadata)
+    if manifest.get("schema") == "state-politics.billcommons-nevada-archive-text.v1":
+        from state_politics.bills.billcommons_nv_text import load_billcommons_nv
+
+        return load_billcommons_nv(directory, metadata)
     if manifest.get("schema") == "state-politics.govbot-archived-documents.v1":
         from state_politics.bills.govbot_text import load_govbot
 

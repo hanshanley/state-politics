@@ -41,6 +41,49 @@ The full source packet is
 `data/processed/billcommons-de-original-source-20261024-v1/`, manifest
 `1ee32f28ee064b20da9d867423e20868cbb70b990f7080dffc2fa1da1726f0ab`.
 
+A further finite metadata probe accounts for all seventy remaining
+state/session groups across 38 states, rather than assuming the session
+catalog proves historical absence. It identifies forty original Nevada
+2024 prefilings with complete exact original version-link relations in the
+retained national tables. All 143 original version URLs have complete stored
+extractions; none is inferred from a constructed URL or guessed session alias.
+The complete capture retains 8,880,653 characters across 143 documents and
+the full original national reference tables. One existing pilot is reused.
+All source histories survive the local successful-response quota stop:
+23 previous metadata GETs plus nineteen suffix GETs make **42**, not 65;
+the original 48-request allowance is not restarted. The published reset and
+twenty-per-minute limit are honored without receiving HTTP 429.
+
+Actual offline normalization and independent replay recover **forty contexts /
+100 complete views / 6,052,496 characters**, including all forty introduced-text
+views. Forty-three amendment documents are preserved as negative dispositions;
+207 other offered attachments remain explicitly unrequested. A copied
+account notice and third-party testimony in the pilot are not policy bodies.
+Both complete national reference tables, every exact target query row and
+all unchanged source strings remain in the complete research packet.
+Manifest: `21dbaf6d4b955c32ba684c0620855251135224e49a97bbbcb023bb69e30b1299`.
+
+The disjoint Delaware/Nevada increment is **46 contexts / 112 views /
+6,353,892 characters**. Source availability is now **139,312 / 157,598**,
+with **18,286** gaps. The new combined full-text inference and graph refresh
+has not run; completed v17 remains the measured downstream baseline.
+The selected advisory casebook input adds the twelve complete Delaware
+strings to the preserved earlier reviews: 64 contexts / 150 views /
+3,842,956 characters / 352 exact spans. This selected cohort does not include
+the Nevada texts and is not a human accuracy estimate. Its new-model
+comparison awaits actual v18 predictions. A missing legacy reviewer-model
+field in the first export is handled by binding the original result hash
+to its sealed old reviewer record, never by inserting a fabricated field;
+the failed partial export and diagnostic remain retained.
+
+The unpublished explorer now separately discloses original and provider
+sessions/dates for independent stored text, preserves `source_session`, and
+does not claim Nevada's exact-pointer profile has an own printed session
+header. A real Chromium fixture verifies the full text, original metadata,
+date uncertainty and complete download. The first cached Chromium build's
+navigation timeout is retained; the other existing Chromium build passes
+without changing the test or installing tools.
+
 A separate Nebraska state-publications-library discovery retains two exchanges
 and its initial catalog-parser failure. Offline review then finds named-AI
 robots exclusions not considered by the initial generic-agent check. The

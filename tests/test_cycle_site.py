@@ -1571,8 +1571,30 @@ def test_cycle_real_browser_controls_downloads_markup_nojs_and_mobile(
         "archive_generated_prologue_preserved": False,
         "model_input_approved": False, "training_admission": False, "analytical_admission": False,
     }
+    stored = {
+        **{key: context[key] for key in (
+            "bill_id", "state", "identifier", "session_identifier", "title",
+        )},
+        "view_id": "stored-text-provider-session-browser-fixture",
+        "source_type": "archive_text", "archive_provider": "Bill Commons",
+        "text": "Complete synthetic stored policy extraction.\n" + text,
+        "source_record": {"synthetic_browser_fixture": True},
+        "source_identity": {"printed_evidence": []},
+        "source_session": {
+            "identifier": "Synthetic provider session", "start_date": "2026-01-13",
+            "end_date": "2026-06-30",
+        },
+        "original_target_context": {
+            **context, "source_introduction_date": "2024-12-19",
+            "synthetic_browser_fixture": True,
+        },
+        "raw_publisher_PDF_or_HTML_bytes_supplied": False,
+        "provider_dates_preserved_not_original_context_overrides": True,
+        "archive_generated_prologue_preserved": False,
+        "model_input_approved": False, "training_admission": False, "analytical_admission": False,
+    }
     monkeypatch.setattr("state_politics.site_evidence.load_archive", lambda *_: (
-        [view, carryover], [context], {
+        [view, carryover, stored], [context], {
             name: sha256_file(directory / name) for name in ("manifest.json", "report.json")
         },
         {"schema": "published-corpus-browser-fixture"},
