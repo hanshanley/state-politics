@@ -72,6 +72,16 @@ UNLABELLED_PAGE_BRIDGES = {
     },
 }
 SEALED_PRODUCERS = {
+    "81771d07dc9f41a79547193e26e220bfa71015e57d912eb587ad749373d426ab": {
+        "producer/nj_library_collection.py": {
+            "sha256": "11808e71439a442f5b3140077b3e2f1f8f7e0bf2ba2c1403dbcabddac356948c",
+            "bytes": 68889,
+        },
+        "producer/nj_library_text.py": {
+            "sha256": "4431677fafdcd0a03bb86b4e19ee74e0fc84cedf8717883a7779171e6a7cab47",
+            "bytes": 66976,
+        },
+    },
     "3922c090c6d937385c57818b9a3f065ebee1f6168a3cedc9b842b8095e5bdeae": {
         "producer/nj_library_collection.py": {
             "sha256": "4075e6a5e757ffe092e613cebf0c502eaf9b74fe0fbac95a95f8227dd8576381",
@@ -705,6 +715,9 @@ def _context_introductions(directory, manifest_sha256):
         ("state", "=", "NJ"),
         ("bill_id", "in", [row["bill_id"] for row in contexts.values()]),
     ]).to_pylist()
+    actions_by_bill = defaultdict(list)
+    for action in actions:
+        actions_by_bill[action["bill_id"]].append(action)
     qualified = {}
     for identifier, row in contexts.items():
         ids = legacy._decode(row["origin_introduction_action_ids"])
@@ -713,8 +726,8 @@ def _context_introductions(directory, manifest_sha256):
         qualified[identifier] = {
             "original_context": row,
             "origin_introduction_actions": [
-                action for action in actions
-                if action["bill_id"] == row["bill_id"] and action["action_id"] in ids
+                action for action in actions_by_bill[row["bill_id"]]
+                if action["action_id"] in ids
             ],
         }
     inventory = dict(manifest["artifacts"])

@@ -1,6 +1,6 @@
 # State completion tracker
 
-Updated **October 23, 2026**. This is the current dispatch list, not a claim that
+Updated **October 24, 2026**. This is the current dispatch list, not a claim that
 historical progress messages describe processes still running.
 
 **Active study window: January 1, 2023 through December 31, 2024.** Work on
@@ -27,7 +27,47 @@ not that the state has no data. Platform recovery is separate from the
 legislative status in this table; no state's operative-platform coverage is
 certified complete.
 
-## Latest provider-context projection with original-action evidence
+## Latest original-context New Jersey library recovery
+
+Two fresh offline packets recover **16 additional original contexts / 42 complete
+reader views / 2,000,505 policy characters**. The first fixes a hard-coded
+2022/2023 introduction-year restriction for six January 2024 bills whose own
+covers explicitly print the 220th Legislature. Exact unchanged original
+introduction-action IDs, organization, chamber and literal calendar dates
+support every view; raw timestamps and the contradictory original
+`2023-12-31` session-end metadata are preserved, not repaired.
+
+A distinct all-original-date profile recovers ten further contexts. It handles
+printed fourth reprints and literal PDF word spacing, retains fully bounded
+unproven alternatives as explicit quarantines rather than policy inputs, and
+exposes same-bill uncertainty on the complete views. One exact supplied PDF's
+unlabelled extracted page is bound by its pinned bytes and both printed
+same-bill/reprint/folio witnesses. The missing extracted header and folio remain
+null: neither is inserted. Every physical PDF page, both reader outputs and the
+complete original context/action references remain available.
+
+The separately replayed packets are
+`data/processed/nj-library-tail-context-text-20261024-v1/`
+(6 contexts / 16 views; manifest
+`3922c090c6d937385c57818b9a3f065ebee1f6168a3cedc9b842b8095e5bdeae`)
+and `data/processed/nj-library-effective-context-text-20261024-v1/`
+(10 contexts / 26 views; manifest
+`81771d07dc9f41a79547193e26e220bfa71015e57d912eb587ad749373d426ab`).
+Their source queues are exact whole-row/schema subsets of the original frozen
+queue, and the second excludes the first six recovered identities.
+No previous packet or negative disposition is rewritten.
+
+Available source text is now **139,244 / 157,598 original candidate contexts**,
+with **18,354** remaining gaps, including **1,622 NJ / 5,717 HI**. Twenty archives
+contain **10,789 contexts / 13,196 views**. These are original-context availability
+counts, not certified unique legislation or a native census. Source, model,
+semantic-review and gallery executions remain separately recorded; this source
+recovery alone does not certify classifications or imply new model results.
+Proof: `data/nj-context-packet-replay-20261024-v1.json`.
+There are **zero new source requests** and no filing-originality, party-time,
+human, rights, scientific or publication promotion.
+
+## Preceding provider-context projection with original-action evidence
 
 A further offline audit finds **20 additional original 2024 Hawaii contexts /
 35 complete views / 396,533 policy characters** in already retained provider
