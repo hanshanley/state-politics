@@ -4,6 +4,82 @@ The existing figures and analytical conclusions are **legacy, not revalidated fi
 The current changes repair infrastructure and preserve evidence; they do not certify a
 replacement classifier or establish complete contemporary coverage.
 
+## Strict-majority bill-topic candidate: October 24, 2026
+
+The requested majority alternative is implemented and executed for the entire
+saved population. **Strictly more than half** of all window argmax votes must
+support one output; a plurality or tie cannot assign it. The 0.80 score / 0.20
+margin gates apply to the complete mean vector of supporting windows. This is
+an intentional change of gate semantics, not a claim that the whole-document
+mean remains above 0.80. Source aggregation then requires strictly more than
+half of distinct exact input strings to yield the same accepted output.
+Uncertain sources remain in the denominator; learned rejection is a separate
+output, not an inferred fact that the bill is out of scope.
+
+Actual full-population results:
+
+| Recorded decision | Frozen unanimity | Strict-majority candidate |
+|---|---:|---:|
+| Topic assigned | 65,091 | 78,300 |
+| Learned model rejection | 23,198 | 23,618 |
+| Other unresolved decisions | 51,025 | 37,396 |
+| Source-test exclusions | 3 | 3 |
+| No supplied text | 18,281 | 18,281 |
+
+The **13,209 new provisional assignments** originate from 10,711 window-veto
+cases, 2,479 source-alternative cases and nineteen mixed-reason cases.
+Available-but-unassigned contexts fall from **74,226 to 61,017**, a 17.8%
+reduction, **not an accuracy improvement claim**. Every one of the 65,091
+previously accepted topics is preserved unchanged. All 157,598 entire original
+context rows and 178,745 entire original predictions survive outside an added
+candidate namespace. The run uses all 785,550 saved windows, no encoder calls
+and no changed source/model weights.
+
+All 348 exact duplicate source votes are deweighted. The candidate explicitly
+retains minority evidence: 1,042 assigned contexts have source disagreement or
+uncertainty, and 12,880 have within-document disagreement. Eleven majority
+assignments differ from the argmax of the unconditional mean vector. These are
+reported consequences of hard voting, not silently represented as soft pooling.
+Different extraction strings are not certified independent editions, and the
+overlapping model windows are not independent human semantic judgments.
+
+The selected assistant-only casebook is diagnostic, not human gold. Of 32
+newly assigned contexts in that selected cohort, 25 match its proposals, six
+differ and one has no advisory consensus. Across all 109 cases the candidate
+has 58 same-topic comparisons, ten differing topics, 37 unassigned-with-proposal,
+two unresolved in both and two assignments without advisory consensus.
+The six new differences require real adjudication; they are neither proved
+errors nor grounds for silently editing the advisory labels or model.
+The frozen checkpoint records **808 training / 50 dev examples, all marked
+assistant-reviewed**, and was trained with complete-document mean-probability
+loss. Majority postprocessing is a different decision policy and cannot inherit
+independent calibration or validation from that training run.
+
+The actual gallery is `outputs/topic-majority-2023-2024-v1/`: 23 artifacts,
+three PNG/SVG pairs and a complete **123-member research ZIP** preserving all
+108 original inference members. ZIP: **2,131,586,639 bytes**, SHA-256
+`a837710c39ece99608b22ad2c7bd47eb53e9d014d3fdd4ff0ac7cc8b528cdeec`.
+Manifest:
+`ea392fae9eed070199e47d894f6a93c15ac4bc4af1e4aeb470676b565afe6845`.
+The policy is frozen before execution under
+`bbf6f887cbed4f703416e90723c9e015292dc582784007756c27f774c5cb223a`.
+Twenty focused majority/diagnostic regressions pass. An independent observer
+imports neither new implementation nor producer and reconstructs every window,
+source/context vote and all six chart tables, preserving every original field.
+Actual desktop/mobile Chromium checks decode all three SVGs and verify nine
+byte-identical downloads, including the complete ZIP, with zero JavaScript
+errors or external requests. All browser helpers exit.
+
+The actual full audit is **441/475**: three newly documented Python files add
+three passing checks to the preceding 438/472 report. The same 34 legacy
+failures and every other report field remain identical. The missing old
+scientific-analysis artifacts are not replaced with candidate predictions.
+
+This candidate does not rewrite v19, the old galleries, frozen human plan,
+training labels or any canonical/public analysis. The next source/encoder
+extension still starts from **v19 / token v16**. Independent evaluation and
+explicit promotion remain separate gates; no website integration occurs.
+
 ## Complete unresolved-source dossiers and further discovery: October 24, 2026
 
 Further autonomous recovery checks preserve **180 unmatched publication records /

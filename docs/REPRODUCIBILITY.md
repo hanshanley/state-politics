@@ -18,6 +18,83 @@ be bound explicitly before regenerated outputs can support the narrowed study.
 
 ## Recreated graph bundle
 
+### Strict-majority bill-topic candidate
+
+The new decision policy is a separate, explicitly provisional alternative to
+the preserved unanimity baseline. Reproduce it from the complete saved **v19**
+windows without rerunning the encoder:
+
+```bash
+HF_HUB_OFFLINE=1 TRANSFORMERS_OFFLINE=1 \
+  .venv/bin/python -I -B scripts/reaggregate_cycle_topics.py \
+  --directory data/processed/cycle-topic-inference-retained-text-20261024-v19 \
+  --gallery outputs/topic-inference-retained-text-2023-2024-v17 \
+  --gallery-sha256 6dcb6e1ef7df9b40e4c53bb106f437ba9a0e67220d5b4dbbb824d5a024a52932 \
+  --out-dir outputs/topic-majority-2023-2024-REPLAY
+```
+
+The output directory must be new. The producer SHA-binds the full original
+gallery/job, all four executed producers and the selected assistant comparison.
+It freezes `policy_plan.json` **before** population reaggregation. Its actual
+policy-run hash is
+`bbf6f887cbed4f703416e90723c9e015292dc582784007756c27f774c5cb223a`.
+The unchanged frozen runtime reconstructs every window's complete softmax
+vector; all 22 outputs, including supervised rejection, remain present.
+
+The policy has two strict-majority stages. First, more than half of **all**
+window argmax votes must support one output. A tie or a largest plurality below
+that quorum is uncertain. The score/margin gates remain numerically 0.80/0.20,
+but are evaluated on the complete mean vector of the **supporting windows**,
+not the unconditional whole-document mean. No rejection score is redistributed
+to policy topics. Both conditional and unconditional vectors are exported.
+The conditional score is not calibrated whole-bill confidence.
+
+Second, more than half of distinct exact `input_sha256` source strings must
+yield one accepted window-majority output. Exact repeated strings count once;
+inconsistent repeated evidence fails explicitly. Uncertain sources stay in the
+denominator rather than being dropped. Learned rejection counts separately
+from uncertainty. A minority of differing accepted sources is retained and
+flagged, not an automatic veto. This is not certification that different
+extractions are independent editions. Model windows retain their original
+1024-token/128-overlap construction, not independent semantic-rater status.
+
+The completed gallery is `outputs/topic-majority-2023-2024-v1/index.html`.
+It has **78,300 assignments / 23,618 learned rejections / 37,396 unresolved /
+three exclusions / 18,281 missing**. All 65,091 original accepted topics remain
+unchanged; the 13,209 additions reduce available-but-unassigned contexts from
+74,226 to 61,017. Entire original context/prediction fields survive in
+`decisions/context_assignments.jsonl` and `decisions/source_decisions.jsonl`
+alongside a `majority_candidate` namespace. All source dates/nulls, output
+vectors, minority votes and approval gates remain explicit.
+
+Six chart tables cover status, all 21 policy topics, transition reasons,
+new-assignment origins, all fifty states and the selected assistant comparison.
+Three PNG/SVG pairs show the actual results. The complete **123-member ZIP**
+preserves all 108 original full-source inference members and appends both
+candidate JSONLs, all tables, the original assistant comparison, four producers,
+policy and summary. It is not a metadata-only research download. No old
+inference/gallery/cache files are rewritten and no tokenizer/encoder runs.
+
+Actual independent replay is
+`data/majority-candidate-independent-replay-20261024-v1.json`, executed from
+`data/verify_majority_candidate_20261024_v1.py`. It independently reconstructs
+all 785,550 windows, source quorums, 157,598 context decisions, all original
+fields, chart tables and 123 complete ZIP members without importing either new
+implementation. Actual browser proof is
+`data/majority-candidate-browser-20261024-v1/receipt.json`: desktop/mobile,
+three decoded SVGs and nine byte-identical downloads, zero external requests
+or JavaScript errors, helpers exited.
+
+The selected assistant diagnostics are not a tuning set or accuracy estimate:
+of 32 newly assigned selected cases, 25 match existing proposals, six differ and
+one has no proposal. The checkpoint's registered 808 train / fifty dev rows
+are assistant-reviewed, not independent human validation. Its original
+complete-document mean-probability training objective is not the new majority
+policy. The immutable human plan must not be rewritten to retroactively certify
+this candidate. Independent evaluation and any promotion require a separate
+explicitly registered evaluation/promotion step. Original **v19 / token v16**
+remains the source/encoder continuation baseline.
+
 ### Complete unresolved-source query sets
 
 The additional offline frontier audit is
@@ -148,11 +225,12 @@ remains separate and unchanged: its 34 failures are missing legacy
 an apparent pass. Human accuracy, operative platforms, event-time party, source
 rights and publication remain open requirements.
 
-The current full audit reports **438/472**, not the preceding **436/470**:
-the full-score producer and its documented test file add two passing Python-file
-documentation checks. The exact same 34 failures and all other report fields
-remain identical to the preceding source/inference audit in
-`data/full-score-diagnostics-code-checkpoint-full-audit-20261024-v1.json`.
+The current full audit reports **441/475**, compared with **438/472** at the
+full-score checkpoint: the majority module, producer and documented test file
+add three passing Python-file documentation checks. The exact same 34 legacy
+failures and all other report fields remain identical in
+`data/majority-candidate-code-checkpoint-full-audit-20261024-v1.json`.
+The preceding full-score/source audit reports remain unchanged.
 
 ```bash
 .venv/bin/python -I -B scripts/recreate_graphs.py \

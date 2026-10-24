@@ -83,7 +83,7 @@ research-corpus cleaning and classifications remain uncertified.
 The local graph bundle includes complete research downloads and an explicit
 remaining-text queue; see the [recovery commands](docs/REPRODUCIBILITY.md#independent-archived-bill-text).
 
-Completed provisional topic inference yields
+Under the frozen unanimity policy, completed provisional topic inference yields
 **89,950 assignments / 67,648 abstentions**; retained bodies yield
 **65,091 assignments / 74,226 abstentions / 18,281 unavailable bodies**
 across **178,745 full source alternatives**.
@@ -122,6 +122,20 @@ includes every original full-text inference input as well as the diagnostics.
 These are uncalibrated model diagnostics, not additional classifications,
 accuracy estimates or policy-prevalence estimates; see the
 [full-score diagnostic contract](docs/REPRODUCIBILITY.md#full-score-diagnostics-without-new-classifications).
+
+A separate **strict-majority candidate** now assigns **78,300 contexts**,
+adding **13,209** while preserving all 65,091 previously accepted topics.
+It requires more than half of all window votes, then more than half of distinct
+scored source strings; ties/pluralities stay unresolved. The numerical
+0.80/0.20 quality gates apply to the supporting-window vector, not the diluted
+whole-document mean. This is an explicit policy change, not unchanged confidence.
+The remaining 61,017 available-but-unassigned contexts comprise 23,618 learned
+rejections, 37,396 unresolved majorities and three exclusions; missing text
+remains 18,281. Full results, three new PNG/SVG pairs and the complete original-
+source-plus-candidate download are in `outputs/topic-majority-2023-2024-v1/`.
+Minority evidence and source disagreements remain visible. This candidate has
+**not** replaced the preserved baseline or established better accuracy; see the
+[majority policy and measured tradeoffs](docs/REPRODUCIBILITY.md#strict-majority-bill-topic-candidate).
 
 Twenty-one model-blind GPT-6.1 Sol reviews cover **109 selected Delaware/Hawaii/
 NJ/Nevada/Virginia contexts / 255 complete source views**, with 604 exact evidence
