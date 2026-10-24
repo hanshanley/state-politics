@@ -110,6 +110,19 @@ between inputs are not accuracy measurements. These remain model assignments,
 not validated policy findings or party positions; see the
 [inference contract](docs/REPRODUCIBILITY.md#provisional-population-topic-inference).
 
+A separate, less lossy diagnostic gallery is now available at
+`outputs/topic-score-diagnostics-2023-2024-v1/index.html`.
+It preserves every original assignment and prediction while exposing all
+**21 topic outputs plus the model's rejection output**, without renormalizing
+rejection away. **139,314 contexts** have score vectors; three source-test
+contexts are explicitly unscored, distinct from the 18,281 missing-body contexts.
+Two new PNG/SVG graph pairs separate the recorded decision reasons and show the
+complete output-score distribution. The complete 116-member research download
+includes every original full-text inference input as well as the diagnostics.
+These are uncalibrated model diagnostics, not additional classifications,
+accuracy estimates or policy-prevalence estimates; see the
+[full-score diagnostic contract](docs/REPRODUCIBILITY.md#full-score-diagnostics-without-new-classifications).
+
 Twenty-one model-blind GPT-6.1 Sol reviews cover **109 selected Delaware/Hawaii/
 NJ/Nevada/Virginia contexts / 255 complete source views**, with 604 exact evidence
 spans verified. Thirty-three assigned topics match advisory proposals; four

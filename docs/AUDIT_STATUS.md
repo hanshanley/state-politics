@@ -4,6 +4,60 @@ The existing figures and analytical conclusions are **legacy, not revalidated fi
 The current changes repair infrastructure and preserve evidence; they do not certify a
 replacement classifier or establish complete contemporary coverage.
 
+## Full-score diagnostics without forced labels: October 24, 2026
+
+The actual new gallery,
+`outputs/topic-score-diagnostics-2023-2024-v1/`, exposes the information hidden
+by a hard-label-only summary. All **157,598 entire assignment rows** and
+**178,745 entire prediction rows** remain unchanged outside an added diagnostic
+namespace. Every scored view retains the complete 22-output vector, including
+supervised rejection; rejection is never removed or redistributed across topics.
+Independent arithmetic reconstructs all 178,742 scored views from **785,550
+complete saved window-logit vectors**, without importing the new producer.
+All 139,314 scored-context means, source minima/maxima, entropies and source
+argmax disagreements independently reconstruct. The 348 repeated identical
+views remain exported but do not overweight within-context diagnostic means.
+Missing inputs and three excluded source-test contexts have null vectors,
+never fabricated zero or uniform scores.
+
+The recorded context decisions form these disjoint categories. Source-alternative
+disagreement takes precedence over individual views' abstention reasons:
+
+| Recorded category | Original contexts |
+|---|---:|
+| Classified with source consensus | 65,091 |
+| Within-document window disagreement only | 28,353 |
+| Supervised rejection only | 23,198 |
+| Low score only | 14,508 |
+| Mixed source-view abstention reasons | 2,168 |
+| Source-alternative disagreement | 5,996 |
+| Excluded source-test records | 3 |
+| No supplied retained text | 18,281 |
+
+The two new PNG/SVG graph pairs have independently reconstructed national
+tables and all **1,100 state/output rows**. Source-sensitivity whiskers are not
+confidence intervals. All fourteen new artifacts and all **116 complete ZIP
+members** verify, including every one of the 108 original full-source inference
+members. The original 1,732,997,111-byte source ZIP and both current caches
+remain unchanged. The new complete download is **2,118,866,471 bytes**, SHA-256
+`9881a4bcd5ed2ba4ba9ceaa3c667a24c2016050a03e5f9207e69291929a46f08`.
+Eight focused regressions pass. Actual desktop/mobile Chromium checks decode
+both original SVGs and verify five byte-identical downloads, including the
+complete ZIP, with zero JavaScript errors or external HTTP requests.
+Both helpers exit; screenshots and exact downloads are retained.
+The manifest is
+`412884a7771d43d01a3bfbdcf4c3060d158f6f6cdfa0fa32898af29370701360`.
+
+This layer does not rerun the encoder, change v19 assignments, relax thresholds,
+alter the frozen human packet or certify model accuracy. It does not add missing
+bodies, establish operative platforms/event-time party attribution, or publish
+to themarginoferror.com. A further bounded new-corpus search records eight
+queries/four primary-page attempts and **zero acquired bodies or admissions**.
+The new institutional bitstream lead returns 403 and is closed without alternate
+access; a public code repository does not release its underlying policy corpus.
+The complete local report is `data/new-published-corpus-leads-20261024-v1.json`.
+These are bounded negatives, not an exhaustive absence claim.
+
 ## Further original-action recovery and full Nevada review: October 24, 2026
 
 A new, separately opted-in profile independently replays **five original

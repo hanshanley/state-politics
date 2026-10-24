@@ -18,6 +18,62 @@ be bound explicitly before regenerated outputs can support the narrowed study.
 
 ## Recreated graph bundle
 
+### Full-score diagnostics without new classifications
+
+The separate additive gallery is
+`outputs/topic-score-diagnostics-2023-2024-v1/index.html`.
+Rebuild it from completed **v19**, not an older inference job:
+
+```bash
+HF_HUB_OFFLINE=1 TRANSFORMERS_OFFLINE=1 \
+  .venv/bin/python -I -B scripts/recreate_score_diagnostics.py \
+  --directory data/processed/cycle-topic-inference-retained-text-20261024-v19 \
+  --gallery outputs/topic-inference-retained-text-2023-2024-v17 \
+  --gallery-sha256 6dcb6e1ef7df9b40e4c53bb106f437ba9a0e67220d5b4dbbb824d5a024a52932 \
+  --out-dir outputs/topic-score-diagnostics-2023-2024-REPLAY
+```
+
+The output path must be fresh. This command verifies the externally pinned
+gallery and every original source member, replays the unchanged frozen
+window-softmax/decision function and exports complete vectors without an
+encoder. It does not average logits before softmax, remove the supervised
+rejection output, force a topic from the largest diagnostic mean or treat
+missing/excluded inputs as zero scores. The original candidate fields, dates,
+unknowns, decisions and approval flags survive unchanged outside an explicitly
+diagnostic namespace.
+
+`diagnostics/context_scores.jsonl` contains all **157,598 original contexts**.
+`diagnostics/view_scores.jsonl` contains all **178,745 original predictions**,
+including complete saved logits and the added parsed 22-output vectors.
+Exactly 178,742 views / **139,314 contexts** have scores. Three source-test
+contexts retain empty original scores and null diagnostic vectors, separately
+from 18,281 contexts without text. Equal exact `input_sha256` strings count
+once within a context's diagnostic mean; all original views remain exported.
+National/state charts give each scored context equal weight and preserve all
+21 topic outputs plus supervised rejection. No-candidate/unscored state means
+stay null. Source envelopes describe supplied-view variation, not confidence.
+These scores are uncalibrated diagnostics, not policy proportions or new labels.
+
+The fourteen-artifact gallery includes two PNG/SVG pairs, three complete chart
+tables, both frozen plotting producers and a complete **116-member ZIP**.
+That ZIP preserves all 108 original inference members, including complete
+policy texts, source records, predictions and frozen provenance; it appends the
+two diagnostic JSONLs, three chart tables, two producers and summary. It is not
+a metadata-only replacement. Both producer copies are frozen before processing,
+and original inputs, source ZIP, gallery pin and producers are rechecked after
+execution. Existing galleries are not rewritten.
+
+Actual independent replay is
+`data/full-score-diagnostics-independent-replay-20261024-v1.json`.
+It independently reconstructs every scored view from all 785,550 saved windows,
+every context vector and all chart aggregates; it checks every original field
+and every complete ZIP member without importing the diagnostic producer.
+Actual browser evidence is
+`data/full-score-diagnostics-browser-20261024-v1/receipt.json`.
+Both layouts, both SVGs and five exact downloads pass; no external requests or
+JavaScript errors occur, and helpers exit. The original model, token-cache v16,
+human evidence, missing-body queue and publication gates remain unchanged.
+
 ### Current-snapshot replay versus the historical analysis audit
 
 The saved 2023–2024 retained-text snapshot has a tracked offline replay command:
