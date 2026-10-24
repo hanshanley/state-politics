@@ -49,8 +49,12 @@ A further finite public-identity pass adds **15 original 2024 Hawaii contexts /
 16 complete views**. Search stops at an explicit login requirement; only public
 document links already returned before that stop are followed, without cookies,
 login, alternate search routes or native requests.
-Combined availability is **139,206 of 157,598 existing candidate contexts**, with
-**18,392 remaining gaps**. These are not certified unique-legislation or
+Two more original Hawaii contexts now have **two complete published views /
+7,722 policy characters**, linked by their own original carryover actions.
+Context-qualified view IDs preserve the earlier source identity rather than
+merging the printed 2023 and original 2024 sessions.
+Combined availability is **139,208 of 157,598 existing candidate contexts**, with
+**18,390 remaining gaps**. These are not certified unique-legislation or
 filing-cohort counts. Complete alternative views and
 original source metadata are retained. Source versions, archive extraction,
 research-corpus cleaning and classifications remain uncertified.
@@ -59,18 +63,18 @@ remaining-text queue; see the [recovery commands](docs/REPRODUCIBILITY.md#indepe
 
 Provisional topic inference is complete: title/abstract evidence yields
 **89,950 assignments / 67,648 abstentions**; retained bodies yield
-**65,051 assignments / 74,155 abstentions / 18,392 unavailable bodies**
-across **178,488 full source alternatives**.
-The latest fifteen newly observed contexts produce eight provisional assignments
-and seven abstentions; uncertainty is not replaced with forced labels.
-All **157,583 other complete assignment rows** and all 178,472 preceding view
-predictions remain unchanged. Only sixteen genuinely new strings were encoded,
+**65,053 assignments / 74,155 abstentions / 18,390 unavailable bodies**
+across **178,490 full source alternatives**.
+The latest two newly observed contexts both receive provisional assignments;
+uncertainty elsewhere is not replaced with forced labels.
+All **157,596 other complete assignment rows** and all 178,488 preceding view
+predictions remain unchanged. Only one genuinely new string was encoded,
 with no old encoder work repeated and no change to the model or thresholds.
 Local graphs and complete research downloads are in
-`outputs/recreated-2023-2024-v24/`,
-`outputs/topic-inference-retained-text-2023-2024-v11/` and
-`outputs/topic-input-comparison-2023-2024-v9/`.
-The unpublished full-text explorer is `data/preview-cycle-evidence-v29/`.
+`outputs/recreated-2023-2024-v25/`,
+`outputs/topic-inference-retained-text-2023-2024-v12/` and
+`outputs/topic-input-comparison-2023-2024-v10/`.
+The unpublished full-text explorer is `data/preview-cycle-evidence-v30/`.
 The paired-input comparison preserves missingness and abstentions; differences
 between inputs are not accuracy measurements. These remain model assignments,
 not validated policy findings or party positions; see the

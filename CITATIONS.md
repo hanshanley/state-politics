@@ -582,8 +582,16 @@ selects the old profile/archived producer and reproduces its original
 rejections; it is not silently rewritten. Full correction receipt:
 `data/processed/govbot-enrolled-correction-20261023-v1.json`.
 
-DE's empty version/file lists and NH's conflicting own printed years remain
-unavailable. Three drafts and two amendment-context documents remain
+DE's empty version/file lists and NH's missing or identity-conflicting bodies
+remain unavailable. A separate offline exact-original-action audit accounts for
+all thirteen retained NH 2026 leads and 178 original actions: eleven have no
+published body, two have HTML printing 2025, and none has a retained PDF.
+Nine retention and four rereferral events are not explicit session-transfer
+statements; HB 100's printed `100-FN` suffix is not silently removed.
+Original December 2024 dates and descriptions stating January 8, 2025 remain
+separate, unchanged observations. The audit admits no new source:
+`data/nh-original-action-carryover-audit-20261023-v1.json`.
+Three drafts and two amendment-context documents remain
 quarantined. No original state
 publisher URL is requested, source stop reopened, annual/session alias
 inferred or native/original/filing-time/party/rights/human-accuracy gate closed.
@@ -640,6 +648,21 @@ supplies policy bodies; the source's AI `bill_extracts`, `summary`,
 `analyst_results`, scores and party/control fields are neither classifier
 inputs nor gold labels. No source-original, filing-time, party, human-review,
 scientific or publication approval follows from this recovery.
+
+An offline opt-in follow-up links two further original 2024 Hawaii contexts,
+HB 79 and SB 914, to the records' own printed 2023 bodies using the complete
+original action table, exact bill-specific carryover events and original
+origin-introduction action IDs/chambers. It adds **two context-qualified full
+views / 7,722 policy characters**, with no new request:
+`data/processed/published-carryover-documents-20261023-v1/`, manifest
+`2c44d7284ccf5c934871e79dc8a860c33d7cf7fe78260a535daa0367c817f01b`.
+View IDs append the unchanged original context ID. The earlier HB 79 view
+retains its literal `2023 Regular Session` label and ID; source ordinal 1205
+was present in the complete CSV but not among the earlier 27 accepted views.
+Printed years, context sessions, all source fields/prologues and old negatives
+are preserved, not repaired. These are additional observed contexts, not new
+distinct legislation, separate publications or human labels. Replay:
+`data/published-carryover-packet-replay-20261023-v2.json`.
 
 The v1 packet's true uncertainty observation had an ambiguous name ending
 in `_certified`, so the conservative comparison guard refused it. V2 renames

@@ -4,7 +4,62 @@ The existing figures and analytical conclusions are **legacy, not revalidated fi
 The current changes repair infrastructure and preserve evidence; they do not certify a
 replacement classifier or establish complete contemporary coverage.
 
-## Finite exact-identity recovery and updated inference: October 23, 2026
+## Context-qualified published recovery and updated inference: October 23, 2026
+
+An offline, complete-original-action proof adds **two original Hawaii 2024
+contexts / two published full views / 7,722 policy characters**. Each own
+printed 2023 identity is supported by the exact original bill's carryover
+event and origin-introduction action IDs/chamber. Context-qualified view IDs
+preserve the earlier HB 79 view and its literal `2023 Regular Session`
+label rather than merging annual contexts. Only source ordinal 1203 was
+already accepted; ordinal 1205 was present in the retained CSV but not among
+the earlier 27 views. A failed observer's contrary assumptions are corrected
+without changing source evidence. Packet:
+`data/processed/published-carryover-documents-20261023-v1/`, manifest
+`2c44d7284ccf5c934871e79dc8a860c33d7cf7fe78260a535daa0367c817f01b`.
+
+Availability is **139,208 / 157,598**, with **18,390** missing, including
+**5,737 HI**. Sixteen archival packets contain **10,753 contexts / 13,119
+views**. All 13,117 preceding archive rows, 305 other source partitions,
+twelve other chart tables and 22 complete preceding source ZIPs remain
+unchanged. Current source outputs are **v30 explorer / v25 graph gallery**,
+with 23 complete source ZIPs.
+
+Actual completed **v14**, frozen from v30 and extending completed v13
+read-only, processes **178,490 views**: **65,053 classified / 74,155
+abstained / 18,390 unavailable**. Both new contexts receive provisional
+assignments; all **157,596 other whole assignment rows / 178,488 preceding
+predictions** are unchanged. Only **one genuinely new string / 778 tokens /
+one window** reaches the unchanged encoder; no old input is repeated.
+Full independent token/logit/window/consensus/assignment and 108-member
+inference ZIP replay pass. This does not establish independent accuracy.
+
+Current galleries are
+`outputs/topic-inference-retained-text-2023-2024-v12/` and
+`outputs/topic-input-comparison-2023-2024-v10/`. All 139,208 paired contexts
+and all seven comparison tables are independently reconstructed.
+Real Chromium checks **286 complete bodies / 231 carryover proofs**,
+including both new complete source records, publisher prologues and action/
+context metadata; fifteen full-state queries, eighteen byte-identical
+downloads, fourteen SVGs and desktop/mobile layouts pass. No JavaScript/
+external-request error occurs; every helper exits. Receipts:
+`data/published-context-source-union-replay-20261023-v1.json`,
+`data/published-context-assignment-reconciliation-20261023-v1.json`,
+`data/published-context-complete-inference-replay-20261023-v1.json`,
+`data/published-context-comparison-replay-20261023-v1.json` and
+`data/published-context-browser-workspace-20261023-v1/receipt.json`.
+
+A separate exact-original NH audit retains all thirteen missing/rejected
+leads: eleven lack a body; two retain own-2025 HTML; none has a PDF.
+The 178 original actions contain retention/rereferral, not an explicit
+session-transfer statement. Original dates and conflicting descriptions
+remain separate; `100-FN` is not aliased to `100`. Zero source admissions
+follow. Proof: `data/nh-original-action-carryover-audit-20261023-v1.json`.
+No network stop is reopened. Human accuracy, source originality, operative
+platforms, party-time attribution, rights, report and publication remain open;
+the public site is unchanged.
+
+## Preceding finite exact-identity recovery and updated inference: October 23, 2026
 
 Twenty original missing-bill identities are predeclared for ordinary public
 state/bill-number searches. After 24 successful result pages, the publisher
@@ -56,9 +111,9 @@ Browser proof is `data/identity-browser-workspace-20261023-v1/receipt.json`.
 
 Controlled BillCam totals are **3,081 GETs / 26 POSTs**, including the
 search denial. No account restriction, earlier finite campaign or native
-stop is reopened. Two separately observed published-corpus carryover
-leads remain provisional, not new admissions; their existing source-view
-IDs require explicit context-specific handling before any future use.
+stop is reopened. At that checkpoint, two separately observed published-corpus
+carryover leads remained provisional; their subsequent context-specific
+handling and independently replayed recovery are documented above.
 All independent-human, rights, party-time, filing-originality, scientific,
 report and publication gates remain open.
 

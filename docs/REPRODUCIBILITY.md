@@ -36,17 +36,18 @@ be bound explicitly before regenerated outputs can support the narrowed study.
   --archive-text data/processed/billcam-action-bound-html-delta-20261023-v1 \
   --archive-text data/processed/billcam-action-bound-html-four-subject-20261023-v1 \
   --archive-text data/processed/billcam-prestop-public-documents-html-20261023-v1 \
+  --archive-text data/processed/published-carryover-documents-20261023-v1 \
   --out-dir outputs/recreated-2023-2024-REPLAY
 ```
 
-The accepted local build is `outputs/recreated-2023-2024-v24/index.html`.
+The accepted local build is `outputs/recreated-2023-2024-v25/index.html`.
 The command above requires a fresh output directory. The bundle contains 14
-current evidence graphs in PNG and SVG, 13 complete chart-data CSVs, twenty-two complete
+current evidence graphs in PNG and SVG, 13 complete chart-data CSVs, twenty-three complete
 research-packet ZIPs and a hash manifest. It also archives the exact fifteen
 plotting/source-consumer producers and the recovered producers within their research packets.
-The current bundle has **twenty-two** complete research ZIPs, 93 bound artifacts
-and manifest `8db3473215b16ee11a0704a60031cb46b73e7046294ea40724da6dd4bc35c894`.
-All twenty-one preceding source ZIPs remain byte-identical.
+The current bundle has **twenty-three** complete research ZIPs, 94 bound artifacts
+and manifest `4ea3e99215d88d629bfa5c0c601c4270fd1a0f187d3d05efaed01f0fb084a7da`.
+All twenty-two preceding source ZIPs remain byte-identical.
 It uses saved evidence
 tables and existing development diagnostics without
 collecting sources or executing a classifier. Missing native channels remain
@@ -163,7 +164,88 @@ publisher-native or introduced version.
 
 ## Independent archived bill text
 
-### Current finite public-identity recovery and completed inference
+### Current context-qualified published recovery and completed inference
+
+The opt-in packet
+`data/processed/published-carryover-documents-20261023-v1/`, manifest
+`2c44d7284ccf5c934871e79dc8a860c33d7cf7fe78260a535daa0367c817f01b`,
+adds **two original 2024 Hawaii contexts / two complete views / 7,722
+policy characters** without network requests. Its source packet retains the
+complete original CSV, complete 9,002,451-row action Parquet and extraction
+manifest. Actual bill-specific carryover and origin-introduction actions
+support the link to own printed 2023 bodies; annual-session or URL aliases
+are not inferred. Only these new view IDs append `:context:<original bill ID>`.
+All old 27 published views/IDs, source fields, prologues, dates and negatives
+remain unchanged. Ordinal 1203 already had a view with the literal
+`2023 Regular Session` label; ordinal 1205 was retained but not previously
+accepted. The first observer's contrary assumptions are corrected in
+`data/published-carryover-packet-replay-20261023-v2.json`, not by rewriting
+original evidence.
+
+Availability is **139,208 / 157,598**, with **18,390** remaining, including
+**5,737 HI**. Sixteen archives cover **10,753 contexts / 13,119 views**.
+All 13,117 preceding archive rows, 305 other source partitions, twelve
+other chart tables and 22 preceding complete source ZIPs remain unchanged.
+Explorer **v30** has 779 artifacts, manifest
+`c199a54c230be8c3329e25073ba2a3d473706d1a550db14c948c3050eb570aea`;
+source gallery **v25** has 94 artifacts and 23 complete research ZIPs.
+
+Actual completed job
+`data/processed/cycle-topic-inference-retained-text-20261023-v14/`,
+frozen from v30, contains **178,490 views / 157,598 original contexts**.
+It yields **65,053 classified / 74,155 abstained / 18,390 unavailable**.
+Both new contexts receive provisional assignments; all **157,596 other
+whole assignment rows / 178,488 preceding view predictions** are unchanged.
+Read-only extension of completed v13 encodes **one new string / 778 tokens /
+one window**, with zero old encoder repeats. The other supplied text was
+already cached. Logical all-view totals are **597,270,851 tokens / 781,982
+windows**, with 615 excluded-source tokens separate. Full independent
+token/logit/window/consensus/assignment replay and the complete 108-member
+inference ZIP pass without encoder execution. Weights, thresholds, labels,
+scientific code, human-plan bindings and metadata inference remain unchanged;
+explicit summarization precedes graphing.
+
+The current body gallery is
+`outputs/topic-inference-retained-text-2023-2024-v12/`, 13 artifacts, manifest
+`0bb2af5c041da819e08f5c28f9228d216697759ba3af541119a89b5b7c3ef73e`.
+The current comparison is `outputs/topic-input-comparison-2023-2024-v10/`,
+22 artifacts, manifest
+`f627a8ce7ebbab5181809245add7bd46ee87d8c1b87161d729a05d7aab88d7f4`.
+All 139,208 paired contexts and all seven tables are independently rebuilt:
+42,024 same assigned topics / 6,109 different / 43,234 both abstaining /
+47,841 exactly one abstaining. Missing bodies remain separate; these are not
+accuracy measurements. All research downloads contain complete inputs.
+
+Future extensions must start **completed v14 / token v11**, not the earlier
+v13 baseline or any unexecuted snapshot. The prediction cache has
+**168,183 rows / 750,272,512 bytes**, SHA-256
+`23ec30a9107a990368e3712363bde3893f791ae3db1e60f041bca479a23ce82b`.
+The independently verified token cache is
+`data/cycle-topic-independent-token-verification-cache-20261023-v11.sqlite`,
+**168,183 strings / 40,087,552 bytes**, SHA-256
+`3e7d36701df24f009f7af63c5dae24b27343b3dbd43a53a2944d057a42be0cbf`.
+Both preceding caches remain unchanged.
+
+Receipts are `data/published-context-source-union-replay-20261023-v1.json`,
+`data/published-context-cache-extension-20261023-v1.json`,
+`data/published-context-assignment-reconciliation-20261023-v1.json`,
+`data/published-context-complete-inference-replay-20261023-v1.json` and
+`data/published-context-comparison-replay-20261023-v1.json`.
+Real Chromium proof
+`data/published-context-browser-workspace-20261023-v1/receipt.json`
+checks **286 complete bodies / 231 full carryover proofs**, including both
+new published rows' complete source records, prologues and action/context
+metadata; fifteen full-state queries (1,707 HI / 8,169 NJ), eighteen
+byte-identical downloads, fourteen SVGs and desktop/mobile layouts pass.
+JavaScript/external errors are zero and all helpers exit.
+An independent offline NH audit admits zero sources: eleven of thirteen
+leads lack a body, two retain own-2025 HTML, none has a PDF and the 178
+original actions contain no literal session-transfer statement. Receipt:
+`data/nh-original-action-carryover-audit-20261023-v1.json`.
+All existing network stops and independent-human, source-original, rights,
+party-time, scientific, report and publication gaps remain unresolved.
+
+### Preceding finite public-identity recovery and completed inference
 
 The new, disjoint packet
 `data/processed/billcam-prestop-public-documents-html-20261023-v1/`
@@ -185,11 +267,11 @@ public bodies survive in the complete source packet. This is not a
 completed twenty-query or statewide census. Controlled totals, including
 failure, are **3,081 GETs / 26 POSTs**; inheritance is not new transport.
 
-Current source availability is **139,206 / 157,598**, with **18,392**
+Source availability at that checkpoint is **139,206 / 157,598**, with **18,392**
 remaining, including **5,739 HI**. Fifteen archives cover **10,751 contexts /
 13,117 views**. Exact source replay preserves all previous archive rows,
 305 other source partitions, twelve other chart tables and all 21 old
-complete source ZIPs unchanged. Current explorer **v29** has 777 artifacts,
+complete source ZIPs unchanged. Its explorer **v29** has 777 artifacts,
 manifest `8aa1de9ab592a4e8569c77f9806c1d0dc31e17e338d1b0c262dcb26e8c331b2d`;
 source gallery **v24** has 93 artifacts and 22 complete research ZIPs.
 
@@ -206,10 +288,10 @@ Logical all-view totals are 597,269,253 tokens / 781,980 windows, with
 scientific code, all human-plan bindings and metadata inference are unchanged.
 Explicit summarization precedes graphing.
 
-Current body gallery is
+The preceding body gallery is
 `outputs/topic-inference-retained-text-2023-2024-v11/`, 13 artifacts,
 manifest `6c0793ff12c2a60df5a0a4d9ac5ad7842b4fa64bb3f6535f81f13c9c254c0061`.
-Current comparison is `outputs/topic-input-comparison-2023-2024-v9/`,
+Its comparison is `outputs/topic-input-comparison-2023-2024-v9/`,
 22 artifacts, manifest
 `8cb6cd4225c36e4d7d083b3f8d34bf1d93538e523f83bb26ed922f033f5b3671`.
 Its 139,206 paired contexts contain 42,024 same assigned topics, 6,108
@@ -219,8 +301,7 @@ Every cell of all seven tables and every full inference ZIP member is
 independently checked. The source and model downloads remain complete bodies,
 not metadata-only substitutes.
 
-Future cache extensions must use **completed v13**, not v12 or an
-unexecuted snapshot. Its prediction cache has **168,182 rows /
+The preceding completed v13 prediction cache has **168,182 rows /
 750,268,416 bytes**, SHA-256
 `b0d2513e034448ce463422d36b5c30dbd4eaa17f58fdef15fd901072879a228f`.
 The independently verified token cache is
@@ -240,9 +321,9 @@ checks all sixteen new bodies plus 268 preceding regression bodies,
 fifteen full-state queries (1,705 HI / 8,169 NJ), eighteen byte-identical
 downloads, fourteen SVGs and desktop/mobile layouts. JavaScript/external
 errors are zero and every helper exits.
-Two separately observed published-corpus carryover leads remain
-provisional because their already-used source-view IDs need explicit
-context-specific treatment; neither is silently counted or admitted.
+At that checkpoint, two separately observed published-corpus carryover
+leads remain provisional; the subsequent context-qualified proof and
+recovery are documented above, without modifying this preceding snapshot.
 All human, rights, party-time, filing-originality, scientific, report
 and publication gates remain unresolved.
 
@@ -352,7 +433,7 @@ The actual assignment Parquet is **25,965,041 bytes**, SHA-256
 
 The preceding completed v12 prediction cache has **168,166 rows / 750,219,264 bytes**,
 SHA-256 `83fae74274e49121273c4a043bf21f2acf639ab9018d82a3354122073117f106`.
-Future extensions use **v13 / token v10** above, not this older cache.
+Future extensions use **v14 / token v11** above, not this older cache.
 The preceding independently verified token cache is
 `data/cycle-topic-independent-token-verification-cache-20261023-v9.sqlite`,
 **168,166 strings / 40,087,552 bytes**, SHA-256
@@ -521,7 +602,7 @@ The actual assignments are 25,964,882 bytes, SHA-256
 The preceding completed v11 prediction cache has **167,978 rows /
 749,453,312 bytes**, SHA-256
 `5fcab211a7885bccb6fde48351eeaeb71365e0f1328df1cc5bf4e3a2069809c0`.
-Future extensions use completed **v13 / token v10**, as specified above;
+Future extensions use completed **v14 / token v11**, as specified above;
 neither this historical cache nor the superseded unexecuted v9 is current.
 The preceding matching independent token cache is
 `data/cycle-topic-independent-token-verification-cache-20261023-v8.sqlite`;
@@ -2271,29 +2352,36 @@ synthetic references/logits and is not classifier validation.
   --archive-text data/processed/billcam-action-bound-html-delta-20261023-v1 \
   --archive-text data/processed/billcam-action-bound-html-four-subject-20261023-v1 \
   --archive-text data/processed/billcam-prestop-public-documents-html-20261023-v1 \
+  --archive-text data/processed/published-carryover-documents-20261023-v1 \
   --receipt-evidence data/processed/maine-source-receipt-evidence-2023-2024-v1 \
   --native-session-scope ny-2023-2024 --native-session-scope il-103rd \
   --native-session-scope tx-88r-retained \
   --out data/preview-cycle-evidence-REPLAY
 ```
 
-The accepted displayed build is `data/preview-cycle-evidence-v29/`; reproduction requires
-a fresh output directory. It adds all fifteen archival packets to metadata v4 /
+The accepted displayed build is `data/preview-cycle-evidence-v30/`; reproduction requires
+a fresh output directory. It adds all sixteen archival packets to metadata v4 /
 native v15 and research-corpus v4, with the unchanged
 platform evidence v5 and token-plan v2. The latter is reusable because the
 complete 159,315-view metadata input Parquet is byte-identical to v3.
 CLI defaults remain the earlier metadata v3 / native v14 selection; custom
 metadata does not silently attach optional bundles. Pass the compatible
 explicit directories above.
-The current **777-artifact** manifest is
-`8aa1de9ab592a4e8569c77f9806c1d0dc31e17e338d1b0c262dcb26e8c331b2d`.
-Actual v13 inference is bound to this build. Sixteen complete own-2024
-views supplement the preceding source set without modifying any old row.
+The current **779-artifact** manifest is
+`c199a54c230be8c3329e25073ba2a3d473706d1a550db14c948c3050eb570aea`.
+Actual v14 inference is bound to this build. Two complete action-proven
+published views supplement the preceding source set without modifying any old row.
 Current workspace proof is
-`data/identity-browser-workspace-20261023-v1/receipt.json`: 284 exact
-complete bodies, fifteen full-state queries, eighteen byte-identical
+`data/published-context-browser-workspace-20261023-v1/receipt.json`: 286 exact
+complete bodies including all 231 carryover proofs, fifteen full-state queries, eighteen byte-identical
 downloads, fourteen SVGs, desktop/mobile, no JS/external errors, all helpers
 exited.
+
+The preceding **777-artifact v29** manifest is
+`8aa1de9ab592a4e8569c77f9806c1d0dc31e17e338d1b0c262dcb26e8c331b2d`.
+Actual v13 inference remains bound to that unchanged build. Its sixteen
+own-2024 views and 284-body browser proof remain preserved:
+`data/identity-browser-workspace-20261023-v1/receipt.json`.
 
 The preceding **775-artifact v28** build manifest is
 `5997376c9702db82b04d3e5a96badaed3e221e5bd4fe8f9135422ee482263a7f`.
