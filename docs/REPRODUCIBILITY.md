@@ -25,10 +25,10 @@ The saved 2023–2024 retained-text snapshot has a tracked offline replay comman
 ```bash
 HF_HUB_OFFLINE=1 TRANSFORMERS_OFFLINE=1 \
   .venv/bin/python -I -B scripts/audit_cycle_topics.py \
-  --job data/processed/cycle-topic-inference-retained-text-20261024-v18 \
-  --gallery outputs/topic-inference-retained-text-2023-2024-v16 \
-  --verified-token-cache data/cycle-topic-independent-token-verification-cache-20261024-v15.sqlite \
-  --verified-token-cache-sha256 cda9ba11c805ba74bb758d03855f5657fb7d3ac846ba4272047fc1479c98d144 \
+  --job data/processed/cycle-topic-inference-retained-text-20261024-v19 \
+  --gallery outputs/topic-inference-retained-text-2023-2024-v17 \
+  --verified-token-cache data/cycle-topic-independent-token-verification-cache-20261024-v16.sqlite \
+  --verified-token-cache-sha256 68432beb05e121d8681915798c7a208e055461b9d3f785f47bb414bdf3a3e34f \
   --out data/current-cycle-audit-NEW-UNUSED.json
 ```
 
@@ -46,10 +46,10 @@ All fifty state partitions, gallery artifacts and **all 108 required complete ZI
 members** are checked. Required source inputs, predictions or frozen producers
 cannot be omitted by changing the download manifest to match a smaller ZIP.
 The current actual replay is
-`data/billcommons-combined-tracked-current-cycle-audit-20261024-v1.json`: **178,740 views /
+`data/published-va-tracked-current-cycle-audit-20261024-v1.json`: **178,745 views /
 157,598 contexts**, identical saved decisions, counts and byte bindings to the
 independent private replay, with zero encoder passes and no token-cache writes.
-The preceding v17/v16/v15 replays and token v14/v13/v12 remain unchanged.
+The preceding v18/v17/v16/v15 replays and token v15/v14/v13/v12 remain unchanged.
 
 This is a structural/provenance replay, **not independent accuracy validation or
 study completion**. The original full `audit_reproducibility.py --require-tracked`
@@ -63,7 +63,7 @@ The current full audit reports **436/470**, not the preceding **432/466**:
 the two independent-publication adapters and their documented tests add four
 passing Python-file documentation checks. The exact same 34 failures and all
 other report fields remain identical in
-`data/billcommons-pre-save-full-audit-20261024-v1.json`.
+`data/published-va-code-checkpoint-full-audit-20261024-v1.json`.
 
 ```bash
 .venv/bin/python -I -B scripts/recreate_graphs.py \
@@ -92,17 +92,18 @@ other report fields remain identical in
   --archive-text data/processed/nj-library-printed-variant-context-text-20261024-v1 \
   --archive-text data/processed/billcommons-de-original-context-text-20261024-v1 \
   --archive-text data/processed/billcommons-nv83-original-context-text-20261024-v1 \
+  --archive-text data/processed/published-va-carryover-documents-20261024-v1 \
   --out-dir outputs/recreated-2023-2024-REPLAY
 ```
 
-The accepted local build is `outputs/recreated-2023-2024-v29/index.html`.
+The accepted local build is `outputs/recreated-2023-2024-v30/index.html`.
 The command above requires a fresh output directory. The bundle contains 14
-current evidence graphs in PNG and SVG, 13 complete chart-data CSVs, thirty-one complete
+current evidence graphs in PNG and SVG, 13 complete chart-data CSVs, thirty-two complete
 research-packet ZIPs and a hash manifest. It also archives the exact seventeen
 plotting/source-consumer producers and the recovered producers within their research packets.
-The current bundle has **thirty-one** complete research ZIPs, 104 bound artifacts
-and manifest `0096d19c510251bb9692d3340538bd308ec9f09019a99b33e51b245457a22f9d`.
-All twenty-nine preceding source ZIPs remain byte-identical under independent replay.
+The current bundle has **thirty-two** complete research ZIPs, 105 bound artifacts
+and manifest `74cfe8aad94e8c3da7d217f6486f7714ab4961666242204b2d4865d3c4aa45e7`.
+All thirty-one preceding source ZIPs remain byte-identical under independent replay.
 It uses saved evidence
 tables and existing development diagnostics without
 collecting sources or executing a classifier. Missing native channels remain
@@ -122,7 +123,77 @@ validated. No party-topic, trend or D/R outcome results are invented to fill the
 Existing output directories are refused; use a new `outputs/recreated-*`
 directory for another run. Generated bundles are local and Git-ignored.
 
-## Independently published Delaware and Nevada text
+## Original-action-bound Virginia text and current v19 outputs
+
+Five original Virginia contexts now retain **five complete published views /
+58,325 characters**. Three are own offered editions; two are complete committee
+substitutes with their own printed proposal dates and operative enactment clauses.
+All are explicitly dated 2024. Their unchanged original 2025-labelled contexts
+have exact origin-filing IDs/chambers/organizations and final literal
+`Continued to 2025 ...` actions. A recommendation to continue, provider year,
+effective date or inferred session alias cannot supply that bridge.
+The separately opted-in source profile never changes earlier replay behavior.
+Complete original actions and every published CSV field/negative remain
+available in `research-data/independent_archive_25.zip`; original dates,
+session labels and unknowns are not repaired or certified.
+
+```bash
+.venv/bin/python -I -B -m state_politics.bills.published_corpus_text verify \
+  --directory data/processed/published-va-carryover-documents-20261024-v1 \
+  --source-manifest-sha256 381017f4333a36f0b415368b5ef0e45e860b346c143208feaec7bb35dc3539e8 \
+  --gap-queue-sha256 c40b913b750dae4f68e24463cefff23869bb4e47d53182aa29fdb4e6c1331b3e
+```
+
+Actual source availability is **139,317 / 157,598**, leaving **18,281** gaps,
+including 771 VA / 422 DE / 73 NV / 1,600 NJ / 5,717 HI. Twenty-five archives
+contain **10,862 contexts / 13,374 views**. Explorer v35 has 799 artifacts,
+manifest `6c4fdb0e21d712c3fa95bbb411b12650c1adb50aaabf67ab37434f8121610799`.
+The source replay rehashes 1,805 artifacts and preserves all 13,369 prior
+archive rows, 305 other source partitions, twelve other chart tables and
+31 preceding complete source ZIPs.
+
+Completed full-document **v19** yields **65,091 assignments / 74,226 abstentions /
+18,281 unavailable contexts**, with **178,745 full source alternatives**.
+The five new contexts yield two assignments / three abstentions; all 157,593
+other whole assignment rows and all 178,740 earlier predictions are unchanged.
+Exactly **five new strings / 12,028 tokens / fifteen windows** reach the frozen
+encoder, with zero discarded tokens or repeated old inputs. Both private and
+tracked read-only token/logit/window/consensus replays pass. All seven paired
+tables independently reconstruct for all fifty states and 139,317 observed-body
+contexts. Metadata inference, weights, taxonomy, thresholds and human labels
+remain unchanged.
+
+Topic gallery v17 has 13 artifacts, manifest
+`6dcb6e1ef7df9b40e4c53bb106f437ba9a0e67220d5b4dbbb824d5a024a52932`;
+paired gallery v15 has 22 artifacts, manifest
+`0a443592b2a89c8a7fcd4c8eba5debf69d4a8a63cbe387432bf4a068e8fa7c23`.
+The complete population inference ZIP contains 108 members / 1,732,997,111 bytes,
+SHA `95801911bb059f446ed59737212b48a3e595f8565146867cc7bceac356ee821b`.
+Current source/model/comparison receipts have the `data/published-va-` prefix:
+`source-union-replay-20261024-v1.json`,
+`assignment-reconciliation-20261024-v1.json`,
+`comparison-replay-20261024-v1.json` and
+`tracked-current-cycle-audit-20261024-v1.json`.
+
+Future extensions must start **completed v19 / token v16**, not an earlier
+historical job. Its prediction cache has 168,403 rows / 752,422,912 bytes, SHA
+`5ce833127e14ce81cf8654acec5068df97b53b55073fed9d71735e5185044305`.
+The independent token cache is
+`data/cycle-topic-independent-token-verification-cache-20261024-v16.sqlite`,
+168,403 strings / 40,194,048 bytes, SHA
+`68432beb05e121d8681915798c7a208e055461b9d3f785f47bb414bdf3a3e34f`.
+Earlier caches remain byte-identical.
+
+Real Chromium renders 541 complete workspace bodies, all five new original
+Virginia continued-action/edition proofs, all 112 earlier Bill Commons metadata
+proofs and 61 earlier NJ introduction proofs. Fifteen additional complete state
+queries, all fourteen source SVGs and 22 exact workspace downloads pass.
+The casebook separately renders all 255 complete UTF-8 texts and three exact
+downloads. Both suites pass desktop/mobile with zero JavaScript errors or
+external requests; every helper exits and only the two inspected owned
+profiles are removed.
+
+## Preceding independently published Delaware and Nevada text
 
 Two new offline packets recover **46 original contexts / 112 complete views /
 6,353,892 characters**. Delaware contributes six contexts / twelve views;
@@ -154,7 +225,8 @@ gallery's `research-data/independent_archive_23.zip` and
   --gap-queue-sha256 04e318948601afb208c6c93a404f3079ce45e750ed27b68cfe15b652ad761aa5
 ```
 
-Source availability is **139,312 / 157,598**, with **18,286** remaining gaps,
+At this completed checkpoint, source availability was **139,312 / 157,598**,
+with **18,286** remaining gaps,
 including 422 DE / 73 NV / 1,600 NJ / 5,717 HI. Twenty-four archives contain
 10,857 contexts / 13,369 views. Explorer v34 has **797 artifacts**, manifest
 `3aee2c7b853af84152455ac87c0360812f836b50951e57569c77433255848588`.
@@ -185,8 +257,8 @@ Source/model/comparison receipts use the `data/billcommons-combined-` prefix:
 `comparison-replay-20261024-v1.json` and
 `tracked-current-cycle-audit-20261024-v1.json`.
 
-Future extensions must start **completed v18 / token v15**, not earlier
-historical checkpoints. Its prediction cache has **168,398 rows /
+The preceding completed v18 / token v15 stays preserved; future extensions
+use **completed v19 / token v16** above. Its historical prediction cache has **168,398 rows /
 752,402,432 bytes**, SHA
 `ea3be36006116de7e9e90e3ab9e9f9a94a7c673daf39ab840501892a567cc951`.
 The independent token cache is
@@ -206,10 +278,11 @@ Only the two inspected owned browser profiles are removed.
 
 ## Assistant-advisory semantic review
 
-`outputs/assistant-advisory-topic-review-2023-2024-v6/index.html` is a separate
+`outputs/assistant-advisory-topic-review-2023-2024-v7/index.html` is a separate
 private casebook, not a replacement population inference or graph bundle.
-Twelve model-blind GPT-6.1 Sol review assignments examine all 64 selected recovered
-Delaware/Hawaii/NJ contexts and all 150 complete policy views. Every input hash and all 352 exact
+Twenty-one model-blind GPT-6.1 Sol assignments examine all 109 selected recovered
+Delaware/Hawaii/NJ/Nevada/Virginia contexts and all 255 complete policy views.
+Every input hash and all 604 exact
 evidence spans are checked before revealing the frozen model comparison.
 Frozen human evaluation IDs, identities and body hashes are excluded; no
 overlap is found. Original evaluation inputs, predictions and labels remain
@@ -217,25 +290,30 @@ unchanged.
 
 The primary download,
 `research-data/complete_review_inputs_results_and_comparison.zip`, contains
-201 hash-bound members: all complete reviewed texts, original blind inputs,
+344 hash-bound members: all complete reviewed texts, original blind inputs,
 review results, the complete comparison, selected original model predictions
 and assignments, and `executed_verifier.py`. `comparison.csv` is explicitly a
 comparison table, **not a substitute for source-text downloads**.
 The outer manifest binds every artifact and every ZIP member. The selected
 model rows retain their original fields and unknowns.
 
-The comparison records 28 matching assigned-topic proposals, 32 model abstentions
-with advisory proposals, two contexts unresolved in both and two different
-assigned topics. Eleven individual view disagreements remain explicit.
+The comparison records 33 matching assigned-topic proposals, 68 model abstentions
+with advisory proposals, three contexts unresolved in both, four different
+assigned topics and one model assignment without advisory consensus.
+Fourteen individual view disagreements and one model-assigned/advisory-unresolved
+view remain explicit.
 These are descriptive results for a nonrepresentative cohort. They cannot
 estimate population accuracy or become human gold, training labels,
 analytical assignments, model promotion or publication permission.
 Adjudication flags are a review queue, not automatic corrections.
 All view disagreements enter that queue even if both context results abstain.
 V4 added the missing A 5610 flag; V5 preserved that rule for the preceding 22
-contexts and V6 adds six complete Delaware comparisons. The Nevada cohort is
-not part of this selected semantic review. All earlier casebooks stay immutable.
-There are 35 selected triage contexts, not 35 established model errors.
+contexts; V6 added six complete Delaware comparisons. V7 adds all forty recovered
+Nevada contexts and five original-action-bound Virginia contexts. The independent
+Nevada read-range verifier checks all 100 full views and 557 contiguous bounded
+intervals; it is read accounting, not a human accuracy estimate. All earlier
+casebooks stay immutable.
+There are 74 selected triage contexts, not 74 established model errors.
 Construction-permit bills A 5036/S 3551 have model topic 15 and differing
 advisory proposals 14/20. Such taxonomy-boundary disagreement cannot establish
 which label is correct or substitute for independent human adjudication.
@@ -389,7 +467,7 @@ Source, assignment, paired-table and complete-replay receipts are
 Both private and tracked source/logit/token/window/consensus replays pass.
 
 The preceding v17 / token v14 checkpoint stays preserved; future extensions
-use completed v18 / token v15 above. Its historical v17 prediction
+use completed v19 / token v16 above. Its historical v17 prediction
 cache has **168,286 rows / 751,034,368 bytes**, SHA-256
 `54ab9a5cfb991374993d1faa968196a379d7653a78887180438301032b11d51e`.
 The independent token cache is
@@ -468,7 +546,7 @@ Independent source and assignment receipts are
 `data/nj-context-assignment-reconciliation-20261024-v1.json`.
 
 The preceding v16 / token v13 checkpoint stays preserved; future extensions
-use completed v18 / token v15 above. The historical v16 prediction
+use completed v19 / token v16 above. The historical v16 prediction
 cache has **168,225 rows / 750,690,304 bytes**, SHA-256
 `b7e52e96d73ccf9357a2f9db0d5ebad7694b1ac7168e3bca63138034b0eb774b`.
 The independent token cache is
@@ -545,7 +623,7 @@ these are descriptive input differences, not accuracy measurements.
 Every source and model research download remains a complete packet.
 
 The preceding v15 / token v12 checkpoint remains preserved; future extensions
-use the completed v18 / token v15 checkpoint above. Its historical v15 prediction
+use the completed v19 / token v16 checkpoint above. Its historical v15 prediction
 cache has **168,183 rows / 750,272,512 bytes**, SHA-256
 `788fbfef3118167ddc67be24265e5242922ab8c89bb979e328ddfa4450b646c8`.
 The independently verified cache is
@@ -843,7 +921,7 @@ The actual assignment Parquet is **25,965,041 bytes**, SHA-256
 
 The preceding completed v12 prediction cache has **168,166 rows / 750,219,264 bytes**,
 SHA-256 `83fae74274e49121273c4a043bf21f2acf639ab9018d82a3354122073117f106`.
-Future extensions use **v18 / token v15** above, not this older cache.
+Future extensions use **v19 / token v16** above, not this older cache.
 The preceding independently verified token cache is
 `data/cycle-topic-independent-token-verification-cache-20261023-v9.sqlite`,
 **168,166 strings / 40,087,552 bytes**, SHA-256
@@ -1012,7 +1090,7 @@ The actual assignments are 25,964,882 bytes, SHA-256
 The preceding completed v11 prediction cache has **167,978 rows /
 749,453,312 bytes**, SHA-256
 `5fcab211a7885bccb6fde48351eeaeb71365e0f1328df1cc5bf4e3a2069809c0`.
-Future extensions use completed **v18 / token v15**, as specified above;
+Future extensions use completed **v19 / token v16**, as specified above;
 neither this historical cache nor the superseded unexecuted v9 is current.
 The preceding matching independent token cache is
 `data/cycle-topic-independent-token-verification-cache-20261023-v8.sqlite`;

@@ -72,8 +72,11 @@ six Delaware contexts retain both full extraction alternatives. Fiscal notes,
 amendment instructions and account notices are not bill-body substitutes.
 Complete source records, negative dispositions and national reference tables
 remain available without repairing dates or provider session labels.
-Combined source availability is **139,312 of 157,598 existing candidate contexts**,
-with **18,286 remaining gaps**. These are not certified unique-legislation or
+Five further Virginia contexts retain **five complete views / 58,325 characters**.
+Their own 2024 editions link to unchanged 2025-labelled contexts through exact
+original origin-filing IDs and final continued-to-2025 actions, not a session alias.
+Combined source availability is **139,317 of 157,598 existing candidate contexts**,
+with **18,281 remaining gaps**. These are not certified unique-legislation or
 filing-cohort counts. Complete alternative views and
 original source metadata are retained. Source versions, archive extraction,
 research-corpus cleaning and classifications remain uncertified.
@@ -82,21 +85,21 @@ remaining-text queue; see the [recovery commands](docs/REPRODUCIBILITY.md#indepe
 
 Completed provisional topic inference yields
 **89,950 assignments / 67,648 abstentions**; retained bodies yield
-**65,089 assignments / 74,223 abstentions / 18,286 unavailable bodies**
-across **178,740 full source alternatives**.
-The newest 46 Delaware/Nevada contexts yield nine provisional assignments and 37
+**65,091 assignments / 74,226 abstentions / 18,281 unavailable bodies**
+across **178,745 full source alternatives**.
+The newest five Virginia contexts yield two provisional assignments and three
 abstentions; uncertainty is not replaced with forced labels.
-All **157,552 other complete assignment rows** and all 178,628 preceding view
-predictions remain unchanged. The actual run encodes only the 112 new strings,
-covering 1,538,904 tokens / 2,353 windows without discarded tokens or repeated
+All **157,593 other complete assignment rows** and all 178,740 preceding view
+predictions remain unchanged. The actual run encodes only the five new strings,
+covering 12,028 tokens / fifteen windows without discarded tokens or repeated
 old encoder inputs. No model or threshold changes.
 Local graphs and complete research downloads are in
-`outputs/recreated-2023-2024-v29/`,
-`outputs/topic-inference-retained-text-2023-2024-v16/` and
-`outputs/topic-input-comparison-2023-2024-v14/`.
-The unpublished full-text explorer is `data/preview-cycle-evidence-v34/`.
-The source gallery and explorer now contain all twenty-four archives and the
-latest 46-context recovery. Completed full-text inference v18, independent
+`outputs/recreated-2023-2024-v30/`,
+`outputs/topic-inference-retained-text-2023-2024-v17/` and
+`outputs/topic-input-comparison-2023-2024-v15/`.
+The unpublished full-text explorer is `data/preview-cycle-evidence-v35/`.
+The source gallery and explorer now contain all twenty-five archives and the
+latest five-context recovery. Completed full-text inference v19, independent
 saved-token/logit/consensus replay and the paired-input comparison use those
 same actual sources; metadata inference is unchanged.
 The tracked `scripts/audit_cycle_topics.py` independently replays the saved
@@ -107,14 +110,15 @@ between inputs are not accuracy measurements. These remain model assignments,
 not validated policy findings or party positions; see the
 [inference contract](docs/REPRODUCIBILITY.md#provisional-population-topic-inference).
 
-Model-blind GPT-6.1 Sol reviews cover **64 selected Delaware/Hawaii/NJ contexts /
-150 complete source views**, with 352 exact evidence spans verified.
-Twenty-eight assigned topics match advisory proposals, two assigned topics differ,
-32 model abstentions have proposals, and two contexts remain unresolved in both.
-The differing construction-permit proposals expose taxonomy ambiguity, not
-established model errors. These are selected-cohort diagnostics, **not independent human
+Twenty-one model-blind GPT-6.1 Sol reviews cover **109 selected Delaware/Hawaii/
+NJ/Nevada/Virginia contexts / 255 complete source views**, with 604 exact evidence
+spans verified. Thirty-three assigned topics match advisory proposals; four
+assigned topics differ, 68 model abstentions have proposals, three contexts
+remain unresolved in both and one model assignment has no advisory consensus.
+All 74 triage flags request independent adjudication, not automatic correction.
+These are selected-cohort diagnostics, **not independent human
 accuracy or replacement labels**. The complete local casebook and full-source
-download are in `outputs/assistant-advisory-topic-review-2023-2024-v6/`;
+download are in `outputs/assistant-advisory-topic-review-2023-2024-v7/`;
 see the [review contract](docs/REPRODUCIBILITY.md#assistant-advisory-semantic-review).
 
 ## Setup

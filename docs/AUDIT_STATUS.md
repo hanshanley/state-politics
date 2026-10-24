@@ -25,11 +25,55 @@ contexts / 100 complete views / 6,052,496 characters**. Independent replay
 verifies all 239 literal evidence spans and unchanged frozen-human exclusions:
 `data/billcommons-nv-full-semantic-evidence-20261024-v1.json`.
 These results are advisory, not human gold, replacement labels or accuracy
-estimates. The new Virginia source packet and Nevada advisory reviews are not
-yet incorporated into the completed v18 inference or v6 casebook below.
-New population inference and regenerated outputs require separate actual runs.
+estimates. Separate read-accounting verification checks all 100 text files and
+557 contiguous bounded intervals without gaps or omissions.
+The additional five-text Virginia blind review verifies thirteen exact spans.
 
-## Continued independent-publication recovery: October 24, 2026
+The actual refreshed explorer v35 and source gallery v30 include all twenty-five
+packets: **10,862 archive contexts / 13,374 archive views**. Overall source
+availability is **139,317 / 157,598**, leaving **18,281** gaps. Complete source
+replay rehashes 1,805 artifacts and preserves all 13,369 prior archive rows,
+305 other source partitions, twelve other chart tables and 31 preceding full
+source ZIPs. Source gallery v30 contains 105 artifacts, fourteen fresh PNG/SVG
+pairs and 32 complete research ZIPs.
+
+Completed full-document **v19** yields **65,091 classified / 74,226 abstained /
+18,281 unavailable** across **178,745 complete source alternatives**.
+The five new contexts yield two assignments / three abstentions; all 157,593
+other whole assignment rows and 178,740 previous predictions remain unchanged.
+Only five strings / 12,028 tokens / fifteen windows reach the original encoder,
+with no discarded tokens or repeated old inputs. Both complete saved-model
+replays pass, and all seven paired tables reconstruct independently for all
+fifty states and 139,317 observed-body contexts. The topic/paired galleries are
+`outputs/topic-inference-retained-text-2023-2024-v17/` and
+`outputs/topic-input-comparison-2023-2024-v15/`. Metadata inference is unchanged.
+
+Casebook v7 retains **109 contexts / 255 full views / 9,953,777 characters /
+604 verified literal spans / 21 blind assignments**. It has 345 artifacts and
+a complete 344-member research ZIP, with original state/session labels now
+visible on each context. Actual comparison records 33 matching assignments,
+68 model abstentions with proposals, three unresolved in both, four differing
+assigned topics and one model assignment without advisory consensus. All 74
+triage flags request independent human review; they are not established errors.
+
+Real Chromium checks 541 complete workspace bodies, all five new Virginia
+continued-action/edition/original-context proofs, 112 retained Bill Commons
+metadata proofs and 61 earlier NJ introduction proofs. Fifteen additional
+complete-state queries, fourteen decoded source SVGs and 22 exact workspace
+downloads pass. Casebook checks render all 255 complete UTF-8 texts and three
+exact downloads. Both suites pass desktop/mobile with zero JavaScript errors
+or external requests. Every helper exits; only the two inspected owned profiles
+are removed. Actual screenshots remain readable. No scientific, human, party,
+rights, report or public-integration gate is closed.
+
+Further bounded discovery retains one TrackBill robots request with a DNS
+transport stop and two deny-all StateNet/Lexis robots responses; no document
+request, retry or alternative route follows. All 21,153 retained Maryland corpus
+records have only `summary`/`text`/`title`, not newly recovered original source
+URLs or session metadata. These are bounded negative observations, not universal
+absence or additional fills.
+
+## Preceding independent-publication recovery: October 24, 2026
 
 New Bill Commons discovery captures all **80 published session records** through
 seven anonymous GETs and its advertised public OpenAPI through two more.
@@ -349,7 +393,7 @@ No reported missing body is filled with an ancillary document.
 
 The independent replay is now a reusable tracked CLI,
 `scripts/audit_cycle_topics.py`, rather than requiring session-private helpers.
-Actual current replay verifies every **178,740 source view / 157,598 original context**,
+Actual current replay verifies every **178,745 source view / 157,598 original context**,
 saved logits, token/window coverage, source-alternative consensus, original
 unknown fields, summary and manifest-bound gallery artifact. The complete
 research ZIP must contain **all 108 required input/prediction/producer members**;
@@ -357,8 +401,9 @@ rebinding a smaller manifest/ZIP does not make missing full text acceptable.
 An externally pinned independent token cache is opened read-only, with explicit
 missing-row failure and unchanged pre/post hashes. No encoder, label change or
 source/model promotion occurs. Receipt:
-`data/billcommons-combined-tracked-current-cycle-audit-20261024-v1.json`.
-The preceding v17, v16 and v15 replays remain sealed at
+`data/published-va-tracked-current-cycle-audit-20261024-v1.json`.
+The preceding v18, v17, v16 and v15 replays remain sealed at
+`data/billcommons-combined-tracked-current-cycle-audit-20261024-v1.json`,
 `data/nj-single-page-tracked-current-cycle-audit-20261024-v1.json`,
 `data/nj-context-tracked-current-cycle-audit-20261024-v1.json` and
 `data/tracked-current-cycle-audit-20261024-v2.json`.
