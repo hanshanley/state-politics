@@ -84,16 +84,16 @@ predictions remain unchanged. The actual run encodes only the 42 new strings,
 covering 536,323 tokens / 684 windows without discarded tokens or repeated
 old encoder inputs. No model or threshold changes.
 Local graphs and complete research downloads are in
-`outputs/recreated-2023-2024-v27/`,
+`outputs/recreated-2023-2024-v28/`,
 `outputs/topic-inference-retained-text-2023-2024-v14/` and
 `outputs/topic-input-comparison-2023-2024-v12/`.
-The unpublished full-text explorer is `data/preview-cycle-evidence-v32/`.
-The source gallery and explorer now contain all twenty archives and the
-sixteen additional NJ contexts. Completed full-text inference v16, independent
-saved-token/logit/consensus replay and the paired-input comparison use those
-same actual sources; metadata inference is unchanged.
-The newest 22-context source recovery is awaiting its separate v17 inference
-and refreshed galleries; the completed topic totals above remain v16.
+The unpublished full-text explorer is `data/preview-cycle-evidence-v33/`.
+The source gallery and explorer now contain all twenty-two archives and the
+latest 22-context NJ recovery. Completed full-text inference v16, independent
+saved-token/logit/consensus replay and the paired-input comparison still reflect
+the preceding twenty-archive snapshot; metadata inference is unchanged.
+The newest 22-context source recovery is undergoing separate v17 inference
+and topic-gallery refresh; the completed topic totals above remain v16.
 The tracked `scripts/audit_cycle_topics.py` independently replays the saved
 whole-source decisions and complete downloads offline without an encoder;
 see the [current-snapshot audit command](docs/REPRODUCIBILITY.md#current-snapshot-replay-versus-the-historical-analysis-audit).

@@ -88,17 +88,19 @@ report fields are preserved in
   --archive-text data/processed/billcam-provider-context-html-four-subject-20261023-v1 \
   --archive-text data/processed/nj-library-tail-context-text-20261024-v1 \
   --archive-text data/processed/nj-library-effective-context-text-20261024-v1 \
+  --archive-text data/processed/nj-library-single-page-context-text-20261024-v1 \
+  --archive-text data/processed/nj-library-printed-variant-context-text-20261024-v1 \
   --out-dir outputs/recreated-2023-2024-REPLAY
 ```
 
-The accepted local build is `outputs/recreated-2023-2024-v27/index.html`.
+The accepted local build is `outputs/recreated-2023-2024-v28/index.html`.
 The command above requires a fresh output directory. The bundle contains 14
-current evidence graphs in PNG and SVG, 13 complete chart-data CSVs, twenty-seven complete
+current evidence graphs in PNG and SVG, 13 complete chart-data CSVs, twenty-nine complete
 research-packet ZIPs and a hash manifest. It also archives the exact fifteen
 plotting/source-consumer producers and the recovered producers within their research packets.
-The current bundle has **twenty-seven** complete research ZIPs, 98 bound artifacts
-and manifest `33b948ac1643b366aa3996aa3234fbaaeb1c10cda407b06c873b1c13a398a1a6`.
-All twenty-five preceding source ZIPs remain byte-identical under independent replay.
+The current bundle has **twenty-nine** complete research ZIPs, 100 bound artifacts
+and manifest `10801f0dbae9f17f5371201d11400f4247399d553601bd6124113202241c5bab`.
+Independent reconciliation of the twenty-seven preceding source ZIPs is running.
 It uses saved evidence
 tables and existing development diagnostics without
 collecting sources or executing a classifier. Missing native channels remain
@@ -251,7 +253,41 @@ publisher-native or introduced version.
 
 ## Independent archived bill text
 
-### Current original-context New Jersey recovery and inference: October 24, 2026
+### Current residual New Jersey recovery: October 24, 2026
+
+The independently replayed single-page and printed-variant packets add
+**22 original contexts / 61 complete views / 1,144,522 policy characters**.
+Packets are `data/processed/nj-library-single-page-context-text-20261024-v1/`
+(3 contexts / 8 views; manifest
+`5298ca4dc50ee84b343573402db8e92443700f911838ecf6dfb7645c17aef256`)
+and `data/processed/nj-library-printed-variant-context-text-20261024-v1/`
+(19 contexts / 53 views; manifest
+`4cd0c22ae7581609aefe621175ece7d1a1623f45fd28976dfc82fdad1550b62d`).
+Both preserve all supplied source pages and complete original context/action
+references; the second exact original-row queue excludes the three first
+recoveries. Distinct context-evidence schemas preserve old profile behaviour.
+No source date, session, header, folio or policy text is repaired or invented.
+Unproven prefiling/session versions stay quarantined. Exact PDF/reader/prefix/
+content-stream witnesses expose retained codification and whitespace metadata.
+
+The combined receipt `data/nj-residual-context-packet-replay-20261024-v1.json`
+has SHA `94d0753c45a92a31306e56926f2e63aa74078421b7d283f97443dd0cb1cadf6c`.
+Actual availability is **139,266 / 157,598**, with **18,332** remaining gaps,
+including **1,600 NJ / 5,717 HI**. Twenty-two archives contain **10,811 contexts /
+13,257 views**. Actual explorer v33 has 791 artifacts, manifest
+`2c13118effff5ffa2c621dd3f11f7d8b2b9de65ec576c0f32fd86a242b75bd05`;
+the recreated source gallery v28 is described above.
+
+Full-text v17 inference and downstream topic/paired galleries are running
+separately against the unchanged frozen v16 model/cache and token v13.
+The new job has 178,628 supplied source views. Final decisions and genuine
+new encoder work must be measured, not projected. The preceding completed
+v16 snapshot and replay command above remain the current actual model baseline.
+All 61 new complete policy views have separate model-blind advisory reviews
+with 138 verified literal evidence spans; they are not human labels or training
+data. No source request, metadata replacement or approval promotion occurs.
+
+### Preceding original-context New Jersey recovery and inference: October 24, 2026
 
 Two offline packets add **16 original contexts / 42 complete reader views /
 2,000,505 policy characters**. The tail profile recovers six January 2024
@@ -282,7 +318,8 @@ Availability is **139,244 / 157,598**, with **18,354** remaining, including
 **1,622 NJ / 5,717 HI**. Twenty archives contain **10,789 contexts / 13,196 views**.
 Actual explorer v32 has 787 artifacts, manifest
 `8bff39638fa30416e33e3f394995932c96801965c456a208869597772befd78a`.
-Source gallery v27 is described above.
+Source gallery v27 remains the preserved preceding source snapshot; current v28
+is described above.
 
 Actual completed job
 `data/processed/cycle-topic-inference-retained-text-20261024-v16/` contains

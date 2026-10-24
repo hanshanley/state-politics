@@ -32,6 +32,15 @@ the 22-archive union has 10,811 contexts / 13,257 views. The nineteen new contex
 are receiving complete model-blind GPT-6.1 Sol review separately.
 Source/model/graph refreshes are separate; the completed inference and gallery
 counts below remain v16 until the next actual run finishes.
+Actual source builds are complete: explorer
+`data/preview-cycle-evidence-v33/` has 791 bound artifacts; gallery
+`outputs/recreated-2023-2024-v28/` has 100 artifacts, fourteen recreated
+PNG/SVG pairs and twenty-nine complete research ZIPs.
+All new complete texts are now blindly reviewed: 22 contexts / 61 views /
+1,144,522 characters / 138 exact spans, with zero frozen-human overlap.
+Together with preserved earlier reviews, the prepared casebook covers 58
+contexts / 138 views / 3,541,560 characters / 324 spans. Its new-model
+comparison is not executed before actual v17 assignments exist.
 There are no new source requests, date repairs or scientific/publication promotions.
 
 ## Original-context NJ recovery and completed output refresh: October 24, 2026
