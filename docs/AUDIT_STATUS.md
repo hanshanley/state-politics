@@ -4,6 +4,40 @@ The existing figures and analytical conclusions are **legacy, not revalidated fi
 The current changes repair infrastructure and preserve evidence; they do not certify a
 replacement classifier or establish complete contemporary coverage.
 
+## Continued independent-publication recovery: October 24, 2026
+
+New Bill Commons discovery captures all **80 published session records** through
+seven anonymous GETs and its advertised public OpenAPI through two more.
+The complete remaining 18,332-row original gap queue has seventy state/session
+groups. No literal or explicit canonical session identifier matches those
+remaining groups. The publisher nevertheless explicitly names Delaware's
+**153rd General Assembly**, matching fourteen original December 2024 prefilings.
+That observation is not an inferred annual-session alias or new cohort.
+
+One public batch and fourteen full-record requests retain all fourteen leads,
+including their original titles and the publisher's conflicting 2026 session
+start/end dates. Thirteen offered stored text documents are captured completely
+through thirteen further GETs: **37 total GETs**, without resetting any scope,
+native publisher requests, cookies, credentials or account access. Both the
+transparent project agent and relevant named-AI robots policy are checked.
+The received strings cover six original contexts; one HB 32 fiscal note is
+ancillary, not a bill-text fill. The other twelve strings total 301,396
+characters and retain their own printed Assembly, typed number and caption.
+Structural normalization/replay and downstream inference remain separate
+pending executions; these capture observations alone do not update coverage.
+The full source packet is
+`data/processed/billcommons-de-original-source-20261024-v1/`, manifest
+`1ee32f28ee064b20da9d867423e20868cbb70b990f7080dffc2fa1da1726f0ab`.
+
+A separate Nebraska state-publications-library discovery retains two exchanges
+and its initial catalog-parser failure. Offline review then finds named-AI
+robots exclusions not considered by the initial generic-agent check. The
+library scope is conservatively closed: no PDFs, followups, alternate route or
+admissions. Original captures and the explicit correction remain preserved in
+`data/ne-library-session-laws-conservative-access-stop-20261024-v1.json`.
+All earlier access stops, human controls and scientific/publication gates stay
+unchanged.
+
 ## Continued residual-source recovery: October 24, 2026
 
 A complete scan of 19,904 already-retained reader pages finds 22 still-missing
