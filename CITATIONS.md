@@ -353,7 +353,28 @@ state and LegiScan source URLs, local-copy paths, version IDs and stage/date
 claims. That metadata is not independently certified source-transfer history;
 neither those native URLs nor LegiScan's API/body endpoints were requested.
 
-### Current supplement: explicit original bill actions
+### Current supplement: finite public identity discovery
+
+A predeclared twenty-identity ordinary public search retains 24 successful
+result pages, then closes immediately on an explicit search-login HTTP 401.
+No denied result, login, new cookie session or alternate search route is
+requested. Only fifteen public document links already returned before
+that denial and their actual public cached-text links are followed with
+31 GETs, without cookies, accounts, APIs or native publisher requests.
+This recovers **15 original 2024 contexts / 16 complete views / 58,828
+characters**, with own printed state, 32nd Legislature/2024, typed number
+and caption matched to unchanged original fields.
+
+Packet: `data/processed/billcam-prestop-public-documents-html-20261023-v1/`,
+manifest `2e68a62ad0323c0d78daea5e2a823b0bb22bb47fba287e3b2971d4a4dbddd9cf`.
+The partial discovery, denial and all full public bodies are preserved,
+not converted into a complete twenty-query or statewide census.
+Controlled totals are now **3,081 GETs / 26 POSTs**, including failures;
+inherited responses are not counted again. The search-login stop and
+all other restrictions remain binding. Source recovery grants no rights,
+filing-time, party, model or publication approval.
+
+### Preceding supplement: explicit original bill actions
 
 Two offline packets recover **213 further original contexts / 229 unique
 complete views / 1,827,636 characters**:

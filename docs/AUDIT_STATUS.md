@@ -4,7 +4,65 @@ The existing figures and analytical conclusions are **legacy, not revalidated fi
 The current changes repair infrastructure and preserve evidence; they do not certify a
 replacement classifier or establish complete contemporary coverage.
 
-## Explicit original-action recovery and actual inference: October 23, 2026
+## Finite exact-identity recovery and updated inference: October 23, 2026
+
+Twenty original missing-bill identities are predeclared for ordinary public
+state/bill-number searches. After 24 successful result pages, the publisher
+returns an explicit search-login HTTP 401; discovery stops immediately,
+removes its anonymous cookie jar and makes no retry, new-session reset,
+login or alternate-search request. The denied endpoint remains closed.
+Only fifteen public bill links already returned in successful responses
+and their actually linked public cached-text pages are followed, using
+GETs without cookies, accounts, search/API or native requests.
+
+This separate 31-GET public-document scope recovers **15 original Hawaii
+2024 contexts / 16 complete views / 58,828 characters**. Own printed
+state, 32nd Legislature/2024, typed number and caption agree with every
+unchanged original context. Packet
+`data/processed/billcam-prestop-public-documents-html-20261023-v1/`,
+manifest `2e68a62ad0323c0d78daea5e2a823b0bb22bb47fba287e3b2971d4a4dbddd9cf`,
+supplements all fourteen preceding archives. The complete discovery,
+login denial, public responses and negative/missingness evidence survive;
+metadata-only leads are not counted as recovered bodies.
+
+Source availability is **139,206 / 157,598**, leaving **18,392** missing,
+including **5,739 HI**. Fifteen archival packets contain **10,751 contexts /
+13,117 views**. All prior source rows/partitions and 21 old complete
+source ZIPs remain unchanged. Current source outputs are v29 explorer /
+v24 graph gallery with 22 complete research ZIPs.
+
+Actual completed **v13**, frozen from v29 and extending completed v12
+read-only, processes **178,488 views**: **65,051 classified / 74,155
+abstained / 18,392 unavailable**. New contexts yield **eight assignments /
+seven abstentions**. All **157,583 other whole assignment rows** and
+**178,472 earlier predictions** are unchanged. Only **16 new strings /
+15,303 tokens / 23 windows** reach the unchanged encoder; old-input
+repeats are zero. Full independent token/logit/window/consensus/assignment
+and complete 108-member ZIP replay passes without encoder execution.
+
+Current body/topic and paired galleries are
+`outputs/topic-inference-retained-text-2023-2024-v11/` and
+`outputs/topic-input-comparison-2023-2024-v9/`. All 139,206 paired contexts
+and all seven comparison tables are independently reconstructed.
+Actual Chromium checks **284 complete bodies**, including all sixteen new
+ones and the preceding 229 carryover proofs, fifteen full-state queries,
+eighteen byte-identical downloads, fourteen SVGs and desktop/mobile layouts.
+JavaScript/external-request errors are zero and all helpers exit.
+Receipts are `data/identity-source-union-replay-20261023-v1.json`,
+`data/identity-assignment-reconciliation-20261023-v1.json`,
+`data/identity-complete-inference-replay-20261023-v1.json` and
+`data/identity-comparison-replay-20261023-v1.json`.
+Browser proof is `data/identity-browser-workspace-20261023-v1/receipt.json`.
+
+Controlled BillCam totals are **3,081 GETs / 26 POSTs**, including the
+search denial. No account restriction, earlier finite campaign or native
+stop is reopened. Two separately observed published-corpus carryover
+leads remain provisional, not new admissions; their existing source-view
+IDs require explicit context-specific handling before any future use.
+All independent-human, rights, party-time, filing-originality, scientific,
+report and publication gates remain open.
+
+## Preceding explicit original-action recovery and actual inference: October 23, 2026
 
 An opt-in offline proof recovers **213 further original Hawaii contexts /
 229 unique complete views / 1,827,636 characters**. Each requires its exact
