@@ -16,15 +16,22 @@ The preceding ten-context packet still replays exactly. All eight new texts
 receive model-blind advisory review with 22 mechanically verified literal spans;
 those proposals are not human gold or model replacements.
 
-A distinct printed-variant profile passes 103 source regressions and identifies
-the other nineteen contexts in complete retained-page diagnostics. It preserves
+A distinct printed-variant profile passes 103 source regressions and now builds
+and independently replays the other **nineteen contexts / 53 complete views /
+1,125,882 characters**. It preserves
 literal fifth/bracketed reprints and punctuation, quarantines bounded prefiling
 and unwitnessed-session versions without inferring dates or sessions, and uses
 exact PDF/page/prefix/content-stream witnesses for codification prologues and one
-whitespace separator. Every source page remains retained. These nineteen are
-**diagnostic candidates, not normalized source admissions** until their complete
-packet build and independent replay finish. Source/model/graph refreshes are
-separate; the completed inference and gallery counts below remain v16.
+whitespace separator. Every source page remains retained. Its manifest is
+`4cd0c22ae7581609aefe621175ece7d1a1623f45fd28976dfc82fdad1550b62d`.
+The combined receipt `data/nj-residual-context-packet-replay-20261024-v1.json`
+reconciles all **22 new contexts / 61 complete views / 1,144,522 characters**
+against exact original missing rows and v16 unavailable assignments.
+Source availability is **139,266 / 157,598**, with **18,332** remaining gaps;
+the 22-archive union has 10,811 contexts / 13,257 views. The nineteen new contexts
+are receiving complete model-blind GPT-6.1 Sol review separately.
+Source/model/graph refreshes are separate; the completed inference and gallery
+counts below remain v16 until the next actual run finishes.
 There are no new source requests, date repairs or scientific/publication promotions.
 
 ## Original-context NJ recovery and completed output refresh: October 24, 2026

@@ -27,7 +27,45 @@ not that the state has no data. Platform recovery is separate from the
 legislative status in this table; no state's operative-platform coverage is
 certified complete.
 
-## Latest original-context New Jersey library recovery
+## Latest residual New Jersey library recovery
+
+Two further independently replayed offline packets recover **22 additional
+original contexts / 61 complete views / 1,144,522 policy characters**. A distinct
+single-page profile recovers three contexts without treating a missing
+continuation page as proof of an incomplete bill. Complete own bodies/effective
+clauses, introduced statements and unambiguous boundaries remain mandatory.
+
+A separate printed-variant profile recovers nineteen more contexts. Literal
+bracketed/fifth reprints and `No,` punctuation are retained, not repaired.
+Fully bounded prefiling and unwitnessed-session versions remain quarantined
+without fabricated dates or sessions, while independently complete siblings
+survive. Exact PDF/per-reader page and prefix hashes bind four codification/
+folio prologues. One verified whitespace separator retains its original
+space/space-newline strings and physical content-stream proof outside policy
+inputs. No body, header or source character is inserted or silently cropped.
+
+Packets are `data/processed/nj-library-single-page-context-text-20261024-v1/`
+(3 contexts / 8 views / 18,640 characters; manifest
+`5298ca4dc50ee84b343573402db8e92443700f911838ecf6dfb7645c17aef256`)
+and `data/processed/nj-library-printed-variant-context-text-20261024-v1/`
+(19 contexts / 53 views / 1,125,882 characters; manifest
+`4cd0c22ae7581609aefe621175ece7d1a1623f45fd28976dfc82fdad1550b62d`).
+Both retain every supplied PDF/reader page and complete original reference
+inputs. The second queue excludes the three actual first recoveries.
+All 22 still-missing own-cover contexts identified in the finite retained-page
+scan are now recovered. This is not closure of all NJ legislative gaps.
+
+Source availability is **139,266 / 157,598**, with **18,332** remaining gaps,
+including **1,600 NJ / 5,717 HI**. Twenty-two archives contain
+**10,811 contexts / 13,257 views**. Proof:
+`data/nj-residual-context-packet-replay-20261024-v1.json`.
+Model v16 and preceding graphs remain the last completed downstream baseline;
+new source/model/gallery refreshes are separate executions. Three new contexts
+already have complete blinded advisory review; the other nineteen are under
+review, never human gold. There are no new source requests or scientific,
+party-time, human, rights, report, publication or public-integration promotions.
+
+## Preceding original-context New Jersey library recovery
 
 Two fresh offline packets recover **16 additional original contexts / 42 complete
 reader views / 2,000,505 policy characters**. The first fixes a hard-coded

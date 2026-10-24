@@ -61,15 +61,19 @@ contexts / 42 complete reader views / 2,000,505 policy characters**. Exact
 original introduction evidence supports January 2024 tail-session covers;
 bounded reprints and extraction-spacing fixes preserve all uncertain source
 alternatives, original dates and contradictory session-end metadata.
-Combined availability is **139,244 of 157,598 existing candidate contexts**, with
-**18,354 remaining gaps**. These are not certified unique-legislation or
+Two further independently replayed packets add **22 contexts / 61 complete
+views / 1,144,522 characters** using complete single-page and literal printed-
+variant evidence. Unproven prefiling/session variants remain quarantined, and
+source-scoped codification/whitespace proofs retain the original source strings.
+Combined source availability is **139,266 of 157,598 existing candidate contexts**,
+with **18,332 remaining gaps**. These are not certified unique-legislation or
 filing-cohort counts. Complete alternative views and
 original source metadata are retained. Source versions, archive extraction,
 research-corpus cleaning and classifications remain uncertified.
 The local graph bundle includes complete research downloads and an explicit
 remaining-text queue; see the [recovery commands](docs/REPRODUCIBILITY.md#independent-archived-bill-text).
 
-Completed provisional topic inference yields
+The last completed provisional topic-inference snapshot yields
 **89,950 assignments / 67,648 abstentions**; retained bodies yield
 **65,065 assignments / 74,179 abstentions / 18,354 unavailable bodies**
 across **178,567 full source alternatives**.
@@ -88,6 +92,8 @@ The source gallery and explorer now contain all twenty archives and the
 sixteen additional NJ contexts. Completed full-text inference v16, independent
 saved-token/logit/consensus replay and the paired-input comparison use those
 same actual sources; metadata inference is unchanged.
+The newest 22-context source recovery is awaiting its separate v17 inference
+and refreshed galleries; the completed topic totals above remain v16.
 The tracked `scripts/audit_cycle_topics.py` independently replays the saved
 whole-source decisions and complete downloads offline without an encoder;
 see the [current-snapshot audit command](docs/REPRODUCIBILITY.md#current-snapshot-replay-versus-the-historical-analysis-audit).
