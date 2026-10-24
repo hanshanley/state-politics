@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang="en">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>State politics: classification evidence</title>
+<link rel="stylesheet" href="classification-inspector.css">
+<script src="classification-inspector.js" defer></script>
+<main>
+<p class="eyebrow">LOCAL RESEARCH / UNPUBLISHED</p>
+<h1>Inspect the classification, not just the count</h1>
+<p class="lede">Compare the frozen unanimity decision with the separate strict-majority
+candidate. Neither is independently validated. Scores are uncalibrated model outputs,
+not confidence in a bill's true topic.</p>
+<p class="note">Blind reviewers must not inspect these predictions before annotation.
+This interface does not approve sources, training, party attribution or publication.</p>
+<p><a download href="research-data/complete_inference_and_majority_candidate.zip">Complete
+source inputs, predictions and candidate decisions (ZIP)</a> &middot;
+<a href="manifest.json">Integrity manifest</a> &middot; <a href="taxonomy.yml">Taxonomy</a></p>
+<p id="national" role="status">Loading the saved classification index...</p>
+<form id="filters">
+<label>State <select id="state" required disabled><option value="">Select a state</option></select></label>
+<label>Measure or title <input id="query" type="search" placeholder="Literal identifier or title"></label>
+<label>Decision slice <select id="slice">
+<option value="">All candidate contexts</option><option value="new">New majority assignments</option>
+<option value="source">Source disagreement or uncertainty</option>
+<option value="window">Within-document disagreement</option>
+<option value="model_rejected">Learned model rejection</option>
+<option value="uncertain">Other unresolved</option><option value="unavailable">No supplied text</option>
+<option value="excluded">Excluded source tests</option></select></label>
+<label>Majority topic <select id="topic"><option value="">All topics</option></select></label>
+<button type="submit">Apply filters</button>
+</form>
+<p id="status" role="status" aria-live="polite">Choose a state to inspect complete records.</p>
+<div class="controls"><button id="download" disabled>Download complete query records</button>
+<button id="previous" disabled>Previous page</button><span id="page"></span>
+<button id="next" disabled>Next page</button></div>
+<div class="scroll"><table id="results"><caption>Original and majority decisions; one row per original context</caption>
+<thead><tr><th>Measure</th><th>Title</th><th>Original</th><th>Majority candidate</th><th>Evidence</th></tr></thead>
+<tbody></tbody></table></div>
+<section id="detail" hidden tabindex="-1" aria-label="Complete classification evidence"></section>
+<details><summary>Complete state tables and no-JavaScript access</summary>
+<p>The tables contain every context, including unassigned and missing-text records.
+The source ZIP contains the complete original texts and predictions, not a metadata substitute.</p>
+<ul class="state-links">@@STATE_TABLES@@</ul></details>
+<noscript><p>The interactive inspector needs JavaScript and a server supporting byte ranges.
+Use the complete state tables and full research ZIP above without JavaScript.</p></noscript>
+</main>
+</html>

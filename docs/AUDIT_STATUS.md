@@ -4,6 +4,78 @@ The existing figures and analytical conclusions are **legacy, not revalidated fi
 The current changes repair infrastructure and preserve evidence; they do not certify a
 replacement classifier or establish complete contemporary coverage.
 
+## Per-bill classification evidence inspector: October 24, 2026
+
+The new local inspector covers **all 157,598 original contexts / 178,745 entire
+source alternatives**, not only the selected advisory cohort. Original
+unanimity decisions and the separate majority candidate appear side by side.
+Every scored source retains all **21 topic outputs plus learned rejection**,
+its complete selected model-input text, original source metadata, raw logits
+and all overlapping windows. Whole-document means and supporting-window means
+are explicitly different; conditional scores are not advertised as calibrated
+whole-bill confidence. The three source-test exclusions have no score vectors,
+and the 18,281 missing-text contexts have no invented source or title fallback.
+
+State, literal title/identifier, majority-topic and decision/disagreement
+filters operate on complete state indexes. Pagination does not cap query
+exports. Each exported context retains its entire original/candidate row and
+every complete source-input/prediction row. Raw JSON numeric lexemes survive
+export without JavaScript large-integer rounding; literal Unicode separators
+do not split physical JSONL records. SHA-bound byte ranges fetch only the
+selected complete evidence, rather than loading a state's entire corpus just
+to inspect one bill. Supplementary-Unicode offsets preserve Python source
+boundaries in the browser's UTF-16 strings.
+
+The saved bundle is `outputs/classification-inspector-2023-2024-v1/`.
+Its 162 artifacts include fifty complete indexes, fifty complete no-JavaScript
+state tables, exact original/candidate evidence JSONLs, the unchanged complete
+2,131,586,639-byte research ZIP and archived producers. The loopback workspace
+has an explicitly opted-in `/classifications/` mount with the existing
+manifest/Host/path/change guards and a warning to blind human reviewers.
+No public route or publication files change.
+
+Independent reconstruction imports neither new producer nor browser code.
+It checks **every context, source input, prediction, byte range and source
+hash**, all 2,516,915,316 retained model-input characters, all fifty state tables
+and every supplementary-Unicode boundary. Four source inputs contain
+supplementary characters; their offsets are not guessed from UTF-16 length.
+The observer and receipt are
+`data/verify_classification_inspector_20261024_v1.py` and
+`data/classification-inspector-independent-replay-20261024-v1.json`.
+Manifest SHA-256:
+`563e5ec146210c64eb7293f57d82ccbfedf2194caeccee337f20b9185c28f6aa`.
+
+Actual Chromium checks pass at desktop/mobile widths, with keyboard navigation,
+complete no-JavaScript tables, all four alternatives for a Nevada bill, a
+supplementary-Unicode source, all three scoreless exclusions and a missing
+body. The entire **15,384,142-character Ohio input** renders with its original
+SHA. All 22 displayed scores match saved values, and fourteen first/last
+window texts independently match their complete source spans, including the
+long document and supplementary-character boundary.
+
+Full-query exports retain all **154 Alaska contexts / 154 sources**, not the
+25-row page, and all **fifteen new-majority contexts / fifteen sources** under
+the active filter. Independent Python comparisons check every original field,
+unknown and full policy text in both actual browser downloads. The complete
+2,131,586,639-byte research ZIP also downloads byte-identically. There are no
+JavaScript errors or external page requests; helpers exit. Browser proof is
+`data/classification-inspector-browser-20261024-v3/receipt.json`; query proof is
+`data/classification-inspector-query-download-replay-20261024-v3.json`.
+
+The first observer incorrectly expected successive same-named exports to
+create different filenames in its shared download destination. Its timeout,
+source, retained fifteen-context filtered file and screenshots are preserved,
+not reported as a successful full-query check. Successor observers isolate
+each download destination; both complete query sets then pass without changing
+the application or dataset. Forty-two focused regressions pass. Existing site
+regressions have 134 passes and three optional browser-fixture skips, separate
+from the actual browser executions above.
+
+This is an inspection and evidence-access improvement, not another classifier
+experiment, a source fill or human adjudication. All original counts, scores,
+source alternatives, dates/nulls and approval gates remain unchanged.
+Source-provided AI annotations remain raw untrusted provenance, never gold.
+
 ## Longer-context and title/body experiments: October 24, 2026
 
 Both bounded experiments are complete, **not promoted**. The frozen checkpoint

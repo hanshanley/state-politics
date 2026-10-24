@@ -276,3 +276,65 @@ def test_topic_mount_rejects_unperformed_inference_or_claimed_approval(
     (root / "manifest.json").write_text(json.dumps(manifest))
     with pytest.raises(ValueError, match="complete unapproved provisional"):
         MODULE["bind_bundle"](root, "topics")
+
+
+@pytest.mark.parametrize(
+    ("header", "expected"),
+    [("bytes=0-3", (0, 3)), ("bytes=2-", (2, 9)), ("bytes=-3", (7, 9)),
+     ("bytes=8-999", (8, 9)), ("bytes=-99", (0, 9)), ("items=0-3", None),
+     ("bytes=0-1,4-5", None)],
+)
+def test_single_byte_range_shapes(header, expected):
+    assert MODULE["byte_range"](header, 10) == expected
+
+
+@pytest.mark.parametrize("header", ["bytes=10-", "bytes=3-2", "bytes=-0", "bytes=-",
+                                   "bytes=" + "9" * 100 + "-"])
+def test_invalid_or_unsatisfiable_ranges_fail(header):
+    with pytest.raises(ValueError):
+        MODULE["byte_range"](header, 10)
+
+
+def test_workspace_ranges_preserve_exact_bytes_heads_and_change_guards(
+    research_http, research_bundle
+):
+    address, root = research_http
+    url = address + "/evidence/index.html"
+    data = research_bundle[3]
+    with urllib.request.urlopen(
+        urllib.request.Request(url, headers={"Range": "bytes=3-12"})
+    ) as response:
+        assert response.status == 206 and response.read() == data[3:13]
+        assert response.headers["Content-Range"] == f"bytes 3-12/{len(data)}"
+        assert response.headers["Content-Length"] == "10"
+    with urllib.request.urlopen(
+        urllib.request.Request(url, method="HEAD", headers={"Range": "bytes=3-12"})
+    ) as response:
+        assert response.status == 200 and response.read() == b""
+        assert response.headers["Content-Length"] == str(len(data))
+    with pytest.raises(urllib.error.HTTPError) as caught:
+        urllib.request.urlopen(urllib.request.Request(url, headers={"Range": "bytes=999999-"}))
+    assert caught.value.code == 416
+    assert caught.value.headers["Content-Range"] == f"bytes */{len(data)}"
+    (root / "index.html").write_bytes(data + b"changed")
+    with pytest.raises(urllib.error.HTTPError) as caught:
+        urllib.request.urlopen(urllib.request.Request(url, headers={"Range": "bytes=0-1"}))
+    assert caught.value.code == 409
+
+
+def test_classification_mount_is_explicit_and_remains_unapproved(research_bundle):
+    root, _, manifest, _ = research_bundle
+    packet = {
+        "schema": "state-politics.classification-inspector.v1",
+        "status": "complete_local_inspector_not_validated_findings",
+        "scientific_certification": "not_performed", "model_execution": False,
+        "model_promotion": False, "publication": False,
+        "model_input_approved": False, "analytical_admission": False,
+        "artifacts": manifest["outputs"],
+    }
+    (root / "manifest.json").write_text(json.dumps(packet))
+    MODULE["bind_bundle"](root, "classifications")
+    packet["model_promotion"] = True
+    (root / "manifest.json").write_text(json.dumps(packet))
+    with pytest.raises(ValueError, match="unpublished, unapproved"):
+        MODULE["bind_bundle"](root, "classifications")

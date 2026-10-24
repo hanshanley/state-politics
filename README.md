@@ -123,6 +123,17 @@ These are uncalibrated model diagnostics, not additional classifications,
 accuracy estimates or policy-prevalence estimates; see the
 [full-score diagnostic contract](docs/REPRODUCIBILITY.md#full-score-diagnostics-without-new-classifications).
 
+The local **classification evidence inspector** makes individual assignments
+auditable at `outputs/classification-inspector-2023-2024-v1/index.html`.
+All 157,598 contexts retain both original and majority decisions. Each supplied
+source exposes all 22 topic/rejection scores, its complete policy text and every
+overlapping window. Whole-document scores stay distinct from conditional
+supporting-window scores. State/title/topic/disagreement filters export **all
+matching complete contexts, source inputs and predictions**, not just the page
+or metadata. Fifty complete state tables also work without JavaScript.
+Run it through the [bound local workspace](docs/REPRODUCIBILITY.md#per-bill-classification-evidence-inspector);
+the interactive view requires byte-range serving. No result is promoted.
+
 A separate **strict-majority candidate** now assigns **78,300 contexts**,
 adding **13,209** while preserving all 65,091 previously accepted topics.
 It requires more than half of all window votes, then more than half of distinct

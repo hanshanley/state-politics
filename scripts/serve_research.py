@@ -9,6 +9,7 @@ import hashlib
 import json
 import mimetypes
 import os
+import re
 import shutil
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path, PurePosixPath
@@ -22,6 +23,7 @@ MANIFESTS = {
     "sources": "manifest.json",
     "graphs": "manifest.json",
     "topics": "manifest.json",
+    "classifications": "manifest.json",
 }
 HOME = b"""<!doctype html><html lang="en"><meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
@@ -44,6 +46,7 @@ This separate frame does not replace calendar eligibility or invent filing dates
 @@SOURCE_INVENTORY@@
 @@RECOVERED_GRAPHS@@
 @@TOPIC_GRAPHS@@
+@@CLASSIFICATIONS@@
 <article><h2><a href="/review/human-review.html">Model-blind human review</a></h2>
 <p>Unseen complete inputs and source alternatives, rubric-guided annotation,
 local drafts, and independently validated exports. No predictions are shown.</p></article>
@@ -68,9 +71,31 @@ def sha256(path):
     return digest.hexdigest()
 
 
+def byte_range(value, size):
+    """Return one inclusive byte interval, or ignore unsupported range forms."""
+    if not value or not value.startswith("bytes=") or "," in value or not size:
+        return None
+    match = re.fullmatch(r"bytes=([0-9]{0,20})-([0-9]{0,20})", value)
+    if not match or not any(match.groups()):
+        raise ValueError("invalid byte range")
+    left, right = match.groups()
+    if not left:
+        count = int(right)
+        if not count:
+            raise ValueError("empty suffix range")
+        return max(0, size - count), size - 1
+    start, end = int(left), int(right) if right else size - 1
+    if start >= size or end < start:
+        raise ValueError("unsatisfiable byte range")
+    return start, min(end, size - 1)
+
+
 def bind_bundle(directory, kind):
     directory = directory.absolute()
-    roots = (ROOT / "data", ROOT / "outputs") if kind in {"graphs", "topics"} else (ROOT / "data",)
+    roots = (
+        (ROOT / "data", ROOT / "outputs")
+        if kind in {"graphs", "topics", "classifications"} else (ROOT / "data",)
+    )
     if (
         kind not in MANIFESTS
         or not directory.is_dir()
@@ -87,7 +112,21 @@ def bind_bundle(directory, kind):
     if not manifest_path.is_file() or manifest_path.resolve() != manifest_path:
         raise ValueError("missing or linked research manifest")
     manifest = json.loads(manifest_path.read_bytes())
-    if kind == "topics":
+    if kind == "classifications":
+        if (
+            manifest.get("schema") != "state-politics.classification-inspector.v1"
+            or manifest.get("status") != "complete_local_inspector_not_validated_findings"
+            or manifest.get("scientific_certification") != "not_performed"
+            or any(
+                manifest.get(flag) is not False for flag in (
+                    "model_execution", "model_promotion", "publication",
+                    "model_input_approved", "analytical_admission",
+                )
+            )
+        ):
+            raise ValueError("unpublished, unapproved offline classification inspector required")
+        files = manifest["artifacts"]
+    elif kind == "topics":
         if (
             manifest.get("status") != "complete_provisional_topic_graphs_not_scientific_validation"
             or manifest.get("scientific_certification") != "not_performed"
@@ -244,6 +283,15 @@ before submitting their independent annotations.</p></article>"""
                 b"@@TOPIC_GRAPHS@@",
                 topics if "topics" in self.bundles else b"",
             )
+            classifications = b"""<article><h2><a href="/classifications/index.html">
+Classification evidence inspector</a></h2><p>Original and majority decisions
+side by side, all topic/rejection scores, overlapping windows and complete
+source records. The majority rule is not promoted or independently validated.
+Blind reviewers must not inspect these predictions before annotation.</p></article>"""
+            home = home.replace(
+                b"@@CLASSIFICATIONS@@",
+                classifications if "classifications" in self.bundles else b"",
+            )
             self.send_response(200)
             self.send_header("Content-Type", "text/html; charset=utf-8")
             self.send_header("Content-Length", str(len(home)))
@@ -287,18 +335,43 @@ before submitting their independent annotations.</p></article>"""
             if stat_fingerprint(os.fstat(handle.fileno())) != expected:
                 self.send_error(409, "Bound artifact changed before serving")
                 return
-            self.send_response(200)
+            interval = None
+            if send_body and not self.headers.get("If-Range"):
+                try:
+                    interval = byte_range(self.headers.get("Range"), expected[0])
+                except ValueError:
+                    self.send_response(416)
+                    self.send_header("Content-Range", f"bytes */{expected[0]}")
+                    self.send_header("Content-Length", "0")
+                    self.end_headers()
+                    return
+            start, end = interval if interval else (0, expected[0] - 1)
+            self.send_response(206 if interval else 200)
             self.send_header(
                 "Content-Type",
                 mimetypes.guess_type(name)[0] or "application/octet-stream",
             )
-            self.send_header("Content-Length", str(expected[0]))
+            self.send_header("Content-Length", str(end - start + 1))
+            self.send_header("Accept-Ranges", "bytes")
+            if interval:
+                self.send_header("Content-Range", f"bytes {start}-{end}/{expected[0]}")
             self.send_header("Cache-Control", "no-store")
             self.send_header("X-Content-Type-Options", "nosniff")
             self.end_headers()
             if send_body:
                 try:
-                    shutil.copyfileobj(handle, self.wfile, length=1024 * 1024)
+                    if interval:
+                        handle.seek(start)
+                        remaining = end - start + 1
+                        while remaining:
+                            chunk = handle.read(min(remaining, 1024 * 1024))
+                            if not chunk:
+                                self.log_error("Bound artifact ended during byte-range download")
+                                break
+                            self.wfile.write(chunk)
+                            remaining -= len(chunk)
+                    else:
+                        shutil.copyfileobj(handle, self.wfile, length=1024 * 1024)
                 except (BrokenPipeError, ConnectionResetError):
                     self.log_error("Client disconnected during bound artifact download: %s", name)
 
@@ -320,6 +393,10 @@ def main(argv=None):
         help="Optional complete provisional topic graphs; not blind-review inputs",
     )
     parser.add_argument("--port", type=int, default=8765)
+    parser.add_argument(
+        "--classifications", type=Path,
+        help="Optional original/majority evidence inspector; not blind-review inputs",
+    )
     args = parser.parse_args(argv)
     bundles = {
         kind: bind_bundle(getattr(args, kind), kind)

@@ -18,6 +18,89 @@ be bound explicitly before regenerated outputs can support the narrowed study.
 
 ## Recreated graph bundle
 
+### Per-bill classification evidence inspector
+
+The inspector exposes individual source-backed model decisions without
+promoting the majority rule or altering any prediction. Build a new bundle
+from the externally pinned majority gallery and the same original v19 job:
+
+```bash
+HF_HUB_OFFLINE=1 TRANSFORMERS_OFFLINE=1 \
+  .venv/bin/python -I -B scripts/build_classification_inspector.py \
+  --job data/processed/cycle-topic-inference-retained-text-20261024-v19 \
+  --majority-gallery outputs/topic-majority-2023-2024-v1 \
+  --majority-sha256 ea392fae9eed070199e47d894f6a93c15ac4bc4af1e4aeb470676b565afe6845 \
+  --out-dir outputs/classification-inspector-2023-2024-REPLAY
+```
+
+The completed actual bundle is `outputs/classification-inspector-2023-2024-v1/`.
+Serve it through the existing loopback workspace; do not open the interactive
+page with `file://` or a server that silently ignores byte-range requests:
+
+```bash
+.venv/bin/python -I -B scripts/serve_research.py \
+  --evidence data/preview-cycle-evidence-v35 \
+  --sessions data/processed/verified-session-comparison-2023-2024-v3 \
+  --review data/human-review-native-20261021-v3 \
+  --sources data/processed/native-inventory-catalog-2023-2024-v2 \
+  --graphs outputs/recreated-2023-2024-v30 \
+  --topics outputs/topic-inference-retained-text-2023-2024-v17 \
+  --classifications outputs/classification-inspector-2023-2024-v1 \
+  --port 8765
+```
+
+The workspace home links to `/classifications/index.html`. This is an explicit
+optional research mount, not a public deployment or a blind-review input.
+The server hashes every whitelisted artifact before binding, refuses changed
+or linked files and foreign Hosts, and serves exact single byte ranges with
+their original content length. HEAD remains a full-representation header
+request. Unsupported/invalid ranges never become a metadata-only record.
+
+All 157,598 contexts preserve the original assignment plus separate majority
+status/topic. State/topic/title/disagreement filters and pagination never
+change the eligible source population. Source details show the complete
+22-output whole-document and supporting-window vectors, including learned
+rejection, all saved overlapping-window votes and complete window text.
+Supporting scores are not whole-document confidence; no output is
+renormalized away. Excluded sources have no scores, missing bodies have no
+synthetic text, and empty state cohorts do not establish zero activity.
+
+The fifty state JSON indexes contain SHA-bound byte references into complete
+copied input/context/prediction JSONLs. The browser verifies every fetched
+record and selected text hash before displaying it. UTF-16 spans and
+supplementary-character positions preserve exact Python source offsets.
+The complete query export is one physical JSONL row per matched context:
+`schema`, the entire raw `context`, and all complete raw `inputs` and
+`predictions`. It streams every matching row, not just the current page, and
+retains original unknowns, full policy texts and large-integer lexemes.
+An unavailable/corrupt source aborts the export; no partial or metadata-only
+download substitutes for it.
+
+Fifty complete `states/STATE.html` tables and the unchanged original full-source
+majority research ZIP provide no-JavaScript access. The ZIP is
+`research-data/complete_inference_and_majority_candidate.zip`, SHA-256
+`a837710c39ece99608b22ad2c7bd47eb53e9d014d3fdd4ff0ac7cc8b528cdeec`.
+It contains all original full inference members and candidate outputs, not the
+inspector's derived index in place of research data. The inspector's own
+162-artifact manifest is
+`563e5ec146210c64eb7293f57d82ccbfedf2194caeccee337f20b9185c28f6aa`.
+Independent all-record/range/Unicode replay is
+`data/classification-inspector-independent-replay-20261024-v1.json`.
+Actual browser proof is
+`data/classification-inspector-browser-20261024-v3/receipt.json`.
+It checks desktop/mobile and keyboard/no-JavaScript behavior, the complete
+15,384,142-character Ohio input, supplementary Unicode, source alternatives,
+all scoreless exclusions and fourteen complete first/last window texts.
+The actual 154-context full-state and fifteen-context filtered query downloads
+are independently compared field-for-field with their entire original
+contexts, source inputs and predictions in
+`data/classification-inspector-query-download-replay-20261024-v3.json`.
+The complete research ZIP is also byte-identical. The failed first observer
+is preserved; successful observers use separate directories for successive
+same-named downloads rather than overwriting the earlier export.
+No source collection, encoder, training, annotation, calibration or promotion
+runs during the build; all scientific/publication gates remain closed.
+
 ### Longer-context and cross-input experiments
 
 The selected-cohort pilot is a separate inference experiment, not a population

@@ -9,6 +9,7 @@ data/*
 /outputs/topic-score-diagnostics-*/
 /outputs/topic-majority-*/
 /outputs/topic-context-pilot-*/
+/outputs/classification-inspector-*/
 /outputs/assistant-advisory-topic-review-*/
 
 # Large source corpora and dumps
