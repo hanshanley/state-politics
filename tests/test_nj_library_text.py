@@ -81,6 +81,154 @@ def test_partial_single_page_is_preserved_but_never_admitted():
     assert introduced["quarantined_same_bill_source_versions"][0]["page_ordinals"] == [2]
 
 
+def test_printed_variants_preserve_fifth_reprints_commas_and_own_reprint_covers():
+    texts = _texts()
+    texts[1] = texts[1].replace("No. 100 (First", "No, 100 (Fifth")
+    texts[2] = texts[2].replace("[1R]", "[5R]")
+    texts[7] = "[First Reprint]\n" + texts[7].replace(
+        "As introduced.", "As reported with amendments.",
+    )
+    texts[8] = texts[8].replace("S200 OTHER", "S200 [1R]").replace(
+        "\nSTATEMENT\nFull second bill é.", "",
+    )
+    with pytest.raises(ValueError):
+        nj.separate_versions(
+            texts, context_qualified_introductions={}, qualify_supported_years=True,
+            allow_single_page_versions=True,
+        )
+    versions, dispositions = nj.separate_versions(
+        texts, context_qualified_introductions={}, qualify_supported_years=True,
+        allow_single_page_versions=True, allow_printed_variants=True,
+    )
+    assert len(versions) == 3 and len(dispositions) == len(texts)
+    enacted, _, reprint = versions
+    assert "No, 100 (Fifth Reprint)" in enacted["printed_version"]["text"]
+    assert enacted["continuations"][0]["printed_label"] == " [5R]"
+    assert reprint["printed_cover_reprint"] == "First"
+    assert reprint["printed_cover_reprint_span"]["text"] == "[First Reprint]"
+    assert reprint["statement_spans"] == []
+    assert reprint["continuations"][0]["printed_label"] == " [1R]"
+
+
+def test_printed_variants_still_reject_wrong_continuation_reprint():
+    texts = _texts()
+    texts[1] = texts[1].replace("No. 100 (First", "No, 100 (Fifth")
+    with pytest.raises(ValueError, match="enacted printed reprint mismatch"):
+        nj.separate_versions(
+            texts, context_qualified_introductions={}, qualify_supported_years=True,
+            allow_single_page_versions=True, allow_printed_variants=True,
+        )
+
+
+def test_prefiling_versions_remain_unproven_without_discarding_complete_siblings():
+    texts = _texts()
+    texts[3] = texts[3].replace(
+        "INTRODUCED MAY 8, 2023", "PRE-FILED FOR INTRODUCTION IN THE 2022 SESSION",
+    )
+    with pytest.raises(ValueError, match="absent printed introduced year"):
+        nj.separate_versions(
+            texts, context_qualified_introductions={}, qualify_supported_years=True,
+            allow_single_page_versions=True,
+        )
+    versions, dispositions = nj.separate_versions(
+        texts, context_qualified_introductions={}, qualify_supported_years=True,
+        allow_single_page_versions=True, allow_printed_variants=True,
+    )
+    assert {version["identifier"] for version in versions} == {"S 200"}
+    assert len(dispositions) == len(texts)
+    for index in (1, 2, 3, 4, 5):
+        unproven = dispositions[index]["unproven_version"]
+        assert unproven["reason"] == "unproven_original_introduction_date"
+        assert unproven["policy_input_admitted"] is False
+        assert unproven["printed_prefiling_evidence"]["original_introduction_date"] is None
+        assert unproven["printed_prefiling_evidence"]["literal_span"]["text"] == "2022"
+
+
+def test_source_scoped_enacted_prologue_is_literal_and_rejects_changed_bytes():
+    texts = _texts()
+    prefix = "§1\nC.1:2-3\n"
+    texts[1] = prefix + texts[1].split("\n", 1)[1]
+    witnesses = {2: {
+        "source_pdf_sha256": "a" * 64, "page_text_sha256": nj._sha(texts[1].encode()),
+        "prefix_sha256": nj._sha(prefix.encode()), "role": "printed_statutory_codification",
+    }}
+    with pytest.raises(ValueError, match="ambiguous enacted-version prologue"):
+        nj.separate_versions(
+            texts, context_qualified_introductions={}, qualify_supported_years=True,
+            allow_single_page_versions=True, allow_printed_variants=True,
+        )
+    versions, _ = nj.separate_versions(
+        texts, context_qualified_introductions={}, qualify_supported_years=True,
+        allow_single_page_versions=True, allow_printed_variants=True,
+        enacted_prologue_witnesses=witnesses,
+    )
+    assert versions[0]["source_scoped_enacted_prologue"]["literal_prefix_span"]["text"] == prefix
+    for changed in (
+        {**witnesses[2], "prefix_sha256": "0" * 64},
+        {**witnesses[2], "page_text_sha256": "0" * 64},
+        {**witnesses[2], "role": "unproven_report"},
+    ):
+        with pytest.raises(ValueError, match="pinned enacted prologue"):
+            nj.separate_versions(
+                texts, context_qualified_introductions={}, qualify_supported_years=True,
+                allow_single_page_versions=True, allow_printed_variants=True,
+                enacted_prologue_witnesses={2: changed},
+            )
+
+
+def test_unwitnessed_enacted_version_is_quarantined_without_losing_own_cover_siblings():
+    texts = _texts()
+    texts[1] = texts[1].replace("No. 100", "No. 999")
+    texts[2] = texts[2].replace("A100", "A999")
+    with pytest.raises(ValueError, match="missing same-bill session cover witness"):
+        nj.separate_versions(texts)
+    versions, dispositions = nj.separate_versions(
+        texts, context_qualified_introductions={}, qualify_supported_years=True,
+        allow_single_page_versions=True, allow_printed_variants=True,
+    )
+    assert {version["identifier"] for version in versions} == {"A 100", "S 200"}
+    for index in (1, 2):
+        rejected = dispositions[index]["unproven_version"]
+        assert rejected["identifier"] == "A 999"
+        assert rejected["policy_input_admitted"] is False
+        assert rejected["reason"] == "unproven_same_bill_session_witness"
+        assert rejected["unproven_session_evidence"]["session_identifier"] is None
+        assert rejected["unproven_session_evidence"]["candidate_own_cover_spans"] == []
+
+
+def test_pinned_whitespace_separator_is_retained_without_becoming_policy_text():
+    texts = _texts()
+    texts.insert(1, " \n")
+    witness = {
+        "source_pdf_sha256": "b" * 64, "page_ordinal": 2,
+        "page_text_sha256": nj._sha(texts[1].encode()),
+        "content_stream_sha256": "c" * 64, "only_whitespace_text_operations": True,
+    }
+    with pytest.raises(ValueError, match="complete nonempty reader pages"):
+        nj.separate_versions(texts)
+    versions, dispositions = nj.separate_versions(
+        texts, context_qualified_introductions={}, qualify_supported_years=True,
+        allow_single_page_versions=True, allow_printed_variants=True,
+        whitespace_page_witnesses={2: witness},
+    )
+    assert len(dispositions) == len(texts)
+    assert dispositions[1]["disposition"] == "retained_verified_whitespace_page"
+    assert dispositions[1]["text_preserved_in_full"] is True
+    assert all(2 not in version["page_ordinals"] for version in versions)
+    assert all(version["retained_source_scoped_whitespace_pages"] == [witness]
+               for version in versions)
+    for changed in (
+        {**witness, "page_text_sha256": "0" * 64},
+        {**witness, "only_whitespace_text_operations": False},
+    ):
+        with pytest.raises(ValueError, match="pinned whitespace-page"):
+            nj.separate_versions(
+                texts, context_qualified_introductions={}, qualify_supported_years=True,
+                allow_single_page_versions=True, allow_printed_variants=True,
+                whitespace_page_witnesses={2: changed},
+            )
+
+
 @pytest.fixture
 def work():
     # Never use pytest's system temporary directory for source or packet files.

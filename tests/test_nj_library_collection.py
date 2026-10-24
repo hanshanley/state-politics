@@ -197,6 +197,7 @@ def _source(work, *, texts=None, status="immutable_first16_subset", duplicate_by
 
 @pytest.mark.parametrize("context_schema", [
     nj.CONTEXT_SCHEMA, nj.CONTEXT_ALL_DATES_SCHEMA, nj.CONTEXT_SINGLE_PAGE_SCHEMA,
+    nj.CONTEXT_PRINTED_VARIANTS_SCHEMA,
 ])
 def test_context_evidence_recovers_tail_and_preserves_exact_original_subset(
     work, monkeypatch, context_schema,
@@ -206,9 +207,16 @@ def test_context_evidence_recovers_tail_and_preserves_exact_original_subset(
             "approved May 9, 2023", "approved January 16, 2024",
         ) for text in _pages()
     ]
-    if context_schema == nj.CONTEXT_SINGLE_PAGE_SCHEMA:
+    if context_schema in {nj.CONTEXT_SINGLE_PAGE_SCHEMA, nj.CONTEXT_PRINTED_VARIANTS_SCHEMA}:
         texts[2] += "2. This act shall take effect immediately.\nComplete final policy.\n"
         del texts[3]
+    if context_schema == nj.CONTEXT_PRINTED_VARIANTS_SCHEMA:
+        texts[2] = texts[2].replace("No. 100 (First", "No, 100 (Fifth")
+        texts[3] = "[First Reprint]\n" + texts[3].replace(
+            "As introduced.", "As reported with amendments.",
+        )
+        texts[4] = texts[4].replace("A100 MEMBER", "A100 [1R]")
+        texts[5] = texts[5].replace("A100 MEMBER", "A100 [1R]")
     source, queue, _, originals = _source(work, texts=texts)
     original = {
         **originals[0], "session_end_date": "2023-12-31",
@@ -274,9 +282,12 @@ def test_context_evidence_recovers_tail_and_preserves_exact_original_subset(
     count_name = ("context_qualified_tail_views" if context_schema == nj.CONTEXT_SCHEMA
                   else "context_qualified_original_date_views")
     assert len(views) == manifest["counts"][count_name] == 4
-    if context_schema == nj.CONTEXT_SINGLE_PAGE_SCHEMA:
+    if context_schema in {nj.CONTEXT_SINGLE_PAGE_SCHEMA, nj.CONTEXT_PRINTED_VARIANTS_SCHEMA}:
         assert manifest["counts"]["accepted_complete_single_page_views"] == 2
         assert sum(view["source_version"].get("complete_single_page_policy_version", False)
+                   for view in views) == 2
+    if context_schema == nj.CONTEXT_PRINTED_VARIANTS_SCHEMA:
+        assert sum(view["source_version"].get("printed_cover_reprint") == "First"
                    for view in views) == 2
     assert all(view["source_version"]["original_context_introduction_proof"]
                ["original_context"]["session_end_date"] == "2023-12-31" for view in views)

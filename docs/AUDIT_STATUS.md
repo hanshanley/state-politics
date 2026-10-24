@@ -4,6 +4,29 @@ The existing figures and analytical conclusions are **legacy, not revalidated fi
 The current changes repair infrastructure and preserve evidence; they do not certify a
 replacement classifier or establish complete contemporary coverage.
 
+## Continued residual-source recovery: October 24, 2026
+
+A complete scan of 19,904 already-retained reader pages finds 22 still-missing
+original contexts with their own printed bill covers. A separately gated
+single-page profile has now **built and independently replayed three contexts /
+eight complete views / 18,640 characters**: A 5565, S 3971 and S 4156.
+Packet `data/processed/nj-library-single-page-context-text-20261024-v1/` has
+manifest `5298ca4dc50ee84b343573402db8e92443700f911838ecf6dfb7645c17aef256`.
+The preceding ten-context packet still replays exactly. All eight new texts
+receive model-blind advisory review with 22 mechanically verified literal spans;
+those proposals are not human gold or model replacements.
+
+A distinct printed-variant profile passes 103 source regressions and identifies
+the other nineteen contexts in complete retained-page diagnostics. It preserves
+literal fifth/bracketed reprints and punctuation, quarantines bounded prefiling
+and unwitnessed-session versions without inferring dates or sessions, and uses
+exact PDF/page/prefix/content-stream witnesses for codification prologues and one
+whitespace separator. Every source page remains retained. These nineteen are
+**diagnostic candidates, not normalized source admissions** until their complete
+packet build and independent replay finish. Source/model/graph refreshes are
+separate; the completed inference and gallery counts below remain v16.
+There are no new source requests, date repairs or scientific/publication promotions.
+
 ## Original-context NJ recovery and completed output refresh: October 24, 2026
 
 Two separately replayed offline library packets add **16 original contexts /

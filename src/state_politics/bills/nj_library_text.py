@@ -255,16 +255,26 @@ def _identifier(kind, number):
     return ("A" if kind.upper() == "ASSEMBLY" else "S") + " " + str(int(number))
 
 
-_COVER = re.compile(
+_COVER_PREFIX = (
     r"\A[ \t\r\n]*(?:\(Sponsorship Updated As Of:[^\r\n]+\)[ \t\r\n]*)?"
+)
+_COVER_IDENTITY = (
     r"(?P<bill>(?P<kind>ASSEMBLY|SENATE),[ \t]+No\.[ \t]*(?P<number>[1-9][0-9]*))"
     r"[ \t]*\r?\n[ \t\r\n]*(?P<state>STATE OF NEW JERSEY)"
     r"[ \t]*\r?\n[ \t\r\n]*(?P<session>[0-9]+(?:st|nd|rd|th)[ \t]+LEGISLATURE)"
 )
+_COVER = re.compile(_COVER_PREFIX + _COVER_IDENTITY)
+_REPRINT_COVER = re.compile(
+    _COVER_PREFIX
+    + r"(?:(?P<cover_reprint>\[(?P<reprint>First|Second|Third|Fourth|Fifth) Reprint\])"
+      r"[ \t\r\n]*)?"
+    + _COVER_IDENTITY
+)
+_REPRINT_NUMBERS = {"First": "1", "Second": "2", "Third": "3", "Fourth": "4", "Fifth": "5"}
 
 
 def printed_identity(text, page_ordinal=1, *, context_qualified_introductions=None,
-                     qualify_supported_years=False):
+                     qualify_supported_years=False, allow_printed_variants=False):
     """Require an own bill cover, not a fiscal/committee/checklist or cited header."""
     require(type(text) is str, "literal complete cover string required")
     require(context_qualified_introductions is None
@@ -273,18 +283,28 @@ def printed_identity(text, page_ordinal=1, *, context_qualified_introductions=No
     require(type(qualify_supported_years) is bool
             and (not qualify_supported_years or context_qualified_introductions is not None),
             "extended original-date profile requires explicit context evidence")
-    own = _COVER.match(text)
+    require(type(allow_printed_variants) is bool
+            and (not allow_printed_variants or qualify_supported_years),
+            "printed variants require the explicit extended profile")
+    own = (_REPRINT_COVER if allow_printed_variants else _COVER).match(text)
     require(own is not None, "not an own typed bill cover")
     require(own["session"] == "220th LEGISLATURE", "wrong printed session")
-    intro = _one(
+    prefile = None
+    if allow_printed_variants and not re.search(r"(?m)^[ \t]*INTRODUCED\b", text):
+        prefile = _one(
+            r"(?m)^[ \t]*PRE-FILED FOR INTRODUCTION IN THE (20[0-9]{2}) SESSION[ \t]*$",
+            text, "literal prefiling session year",
+        )
+        require(prefile[1] in {"2022", "2023", "2024"}, "unsupported printed prefiling year")
+    intro = prefile if prefile is not None else _one(
         r"(?m)^[ \t]*INTRODUCED[ \t]+[A-Z]+[ \t]+[0-9]{1,2},[ \t]+(20[0-9]{2})[ \t]*$",
         text, "introduced year",
     )
     context_proof = None
     identifier = _identifier(own["kind"], own["number"])
-    if intro[1] not in {"2022", "2023"} or (
+    if prefile is None and (intro[1] not in {"2022", "2023"} or (
         qualify_supported_years and identifier in context_qualified_introductions
-    ):
+    )):
         qualified = (context_qualified_introductions or {}).get(identifier)
         allowed = {"2022", "2023", "2024"} if qualify_supported_years else {"2024"}
         require(intro[1] in allowed and type(qualified) is dict
@@ -371,18 +391,30 @@ def printed_identity(text, page_ordinal=1, *, context_qualified_introductions=No
             "incomplete own cover/version")
     result = {
         "state": "NJ", "identifier": _identifier(own["kind"], own["number"]),
-        "session_identifier": "220", "printed_cover_year": intro[1],
+        "session_identifier": "220",
+        "printed_cover_year": None if prefile is not None else intro[1],
         "identity_spans": [
             _match_span(text, own, "printed_own_bill_header", page_ordinal, "bill"),
             _match_span(text, own, "printed_state", page_ordinal, "state"),
             _match_span(text, own, "printed_session", page_ordinal, "session"),
         ],
-        "printed_year_span": _match_span(text, intro, "printed_cover_year", page_ordinal, 1),
+        "printed_year_span": _match_span(
+            text, intro, "printed_prefiling_session_year" if prefile is not None
+            else "printed_cover_year", page_ordinal, 1,
+        ),
         "version_span": _span(text, version_start, version_end,
                               "printed_version_text", page_ordinal),
     }
     if context_proof is not None:
         result["original_context_introduction_proof"] = context_proof
+    if prefile is not None:
+        result["printed_prefiling_session_year"] = prefile[1]
+        result["unproven_original_introduction_date"] = True
+    if allow_printed_variants and own["reprint"] is not None:
+        result["printed_cover_reprint"] = own["reprint"]
+        result["printed_cover_reprint_span"] = _match_span(
+            text, own, "printed_own_cover_reprint", page_ordinal, "cover_reprint",
+        )
     return result
 
 
@@ -407,17 +439,39 @@ def _continuation(text, page):
     }
 
 
-def _enacted(text, page, *, extended_identity_profile=False):
+def _enacted(text, page, *, extended_identity_profile=False, allow_printed_variants=False,
+             prologue_witness=None):
+    number_prefix = r"No[.,]" if allow_printed_variants else r"No\."
+    ordinals = "First|Second|Third|Fourth|Fifth" if allow_printed_variants else "First|Second|Third|Fourth"
     law = re.search(
         r"(?m)^P\.L\.[ \t]+(?P<year>20[0-9]{2}),[ \t]+CHAPTER[ \t]+[0-9]+,"
         r"[ \t]+approved[^\r\n]+\r?\n"
-        r"(?P<bill>(?P<kind>Assembly|Senate),[ \t]+No\.[ \t]+(?P<number>[1-9][0-9]*))"
-        r"(?P<version>[ \t]*\((?P<reprint>First|Second|Third|Fourth) Reprint\))?"
+        rf"(?P<bill>(?P<kind>Assembly|Senate),[ \t]+{number_prefix}[ \t]+(?P<number>[1-9][0-9]*))"
+        rf"(?P<version>[ \t]*\((?P<reprint>{ordinals}) Reprint\))?"
         r"[ \t]*(?:\r?\n|\Z)", text,
     )
     if law is None or law["reprint"] == "Fourth" and not extended_identity_profile:
         return None
-    require(text.lstrip().startswith("EXPLANATION")
+    witnessed_prologue = None
+    if prologue_witness is not None:
+        require(allow_printed_variants and type(prologue_witness) is dict
+                and set(prologue_witness) == {
+                    "source_pdf_sha256", "page_text_sha256", "prefix_sha256", "role",
+                }
+                and all(type(value) is str for value in prologue_witness.values())
+                and re.fullmatch(r"[0-9a-f]{64}", prologue_witness["source_pdf_sha256"])
+                and prologue_witness["role"] in {
+                    "printed_initial_folio", "printed_statutory_codification",
+                }
+                and _sha(text.encode()) == prologue_witness["page_text_sha256"]
+                and _sha(text[:law.start()].encode()) == prologue_witness["prefix_sha256"],
+                "pinned enacted prologue bytes or source witness changed")
+        witnessed_prologue = {
+            **prologue_witness,
+            "literal_prefix_span": _span(text, 0, law.start(), "source_enacted_prologue", page),
+            "no_source_text_inserted_cropped_or_rewritten": True,
+        }
+    require((text.lstrip().startswith("EXPLANATION") or witnessed_prologue is not None)
             and "STATEMENT TO" not in text[:law.end()]
             and "LEGISLATIVE HISTORY CHECKLIST" not in text[:law.end()],
             "ambiguous enacted-version prologue")
@@ -427,13 +481,16 @@ def _enacted(text, page, *, extended_identity_profile=False):
     # Chapter 187's pypdf string has "of New Jer sey:"; preserve that exact span.
     state = _one(r"of New Jer ?sey:", text, "enacted state")
     version = _match_span(text, law, "printed_enacted_version_header", page)
-    return {
+    result = {
         "identifier": _identifier(law["kind"], law["number"]),
         "state_span": _match_span(text, state, "printed_enacting_state", page),
         "bill_span": _match_span(text, law, "printed_own_bill_header", page, "bill"),
         "version_span": version, "printed_law_year": law["year"],
         "reprint": f"{law['reprint']} Reprint" if law["version"] else None,
     }
+    if witnessed_prologue is not None:
+        result["source_scoped_enacted_prologue"] = witnessed_prologue
+    return result
 
 
 def _ancillary(text):
@@ -483,7 +540,8 @@ def _checklist_only(page_texts):
 
 def separate_versions(page_texts, *, context_qualified_introductions=None,
                       qualify_supported_years=False, unlabelled_page_bridges=None,
-                      allow_single_page_versions=False):
+                      allow_single_page_versions=False, allow_printed_variants=False,
+                      enacted_prologue_witnesses=None, whitespace_page_witnesses=None):
     """Return complete contiguous own versions and all-page dispositions.
 
     Unknown boundaries, orphan typed continuations, or contradictory folios are
@@ -493,7 +551,7 @@ def separate_versions(page_texts, *, context_qualified_introductions=None,
     of the same bill carry the corresponding source-completeness warning.
     """
     require(type(page_texts) is list and bool(page_texts)
-            and all(type(text) is str and text.strip() for text in page_texts),
+            and all(type(text) is str for text in page_texts),
             "complete nonempty reader pages required")
     require(unlabelled_page_bridges is None
             or qualify_supported_years and type(unlabelled_page_bridges) is dict,
@@ -501,17 +559,48 @@ def separate_versions(page_texts, *, context_qualified_introductions=None,
     require(type(allow_single_page_versions) is bool
             and (not allow_single_page_versions or qualify_supported_years),
             "single-page versions require the explicit extended profile")
+    require(type(allow_printed_variants) is bool
+            and (not allow_printed_variants or qualify_supported_years),
+            "printed variants require the explicit extended profile")
+    require(enacted_prologue_witnesses is None or (
+        allow_printed_variants and type(enacted_prologue_witnesses) is dict
+    ), "enacted prologue witnesses require the explicit printed-variant profile")
+    require(whitespace_page_witnesses is None or (
+        allow_printed_variants and type(whitespace_page_witnesses) is dict
+    ), "whitespace-page witnesses require the explicit printed-variant profile")
+    whitespace = whitespace_page_witnesses or {}
+    for ordinal, witness in whitespace.items():
+        require(type(ordinal) is int and 1 <= ordinal <= len(page_texts)
+                and type(witness) is dict and set(witness) == {
+                    "source_pdf_sha256", "page_ordinal", "page_text_sha256",
+                    "content_stream_sha256", "only_whitespace_text_operations",
+                }
+                and witness["page_ordinal"] == ordinal
+                and witness["only_whitespace_text_operations"] is True
+                and all(type(witness[key]) is str
+                        and re.fullmatch(r"[0-9a-f]{64}", witness[key]) for key in (
+                            "source_pdf_sha256", "page_text_sha256", "content_stream_sha256",
+                        ))
+                and not page_texts[ordinal - 1].strip()
+                and _sha(page_texts[ordinal - 1].encode()) == witness["page_text_sha256"],
+                "pinned whitespace-page bytes or physical-content witness changed")
+    require(all(text.strip() or i + 1 in whitespace for i, text in enumerate(page_texts)),
+            "complete nonempty reader pages required")
+    cover_pattern = _REPRINT_COVER if allow_printed_variants else _COVER
     covers = {
         i: printed_identity(
             text, i + 1, context_qualified_introductions=context_qualified_introductions,
             qualify_supported_years=qualify_supported_years,
+            allow_printed_variants=allow_printed_variants,
         )
-        for i, text in enumerate(page_texts) if _COVER.match(text)
+        for i, text in enumerate(page_texts) if cover_pattern.match(text)
     }
     enacted = {
         i: value for i, text in enumerate(page_texts)
         if (value := _enacted(
             text, i + 1, extended_identity_profile=qualify_supported_years,
+            allow_printed_variants=allow_printed_variants,
+            prologue_witness=(enacted_prologue_witnesses or {}).get(i + 1),
         )) is not None
     }
     if not covers and not enacted and _checklist_only(page_texts):
@@ -526,6 +615,7 @@ def separate_versions(page_texts, *, context_qualified_introductions=None,
     versions, selected, quarantined, unproven_versions = [], {}, {}, []
     for index in sorted(covers.keys() | enacted.keys()):
         require(index not in selected and index not in quarantined, "overlapping own versions")
+        unproven_session = False
         kind = "bill_cover" if index in covers else "enacted_version"
         if kind == "bill_cover":
             identity = covers[index]
@@ -538,15 +628,28 @@ def separate_versions(page_texts, *, context_qualified_introductions=None,
             first = enacted[index]
             identifier = first["identifier"]
             candidates = own_by_id[identifier]
-            require(len(candidates) == 1, "ambiguous or missing same-bill session cover witness")
-            _, cover = candidates[0]
+            if allow_printed_variants:
+                introduced = [(i, witness) for i, witness in candidates
+                              if "printed_cover_reprint" not in witness]
+                candidates = introduced or candidates
+            require(len(candidates) == 1 or allow_printed_variants,
+                    "ambiguous or missing same-bill session cover witness")
+            if len(candidates) == 1:
+                _, cover = candidates[0]
+            else:
+                cover = None
+                unproven_session = True
             witnesses = [first["bill_span"], first["state_span"]]
-            external = cover["identity_spans"]
+            external = cover["identity_spans"] if cover is not None else []
             version = first["version_span"]
             printed_year = first["printed_law_year"]
-        context_proof = (identity if kind == "bill_cover" else cover).get(
+        context_witness = identity if kind == "bill_cover" else cover
+        context_proof = context_witness.get(
             "original_context_introduction_proof",
-        )
+        ) if context_witness is not None else None
+        unproven_introduction = context_witness.get(
+            "unproven_original_introduction_date", False,
+        ) if context_witness is not None else False
         ordinals = [index + 1]
         continuations = []
         page_bridges = []
@@ -598,10 +701,13 @@ def separate_versions(page_texts, *, context_qualified_introductions=None,
                     None: [], "First Reprint": ["1"],
                     "Second Reprint": ["2"], "Third Reprint": ["3"],
                     "Fourth Reprint": ["4"],
+                    "Fifth Reprint": ["5"],
                 }[enacted[index]["reprint"]]
                 require(reprints == expected, "enacted printed reprint mismatch")
             else:
-                require(not re.search(r"\[[0-9]+R\]", continuation["printed_label"]),
+                expected = ([_REPRINT_NUMBERS[identity["printed_cover_reprint"]]]
+                            if identity.get("printed_cover_reprint") else [])
+                require(re.findall(r"\[([0-9]+)R\]", continuation["printed_label"]) == expected,
                         "introduced cover/continuation version mismatch")
             require(cursor not in selected and cursor not in quarantined,
                     "overlapping continuation pages")
@@ -634,7 +740,9 @@ def separate_versions(page_texts, *, context_qualified_introductions=None,
             text = page_texts[ordinal - 1]
             for match in re.finditer(r"(?m)^[ \t]*STATEMENT[ \t]*(?:[0-9]+[ \t]*)?$", text):
                 statements.append(_match_span(text, match, "own_bill_statement", ordinal))
-        statement_complete = kind != "bill_cover" or bool(statements)
+        statement_complete = (kind != "bill_cover"
+                              or bool(identity.get("printed_cover_reprint"))
+                              or bool(statements))
         require(qualify_supported_years or statement_complete,
                 "introduced bill missing its complete statement")
         if cursor == len(page_texts):
@@ -646,15 +754,34 @@ def separate_versions(page_texts, *, context_qualified_introductions=None,
             require(reason != "unselected_ancillary_or_unresolved_page",
                     "ambiguous bill/ancillary boundary")
             boundary = {"reason": reason, "next_page_ordinal": cursor + 1}
-        if not body_complete or not statement_complete:
+        if not body_complete or not statement_complete or unproven_introduction or unproven_session:
             unproven = {
                 "identifier": identifier, "kind": kind, "page_ordinals": ordinals,
                 "printed_version": version, "boundary": boundary,
-                "reason": ("unproven_complete_policy_body_or_effective_clause"
+                "reason": ("unproven_same_bill_session_witness" if unproven_session else
+                           "unproven_original_introduction_date"
+                           if unproven_introduction else
+                           "unproven_complete_policy_body_or_effective_clause"
                            if not body_complete else "unproven_complete_introduced_statement"),
                 "entire_extracted_page_strings_and_original_pdf_retained": True,
                 "policy_input_admitted": False,
             }
+            if unproven_session:
+                unproven["unproven_session_evidence"] = {
+                    "identity_spans": witnesses,
+                    "candidate_own_cover_spans": [
+                        witness["identity_spans"] for _, witness in candidates
+                    ],
+                    "session_identifier": None, "no_session_inferred": True,
+                }
+            if unproven_introduction:
+                witness = identity if kind == "bill_cover" else cover
+                unproven["printed_prefiling_evidence"] = {
+                    "printed_prefiling_session_year": witness["printed_prefiling_session_year"],
+                    "literal_span": witness["printed_year_span"],
+                    "original_introduction_date": None,
+                    "no_introduction_date_inferred": True,
+                }
             unproven_versions.append(unproven)
             for ordinal in ordinals:
                 require(ordinal - 1 not in selected and ordinal - 1 not in quarantined,
@@ -671,6 +798,9 @@ def separate_versions(page_texts, *, context_qualified_introductions=None,
         }
         if context_proof is not None:
             item["original_context_introduction_proof"] = context_proof
+        if kind == "bill_cover" and identity.get("printed_cover_reprint"):
+            item["printed_cover_reprint"] = identity["printed_cover_reprint"]
+            item["printed_cover_reprint_span"] = identity["printed_cover_reprint_span"]
         if section_effective is not None:
             item["section_specific_effective_clause_evidence"] = {
                 "scope": "complete_contiguous_version_text",
@@ -685,6 +815,10 @@ def separate_versions(page_texts, *, context_qualified_introductions=None,
             }
         if page_bridges:
             item["unlabelled_page_bridges"] = page_bridges
+        if kind == "enacted_version" and enacted[index].get("source_scoped_enacted_prologue"):
+            item["source_scoped_enacted_prologue"] = enacted[index]["source_scoped_enacted_prologue"]
+        if whitespace:
+            item["retained_source_scoped_whitespace_pages"] = list(whitespace.values())
         if len(ordinals) == 1:
             item["complete_single_page_policy_version"] = True
         versions.append(item)
@@ -697,6 +831,15 @@ def separate_versions(page_texts, *, context_qualified_introductions=None,
         if related:
             version["quarantined_same_bill_source_versions"] = related
     for index, text in enumerate(page_texts):
+        if index + 1 in whitespace:
+            require(index not in selected and index not in quarantined,
+                    "verified whitespace page overlaps a policy version")
+            dispositions.append({
+                "page_ordinal": index + 1, "disposition": "retained_verified_whitespace_page",
+                "version_ordinal": None, "text_preserved_in_full": True,
+                "policy_input_admitted": False, "source_witness": whitespace[index + 1],
+            })
+            continue
         require(index in selected or index in quarantined or _continuation(text, index + 1) is None,
                 "orphan printed bill continuation; no guessing")
         if index in quarantined:

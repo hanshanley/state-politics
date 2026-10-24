@@ -52,6 +52,7 @@ SOURCE_STATUSES = {
 CONTEXT_SCHEMA = "state-politics.original-nj-tail-introductions.v1"
 CONTEXT_ALL_DATES_SCHEMA = "state-politics.original-nj-introduction-contexts.v1"
 CONTEXT_SINGLE_PAGE_SCHEMA = "state-politics.original-nj-single-page-contexts.v1"
+CONTEXT_PRINTED_VARIANTS_SCHEMA = "state-politics.original-nj-printed-variants-contexts.v1"
 ORIGINAL_CONTEXTS_SHA256 = "854ecd4e37ba2f160c8dc46fca92f9b47bbcf29c82939a7726855eaaea304431"
 ORIGINAL_EXTRACTION_SHA256 = "9a3555e5194ac3d45ab30c4107df4f720ad40f3ce85e040fa5336138d8ee8a29"
 UNLABELLED_PAGE_BRIDGES = {
@@ -72,7 +73,81 @@ UNLABELLED_PAGE_BRIDGES = {
         },
     },
 }
+PRINTED_PROLOGUE_WITNESSES = {
+    "d1f6a58c2b05ee0c35b4151c888c8968ffe397073f779f72fd9af2ae49a4939b": {
+        "page_ordinal": 4, "role": "printed_statutory_codification",
+        "readers": {
+            "pypdf": (
+                "1b0df46f32f0220c09a4f523418855ff59765cfe808456f0f0a65ee9db346f18",
+                "0537303fb71bc094021c3dd796f9b6e06ce8cd6570bf94a741a35686a6210874",
+            ),
+            "pymupdf": (
+                "7aa182a4a72ae97a8a89fc78ee0175a26a3e8668a2e2590dd00ae458db3a60a7",
+                "c6eb0f7696927b243f16f941f2905dfe3eff296fb1155bcf239b5ff0376d2429",
+            ),
+        },
+    },
+    "bfa88a5cbd001625f63a69f65166359544c1f11305c41ffab57fe507c58c64bf": {
+        "page_ordinal": 3, "role": "printed_initial_folio",
+        "readers": {
+            "pypdf": (
+                "46460c930d4f91be01fe3b8464191736c3928ddefa1a7c305cb57e4ac755d73b",
+                "67249cba0e648265eecb495ffeb2590be30e7deff6e4b98d3e02c24c681b8d3a",
+            ),
+            "pymupdf": (
+                "3b6b43079e223663c80c3f9614ad547d4f8615b5c5e0106fafb225abcb36cdf8",
+                "67249cba0e648265eecb495ffeb2590be30e7deff6e4b98d3e02c24c681b8d3a",
+            ),
+        },
+    },
+    "b537e0cd0952ff2df641155cfadec712eb620d3821a1471dd60bd17881339392": {
+        "page_ordinal": 3, "role": "printed_statutory_codification",
+        "readers": {
+            "pypdf": (
+                "b2cbc9681bef72c781e95d80a0443b919a5c815f84736d48c2f6347d13a008ec",
+                "bab9e1aaeeb5ad6ffa1dcfa42a4c2a311383738e34297f65a743b1320e670238",
+            ),
+            "pymupdf": (
+                "438f1d1e4ef9a2bbdb6d81cbdffc09d220ba989d4b58d442d916e240af5b8a7d",
+                "5eddb19ac43dd2f9a02630fba645e6df12c4283b915a99e04195eda12c3d7443",
+            ),
+        },
+    },
+    "5c35773602636c587f0bdc353f67d740e77c214e4d5468d7f37eaf2354130350": {
+        "page_ordinal": 3, "role": "printed_statutory_codification",
+        "readers": {
+            "pypdf": (
+                "00f62969825ddc8e5f50e210ffbc5f6f2756532252b160e3183d5ab654757cfa",
+                "afdce198dbbe5debf2d42ed507ef258891c3b3b3d7100e427253e7e54c600c98",
+            ),
+            "pymupdf": (
+                "5259540a29dc1948d2ca9777e2b88e2e4f414a0ea1259d36a14763fcf00284eb",
+                "d8433ac3988d892228918cddeac5b1e9ce4c5ec7e5d81d9302dcd3cea7febc96",
+            ),
+        },
+    },
+}
+VERIFIED_WHITESPACE_PAGES = {
+    "d1f6a58c2b05ee0c35b4151c888c8968ffe397073f779f72fd9af2ae49a4939b": {
+        "page_ordinal": 3,
+        "content_stream_sha256": "19c1732cc891de7b50e72c6ff693d6292a09157090e38786f74359745f4b8513",
+        "readers": {
+            "pypdf": "36a9e7f1c95b82ffb99743e0c5c4ce95d83c9a430aac59f84ef3cbfab6145068",
+            "pymupdf": "e16f1596201850fd4a63680b27f603cb64e67176159be3d8ed78a4403fdb1700",
+        },
+    },
+}
 SEALED_PRODUCERS = {
+    "5298ca4dc50ee84b343573402db8e92443700f911838ecf6dfb7645c17aef256": {
+        "producer/nj_library_collection.py": {
+            "sha256": "f6b5bc86751f9b8b966e2738669f1fb03817c578ddfa764210c63edabbdab2b8",
+            "bytes": 71296,
+        },
+        "producer/nj_library_text.py": {
+            "sha256": "cd553e50fe15c258428de12b42285ad12852758d3d2fefad581227573a546174",
+            "bytes": 67376,
+        },
+    },
     "81771d07dc9f41a79547193e26e220bfa71015e57d912eb587ad749373d426ab": {
         "producer/nj_library_collection.py": {
             "sha256": "11808e71439a442f5b3140077b3e2f1f8f7e0bf2ba2c1403dbcabddac356948c",
@@ -519,8 +594,27 @@ def _source(source, manifest_sha256):
 
 def _separate(page_rows, *, context_qualified_introductions=None,
               qualify_supported_years=False, source_pdf_sha256=None,
-              allow_single_page_versions=False):
-    if any(p["errors"] or type(p["text"]) is not str or not p["text"].strip()
+              allow_single_page_versions=False, allow_printed_variants=False):
+    whitespace = None
+    if allow_printed_variants and source_pdf_sha256 in VERIFIED_WHITESPACE_PAGES:
+        profile = VERIFIED_WHITESPACE_PAGES[source_pdf_sha256]
+        require(bool(page_rows) and len({row["reader"] for row in page_rows}) == 1,
+                "one complete reader required for a pinned whitespace page")
+        page = next((row for row in page_rows
+                     if row["page_ordinal"] == profile["page_ordinal"]), None)
+        expected = profile["readers"][page_rows[0]["reader"]]
+        require(page is not None and not page["errors"] and type(page["text"]) is str
+                and not page["text"].strip()
+                and legacy._sha(page["text"].encode()) == expected,
+                "pinned whitespace page or physical-content witness changed")
+        whitespace = {profile["page_ordinal"]: {
+            "source_pdf_sha256": source_pdf_sha256,
+            "page_ordinal": profile["page_ordinal"], "page_text_sha256": expected,
+            "content_stream_sha256": profile["content_stream_sha256"],
+            "only_whitespace_text_operations": True,
+        }}
+    if any(p["errors"] or type(p["text"]) is not str or (
+           not p["text"].strip() and p["page_ordinal"] not in (whitespace or {}))
            for p in page_rows):
         return [], [{
             "page_ordinal": p["page_ordinal"], "disposition": "quarantined_reader",
@@ -529,6 +623,17 @@ def _separate(page_rows, *, context_qualified_introductions=None,
         } for p in page_rows], "reader_error_or_empty_page_no_ocr_or_substitution"
     try:
         bridges = None
+        prologues = None
+        if allow_printed_variants and source_pdf_sha256 in PRINTED_PROLOGUE_WITNESSES:
+            witness = PRINTED_PROLOGUE_WITNESSES[source_pdf_sha256]
+            require(bool(page_rows) and len({row["reader"] for row in page_rows}) == 1,
+                    "one complete reader required for a pinned enacted prologue")
+            page_sha, prefix_sha = witness["readers"][page_rows[0]["reader"]]
+            prologues = {witness["page_ordinal"]: {
+                "source_pdf_sha256": source_pdf_sha256,
+                "page_text_sha256": page_sha, "prefix_sha256": prefix_sha,
+                "role": witness["role"],
+            }}
         if qualify_supported_years and source_pdf_sha256 in UNLABELLED_PAGE_BRIDGES:
             profile = UNLABELLED_PAGE_BRIDGES[source_pdf_sha256]
             require(bool(page_rows) and len({row["reader"] for row in page_rows}) == 1,
@@ -548,6 +653,9 @@ def _separate(page_rows, *, context_qualified_introductions=None,
             qualify_supported_years=qualify_supported_years,
             unlabelled_page_bridges=bridges,
             allow_single_page_versions=allow_single_page_versions,
+            allow_printed_variants=allow_printed_variants,
+            enacted_prologue_witnesses=prologues,
+            whitespace_page_witnesses=whitespace,
         )
     except ValueError as exc:
         prefix = "incompatible NJ library archive: "
@@ -682,6 +790,7 @@ def _context_introductions(directory, manifest_sha256):
     require(set(manifest) == {"schema", "artifacts"}
             and manifest["schema"] in {
                 CONTEXT_SCHEMA, CONTEXT_ALL_DATES_SCHEMA, CONTEXT_SINGLE_PAGE_SCHEMA,
+                CONTEXT_PRINTED_VARIANTS_SCHEMA,
             }
             and set(manifest["artifacts"]) == names
             and _tree(directory) == names | {"manifest.json"},
@@ -703,7 +812,7 @@ def _context_introductions(directory, manifest_sha256):
             "actions do not match the complete original extraction")
     contexts, seen = {}, set()
     years = (("2022-", "2023-", "2024-") if manifest["schema"] in {
-        CONTEXT_ALL_DATES_SCHEMA, CONTEXT_SINGLE_PAGE_SCHEMA,
+        CONTEXT_ALL_DATES_SCHEMA, CONTEXT_SINGLE_PAGE_SCHEMA, CONTEXT_PRINTED_VARIANTS_SCHEMA,
     } else ("2024-",))
     with (directory / "contexts.jsonl").open("rb") as stream:
         for line in stream:
@@ -766,7 +875,7 @@ def _gap_queue(source, queue_path, queue_sha256, *, allow_original_subset=False)
 
 def _replay(source, queue_path, source_sha256, queue_sha256, *,
             context_qualified_introductions=None, qualify_supported_years=False,
-            allow_single_page_versions=False):
+            allow_single_page_versions=False, allow_printed_variants=False):
     source_manifest, batch, ledger = _source(source, source_sha256)
     ledger_name = _ledger_name(source)
     gap = _gap_queue(
@@ -822,6 +931,7 @@ def _replay(source, queue_path, source_sha256, queue_sha256, *,
                     qualify_supported_years=qualify_supported_years,
                     source_pdf_sha256=entry["pdf_sha256"],
                     allow_single_page_versions=allow_single_page_versions,
+                    allow_printed_variants=allow_printed_variants,
                 )
             structures[reader] = [
                 (v["identifier"], v["kind"], v["page_ordinals"], v["boundary"])
@@ -998,6 +1108,18 @@ def _replay(source, queue_path, source_sha256, queue_sha256, *,
                 row["source_version"].get("complete_single_page_policy_version") is True
                 for row in views
             )
+        if allow_printed_variants:
+            report["limits"]["printed_variants"] = (
+                "Explicit printed-variant context profile only. Literal bracketed own "
+                "reprint covers, fifth reprints and No, punctuation are preserved, not "
+                "rewritten. Printed reprint labels must agree on every continuation; "
+                "enacted witnesses prefer a unique independently printed introduced cover. "
+                "Exact pinned codification prefixes remain literal. Prefiling covers supply "
+                "no inferred introduction date and remain quarantined with their dependent versions. "
+                "Bounded enacted versions without a unique same-bill session witness remain "
+                "quarantined without an inferred session. A source-scoped whitespace separator "
+                "is retained with exact PDF/page/content-stream hashes, never inserted into policy text."
+            )
     if ledger_name == "request-ledger.jsonl":
         prefix = legacy._jsonl(source / "seed-request-ledger.jsonl")
         counts["retained_inherited_prefix_records"] = len(prefix)
@@ -1052,6 +1174,7 @@ def build_nj_collection(source_directory, gap_queue, out_directory, *,
             "context evidence requires both a directory and external manifest SHA256")
     qualified, context_inventory, qualify_supported_years = None, {}, False
     allow_single_page_versions = False
+    allow_printed_variants = False
     if context_evidence is not None:
         context_evidence = legacy._root(context_evidence)
         require(not context_evidence.is_relative_to(out) and not out.is_relative_to(context_evidence),
@@ -1061,9 +1184,12 @@ def build_nj_collection(source_directory, gap_queue, out_directory, *,
         )
         context_schema = legacy._json(context_evidence / "manifest.json")["schema"]
         qualify_supported_years = context_schema in {
-            CONTEXT_ALL_DATES_SCHEMA, CONTEXT_SINGLE_PAGE_SCHEMA,
+            CONTEXT_ALL_DATES_SCHEMA, CONTEXT_SINGLE_PAGE_SCHEMA, CONTEXT_PRINTED_VARIANTS_SCHEMA,
         }
-        allow_single_page_versions = context_schema == CONTEXT_SINGLE_PAGE_SCHEMA
+        allow_single_page_versions = context_schema in {
+            CONTEXT_SINGLE_PAGE_SCHEMA, CONTEXT_PRINTED_VARIANTS_SCHEMA,
+        }
+        allow_printed_variants = context_schema == CONTEXT_PRINTED_VARIANTS_SCHEMA
     _gap_queue(source, queue, queue_sha, allow_original_subset=qualified is not None)
     source_names = set(source_manifest["artifacts"]) | {"manifest.json"}
     before = {name: legacy._binding(source / name) for name in sorted(source_names)}
@@ -1080,7 +1206,8 @@ def build_nj_collection(source_directory, gap_queue, out_directory, *,
                                         source_sha, queue_sha,
                                         context_qualified_introductions=qualified,
                                         qualify_supported_years=qualify_supported_years,
-                                        allow_single_page_versions=allow_single_page_versions)
+                                        allow_single_page_versions=allow_single_page_versions,
+                                        allow_printed_variants=allow_printed_variants)
     for name, rows in products.items():
         legacy._write_rows(out / name, rows)
     pq.write_table(contexts, out / "context_inventory.parquet")
@@ -1177,13 +1304,17 @@ def load_nj_collection(root, metadata=None, *, source_manifest_sha256=None,
             previous_all_dates = SEALED_PRODUCERS[
                 "81771d07dc9f41a79547193e26e220bfa71015e57d912eb587ad749373d426ab"
             ]["producer/nj_library_text.py"]
+            previous_single_page = SEALED_PRODUCERS[
+                "5298ca4dc50ee84b343573402db8e92443700f911838ecf6dfb7645c17aef256"
+            ]["producer/nj_library_text.py"]
             require(expected in (
                 legacy._binding(path), legacy.STRICT_2023_PRODUCER,
-                previous_tail, previous_all_dates,
+                previous_tail, previous_all_dates, previous_single_page,
             ),
                     "historical extraction dependency changed")
     qualified, context_inventory, qualify_supported_years = None, {}, False
     allow_single_page_versions = False
+    allow_printed_variants = False
     if "context_introduction_evidence_sha256" in manifest:
         context_sha = _hash(manifest["context_introduction_evidence_sha256"])
         if context_evidence_sha256 is not None:
@@ -1194,9 +1325,12 @@ def load_nj_collection(root, metadata=None, *, source_manifest_sha256=None,
         )
         context_schema = legacy._json(directory / "context-evidence/manifest.json")["schema"]
         qualify_supported_years = context_schema in {
-            CONTEXT_ALL_DATES_SCHEMA, CONTEXT_SINGLE_PAGE_SCHEMA,
+            CONTEXT_ALL_DATES_SCHEMA, CONTEXT_SINGLE_PAGE_SCHEMA, CONTEXT_PRINTED_VARIANTS_SCHEMA,
         }
-        allow_single_page_versions = context_schema == CONTEXT_SINGLE_PAGE_SCHEMA
+        allow_single_page_versions = context_schema in {
+            CONTEXT_SINGLE_PAGE_SCHEMA, CONTEXT_PRINTED_VARIANTS_SCHEMA,
+        }
+        allow_printed_variants = context_schema == CONTEXT_PRINTED_VARIANTS_SCHEMA
     else:
         require(context_evidence_sha256 is None, "expected context evidence is missing")
     source = legacy._root(directory / "source-evidence")
@@ -1214,6 +1348,7 @@ def load_nj_collection(root, metadata=None, *, source_manifest_sha256=None,
         context_qualified_introductions=qualified,
         qualify_supported_years=qualify_supported_years,
         allow_single_page_versions=allow_single_page_versions,
+        allow_printed_variants=allow_printed_variants,
     )
     for name, rows in products.items():
         with (directory / name).open("rb") as stream:
