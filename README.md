@@ -65,8 +65,15 @@ Two further independently replayed packets add **22 contexts / 61 complete
 views / 1,144,522 characters** using complete single-page and literal printed-
 variant evidence. Unproven prefiling/session variants remain quarantined, and
 source-scoped codification/whitespace proofs retain the original source strings.
-Combined source availability is **139,266 of 157,598 existing candidate contexts**,
-with **18,332 remaining gaps**. These are not certified unique-legislation or
+Two independently replayed Bill Commons packets now add **46 original Delaware/
+Nevada contexts / 112 complete views / 6,353,892 characters**. Exact original
+version references and own formal bodies preserve forty Nevada prefilings;
+six Delaware contexts retain both full extraction alternatives. Fiscal notes,
+amendment instructions and account notices are not bill-body substitutes.
+Complete source records, negative dispositions and national reference tables
+remain available without repairing dates or provider session labels.
+Combined source availability is **139,312 of 157,598 existing candidate contexts**,
+with **18,286 remaining gaps**. These are not certified unique-legislation or
 filing-cohort counts. Complete alternative views and
 original source metadata are retained. Source versions, archive extraction,
 research-corpus cleaning and classifications remain uncertified.
@@ -75,21 +82,21 @@ remaining-text queue; see the [recovery commands](docs/REPRODUCIBILITY.md#indepe
 
 Completed provisional topic inference yields
 **89,950 assignments / 67,648 abstentions**; retained bodies yield
-**65,080 assignments / 74,186 abstentions / 18,332 unavailable bodies**
-across **178,628 full source alternatives**.
-The newest 22 NJ contexts yield fifteen provisional assignments and seven
+**65,089 assignments / 74,223 abstentions / 18,286 unavailable bodies**
+across **178,740 full source alternatives**.
+The newest 46 Delaware/Nevada contexts yield nine provisional assignments and 37
 abstentions; uncertainty is not replaced with forced labels.
-All **157,576 other complete assignment rows** and all 178,567 preceding view
-predictions remain unchanged. The actual run encodes only the 61 new strings,
-covering 302,904 tokens / 397 windows without discarded tokens or repeated
+All **157,552 other complete assignment rows** and all 178,628 preceding view
+predictions remain unchanged. The actual run encodes only the 112 new strings,
+covering 1,538,904 tokens / 2,353 windows without discarded tokens or repeated
 old encoder inputs. No model or threshold changes.
 Local graphs and complete research downloads are in
-`outputs/recreated-2023-2024-v28/`,
-`outputs/topic-inference-retained-text-2023-2024-v15/` and
-`outputs/topic-input-comparison-2023-2024-v13/`.
-The unpublished full-text explorer is `data/preview-cycle-evidence-v33/`.
-The source gallery and explorer now contain all twenty-two archives and the
-latest 22-context NJ recovery. Completed full-text inference v17, independent
+`outputs/recreated-2023-2024-v29/`,
+`outputs/topic-inference-retained-text-2023-2024-v16/` and
+`outputs/topic-input-comparison-2023-2024-v14/`.
+The unpublished full-text explorer is `data/preview-cycle-evidence-v34/`.
+The source gallery and explorer now contain all twenty-four archives and the
+latest 46-context recovery. Completed full-text inference v18, independent
 saved-token/logit/consensus replay and the paired-input comparison use those
 same actual sources; metadata inference is unchanged.
 The tracked `scripts/audit_cycle_topics.py` independently replays the saved
@@ -100,14 +107,14 @@ between inputs are not accuracy measurements. These remain model assignments,
 not validated policy findings or party positions; see the
 [inference contract](docs/REPRODUCIBILITY.md#provisional-population-topic-inference).
 
-Model-blind GPT-6.1 Sol reviews cover **58 recovered Hawaii/NJ contexts /
-138 complete source views**, with 324 exact evidence spans verified.
-Twenty-five assigned topics match advisory proposals, two assigned topics differ,
-29 model abstentions have proposals, and two contexts remain unresolved in both.
+Model-blind GPT-6.1 Sol reviews cover **64 selected Delaware/Hawaii/NJ contexts /
+150 complete source views**, with 352 exact evidence spans verified.
+Twenty-eight assigned topics match advisory proposals, two assigned topics differ,
+32 model abstentions have proposals, and two contexts remain unresolved in both.
 The differing construction-permit proposals expose taxonomy ambiguity, not
 established model errors. These are selected-cohort diagnostics, **not independent human
 accuracy or replacement labels**. The complete local casebook and full-source
-download are in `outputs/assistant-advisory-topic-review-2023-2024-v5/`;
+download are in `outputs/assistant-advisory-topic-review-2023-2024-v6/`;
 see the [review contract](docs/REPRODUCIBILITY.md#assistant-advisory-semantic-review).
 
 ## Setup

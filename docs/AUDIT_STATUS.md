@@ -34,9 +34,9 @@ and all fourteen original candidate dispositions. Manifest:
 Its twelve strings also match the complete blinded review inputs exactly;
 all 28 advisory literal spans verify without frozen-human overlap. These
 reviews are not independent human accuracy or replacement labels.
-New source availability is 139,272 / 157,598, leaving 18,326 gaps;
-model v17 and existing galleries are still the last completed downstream
-baseline. New inference and graph executions remain separate.
+At this Delaware-only checkpoint, source availability was 139,272 / 157,598,
+leaving 18,326 gaps, and model v17 was the completed downstream baseline.
+The actual combined source and v18 executions are recorded below.
 The full source packet is
 `data/processed/billcommons-de-original-source-20261024-v1/`, manifest
 `1ee32f28ee064b20da9d867423e20868cbb70b990f7080dffc2fa1da1726f0ab`.
@@ -65,13 +65,34 @@ Manifest: `21dbaf6d4b955c32ba684c0620855251135224e49a97bbbcb023bb69e30b1299`.
 
 The disjoint Delaware/Nevada increment is **46 contexts / 112 views /
 6,353,892 characters**. Source availability is now **139,312 / 157,598**,
-with **18,286** gaps. The new combined full-text inference and graph refresh
-has not run; completed v17 remains the measured downstream baseline.
+with **18,286** gaps. The actual refreshed explorer v34 has 797 artifacts;
+source gallery v29 has 104 artifacts, fourteen fresh PNG/SVG graph pairs
+and thirty-one complete research ZIPs. Independent replay verifies 1,792
+old/new artifacts and preserves all 13,257 old archive rows, 305 other source
+partitions, twelve other chart tables and twenty-nine old full source ZIPs.
+The source tracker remains frozen at its source-input checkpoint.
+
+Completed full-document **v18** yields **65,089 classified / 74,223 abstained /
+18,286 unavailable** across **178,740 source views**. The new contexts yield
+nine assignments / 37 abstentions; all 157,552 other whole assignment rows
+and 178,628 preceding predictions are unchanged. Actual encoder work is only
+112 new strings / 1,538,904 tokens / 2,353 windows, with no discarded tokens
+or repeated old inputs. Weights, taxonomy, thresholds and human controls
+remain unchanged. Both private complete replay and the tracked read-only
+token-cache replay pass; all seven paired tables independently reconstruct
+for all fifty states and 139,312 observed-body contexts.
+The new topic and paired galleries are
+`outputs/topic-inference-retained-text-2023-2024-v16/` and
+`outputs/topic-input-comparison-2023-2024-v14/`.
 The selected advisory casebook input adds the twelve complete Delaware
 strings to the preserved earlier reviews: 64 contexts / 150 views /
 3,842,956 characters / 352 exact spans. This selected cohort does not include
-the Nevada texts and is not a human accuracy estimate. Its new-model
-comparison awaits actual v18 predictions. A missing legacy reviewer-model
+the Nevada texts and is not a human accuracy estimate. Actual v18 comparison
+records 28 matching assignments, 32 model abstentions with proposals, two
+unresolved in both and two differing assigned topics. All 35 triage flags
+are requests for independent human review, not established errors.
+Casebook v6 has 202 artifacts and a complete 201-member review ZIP.
+A missing legacy reviewer-model
 field in the first export is handled by binding the original result hash
 to its sealed old reviewer record, never by inserting a fabricated field;
 the failed partial export and diagnostic remain retained.
@@ -83,6 +104,14 @@ header. A real Chromium fixture verifies the full text, original metadata,
 date uncertainty and complete download. The first cached Chromium build's
 navigation timeout is retained; the other existing Chromium build passes
 without changing the test or installing tools.
+The full real workspace renders 536 selected bodies, all 112 new original/
+provider date proofs and all 61 preceding NJ introduction proofs. All fourteen
+source SVGs decode; fifteen additional complete-state queries and 21 exact
+workspace downloads pass. The casebook independently renders all 150 complete
+UTF-8 texts and three exact downloads. Both suites pass desktop/mobile with
+zero JavaScript errors or external requests; all helpers exit and only the two
+inspected owned profiles are removed. These are computational, source and UX
+checks, not accuracy or publication approval.
 
 The first source-gallery preflight rejects the new packets because its
 explicit schema allowlist omits both independent-publication adapters.
@@ -295,7 +324,7 @@ No reported missing body is filled with an ancillary document.
 
 The independent replay is now a reusable tracked CLI,
 `scripts/audit_cycle_topics.py`, rather than requiring session-private helpers.
-Actual current replay verifies every **178,628 source view / 157,598 original context**,
+Actual current replay verifies every **178,740 source view / 157,598 original context**,
 saved logits, token/window coverage, source-alternative consensus, original
 unknown fields, summary and manifest-bound gallery artifact. The complete
 research ZIP must contain **all 108 required input/prediction/producer members**;
@@ -303,8 +332,9 @@ rebinding a smaller manifest/ZIP does not make missing full text acceptable.
 An externally pinned independent token cache is opened read-only, with explicit
 missing-row failure and unchanged pre/post hashes. No encoder, label change or
 source/model promotion occurs. Receipt:
-`data/nj-single-page-tracked-current-cycle-audit-20261024-v1.json`.
-The preceding v16 and v15 replays remain sealed at
+`data/billcommons-combined-tracked-current-cycle-audit-20261024-v1.json`.
+The preceding v17, v16 and v15 replays remain sealed at
+`data/nj-single-page-tracked-current-cycle-audit-20261024-v1.json`,
 `data/nj-context-tracked-current-cycle-audit-20261024-v1.json` and
 `data/tracked-current-cycle-audit-20261024-v2.json`.
 
