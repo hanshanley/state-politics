@@ -45,6 +45,8 @@ def test_research_archive_preserves_complete_records_and_original_manifest(tmp_p
 @pytest.mark.parametrize("schema", [
     "state-politics.nj-library-collection-text.v1",
     "state-politics.ok-retained-context-text.v1",
+    "state-politics.billcommons-archive-text.v1",
+    "state-politics.billcommons-nevada-archive-text.v1",
 ])
 def test_new_archive_sources_keep_complete_downloads_without_promoting_approval(tmp_path, schema):
     directory, original, body = packet(tmp_path)

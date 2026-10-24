@@ -84,6 +84,16 @@ date uncertainty and complete download. The first cached Chromium build's
 navigation timeout is retained; the other existing Chromium build passes
 without changing the test or installing tools.
 
+The first source-gallery preflight rejects the new packets because its
+explicit schema allowlist omits both independent-publication adapters.
+The recorded guard failure is preserved. The parallel preview is stopped
+before editing any bound producer; neither output directory had yet been
+created. The consumer now accepts only the two exact new schemas, retains
+all false-approval checks and archives both adapter producers. Sixteen focused
+graph tests pass, including full source/manifest ZIP contents and refusal of
+approval promotion for both schemas. Fresh command receipts use the same
+measured source union; no partial artifact is overwritten or called complete.
+
 A separate Nebraska state-publications-library discovery retains two exchanges
 and its initial catalog-parser failure. Offline review then finds named-AI
 robots exclusions not considered by the initial generic-agent check. The
