@@ -86,6 +86,16 @@ between inputs are not accuracy measurements. These remain model assignments,
 not validated policy findings or party positions; see the
 [inference contract](docs/REPRODUCIBILITY.md#provisional-population-topic-inference).
 
+Model-blind GPT-6.1 Sol reviewers have now examined all **20 latest recovered
+contexts / 35 complete source views**, with 76 exact evidence spans verified.
+Ten context assignments agree with the advisory review; nine model abstentions
+have advisory topic proposals, and one context remains unresolved in both.
+Two view-level topic disagreements occur within bills on which the model
+already abstains. These are selected-cohort diagnostics, **not independent human
+accuracy or replacement labels**. The complete local casebook and full-source
+download are in `outputs/assistant-advisory-topic-review-2023-2024-v2/`;
+see the [review contract](docs/REPRODUCIBILITY.md#assistant-advisory-semantic-review).
+
 ## Setup
 
 Requires Python 3.11+ and uv. From the repository root:

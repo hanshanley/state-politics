@@ -4,6 +4,55 @@ The existing figures and analytical conclusions are **legacy, not revalidated fi
 The current changes repair infrastructure and preserve evidence; they do not certify a
 replacement classifier or establish complete contemporary coverage.
 
+## Full-context semantic review and finite provider probes: October 24, 2026
+
+Two model-blind GPT-6.1 Sol reviewers read **all 20 latest recovered original
+contexts / 35 complete views / 396,533 policy characters** against the official
+taxonomy, without model labels or confidence scores. Mechanical reconciliation
+verifies all **76 literal evidence spans**, complete text hashes, original
+context identities and unchanged source/model/human-evaluation inputs.
+No frozen human ID, identity or body overlaps this review cohort.
+
+At context level, **ten assigned topics agree, nine model abstentions have
+advisory topic proposals, and one remains unresolved in both**. Two individual
+view assignments differ: HB 837 (model 14 versus advisory 7) and SB 94 (model 21
+versus advisory 7). Both whole-bill model assignments already abstain; the
+all-view consensus guard is retained. Advisory disagreements do not establish
+which label is correct, and agreement does not establish accuracy.
+Drafting blanks, inconsistent internal references, differing enforcement
+versions and source-date discrepancies are recorded rather than repaired.
+
+The standalone casebook is
+`outputs/assistant-advisory-topic-review-2023-2024-v2/index.html`.
+Its complete 48-member research ZIP includes every reviewed full text, blinded
+review input/result, selected original model assignment/prediction and exact
+executed comparison observer. Chromium renders all 35 complete UTF-8 texts,
+checks desktop/mobile layouts and downloads three byte-identical files.
+This selected Hawaii cohort is **assistant-advisory development evidence,
+not human gold, representative accuracy, training admission or model promotion**.
+All population topic counts and existing graphs remain unchanged.
+Receipts: `data/provider-semantic-review-reconciliation-20261024-v2.json`
+and `data/advisory-casebook-browser-20261024-v2/receipt.json`.
+The initial observer assumes a nonexistent confidence field; its failure is
+preserved, and the corrected observer reads the actual saved `score` and
+`score_type` without changing predictions.
+The first bundle is preserved; v2 replaces the cramped mobile table with
+labelled stacked records and exposes individual view comparisons and source
+limitations. All underlying diagnostic data and scientific decisions agree
+with v1.
+
+A separate finite probe makes **seven FastDemocracy GETs** (robots, three
+public pages and three actually linked frames). The frames contain a committee
+report and two short summaries, not complete policy bodies; native-only links
+are preserved but not followed. **One LegiScan robots GET returns a 403
+challenge and closes that provider scope immediately**: no challenge execution,
+retry, account, cookie, API, body-page or alternate-route request.
+Both scopes are closed, with **zero source admissions or classifier calls**.
+The complete 42-member raw-observation ZIP is
+`data/public-provider-probes-complete-20261024-v1.zip`, bound by
+`data/public-provider-probes-complete-20261024-v1.json`.
+No reported missing body is filled with an ancillary document.
+
 ## Tracked current-snapshot replay and renewed discovery: October 24, 2026
 
 The independent replay is now a reusable tracked CLI,
@@ -27,7 +76,12 @@ The former observation does not cause any source or model rewrite.
 
 All **34** existing full-audit failures are missing legacy 2018–present platform/
 party-analysis artifacts or required derivatives, not newly introduced snapshot
-corruption. The full legacy audit is not weakened, its failure list is not hidden,
+corruption. The current full audit is **432/466**, versus the preceding
+**430/464**: the two new documented Python files add exactly two passing
+file-documentation checks. The same 34 failures and every other report field
+remain identical; see
+`data/tracked-auditor-legacy-reconciliation-20261024-v2.json`.
+The full legacy audit is not weakened, its failure list is not hidden,
 and current-cycle provisional outputs are not substituted into legacy filenames.
 Structural replay does not resolve independent human accuracy, operative-platform
 evidence, dated party attribution or source-rights requirements.

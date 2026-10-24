@@ -58,6 +58,12 @@ remains separate and unchanged: its 34 failures are missing legacy
 an apparent pass. Human accuracy, operative platforms, event-time party, source
 rights and publication remain open requirements.
 
+The current full audit reports **432/466**, not the preceding **430/464**:
+adding the tracked replay script and its documented test adds two passing
+Python-file documentation checks. The exact same 34 failures and all other
+report fields are preserved in
+`data/tracked-auditor-legacy-reconciliation-20261024-v2.json`.
+
 ```bash
 .venv/bin/python -I -B scripts/recreate_graphs.py \
   --research-corpus data/processed/research-corpus-text-20261022-v4 \
@@ -108,6 +114,36 @@ missing, so those images are **not** claimed to have been regenerated or
 validated. No party-topic, trend or D/R outcome results are invented to fill them.
 Existing output directories are refused; use a new `outputs/recreated-*`
 directory for another run. Generated bundles are local and Git-ignored.
+
+## Assistant-advisory semantic review
+
+`outputs/assistant-advisory-topic-review-2023-2024-v2/index.html` is a separate
+private casebook, not a replacement population inference or graph bundle.
+Two model-blind GPT-6.1 Sol reviewers examine all 20 latest recovered Hawaii
+contexts and all 35 complete policy views. Every input hash and all 76 exact
+evidence spans are checked before revealing the frozen model comparison.
+Frozen human evaluation IDs, identities and body hashes are excluded; no
+overlap is found. Original evaluation inputs, predictions and labels remain
+unchanged.
+
+The primary download,
+`research-data/complete_review_inputs_results_and_comparison.zip`, contains
+48 hash-bound members: all complete reviewed texts, original blind inputs,
+review results, the complete comparison, selected original model predictions
+and assignments, and `executed_verifier.py`. `comparison.csv` is explicitly a
+comparison table, **not a substitute for source-text downloads**.
+The outer manifest binds every artifact and every ZIP member. The selected
+model rows retain their original fields and unknowns.
+
+The comparison records ten matching assigned topics, nine model abstentions
+with advisory proposals and one context unresolved in both; two individual
+view disagreements remain inside whole-bill model abstentions.
+These are descriptive results for a nonrepresentative cohort. They cannot
+estimate population accuracy or become human gold, training labels,
+analytical assignments, model promotion or publication permission.
+Adjudication flags are a review queue, not automatic corrections.
+The unchanged population graphs must not be regenerated from these advisory
+proposals as if they were validated labels.
 
 ## Complete retained searchable-bill text
 
