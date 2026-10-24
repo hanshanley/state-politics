@@ -4,6 +4,31 @@ The existing figures and analytical conclusions are **legacy, not revalidated fi
 The current changes repair infrastructure and preserve evidence; they do not certify a
 replacement classifier or establish complete contemporary coverage.
 
+## Further original-action recovery and full Nevada review: October 24, 2026
+
+A new, separately opted-in profile independently replays **five original
+Virginia contexts / five complete published views / 58,325 characters**.
+Their own offered or full committee-substitute editions are explicitly dated
+2024. Each unchanged original 2025-labelled context has both its complete
+origin-filing action IDs/chamber/organization and a final literal
+`Continued to 2025 ...` action. A recommendation to continue is insufficient.
+No session alias, provider year, effective date or corrected original field
+supplies that bridge. Complete original actions, the complete published CSV,
+all negative dispositions and original unknowns survive in
+`data/processed/published-va-carryover-documents-20261024-v1/`.
+Both earlier publication packets still replay unchanged; 67 focused
+source/paired-inference regressions pass. Initial test-path and fixture
+diagnostics remain preserved.
+
+Eight new model-blind GPT-6.1 Sol assignments have now read **all forty Nevada
+contexts / 100 complete views / 6,052,496 characters**. Independent replay
+verifies all 239 literal evidence spans and unchanged frozen-human exclusions:
+`data/billcommons-nv-full-semantic-evidence-20261024-v1.json`.
+These results are advisory, not human gold, replacement labels or accuracy
+estimates. The new Virginia source packet and Nevada advisory reviews are not
+yet incorporated into the completed v18 inference or v6 casebook below.
+New population inference and regenerated outputs require separate actual runs.
+
 ## Continued independent-publication recovery: October 24, 2026
 
 New Bill Commons discovery captures all **80 published session records** through

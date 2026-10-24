@@ -9,6 +9,7 @@ import json
 import re
 import shutil
 from collections import Counter, defaultdict
+from datetime import date, datetime
 from pathlib import Path, PurePosixPath
 
 import pyarrow as pa
@@ -20,6 +21,7 @@ from state_politics.provenance import sha256_file
 
 SCHEMA = "state-politics.published-ai-corpus-text.v1"
 SOURCE_SCHEMA = "state-politics.independent-ai-corpus-source.v1"
+VA_CARRYOVER_PROFILE = "own-2024-edition-original-continued-to-2025.v1"
 RECORD_URL = "https://zenodo.org/records/20781731"
 DATASET_URL = RECORD_URL + "/files/Final_Database_10.csv?download=1"
 CSV_MEMBER = "raw/03-published-complete-dataset.body"
@@ -293,6 +295,102 @@ def printed_identity(text, context):
     }
 
 
+def _virginia_carryover_identity(text, context, actions):
+    if (context["state"] != "VA" or context["session_identifier"] != "2025"
+            or context["identifier"].split()[0] not in {"HB", "SB"}
+            or type(context.get("source_introduction_date")) is not str
+            or not context["source_introduction_date"].startswith("2024-")
+            or type(context.get("origin_introduction_action_ids")) is not str
+            or type(context.get("from_organization_id")) is not str):
+        return None
+    origin_ids = json.loads(context["origin_introduction_action_ids"])
+    require(type(origin_ids) is list and all(type(value) is str for value in origin_ids)
+            and len(origin_ids) == len(set(origin_ids)), "untyped Virginia origin action IDs")
+    if not origin_ids:
+        return None
+    printed_context = {**context, "session_identifier": "2024"}
+    printed = printed_identity(text, printed_context)
+    body = BODY.search(text)
+    if body is None:
+        return None
+    head = text[:min(2000, body.start())]
+    offered = list(re.finditer(
+        r"(?m)^Offered\s+([A-Za-z]+\s+\d{1,2},\s+20\d{2})\b", head, re.I,
+    ))
+    if offered:
+        if printed is None or len(offered) != 1:
+            return None
+        edition = offered[0]
+    else:
+        own = re.match(r"\s*(HOUSE|SENATE)\s+BILL\s+NO\.\s*(\d+)\b", head, re.I)
+        venue = re.search(r"\bGeneral\s+Assembly\s+of\s+Virginia\b", text, re.I)
+        proposed = list(re.finditer(
+            r"\(Proposed by the (?:House|Senate) Committee[^()]+\bon\s+"
+            r"([A-Za-z]+\s+\d{1,2},\s+20\d{2})\)", head, re.I,
+        ))
+        if (own is None or venue is None or len(proposed) != 1
+                or not re.search(r"(?m)^AMENDMENT IN THE NATURE OF A SUBSTITUTE\s*$", head)):
+            return None
+        identifier = f"{'HB' if own[1].upper() == 'HOUSE' else 'SB'} {int(own[2])}"
+        if identifier != context["identifier"]:
+            return None
+        edition = proposed[0]
+        printed = {
+            "state": "VA", "identifier": identifier, "session_identifier": "2024",
+            "printed_session_observations": ["2024"],
+            "printed_evidence": [_span(match) for match in (own, venue, edition, body)],
+            "session_evidence_limit": (
+                "Own full committee-substitute edition date, not a provider or effective year; "
+                "the separate original continued action supports the unchanged 2025 context."
+            ),
+        }
+    try:
+        edition_date = datetime.strptime(" ".join(edition[1].split()), "%B %d, %Y").date()
+        introduced_date = date.fromisoformat(context["source_introduction_date"])
+    except ValueError:
+        return None
+    if edition_date.year != 2024 or introduced_date > edition_date:
+        return None
+    carry = [
+        row for row in actions
+        if row["bill_id"] == context["bill_id"] and row["state"] == "VA"
+        and re.fullmatch(r"Continued to 2025(?: with substitute)? in .+\([^)]+\)",
+                         row["description"])
+        and re.fullmatch(r"2024-\d{2}-\d{2}", row["date"])
+        and row["date"] >= edition_date.isoformat()
+    ]
+    chamber = "lower" if context["identifier"].startswith("HB ") else "upper"
+    introduced = [
+        row for row in actions
+        if row["bill_id"] == context["bill_id"] and row["state"] == "VA"
+        and row["action_id"] in origin_ids
+        and row["date"] == context["source_introduction_date"]
+        and row["organization_id"] == context["from_organization_id"]
+        and row["chamber"] == chamber and row["classification"] == "filing|introduction"
+        and row["description"].startswith("Prefiled and ordered printed; offered ")
+    ]
+    if (len(carry) != 1 or len(introduced) != len(origin_ids)
+            or {row["action_id"] for row in introduced} != set(origin_ids)):
+        return None
+    try:
+        date.fromisoformat(carry[0]["date"])
+    except ValueError:
+        return None
+    return {
+        **printed, "session_identifier": context["session_identifier"],
+        "printed_year": "2024", "printed_edition_date": edition_date.isoformat(),
+        "source_relation": "original_bill_specific_continued_action_and_printed_own_identity",
+        "explicit_original_carryover_evidence": {
+            "original_bill_id": context["bill_id"],
+            "original_context_session_identifier": context["session_identifier"],
+            "actual_printed_year": "2024", "carryover_actions": carry,
+            "original_origin_introduction_actions": introduced,
+            "original_dates_sessions_and_unknowns_preserved": True,
+            "native_URL_alias_or_filing_time_version_not_asserted": True,
+        },
+    }
+
+
 def _source(source, source_sha):
     require(_binding(source / "manifest.json")["sha256"] == _hash(source_sha),
             "caller-pinned source manifest changed")
@@ -332,6 +430,23 @@ def _replay(source, queue_path, source_sha, queue_sha, *, legacy_observation_nam
             and all(r["neither_source_observed"] is True for r in originals),
             "only distinct original missing-text contexts permitted")
     carryover = billcam_text._carryover_actions(source, source_manifest, originals)
+    virginia_carryover = {}
+    if "explicit_virginia_carryover_profile" in source_manifest:
+        require(source_manifest["explicit_virginia_carryover_profile"] == VA_CARRYOVER_PROFILE
+                and "explicit_carryover_evidence" in source_manifest,
+                "unsupported Virginia carryover profile or missing complete action evidence")
+        ids = [row["bill_id"] for row in originals
+               if row["state"] == "VA" and row["session_identifier"] == "2025"]
+        rows = pq.read_table(
+            source / source_manifest["explicit_carryover_evidence"]["actions"],
+            filters=[("bill_id", "in", ids), ("state", "=", "VA")],
+        ).to_pylist() if ids else []
+        for action in rows:
+            require(all(type(action[key]) is str for key in (
+                "action_id", "bill_id", "state", "date", "description",
+                "classification", "organization_id", "chamber",
+            )), "untyped original Virginia carryover action")
+            virginia_carryover.setdefault(action["bill_id"], []).append(action)
     index = defaultdict(list)
     for row in originals:
         index[row["state"], row["identifier"]].append(row)
@@ -362,17 +477,22 @@ def _replay(source, queue_path, source_sha, queue_sha, *, legacy_observation_nam
                             identity = billcam_text._explicit_carryover_identity(
                                 text, row, carryover[row["bill_id"]],
                             )
-                            if identity is not None:
-                                evidence = source_manifest["explicit_carryover_evidence"]
-                                proof = identity["explicit_original_carryover_evidence"]
-                                proof["action_source"] = {
-                                    "path": "source-evidence/" + evidence["actions"],
-                                    **source_manifest["artifacts"][evidence["actions"]],
-                                    "extraction_manifest_path":
-                                        "source-evidence/" + evidence["extraction_manifest"],
-                                    "extraction_manifest_sha256":
-                                        evidence["extraction_manifest_sha256"],
-                                }
+                        if identity is None and row["bill_id"] in virginia_carryover:
+                            identity = _virginia_carryover_identity(
+                                text, row, virginia_carryover[row["bill_id"]],
+                            )
+                        if (identity is not None
+                                and "explicit_original_carryover_evidence" in identity):
+                            evidence = source_manifest["explicit_carryover_evidence"]
+                            proof = identity["explicit_original_carryover_evidence"]
+                            proof["action_source"] = {
+                                "path": "source-evidence/" + evidence["actions"],
+                                **source_manifest["artifacts"][evidence["actions"]],
+                                "extraction_manifest_path":
+                                    "source-evidence/" + evidence["extraction_manifest"],
+                                "extraction_manifest_sha256":
+                                    evidence["extraction_manifest_sha256"],
+                            }
                         if identity is not None:
                             matches.append((row, identity))
                 disposition = (

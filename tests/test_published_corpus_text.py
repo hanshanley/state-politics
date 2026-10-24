@@ -476,3 +476,137 @@ def test_published_year_difference_needs_its_own_complete_matching_action_proof(
     recover(source, gap, out)
     assert all("explicit_original_carryover_evidence" not in view["source_identity"]
                for view in load(out)[0])
+
+
+@pytest.fixture
+def virginia_carryover_source(packet_source):
+    source, gap, out, records, _ = packet_source
+    contexts = with_carryover_evidence(source, gap)
+    context = {
+        "bill_id": "va42", "state": "VA", "identifier": "HB 42",
+        "session_identifier": "2025", "title": "Original Virginia title unchanged.",
+        "neither_source_observed": True, "source_filing_date": None,
+        "source_introduction_date": "2024-01-09",
+        "origin_introduction_action_ids": '["original-va-filing"]',
+        "from_organization_id": "original-va-house",
+    }
+    pq.write_table(pa.Table.from_pylist([*contexts, context]), gap)
+    records.append({
+        "Bill_Number": "H 42", "Jurisdiction": "Virginia",
+        "Bill_Text": (
+            "2023 VA H 42\nAuthor: Independent source\nVersion: Introduced\n"
+            "Version Date: 01/10/2024\n"
+            "HOUSE BILL NO. 42\nOffered January 10, 2024\nPrefiled January 9, 2024\n"
+            "A BILL concerning complete policy.\n"
+            "Be it enacted by the General Assembly of Virginia:\n"
+            "1. Complete operative policy.\u2028No content is replaced by an AI summary.\n"
+        ),
+        "Year": "2026", "Version_Date": "01/10/2024",
+        "summary": "AI summary is not a body or a label.", "analyst_results": "{}",
+    })
+    actions = pq.read_table(source / "carryover-evidence/bill_actions.parquet").to_pylist()
+    for action in actions:
+        action["chamber"] = "lower"
+    actions.extend([
+        {
+            "action_id": "original-va-filing", "bill_id": "va42", "state": "VA",
+            "date": "2024-01-09",
+            "description": "Prefiled and ordered printed; offered 01/10/24 24100001D",
+            "classification": "filing|introduction",
+            "organization_id": "original-va-house", "chamber": "lower",
+        },
+        {
+            "action_id": "original-va-continued", "bill_id": "va42", "state": "VA",
+            "date": "2024-02-05",
+            "description": "Continued to 2025 with substitute in Rules (Voice Vote)",
+            "classification": "", "organization_id": "original-va-house", "chamber": "lower",
+        },
+    ])
+    return source, gap, out, records, context, actions
+
+
+def refresh_virginia_source(source, records, actions, *, profile=True):
+    with (source / CSV_MEMBER).open("w", newline="") as stream:
+        writer = csv.DictWriter(stream, fieldnames=list(records[0]))
+        writer.writeheader()
+        writer.writerows(records)
+    inventory = json.loads((source / "dataset-inventory.json").read_bytes())
+    md5 = hashlib.md5((source / CSV_MEMBER).read_bytes(), usedforsecurity=False).hexdigest()
+    inventory.update(advertised_md5=md5, actual_md5=md5, n_complete_csv_records=len(records))
+    inventory["dataset_response"]["body_binding"] = binding(source / CSV_MEMBER)
+    write_json(source / "dataset-inventory.json", inventory)
+    path = source / "carryover-evidence/bill_actions.parquet"
+    pq.write_table(pa.Table.from_pylist(actions), path)
+    extraction = source / "carryover-evidence/extraction.json"
+    original = json.loads(extraction.read_bytes())
+    original["artifacts"]["bill_actions.parquet"].update(
+        sha256=sha256_file(path), rows=len(actions),
+    )
+    write_json(extraction, original)
+    manifest = json.loads((source / "manifest.json").read_bytes())
+    manifest["explicit_carryover_evidence"]["extraction_manifest_sha256"] = sha256_file(extraction)
+    if profile:
+        manifest["explicit_virginia_carryover_profile"] = published_corpus_text.VA_CARRYOVER_PROFILE
+    manifest["artifacts"] = {
+        p.relative_to(source).as_posix(): binding(p)
+        for p in source.rglob("*") if p.is_file() and p != source / "manifest.json"
+    }
+    write_json(source / "manifest.json", manifest)
+
+
+@pytest.mark.parametrize("edition", ["offered", "full_committee_substitute"])
+def test_virginia_original_continued_action_binds_own_edition_without_session_repair(
+    virginia_carryover_source, edition,
+):
+    source, gap, out, records, context, actions = virginia_carryover_source
+    if edition == "full_committee_substitute":
+        records[-1]["Bill_Text"] = records[-1]["Bill_Text"].replace(
+            "Offered January 10, 2024\nPrefiled January 9, 2024\n",
+            "AMENDMENT IN THE NATURE OF A SUBSTITUTE\n"
+            "(Proposed by the House Committee for Courts of Justice\non February 2, 2024)\n",
+        )
+    refresh_virginia_source(source, records, actions)
+    recover(source, gap, out)
+    views, contexts, _, _ = load(out)
+    view = next(row for row in views if row["bill_id"] == "va42")
+    assert next(row for row in contexts if row["bill_id"] == "va42") == context
+    assert view["session_identifier"] == view["source_identity"]["session_identifier"] == "2025"
+    assert view["source_identity"]["printed_year"] == "2024"
+    assert view["source_identity"]["printed_edition_date"] == (
+        "2024-01-10" if edition == "offered" else "2024-02-02"
+    )
+    assert view["original_target_context"]["source_filing_date"] is None
+    assert view["source_record"] == records[-1]
+    assert view["publisher_prologue"] + view["text"] == records[-1]["Bill_Text"]
+    assert view["view_id"].endswith(":context:va42")
+    assert all(view[flag] is False for flag in FLAGS)
+    comparison.unapproved(view, required=False)
+    assert input_text(make_input(view, "retained_text", "bound/source", 0)) == view["text"]
+
+
+@pytest.mark.parametrize("defect", [
+    "profile_absent", "recommendation_only", "wrong_bill", "wrong_origin",
+    "contradictory_edition_year", "edition_after_continuation", "missing_origin_id",
+])
+def test_virginia_carryover_rejects_aliases_recommendations_and_incomplete_original_proof(
+    virginia_carryover_source, defect,
+):
+    source, gap, out, records, _, actions = virginia_carryover_source
+    if defect == "recommendation_only":
+        actions[-1]["description"] = "Subcommittee recommends continuing to 2025 (Voice Vote)"
+    elif defect == "wrong_bill":
+        actions[-1]["bill_id"] = "another-original-bill"
+    elif defect == "wrong_origin":
+        actions[-2]["organization_id"] = "another-original-organization"
+    elif defect == "contradictory_edition_year":
+        records[-1]["Bill_Text"] = records[-1]["Bill_Text"].replace(
+            "Offered January 10, 2024",
+            "Offered January 10, 2024\nOffered January 10, 2025",
+        )
+    elif defect == "edition_after_continuation":
+        actions[-1]["date"] = "2024-01-09"
+    elif defect == "missing_origin_id":
+        actions[-2]["action_id"] = "unbound-original-action"
+    refresh_virginia_source(source, records, actions, profile=defect != "profile_absent")
+    recover(source, gap, out)
+    assert all(row["bill_id"] != "va42" for row in load(out)[0])
