@@ -4,6 +4,9 @@ import functools
 import hashlib
 import json
 import runpy
+import selectors
+import subprocess
+import sys
 import threading
 import urllib.error
 import urllib.request
@@ -54,8 +57,8 @@ def test_workspace_serves_exact_bytes_and_manifest_bound_links(research_http, re
     with urllib.request.urlopen(address + "/") as response:
         body = response.read()
     assert b"/evidence/index.html" in body
-    assert b"/sessions/index.html" in body
-    assert b"/review/human-review.html" in body
+    assert b"/sessions/index.html" not in body
+    assert b"/review/human-review.html" not in body
     with urllib.request.urlopen(address + "/evidence/index.html") as response:
         assert response.read() == research_bundle[3]
         assert response.headers["X-Content-Type-Options"] == "nosniff"
@@ -322,7 +325,7 @@ def test_workspace_ranges_preserve_exact_bytes_heads_and_change_guards(
     assert caught.value.code == 409
 
 
-def test_classification_mount_is_explicit_and_remains_unapproved(research_bundle):
+def classification_bundle(research_bundle):
     root, _, manifest, _ = research_bundle
     packet = {
         "schema": "state-politics.classification-inspector.v1",
@@ -333,8 +336,83 @@ def test_classification_mount_is_explicit_and_remains_unapproved(research_bundle
         "artifacts": manifest["outputs"],
     }
     (root / "manifest.json").write_text(json.dumps(packet))
+    return root, packet
+
+
+def test_classification_mount_is_explicit_and_remains_unapproved(research_bundle):
+    root, packet = classification_bundle(research_bundle)
     MODULE["bind_bundle"](root, "classifications")
     packet["model_promotion"] = True
     (root / "manifest.json").write_text(json.dumps(packet))
     with pytest.raises(ValueError, match="unpublished, unapproved"):
         MODULE["bind_bundle"](root, "classifications")
+
+
+def review_bundle(research_bundle):
+    root, _, _, data = research_bundle
+    files = {
+        "human-review.html": data,
+        "ui-data.json": b'{"records":[]}',
+        "complete-inputs.zip": b"PK-complete-synthetic-review-inputs",
+    }
+    bindings = {}
+    for name, raw in files.items():
+        (root / name).write_bytes(raw)
+        bindings[name] = {"sha256": hashlib.sha256(raw).hexdigest(), "bytes": len(raw)}
+    packet = {
+        "schema": "local_self_attested_human_review_v1",
+        "status": "local_only_unpublished_unannotated",
+        "model_input_approved": False, "analytical_admission": False,
+        "human_gold": False, "independent_gold": False, "canonical_gold": False,
+        "assets": {"human-review.html": bindings["human-review.html"]},
+        "complete_inputs": {}, "ui_data": bindings["ui-data.json"],
+        "complete_inputs_zip": bindings["complete-inputs.zip"],
+    }
+    (root / "human_packet_manifest.json").write_text(json.dumps(packet))
+    return root
+
+
+@pytest.mark.parametrize("kind", ["evidence", "classifications", "review"])
+def test_actual_cli_can_serve_one_bundle_without_unrelated_or_dead_routes(research_bundle, kind):
+    root = research_bundle[0]
+    if kind == "classifications":
+        root, _ = classification_bundle(research_bundle)
+    elif kind == "review":
+        root = review_bundle(research_bundle)
+    script = Path(__file__).resolve().parents[1] / "scripts/serve_research.py"
+    with subprocess.Popen(
+        [sys.executable, "-I", "-B", str(script), "--" + kind, str(root), "--port", "0"],
+        stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True,
+    ) as process:
+        try:
+            with selectors.DefaultSelector() as selector:
+                selector.register(process.stdout, selectors.EVENT_READ)
+                assert selector.select(timeout=15), "No bounded standalone CLI readiness"
+            line = process.stdout.readline().strip()
+            assert line.startswith("Unpublished research workspace: http://127.0.0.1:"), line
+            address = line.split(": ", 1)[1].rstrip("/")
+            filename = "human-review.html" if kind == "review" else "index.html"
+            with urllib.request.urlopen(address + "/") as response:
+                home = response.read()
+            assert f"/{kind}/{filename}".encode() in home
+            assert b"@@" not in home
+            with urllib.request.urlopen(address + f"/{kind}/{filename}") as response:
+                assert response.read() == research_bundle[3]
+            for other in MODULE["MANIFESTS"]:
+                if other == kind:
+                    continue
+                assert f'/{other}/'.encode() not in home
+                target = "human-review.html" if other == "review" else "index.html"
+                with pytest.raises(urllib.error.HTTPError) as caught:
+                    urllib.request.urlopen(address + f"/{other}/{target}")
+                assert caught.value.code == 404
+        finally:
+            process.terminate()
+            process.communicate(timeout=10)
+
+
+def test_workspace_cli_requires_at_least_one_explicit_bundle(capsys):
+    with pytest.raises(SystemExit) as caught:
+        MODULE["main"](["--port", "0"])
+    assert caught.value.code == 2
+    assert "at least one" in capsys.readouterr().err

@@ -55,6 +55,15 @@ These are local, Git-ignored artifacts, not data supplied by cloning the code.
 The [reproducibility guide](docs/REPRODUCIBILITY.md) provides the current build
 and local-workspace commands.
 
+With the saved inspector bundle present, start it independently:
+
+```bash
+.venv/bin/python -I -B scripts/serve_research.py \
+  --classifications outputs/classification-inspector-2023-2024-v1
+```
+
+Open the printed loopback address. Other research bundles are not required.
+
 The inspector downloads every matching complete context, source input and
 prediction, not just the visible page. Missing text, abstentions and source
 disagreements remain explicit. Retained legacy figures are not revalidated

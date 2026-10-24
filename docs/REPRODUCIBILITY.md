@@ -34,8 +34,20 @@ HF_HUB_OFFLINE=1 TRANSFORMERS_OFFLINE=1 \
 ```
 
 The completed actual bundle is `outputs/classification-inspector-2023-2024-v1/`.
-Serve it through the existing loopback workspace; do not open the interactive
-page with `file://` or a server that silently ignores byte-range requests:
+Serve it independently through the loopback workspace; no evidence, session
+or review bundle is required:
+
+```bash
+.venv/bin/python -I -B scripts/serve_research.py \
+  --classifications outputs/classification-inspector-2023-2024-v1 \
+  --port 8765
+```
+
+Every bundle flag is optional, but at least one explicit bundle is required.
+The home page links only to bound bundles; all unbound routes return 404.
+Do not open the interactive page with `file://` or a server that silently
+ignores byte-range requests. If all the other saved bundles are available,
+the existing combined workspace remains supported:
 
 ```bash
 .venv/bin/python -I -B scripts/serve_research.py \
@@ -3077,26 +3089,24 @@ population-accuracy reference.
   --output data/human-review-native-REPLAY
 
 .venv/bin/python -I -B scripts/serve_research.py \
-  --evidence data/preview-cycle-evidence-v18 \
-  --sessions data/processed/verified-session-comparison-2023-2024-v3 \
   --review data/human-review-native-20261021-v3 \
-  --sources data/processed/native-inventory-catalog-2023-2024-v2 \
-  --graphs outputs/recreated-2023-2024-v14 \
-  --topics outputs/topic-input-comparison-2023-2024-v1 \
-  --port 8765
+  --port 8766
 ```
 
-Open the printed loopback address. The server checks complete artifact
+Open the printed loopback address. Review-only serving omits prediction links
+and returns 404 for all other research mounts. This reduces accidental exposure;
+it does not certify reviewer identity or independence. Reviewers must not inspect
+topic graphs or the classification inspector before completing annotations.
+Keep this process separate from the combined research workspace documented
+above; other bundles are not prerequisites for annotation.
+
+The server checks complete artifact
 hashes at startup and changed-file fingerprints before serving, permits
 only manifest-listed paths and binds only 127.0.0.1. It does not expose the
 repository or all of `data/`, create symlinks/copies, publish or load models.
-Use `--topics outputs/topic-inference-retained-text-2023-2024-v2` instead
-to mount the three full-body topic graphs; the comparison mount preserves
-both complete original tier downloads. Blind reviewers must not inspect either.
-The optional graph mount serves its exact manifest-listed ZIP/CSV/Parquet/image
-artifacts under `/graphs/`; no other bundle may be mounted from `outputs/`.
-The optional `/topics/` mount contains provisional model predictions; independent
-human reviewers must not inspect it before completing their annotations.
+Graph, topic and classification bundles may be explicitly mounted from
+`outputs/`; other bundle kinds must remain under `data/`. Only their
+manifest-listed files are served, never the surrounding directory.
 Human packet manifest:
 `a1fa21d6842f34ebc6bebb8ea51261abce1448b757dfa116bc5157823b7df457`.
 

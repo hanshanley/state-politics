@@ -4,6 +4,34 @@ The existing figures and analytical conclusions are **legacy, not revalidated fi
 The current changes repair infrastructure and preserve evidence; they do not certify a
 replacement classifier or establish complete contemporary coverage.
 
+## Standalone research workspace: October 24, 2026
+
+The classification inspector no longer requires unrelated evidence, session
+and human-review bundles to start. Each of the seven explicit bundle flags is
+optional; an empty selection fails. The workspace home renders only bound
+cards, and unbound routes return 404 rather than advertising dead links.
+Model-blind review can run alone on a separate loopback origin without exposing
+prediction mounts. This is a serving improvement, not proof of reviewer blinding
+or independent human validation.
+
+Actual subprocess/HTTP checks exercise the saved classification-only and
+review-only bundles and the existing combined seven-bundle workspace. Every
+selected entry is byte-identical to its original file; unselected routes,
+foreign Hosts, traversal and unlisted artifacts remain refused. Complete
+context/input/prediction ranges match their original SHA-256 values, HEAD
+retains full-representation headers, and unsatisfiable ranges return 416.
+All three server processes exit and their ports close.
+
+Forty-six focused regressions pass. The actual-bundle observer and proof are
+`data/verify_standalone_workspace_20261024_v1.py` and
+`data/standalone-workspace-actual-20261024-v1/receipt.json`. It independently
+checks all 41 frozen human-plan artifacts, twenty original model/label bindings,
+five frozen runtime files and the original unannotated review packet before
+and after serving. The existing 162-artifact inspector bundle, including its
+historical archived producer, remains unchanged. No model, source collector,
+annotation, classification promotion or publication is executed. The broader
+source/scientific gates and 34 known legacy artifact failures are not closed.
+
 ## Per-bill classification evidence inspector: October 24, 2026
 
 The new local inspector covers **all 157,598 original contexts / 178,745 entire

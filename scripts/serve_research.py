@@ -37,22 +37,47 @@ article{border-top:1px solid #cbc9bf;padding:16px 0}a{color:#275542}
 <h1>State politics: evidence and review</h1>
 <p>Inspect the records, compare cohort definitions, and review complete inputs
 without treating provisional classifications as established findings.</p>
-<article><h2><a href="/evidence/index.html">Evidence explorer</a></h2>
-<p>All-state calendar-candidate and platform evidence, native reader alternatives,
-receipt observations, explicit gaps, and complete query downloads.</p></article>
-<article><h2><a href="/sessions/index.html">Legislative-session comparison</a></h2>
-<p>Verified publisher-session membership, original metadata and date observations.
-This separate frame does not replace calendar eligibility or invent filing dates.</p></article>
-@@SOURCE_INVENTORY@@
-@@RECOVERED_GRAPHS@@
-@@TOPIC_GRAPHS@@
+@@EVIDENCE@@
+@@SESSIONS@@
+@@SOURCES@@
+@@GRAPHS@@
+@@TOPICS@@
 @@CLASSIFICATIONS@@
-<article><h2><a href="/review/human-review.html">Model-blind human review</a></h2>
-<p>Unseen complete inputs and source alternatives, rubric-guided annotation,
-local drafts, and independently validated exports. No predictions are shown.</p></article>
+@@REVIEW@@
 <p class="note">Human identity remains self-attested. No checkbox certifies gold,
 model accuracy, operative platforms, party attribution, or scientific admission.
 Nothing here publishes a report or changes the production website.</p></main></html>"""
+HOME_CARDS = {
+    "evidence": b"""<article><h2><a href="/evidence/index.html">Evidence explorer</a></h2>
+<p>All-state calendar-candidate and platform evidence, native reader alternatives,
+receipt observations, explicit gaps, and complete query downloads.</p></article>""",
+    "sessions": b"""<article><h2>
+<a href="/sessions/index.html">Legislative-session comparison</a></h2>
+<p>Verified publisher-session membership, original metadata and date observations.
+This separate frame does not replace calendar eligibility or invent filing dates.</p></article>""",
+    "sources": b"""<article><h2><a href="/sources/index.html">
+Native-source collection ledger</a></h2><p>All-state collection status,
+original publisher metadata, explicit source restrictions, and retained raw
+responses. Filename lists and repeated observations are not new bills or
+recovered original texts.</p></article>""",
+    "graphs": b"""<article><h2><a href="/graphs/index.html">
+Recovered graphs and complete data</a></h2><p>Source-qualified figures, complete
+chart tables and full research ZIPs, including native PDFs and reader text.
+Old images remain separately labelled, not regenerated findings.</p></article>""",
+    "topics": b"""<article><h2><a href="/topics/index.html">
+Provisional classifier topics</a></h2><p>Complete model-assigned topic graphs,
+abstention denominators, full inference texts and predictions. Not validated
+findings or party positions. Blind reviewers must not inspect these predictions
+before submitting their independent annotations.</p></article>""",
+    "classifications": b"""<article><h2><a href="/classifications/index.html">
+Classification evidence inspector</a></h2><p>Original and majority decisions
+side by side, all topic/rejection scores, overlapping windows and complete
+source records. The majority rule is not promoted or independently validated.
+Blind reviewers must not inspect these predictions before annotation.</p></article>""",
+    "review": b"""<article><h2><a href="/review/human-review.html">Model-blind human review</a></h2>
+<p>Unseen complete inputs and source alternatives, rubric-guided annotation,
+local drafts, and independently validated exports. No predictions are shown.</p></article>""",
+}
 
 
 def fingerprint(path):
@@ -257,41 +282,12 @@ class ResearchHandler(BaseHTTPRequestHandler):
             self.send_error(403, "Loopback Host required")
             return
         if path == "/":
-            inventory = b"""<article><h2><a href="/sources/index.html">
-Native-source collection ledger</a></h2><p>All-state collection status,
-original publisher metadata, explicit source restrictions, and retained raw
-responses. Filename lists and repeated observations are not new bills or
-recovered original texts.</p></article>"""
-            home = HOME.replace(
-                b"@@SOURCE_INVENTORY@@",
-                inventory if "sources" in self.bundles else b"",
-            )
-            graphs = b"""<article><h2><a href="/graphs/index.html">
-Recovered graphs and complete data</a></h2><p>Source-qualified figures, complete
-chart tables and full research ZIPs, including native PDFs and reader text.
-Old images remain separately labelled, not regenerated findings.</p></article>"""
-            home = home.replace(
-                b"@@RECOVERED_GRAPHS@@",
-                graphs if "graphs" in self.bundles else b"",
-            )
-            topics = b"""<article><h2><a href="/topics/index.html">
-Provisional classifier topics</a></h2><p>Complete model-assigned topic graphs,
-abstention denominators, full inference texts and predictions. Not validated
-findings or party positions. Blind reviewers must not inspect these predictions
-before submitting their independent annotations.</p></article>"""
-            home = home.replace(
-                b"@@TOPIC_GRAPHS@@",
-                topics if "topics" in self.bundles else b"",
-            )
-            classifications = b"""<article><h2><a href="/classifications/index.html">
-Classification evidence inspector</a></h2><p>Original and majority decisions
-side by side, all topic/rejection scores, overlapping windows and complete
-source records. The majority rule is not promoted or independently validated.
-Blind reviewers must not inspect these predictions before annotation.</p></article>"""
-            home = home.replace(
-                b"@@CLASSIFICATIONS@@",
-                classifications if "classifications" in self.bundles else b"",
-            )
+            home = HOME
+            for kind, card in HOME_CARDS.items():
+                home = home.replace(
+                    f"@@{kind.upper()}@@".encode(),
+                    card if kind in self.bundles else b"",
+                )
             self.send_response(200)
             self.send_header("Content-Type", "text/html; charset=utf-8")
             self.send_header("Content-Length", str(len(home)))
@@ -378,9 +374,9 @@ Blind reviewers must not inspect these predictions before annotation.</p></artic
 
 def main(argv=None):
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--evidence", type=Path, required=True)
-    parser.add_argument("--sessions", type=Path, required=True)
-    parser.add_argument("--review", type=Path, required=True)
+    parser.add_argument("--evidence", type=Path)
+    parser.add_argument("--sessions", type=Path)
+    parser.add_argument("--review", type=Path)
     parser.add_argument("--sources", type=Path)
     parser.add_argument(
         "--graphs",
@@ -398,6 +394,8 @@ def main(argv=None):
         help="Optional original/majority evidence inspector; not blind-review inputs",
     )
     args = parser.parse_args(argv)
+    if not any(getattr(args, kind) is not None for kind in MANIFESTS):
+        parser.error("select at least one explicit research bundle")
     bundles = {
         kind: bind_bundle(getattr(args, kind), kind)
         for kind in MANIFESTS
