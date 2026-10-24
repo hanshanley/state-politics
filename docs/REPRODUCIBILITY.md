@@ -18,6 +18,39 @@ be bound explicitly before regenerated outputs can support the narrowed study.
 
 ## Recreated graph bundle
 
+### Complete unresolved-source query sets
+
+The additional offline frontier audit is
+`data/processed/retained-source-frontier-20261024-v1/`.
+Its `complete_unresolved_source_evidence.zip` preserves the complete source
+records, not just a list of failed bill numbers. All **180 source dossiers**
+retain every original CSV field, full `Bill_Text`, the 190 unchanged candidate
+contexts and their complete selected action/version/link rows.
+Source AI annotations remain untrusted source fields, never gold, predictions
+or training inputs. A shared state/typed number is not a verified session match.
+Missing dates and unproven source editions stay unknown.
+
+The ZIP contains the full 2,571-record publication CSV, complete 4,046-record
+retained Hawaii corpus, whole current 18,281-row queue, previous source
+dispositions/queue, complete original-reference query tables and the exact
+executed producer. The 17 members independently verify; no source policy text
+is truncated or replaced with a summary. Manifest:
+`8565da6d3993b362685da5607ba0ac534a1093cf3793fc6418f90114325d5807`.
+The actual download binding is in
+`data/retained-source-frontier-complete-download-20261024-v1.json`;
+independent replay is
+`data/retained-source-frontier-independent-replay-20261024-v1.json`.
+
+The producer and independent observer are retained at
+`data/build_retained_source_frontier_20261024_v1.py` and
+`data/verify_retained_source_frontier_20261024_v1.py`. Both require fresh
+outputs/receipts and rehash their complete original inputs. Further discovery
+is retained separately in `data/new-open-corpus-discovery-20261024-v2.json`.
+No bodies were admitted, no encoder ran, no previous access stop reopened and
+no inference/gallery refresh was necessary: **v19 / token v16 and all existing
+graphs remain the actual current baseline**. These are complete bounded audit
+deliverables, not proof of an exhaustive absence or completed scientific study.
+
 ### Full-score diagnostics without new classifications
 
 The separate additive gallery is

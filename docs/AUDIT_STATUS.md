@@ -4,6 +4,42 @@ The existing figures and analytical conclusions are **legacy, not revalidated fi
 The current changes repair infrastructure and preserve evidence; they do not certify a
 replacement classifier or establish complete contemporary coverage.
 
+## Complete unresolved-source dossiers and further discovery: October 24, 2026
+
+Further autonomous recovery checks preserve **180 unmatched publication records /
+190 unchanged original candidate contexts / 1,596,151 complete policy characters**.
+These are coarse state/typed-number leads, **not verified matches or recovered
+contexts**. Every source field, complete body, original context/unknown and all
+1,943 selected original actions / 359 versions / 578 version links survive in
+`data/processed/retained-source-frontier-20261024-v1/`.
+The complete 17-member research ZIP includes the full 2,571-record publication
+CSV, complete 4,046-record retained Hawaii corpus, whole 18,281-row gap queue,
+complete reference query sets and original dispositions, not metadata-only
+pointers. Independent reconstruction checks every dossier field and all members.
+Manifest: `8565da6d3993b362685da5607ba0ac534a1093cf3793fc6418f90114325d5807`.
+Download: **33,098,461 bytes**, SHA-256
+`ec68c4222f18ea93c0311d26c46af5db8b66b39ed17cb51f3306fb3711caf340`.
+
+The retained Hawaii corpus has 4,033 own 2025/33rd-Legislature headers, not
+the missing 2023/2024 contexts; all thirteen other records remain complete
+and unresolved rather than being assigned a guessed identity. Oklahoma SB 1655
+has a complete engrossed body but no own session/legislature date, while its
+original version dates are blank. A related provider date/URL or introduction/
+engrossment action does not certify that source edition. It remains quarantined.
+No identity guards are relaxed and no model is run.
+
+A further GPT-6.1 Sol discovery pass uses eight searches, six primary-page
+attempts and two robots checks. Four apparently new mirror artifacts match the
+previously retained upstream pointers exactly; three full files are already
+retained, and Michigan is the same known unacquired artifact under existing
+stops. A summary-only tracker and an underspecified catalog do not supply new
+full bodies. Inaccessible previews are not retried or bypassed. Complete
+returned observations and the offline overlap checks are recorded in
+`data/new-open-corpus-discovery-20261024-v2.json`.
+The source count remains **139,317 observed / 18,281 missing**, and completed
+inference remains **v19 / token v16**. This completes the bounded available-
+evidence audit, not overall source completeness or independent human validation.
+
 ## Full-score diagnostics without forced labels: October 24, 2026
 
 The actual new gallery,
