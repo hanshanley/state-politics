@@ -215,6 +215,20 @@ def test_context_qualified_220_tail_preserves_original_dates_and_full_versions()
         nj.separate_versions([
             _cover("ASSEMBLY", 100), section_pages[1],
         ])
+    earlier = {
+        "original_context": {**context, "source_introduction_date": "2023-05-08"},
+        "origin_introduction_actions": [{**actions[0], "date": "2023-05-08T04:00:00+00:00"}],
+    }
+    earlier_pages = [_cover("ASSEMBLY", 100), section_pages[1]]
+    with pytest.raises(ValueError, match="effective section"):
+        nj.separate_versions(earlier_pages, context_qualified_introductions={"A 100": earlier})
+    earlier_versions, _ = nj.separate_versions(
+        earlier_pages, context_qualified_introductions={"A 100": earlier},
+        qualify_supported_years=True,
+    )
+    assert earlier_versions[0]["original_context_introduction_proof"][
+        "printed_introduction_date"
+    ] == "2023-05-08"
     for change in (
         {"source_introduction_date": "2024-01-03"},
         {"identifier": "A 101"},
@@ -238,6 +252,93 @@ def test_context_qualified_220_tail_preserves_original_dates_and_full_versions()
                     "original_context": context,
                     "origin_introduction_actions": [{**actions[0], **change}],
                 }},
+            )
+
+
+def test_extended_profile_keeps_complete_versions_and_all_unproven_version_pages():
+    pages = _texts()
+    pages[2] = pages[2].replace(
+        "2. This act shall take effect immediately.", "2. Unproven terminal policy text.",
+    )
+    with pytest.raises(ValueError, match="effective section"):
+        nj.separate_versions(pages)
+    versions, dispositions = nj.separate_versions(
+        pages, context_qualified_introductions={}, qualify_supported_years=True,
+    )
+    assert [(row["identifier"], row["kind"]) for row in versions] == [
+        ("A 100", "bill_cover"), ("S 200", "bill_cover"),
+    ]
+    quarantined = [row for row in dispositions
+                   if row["disposition"] == "quarantined_unproven_version"]
+    assert [row["page_ordinal"] for row in quarantined] == [2, 3]
+    assert all(row["text_preserved_in_full"] for row in quarantined)
+    assert versions[0]["quarantined_same_bill_source_versions"][0]["page_ordinals"] == [2, 3]
+    assert "quarantined_same_bill_source_versions" not in versions[1]
+    assert len(dispositions) == len(pages)
+    ambiguous = list(pages)
+    ambiguous[6] = "An unidentified boundary is still fatal, not a source of cropped text."
+    with pytest.raises(ValueError, match="boundary"):
+        nj.separate_versions(
+            ambiguous, context_qualified_introductions={}, qualify_supported_years=True,
+        )
+
+
+def test_fourth_reprint_and_literal_word_spacing_require_the_extended_profile():
+    pages = _texts()
+    pages[1] = pages[1].replace("First Reprint", "Fourth Reprint")
+    pages[2] = pages[2].replace("[1R]", "[4R]")
+    pages[4] = pages[4].replace(
+        "This act shall take effect immediately.",
+        "This ac t shall ta ke e ffect immediately.",
+    )
+    with pytest.raises(ValueError):
+        nj.separate_versions(pages)
+    versions, _ = nj.separate_versions(
+        pages, context_qualified_introductions={}, qualify_supported_years=True,
+    )
+    assert len(versions) == 3 and versions[0]["continuations"][0]["printed_label"] == " [4R]"
+    raw = "\n".join(pages[p - 1] for p in versions[1]["page_ordinals"])
+    span = versions[1]["literal_effective_clause_evidence"]
+    assert raw[span["start"]:span["end"]] == span["text"]
+    assert "ac t shall ta ke e ffect" in span["text"]
+
+
+def test_unlabelled_page_requires_exact_bytes_and_two_printed_neighbors():
+    original = _texts()
+    bridge = "Literal original unlabelled policy page; no header or folio is inserted.\n"
+    following = "A100 [1R]\n4\nFull final enacted continuation.\n"
+    pages = original[:3] + [bridge, following] + original[3:]
+    profile = {
+        4: {
+            "identifier": "A 100", "preceding_folio": 2, "following_folio": 4,
+            "printed_reprint_label": "[1R]", "source_pdf_sha256": "1" * 64,
+            "before_text_sha256": nj._sha(pages[2].encode()),
+            "page_text_sha256": nj._sha(bridge.encode()),
+            "after_text_sha256": nj._sha(following.encode()),
+        },
+    }
+    with pytest.raises(ValueError, match="boundary"):
+        nj.separate_versions(
+            pages, context_qualified_introductions={}, qualify_supported_years=True,
+        )
+    versions, dispositions = nj.separate_versions(
+        pages, context_qualified_introductions={}, qualify_supported_years=True,
+        unlabelled_page_bridges=profile,
+    )
+    assert versions[0]["page_ordinals"] == [2, 3, 4, 5]
+    witness = versions[0]["unlabelled_page_bridges"][0]
+    assert witness["extracted_bill_header"] is witness["extracted_folio"] is None
+    assert witness["no_header_folio_or_text_inserted"] is True
+    assert witness["preceding_printed_witness"]["folio"] == 2
+    assert witness["following_printed_witness"]["folio"] == 4
+    assert len(dispositions) == len(pages)
+    for index, altered in ((3, bridge + "changed"), (4, following.replace("\n4\n", "\n5\n"))):
+        changed = list(pages)
+        changed[index] = altered
+        with pytest.raises(ValueError, match="pinned"):
+            nj.separate_versions(
+                changed, context_qualified_introductions={}, qualify_supported_years=True,
+                unlabelled_page_bridges=profile,
             )
 
 

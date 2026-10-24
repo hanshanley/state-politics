@@ -50,9 +50,38 @@ SOURCE_STATUSES = {
     "closed_complete_collection_capture": "closed_complete_collection_capture",
 }
 CONTEXT_SCHEMA = "state-politics.original-nj-tail-introductions.v1"
+CONTEXT_ALL_DATES_SCHEMA = "state-politics.original-nj-introduction-contexts.v1"
 ORIGINAL_CONTEXTS_SHA256 = "854ecd4e37ba2f160c8dc46fca92f9b47bbcf29c82939a7726855eaaea304431"
 ORIGINAL_EXTRACTION_SHA256 = "9a3555e5194ac3d45ab30c4107df4f720ad40f3ce85e040fa5336138d8ee8a29"
+UNLABELLED_PAGE_BRIDGES = {
+    "63dce0b123f0ed16796e1c0dea303999dcda78399777835c7f828d03a10c870b": {
+        "page_ordinal": 37, "identifier": "S 4023", "preceding_folio": 34,
+        "following_folio": 36, "printed_reprint_label": "[1R]",
+        "readers": {
+            "pypdf": (
+                "fd1889d71cbfad5d0ca79ca57982a83eadfe398387a722da111680267651d2d4",
+                "c03151a8aac73a65550c70434c0792dea894fdf30bfd1d842a23d75082bd2104",
+                "7c10b2963173d6f1998e8d2b86ae00df1e42fd53b172f04ee0c70c8f3b4ece0b",
+            ),
+            "pymupdf": (
+                "4585d1dd791122715a104b24b4c98c7681f362ab9a5512c7540b790cb54ab818",
+                "28268cc8547e33ddc5254c838a9eb721cee84f315dd5dee55b9adb0d99bac91f",
+                "1dd30ed7a84dfb992c15e384ede68c023b8dce291bb903006b16141de8a4150e",
+            ),
+        },
+    },
+}
 SEALED_PRODUCERS = {
+    "3922c090c6d937385c57818b9a3f065ebee1f6168a3cedc9b842b8095e5bdeae": {
+        "producer/nj_library_collection.py": {
+            "sha256": "4075e6a5e757ffe092e613cebf0c502eaf9b74fe0fbac95a95f8227dd8576381",
+            "bytes": 63939,
+        },
+        "producer/nj_library_text.py": {
+            "sha256": "7d7a58c5ae5d44579088b234864f04e3ec11464dff2113cd0bdfa1c74432a991",
+            "bytes": 61032,
+        },
+    },
     "e8933b0d69ab9a791ef4830e35044fde4022e8df2880f4a9c544426a9f9601a6": {
         "producer/nj_library_collection.py": {
             "sha256": "c7fe4468c5cb17cf821a9140edc7d1b09b8bafdcb54d1d8237c910e4620a66c7",
@@ -477,7 +506,8 @@ def _source(source, manifest_sha256):
     return manifest, batch, ledger
 
 
-def _separate(page_rows, *, context_qualified_introductions=None):
+def _separate(page_rows, *, context_qualified_introductions=None,
+              qualify_supported_years=False, source_pdf_sha256=None):
     if any(p["errors"] or type(p["text"]) is not str or not p["text"].strip()
            for p in page_rows):
         return [], [{
@@ -486,9 +516,25 @@ def _separate(page_rows, *, context_qualified_introductions=None):
             "reason": "reader_error_or_empty_page_no_ocr_or_substitution",
         } for p in page_rows], "reader_error_or_empty_page_no_ocr_or_substitution"
     try:
+        bridges = None
+        if qualify_supported_years and source_pdf_sha256 in UNLABELLED_PAGE_BRIDGES:
+            profile = UNLABELLED_PAGE_BRIDGES[source_pdf_sha256]
+            require(bool(page_rows) and len({row["reader"] for row in page_rows}) == 1,
+                    "one complete reader required for a pinned page bridge")
+            before, page, after = profile["readers"][page_rows[0]["reader"]]
+            bridges = {profile["page_ordinal"]: {
+                key: value for key, value in profile.items()
+                if key not in {"readers", "page_ordinal"}
+            } | {
+                "source_pdf_sha256": source_pdf_sha256,
+                "before_text_sha256": before, "page_text_sha256": page,
+                "after_text_sha256": after,
+            }}
         versions, dispositions = legacy.separate_versions(
             [p["text"] for p in page_rows],
             context_qualified_introductions=context_qualified_introductions,
+            qualify_supported_years=qualify_supported_years,
+            unlabelled_page_bridges=bridges,
         )
     except ValueError as exc:
         prefix = "incompatible NJ library archive: "
@@ -504,7 +550,7 @@ def _separate(page_rows, *, context_qualified_introductions=None):
             disposition["reason"] = "no_supported_own_identity_and_complete_version"
     return versions, dispositions, (
         "complete_versions_with_unresolved_pages"
-        if any(d["disposition"] == "quarantined_unresolved_page" for d in dispositions)
+        if any(d["disposition"].startswith("quarantined") for d in dispositions)
         else "complete_versions_and_retained_ancillaries" if versions
         else "library_checklist_only_no_bill_text"
     )
@@ -621,7 +667,7 @@ def _context_introductions(directory, manifest_sha256):
     manifest = legacy._json(manifest_path)
     names = {"contexts.jsonl", "bill_actions.parquet", "bill_extraction_manifest.json"}
     require(set(manifest) == {"schema", "artifacts"}
-            and manifest["schema"] == CONTEXT_SCHEMA
+            and manifest["schema"] in {CONTEXT_SCHEMA, CONTEXT_ALL_DATES_SCHEMA}
             and set(manifest["artifacts"]) == names
             and _tree(directory) == names | {"manifest.json"},
             "complete original context/action evidence required")
@@ -641,6 +687,7 @@ def _context_introductions(directory, manifest_sha256):
             == pq.read_metadata(directory / "bill_actions.parquet").num_rows,
             "actions do not match the complete original extraction")
     contexts, seen = {}, set()
+    years = ("2022-", "2023-", "2024-") if manifest["schema"] == CONTEXT_ALL_DATES_SCHEMA else ("2024-",)
     with (directory / "contexts.jsonl").open("rb") as stream:
         for line in stream:
             row = legacy._decode(line)
@@ -650,7 +697,7 @@ def _context_introductions(directory, manifest_sha256):
             if (row.get("state") == "NJ" and row.get("session_identifier") == "220"
                     and re.fullmatch(r"[AS] [1-9][0-9]*", row.get("identifier", ""))
                     and type(row.get("source_introduction_date")) is str
-                    and row["source_introduction_date"].startswith("2024-")):
+                    and row["source_introduction_date"].startswith(years)):
                 require(row["identifier"] not in contexts, "ambiguous original tail context")
                 contexts[row["identifier"]] = row
     require(bool(contexts), "no explicit original tail-session contexts")
@@ -698,7 +745,7 @@ def _gap_queue(source, queue_path, queue_sha256, *, allow_original_subset=False)
 
 
 def _replay(source, queue_path, source_sha256, queue_sha256, *,
-            context_qualified_introductions=None):
+            context_qualified_introductions=None, qualify_supported_years=False):
     source_manifest, batch, ledger = _source(source, source_sha256)
     ledger_name = _ledger_name(source)
     gap = _gap_queue(
@@ -751,6 +798,8 @@ def _replay(source, queue_path, source_sha256, queue_sha256, *,
             else:
                 source_versions, source_dispositions, reason = _separate(
                     page_rows, context_qualified_introductions=context_qualified_introductions,
+                    qualify_supported_years=qualify_supported_years,
+                    source_pdf_sha256=entry["pdf_sha256"],
                 )
             structures[reader] = [
                 (v["identifier"], v["kind"], v["page_ordinals"], v["boundary"])
@@ -781,6 +830,12 @@ def _replay(source, queue_path, source_sha256, queue_sha256, *,
                     view = _view(
                         page_rows, version, context, entry, reader, ordinal, ledger_name, label,
                     )
+                    if qualify_supported_years:
+                        view["view_id"] = (
+                            f"nj-library-original-context:{entry['catalog_item']['uuid']}:"
+                            f"{entry['pdf_sha256']}:{version['page_ordinals'][0]}:{reader}:"
+                            f"context:{context['bill_id']}"
+                        )
                     views.append(view)
                     matched[index].append(view["view_id"])
                     source_record["matched_views"] += 1
@@ -887,10 +942,29 @@ def _replay(source, queue_path, source_sha256, queue_sha256, *,
             "action IDs, organization, chamber and literal ISO calendar date. No timezone "
             "conversion, session-end repair or implied filing-time certification.",
         }
-        counts["context_qualified_tail_views"] = sum(
+        count_name = ("context_qualified_original_date_views" if qualify_supported_years
+                      else "context_qualified_tail_views")
+        counts[count_name] = sum(
             "original_context_introduction_proof" in row["source_version"] for row in views
         )
         report["original_gap_queue_relation"] = "exact_whole_row_subset_of_original_source_queue"
+        if qualify_supported_years:
+            report["limits"]["printed_identity_profile"] = (
+                "Own 220th Legislature covers with exact unchanged original context/action "
+                "proof for supplied 2022/2023/2024 introductions. Complete section-specific "
+                "effective clauses are retained literally. No session-end, date, party "
+                "or policy-text repair; all prior packets and their profiles remain frozen."
+            )
+            report["limits"]["unsupported_separation"] = (
+                "Ambiguous identities, folios or boundaries quarantine the whole reader. "
+                "Known disjoint ranges without complete policy/statement evidence are "
+                "retained and quarantined individually, never admitted as policy inputs; "
+                "complete same-bill siblings expose those source-completeness warnings."
+            )
+            counts["accepted_views_with_quarantined_same_bill_versions"] = sum(
+                bool(row["source_version"].get("quarantined_same_bill_source_versions"))
+                for row in views
+            )
     if ledger_name == "request-ledger.jsonl":
         prefix = legacy._jsonl(source / "seed-request-ledger.jsonl")
         counts["retained_inherited_prefix_records"] = len(prefix)
@@ -943,13 +1017,16 @@ def build_nj_collection(source_directory, gap_queue, out_directory, *,
     source_manifest, _, _ = _source(source, source_sha)
     require((context_evidence is None) == (context_evidence_sha256 is None),
             "context evidence requires both a directory and external manifest SHA256")
-    qualified, context_inventory = None, {}
+    qualified, context_inventory, qualify_supported_years = None, {}, False
     if context_evidence is not None:
         context_evidence = legacy._root(context_evidence)
         require(not context_evidence.is_relative_to(out) and not out.is_relative_to(context_evidence),
                 "context-evidence/output overlap")
         qualified, context_inventory = _context_introductions(
             context_evidence, context_evidence_sha256,
+        )
+        qualify_supported_years = (
+            legacy._json(context_evidence / "manifest.json")["schema"] == CONTEXT_ALL_DATES_SCHEMA
         )
     _gap_queue(source, queue, queue_sha, allow_original_subset=qualified is not None)
     source_names = set(source_manifest["artifacts"]) | {"manifest.json"}
@@ -965,7 +1042,8 @@ def build_nj_collection(source_directory, gap_queue, out_directory, *,
     legacy._copy(queue, out / "input_gap_queue.parquet")
     products, contexts, report = _replay(evidence, out / "input_gap_queue.parquet",
                                         source_sha, queue_sha,
-                                        context_qualified_introductions=qualified)
+                                        context_qualified_introductions=qualified,
+                                        qualify_supported_years=qualify_supported_years)
     for name, rows in products.items():
         legacy._write_rows(out / name, rows)
     pq.write_table(contexts, out / "context_inventory.parquet")
@@ -1056,9 +1134,12 @@ def load_nj_collection(root, metadata=None, *, source_manifest_sha256=None,
         expected = historical[name] if historical else legacy._binding(path)
         require(artifacts[name] == expected, "installed producer dependency mismatch")
         if historical and name == "producer/nj_library_text.py":
-            require(expected in (legacy._binding(path), legacy.STRICT_2023_PRODUCER),
+            previous_tail = SEALED_PRODUCERS[
+                "3922c090c6d937385c57818b9a3f065ebee1f6168a3cedc9b842b8095e5bdeae"
+            ]["producer/nj_library_text.py"]
+            require(expected in (legacy._binding(path), legacy.STRICT_2023_PRODUCER, previous_tail),
                     "historical extraction dependency changed")
-    qualified, context_inventory = None, {}
+    qualified, context_inventory, qualify_supported_years = None, {}, False
     if "context_introduction_evidence_sha256" in manifest:
         context_sha = _hash(manifest["context_introduction_evidence_sha256"])
         if context_evidence_sha256 is not None:
@@ -1066,6 +1147,10 @@ def load_nj_collection(root, metadata=None, *, source_manifest_sha256=None,
                     "external context evidence anchor changed")
         qualified, context_inventory = _context_introductions(
             directory / "context-evidence", context_sha,
+        )
+        qualify_supported_years = (
+            legacy._json(directory / "context-evidence/manifest.json")["schema"]
+            == CONTEXT_ALL_DATES_SCHEMA
         )
     else:
         require(context_evidence_sha256 is None, "expected context evidence is missing")
@@ -1082,6 +1167,7 @@ def load_nj_collection(root, metadata=None, *, source_manifest_sha256=None,
         source, directory / "input_gap_queue.parquet",
         manifest["source_manifest_sha256"], manifest["gap_queue_sha256"],
         context_qualified_introductions=qualified,
+        qualify_supported_years=qualify_supported_years,
     )
     for name, rows in products.items():
         with (directory / name).open("rb") as stream:

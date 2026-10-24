@@ -195,7 +195,10 @@ def _source(work, *, texts=None, status="immutable_first16_subset", duplicate_by
     return source, queue, _seal(source, status), originals
 
 
-def test_context_evidence_recovers_tail_and_preserves_exact_original_subset(work, monkeypatch):
+@pytest.mark.parametrize("context_schema", [nj.CONTEXT_SCHEMA, nj.CONTEXT_ALL_DATES_SCHEMA])
+def test_context_evidence_recovers_tail_and_preserves_exact_original_subset(
+    work, monkeypatch, context_schema,
+):
     texts = [
         text.replace("MAY 8, 2023", "JANUARY 4, 2024").replace(
             "approved May 9, 2023", "approved January 16, 2024",
@@ -246,7 +249,7 @@ def test_context_evidence_recovers_tail_and_preserves_exact_original_subset(work
     monkeypatch.setattr(nj, "ORIGINAL_EXTRACTION_SHA256",
                         old._binding(evidence / "bill_extraction_manifest.json")["sha256"])
     old._write(evidence / "manifest.json", {
-        "schema": nj.CONTEXT_SCHEMA, "artifacts": {
+        "schema": context_schema, "artifacts": {
             name: old._binding(evidence / name) for name in (
                 "contexts.jsonl", "bill_actions.parquet", "bill_extraction_manifest.json",
             )
@@ -263,7 +266,9 @@ def test_context_evidence_recovers_tail_and_preserves_exact_original_subset(work
         out, context_evidence_sha256=evidence_sha,
     )
     assert contexts == [original]
-    assert len(views) == manifest["counts"]["context_qualified_tail_views"] == 4
+    count_name = ("context_qualified_tail_views" if context_schema == nj.CONTEXT_SCHEMA
+                  else "context_qualified_original_date_views")
+    assert len(views) == manifest["counts"][count_name] == 4
     assert all(view["source_version"]["original_context_introduction_proof"]
                ["original_context"]["session_end_date"] == "2023-12-31" for view in views)
     assert all(view["source_version"]["original_context_introduction_proof"]

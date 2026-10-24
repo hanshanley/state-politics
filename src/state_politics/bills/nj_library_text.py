@@ -263,12 +263,16 @@ _COVER = re.compile(
 )
 
 
-def printed_identity(text, page_ordinal=1, *, context_qualified_introductions=None):
+def printed_identity(text, page_ordinal=1, *, context_qualified_introductions=None,
+                     qualify_supported_years=False):
     """Require an own bill cover, not a fiscal/committee/checklist or cited header."""
     require(type(text) is str, "literal complete cover string required")
     require(context_qualified_introductions is None
             or type(context_qualified_introductions) is dict,
             "explicit context-qualified introduction map required")
+    require(type(qualify_supported_years) is bool
+            and (not qualify_supported_years or context_qualified_introductions is not None),
+            "extended original-date profile requires explicit context evidence")
     own = _COVER.match(text)
     require(own is not None, "not an own typed bill cover")
     require(own["session"] == "220th LEGISLATURE", "wrong printed session")
@@ -277,10 +281,13 @@ def printed_identity(text, page_ordinal=1, *, context_qualified_introductions=No
         text, "introduced year",
     )
     context_proof = None
-    if intro[1] not in {"2022", "2023"}:
-        identifier = _identifier(own["kind"], own["number"])
+    identifier = _identifier(own["kind"], own["number"])
+    if intro[1] not in {"2022", "2023"} or (
+        qualify_supported_years and identifier in context_qualified_introductions
+    ):
         qualified = (context_qualified_introductions or {}).get(identifier)
-        require(intro[1] == "2024" and type(qualified) is dict
+        allowed = {"2022", "2023", "2024"} if qualify_supported_years else {"2024"}
+        require(intro[1] in allowed and type(qualified) is dict
                 and set(qualified) == {"original_context", "origin_introduction_actions"},
                 "wrong printed cover year for session 220")
         context, actions = qualified["original_context"], qualified["origin_introduction_actions"]
@@ -400,15 +407,15 @@ def _continuation(text, page):
     }
 
 
-def _enacted(text, page):
+def _enacted(text, page, *, extended_identity_profile=False):
     law = re.search(
         r"(?m)^P\.L\.[ \t]+(?P<year>20[0-9]{2}),[ \t]+CHAPTER[ \t]+[0-9]+,"
         r"[ \t]+approved[^\r\n]+\r?\n"
         r"(?P<bill>(?P<kind>Assembly|Senate),[ \t]+No\.[ \t]+(?P<number>[1-9][0-9]*))"
-        r"(?P<version>[ \t]*\((?P<reprint>First|Second|Third) Reprint\))?"
+        r"(?P<version>[ \t]*\((?P<reprint>First|Second|Third|Fourth) Reprint\))?"
         r"[ \t]*(?:\r?\n|\Z)", text,
     )
-    if law is None:
+    if law is None or law["reprint"] == "Fourth" and not extended_identity_profile:
         return None
     require(text.lstrip().startswith("EXPLANATION")
             and "STATEMENT TO" not in text[:law.end()]
@@ -474,23 +481,35 @@ def _checklist_only(page_texts):
     )
 
 
-def separate_versions(page_texts, *, context_qualified_introductions=None):
+def separate_versions(page_texts, *, context_qualified_introductions=None,
+                      qualify_supported_years=False, unlabelled_page_bridges=None):
     """Return complete contiguous own versions and all-page dispositions.
 
     Unknown boundaries, orphan typed continuations, or contradictory folios are
     errors, not a reason to return a plausible shortened bill.
+    The explicit extended profile can quarantine a fully bounded but unproven
+    version separately. Its entire pages remain present, and accepted versions
+    of the same bill carry the corresponding source-completeness warning.
     """
     require(type(page_texts) is list and bool(page_texts)
             and all(type(text) is str and text.strip() for text in page_texts),
             "complete nonempty reader pages required")
+    require(unlabelled_page_bridges is None
+            or qualify_supported_years and type(unlabelled_page_bridges) is dict,
+            "explicit extended-profile page bridge required")
     covers = {
         i: printed_identity(
             text, i + 1, context_qualified_introductions=context_qualified_introductions,
+            qualify_supported_years=qualify_supported_years,
         )
         for i, text in enumerate(page_texts) if _COVER.match(text)
     }
-    enacted = {i: value for i, text in enumerate(page_texts)
-               if (value := _enacted(text, i + 1)) is not None}
+    enacted = {
+        i: value for i, text in enumerate(page_texts)
+        if (value := _enacted(
+            text, i + 1, extended_identity_profile=qualify_supported_years,
+        )) is not None
+    }
     if not covers and not enacted and _checklist_only(page_texts):
         return [], [{
             "page_ordinal": i + 1, "disposition": "library_checklist_only_no_bill_text",
@@ -500,9 +519,9 @@ def separate_versions(page_texts, *, context_qualified_introductions=None):
     own_by_id = defaultdict(list)
     for index, cover in covers.items():
         own_by_id[cover["identifier"]].append((index, cover))
-    versions, selected = [], {}
+    versions, selected, quarantined, unproven_versions = [], {}, {}, []
     for index in sorted(covers.keys() | enacted.keys()):
-        require(index not in selected, "overlapping own versions")
+        require(index not in selected and index not in quarantined, "overlapping own versions")
         kind = "bill_cover" if index in covers else "enacted_version"
         if kind == "bill_cover":
             identity = covers[index]
@@ -526,10 +545,43 @@ def separate_versions(page_texts, *, context_qualified_introductions=None):
         )
         ordinals = [index + 1]
         continuations = []
+        page_bridges = []
         cursor, folio = index + 1, 2
         while cursor < len(page_texts):
             continuation = _continuation(page_texts[cursor], cursor + 1)
             if continuation is None:
+                bridge = (unlabelled_page_bridges or {}).get(cursor + 1)
+                if bridge is not None:
+                    require(0 < cursor < len(page_texts) - 1
+                            and kind == "enacted_version"
+                            and identifier == bridge["identifier"]
+                            and _sha(page_texts[cursor - 1].encode()) == bridge["before_text_sha256"]
+                            and _sha(page_texts[cursor].encode()) == bridge["page_text_sha256"]
+                            and _sha(page_texts[cursor + 1].encode()) == bridge["after_text_sha256"],
+                            "pinned unlabelled-page bytes or own version changed")
+                    before = _continuation(page_texts[cursor - 1], cursor)
+                    after = _continuation(page_texts[cursor + 1], cursor + 2)
+                    require(before is not None and after is not None
+                            and before["identifier"] == after["identifier"] == identifier
+                            and before["folio"] == bridge["preceding_folio"] == folio - 1
+                            and after["folio"] == bridge["following_folio"] == folio + 1
+                            and before["printed_label"].strip()
+                            == after["printed_label"].strip() == bridge["printed_reprint_label"]
+                            and cursor not in selected and cursor not in quarantined,
+                            "unlabelled-page two-sided printed witnesses changed")
+                    page_bridges.append({
+                        "page_ordinal": cursor + 1,
+                        "extracted_bill_header": None, "extracted_folio": None,
+                        "source_pdf_sha256": bridge["source_pdf_sha256"],
+                        "page_text_binding": _text_binding(page_texts[cursor]),
+                        "preceding_printed_witness": before, "following_printed_witness": after,
+                        "binding_basis": "exact_pinned_PDF_and_two_sided_same_bill_reprint_folios",
+                        "no_header_folio_or_text_inserted": True,
+                    })
+                    ordinals.append(cursor + 1)
+                    cursor += 1
+                    folio += 1
+                    continue
                 require(not re.match(r"\s*[AS][0-9]+\b", page_texts[cursor]),
                         "unresolved continuation header at boundary")
                 break
@@ -541,12 +593,14 @@ def separate_versions(page_texts, *, context_qualified_introductions=None):
                 expected = {
                     None: [], "First Reprint": ["1"],
                     "Second Reprint": ["2"], "Third Reprint": ["3"],
+                    "Fourth Reprint": ["4"],
                 }[enacted[index]["reprint"]]
                 require(reprints == expected, "enacted printed reprint mismatch")
             else:
                 require(not re.search(r"\[[0-9]+R\]", continuation["printed_label"]),
                         "introduced cover/continuation version mismatch")
-            require(cursor not in selected, "overlapping continuation pages")
+            require(cursor not in selected and cursor not in quarantined,
+                    "overlapping continuation pages")
             ordinals.append(cursor + 1)
             continuations.append(continuation)
             cursor += 1
@@ -558,17 +612,25 @@ def separate_versions(page_texts, *, context_qualified_introductions=None):
             r"(?:(?:[ \t]+(?:and|through)|,)[ \t]+[0-9]+)*[ \t]+of[ \t]+this[ \t]+act"
             r"[ \t]+shall[ \t]+take[ \t]+e[ \t]*ffect\b",
             body,
-        ) if context_proof is not None else None
-        require("AN ACT" in body and "BE IT ENACTED" in body
-                and (re.search(r"This\s+act\s+shall\s+take\s+effect", body)
-                     or section_effective is not None),
+        ) if context_proof is not None or qualify_supported_years else None
+        literal_effective = re.search(
+            r"(?m)^[ \t]*[1-9][0-9]*\.[ \t]+This[ \t]+ac[ \t]*t[ \t]+shall"
+            r"[ \t]+ta[ \t]*ke[ \t]+e[ \t]*ffect\b", body,
+        ) if qualify_supported_years else None
+        body_complete = bool(
+            "AN ACT" in body and "BE IT ENACTED" in body
+            and (re.search(r"This\s+act\s+shall\s+take\s+effect", body)
+                 or section_effective is not None or literal_effective is not None)
+        )
+        require(qualify_supported_years or body_complete,
                 "missing complete own legislative body/effective section")
         statements = []
         for ordinal in ordinals:
             text = page_texts[ordinal - 1]
             for match in re.finditer(r"(?m)^[ \t]*STATEMENT[ \t]*(?:[0-9]+[ \t]*)?$", text):
                 statements.append(_match_span(text, match, "own_bill_statement", ordinal))
-        require(kind != "bill_cover" or bool(statements),
+        statement_complete = kind != "bill_cover" or bool(statements)
+        require(qualify_supported_years or statement_complete,
                 "introduced bill missing its complete statement")
         if cursor == len(page_texts):
             boundary = {"reason": "end_of_complete_pdf", "next_page_ordinal": None}
@@ -579,6 +641,21 @@ def separate_versions(page_texts, *, context_qualified_introductions=None):
             require(reason != "unselected_ancillary_or_unresolved_page",
                     "ambiguous bill/ancillary boundary")
             boundary = {"reason": reason, "next_page_ordinal": cursor + 1}
+        if not body_complete or not statement_complete:
+            unproven = {
+                "identifier": identifier, "kind": kind, "page_ordinals": ordinals,
+                "printed_version": version, "boundary": boundary,
+                "reason": ("unproven_complete_policy_body_or_effective_clause"
+                           if not body_complete else "unproven_complete_introduced_statement"),
+                "entire_extracted_page_strings_and_original_pdf_retained": True,
+                "policy_input_admitted": False,
+            }
+            unproven_versions.append(unproven)
+            for ordinal in ordinals:
+                require(ordinal - 1 not in selected and ordinal - 1 not in quarantined,
+                        "overlapping quarantined version pages")
+                quarantined[ordinal - 1] = unproven
+            continue
         item = {
             "identifier": identifier, "state": "NJ", "session_identifier": "220",
             "kind": kind, "page_ordinals": ordinals, "continuations": continuations,
@@ -595,14 +672,33 @@ def separate_versions(page_texts, *, context_qualified_introductions=None):
                 "start": section_effective.start(), "end": section_effective.end(),
                 "text": section_effective[0],
             }
+        if literal_effective is not None:
+            item["literal_effective_clause_evidence"] = {
+                "scope": "complete_contiguous_version_text",
+                "start": literal_effective.start(), "end": literal_effective.end(),
+                "text": literal_effective[0], "source_word_spacing_not_rewritten": True,
+            }
+        if page_bridges:
+            item["unlabelled_page_bridges"] = page_bridges
         versions.append(item)
         for ordinal in ordinals:
             require(ordinal - 1 not in selected, "overlapping complete bill versions")
             selected[ordinal - 1] = len(versions) - 1
     dispositions = []
+    for version in versions:
+        related = [row for row in unproven_versions if row["identifier"] == version["identifier"]]
+        if related:
+            version["quarantined_same_bill_source_versions"] = related
     for index, text in enumerate(page_texts):
-        require(index in selected or _continuation(text, index + 1) is None,
+        require(index in selected or index in quarantined or _continuation(text, index + 1) is None,
                 "orphan printed bill continuation; no guessing")
+        if index in quarantined:
+            dispositions.append({
+                "page_ordinal": index + 1, "disposition": "quarantined_unproven_version",
+                "version_ordinal": None, "text_preserved_in_full": True,
+                "unproven_version": quarantined[index],
+            })
+            continue
         dispositions.append({
             "page_ordinal": index + 1,
             "disposition": "selected_complete_version" if index in selected else _ancillary(text),
