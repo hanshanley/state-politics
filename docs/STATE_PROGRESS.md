@@ -27,7 +27,39 @@ not that the state has no data. Platform recovery is separate from the
 legislative status in this table; no state's operative-platform coverage is
 certified complete.
 
-## Latest context-qualified published carryover evidence
+## Latest provider-context projection with original-action evidence
+
+A further offline audit finds **20 additional original 2024 Hawaii contexts /
+35 complete views / 396,533 policy characters** in already retained provider
+records declaring `2023 Regular Session`. The previous reader filtered that
+declared year before considering the original bill's actual carryover proof.
+The new, explicit opt-in projection requires the body's own single printed
+2023 venue, typed number and caption, plus that exact original 2024 context's
+carryover event and origin-introduction action IDs/chamber. A matching
+2024 heading cannot substitute for the required action proof.
+
+Both provider-declared 2023 and printed 2023 remain intact alongside the
+unchanged original 2024 context; no session label, date or URL is repaired.
+All complete source captures, original action rows, previous source views
+and negatives survive. The default annual reader remains unchanged.
+Two disjoint packets supplement all sixteen preceding archives:
+`data/processed/billcam-provider-context-html-delta-20261023-v1/`
+(17 contexts / 26 views; manifest
+`8711b3ed9b15286118b8057d254c7e62fc83f2f4594d1d6f8315c0237ddc5ff4`)
+and `data/processed/billcam-provider-context-html-four-subject-20261023-v1/`
+(3 contexts / 9 views; manifest
+`dffe4352c2bb177433a35ae85eb1e55a78af3f497343a014c2f040cd77a26b3f`).
+
+Availability is **139,228 / 157,598**, leaving **18,370** unavailable,
+including **5,717 HI**. Eighteen archival packets contain **10,773 contexts /
+13,154 views**. These are newly observed original contexts, not new distinct
+legislation, source publications or independent human labels. Source and
+subsequent model/graph executions remain separately versioned.
+Proof: `data/provider-context-packet-replay-20261023-v1.json`.
+No requests are made and no existing access stop or scientific, rights,
+party-time, human, report or publication gate is closed.
+
+## Preceding context-qualified published carryover evidence
 
 Two retained published records now support **two additional original 2024
 Hawaii contexts / two full views / 7,722 characters**, without network

@@ -53,6 +53,23 @@ WRAPPED_PRODUCERS = {
         "sha256": "361cd72d242bf3b7bcdd2af50ecc84046a109f9f52acf2c1e4d02b065f6bf1e8",
         "bytes": 32680,
     },
+    "8cd20f56dde8d69ef9e1f8bed694526ecc1eddf091a508a53ff02a02d3f20b23": {
+        "sha256": "55ff8e5ed5c6edb7d4521d37f20d210074bd84855d2758786ec3c769f2823d4e",
+        "bytes": 38878,
+    },
+    "0754dcbf9c7ba56eaf876575be54e232e1641637e58de635721f689eafd5dd37": {
+        "sha256": "55ff8e5ed5c6edb7d4521d37f20d210074bd84855d2758786ec3c769f2823d4e",
+        "bytes": 38878,
+    },
+    "2e68a62ad0323c0d78daea5e2a823b0bb22bb47fba287e3b2971d4a4dbddd9cf": {
+        "sha256": "55ff8e5ed5c6edb7d4521d37f20d210074bd84855d2758786ec3c769f2823d4e",
+        "bytes": 38878,
+    },
+}
+CONTEXT_PROJECTION = {
+    "schema": "state-politics.billcam-original-action-context-projection.v1",
+    "provider_session_identifier": "2023 Regular Session",
+    "original_context_session_identifier": "2024",
 }
 PRODUCTS = {
     "views.jsonl", "source_dispositions.jsonl", "candidate_dispositions.jsonl",
@@ -255,7 +272,7 @@ def _body(raw, url):
     }
 
 
-def _targets(bill, originals):
+def _targets(bill, originals, *, project_original_context=False):
     session = bill["legislative_session"]
     if session["state"]["abbr"] != "HI":
         return [], "outside_initial_HI_reader_profile"
@@ -267,10 +284,13 @@ def _targets(bill, originals):
     require(bill["bill_type"] in TYPES and type(bill["bill_number"]) is int
             and bill["bill_number"] > 0, "unsupported or untyped provider identifier")
     identifier, year = f"{bill['bill_type']} {bill['bill_number']}", match[1]
+    if project_original_context and year != "2023":
+        return [], "outside_explicit_original_action_context_projection"
+    sessions = {"2024"} if project_original_context else {year, f"{year} Regular Session"}
     candidates = [
         row for row in originals if row["state"] == "HI"
         and row["identifier"] == identifier
-        and row["session_identifier"] in (year, f"{year} Regular Session")
+        and row["session_identifier"] in sessions
     ]
     if not candidates:
         return [], "no_original_missing_context_for_declared_state_year_identifier"
@@ -481,6 +501,11 @@ def _replay(source, queue_path, source_sha, queue_sha, *, legacy_identity_profil
     require(len({row["bill_id"] for row in originals}) == len(originals),
             "duplicate original gap context")
     carryover = _carryover_actions(source, source_manifest, originals)
+    project_context = "explicit_original_context_projection" in source_manifest
+    if project_context:
+        require(_equal(source_manifest["explicit_original_context_projection"], CONTEXT_PROJECTION)
+                and "explicit_carryover_evidence" in source_manifest,
+                "unsupported or unbound original context projection")
     views, dispositions, counts = [], [], {}
     for response in responses.values():
         parts = urlsplit(response["url"])
@@ -496,7 +521,7 @@ def _replay(source, queue_path, source_sha, queue_sha, *, legacy_identity_profil
                 "detail page is not one canonical provider bill")
         bill = page.bills[0]
         require(bill["path"] == response["url"], "provider bill path mismatch")
-        targets, reason = _targets(bill, originals)
+        targets, reason = _targets(bill, originals, project_original_context=project_context)
         hashes = set()
         for version in bill["texts"]:
             require(version["bill_id"] == bill["id"] and version["text_hash"] not in hashes,
@@ -530,13 +555,19 @@ def _replay(source, queue_path, source_sha, queue_sha, *, legacy_identity_profil
                     )
                 else:
                     context = targets[0]
-                    identity = printed_identity(
+                    identity = None if project_context else printed_identity(
                         text, context, legacy_identity_profile=legacy_identity_profile,
                     )
                     if identity is None and context["bill_id"] in carryover:
                         identity = _explicit_carryover_identity(
                             text, context, carryover[context["bill_id"]],
                         )
+                        if project_context and identity is not None:
+                            venues = set(re.findall(
+                                r"THIRTY-SECOND\s+LEGISLATURE,\s*(2023|2024)\b", text[:2000],
+                            ))
+                            if venues != {"2023"}:
+                                identity = None
                         if identity is not None:
                             evidence = source_manifest["explicit_carryover_evidence"]
                             identity["explicit_original_carryover_evidence"]["action_source"] = {
@@ -547,6 +578,14 @@ def _replay(source, queue_path, source_sha, queue_sha, *, legacy_identity_profil
                                 "extraction_manifest_sha256":
                                     evidence["extraction_manifest_sha256"],
                             }
+                            if project_context:
+                                identity["explicit_provider_context_projection"] = {
+                                    **CONTEXT_PROJECTION,
+                                    "original_provider_session": bill["legislative_session"],
+                                    "original_provider_display_session":
+                                        bill["display_legislative_session"],
+                                    "no_provider_or_original_session_rewritten": True,
+                                }
                     if identity is None:
                         disposition["disposition"] = (
                             "printed_own_identity_or_year_conflict_not_a_fill"
@@ -626,6 +665,8 @@ def _replay(source, queue_path, source_sha, queue_sha, *, legacy_identity_profil
         report["counts"]["n_action_proven_carryover_views"] = sum(
             "explicit_original_carryover_evidence" in view["source_identity"] for view in views
         )
+    if project_context:
+        report["explicit_original_context_projection"] = CONTEXT_PROJECTION
     return {
         "views.jsonl": views, "source_dispositions.jsonl": dispositions,
         "candidate_dispositions.jsonl": candidate_dispositions,

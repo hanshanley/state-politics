@@ -50,6 +50,16 @@ SEALED_PRODUCERS = {
     },
 }
 FROZEN_DEPENDENCY_PRODUCERS = {
+    "2c44d7284ccf5c934871e79dc8a860c33d7cf7fe78260a535daa0367c817f01b": {
+        "published_corpus_text.py": {
+            "sha256": "89d6dec54c56e0ae7e2c5557dd46f5c9b38a756fef5042dbe447ee2b945fbe90",
+            "bytes": 31695,
+        },
+        "billcam_text.py": {
+            "sha256": "55ff8e5ed5c6edb7d4521d37f20d210074bd84855d2758786ec3c769f2823d4e",
+            "bytes": 38878,
+        },
+    },
     "114e8fdc585a52d469a0df1469a19e5b78f788aa9163dbdb3c1d0d47df951cd2": {
         "billcam_text.py": {
             "sha256": "361cd72d242bf3b7bcdd2af50ecc84046a109f9f52acf2c1e4d02b065f6bf1e8",

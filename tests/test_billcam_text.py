@@ -412,3 +412,107 @@ def test_action_evidence_rebound_without_original_extraction_fails_closed(packet
     write_json(source / "manifest.json", manifest)
     with pytest.raises(ValueError, match="do not match the original complete extraction"):
         build(source, out)
+
+
+def declared_2023_source(source, *, own_year="2023", extra_venue=""):
+    original, _ = add_explicit_carryover_source(source)
+    rows = pq.read_table(source / "input_gap_queue.parquet").to_pylist()
+    rows.append({
+        **original, "bill_id": "earlier-original-sb",
+        "session_identifier": "2023 Regular Session",
+    })
+    pq.write_table(pa.Table.from_pylist(rows), source / "input_gap_queue.parquet")
+    ledger = list(archive._rows(source / "request-ledger.jsonl"))
+    for row in ledger:
+        path = source / row["body"]
+        if "/bills/WrongYearSB/" in row["url"]:
+            path.write_bytes(path.read_bytes().replace(
+                b"2024 Regular Session", b"2023 Regular Session",
+            ))
+        elif "/bill-texts/WrongYearSBText" in row["url"]:
+            path.write_bytes(body_page(row["url"], document(
+                2890, "SB", own_year, tail=extra_venue,
+            ).replace("RELATING TO OVERSIGHT.", "RELATING TO PROJECTS.")))
+        row["body_binding"] = archive._binding(path)
+    archive._write_rows(source / "request-ledger.jsonl", ledger)
+    manifest = archive._json(source / "manifest.json")
+    manifest["input_gap_queue"] = archive._binding(source / "input_gap_queue.parquet")
+    manifest["artifacts"] = {
+        path.relative_to(source).as_posix(): archive._binding(path)
+        for path in source.rglob("*") if path.is_file() and path != source / "manifest.json"
+    }
+    write_json(source / "manifest.json", manifest)
+    return original
+
+
+def enable_context_projection(source):
+    manifest = archive._json(source / "manifest.json")
+    manifest["explicit_original_context_projection"] = archive.CONTEXT_PROJECTION
+    write_json(source / "manifest.json", manifest)
+
+
+def test_source_session_projection_is_opt_in_action_bound_and_preserves_earlier_view(packet_source):
+    source, _, out = packet_source
+    original = declared_2023_source(source)
+    build(source, out)
+    earlier, _, _, _ = archive.load_billcam(out)
+    old = next(row for row in earlier if row["bill_id"] == "earlier-original-sb")
+    assert old["session_identifier"] == "2023 Regular Session"
+    assert not any(row["bill_id"] == "original-sb" for row in earlier)
+    enable_context_projection(source)
+    projected = out.with_name("projected")
+    build(source, projected)
+    views, contexts, _, manifest = archive.load_billcam(projected)
+    assert len(views) == len(contexts) == 1
+    view = views[0]
+    assert contexts == [original] and view["original_target_context"] == original
+    assert view["source_record"] == old["source_record"]
+    assert view["text"] == old["text"] and view["view_id"] != old["view_id"]
+    assert view["view_id"].endswith(":original-sb")
+    assert view["source_identity"]["printed_year"] == "2023"
+    assert view["source_identity"]["session_identifier"] == "2024"
+    projection = view["source_identity"]["explicit_provider_context_projection"]
+    assert projection["original_provider_session"]["name"] == "2023 Regular Session"
+    assert manifest["counts"]["n_action_proven_carryover_views"] == 1
+    assert all(view[flag] is False for flag in archive.FLAGS)
+    assert archive.load_billcam(out)[0] == earlier
+
+
+@pytest.mark.parametrize("wrong", [
+    None, False, {}, {"original_context_session_identifier": "2025"},
+])
+def test_unsupported_context_projection_fails_closed(packet_source, wrong):
+    source, _, out = packet_source
+    declared_2023_source(source)
+    manifest = archive._json(source / "manifest.json")
+    manifest["explicit_original_context_projection"] = wrong
+    write_json(source / "manifest.json", manifest)
+    with pytest.raises(ValueError, match="unsupported or unbound original context projection"):
+        build(source, out)
+
+
+def test_context_projection_without_complete_original_action_binding_fails_closed(packet_source):
+    source, _, out = packet_source
+    declared_2023_source(source)
+    enable_context_projection(source)
+    manifest = archive._json(source / "manifest.json")
+    del manifest["explicit_carryover_evidence"]
+    write_json(source / "manifest.json", manifest)
+    with pytest.raises(ValueError, match="unsupported or unbound original context projection"):
+        build(source, out)
+
+
+@pytest.mark.parametrize(("year", "extra_venue"), [
+    ("2024", ""),
+    ("2023", "THIRTY-SECOND LEGISLATURE, 2024"),
+])
+def test_projection_never_uses_matching_context_year_or_ambiguous_venue_as_action_proof(
+    packet_source, year, extra_venue,
+):
+    source, _, out = packet_source
+    declared_2023_source(source, own_year=year, extra_venue=extra_venue)
+    enable_context_projection(source)
+    build(source, out)
+    assert archive.load_billcam(out)[0] == []
+    assert any(row["disposition"] == "printed_own_identity_or_year_conflict_not_a_fill"
+               for row in archive._rows(out / "source_dispositions.jsonl"))
