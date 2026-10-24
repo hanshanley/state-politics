@@ -4,6 +4,90 @@ The existing figures and analytical conclusions are **legacy, not revalidated fi
 The current changes repair infrastructure and preserve evidence; they do not certify a
 replacement classifier or establish complete contemporary coverage.
 
+## Longer-context and title/body experiments: October 24, 2026
+
+Both bounded experiments are complete, **not promoted**. The frozen checkpoint
+supports 8,192 positions but was trained with 1,024-token windows and 128-token
+overlap. Increasing inference context does not retrain or recalibrate it.
+The pilot retains all **109 selected original contexts / 255 entire source
+views / 9,953,777 policy characters**, with no discarded tokens or source
+alternatives. It freezes two profiles before forward passes: 4,096/512 and
+8,192/1,024 tokens/overlap, retaining the strict-majority rule and its declared
+supporting-window quality gates.
+
+| Selected-cohort policy | Assigned | Same assistant proposal | Different proposal | Advisory unresolved |
+|---|---:|---:|---:|---:|
+| 1,024-token majority | 70 | 58 | 10 | 2 |
+| 4,096-token majority | 74 | 59 | 13 | 2 |
+| 8,192-token majority | 79 | 61 | 16 | 2 |
+
+The 4,096 profile adds six assignments but loses two existing assignments;
+the 8,192 profile adds ten but loses one. Neither changes a previously accepted
+topic into a different accepted topic. Keeping every primary assignment and
+using longer windows only for unresolved cases instead yields 76 or 80
+assignments, but fourteen or seventeen disagreements with the assistant
+proposals. Of the six new 4,096 assignments, two match proposals and four differ;
+of the ten new 8,192 assignments, three match and seven differ. These are
+development diagnostics on a selected, already inspected cohort, not
+representative or independent human accuracy. Neither the model nor the
+assistant proposals are adjudicated truth.
+
+The explicit runtime never edits the checkpoint manifest or substitutes a
+cached short-document decision for a larger window's logits. Every cache key
+binds model run, complete input SHA, token interval and actual encoder IDs.
+Exactly matching windows may be reused. The separate cache contains 3,568
+original and 1,208 newly encoded windows, with 768 atomic batch receipts.
+The 4,096 profile encodes 830 new windows in 139.835 encoder seconds; the 8,192
+profile encodes 378 in 207.395 seconds. These measured forward times exclude
+tokenization, archive building and verification. A completed resume verifies
+all payload/archive bindings without loading the encoder or changing the cache.
+
+Independent fresh tokenization reconstructs all windows, cache identities,
+votes, original records and four chart tables. Four predeclared fresh encoder
+batch checks repeat seven windows for validation and produce bit-identical
+logits, maximum absolute error 0.0; these repeats are explicitly separate from
+producer work. Actual desktop/mobile Chromium checks verify all 255 complete
+UTF-8 inputs, two SVGs and seven byte-identical downloads, with no JavaScript
+errors or external requests. Both screenshots have been visually inspected
+and the browser helpers exit.
+
+Actual gallery: `outputs/topic-context-pilot-2023-2024-v1/`, with 284 payload
+artifacts and two PNG/SVG pairs. Its complete 285-member research ZIP is
+**57,192,305 bytes**, SHA-256
+`954b953ff32af95ca2e7a0bb4941ccfa5e1a288bf4eac6e8fb066caeceb29419`.
+Manifest:
+`ef7857499a3783fed82a8884979b01f3f7b72c7c46afce16246fd24e24be5a6e`.
+The separately bound `complete_download.json` verifies the manifest and ZIP;
+they are intentionally not circular members of the manifest.
+
+A further exploratory protocol is frozen before inspecting the selected
+metadata predictions. It preserves all seventy primary assignments and rescues
+an unresolved context only when an accepted metadata topic has more than half
+of all three votes: metadata, 4,096 body and 8,192 body. At least one body must
+support it; uncertain/rejected votes remain in the denominator. These signals
+are correlated predictions from the **same weights**, not three independent
+classifiers. It adds **four assignments, two matching proposals and two
+differing**; all four have complete retained source evidence. The two Hawaii
+disagreements persist even when all three signals agree, demonstrating that
+cross-input agreement does not resolve the conflict with the advisory judgment.
+No decision is declared erroneous or silently corrected.
+
+The annex in `data/processed/context-cross-input-rescue-20261024-v1/` retains
+all 109 context rows, all 114 selected complete metadata inputs/predictions,
+the entire body-pilot archive and every derived decision. Independent replay
+verifies all CSV fields, twelve complete outer ZIP members and the 285 nested
+body-pilot members. Its full ZIP is **57,617,097 bytes**, SHA-256
+`0b20aac414d5d4999e07f5b7cb90d08d535ea40a3f6bcc284bed5d0b11bd244e`.
+No new encoder calls occur in this annex.
+
+The population majority candidate remains **78,300 assigned / 61,017
+available-but-unassigned**, and 18,281 contexts still lack text. The original
+v19/token-v16 baseline, 28-context unannotated human packet, frozen evaluation
+plan, training labels and model weights remain unchanged. These experiments
+do not fill missing bodies, independently validate labels, settle taxonomy
+boundaries, authorize further model training, or change publication gates.
+Further coverage gains alone are not grounds to promote either alternative.
+
 ## Strict-majority bill-topic candidate: October 24, 2026
 
 The requested majority alternative is implemented and executed for the entire

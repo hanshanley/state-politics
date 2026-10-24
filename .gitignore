@@ -8,6 +8,7 @@ data/*
 /outputs/topic-input-comparison-*/
 /outputs/topic-score-diagnostics-*/
 /outputs/topic-majority-*/
+/outputs/topic-context-pilot-*/
 /outputs/assistant-advisory-topic-review-*/
 
 # Large source corpora and dumps

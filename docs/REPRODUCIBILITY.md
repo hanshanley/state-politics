@@ -18,6 +18,110 @@ be bound explicitly before regenerated outputs can support the narrowed study.
 
 ## Recreated graph bundle
 
+### Longer-context and cross-input experiments
+
+The selected-cohort pilot is a separate inference experiment, not a population
+rerun, retraining or validation against independent human labels. It uses the
+same frozen model and strict-majority policy on all 109 selected contexts and
+255 complete source views. Reproduce into a **new** output directory:
+
+```bash
+HF_HUB_OFFLINE=1 TRANSFORMERS_OFFLINE=1 TOKENIZERS_PARALLELISM=false \
+  .venv/bin/python -I -B scripts/pilot_context_windows.py \
+  --job data/processed/cycle-topic-inference-retained-text-20261024-v19 \
+  --majority-gallery outputs/topic-majority-2023-2024-v1 \
+  --majority-sha256 ea392fae9eed070199e47d894f6a93c15ac4bc4af1e4aeb470676b565afe6845 \
+  --casebook outputs/assistant-advisory-topic-review-2023-2024-v7 \
+  --casebook-sha256 df01ac822204da4b5c92b8d157bce574bb1c164358bbfdc31e1a3870f1e4298b \
+  --out-dir outputs/topic-context-pilot-2023-2024-REPLAY \
+  --allow-provisional
+```
+
+`plan.json` freezes all original source bindings, selected IDs, runtime,
+producers, weights and profiles before encoder work. The unchanged training
+configuration is 1,024 tokens / 128 overlap; native model capacity is 8,192.
+The explicit inference profiles are 4,096/512 and 8,192/1,024. No trained
+manifest is monkeypatched, no policy text is truncated, and every original
+source and context field remains recoverable.
+
+The separate SQLite cache binds each window to model run, complete input SHA,
+token interval and actual wrapped encoder IDs. It reuses only exact matching
+windows, never an old short-document decision in place of larger-window
+logits. Longest-first batches have an 8,192 padded-token budget and maximum
+batch size two. Cache windows and complete batch receipts commit atomically.
+Repeating the same command with `--resume` verifies the frozen plan and reuses
+completed exact windows. A completed resume verifies all artifact and archive
+bindings without loading the encoder or writing the cache. Interrupted ZIP
+finalization is explicitly refused, not returned as successful completion.
+
+Actual results are in `outputs/topic-context-pilot-2023-2024-v1/`. The
+1,024-token majority assigns seventy selected cases; 4,096 assigns 74 and
+8,192 assigns 79. Corresponding disagreements with assistant proposals are
+ten, thirteen and sixteen, with two advisory-unresolved assignments in each
+condition. The longer profiles also lose two and one existing assignments.
+Rescue-only comparisons preserve all primary assignments and assign 76 or 80,
+but have fourteen or seventeen differing topics. These selected diagnostics
+have been used for hypothesis development and are not untouched evaluation,
+representative accuracy, proof that the proposals are correct, or grounds for
+population promotion.
+
+The two PNG/SVG pairs and four complete tables describe the selected
+comparisons and actual encoder work. The complete 285-member ZIP retains all
+255 full source texts, complete original input/prediction/context records,
+token IDs/offsets, all 4,776 cached windows, 768 atomic batch receipts, raw and
+rescue-only decisions and executed producers. It is **not metadata-only**.
+Manifest:
+`ef7857499a3783fed82a8884979b01f3f7b72c7c46afce16246fd24e24be5a6e`.
+`complete_download.json` separately pins that manifest and
+`research-data/complete_context_window_pilot.zip`:
+**57,192,305 bytes**, SHA-256
+`954b953ff32af95ca2e7a0bb4941ccfa5e1a288bf4eac6e8fb066caeceb29419`.
+The archive and download receipt are excluded from the manifest to avoid
+circular hashing; verify them separately as well as the 284 payload artifacts.
+
+Independent replay is
+`data/context-pilot-independent-replay-20261024-v1.json`, produced by
+`data/verify_context_pilot_20261024_v1.py` under the predeclared
+`data/context-pilot-verification-protocol-20261024-v1.json`.
+It freshly tokenizes all inputs and reconstructs every window, cache identity,
+source/context decision, chart table and ZIP member without importing the new
+implementations. Four predeclared independent encoder batch checks repeat
+seven windows and reproduce their logits exactly. Those intentional validation
+repeats are separate from the producer's 1,208 new windows. Completed-resume
+evidence is `data/context-pilot-completed-resume-20261024-v1.log`.
+Browser evidence is `data/context-pilot-browser-20261024-v1/receipt.json`:
+desktop/mobile, both SVGs, all 255 complete UTF-8 inputs and seven exact
+downloads; helpers exit and no external requests or JavaScript errors occur.
+
+The further cross-input annex is separately exploratory. Its rule is frozen
+in `data/context-cross-input-rescue-plan-20261024-v1.json` before the selected
+metadata predictions are inspected. Keep all seventy primary assignments;
+for an unresolved case, require an accepted metadata policy topic supported
+by more than half of metadata/4,096-body/8,192-body votes, including a body
+vote. Uncertain/rejected votes stay in the denominator; there is no metadata-
+only fallback. All signals share the same weights and are not independent
+semantic raters.
+
+Actual output is `data/processed/context-cross-input-rescue-20261024-v1/`.
+It adds four assignments, two matching assistant proposals and two differing,
+with **zero new encoder calls**. The complete twelve-member
+`complete_cross_input_exploration.zip` includes all 114 complete selected
+metadata inputs and predictions, all 109 contexts/comparisons and the entire
+285-member body-pilot ZIP. Full archive: **57,617,097 bytes**, SHA-256
+`0b20aac414d5d4999e07f5b7cb90d08d535ea40a3f6bcc284bed5d0b11bd244e`.
+The executed producer is
+`data/run_context_cross_input_rescue_20261024_v1.py`; independent reconstruction
+of all records, CSV fields and outer/nested archive members is recorded in
+`data/context-cross-input-independent-replay-20261024-v1.json`, from
+`data/verify_context_cross_input_rescue_20261024_v1.py`. Download bindings are
+in `data/context-cross-input-exploration-complete-download-20261024-v1.json`.
+Existing output directories/receipts must not be overwritten for a replay.
+
+Neither experiment changes the frozen human evaluation plan or supplies human
+annotations, retrains weights, certifies accuracy, replaces population results
+or publishes anything. The majority candidate remains 78,300 assignments;
+the next source/encoder extension still starts from **v19 / token v16**.
+
 ### Strict-majority bill-topic candidate
 
 The new decision policy is a separate, explicitly provisional alternative to
@@ -85,7 +189,8 @@ implementation. Actual browser proof is
 three decoded SVGs and nine byte-identical downloads, zero external requests
 or JavaScript errors, helpers exited.
 
-The selected assistant diagnostics are not a tuning set or accuracy estimate:
+The selected assistant diagnostics are development evidence, not untouched
+evaluation or population accuracy estimates:
 of 32 newly assigned selected cases, 25 match existing proposals, six differ and
 one has no proposal. The checkpoint's registered 808 train / fifty dev rows
 are assistant-reviewed, not independent human validation. Its original

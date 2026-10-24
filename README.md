@@ -137,6 +137,18 @@ Minority evidence and source disagreements remain visible. This candidate has
 **not** replaced the preserved baseline or established better accuracy; see the
 [majority policy and measured tradeoffs](docs/REPRODUCIBILITY.md#strict-majority-bill-topic-candidate).
 
+A further complete-source pilot tests **4,096- and 8,192-token windows** with
+the same frozen weights on all **109 selected contexts / 255 source views**.
+Assignments increase from 70 under the 1,024-token majority rule to 74 and 79,
+but disagreements with the assistant proposals also increase from ten to
+thirteen and sixteen. A separate title/body voting check adds four assignments:
+two match the proposals and two differ. These selected assistant comparisons
+are **not human accuracy measurements**, and the signals share the same model.
+Neither experiment replaces the population results or justifies a nationwide
+rollout. Two new graph pairs and complete texts, tokenizations, logits and
+comparisons are in `outputs/topic-context-pilot-2023-2024-v1/`; see the
+[longer-context experiment and full downloads](docs/REPRODUCIBILITY.md#longer-context-and-cross-input-experiments).
+
 Twenty-one model-blind GPT-6.1 Sol reviews cover **109 selected Delaware/Hawaii/
 NJ/Nevada/Virginia contexts / 255 complete source views**, with 604 exact evidence
 spans verified. Thirty-three assigned topics match advisory proposals; four
