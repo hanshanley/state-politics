@@ -27,7 +27,34 @@ not that the state has no data. Platform recovery is separate from the
 legislative status in this table; no state's operative-platform coverage is
 certified complete.
 
-## Latest explicit-action carryover recovery
+## Latest finite public-identity recovery
+
+A new bounded public-form discovery retains 24 successful result pages
+before the publisher returns an explicit search-login HTTP 401. That search
+endpoint is now closed: no login, retry, new cookie session, alternate search
+route or request for the denied result is used. Only fifteen public bill
+links already returned before that stop and their actual public cached-text
+links are followed, with no cookies, account, API or native requests.
+
+The GET-only follow-up closes after 31 new GETs. Strict replay recovers
+**15 original 2024 Hawaii contexts / 16 complete views / 58,828 characters**,
+with matching own printed state, 32nd Legislature/2024, typed number and
+caption. This is not a metadata-only fill or a statewide census.
+Packet: `data/processed/billcam-prestop-public-documents-html-20261023-v1/`,
+manifest `2e68a62ad0323c0d78daea5e2a823b0bb22bb47fba287e3b2971d4a4dbddd9cf`.
+All fifteen contexts came from the exact preceding 18,407-row gap queue;
+all original dates, sessions, fields and unknowns remain unchanged.
+
+Availability is **139,206 / 157,598 original contexts**, leaving **18,392**
+unavailable, including **5,739 HI**. Fifteen archival packets cover
+**10,751 contexts / 13,117 views**. The new packet supplements all fourteen
+preceding packets; it does not replace any. Source, inference and graph
+receipts remain separately versioned. No scientific, human, rights,
+filing-originality, party-time or publication approval is inferred.
+Controlled BillCam totals are **3,081 GETs / 26 POSTs**, including the
+search denial; inherited responses are represented, not requested again.
+
+## Preceding explicit-action carryover recovery
 
 An offline follow-up resolves **213 further original Hawaii contexts /
 229 unique complete views / 1,827,636 characters** using actual original
