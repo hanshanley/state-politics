@@ -348,6 +348,10 @@ def load_archive(directory: Path, metadata=None):
         from state_politics.bills.billcam_text import load_billcam
 
         return load_billcam(directory, metadata)
+    if manifest.get("schema") == "state-politics.billcommons-archive-text.v1":
+        from state_politics.bills.billcommons_text import load_billcommons
+
+        return load_billcommons(directory, metadata)
     if manifest.get("schema") == "state-politics.govbot-archived-documents.v1":
         from state_politics.bills.govbot_text import load_govbot
 

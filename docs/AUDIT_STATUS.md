@@ -23,8 +23,20 @@ transparent project agent and relevant named-AI robots policy are checked.
 The received strings cover six original contexts; one HB 32 fiscal note is
 ancillary, not a bill-text fill. The other twelve strings total 301,396
 characters and retain their own printed Assembly, typed number and caption.
-Structural normalization/replay and downstream inference remain separate
-pending executions; these capture observations alone do not update coverage.
+The first real structural build exposes a compact-number/order mismatch in
+batch-query replay. Its failed log and all original capture bytes remain
+unchanged. Corrected replay reproduces the collector's actual compact sorted
+keys and rejects altered query bindings without changing any original field.
+The actual packet now builds and independently verifies **six contexts /
+twelve full views / 301,396 characters**, preserving the fiscal-note rejection
+and all fourteen original candidate dispositions. Manifest:
+`da06360ed4eb4f559a9cd7ad0c50f9738eac66eb4397e0eea513629297d0c502`.
+Its twelve strings also match the complete blinded review inputs exactly;
+all 28 advisory literal spans verify without frozen-human overlap. These
+reviews are not independent human accuracy or replacement labels.
+New source availability is 139,272 / 157,598, leaving 18,326 gaps;
+model v17 and existing galleries are still the last completed downstream
+baseline. New inference and graph executions remain separate.
 The full source packet is
 `data/processed/billcommons-de-original-source-20261024-v1/`, manifest
 `1ee32f28ee064b20da9d867423e20868cbb70b990f7080dffc2fa1da1726f0ab`.

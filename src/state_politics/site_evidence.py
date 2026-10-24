@@ -1019,7 +1019,8 @@ def build_cycle_preview(
         for name in (
             "archive_text.py", "lawatlas_text.py", "maryland_archive_text.py",
             "nj_library_text.py", "nj_library_collection.py", "ok_retained_context_text.py",
-            "billcam_text.py", "govbot_text.py", "native_text.py", "published_corpus_text.py",
+            "billcam_text.py", "billcommons_text.py", "govbot_text.py", "native_text.py",
+            "published_corpus_text.py",
         ):
             producer_paths[name] = Path(__file__).with_name("bills") / name
         producer_paths["registry.py"] = Path(__file__).with_name("platforms") / "registry.py"

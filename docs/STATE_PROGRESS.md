@@ -27,7 +27,40 @@ not that the state has no data. Platform recovery is separate from the
 legislative status in this table; no state's operative-platform coverage is
 certified complete.
 
-## Latest residual New Jersey library recovery
+## Latest independent-publication Delaware recovery
+
+A new independently replayed Bill Commons packet recovers **six original
+Delaware contexts / twelve complete source views / 301,396 characters**:
+HB 23, HB 28, HB 32, HB 140, SR 2 and SR 3. Both complete PDF/HTML extraction
+alternatives survive. A separate 4,373-character HB 32 fiscal note is excluded;
+all fourteen original candidate dispositions remain explicit, including eight
+with no supplied full policy text.
+
+Own printed 153rd General Assembly, typed bill/resolution, exact original
+caption and Delaware enacting/resolving clause bind the original contexts.
+Every supplied source/version/document foreign key and whole original row is
+replayed. Original December 2024 introduction dates and the publisher's
+conflicting 2026 session dates remain distinct and unchanged. Raw publisher
+PDF/HTML bytes were not supplied: these are complete third-party stored
+extractions, not publisher-original or filing-time certification.
+
+Packet: `data/processed/billcommons-de-original-context-text-20261024-v1/`,
+manifest `da06360ed4eb4f559a9cd7ad0c50f9738eac66eb4397e0eea513629297d0c502`.
+The new original-context availability is **139,272 / 157,598**, leaving
+**18,326** gaps, including **422 DE / 1,600 NJ / 5,717 HI**.
+Twenty-three archives contain **10,817 contexts / 13,269 views**.
+Proof: `data/billcommons-de-context-packet-replay-20261024-v1.json`.
+Full-text model v17 and its existing galleries remain the last completed
+downstream baseline; new inference and graph executions have not occurred.
+
+The complete blinded advisory review reads all twelve actual source strings
+and verifies 28 literal spans, with no frozen-human overlap. It is not human
+gold, accuracy certification or replacement labels. The separate finite
+Nevada original-reference recovery is still in progress and is not included
+in these counts. No scientific, party, source-rights, human, report,
+publication or public-integration gate is closed.
+
+## Preceding residual New Jersey library recovery
 
 Two further independently replayed offline packets recover **22 additional
 original contexts / 61 complete views / 1,144,522 policy characters**. A distinct
