@@ -482,7 +482,8 @@ def _checklist_only(page_texts):
 
 
 def separate_versions(page_texts, *, context_qualified_introductions=None,
-                      qualify_supported_years=False, unlabelled_page_bridges=None):
+                      qualify_supported_years=False, unlabelled_page_bridges=None,
+                      allow_single_page_versions=False):
     """Return complete contiguous own versions and all-page dispositions.
 
     Unknown boundaries, orphan typed continuations, or contradictory folios are
@@ -497,6 +498,9 @@ def separate_versions(page_texts, *, context_qualified_introductions=None,
     require(unlabelled_page_bridges is None
             or qualify_supported_years and type(unlabelled_page_bridges) is dict,
             "explicit extended-profile page bridge required")
+    require(type(allow_single_page_versions) is bool
+            and (not allow_single_page_versions or qualify_supported_years),
+            "single-page versions require the explicit extended profile")
     covers = {
         i: printed_identity(
             text, i + 1, context_qualified_introductions=context_qualified_introductions,
@@ -605,7 +609,8 @@ def separate_versions(page_texts, *, context_qualified_introductions=None,
             continuations.append(continuation)
             cursor += 1
             folio += 1
-        require(len(ordinals) >= 2, "missing complete bill continuation")
+        require(len(ordinals) >= 2 or allow_single_page_versions,
+                "missing complete bill continuation")
         body = "\n".join(page_texts[p - 1] for p in ordinals)
         section_effective = re.search(
             r"(?m)^[ \t]*[1-9][0-9]*\.[ \t]+[Ss]ections?[ \t]+[0-9]+"
@@ -680,6 +685,8 @@ def separate_versions(page_texts, *, context_qualified_introductions=None,
             }
         if page_bridges:
             item["unlabelled_page_bridges"] = page_bridges
+        if len(ordinals) == 1:
+            item["complete_single_page_policy_version"] = True
         versions.append(item)
         for ordinal in ordinals:
             require(ordinal - 1 not in selected, "overlapping complete bill versions")

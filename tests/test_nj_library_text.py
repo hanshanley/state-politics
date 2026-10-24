@@ -46,6 +46,41 @@ def _texts():
     ]
 
 
+def test_single_page_policy_requires_explicit_profile_and_complete_body():
+    texts = _texts()
+    texts[1] += "2. This act shall take effect immediately.\nComplete final policy paragraph.\n"
+    del texts[2]
+    with pytest.raises(ValueError, match="missing complete bill continuation"):
+        nj.separate_versions(texts)
+    versions, dispositions = nj.separate_versions(
+        texts, context_qualified_introductions={}, qualify_supported_years=True,
+        allow_single_page_versions=True,
+    )
+    single = versions[0]
+    assert single["kind"] == "enacted_version" and single["page_ordinals"] == [2]
+    assert single["complete_single_page_policy_version"] is True
+    assert single["boundary"] == {
+        "reason": "next_distinct_own_version", "next_page_ordinal": 3,
+    }
+    assert len(dispositions) == len(texts)
+    with pytest.raises(ValueError, match="explicit extended profile"):
+        nj.separate_versions(texts, allow_single_page_versions=True)
+
+
+def test_partial_single_page_is_preserved_but_never_admitted():
+    texts = _texts()
+    del texts[2]
+    versions, dispositions = nj.separate_versions(
+        texts, context_qualified_introductions={}, qualify_supported_years=True,
+        allow_single_page_versions=True,
+    )
+    assert all(version["kind"] != "enacted_version" for version in versions)
+    assert dispositions[1]["disposition"] == "quarantined_unproven_version"
+    assert dispositions[1]["text_preserved_in_full"] is True
+    introduced = next(version for version in versions if version["identifier"] == "A 100")
+    assert introduced["quarantined_same_bill_source_versions"][0]["page_ordinals"] == [2]
+
+
 @pytest.fixture
 def work():
     # Never use pytest's system temporary directory for source or packet files.

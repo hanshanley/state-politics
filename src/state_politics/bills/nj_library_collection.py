@@ -51,6 +51,7 @@ SOURCE_STATUSES = {
 }
 CONTEXT_SCHEMA = "state-politics.original-nj-tail-introductions.v1"
 CONTEXT_ALL_DATES_SCHEMA = "state-politics.original-nj-introduction-contexts.v1"
+CONTEXT_SINGLE_PAGE_SCHEMA = "state-politics.original-nj-single-page-contexts.v1"
 ORIGINAL_CONTEXTS_SHA256 = "854ecd4e37ba2f160c8dc46fca92f9b47bbcf29c82939a7726855eaaea304431"
 ORIGINAL_EXTRACTION_SHA256 = "9a3555e5194ac3d45ab30c4107df4f720ad40f3ce85e040fa5336138d8ee8a29"
 UNLABELLED_PAGE_BRIDGES = {
@@ -517,7 +518,8 @@ def _source(source, manifest_sha256):
 
 
 def _separate(page_rows, *, context_qualified_introductions=None,
-              qualify_supported_years=False, source_pdf_sha256=None):
+              qualify_supported_years=False, source_pdf_sha256=None,
+              allow_single_page_versions=False):
     if any(p["errors"] or type(p["text"]) is not str or not p["text"].strip()
            for p in page_rows):
         return [], [{
@@ -545,6 +547,7 @@ def _separate(page_rows, *, context_qualified_introductions=None,
             context_qualified_introductions=context_qualified_introductions,
             qualify_supported_years=qualify_supported_years,
             unlabelled_page_bridges=bridges,
+            allow_single_page_versions=allow_single_page_versions,
         )
     except ValueError as exc:
         prefix = "incompatible NJ library archive: "
@@ -677,7 +680,9 @@ def _context_introductions(directory, manifest_sha256):
     manifest = legacy._json(manifest_path)
     names = {"contexts.jsonl", "bill_actions.parquet", "bill_extraction_manifest.json"}
     require(set(manifest) == {"schema", "artifacts"}
-            and manifest["schema"] in {CONTEXT_SCHEMA, CONTEXT_ALL_DATES_SCHEMA}
+            and manifest["schema"] in {
+                CONTEXT_SCHEMA, CONTEXT_ALL_DATES_SCHEMA, CONTEXT_SINGLE_PAGE_SCHEMA,
+            }
             and set(manifest["artifacts"]) == names
             and _tree(directory) == names | {"manifest.json"},
             "complete original context/action evidence required")
@@ -697,7 +702,9 @@ def _context_introductions(directory, manifest_sha256):
             == pq.read_metadata(directory / "bill_actions.parquet").num_rows,
             "actions do not match the complete original extraction")
     contexts, seen = {}, set()
-    years = ("2022-", "2023-", "2024-") if manifest["schema"] == CONTEXT_ALL_DATES_SCHEMA else ("2024-",)
+    years = (("2022-", "2023-", "2024-") if manifest["schema"] in {
+        CONTEXT_ALL_DATES_SCHEMA, CONTEXT_SINGLE_PAGE_SCHEMA,
+    } else ("2024-",))
     with (directory / "contexts.jsonl").open("rb") as stream:
         for line in stream:
             row = legacy._decode(line)
@@ -758,7 +765,8 @@ def _gap_queue(source, queue_path, queue_sha256, *, allow_original_subset=False)
 
 
 def _replay(source, queue_path, source_sha256, queue_sha256, *,
-            context_qualified_introductions=None, qualify_supported_years=False):
+            context_qualified_introductions=None, qualify_supported_years=False,
+            allow_single_page_versions=False):
     source_manifest, batch, ledger = _source(source, source_sha256)
     ledger_name = _ledger_name(source)
     gap = _gap_queue(
@@ -813,6 +821,7 @@ def _replay(source, queue_path, source_sha256, queue_sha256, *,
                     page_rows, context_qualified_introductions=context_qualified_introductions,
                     qualify_supported_years=qualify_supported_years,
                     source_pdf_sha256=entry["pdf_sha256"],
+                    allow_single_page_versions=allow_single_page_versions,
                 )
             structures[reader] = [
                 (v["identifier"], v["kind"], v["page_ordinals"], v["boundary"])
@@ -978,6 +987,17 @@ def _replay(source, queue_path, source_sha256, queue_sha256, *,
                 bool(row["source_version"].get("quarantined_same_bill_source_versions"))
                 for row in views
             )
+        if allow_single_page_versions:
+            report["limits"]["complete_single_page_versions"] = (
+                "Explicit single-page context profile only. A complete own body/effective "
+                "clause, introduced statement when applicable, exact identity/action proof "
+                "and unambiguous next-version/ancillary/PDF boundary remain required. "
+                "Short partial pages are retained in quarantine, never admitted."
+            )
+            counts["accepted_complete_single_page_views"] = sum(
+                row["source_version"].get("complete_single_page_policy_version") is True
+                for row in views
+            )
     if ledger_name == "request-ledger.jsonl":
         prefix = legacy._jsonl(source / "seed-request-ledger.jsonl")
         counts["retained_inherited_prefix_records"] = len(prefix)
@@ -1031,6 +1051,7 @@ def build_nj_collection(source_directory, gap_queue, out_directory, *,
     require((context_evidence is None) == (context_evidence_sha256 is None),
             "context evidence requires both a directory and external manifest SHA256")
     qualified, context_inventory, qualify_supported_years = None, {}, False
+    allow_single_page_versions = False
     if context_evidence is not None:
         context_evidence = legacy._root(context_evidence)
         require(not context_evidence.is_relative_to(out) and not out.is_relative_to(context_evidence),
@@ -1038,9 +1059,11 @@ def build_nj_collection(source_directory, gap_queue, out_directory, *,
         qualified, context_inventory = _context_introductions(
             context_evidence, context_evidence_sha256,
         )
-        qualify_supported_years = (
-            legacy._json(context_evidence / "manifest.json")["schema"] == CONTEXT_ALL_DATES_SCHEMA
-        )
+        context_schema = legacy._json(context_evidence / "manifest.json")["schema"]
+        qualify_supported_years = context_schema in {
+            CONTEXT_ALL_DATES_SCHEMA, CONTEXT_SINGLE_PAGE_SCHEMA,
+        }
+        allow_single_page_versions = context_schema == CONTEXT_SINGLE_PAGE_SCHEMA
     _gap_queue(source, queue, queue_sha, allow_original_subset=qualified is not None)
     source_names = set(source_manifest["artifacts"]) | {"manifest.json"}
     before = {name: legacy._binding(source / name) for name in sorted(source_names)}
@@ -1056,7 +1079,8 @@ def build_nj_collection(source_directory, gap_queue, out_directory, *,
     products, contexts, report = _replay(evidence, out / "input_gap_queue.parquet",
                                         source_sha, queue_sha,
                                         context_qualified_introductions=qualified,
-                                        qualify_supported_years=qualify_supported_years)
+                                        qualify_supported_years=qualify_supported_years,
+                                        allow_single_page_versions=allow_single_page_versions)
     for name, rows in products.items():
         legacy._write_rows(out / name, rows)
     pq.write_table(contexts, out / "context_inventory.parquet")
@@ -1150,9 +1174,16 @@ def load_nj_collection(root, metadata=None, *, source_manifest_sha256=None,
             previous_tail = SEALED_PRODUCERS[
                 "3922c090c6d937385c57818b9a3f065ebee1f6168a3cedc9b842b8095e5bdeae"
             ]["producer/nj_library_text.py"]
-            require(expected in (legacy._binding(path), legacy.STRICT_2023_PRODUCER, previous_tail),
+            previous_all_dates = SEALED_PRODUCERS[
+                "81771d07dc9f41a79547193e26e220bfa71015e57d912eb587ad749373d426ab"
+            ]["producer/nj_library_text.py"]
+            require(expected in (
+                legacy._binding(path), legacy.STRICT_2023_PRODUCER,
+                previous_tail, previous_all_dates,
+            ),
                     "historical extraction dependency changed")
     qualified, context_inventory, qualify_supported_years = None, {}, False
+    allow_single_page_versions = False
     if "context_introduction_evidence_sha256" in manifest:
         context_sha = _hash(manifest["context_introduction_evidence_sha256"])
         if context_evidence_sha256 is not None:
@@ -1161,10 +1192,11 @@ def load_nj_collection(root, metadata=None, *, source_manifest_sha256=None,
         qualified, context_inventory = _context_introductions(
             directory / "context-evidence", context_sha,
         )
-        qualify_supported_years = (
-            legacy._json(directory / "context-evidence/manifest.json")["schema"]
-            == CONTEXT_ALL_DATES_SCHEMA
-        )
+        context_schema = legacy._json(directory / "context-evidence/manifest.json")["schema"]
+        qualify_supported_years = context_schema in {
+            CONTEXT_ALL_DATES_SCHEMA, CONTEXT_SINGLE_PAGE_SCHEMA,
+        }
+        allow_single_page_versions = context_schema == CONTEXT_SINGLE_PAGE_SCHEMA
     else:
         require(context_evidence_sha256 is None, "expected context evidence is missing")
     source = legacy._root(directory / "source-evidence")
@@ -1181,6 +1213,7 @@ def load_nj_collection(root, metadata=None, *, source_manifest_sha256=None,
         manifest["source_manifest_sha256"], manifest["gap_queue_sha256"],
         context_qualified_introductions=qualified,
         qualify_supported_years=qualify_supported_years,
+        allow_single_page_versions=allow_single_page_versions,
     )
     for name, rows in products.items():
         with (directory / name).open("rb") as stream:
