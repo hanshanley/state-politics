@@ -88,6 +88,13 @@ do not fill missing bodies, independently validate labels, settle taxonomy
 boundaries, authorize further model training, or change publication gates.
 Further coverage gains alone are not grounds to promote either alternative.
 
+All 27 focused profile/majority/score regressions pass. The actual tracked full
+audit is **444/478**, adding three passing Python-documentation checks to the
+preceding 441/475 report. The same 34 legacy failures and every other report
+field remain identical. The report is
+`data/context-pilot-code-checkpoint-full-audit-20261024-v1.json`; its nonzero
+audit exit is retained, not represented as passing scientific validation.
+
 ## Strict-majority bill-topic candidate: October 24, 2026
 
 The requested majority alternative is implemented and executed for the entire

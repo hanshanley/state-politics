@@ -121,6 +121,11 @@ Neither experiment changes the frozen human evaluation plan or supplies human
 annotations, retrains weights, certifies accuracy, replaces population results
 or publishes anything. The majority candidate remains 78,300 assignments;
 the next source/encoder extension still starts from **v19 / token v16**.
+The actual tracked full audit is
+`data/context-pilot-code-checkpoint-full-audit-20261024-v1.json`: 444/478,
+with the same 34 legacy failures and every other preceding report field
+unchanged. Generated source/model/graph evidence remains local and Git-ignored;
+pushing the code is not a backup of these complete research downloads.
 
 ### Strict-majority bill-topic candidate
 
