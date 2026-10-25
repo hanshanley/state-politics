@@ -2145,8 +2145,8 @@ z
    </g>
    <g id="patch_208">
     <path d="M 477.321266 139.473729 
-L 480.765529 139.473729 
-L 480.765529 151.133718 
+L 488.355101 139.473729 
+L 488.355101 151.133718 
 L 477.321266 151.133718 
 z
 " clip-path="url(#pa6e6e01dbb)" style="fill: #c85a3d"/>
@@ -2344,10 +2344,10 @@ z
 " clip-path="url(#pa6e6e01dbb)" style="fill: #8d809b"/>
    </g>
    <g id="patch_233">
-    <path d="M 480.765529 139.473729 
+    <path d="M 488.355101 139.473729 
 L 532.581885 139.473729 
 L 532.581885 151.133718 
-L 480.765529 151.133718 
+L 488.355101 151.133718 
 z
 " clip-path="url(#pa6e6e01dbb)" style="fill: #8d809b"/>
    </g>
@@ -2532,7 +2532,7 @@ L 834.409106 543.916347
    <text style="font-size: 10.5px; font-family: 'DejaVu Serif', 'Bitstream Vera Serif', 'Computer Modern Roman', 'New Century Schoolbook', 'Century Schoolbook L', 'Utopia', 'ITC Bookman', 'Bookman', 'Nimbus Roman No9 L', 'Times New Roman', 'Times', 'Palatino', 'Charter', serif; text-anchor: start; fill: #6b6b6b" x="12.96" y="43.198144" transform="rotate(-0 12.96 43.198144)">Complete retained source evidence; unknowns preserved</text>
   </g>
   <g id="text_69">
-   <text style="font-style: italic; font-size: 8.5px; font-family: 'DejaVu Serif', 'Bitstream Vera Serif', 'Computer Modern Roman', 'New Century Schoolbook', 'Century Schoolbook L', 'Utopia', 'ITC Bookman', 'Bookman', 'Nimbus Roman No9 L', 'Times New Roman', 'Times', 'Palatino', 'Charter', serif; fill: #6b6b6b" transform="translate(12.96 628.215839)">Source: Evidence v31: 139,425 of 157,598 contexts have text. Exact bill IDs de-duplicate source channels. Missing or later-version text is not</text>
+   <text style="font-style: italic; font-size: 8.5px; font-family: 'DejaVu Serif', 'Bitstream Vera Serif', 'Computer Modern Roman', 'New Century Schoolbook', 'Century Schoolbook L', 'Utopia', 'ITC Bookman', 'Bookman', 'Nimbus Roman No9 L', 'Times New Roman', 'Times', 'Palatino', 'Charter', serif; fill: #6b6b6b" transform="translate(12.96 628.215839)">Source: Evidence v32: 139,674 of 157,598 contexts have text. Exact bill IDs de-duplicate source channels. Missing or later-version text is not</text>
    <text style="font-style: italic; font-size: 8.5px; font-family: 'DejaVu Serif', 'Bitstream Vera Serif', 'Computer Modern Roman', 'New Century Schoolbook', 'Century Schoolbook L', 'Utopia', 'ITC Bookman', 'Bookman', 'Nimbus Roman No9 L', 'Times New Roman', 'Times', 'Palatino', 'Charter', serif; fill: #6b6b6b" transform="translate(12.96 640.115839)">publisher-original certification.</text>
   </g>
   <g id="legend_1">

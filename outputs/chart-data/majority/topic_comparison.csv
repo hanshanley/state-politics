@@ -1,22 +1,22 @@
 topic,label,baseline_contexts,candidate_contexts
-1,Macroeconomics,3008,3813
+1,Macroeconomics,3010,3815
 2,Civil rights and liberties,306,351
-3,Health,13175,15411
-4,Agriculture,1031,1198
-5,Labor and employment,1731,2309
-6,Education,7841,9133
-7,Environment,1136,1394
-8,Energy,1001,1259
+3,Health,13203,15439
+4,Agriculture,1033,1200
+5,Labor and employment,1733,2311
+6,Education,7854,9146
+7,Environment,1137,1395
+8,Energy,1006,1264
 9,Immigration,121,140
-10,Transportation,4667,5583
-12,"Law, crime and justice",12963,15262
-13,Social welfare,1263,1658
-14,Housing and community development,2732,3430
-15,"Business, commerce and consumers",2689,3860
-16,Defense and veterans,1159,1359
-17,"Science, technology and communications",49,53
+10,Transportation,4671,5587
+12,"Law, crime and justice",12977,15276
+13,Social welfare,1269,1664
+14,Housing and community development,2738,3436
+15,"Business, commerce and consumers",2690,3861
+16,Defense and veterans,1160,1360
+17,"Science, technology and communications",50,54
 18,Foreign trade,0,0
 19,International affairs,52,52
-20,Government operations,6915,8066
-21,Public lands and water,3278,3994
+20,Government operations,6921,8072
+21,Public lands and water,3281,3997
 23,"Culture, family and social issues",22,23

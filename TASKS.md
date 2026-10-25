@@ -36,8 +36,8 @@ the detailed source and scientific gates remain in `docs/AUDIT_STATUS.md` and
   inspection and model-blind review serving passed 46 regressions and actual
   saved-bundle HTTP checks; checkpoint `1d57247`.
 - [ ] **DATA-01: Resolve genuine source gaps when new permitted evidence exists.**
-  Current source union: 157,598 candidate contexts, 139,425 with body text and
-  18,173 still missing. The earlier 18,281-row gap queue remains preserved.
+  Current source union: 157,598 candidate contexts, 139,674 with body text and
+  17,924 still missing. Earlier 18,281/18,173-row gap queues remain preserved.
   Follow recorded source closures and restrictions; do not repeat closed
   campaigns or turn absent text into zeros or fabricated inputs.
   New October 25 source milestone: one newly identified official Nebraska
@@ -45,7 +45,8 @@ the detailed source and scientific gates remain in `docs/AUDIT_STATUS.md` and
   views, with original dates/identities unchanged. Independent replay
   re-extracts every page with both readers and checks all 350 body spans.
   The complete source packet and downstream propagation are now independently
-  verified; this does not close the remaining 18,173 source gaps.
+  verified. The expanded collection subsequently recovers another 249 contexts;
+  this does not close the remaining 17,924 source gaps.
 - [x] **DATA-02: Propagate the qualified Nebraska journal evidence.** Extend
   the actual v19/token-v16 baseline without changing original labels, weights,
   taxonomy, human reservations or unavailable source fields. Reuse all prior
@@ -85,9 +86,9 @@ the detailed source and scientific gates remain in `docs/AUDIT_STATUS.md` and
   Both older packets replay unchanged; all 857 candidates and 1,700 dispositions
   survive. All 276 integration tests pass, with three optional fixture skips.
   The complete 28-member source ZIP retains all raw books/readers/producers;
-  it remains local and ignored. Current model/graphs are not updated by this
-  source qualification; DATA-04 performs that separate successor.
-- [ ] **DATA-04: Propagate the expanded journal collection into actual graphs.**
+  it remains local and ignored. Qualification alone did not update the model
+  or graphs; DATA-04 now completes that separate successor.
+- [x] **DATA-04: Propagate the expanded journal collection into actual graphs.**
   Start from completed v20 / token v17, retain all 26 earlier archive packets
   and every old input/prediction, and add only independently qualified new
   contexts. Freeze a fresh inference job and read-only cache successor; encode
@@ -95,6 +96,31 @@ the detailed source and scientific gates remain in `docs/AUDIT_STATUS.md` and
   window evidence and full downloads, then refresh source/topic/majority/score/
   comparison/inspector bundles and all actual Substack/website-background
   graphs. Preserve old snapshots, unknowns and all scientific/publication gates.
+  Verified v21 / token v18: exactly 498 new strings / 207,256 tokens / 502
+  windows, with zero old encoder repeats or discarded tokens. The new 249
+  contexts add 95 unanimity assignments and 154 abstentions; totals are 65,234
+  assigned / 74,440 abstained / 17,924 missing. Unpromoted majority assigns
+  78,443. All 178,961 old predictions, 157,349 other assignment rows, 85
+  controls, 354 source partitions and 33 previous complete source ZIPs survive
+  unchanged. Full fifty-state token/logit/window/108-member-ZIP replay and
+  independent full-score/vote checks pass. All 108 actual dual-background
+  exports and 35 complete CSVs are regenerated; 3,176 marks reconcile, and
+  a fresh nested replay is byte-identical for images/tables. Chromium verifies
+  all 498 new complete texts/scores/windows and complete full-state/filtered
+  query downloads plus the entire 28-member source ZIP. The combined suite
+  passes 390 tests, with three optional fixture skips. Nothing is deployed.
+  Root and nested galleries pass desktop/390px/320px with 27 images, 180 links
+  and seven actual methodology/evidence navigations. The full tracked audit is
+  452/486 with the same 34 legacy failures and all non-counter fields unchanged;
+  210 public-documentation checks and scoped Ruff pass.
+- [ ] **DATA-05: Investigate the later 2024 journal gap after graph delivery.**
+  The retained 2024 book's last printed daily header is March 25; all 89
+  not-located ordinary resolutions are dated later. Find an explicit official
+  catalogue reference before acquiring any later volume. Do not guess a URL,
+  reopen closed native routes or claim a recovery from this diagnostic.
+  Preserve the other 18 date/body-boundary negatives without repairing dates
+  or relaxing the admitted source profile. The full 107-row negative set and
+  all its available candidate bodies are retained in the offline diagnostic.
 - [ ] **VALIDATE-01: Independently validate classifications.** Preserve original
   unanimity and unpromoted majority separately. Complete actual independent human
   review and resolve taxonomy disputes before accuracy or party-policy claims.

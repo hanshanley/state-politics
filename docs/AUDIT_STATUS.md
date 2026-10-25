@@ -7,28 +7,28 @@ coverage or party-policy findings.
 
 ## Current propagated evidence and graphs: October 25, 2026
 
-The completed source/model successor is **v20 / independent token cache v17**.
-Of 157,598 unchanged contexts, **139,425 have text / 18,173 remain missing**.
-Unanimity assigns 65,139 and abstains on 74,286; the unpromoted majority
-candidate assigns 78,348, rejects 23,652, leaves 37,422 uncertain, excludes
-three scoreless test records and retains all 18,173 missing-body contexts.
+The completed source/model successor is **v21 / independent token cache v18**.
+Of 157,598 unchanged contexts, **139,674 have text / 17,924 remain missing**.
+Unanimity assigns 65,234 and abstains on 74,440; the unpromoted majority
+candidate assigns 78,443, rejects 23,754, leaves 37,474 uncertain, excludes
+three scoreless test records and retains all 17,924 missing-body contexts.
 These are provisional model dispositions, not independent accuracy estimates.
 
-Exactly 216 newly qualified reader strings / 87,803 tokens / 216 windows reached
+Exactly 498 newly qualified reader strings / 207,256 tokens / 502 windows reached
 the frozen encoder. No old input was re-encoded and no token was discarded.
-All 178,745 old predictions, 168,403 old cached results, 157,490 other whole
+All 178,961 old predictions, 168,619 old cached results, 157,349 other whole
 assignment rows, original identities/dates/unknowns and 85 protected human/model
-controls remain unchanged. The new contexts yield 48 unanimity assignments and
-60 abstentions; those 60 previously lacked text. Independent strict-majority
-arithmetic separates their 48 assignments / 34 model rejections / 26 uncertain
+controls remain unchanged. The new contexts yield 95 unanimity assignments and
+154 abstentions; those 154 previously lacked text. Independent strict-majority
+arithmetic separates their 95 assignments / 102 model rejections / 52 uncertain
 decisions without changing the original rule.
 
-Preview v36 retains all 354 other source partitions, Nebraska's five prior
+Preview v37 retains all 354 other source partitions, Nebraska's 221 prior
 archive views and every old dependency. Its NE archive partition and complete
-download contain all 221 alternatives, not just the 216 additions. Source
-gallery v31 preserves all 32 earlier complete research ZIPs byte-for-byte and
-adds the unchanged complete 14-member journal ZIP. Topic v18, majority v2,
-full-score v2, paired-input v16 and inspector v2 retain complete original
+download contain all 719 alternatives, not just the 498 additions. Source
+gallery v32 preserves all 33 earlier complete research ZIPs byte-for-byte and
+adds the complete 28-member collection ZIP. Topic v19, majority v3,
+full-score v3, paired-input v17 and inspector v3 retain complete original
 inputs, source text, predictions and producers; no metadata-only substitute
 or visible-page limit is used.
 
@@ -42,37 +42,35 @@ JavaScript errors/external HTTP requests, and actual navigation to all seven
 methodology/source destinations. The entire root/nested 108-image and 35-CSV
 payloads are byte-identical.
 
-The current inspector also passes actual Chromium checks for **all 216 new
+The current inspector also passes actual Chromium checks for **all 498 new
 complete reader bodies**, every 22-output vector and complete windows.
-Its all-NE query exports all 2,128 contexts / 536 source-input/prediction pairs /
-8,752,794 selected policy characters. The separate LR315 query includes both
-entire inputs; the actual source-ZIP download includes all 14 original files.
+Its all-NE query exports all 2,128 contexts / 1,034 source-input/prediction pairs /
+9,615,271 selected policy characters. The literal LR10 substring query includes
+all 12 matching contexts / 19 complete source pairs; the actual source-ZIP
+download includes all 28 original files.
 Every exported raw field, unknown and large integer matches the frozen
 records, independently of page rendering.
 
-Current proofs are `data/ne-journal-population-reconciliation-20261025-v1.json`,
-`data/ne-journal-derived-score-replay-20261025-v1.json`,
-`data/ne-journal-tracked-cycle-audit-20261025-v1.json`,
-`data/ne-journal-query-download-replay-20261025-v1.json` and
-`data/ne-journal-current-graphs-independent-20261025-v2.json`.
-Browser receipts are `data/ne-journal-browser-20261025-v1/receipt.json` and
-`data/current-graphs-browser-20261025-v5/receipt.json` / `v6` for nested/root.
-The combined source/inspector/all-chart-family/serving suite has **369 passes /
-three optional fixture skips / zero failures or errors** (372 cases):
-`data/ne-journal-final-regressions-20261025-v2.xml`. The first invocation used
-system-temp fixtures and correctly hit existing project-data output guards;
-the successful invocation uses a fresh ignored project-data fixture directory.
-The actual tracked full audit is **450/484**, with exactly the same 34 legacy
-failures as 448/482. Only the two passing documentation counters change; every
-other report field, including all computed results and the full failure list,
-is identical. Its nonzero exit is preserved, not called a clean full audit:
-`data/ne-journal-full-audit-20261025-v1.json` and
-`data/ne-journal-full-audit-comparison-20261025-v1.json`.
-The initial token-observer URI error, incorrect observer assumption of no prior
-NE archive views, failed caption-shadowing render and formatting-only
-intermediate are preserved, not relabelled successful runs. Corrected checks
-and exact final outputs are separate. No model, token, source-collection or
-context-experiment work was repeated to resolve those observer/layout issues.
+Current proofs have the `data/ne-journal-collection-` prefix:
+`population-reconciliation-20261025-v1.json`,
+`derived-score-replay-20261025-v1.json`,
+`tracked-cycle-audit-20261025-v1.json`,
+`query-download-replay-20261025-v1.json` and
+`current-graphs-independent-20261025-v1.json`.
+Browser receipts are `data/ne-journal-collection-browser-20261025-v1/receipt.json`
+and `data/current-graphs-browser-20261025-v7/receipt.json` / `v8` for root/nested.
+The combined source/inspector/all-chart-family/serving suite has **390 passes /
+three optional fixture skips / zero failures or errors** (393 cases):
+`data/ne-journal-collection-final-regressions-20261025-v1.xml`.
+All fixtures stay in fresh ignored project-data directories. The earlier
+source/model/graph snapshots, failed attempts and exact previous collection
+remain preserved; no old encoder/token work or context experiment was repeated.
+The actual tracked full audit is **452/486**, with the same 34 legacy failures
+as 450/484. Only the two passing documentation counters change; every other
+field and the complete failure list are identical. Its actual nonzero exit
+is retained, not described as a clean full audit:
+`data/ne-journal-collection-full-audit-20261025-v1.json` and
+`data/ne-journal-collection-full-audit-comparison-20261025-v1.json`.
 Independent human annotation, operative platforms, filing-time party/source
 certification, rights/report approval and website publication remain open.
 
@@ -81,7 +79,7 @@ certification, rights/report approval and website publication remain open.
 A separate, independently verified source collection qualifies **249 more
 original missing contexts / 498 full reader views / 862,477 characters** from
 the official 2023 First Session volumes and the preserved 2024 book. This is
-**not yet propagated into current v20 inference or its graphs**. All 8,274
+**now propagated into current v21 inference and its graphs**. All 8,274
 page strings are independently re-extracted; 812 body spans and 520 excluded
 literal printed prefixes are checked. The versioned prefix-only header rule
 resolves 83 pypdf glyph-spacing conflicts without altering policy text,

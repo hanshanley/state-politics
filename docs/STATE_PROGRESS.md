@@ -29,67 +29,65 @@ certified complete.
 
 ## Current dispatch snapshot: October 25, 2026
 
-The completed canonical inference is now **v20 / token cache v17**, with
-157,598 original contexts: **139,425 have retained text, 65,139 receive an
-original-rule unanimity topic, 74,286 abstain and 18,173 lack text**.
-The separate, unpromoted majority candidate assigns **78,348**, retaining all
-old assignments. Future extensions start here, not from historical v19/v16
+The completed canonical inference is now **v21 / token cache v18**, with
+157,598 original contexts: **139,674 have retained text, 65,234 receive an
+original-rule unanimity topic, 74,440 abstain and 17,924 lack text**.
+The separate, unpromoted majority candidate assigns **78,443**, retaining all
+old assignments. Future extensions start here, not from historical v20/v17
 instructions below. All prior snapshots and frozen human/model controls remain
 unchanged.
 
 The current collection actually refreshes all **27 charts / 108 Substack and
 website-background PNG/SVG exports**, linked from `outputs/README.md` and
 `outputs/index.html`, with all 35 complete chart CSVs and their full ZIP.
-Source/topic/majority/score/input bundles are v31/v18/v2/v2/v16; inspector v2
-exposes the same actual v20 evidence. The selected-context pilot remains a
+Source/topic/majority/score/input bundles are v32/v19/v3/v3/v17; inspector v3
+exposes the same actual v21 evidence. The selected-context pilot remains a
 historical diagnostic and was not rerun. Captions and manifest populations
 derive from the saved tables rather than stale hard-coded counts. Independent
 replay checks all 3,176 marks/cells; actual root and fresh nested galleries pass
 27 images / 180 links at 1360px, 390px and 320px, including real navigation to
 all seven methodology/evidence destinations.
 
-A newly identified official State Library journal now qualifies **108 original
-Nebraska contexts / 216 complete reader views / 360,756 characters**. One
-bounded GET retained the entire 1,370-page PDF. Both readers preserve every
-page, own resolution/108th Legislature/Second Session identity, exact original
-introduction dates and explicit complete-body boundaries. Independent replay
-re-extracts all 2,740 reader pages and verifies 350 raw body spans. It does not
-substitute bill titles, budget summaries or amendment fragments for full bills.
-Packet: `data/processed/ne-journal-qualified-text-20261025-v1/`,
-manifest `d4496cc9af71061371c8575acaae3257e074488d06e59d8c7deaf1114bcbef61`.
-Actual propagation is complete: 216 new exact strings / 87,803 tokens /
-216 windows reached the unchanged encoder, with no discarded tokens or old
-inputs repeated. All 178,745 old predictions and 157,490 other whole
-assignment rows remain unchanged. The new contexts add 48 unanimity assignments
-and 60 abstentions; they were previously unavailable, not changed old labels.
-All 354 other source partitions, five previous NE archive views and 32 older
-complete source ZIPs survive unchanged. Full source availability now leaves
-1,700 Nebraska gaps.
+The expanded official journal collection adds **249 original Nebraska
+contexts / 498 complete reader views / 862,477 characters**, separately from
+the previously propagated 108-context packet. Its versioned prefix-only repair
+resolves 83 pypdf printed-header conflicts without relaxing policy-text
+agreement, dates, identity or boundaries. Independent replay re-extracts all
+8,274 raw page strings and checks 812 body spans / 520 excluded prefixes.
+Both older packets and all 332 earlier qualified strings remain unchanged.
+Packet: `data/processed/ne-journal-collection-qualified-20261025-v2/`,
+manifest `3948e5160a060654ee1c65b1c334e3366dee9fb168b68f3a046ed43f5f877123`.
+
+Actual v21 propagation encodes exactly 498 fresh strings / 207,256 tokens /
+502 windows, with zero discarded tokens or old encoder inputs repeated.
+All 178,961 old predictions, 168,619 cached results, 157,349 other whole
+assignment rows and 85 controls remain unchanged. The new contexts add 95
+unanimity assignments and 154 abstentions; these were previously unavailable.
+Strict-majority diagnostics separate their 95 assignments / 102 model
+rejections / 52 uncertain outcomes. All 354 other source partitions, 221 prior
+NE archive views and 33 older complete research ZIPs survive unchanged.
+Nebraska now has 1,451 remaining gaps; its complete archive partition has
+719 views, including all old alternatives, not merely the 498 additions.
 
 The actual model/source/token/window/108-member-download replay passes for all
-fifty states. Chromium renders all 216 new full texts, all 22 outputs and their
-complete windows, and verifies actual full-state/filtered queries and the entire
-journal ZIP. Proofs have the `data/ne-journal-` prefix:
+fifty states. Chromium renders all 498 new full texts, all 22 outputs and their
+complete windows, and verifies complete full-state/filtered queries and the
+entire 28-member source ZIP. Proofs have the `data/ne-journal-collection-` prefix:
 `population-reconciliation-20261025-v1.json`,
 `derived-score-replay-20261025-v1.json`,
 `tracked-cycle-audit-20261025-v1.json`,
 `query-download-replay-20261025-v1.json` and
-`current-graphs-independent-20261025-v2.json`.
+`current-graphs-independent-20261025-v1.json`.
 Actual graph browser receipts are
-`data/current-graphs-browser-20261025-v5/receipt.json` (nested) and `v6`
-(root). No human validation, model promotion, source-rights approval or public
+`data/current-graphs-browser-20261025-v7/receipt.json` (root) and `v8`
+(nested). No human validation, model promotion, source-rights approval or public
 website publication is claimed.
 
-An independently verified **additional source qualification** now supplies
-249 original contexts / 498 views / 862,477 characters from the complete 2023
-books and seven wrapped headers in the saved 2024 book. All 83 provisional
-reader conflicts were literal printed-page header spacing; the versioned
-repair retains exact exclusions and does not relax policy-body agreement.
-Independent replay checks 8,274 raw reader pages, 812 body spans, 520 prefixes,
-unchanged original fields and all 85 controls. Both older source packets replay
-unchanged. **Current inference/graphs remain v20/token17 until DATA-04 actually
-propagates this separate collection**; do not subtract qualified-only records
-from the current missing-data denominator. All source/scientific gates remain.
+The prior v20/token17/source31/108-context delivery remains preserved history.
+The next source lead is the later 2024 journal: all 89 not-located ordinary
+resolutions follow the retained book's March 25 cutoff. Find an explicit
+official catalogue reference before acquisition; DATA-05 does not authorize a
+guessed URL, native access workaround, date repair or new body admission.
 
 The named checkpoint sections below are retained history. Statements that an
 execution "has not occurred" apply to that historical checkpoint, not a request

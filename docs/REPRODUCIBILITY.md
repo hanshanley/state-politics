@@ -16,7 +16,104 @@ remain unchanged. Broad rebuild commands below are not a request to complete
 other years; target-cycle selection and its inclusion/exclusion provenance must
 be bound explicitly before regenerated outputs can support the narrowed study.
 
-## Current successor: Nebraska journal propagation
+## Current successor: expanded journal collection
+
+**Use completed v21 / independent token cache v18 for subsequent extensions.**
+All earlier jobs, caches, source packets and graph snapshots remain immutable;
+the historical v20 instructions below are superseded, not a request to rerun.
+The actual union is **139,674 / 157,598 contexts**, with **17,924 missing**
+(1,451 in Nebraska). Preview v37 retains all 26 earlier archive packets and
+adds only the independently qualified collection:
+`data/preview-cycle-evidence-v37/`, manifest
+`38496e7f3039de43fd553ccfb34c10e73dbfcaa350cb483f871dbc127600fc35`.
+All 354 other partitions and 221 prior NE archive views are unchanged; the
+complete NE archive partition/download now has 719 views. Source gallery v32
+preserves all 33 previous complete research ZIPs byte-for-byte:
+`outputs/recreated-2023-2024-v32/`, manifest
+`6eaba423ca12e9844577c9d8bfc889ddbeb5cf36268b68976695c2f89281fc55`.
+
+The completed job is
+`data/processed/cycle-topic-inference-retained-text-20261025-v21/`.
+Only **498 fresh strings / 207,256 tokens / 502 windows** reached the encoder,
+with zero old inputs repeated or tokens discarded. All 178,961 prior complete
+predictions, 168,619 cached results, 157,349 other whole assignment rows,
+original context fields and 85 controls are unchanged. New contexts contribute
+95 unanimity assignments and 154 abstentions, for **65,234 assigned / 74,440
+abstained / 17,924 unavailable**. The unchanged model, taxonomy and numerical
+gates do not confer independent human validation.
+
+Prediction cache v21: 169,117 rows / 753,946,624 bytes, SHA-256
+`ea55351fa0c674d5fbcac06ded28f1cd39c67e298522f507411e87cbdf88134d`.
+Independent token cache v18:
+`data/cycle-topic-independent-token-verification-cache-20261025-v18.sqlite`,
+169,117 strings / 40,312,832 bytes, SHA-256
+`7cd0f336942e83bbb8b7b2280afe56641b7f3ce57b8172bbff27a2869e171c5e`.
+Both parent v20/v17 caches remain byte-identical. All fifty states, complete
+source strings, saved logits/windows, assignments and the full 108-member
+inference ZIP pass the offline replay:
+
+```bash
+HF_HUB_OFFLINE=1 TRANSFORMERS_OFFLINE=1 \
+  .venv/bin/python -I -B scripts/audit_cycle_topics.py \
+  --job data/processed/cycle-topic-inference-retained-text-20261025-v21 \
+  --gallery outputs/topic-inference-retained-text-2023-2024-v19 \
+  --verified-token-cache data/cycle-topic-independent-token-verification-cache-20261025-v18.sqlite \
+  --verified-token-cache-sha256 7cd0f336942e83bbb8b7b2280afe56641b7f3ce57b8172bbff27a2869e171c5e \
+  --out data/ne-journal-collection-tracked-cycle-audit-REPLAY.json
+```
+
+Topic v19 is
+`165ea39bec929078917280778a63a16a1d8bbd93ab40209f7c95511657c4ae48`;
+majority v3 is
+`3bb04ed8259342b4c11818ff8edd01f8739cf395b168a5227df4e1fa0e780976`;
+full-score v3 is
+`4097d78124f32403be3cd3f5a4ec456124caeaff09144535d19a1b8a5af855d3`;
+paired-input v17 is
+`1418d6916527210a64007457c03e1d3222a4fc3dddd3c05fed1157d34c6e9e09`.
+Majority remains unpromoted: **78,443 assigned / 23,754 rejected / 37,474
+uncertain / three excluded / 17,924 unavailable**. The 13,209 additional
+assignments do not establish accuracy. The metadata gallery and selected
+context pilot are unchanged historical inputs.
+
+Inspector v3 manifest:
+`772d1f6ac32a5a4324d1e150aeb9d7f3d57c4dfb2fb5f28cfb0e33081092363c`.
+Serve it independently with `scripts/serve_research.py --classifications
+outputs/classification-inspector-2023-2024-v3`. Actual Chromium checks all 498
+new full texts, all 22 scores and complete windows. Its full NE query exports
+2,128 contexts / 1,034 complete input/prediction pairs / 9,615,271 selected
+characters. The literal `LR 10` search deliberately exports all 12 substring
+matches, including longer identifiers, with 19 source pairs; it is not a
+single-record claim. The actual source ZIP has all 28 packet members. Its
+54,784,646-byte graph-download container has SHA-256
+`e3b28cdc0eafb0eb8f7363d83fc1474b8a01468baac257cc5f13f1616c342cf6`;
+its complete payload matches the separately retained qualification packet.
+
+The actual current collection again has **27 charts / 108 exports / 35 full
+CSVs**, with 3,176 independently reconciled marks/cells. Both root and fresh
+nested galleries pass Chromium at 1360/390/320px, with 27 loaded images,
+180 checked links, seven actual evidence/methodology navigations and no
+overflow/errors/external HTTP. Their image/table bytes are identical.
+The prior source31 collection and its exact producer remain preserved under
+`outputs/preserved-current-source31-20261025-v1/`; legacy root PNGs are intact.
+Current manifest:
+`a7c0e004bc9853c5293e49f03c0d3129dde655024a5e932ca7e329cfb56ff467`.
+The combined regression suite has **390 passes / three optional skips**:
+`data/ne-journal-collection-final-regressions-20261025-v1.xml`.
+Proofs use `data/ne-journal-collection-` prefixes; browser receipts are
+`data/ne-journal-collection-browser-20261025-v1/receipt.json` and
+`data/current-graphs-browser-20261025-v7/receipt.json` / `v8`.
+No source rights, human gold, model promotion or website publication is granted.
+The actual tracked full audit is **452/486**, preserving the same 34 legacy
+failures and every non-counter report field from 450/484. Its nonzero exit and
+exact comparison are retained in
+`data/ne-journal-collection-full-audit-20261025-v1.json` and
+`data/ne-journal-collection-full-audit-comparison-20261025-v1.json`;
+210 public-documentation checks and scoped Ruff pass.
+
+## Preserved v20 successor: first Nebraska journal propagation
+
+This historical checkpoint's former extension instruction is superseded by
+completed v21/token18 above. Keep its commands and original evidence intact.
 
 **Use completed v20 / independent token cache v17 for subsequent source
 extensions.** This dispatch instruction supersedes historical "future extension"
@@ -148,8 +245,8 @@ human gold, filing-time originality or redistribution permission.
 
 ## Expanded official journal collection
 
-This is a separate source qualification, **not yet propagated into the current
-v20 inference or its graphs**. The official 2023 catalogue identifies both
+This is a separate source qualification, now propagated into **v21 inference
+and its current graphs** as described above. The official 2023 catalogue identifies both
 First Session volumes; three bounded GETs retained that catalogue and both
 complete books. The existing 2024 Second Session book is reused unchanged.
 All four PDFs and both full reader streams remain in the packet.
