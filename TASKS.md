@@ -113,7 +113,7 @@ the detailed source and scientific gates remain in `docs/AUDIT_STATUS.md` and
   and seven actual methodology/evidence navigations. The full tracked audit is
   452/486 with the same 34 legacy failures and all non-counter fields unchanged;
   210 public-documentation checks and scoped Ruff pass.
-- [ ] **DATA-05: Investigate the later 2024 journal gap after graph delivery.**
+- [x] **DATA-05: Investigate the later 2024 journal gap after graph delivery.**
   The retained 2024 book's last printed daily header is March 25; all 89
   not-located ordinary resolutions are dated later. Find an explicit official
   catalogue reference before acquiring any later volume. Do not guess a URL,
@@ -121,6 +121,45 @@ the detailed source and scientific gates remain in `docs/AUDIT_STATUS.md` and
   Preserve the other 18 date/body-boundary negatives without repairing dates
   or relaxing the admitted source profile. The full 107-row negative set and
   all its available candidate bodies are retained in the offline diagnostic.
+  The official catalogue explicitly lists Volume 2. Two bounded GETs retain
+  the catalogue and complete 33,072,638-byte / 1,613-page PDF, without redirects,
+  retries or native endpoint use; both readers retain all 3,226 page strings.
+  A read-only four-book probe also identifies number-before-date day-opening
+  headers behind 16 earlier negatives. It proposes 104 contexts / 208 views
+  while confirming all 357 existing contexts and 714 strings unchanged.
+  This discovery/probe does not admit new bodies or update classifications.
+- [x] **DATA-06: Qualify the explicit-day journal source profile.** Preserve
+  all sealed source packets, default v1/v2 behavior and current v21/token18
+  outputs. Use a separately named, opt-in prefix-only date-header profile and
+  non-colliding IDs. Require exact original dates, own LR/session, complete
+  operative text/ending and both whole-reader bodies; never repair a date.
+  Freeze the full four-book source provenance and current gap queue, verify
+  every raw page/date/span and prior-context/control invariant independently,
+  retain every negative and complete source download, wire consumers/tests,
+  then checkpoint before a separate downstream inference/graph successor.
+  Verified 104 contexts / 208 complete views / 354,952 characters. Independent
+  replay re-extracts all 11,500 unique reader-page strings and verifies 350
+  body spans, 226 excluded prefixes and 294 number-first printed day headers.
+  All 357 prior context dates / 714 policy strings and 85 controls remain
+  unchanged. The complete 60-member source ZIP and all 1,037 candidates /
+  1,451 dispositions are retained. Forty focused tests and 283 integration
+  tests pass, with three optional integration skips; 211 doc checks pass.
+  This source qualification has not updated current v21/token18 graphs.
+- [ ] **DATA-07: Propagate explicit-day-qualified source evidence.** Extend
+  completed v21/token18 with only the new 104 original contexts, keeping all
+  27 older archives, original context fields and cached predictions unchanged.
+  Independently verify fresh-only inference, token/window/logit coverage,
+  source union and complete downloads, then regenerate and inspect the actual
+  current dual-background graphs. Preserve previous outputs and gates; checkpoint
+  verified delivery as Hans Hanley.
+- [ ] **DATA-08: Resolve the three remaining ordinary-resolution boundaries.**
+  LR449's explicit disposition begins the next page, exposing a synthetic
+  stream-join newline not represented by its one raw fragment. LR5 and LR282
+  have complete-looking operative bodies directly followed by the next numbered
+  introduced resolution, without the two currently accepted disposition markers.
+  Investigate separately named literal boundary profiles and independent
+  completeness proof; do not call these publisher-access blockers, silently
+  relax old profiles, overwrite packets or admit adjoining bills/amendments.
 - [ ] **VALIDATE-01: Independently validate classifications.** Preserve original
   unanimity and unpromoted majority separately. Complete actual independent human
   review and resolve taxonomy disputes before accuracy or party-policy claims.

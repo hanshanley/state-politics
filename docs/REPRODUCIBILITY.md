@@ -293,6 +293,68 @@ controls and human-review reservations remain unchanged. The complete
 `93db5a0079a58cb26ba3ad768651e5771b2376d132a06a9581710bd273d05d70`.
 All 276 source integration tests pass, with three optional fixture skips.
 
+## Explicit printed-day source qualification
+
+This follow-up is **source qualification only**, not a new current inference
+or graph delivery. Current canonical outputs remain v21/token18/source32.
+The official Library Commission journal catalogue explicitly lists 2024 Volume 2.
+Exactly two bounded GETs retain that catalogue and its listed 33,072,638-byte /
+1,613-page PDF, without redirects, retries, native endpoint access or a new
+robots lookup. Both complete readers retain all 3,226 physical page strings.
+The PDF SHA-256 is
+`2cf21b90fb163a1f1e20220996e6af5b490221095c3cb4b446b1f9b4d99e8355`.
+
+Daily opening pages can print `1131` before `SIXTY-THIRD DAY - APRIL 17, 2023`.
+The opt-in explicit-day profile recognizes that anchored literal prefix,
+instead of carrying forward April 14 from the preceding proceedings. LR96
+and LR336 are concrete preserved negatives explained by this layout. The
+original introduction dates are never modified or relaxed; all prior v1/v2
+defaults, IDs, packets and cached predictions remain intact.
+
+The new `state-politics.nebraska-journal-day-text.v1` packet supplies
+104 candidate recoveries / 208 complete views / 354,952 characters:
+88 from the later 2024 book and 16 from explicit day openings in the older books.
+Its complete payload embeds both older packets, the full later capture/readers,
+the original current gap queue and all accepted/rejected candidates. Every
+prior 357-context date / 714 policy-string comparison passes unchanged.
+The three remaining ordinary-resolution negatives remain excluded.
+
+```bash
+.venv/bin/python -I -B -m state_politics.bills.ne_journal_day_text \
+  --parent-collection data/processed/ne-journal-collection-qualified-20261025-v2 \
+  --sealed-packet data/processed/ne-journal-qualified-text-20261025-v1 \
+  --late-source data/processed/ne-late-journal-source-20261025-v1 \
+  --late-readers data/processed/ne-late-journal-readers-20261025-v1 \
+  --gap-queue outputs/recreated-2023-2024-v32/chart-data/missing_retained_text.parquet \
+  --out-dir data/processed/ne-journal-day-qualified-REPLAY
+```
+
+Saved packet manifest:
+`ac27e166a4d5a0481106391e4b70b38ba9d131ab511f18c02a8f1ca88616bb9a`.
+Full raw-source/date/span and complete-archive verification is separate from
+the producer replay; no source qualification creates human gold, filing-time
+party certification, redistribution rights or website approval.
+
+Independent verification now passes:
+`data/ne-journal-day-independent-20261025-v1.json`. It re-extracts **11,500
+unique original reader-page strings**, verifies 350 raw body spans / 226
+literal prefix exclusions and observes 294 number-first printed day headers.
+All 357 prior dates / 714 policy strings, 85 frozen controls and model-blind
+reservations are unchanged. Every new context was genuinely unavailable with
+a null topic in v21; no graph or encoder work is performed by qualification.
+All 1,037 positive/negative candidates and 1,451 gap dispositions remain.
+
+The complete 60-member ZIP is
+`data/ne-journal-day-qualified-complete-20261025-v1.zip` (116,711,254 bytes),
+SHA-256 `e906bbc3b05d492adcdb35eb7740022529c259cbe925c47ebaad66df043fa348`.
+Forty focused tests and 283 archive/evidence/source-graph integration tests
+pass, with three optional integration fixture skips; 211 public-documentation
+checks and scoped Ruff pass. Generic loading also verifies all 157,598 current
+metadata records. These ignored sources are local, not backed up by code pushes.
+The remaining three ordinary negatives are retained boundary issues, including
+LR449's next-page disposition and LR5/LR282's adjoining introduced headers;
+they are not falsely described as inaccessible publisher documents.
+
 ## Recreated graph bundle
 
 ### Current dual-background graph collection

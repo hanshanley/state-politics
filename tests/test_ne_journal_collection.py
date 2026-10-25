@@ -6,6 +6,7 @@ import json
 import pytest
 
 from state_politics.bills import ne_journal_collection as collection
+from state_politics.bills import ne_journal_day_text as explicit_day
 from state_politics.bills import ne_journal_text as sealed
 
 
@@ -146,6 +147,90 @@ def test_literal_header_rule_does_not_remove_a_policy_lookalike():
     assert stream == text
     assert spans[0]["raw_start"] == 0
     assert spans[0]["excluded_page_prefix"] is None
+
+
+@pytest.mark.parametrize("year", [2023, 2024])
+def test_explicit_number_first_day_opening_uses_printed_date_without_repair(year):
+    raw = source_pages(year)
+    prefix = f"SECOND DAY - JANUARY 5, {year}\n1\n"
+    reversed_prefix = f"1\nSECOND DAY - JANUARY 5, {year}\n"
+    raw[0] = page(1, raw[0]["text"].replace(prefix, reversed_prefix, 1))
+    supplied = readers(raw)
+    original = context(year)
+    before = original.copy()
+    old_views, _, _ = collection.qualify({"book": supplied}, [original], books={"book": book(year)})
+    assert not old_views
+    views, _, _ = explicit_day.qualify({"book": supplied}, [original], books={"book": book(year)})
+    assert len(views) == 2 and original == before
+    assert all(v["view_id"].startswith("ne-journal-day-v1:") for v in views)
+    for view in views:
+        record = view["source_record"]
+        assert record["journal_date"] == original["source_introduction_date"]
+        first = record["page_fragments"][0]["excluded_page_prefix"]
+        assert first["kind"] == "printed_day_opening_header_number_first"
+        assert first["text"].startswith("1\n")
+        assert first["end"] <= record["page_fragments"][0]["start"]
+
+
+def test_explicit_new_day_never_inherits_previous_days_date():
+    body = source_pages()
+    first = body[0]["text"].split("\n1\n", 1)[1]
+    last = body[1]["text"].split("\n2\n", 1)[1]
+    raw = [
+        page(1, "FIRST DAY - JANUARY 4, 2023\n1\nEarlier unrelated proceedings.\n"),
+        page(2, "2\nSECOND DAY - JANUARY 5, 2023\n" + first),
+        page(3, "LEGISLATIVE JOURNAL\n3\n" + last),
+    ]
+    supplied = {"book": readers(raw)}
+    books = {"book": book(pages=3)}
+    views, _, _ = explicit_day.qualify(supplied, [context()], books=books)
+    assert len(views) == 2
+    stale = context(source_introduction_date="2023-01-04")
+    before = stale.copy()
+    views, dispositions, _ = explicit_day.qualify(supplied, [stale], books=books)
+    assert not views and stale == before
+    assert dispositions[0]["disposition"] == "no_unique_complete_same_date_journal_body"
+
+
+def test_explicit_day_namespace_cannot_collide_with_default_qualified_views():
+    args = ({"book": readers(source_pages())}, [context()])
+    original, _, _ = collection.qualify(*args, books={"book": book()})
+    observed, _, _ = explicit_day.qualify(*args, books={"book": book()})
+    assert [r["text"] for r in original] == [r["text"] for r in observed]
+    assert not {r["view_id"] for r in original} & {r["view_id"] for r in observed}
+
+
+def test_explicit_day_rule_never_strips_a_numbered_policy_lookalike():
+    text = "1\nSECOND DAY RIGHTS\nProtect the complete numbered policy body.\n"
+    stream, spans = collection.collection_stream([page(1, text)], collection.EXPLICIT_DAY_HEADERS)
+    assert stream == text and spans[0]["raw_start"] == 0
+    assert spans[0]["excluded_page_prefix"] is None
+
+
+def test_explicit_day_archive_dispatch_preserves_current_metadata(tmp_path, monkeypatch):
+    from state_politics.bills import archive_text
+
+    (tmp_path / "manifest.json").write_text(json.dumps({"schema": explicit_day.SCHEMA}))
+    metadata = [context()]
+    sentinel = object()
+
+    def loader(directory, current):
+        assert directory == tmp_path and current is metadata
+        return sentinel
+
+    monkeypatch.setattr(explicit_day, "load_ne_journal_day", loader)
+    assert archive_text.load_archive(tmp_path, metadata) is sentinel
+
+
+def test_explicit_day_builder_rejects_public_output_before_source_reads(tmp_path):
+    with pytest.raises(ValueError, match="under project data/processed"):
+        explicit_day.build(
+            *(
+                tmp_path / name
+                for name in ("parent", "sealed", "source", "readers", "gap", "public")
+            )
+        )
+    assert not (tmp_path / "public").exists()
 
 
 @pytest.mark.parametrize(

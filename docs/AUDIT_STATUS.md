@@ -74,6 +74,28 @@ is retained, not described as a clean full audit:
 Independent human annotation, operative platforms, filing-time party/source
 certification, rights/report approval and website publication remain open.
 
+## Explicit-day qualification: October 25, 2026
+
+After the saved v21 graph delivery, the explicitly catalogued later volume and
+literal number-before-date day-opening profile qualify **104 additional
+contexts / 208 full views / 354,952 characters**. **These are not yet propagated
+into current v21/token18 inference or its graphs.** No original date is repaired:
+the parser checks the actual printed day opening instead of inheriting a stale
+date from preceding proceedings. Old v1/v2 behavior, IDs and packets replay
+unchanged. Independent raw-date verification also confirms every one of the
+357 earlier context dates and all 714 earlier policy strings.
+
+Packet manifest:
+`ac27e166a4d5a0481106391e4b70b38ba9d131ab511f18c02a8f1ca88616bb9a`.
+Independent proof `data/ne-journal-day-independent-20261025-v1.json` re-extracts
+11,500 unique raw reader pages, checks 350 body spans / 226 prefixes, observes
+294 number-first day headers and preserves all 85 controls and reservations.
+All 1,037 candidates, 1,451 dispositions and complete 60-member ZIP survive.
+Forty focused and 283 integration tests pass, with three optional integration
+skips; 211 documentation checks and scoped Ruff pass. Three ordinary-resolution
+boundary negatives remain explicit, not publisher-access excuses.
+Qualification grants no model, human-gold, source-rights or publication approval.
+
 ## Expanded journal qualification: October 25, 2026
 
 A separate, independently verified source collection qualifies **249 more

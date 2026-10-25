@@ -34,6 +34,7 @@ SCHEMA = "state-politics.nebraska-journal-collection-text.v2"
 LEGACY_SCHEMA = "state-politics.nebraska-journal-collection-text.v1"
 LEGACY_HEADERS = "sealed_running_headers_v1"
 LITERAL_HEADERS = "literal_letterspaced_running_headers_v2"
+EXPLICIT_DAY_HEADERS = "literal_number_first_day_headers_v1"
 QUEUE_SHA = "77400a15a69ed74cfcc57b706cf7e72668afa7f8eca80a199bd5cd266a25b813"
 INPUTS = {
     "first/source": "ba6b0f5db28d9a6797a3f13e1f211ae91fcfa309aadfcac2bbcc6f768fefa5fa",
@@ -84,12 +85,20 @@ VENUE = (
 RUNNING_LITERAL = re.compile(
     r"\A" + r"\s*".join("LEGISLATIVEJOURNAL") + r"\s*(?P<printed>\d{1,4})[ \t\xa0]*\n"
 )
+NUMBER_FIRST_DAY = re.compile(
+    r"\A(?P<printed>\d{1,4})\s+[A-Z \-]+DAY\s*[-–—]\s*(?P<month>"
+    + "|".join(MONTHS)
+    + r")\s*(?P<day>\d{1,2}),\s*(?P<year>20\d{2})[ \t\xa0]*\n"
+)
 
 
 def collection_stream(pages, header_profile):
     if header_profile == LEGACY_HEADERS:
         return journal_stream(pages)
-    require(header_profile == LITERAL_HEADERS, "known literal page-header profile")
+    require(
+        header_profile in (LITERAL_HEADERS, EXPLICIT_DAY_HEADERS),
+        "known literal page-header profile",
+    )
     chunks, spans, position, current_date = [], [], 0, None
     for expected, row in enumerate(pages, 1):
         text = row["text"]
@@ -101,6 +110,9 @@ def collection_stream(pages, header_profile):
         )
         header = DAILY.match(text)
         kind = "printed_daily_header"
+        if not header and header_profile == EXPLICIT_DAY_HEADERS:
+            header = NUMBER_FIRST_DAY.match(text)
+            kind = "printed_day_opening_header_number_first"
         if header:
             current_date = date(
                 int(header["year"]), MONTHS[header["month"]], int(header["day"])
@@ -169,7 +181,7 @@ def candidates(pages, book, *, header_profile=LITERAL_HEADERS):
                 "end": b,
                 "sha256": hashlib.sha256(raw.encode()).hexdigest(),
             }
-            if header_profile == LITERAL_HEADERS:
+            if header_profile != LEGACY_HEADERS:
                 fragment["excluded_page_prefix"] = span["excluded_page_prefix"]
             fragments.append(fragment)
         if len(dates) != 1 or None in dates:
@@ -261,12 +273,15 @@ def qualify(pages_by_book, originals, *, books=BOOKS, header_profile=LITERAL_HEA
             name = candidate["document"]
             book = books[name]
             text = candidate["text"]
+            namespace = (
+                "ne-journal-day-v1"
+                if header_profile == EXPLICIT_DAY_HEADERS
+                else f"ne-journal-collection-v{2 if header_profile == LITERAL_HEADERS else 1}"
+            )
             views.append(
                 {
                     "view_id": (
-                        f"ne-journal-collection-v{2 if header_profile == LITERAL_HEADERS else 1}:"
-                        f"{name}:{book['sha256']}:"
-                        f"{reader}:{candidate['ordinal']}"
+                        f"{namespace}:{name}:{book['sha256']}:{reader}:{candidate['ordinal']}"
                     ),
                     "source_type": "archive_text",
                     "bill_id": row["bill_id"],
@@ -293,8 +308,8 @@ def qualify(pages_by_book, originals, *, books=BOOKS, header_profile=LITERAL_HEA
                         "page_header_removal_only": True,
                         "fragment_joiner": "\n",
                         **(
-                            {"page_header_profile": LITERAL_HEADERS}
-                            if header_profile == LITERAL_HEADERS
+                            {"page_header_profile": header_profile}
+                            if header_profile != LEGACY_HEADERS
                             else {}
                         ),
                     },
