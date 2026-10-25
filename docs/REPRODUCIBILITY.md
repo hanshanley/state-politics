@@ -50,6 +50,12 @@ the historical evidence:
 make figures GRAPH_OUT=outputs/current-render-REPLAY
 ```
 
+Methodology and original-evidence links are resolved relative to the actual
+output directory, including nested replay paths. Both root and nested galleries
+are verified in Chromium with actual navigation to all seven destinations,
+not just checks that the link text exists. The replay still needs its original
+local source bundles; it does not download or publish them automatically.
+
 The original `make figures` producers are now explicitly `make legacy-figures`;
 they are not the current study's regeneration path. Party/platform attention
 comparisons remain withheld: graph polishing does not resolve independent

@@ -45,3 +45,13 @@ the detailed source and scientific gates remain in `docs/AUDIT_STATUS.md` and
 - [ ] **WEB-01: Prepare, but do not publish, website integration.** Maintain the
   local research companion and both export backgrounds. Integrate into
   themarginoferror.com only after the report and publication gates are approved.
+- [x] **WEB-02: Make fresh local graph-gallery replays portable.** Correct
+  methodology/original-evidence links when the documented replay is built in
+  a nested output directory. Verify root and nested paths, complete downloads
+  and actual browser navigation without exposing arbitrary directories or
+  changing any classifications. This is local preparation, not publication.
+  Verified October 25: a real nested replay resolves all seven methodology/
+  original-evidence destinations. Chromium exercises root and nested galleries
+  at desktop, 390px and 320px, all 27 images/180 links per viewport, then actually
+  opens all seven destinations. All 110 targeted regressions pass; every one of
+  the 108 images and 35 chart CSVs remains byte-identical to the prior delivery.

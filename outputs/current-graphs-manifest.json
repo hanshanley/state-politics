@@ -19001,7 +19001,7 @@
       "bytes": 1234
     },
     "current-chart-data.zip": {
-      "sha256": "d95cccca22e19da8c46f87fa67232c459ea9b99311502844f75ef01eecfe8b78",
+      "sha256": "970cca35db96c27e34499351fa75638330618fff798066e055d52620e22e6ad9",
       "bytes": 464617
     },
     "index.html": {
@@ -19040,8 +19040,8 @@
     }
   },
   "producer": {
-    "sha256": "7ddacc36c9b50a0e9d8f08bc864ac6d4ddbb080f90e91330e4322fdf0d17fa91",
-    "bytes": 45225
+    "sha256": "2d84c90112b82b748005456f1417c505333bea0d29e63b4a942f13f924005b7f",
+    "bytes": 45562
   },
   "theme": {
     "sha256": "7ee657c14935d1d36a7ddf0e9a70076c0a6c5ccfa51a5e9ee30573fef5571dd3",

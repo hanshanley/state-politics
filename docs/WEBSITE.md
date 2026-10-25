@@ -8,6 +8,15 @@ route, card, navigation entry, sitemap/RSS entry or deployment staging. A future
 separate publication approval are required before any integration into themarginoferror.com.
 No report title, conclusions or publication date are assumed.
 
+The separately tracked current graph exports live under `outputs/substack/`
+and `outputs/themarginoferror/`; they are local preparation, not a registered
+production companion. Open `outputs/index.html`, or build a fresh graph replay
+using the reproducibility guide. Replays at nested output paths preserve working
+links to methodology and the separately saved original evidence galleries.
+Those local source archives remain prerequisites, not files automatically
+copied into a future publication. Root and nested gallery navigation has been
+verified independently; no publication route or approval gate is changed.
+
 The initial implementation leads with source coverage, not an unvalidated partisan ranking:
 
 1. Evidence status and explicit unavailable classifier/bill/cutoff states.

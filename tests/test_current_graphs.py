@@ -2,6 +2,7 @@
 
 import hashlib
 import json
+import re
 import runpy
 from pathlib import Path
 from xml.etree import ElementTree as ET
@@ -129,3 +130,27 @@ def test_current_builder_refuses_overwrite_before_loading_sources(tmp_path):
         hashlib.sha256(marker.read_bytes()).digest()
         == hashlib.sha256(b"preserved original").digest()
     )
+
+
+@pytest.mark.parametrize("relative", ["outputs", "outputs/current-render-REPLAY"])
+def test_gallery_evidence_and_method_links_resolve_from_actual_output_directory(
+    tmp_path,
+    relative,
+):
+    (tmp_path / "docs").mkdir()
+    (tmp_path / "docs/AUDIT_STATUS.md").write_text("Research remains provisional.")
+    for folder, _ in MODULE["SOURCES"].values():
+        directory = tmp_path / "outputs" / folder
+        directory.mkdir(parents=True)
+        (directory / "index.html").write_text("Complete original source evidence.")
+    output = tmp_path / relative
+    output.mkdir(parents=True, exist_ok=True)
+    for name in ["current-chart-data.zip", "current-graphs-manifest.json"]:
+        (output / name).write_bytes(b"complete fixture")
+    MODULE["gallery"](output, [], root=tmp_path)
+    links = re.findall(r'href="([^"]+)"', (output / "index.html").read_text())
+    targets = [(output / link).resolve() for link in links if not link.startswith("#")]
+    assert (tmp_path / "docs/AUDIT_STATUS.md") in targets
+    for folder, _ in MODULE["SOURCES"].values():
+        assert (tmp_path / "outputs" / folder / "index.html") in targets
+    assert all(target.is_file() for target in targets)

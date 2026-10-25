@@ -42,6 +42,18 @@ The hourly continuation prompt checks the tracked task ledger and ignored local
 coordination file; it is not evidence that blocked scientific tasks are complete.
 No model execution, promotion, source collection or website deployment occurs.
 
+The local replay follow-up fixes seven broken methodology/evidence links when
+the documented output is nested below `outputs/`. Both root and real nested
+galleries pass actual Chromium navigation at 1360px, 390px and 320px, with all
+27 images and 180 links per viewport; all seven methodology/original-evidence
+destinations are actually opened. All **110** targeted regressions pass. The
+108 PNG/SVG exports, 35 chart CSVs, rendered values and geometry remain
+byte-identical to the original October 25 delivery; only the producer/provenance
+and archive-container timestamps change. Proofs:
+`data/current-graphs-browser-20261025-v3/receipt.json` (nested) and
+`data/current-graphs-browser-20261025-v4/receipt.json` (root). This link-only
+follow-up does not rerun the full legacy artifact audit or close its 34 blockers.
+
 ## Standalone research workspace: October 24, 2026
 
 The classification inspector no longer requires unrelated evidence, session

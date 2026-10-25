@@ -7,6 +7,7 @@ import argparse
 import hashlib
 import html
 import json
+import os
 import shutil
 import sys
 import textwrap
@@ -995,7 +996,7 @@ def save_figure(spec, output):
     }
 
 
-def gallery(output, figures):
+def gallery(output, figures, *, root=ROOT):
     sections = []
     for group in ("majority", "topics", "evidence", "scores", "inputs", "context"):
         cards = []
@@ -1024,9 +1025,14 @@ def gallery(output, figures):
         sections.append(
             f'<section id="{group}"><h2>{group.capitalize()}</h2>' + "".join(cards) + "</section>"
         )
-    local = " · ".join(
-        f'<a href="{folder}/index.html">{group}: complete original evidence</a>'
-        for group, (folder, _) in SOURCES.items()
+    local_links = []
+    for group, (folder, _) in SOURCES.items():
+        target = root / "outputs" / folder / "index.html"
+        href = html.escape(Path(os.path.relpath(target, output)).as_posix())
+        local_links.append(f'<a href="{href}">{group}: complete original evidence</a>')
+    local = " · ".join(local_links)
+    audit_link = html.escape(
+        Path(os.path.relpath(root / "docs/AUDIT_STATUS.md", output)).as_posix()
     )
     content = (
         """<!doctype html><html lang="en"><meta charset="utf-8">
@@ -1049,7 +1055,9 @@ chart data. Both backgrounds use identical data and geometry.</p>
         + """</nav>
 <p><a href="current-chart-data.zip">All complete chart tables</a> ·
 <a href="current-graphs-manifest.json">Provenance and file hashes</a> ·
-<a href="../docs/AUDIT_STATUS.md">Scientific gates and legacy status</a></p>
+"""
+        + f'<a href="{audit_link}">Scientific gates and legacy status</a></p>'
+        + """
 """
         + "".join(sections)
         + """
@@ -1093,7 +1101,7 @@ def build(output, root=ROOT):
         theme.RC_PARAMS | {"svg.fonttype": "none", "svg.hashsalt": "state-politics"}
     ):
         figures = [save_figure(spec, output) for spec in specifications(tables)]
-    gallery(output, figures)
+    gallery(output, figures, root=root)
     with zipfile.ZipFile(
         output / "current-chart-data.zip", "x", compression=zipfile.ZIP_DEFLATED
     ) as archive:
