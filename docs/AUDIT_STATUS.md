@@ -1,16 +1,82 @@
 # Research audit status
 
-The existing figures and analytical conclusions are **legacy, not revalidated findings**.
-The current changes repair infrastructure and preserve evidence; they do not certify a
-replacement classifier or establish complete contemporary coverage.
+The thirteen historical root figures and their analytical conclusions remain
+**legacy, not revalidated findings**. The current regenerated research graphics
+inspect source/model evidence; they do not certify a classifier, complete
+coverage or party-policy findings.
+
+## Current propagated evidence and graphs: October 25, 2026
+
+The completed source/model successor is **v20 / independent token cache v17**.
+Of 157,598 unchanged contexts, **139,425 have text / 18,173 remain missing**.
+Unanimity assigns 65,139 and abstains on 74,286; the unpromoted majority
+candidate assigns 78,348, rejects 23,652, leaves 37,422 uncertain, excludes
+three scoreless test records and retains all 18,173 missing-body contexts.
+These are provisional model dispositions, not independent accuracy estimates.
+
+Exactly 216 newly qualified reader strings / 87,803 tokens / 216 windows reached
+the frozen encoder. No old input was re-encoded and no token was discarded.
+All 178,745 old predictions, 168,403 old cached results, 157,490 other whole
+assignment rows, original identities/dates/unknowns and 85 protected human/model
+controls remain unchanged. The new contexts yield 48 unanimity assignments and
+60 abstentions; those 60 previously lacked text. Independent strict-majority
+arithmetic separates their 48 assignments / 34 model rejections / 26 uncertain
+decisions without changing the original rule.
+
+Preview v36 retains all 354 other source partitions, Nebraska's five prior
+archive views and every old dependency. Its NE archive partition and complete
+download contain all 221 alternatives, not just the 216 additions. Source
+gallery v31 preserves all 32 earlier complete research ZIPs byte-for-byte and
+adds the unchanged complete 14-member journal ZIP. Topic v18, majority v2,
+full-score v2, paired-input v16 and inspector v2 retain complete original
+inputs, source text, predictions and producers; no metadata-only substitute
+or visible-page limit is used.
+
+The actual current gallery has **27 charts / 108 exports / 35 complete CSVs**.
+Both publication backgrounds use identical geometry and data, with editable
+SVG text and 300-dpi PNGs. Independent replay reconciles all **3,176 marks and
+cells**, source tables, changing captions, full ZIP members, 85 controls and
+thirteen legacy PNGs. Root and genuinely fresh nested replays pass Chromium
+at 1360px, 390px and 320px: 27 loaded images, 180 checked links, no overflow/
+JavaScript errors/external HTTP requests, and actual navigation to all seven
+methodology/source destinations. The entire root/nested 108-image and 35-CSV
+payloads are byte-identical.
+
+The current inspector also passes actual Chromium checks for **all 216 new
+complete reader bodies**, every 22-output vector and complete windows.
+Its all-NE query exports all 2,128 contexts / 536 source-input/prediction pairs /
+8,752,794 selected policy characters. The separate LR315 query includes both
+entire inputs; the actual source-ZIP download includes all 14 original files.
+Every exported raw field, unknown and large integer matches the frozen
+records, independently of page rendering.
+
+Current proofs are `data/ne-journal-population-reconciliation-20261025-v1.json`,
+`data/ne-journal-derived-score-replay-20261025-v1.json`,
+`data/ne-journal-tracked-cycle-audit-20261025-v1.json`,
+`data/ne-journal-query-download-replay-20261025-v1.json` and
+`data/ne-journal-current-graphs-independent-20261025-v2.json`.
+Browser receipts are `data/ne-journal-browser-20261025-v1/receipt.json` and
+`data/current-graphs-browser-20261025-v5/receipt.json` / `v6` for nested/root.
+The combined source/inspector/all-chart-family/serving suite has **369 passes /
+three optional fixture skips / zero failures or errors** (372 cases):
+`data/ne-journal-final-regressions-20261025-v2.xml`. The first invocation used
+system-temp fixtures and correctly hit existing project-data output guards;
+the successful invocation uses a fresh ignored project-data fixture directory.
+The initial token-observer URI error, incorrect observer assumption of no prior
+NE archive views, failed caption-shadowing render and formatting-only
+intermediate are preserved, not relabelled successful runs. Corrected checks
+and exact final outputs are separate. No model, token, source-collection or
+context-experiment work was repeated to resolve those observer/layout issues.
+Independent human annotation, operative platforms, filing-time party/source
+certification, rights/report approval and website publication remain open.
 
 ## New Nebraska journal evidence: October 25, 2026
 
 A newly identified official Nebraska State Library Legislative Journal
 provides **108 previously missing original contexts / 216 complete PDF-reader
 views / 360,756 policy characters**. This is a source recovery, not additional
-validated topic assignments. The existing canonical inference and current
-graphs still describe their preceding saved baseline until propagation.
+validated topic assignments. Its completed downstream propagation is the
+current successor above; qualification alone did not certify the new outputs.
 
 The one captured PDF is the 1,370-page 2024 Volume 1 of the 108th Legislature,
 Second Session, 8,887,498 bytes, SHA-256
@@ -40,7 +106,7 @@ was unavailable and not retried; it is not represented as robots approval.
 No model, human annotation, party/date inference, rights approval or website
 publication is performed by this source qualification.
 
-## Current graph outputs: October 25, 2026
+## Preserved first graph delivery: October 25, 2026
 
 The current entry point is now `outputs/index.html`. The collection actually
 regenerates **27 charts / 108 image exports** from six pinned saved bundles,

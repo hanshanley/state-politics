@@ -21,6 +21,10 @@ the detailed source and scientific gates remain in `docs/AUDIT_STATUS.md` and
   320px without overflow. The full audit is 448/482, with the same 34 legacy
   failures and all other audit fields unchanged. Original evidence, human/model
   controls and thirteen legacy PNGs are unchanged; nothing is deployed.
+  The subsequent journal propagation also refreshes all 108 actual exports
+  and 35 complete chart CSVs from source v31 / inference v20. All 3,176 marks,
+  dynamic captions and dual-background geometry reconcile; root and fresh nested
+  galleries pass all three browser widths and actual evidence-link navigation.
 - [x] **CONTINUE-01: Create the requested continuation schedule.** An hourly
   prompt was registered October 25 to inspect this ledger, local coordination
   notes and Git status, then continue the next actionable task. Stop it when
@@ -32,22 +36,33 @@ the detailed source and scientific gates remain in `docs/AUDIT_STATUS.md` and
   inspection and model-blind review serving passed 46 regressions and actual
   saved-bundle HTTP checks; checkpoint `1d57247`.
 - [ ] **DATA-01: Resolve genuine source gaps when new permitted evidence exists.**
-  Current preserved baseline: 157,598 candidate contexts, 18,281 without body
-  text. Follow recorded source closures and restrictions; do not repeat closed
+  Current source union: 157,598 candidate contexts, 139,425 with body text and
+  18,173 still missing. The earlier 18,281-row gap queue remains preserved.
+  Follow recorded source closures and restrictions; do not repeat closed
   campaigns or turn absent text into zeros or fabricated inputs.
   New October 25 source milestone: one newly identified official Nebraska
   journal qualifies 108 previously missing contexts / 216 complete reader
   views, with original dates/identities unchanged. Independent replay
   re-extracts every page with both readers and checks all 350 body spans.
-  This source packet is ready; propagation into the inference/explorer/graphs
-  remains DATA-02, not a claim those outputs already use the new evidence.
-- [ ] **DATA-02: Propagate the qualified Nebraska journal evidence.** Extend
+  The complete source packet and downstream propagation are now independently
+  verified; this does not close the remaining 18,173 source gaps.
+- [x] **DATA-02: Propagate the qualified Nebraska journal evidence.** Extend
   the actual v19/token-v16 baseline without changing original labels, weights,
   taxonomy, human reservations or unavailable source fields. Reuse all prior
   exact inputs/predictions, infer only genuinely new strings, independently
   replay the successor, refresh complete source/topic/majority/score/comparison
   outputs and current two-background graphs, and save the complete evidence.
   Keep old bundles intact and all scientific/publication gates explicit.
+  Completed successor v20 / token v17 processes exactly 216 new strings /
+  87,803 tokens / 216 windows, with zero old encoder inputs repeated or tokens
+  discarded. Unanimity is 65,139 assigned / 74,286 abstained / 18,173 missing;
+  unpromoted majority assigns 78,348. All 178,745 old predictions, 157,490 other
+  whole assignment rows and 85 controls are unchanged. Full source/model/score/
+  comparison/inspector bundles, complete ZIPs and actual 27-chart dual-background
+  exports pass independent replay. Chromium verifies all 216 new full texts,
+  all 22 scores, complete windows and exact full-state/filtered/source-ZIP
+  downloads. The combined suite passes 369 tests with three optional fixture
+  skips; no model, human gold, source rights or website publication is promoted.
 - [ ] **VALIDATE-01: Independently validate classifications.** Preserve original
   unanimity and unpromoted majority separately. Complete actual independent human
   review and resolve taxonomy disputes before accuracy or party-policy claims.

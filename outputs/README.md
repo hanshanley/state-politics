@@ -4,6 +4,11 @@
 The original and majority classifications remain separate and provisional.
 These are research graphics, not independently validated party-policy findings.
 
+The current source union has **139,425 contexts with text / 18,173 gaps**.
+Unanimity assigns 65,139 contexts and abstains on 74,286; the separate,
+unpromoted majority candidate assigns 78,348. The 108 newly recovered Nebraska
+contexts add 48 assignments and 60 abstentions without changing earlier results.
+
 | Destination | Background | Files |
 |---|---|---|
 | [Substack](substack/) | Warm cream `#F7F5F0` | 300-dpi PNG and editable SVG |

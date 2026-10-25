@@ -30,24 +30,24 @@ from state_politics.plotting import theme  # noqa: E402
 BACKGROUNDS = {"substack": "#F7F5F0", "themarginoferror": "#F5F5F5"}
 SOURCES = {
     "evidence": (
-        "recreated-2023-2024-v30",
-        "74cfe8aad94e8c3da7d217f6486f7714ab4961666242204b2d4865d3c4aa45e7",
+        "recreated-2023-2024-v31",
+        "03898b27177f88bce51330e9e9ce01eb739515f380d65a1980e3f21641dbfb50",
     ),
     "topics": (
-        "topic-inference-retained-text-2023-2024-v17",
-        "6dcb6e1ef7df9b40e4c53bb106f437ba9a0e67220d5b4dbbb824d5a024a52932",
+        "topic-inference-retained-text-2023-2024-v18",
+        "4cb804252a086e1a89935bc8336d6ae39ba1f0971a8772edc6e49f588b7d2f03",
     ),
     "majority": (
-        "topic-majority-2023-2024-v1",
-        "ea392fae9eed070199e47d894f6a93c15ac4bc4af1e4aeb470676b565afe6845",
+        "topic-majority-2023-2024-v2",
+        "a02d80df8c64d5c22a4ddbac8a4b0f1c293175e53e58c39d7b741af2025b1d87",
     ),
     "scores": (
-        "topic-score-diagnostics-2023-2024-v1",
-        "412884a7771d43d01a3bfbdcf4c3060d158f6f6cdfa0fa32898af29370701360",
+        "topic-score-diagnostics-2023-2024-v2",
+        "0b8a9d80790d16b76f0cb2434548bcdd9381bb497e68777ed5873821c45d9b4a",
     ),
     "inputs": (
-        "topic-input-comparison-2023-2024-v15",
-        "0a443592b2a89c8a7fcd4c8eba5debf69d4a8a63cbe387432bf4a068e8fa7c23",
+        "topic-input-comparison-2023-2024-v16",
+        "187634008ccc5bb1ca95f92a3fcdb1c398abfe72e2c98018f67a8f1b522c9921",
     ),
     "context": (
         "topic-context-pilot-2023-2024-v1",
@@ -598,9 +598,14 @@ def specifications(tables):
     )
 
     f = get("evidence", "state_source_status")
-    counts = f.legislative_status.value_counts()
+    status_counts = f.legislative_status.value_counts()
     fig, (ax,) = axes(height=4.5)
-    bars(ax, counts.index, counts.values, xlabel="States with each recorded source status")
+    bars(
+        ax,
+        status_counts.index,
+        status_counts.values,
+        xlabel="States with each recorded source status",
+    )
     yield item(
         "evidence",
         "state_source_status",

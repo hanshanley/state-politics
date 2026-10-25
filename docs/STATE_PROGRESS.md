@@ -29,13 +29,24 @@ certified complete.
 
 ## Current dispatch snapshot: October 25, 2026
 
-The completed canonical inference remains **v19 / token cache v16**, with
-157,598 original contexts: 139,317 have retained text, 65,091 receive an
-original unanimity topic, 74,226 abstain and 18,281 lack text. The unpromoted
-majority candidate assigns 78,300. The current graph collection has 27
-regenerated charts / 108 Substack and website-background PNG/SVG exports,
-linked from `outputs/README.md` and `outputs/index.html`; checkpoint `6d2e5d7`
-also fixes nested local replay links. Those executions are already complete.
+The completed canonical inference is now **v20 / token cache v17**, with
+157,598 original contexts: **139,425 have retained text, 65,139 receive an
+original-rule unanimity topic, 74,286 abstain and 18,173 lack text**.
+The separate, unpromoted majority candidate assigns **78,348**, retaining all
+old assignments. Future extensions start here, not from historical v19/v16
+instructions below. All prior snapshots and frozen human/model controls remain
+unchanged.
+
+The current collection actually refreshes all **27 charts / 108 Substack and
+website-background PNG/SVG exports**, linked from `outputs/README.md` and
+`outputs/index.html`, with all 35 complete chart CSVs and their full ZIP.
+Source/topic/majority/score/input bundles are v31/v18/v2/v2/v16; inspector v2
+exposes the same actual v20 evidence. The selected-context pilot remains a
+historical diagnostic and was not rerun. Captions and manifest populations
+derive from the saved tables rather than stale hard-coded counts. Independent
+replay checks all 3,176 marks/cells; actual root and fresh nested galleries pass
+27 images / 180 links at 1360px, 390px and 320px, including real navigation to
+all seven methodology/evidence destinations.
 
 A newly identified official State Library journal now qualifies **108 original
 Nebraska contexts / 216 complete reader views / 360,756 characters**. One
@@ -46,8 +57,28 @@ re-extracts all 2,740 reader pages and verifies 350 raw body spans. It does not
 substitute bill titles, budget summaries or amendment fragments for full bills.
 Packet: `data/processed/ne-journal-qualified-text-20261025-v1/`,
 manifest `d4496cc9af71061371c8575acaae3257e074488d06e59d8c7deaf1114bcbef61`.
-These are qualified new source inputs; their downstream propagation is pending.
-No new model result, human validation or public publication is claimed.
+Actual propagation is complete: 216 new exact strings / 87,803 tokens /
+216 windows reached the unchanged encoder, with no discarded tokens or old
+inputs repeated. All 178,745 old predictions and 157,490 other whole
+assignment rows remain unchanged. The new contexts add 48 unanimity assignments
+and 60 abstentions; they were previously unavailable, not changed old labels.
+All 354 other source partitions, five previous NE archive views and 32 older
+complete source ZIPs survive unchanged. Full source availability now leaves
+1,700 Nebraska gaps.
+
+The actual model/source/token/window/108-member-download replay passes for all
+fifty states. Chromium renders all 216 new full texts, all 22 outputs and their
+complete windows, and verifies actual full-state/filtered queries and the entire
+journal ZIP. Proofs have the `data/ne-journal-` prefix:
+`population-reconciliation-20261025-v1.json`,
+`derived-score-replay-20261025-v1.json`,
+`tracked-cycle-audit-20261025-v1.json`,
+`query-download-replay-20261025-v1.json` and
+`current-graphs-independent-20261025-v2.json`.
+Actual graph browser receipts are
+`data/current-graphs-browser-20261025-v5/receipt.json` (nested) and `v6`
+(root). No human validation, model promotion, source-rights approval or public
+website publication is claimed.
 
 The named checkpoint sections below are retained history. Statements that an
 execution "has not occurred" apply to that historical checkpoint, not a request

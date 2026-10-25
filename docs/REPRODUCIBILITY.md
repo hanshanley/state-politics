@@ -16,6 +16,101 @@ remain unchanged. Broad rebuild commands below are not a request to complete
 other years; target-cycle selection and its inclusion/exclusion provenance must
 be bound explicitly before regenerated outputs can support the narrowed study.
 
+## Current successor: Nebraska journal propagation
+
+**Use completed v20 / independent token cache v17 for subsequent source
+extensions.** This dispatch instruction supersedes historical "future extension"
+instructions below. V19 / token v16 and every earlier source/model bundle remain
+immutable historical checkpoints, not targets to overwrite.
+
+The source union is **139,425 / 157,598 contexts**, leaving **18,173 gaps**,
+including 1,700 in Nebraska. Preview v36 retains all 25 previous archive
+packets and other source dependencies and appends only the qualified journal:
+`data/preview-cycle-evidence-v36/`, manifest
+`b5fe4a6e257b15a5fdd841e012c6dfe72a11382934756ef847c9bfe2b5026bcf`.
+All 354 other complete source partitions and all original context bytes remain
+unchanged. Nebraska's five earlier archive views survive alongside 216 new
+views; its complete partition and download contain 221 views, not 216.
+All 32 earlier complete source ZIPs are byte-identical. The new source gallery
+is `outputs/recreated-2023-2024-v31/`, manifest
+`03898b27177f88bce51330e9e9ce01eb739515f380d65a1980e3f21641dbfb50`.
+
+Actual inference is
+`data/processed/cycle-topic-inference-retained-text-20261025-v20/`.
+It preserves all 178,745 earlier predictions and encodes only **216 new exact
+strings / 87,803 tokens / 216 windows**, with no discarded tokens or old
+encoder inputs repeated. Its 178,961 complete source views produce **65,139
+unanimity assignments / 74,286 abstentions / 18,173 unavailable contexts**.
+The newly observed contexts yield 48 assignments and 60 abstentions; the latter
+were previously unavailable, not changed old predictions. The unchanged model,
+taxonomy, thresholds and human reservations confer no independent validation.
+
+The successor prediction cache has 168,619 rows / 752,889,856 bytes, SHA-256
+`57a5cbb278088e0fa2d1ba878a023a7f7ea890c78abe678eab3b6a5cbf8f5de9`.
+The independent cache is
+`data/cycle-topic-independent-token-verification-cache-20261025-v17.sqlite`,
+168,619 strings / 40,235,008 bytes, SHA-256
+`c0b07f7e8d3ce3eafb8566dea6854c85b894397be3f471b3324fba1ea47c4687`.
+Both original v19/v16 cache hashes remain unchanged. The initial token observer
+computed and committed its entire cache before a SQLite URI attachment error;
+the retained failure and read-only completion prove that no model or token
+work was repeated to finish verification.
+
+The completed topic gallery is
+`outputs/topic-inference-retained-text-2023-2024-v18/`, manifest
+`4cb804252a086e1a89935bc8336d6ae39ba1f0971a8772edc6e49f588b7d2f03`.
+Majority v2 assigns 78,348, with 23,652 learned rejections, 37,422 uncertain,
+three excluded and 18,173 unavailable contexts; it remains unpromoted.
+Its manifest is
+`a02d80df8c64d5c22a4ddbac8a4b0f1c293175e53e58c39d7b741af2025b1d87`.
+Full-score v2 is
+`0b8a9d80790d16b76f0cb2434548bcdd9381bb497e68777ed5873821c45d9b4a`;
+paired-input v16 is
+`187634008ccc5bb1ca95f92a3fcdb1c398abfe72e2c98018f67a8f1b522c9921`.
+The unchanged metadata gallery and selected-context pilot remain historical
+inputs; no training or context experiment was rerun.
+
+Inspector v2 preserves complete original/candidate rows, full texts, all 22
+scores and every window in
+`outputs/classification-inspector-2023-2024-v2/`, manifest
+`e51d407243344bf00f03a076dffc70dab9627c38056a1fa3f438661009b8b59c`.
+Serve that current bundle independently:
+
+```bash
+.venv/bin/python -I -B scripts/serve_research.py \
+  --classifications outputs/classification-inspector-2023-2024-v2 \
+  --port 8765
+```
+
+The full fifty-state source/token/logit/window/assignment/108-member-ZIP replay
+is `data/ne-journal-tracked-cycle-audit-20261025-v1.json`. Reproduce against
+the completed source job without an encoder or mutable token cache:
+
+```bash
+HF_HUB_OFFLINE=1 TRANSFORMERS_OFFLINE=1 \
+  .venv/bin/python -I -B scripts/audit_cycle_topics.py \
+  --job data/processed/cycle-topic-inference-retained-text-20261025-v20 \
+  --gallery outputs/topic-inference-retained-text-2023-2024-v18 \
+  --verified-token-cache data/cycle-topic-independent-token-verification-cache-20261025-v17.sqlite \
+  --verified-token-cache-sha256 c0b07f7e8d3ce3eafb8566dea6854c85b894397be3f471b3324fba1ea47c4687 \
+  --out data/ne-journal-tracked-cycle-audit-REPLAY.json
+```
+
+The focused integration suite has 369 passes / three optional fixture skips.
+Its fresh fixtures must be inside ignored project `data/`, as required by the
+existing source/export/server boundaries; do not relax those guards to use
+system temporary directories:
+
+```bash
+.venv/bin/python -I -B -m pytest -q \
+  tests/test_archive_text.py tests/test_billcommons_nv_text.py \
+  tests/test_billcommons_text.py tests/test_classification_inspector.py \
+  tests/test_current_graphs.py tests/test_cycle_site.py \
+  tests/test_ne_journal_text.py tests/test_plotting.py \
+  tests/test_recreated_graphs.py tests/test_research_server.py \
+  --basetemp=data/ne-journal-regression-fixtures-REPLAY
+```
+
 ## Nebraska official journal resolution recovery
 
 The pinned source is the complete 2024 Volume 1 of Nebraska's official
@@ -45,7 +140,8 @@ against the original context, never used to repair or invent that date.
 The new schema dispatches through `archive_text.load_archive` and is supported
 by evidence/graph builders with archived producer code. Its 108 qualified
 contexts and 216 reader alternatives remain unapproved research inputs.
-Actual downstream inference/graph propagation is a separate milestone.
+The completed downstream successor is described above; source qualification
+alone never certifies its classifications.
 The full source ZIP is `data/ne-journal-qualified-complete-20261025-v1.zip`,
 not a metadata-only download. Qualification/provenance validation never creates
 human gold, filing-time originality or redistribution permission.
@@ -69,9 +165,9 @@ tables, not metadata or a visible-page subset. The original full-policy-text
 research ZIPs remain in the separately linked local source galleries and are
 not replaced by the small chart-table download.
 
-The renderer externally pins the manifests for evidence v30, original
-retained-text topics v17, majority v1, full-score diagnostics v1, paired-input
-comparison v15 and context pilot v1. It validates each entire input table before
+The renderer externally pins the manifests for evidence v31, original-rule
+retained-text topics v18, majority v2, full-score diagnostics v2, paired-input
+comparison v16 and the unchanged context pilot v1. It validates each entire input table before
 rendering and rechecks inputs afterward. The output manifest records all
 original bindings, exported hashes, actual bar/heatmap values, axes geometry
 and label extents. It refuses an existing collection rather than overwriting
@@ -100,24 +196,25 @@ Original unanimity and unpromoted majority remain distinctly labelled.
 
 The inspector exposes individual source-backed model decisions without
 promoting the majority rule or altering any prediction. Build a new bundle
-from the externally pinned majority gallery and the same original v19 job:
+from the externally pinned current majority gallery and completed v20 job:
 
 ```bash
 HF_HUB_OFFLINE=1 TRANSFORMERS_OFFLINE=1 \
   .venv/bin/python -I -B scripts/build_classification_inspector.py \
-  --job data/processed/cycle-topic-inference-retained-text-20261024-v19 \
-  --majority-gallery outputs/topic-majority-2023-2024-v1 \
-  --majority-sha256 ea392fae9eed070199e47d894f6a93c15ac4bc4af1e4aeb470676b565afe6845 \
+  --job data/processed/cycle-topic-inference-retained-text-20261025-v20 \
+  --majority-gallery outputs/topic-majority-2023-2024-v2 \
+  --majority-sha256 a02d80df8c64d5c22a4ddbac8a4b0f1c293175e53e58c39d7b741af2025b1d87 \
   --out-dir outputs/classification-inspector-2023-2024-REPLAY
 ```
 
-The completed actual bundle is `outputs/classification-inspector-2023-2024-v1/`.
+The current actual bundle is `outputs/classification-inspector-2023-2024-v2/`;
+v1 remains preserved unchanged.
 Serve it independently through the loopback workspace; no evidence, session
 or review bundle is required:
 
 ```bash
 .venv/bin/python -I -B scripts/serve_research.py \
-  --classifications outputs/classification-inspector-2023-2024-v1 \
+  --classifications outputs/classification-inspector-2023-2024-v2 \
   --port 8765
 ```
 
@@ -129,13 +226,13 @@ the existing combined workspace remains supported:
 
 ```bash
 .venv/bin/python -I -B scripts/serve_research.py \
-  --evidence data/preview-cycle-evidence-v35 \
+  --evidence data/preview-cycle-evidence-v36 \
   --sessions data/processed/verified-session-comparison-2023-2024-v3 \
   --review data/human-review-native-20261021-v3 \
   --sources data/processed/native-inventory-catalog-2023-2024-v2 \
-  --graphs outputs/recreated-2023-2024-v30 \
-  --topics outputs/topic-inference-retained-text-2023-2024-v17 \
-  --classifications outputs/classification-inspector-2023-2024-v1 \
+  --graphs outputs/recreated-2023-2024-v31 \
+  --topics outputs/topic-inference-retained-text-2023-2024-v18 \
+  --classifications outputs/classification-inspector-2023-2024-v2 \
   --port 8765
 ```
 
@@ -169,11 +266,23 @@ download substitutes for it.
 Fifty complete `states/STATE.html` tables and the unchanged original full-source
 majority research ZIP provide no-JavaScript access. The ZIP is
 `research-data/complete_inference_and_majority_candidate.zip`, SHA-256
-`a837710c39ece99608b22ad2c7bd47eb53e9d014d3fdd4ff0ac7cc8b528cdeec`.
+`e6d72f0dc467cf9bf80deded92c7b43ed37877d744031f2e06b1a2bcef96b379`.
 It contains all original full inference members and candidate outputs, not the
 inspector's derived index in place of research data. The inspector's own
 162-artifact manifest is
-`563e5ec146210c64eb7293f57d82ccbfedf2194caeccee337f20b9185c28f6aa`.
+`e51d407243344bf00f03a076dffc70dab9627c38056a1fa3f438661009b8b59c`.
+Current Chromium proof is `data/ne-journal-browser-20261025-v1/receipt.json`:
+all 216 new complete reader bodies, every score vector and complete first/last
+window, at desktop/390px/320px with no overflow, JavaScript errors or external
+HTTP requests. Its actual all-Nebraska query preserves all 2,128 contexts /
+536 complete input/prediction pairs / 8,752,794 selected text characters; a
+separate LR315 query preserves its complete context and both full inputs.
+Every raw field, unknown and large integer matches in
+`data/ne-journal-query-download-replay-20261025-v1.json`. The actual downloaded
+14-member journal ZIP includes the complete raw PDF, both full reader streams
+and all accepted/rejected evidence, not metadata-only pointers.
+
+The following are preserved **v1** regressions, not new v2 browser executions.
 Independent all-record/range/Unicode replay is
 `data/classification-inspector-independent-replay-20261024-v1.json`.
 Actual browser proof is

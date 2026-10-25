@@ -176,6 +176,27 @@ def test_current_population_refuses_changed_missingness_or_lost_baseline_topics(
         MODULE["population_counts"]({("majority", "status_comparison"): table})
 
 
+def test_every_chart_family_preserves_population_counts_after_state_status_plot():
+    root = Path(__file__).resolve().parents[1]
+    tables = {
+        (group, name): pd.read_csv(root / "outputs/chart-data" / group / f"{name}.csv")
+        for group, names in MODULE["TABLES"].items()
+        for name in names
+    }
+    population = MODULE["population_counts"](tables)
+    try:
+        with plt.rc_context({"figure.max_open_warning": 0}):
+            figures = list(MODULE["specifications"](tables))
+        assert len(figures) == 27
+        coverage = next(f for f in figures if f["name"] == "retained_snapshot_text_coverage")
+        assert (
+            f"{population['available_retained_text']:,} of "
+            f"{population['original_candidate_contexts']:,} contexts have text"
+        ) in coverage["note"]
+    finally:
+        plt.close("all")
+
+
 @pytest.mark.parametrize("relative", ["outputs", "outputs/current-render-REPLAY"])
 def test_gallery_evidence_and_method_links_resolve_from_actual_output_directory(
     tmp_path,
