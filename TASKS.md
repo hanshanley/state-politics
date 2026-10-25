@@ -35,6 +35,19 @@ the detailed source and scientific gates remain in `docs/AUDIT_STATUS.md` and
   Current preserved baseline: 157,598 candidate contexts, 18,281 without body
   text. Follow recorded source closures and restrictions; do not repeat closed
   campaigns or turn absent text into zeros or fabricated inputs.
+  New October 25 source milestone: one newly identified official Nebraska
+  journal qualifies 108 previously missing contexts / 216 complete reader
+  views, with original dates/identities unchanged. Independent replay
+  re-extracts every page with both readers and checks all 350 body spans.
+  This source packet is ready; propagation into the inference/explorer/graphs
+  remains DATA-02, not a claim those outputs already use the new evidence.
+- [ ] **DATA-02: Propagate the qualified Nebraska journal evidence.** Extend
+  the actual v19/token-v16 baseline without changing original labels, weights,
+  taxonomy, human reservations or unavailable source fields. Reuse all prior
+  exact inputs/predictions, infer only genuinely new strings, independently
+  replay the successor, refresh complete source/topic/majority/score/comparison
+  outputs and current two-background graphs, and save the complete evidence.
+  Keep old bundles intact and all scientific/publication gates explicit.
 - [ ] **VALIDATE-01: Independently validate classifications.** Preserve original
   unanimity and unpromoted majority separately. Complete actual independent human
   review and resolve taxonomy disputes before accuracy or party-policy claims.

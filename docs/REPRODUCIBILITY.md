@@ -16,6 +16,40 @@ remain unchanged. Broad rebuild commands below are not a request to complete
 other years; target-cycle selection and its inclusion/exclusion provenance must
 be bound explicitly before regenerated outputs can support the narrowed study.
 
+## Nebraska official journal resolution recovery
+
+The pinned source is the complete 2024 Volume 1 of Nebraska's official
+Legislative Journal, independently retained by the State Library. The
+qualified packet is `data/processed/ne-journal-qualified-text-20261025-v1/`;
+its manifest is
+`d4496cc9af71061371c8575acaae3257e074488d06e59d8c7deaf1114bcbef61`.
+Replay from the already saved source and two complete page-reader streams:
+
+```bash
+.venv/bin/python -I -B -m state_politics.bills.ne_journal_text \
+  --source data/processed/ne-journal-source-20261025-v1 \
+  --readers data/processed/ne-journal-readers-20261025-v1 \
+  --gap-queue outputs/recreated-2023-2024-v30/chart-data/missing_retained_text.parquet \
+  --out-dir data/processed/ne-journal-qualified-text-REPLAY
+```
+
+No network or model is invoked. The raw PDF, capture inventory, complete
+two-reader inventory and original gap queue have fixed external SHA-256 pins.
+All 1,370 pages per reader survive, including non-policy and rejected content.
+Accepted views retain exact raw-page spans and original whitespace; comparison
+keys do not replace source text. Ordinary resolution number, 108th Legislature,
+Second Session, exact original introduction date, complete resolving clause and
+explicit journal boundaries are mandatory. The source's date is checked
+against the original context, never used to repair or invent that date.
+
+The new schema dispatches through `archive_text.load_archive` and is supported
+by evidence/graph builders with archived producer code. Its 108 qualified
+contexts and 216 reader alternatives remain unapproved research inputs.
+Actual downstream inference/graph propagation is a separate milestone.
+The full source ZIP is `data/ne-journal-qualified-complete-20261025-v1.zip`,
+not a metadata-only download. Qualification/provenance validation never creates
+human gold, filing-time originality or redistribution permission.
+
 ## Recreated graph bundle
 
 ### Current dual-background graph collection

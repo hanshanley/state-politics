@@ -1,6 +1,6 @@
 # State completion tracker
 
-Updated **October 24, 2026**. This is the current dispatch list, not a claim that
+Updated **October 25, 2026**. This is the current dispatch list, not a claim that
 historical progress messages describe processes still running.
 
 **Active study window: January 1, 2023 through December 31, 2024.** Work on
@@ -27,7 +27,33 @@ not that the state has no data. Platform recovery is separate from the
 legislative status in this table; no state's operative-platform coverage is
 certified complete.
 
-## Latest independently published Delaware and Nevada recovery
+## Current dispatch snapshot: October 25, 2026
+
+The completed canonical inference remains **v19 / token cache v16**, with
+157,598 original contexts: 139,317 have retained text, 65,091 receive an
+original unanimity topic, 74,226 abstain and 18,281 lack text. The unpromoted
+majority candidate assigns 78,300. The current graph collection has 27
+regenerated charts / 108 Substack and website-background PNG/SVG exports,
+linked from `outputs/README.md` and `outputs/index.html`; checkpoint `6d2e5d7`
+also fixes nested local replay links. Those executions are already complete.
+
+A newly identified official State Library journal now qualifies **108 original
+Nebraska contexts / 216 complete reader views / 360,756 characters**. One
+bounded GET retained the entire 1,370-page PDF. Both readers preserve every
+page, own resolution/108th Legislature/Second Session identity, exact original
+introduction dates and explicit complete-body boundaries. Independent replay
+re-extracts all 2,740 reader pages and verifies 350 raw body spans. It does not
+substitute bill titles, budget summaries or amendment fragments for full bills.
+Packet: `data/processed/ne-journal-qualified-text-20261025-v1/`,
+manifest `d4496cc9af71061371c8575acaae3257e074488d06e59d8c7deaf1114bcbef61`.
+These are qualified new source inputs; their downstream propagation is pending.
+No new model result, human validation or public publication is claimed.
+
+The named checkpoint sections below are retained history. Statements that an
+execution "has not occurred" apply to that historical checkpoint, not a request
+to repeat completed work or dispatch an old source controller.
+
+## Historical independently published Delaware and Nevada recovery
 
 Two complete offline packets now recover **46 original contexts / 112 complete
 source views / 6,353,892 characters**: six Delaware contexts and forty original

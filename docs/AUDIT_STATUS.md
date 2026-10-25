@@ -4,6 +4,42 @@ The existing figures and analytical conclusions are **legacy, not revalidated fi
 The current changes repair infrastructure and preserve evidence; they do not certify a
 replacement classifier or establish complete contemporary coverage.
 
+## New Nebraska journal evidence: October 25, 2026
+
+A newly identified official Nebraska State Library Legislative Journal
+provides **108 previously missing original contexts / 216 complete PDF-reader
+views / 360,756 policy characters**. This is a source recovery, not additional
+validated topic assignments. The existing canonical inference and current
+graphs still describe their preceding saved baseline until propagation.
+
+The one captured PDF is the 1,370-page 2024 Volume 1 of the 108th Legislature,
+Second Session, 8,887,498 bytes, SHA-256
+`f2ce1960af68ece140f3af2d27d25daf1ee1df061e969019ebbfb644d2869a2f`.
+Only own introduced ordinary-resolution headers, the complete resolving
+clause, exact original introduction/journal dates and explicit end boundaries
+qualify. Both reader bodies must agree modulo whitespace; their differing
+original strings remain separate. Bill-title mentions, constitutional
+amendments, ambiguous/missing endings, wrong dates and reader conflicts do not
+become source bodies. Every original Nebraska gap has a recorded disposition.
+
+Independent verification imports no new journal producer: it re-extracts all
+2,740 reader pages from the raw PDF, checks 350 exact raw spans and every
+recovered original context field/date, and preserves all 85 frozen controls.
+Proof: `data/ne-journal-independent-20261025-v1.json`. The complete 14-member
+source download includes the raw journal, all pages from both readers,
+accepted and rejected source records, original gap queue and producers:
+`data/ne-journal-qualified-complete-20261025-v1.zip`, SHA-256
+`db8613624b2f009786bc7cb22d59ccbb2aaa8996b55ebd4ec0ae810f7ab16ae5`.
+Code commits do not remotely back up this ignored source archive.
+
+Journal/archive/explorer/graph integration regressions have 255 passes and
+three optional fixture skips. No native collector stop was reopened: one
+bounded manual document capture followed successful access to that specific
+public PDF, with no redirect, retry or host crawl. The web-tool robots lookup
+was unavailable and not retried; it is not represented as robots approval.
+No model, human annotation, party/date inference, rights approval or website
+publication is performed by this source qualification.
+
 ## Current graph outputs: October 25, 2026
 
 The current entry point is now `outputs/index.html`. The collection actually
