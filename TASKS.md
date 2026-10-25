@@ -63,6 +63,10 @@ the detailed source and scientific gates remain in `docs/AUDIT_STATUS.md` and
   all 22 scores, complete windows and exact full-state/filtered/source-ZIP
   downloads. The combined suite passes 369 tests with three optional fixture
   skips; no model, human gold, source rights or website publication is promoted.
+  The tracked full audit is 450/484 with the same 34 legacy failures and every
+  other report field unchanged. The actual collection and documentation are
+  saved/pushed as Hans Hanley in `df4a63a`; full local evidence archives remain
+  ignored and are not backed up by that code/graph push.
 - [ ] **VALIDATE-01: Independently validate classifications.** Preserve original
   unanimity and unpromoted majority separately. Complete actual independent human
   review and resolve taxonomy disputes before accuracy or party-policy claims.

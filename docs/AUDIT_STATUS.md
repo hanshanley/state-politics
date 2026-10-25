@@ -62,6 +62,12 @@ three optional fixture skips / zero failures or errors** (372 cases):
 `data/ne-journal-final-regressions-20261025-v2.xml`. The first invocation used
 system-temp fixtures and correctly hit existing project-data output guards;
 the successful invocation uses a fresh ignored project-data fixture directory.
+The actual tracked full audit is **450/484**, with exactly the same 34 legacy
+failures as 448/482. Only the two passing documentation counters change; every
+other report field, including all computed results and the full failure list,
+is identical. Its nonzero exit is preserved, not called a clean full audit:
+`data/ne-journal-full-audit-20261025-v1.json` and
+`data/ne-journal-full-audit-comparison-20261025-v1.json`.
 The initial token-observer URI error, incorrect observer assumption of no prior
 NE archive views, failed caption-shadowing render and formatting-only
 intermediate are preserved, not relabelled successful runs. Corrected checks
