@@ -11,6 +11,8 @@ data/*
 /outputs/topic-context-pilot-*/
 /outputs/classification-inspector-*/
 /outputs/assistant-advisory-topic-review-*/
+/outputs/current-render-*/
+/AGENT-COMMS.md
 
 # Large source corpora and dumps
 *.pgdump

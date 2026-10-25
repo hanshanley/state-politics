@@ -1,0 +1,11 @@
+party,modern_collection_status,n_organizations
+D,automated_filter_accepted,16
+D,candidates_partially_unresolved,0
+D,fetch_failed,1
+D,candidates_rejected,5
+D,not_in_retained_modern_tables,28
+R,automated_filter_accepted,19
+R,candidates_partially_unresolved,0
+R,fetch_failed,0
+R,candidates_rejected,1
+R,not_in_retained_modern_tables,30

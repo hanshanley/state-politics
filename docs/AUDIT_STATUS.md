@@ -4,6 +4,44 @@ The existing figures and analytical conclusions are **legacy, not revalidated fi
 The current changes repair infrastructure and preserve evidence; they do not certify a
 replacement classifier or establish complete contemporary coverage.
 
+## Current graph outputs: October 25, 2026
+
+The current entry point is now `outputs/index.html`. The collection actually
+regenerates **27 charts / 108 image exports** from six pinned saved bundles,
+rather than leaving users to infer which versioned audit directory is current.
+Both the cream Substack and `#F5F5F5` The Margin of Error variants are
+categorized, tracked 300-dpi PNGs and editable-text SVGs. The thirteen old
+root PNGs remain unchanged, explicitly labelled as legacy references.
+
+This pass tightens the measured title/subtitle, legend, axis and source-note
+spacing, splits fifty-state coverage into two comparable panels, preserves
+same-year party markers without hiding one, and moves score labels beyond
+source-variation whiskers. Whole-vector outputs retain rejection; tiny positive
+scores are not displayed as exact zeros. Unsupported party/platform comparisons
+have not been reintroduced as current findings.
+
+Independent replay checks **all 3,176 rendered bars, points and heatmap cells**
+against the complete original chart tables, as well as exact dual-background
+SVG geometry/text, PNG resolution/backgrounds and unchanged original inputs.
+All 35 chart CSVs and every full chart-ZIP member are byte-identical to their
+saved sources. The original full-policy-text research archives remain separate
+complete downloads, not replaced by the chart tables. All 85 frozen
+human/model/runtime controls and thirteen legacy root images remain unchanged.
+Proof: `data/current-graphs-independent-20261025-v1.json`.
+
+The graph, existing plotting, workspace and inspector suites pass **108 tests**
+without skips. Actual Chromium checks all 27 gallery images and 180 links at
+1360px, 390px and 320px, with no horizontal overflow, JavaScript errors or
+external HTTP requests. The gallery requires no JavaScript.
+Final browser proof: `data/current-graphs-browser-20261025-v2/receipt.json`.
+The actual tracked full audit is **448/482**: two additional passing
+documentation checks, the same 34 legacy failures, and every other report field
+identical to the preceding 446/480 audit. The nonzero exit and scientific
+blockers remain explicit in `data/current-graphs-full-audit-20261025-v1.json`.
+The hourly continuation prompt checks the tracked task ledger and ignored local
+coordination file; it is not evidence that blocked scientific tasks are complete.
+No model execution, promotion, source collection or website deployment occurs.
+
 ## Standalone research workspace: October 24, 2026
 
 The classification inspector no longer requires unrelated evidence, session

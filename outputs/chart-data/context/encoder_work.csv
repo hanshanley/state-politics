@@ -1,0 +1,3 @@
+profile,planned_windows,new_encoder_windows,new_encoder_tokens_without_padding,actual_padded_encoder_tokens,exact_baseline_windows_reused,exact_prior_profile_windows_reused,encoder_seconds
+context4096,871,830,2771789,2773396,41,0,139.83535098540597
+context8192,503,378,2550178,2551600,41,84,207.39463294646703

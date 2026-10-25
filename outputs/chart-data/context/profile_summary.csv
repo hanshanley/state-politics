@@ -1,0 +1,5 @@
+profile,label,contexts,assigned,unassigned,same_assigned_topic,different_assigned_topic,assigned_advisory_unresolved,new_assignments_over_majority1024,lost_assignments_against_majority1024,changed_assigned_topics_against_majority1024,rescue_only_assistant_comparisons_not_accuracy
+unanimity1024,unanimity1024,109,38,71,33,4,1,0,32,0,"{""assigned_advisory_unresolved"": 2, ""both_unresolved"": 2, ""different_assigned_topic"": 10, ""same_assigned_topic"": 58, ""unassigned_advisory_assigned"": 37}"
+majority1024,majority1024,109,70,39,58,10,2,0,0,0,"{""assigned_advisory_unresolved"": 2, ""both_unresolved"": 2, ""different_assigned_topic"": 10, ""same_assigned_topic"": 58, ""unassigned_advisory_assigned"": 37}"
+context4096,context4096,109,74,35,59,13,2,6,2,0,"{""assigned_advisory_unresolved"": 2, ""both_unresolved"": 2, ""different_assigned_topic"": 14, ""same_assigned_topic"": 60, ""unassigned_advisory_assigned"": 31}"
+context8192,context8192,109,79,30,61,16,2,10,1,0,"{""assigned_advisory_unresolved"": 2, ""both_unresolved"": 2, ""different_assigned_topic"": 17, ""same_assigned_topic"": 61, ""unassigned_advisory_assigned"": 27}"

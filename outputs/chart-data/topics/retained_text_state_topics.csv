@@ -1,0 +1,1051 @@
+state,topic,topic_name,model_assigned_contexts,candidate_contexts,observed_input_contexts,share_of_all_candidates
+AK,1,Macroeconomics,5,154,154,0.032467532467532464
+AK,2,Civil rights and liberties,0,154,154,0.0
+AK,3,Health,15,154,154,0.09740259740259741
+AK,4,Agriculture,1,154,154,0.006493506493506494
+AK,5,Labor and employment,2,154,154,0.012987012987012988
+AK,6,Education,8,154,154,0.05194805194805195
+AK,7,Environment,1,154,154,0.006493506493506494
+AK,8,Energy,2,154,154,0.012987012987012988
+AK,9,Immigration,0,154,154,0.0
+AK,10,Transportation,2,154,154,0.012987012987012988
+AK,12,"Law, crime and justice",20,154,154,0.12987012987012986
+AK,13,Social welfare,0,154,154,0.0
+AK,14,Housing and community development,3,154,154,0.01948051948051948
+AK,15,"Business, commerce and consumers",2,154,154,0.012987012987012988
+AK,16,Defense and veterans,2,154,154,0.012987012987012988
+AK,17,"Science, technology and communications",0,154,154,0.0
+AK,18,Foreign trade,0,154,154,0.0
+AK,19,International affairs,0,154,154,0.0
+AK,20,Government operations,17,154,154,0.11038961038961038
+AK,21,Public lands and water,6,154,154,0.03896103896103896
+AK,23,"Culture, family and social issues",0,154,154,0.0
+AL,1,Macroeconomics,48,1704,1490,0.028169014084507043
+AL,2,Civil rights and liberties,5,1704,1490,0.0029342723004694834
+AL,3,Health,97,1704,1490,0.056924882629107984
+AL,4,Agriculture,3,1704,1490,0.0017605633802816902
+AL,5,Labor and employment,15,1704,1490,0.008802816901408451
+AL,6,Education,51,1704,1490,0.02992957746478873
+AL,7,Environment,6,1704,1490,0.0035211267605633804
+AL,8,Energy,0,1704,1490,0.0
+AL,9,Immigration,0,1704,1490,0.0
+AL,10,Transportation,29,1704,1490,0.017018779342723004
+AL,12,"Law, crime and justice",231,1704,1490,0.13556338028169015
+AL,13,Social welfare,3,1704,1490,0.0017605633802816902
+AL,14,Housing and community development,10,1704,1490,0.005868544600938967
+AL,15,"Business, commerce and consumers",43,1704,1490,0.02523474178403756
+AL,16,Defense and veterans,6,1704,1490,0.0035211267605633804
+AL,17,"Science, technology and communications",1,1704,1490,0.0005868544600938967
+AL,18,Foreign trade,0,1704,1490,0.0
+AL,19,International affairs,0,1704,1490,0.0
+AL,20,Government operations,89,1704,1490,0.052230046948356805
+AL,21,Public lands and water,16,1704,1490,0.009389671361502348
+AL,23,"Culture, family and social issues",0,1704,1490,0.0
+AR,1,Macroeconomics,35,2029,2029,0.01724987678659438
+AR,2,Civil rights and liberties,3,2029,2029,0.0014785608674223755
+AR,3,Health,163,2029,2029,0.08033514046328241
+AR,4,Agriculture,18,2029,2029,0.008871365204534253
+AR,5,Labor and employment,21,2029,2029,0.010349926071956629
+AR,6,Education,86,2029,2029,0.04238541153277477
+AR,7,Environment,7,2029,2029,0.0034499753573188764
+AR,8,Energy,6,2029,2029,0.002957121734844751
+AR,9,Immigration,0,2029,2029,0.0
+AR,10,Transportation,61,2029,2029,0.030064070970921637
+AR,12,"Law, crime and justice",153,2029,2029,0.07540660423854115
+AR,13,Social welfare,17,2029,2029,0.008378511582060127
+AR,14,Housing and community development,11,2029,2029,0.005421389847215377
+AR,15,"Business, commerce and consumers",31,2029,2029,0.015278462296697881
+AR,16,Defense and veterans,9,2029,2029,0.004435682602267127
+AR,17,"Science, technology and communications",0,2029,2029,0.0
+AR,18,Foreign trade,0,2029,2029,0.0
+AR,19,International affairs,0,2029,2029,0.0
+AR,20,Government operations,98,2029,2029,0.04829965500246427
+AR,21,Public lands and water,24,2029,2029,0.011828486939379004
+AR,23,"Culture, family and social issues",1,2029,2029,0.0004928536224741252
+AZ,1,Macroeconomics,7,327,325,0.021406727828746176
+AZ,2,Civil rights and liberties,1,327,325,0.0030581039755351682
+AZ,3,Health,36,327,325,0.11009174311926606
+AZ,4,Agriculture,4,327,325,0.012232415902140673
+AZ,5,Labor and employment,1,327,325,0.0030581039755351682
+AZ,6,Education,20,327,325,0.06116207951070336
+AZ,7,Environment,2,327,325,0.0061162079510703364
+AZ,8,Energy,3,327,325,0.009174311926605505
+AZ,9,Immigration,1,327,325,0.0030581039755351682
+AZ,10,Transportation,14,327,325,0.04281345565749235
+AZ,12,"Law, crime and justice",36,327,325,0.11009174311926606
+AZ,13,Social welfare,2,327,325,0.0061162079510703364
+AZ,14,Housing and community development,3,327,325,0.009174311926605505
+AZ,15,"Business, commerce and consumers",9,327,325,0.027522935779816515
+AZ,16,Defense and veterans,1,327,325,0.0030581039755351682
+AZ,17,"Science, technology and communications",0,327,325,0.0
+AZ,18,Foreign trade,0,327,325,0.0
+AZ,19,International affairs,1,327,325,0.0030581039755351682
+AZ,20,Government operations,22,327,325,0.0672782874617737
+AZ,21,Public lands and water,18,327,325,0.05504587155963303
+AZ,23,"Culture, family and social issues",0,327,325,0.0
+CA,1,Macroeconomics,50,5568,5568,0.008979885057471264
+CA,2,Civil rights and liberties,3,5568,5568,0.0005387931034482759
+CA,3,Health,518,5568,5568,0.09303160919540229
+CA,4,Agriculture,16,5568,5568,0.0028735632183908046
+CA,5,Labor and employment,62,5568,5568,0.011135057471264368
+CA,6,Education,275,5568,5568,0.049389367816091954
+CA,7,Environment,94,5568,5568,0.016882183908045977
+CA,8,Energy,58,5568,5568,0.010416666666666666
+CA,9,Immigration,1,5568,5568,0.00017959770114942528
+CA,10,Transportation,122,5568,5568,0.021910919540229886
+CA,12,"Law, crime and justice",399,5568,5568,0.07165948275862069
+CA,13,Social welfare,54,5568,5568,0.009698275862068966
+CA,14,Housing and community development,134,5568,5568,0.024066091954022987
+CA,15,"Business, commerce and consumers",93,5568,5568,0.01670258620689655
+CA,16,Defense and veterans,30,5568,5568,0.005387931034482759
+CA,17,"Science, technology and communications",1,5568,5568,0.00017959770114942528
+CA,18,Foreign trade,0,5568,5568,0.0
+CA,19,International affairs,0,5568,5568,0.0
+CA,20,Government operations,136,5568,5568,0.02442528735632184
+CA,21,Public lands and water,121,5568,5568,0.02173132183908046
+CA,23,"Culture, family and social issues",2,5568,5568,0.00035919540229885057
+CO,1,Macroeconomics,7,1480,1480,0.00472972972972973
+CO,2,Civil rights and liberties,0,1480,1480,0.0
+CO,3,Health,70,1480,1480,0.0472972972972973
+CO,4,Agriculture,5,1480,1480,0.0033783783783783786
+CO,5,Labor and employment,0,1480,1480,0.0
+CO,6,Education,13,1480,1480,0.008783783783783784
+CO,7,Environment,2,1480,1480,0.0013513513513513514
+CO,8,Energy,3,1480,1480,0.002027027027027027
+CO,9,Immigration,0,1480,1480,0.0
+CO,10,Transportation,12,1480,1480,0.008108108108108109
+CO,12,"Law, crime and justice",39,1480,1480,0.026351351351351353
+CO,13,Social welfare,3,1480,1480,0.002027027027027027
+CO,14,Housing and community development,0,1480,1480,0.0
+CO,15,"Business, commerce and consumers",4,1480,1480,0.002702702702702703
+CO,16,Defense and veterans,9,1480,1480,0.006081081081081081
+CO,17,"Science, technology and communications",0,1480,1480,0.0
+CO,18,Foreign trade,0,1480,1480,0.0
+CO,19,International affairs,0,1480,1480,0.0
+CO,20,Government operations,9,1480,1480,0.006081081081081081
+CO,21,Public lands and water,1,1480,1480,0.0006756756756756757
+CO,23,"Culture, family and social issues",0,1480,1480,0.0
+CT,1,Macroeconomics,0,1097,1,0.0
+CT,2,Civil rights and liberties,0,1097,1,0.0
+CT,3,Health,0,1097,1,0.0
+CT,4,Agriculture,0,1097,1,0.0
+CT,5,Labor and employment,0,1097,1,0.0
+CT,6,Education,0,1097,1,0.0
+CT,7,Environment,0,1097,1,0.0
+CT,8,Energy,0,1097,1,0.0
+CT,9,Immigration,0,1097,1,0.0
+CT,10,Transportation,0,1097,1,0.0
+CT,12,"Law, crime and justice",0,1097,1,0.0
+CT,13,Social welfare,0,1097,1,0.0
+CT,14,Housing and community development,0,1097,1,0.0
+CT,15,"Business, commerce and consumers",0,1097,1,0.0
+CT,16,Defense and veterans,0,1097,1,0.0
+CT,17,"Science, technology and communications",0,1097,1,0.0
+CT,18,Foreign trade,0,1097,1,0.0
+CT,19,International affairs,0,1097,1,0.0
+CT,20,Government operations,0,1097,1,0.0
+CT,21,Public lands and water,0,1097,1,0.0
+CT,23,"Culture, family and social issues",0,1097,1,0.0
+DE,1,Macroeconomics,9,1145,723,0.007860262008733625
+DE,2,Civil rights and liberties,7,1145,723,0.00611353711790393
+DE,3,Health,119,1145,723,0.10393013100436681
+DE,4,Agriculture,5,1145,723,0.004366812227074236
+DE,5,Labor and employment,7,1145,723,0.00611353711790393
+DE,6,Education,37,1145,723,0.032314410480349345
+DE,7,Environment,2,1145,723,0.0017467248908296944
+DE,8,Energy,4,1145,723,0.0034934497816593887
+DE,9,Immigration,0,1145,723,0.0
+DE,10,Transportation,24,1145,723,0.02096069868995633
+DE,12,"Law, crime and justice",65,1145,723,0.056768558951965066
+DE,13,Social welfare,4,1145,723,0.0034934497816593887
+DE,14,Housing and community development,23,1145,723,0.020087336244541485
+DE,15,"Business, commerce and consumers",20,1145,723,0.017467248908296942
+DE,16,Defense and veterans,10,1145,723,0.008733624454148471
+DE,17,"Science, technology and communications",0,1145,723,0.0
+DE,18,Foreign trade,0,1145,723,0.0
+DE,19,International affairs,2,1145,723,0.0017467248908296944
+DE,20,Government operations,75,1145,723,0.06550218340611354
+DE,21,Public lands and water,7,1145,723,0.00611353711790393
+DE,23,"Culture, family and social issues",0,1145,723,0.0
+FL,1,Macroeconomics,31,2022,2022,0.01533135509396637
+FL,2,Civil rights and liberties,12,2022,2022,0.005934718100890208
+FL,3,Health,264,2022,2022,0.13056379821958458
+FL,4,Agriculture,10,2022,2022,0.004945598417408506
+FL,5,Labor and employment,20,2022,2022,0.009891196834817012
+FL,6,Education,125,2022,2022,0.06181998021760633
+FL,7,Environment,25,2022,2022,0.012363996043521267
+FL,8,Energy,6,2022,2022,0.002967359050445104
+FL,9,Immigration,3,2022,2022,0.001483679525222552
+FL,10,Transportation,81,2022,2022,0.040059347181008904
+FL,12,"Law, crime and justice",304,2022,2022,0.1503461918892186
+FL,13,Social welfare,24,2022,2022,0.011869436201780416
+FL,14,Housing and community development,50,2022,2022,0.024727992087042534
+FL,15,"Business, commerce and consumers",83,2022,2022,0.0410484668644906
+FL,16,Defense and veterans,26,2022,2022,0.012858555885262116
+FL,17,"Science, technology and communications",1,2022,2022,0.0004945598417408506
+FL,18,Foreign trade,0,2022,2022,0.0
+FL,19,International affairs,3,2022,2022,0.001483679525222552
+FL,20,Government operations,62,2022,2022,0.03066271018793274
+FL,21,Public lands and water,37,2022,2022,0.018298714144411473
+FL,23,"Culture, family and social issues",0,2022,2022,0.0
+GA,1,Macroeconomics,93,4788,4610,0.019423558897243107
+GA,2,Civil rights and liberties,11,4788,4610,0.002297410192147034
+GA,3,Health,384,4788,4610,0.08020050125313283
+GA,4,Agriculture,15,4788,4610,0.003132832080200501
+GA,5,Labor and employment,36,4788,4610,0.007518796992481203
+GA,6,Education,142,4788,4610,0.029657477025898077
+GA,7,Environment,18,4788,4610,0.0037593984962406013
+GA,8,Energy,20,4788,4610,0.004177109440267335
+GA,9,Immigration,6,4788,4610,0.0012531328320802004
+GA,10,Transportation,86,4788,4610,0.01796157059314954
+GA,12,"Law, crime and justice",309,4788,4610,0.06453634085213032
+GA,13,Social welfare,26,4788,4610,0.005430242272347535
+GA,14,Housing and community development,43,4788,4610,0.00898078529657477
+GA,15,"Business, commerce and consumers",53,4788,4610,0.011069340016708437
+GA,16,Defense and veterans,26,4788,4610,0.005430242272347535
+GA,17,"Science, technology and communications",0,4788,4610,0.0
+GA,18,Foreign trade,0,4788,4610,0.0
+GA,19,International affairs,3,4788,4610,0.0006265664160401002
+GA,20,Government operations,150,4788,4610,0.03132832080200501
+GA,21,Public lands and water,30,4788,4610,0.006265664160401002
+GA,23,"Culture, family and social issues",1,4788,4610,0.00020885547201336674
+HI,1,Macroeconomics,62,9858,4141,0.006289308176100629
+HI,2,Civil rights and liberties,7,9858,4141,0.0007100831811726517
+HI,3,Health,482,9858,4141,0.04889429904645973
+HI,4,Agriculture,171,9858,4141,0.017346317711503346
+HI,5,Labor and employment,56,9858,4141,0.005680665449381213
+HI,6,Education,259,9858,4141,0.02627307770338811
+HI,7,Environment,98,9858,4141,0.009941164536417123
+HI,8,Energy,44,9858,4141,0.0044633799959423815
+HI,9,Immigration,1,9858,4141,0.00010144045445323595
+HI,10,Transportation,160,9858,4141,0.016230472712517752
+HI,12,"Law, crime and justice",308,9858,4141,0.03124365997159667
+HI,13,Social welfare,51,9858,4141,0.005173463177115033
+HI,14,Housing and community development,203,9858,4141,0.020592412254006896
+HI,15,"Business, commerce and consumers",62,9858,4141,0.006289308176100629
+HI,16,Defense and veterans,12,9858,4141,0.0012172854534388314
+HI,17,"Science, technology and communications",2,9858,4141,0.0002028809089064719
+HI,18,Foreign trade,0,9858,4141,0.0
+HI,19,International affairs,1,9858,4141,0.00010144045445323595
+HI,20,Government operations,251,9858,4141,0.025461554067762224
+HI,21,Public lands and water,190,9858,4141,0.01927368634611483
+HI,23,"Culture, family and social issues",0,9858,4141,0.0
+IA,1,Macroeconomics,91,3096,2858,0.029392764857881136
+IA,2,Civil rights and liberties,10,3096,2858,0.003229974160206718
+IA,3,Health,421,3096,2858,0.13598191214470284
+IA,4,Agriculture,20,3096,2858,0.006459948320413436
+IA,5,Labor and employment,50,3096,2858,0.01614987080103359
+IA,6,Education,267,3096,2858,0.08624031007751938
+IA,7,Environment,17,3096,2858,0.005490956072351421
+IA,8,Energy,16,3096,2858,0.00516795865633075
+IA,9,Immigration,2,3096,2858,0.0006459948320413437
+IA,10,Transportation,177,3096,2858,0.05717054263565891
+IA,12,"Law, crime and justice",350,3096,2858,0.11304909560723514
+IA,13,Social welfare,41,3096,2858,0.013242894056847546
+IA,14,Housing and community development,51,3096,2858,0.016472868217054265
+IA,15,"Business, commerce and consumers",104,3096,2858,0.03359173126614987
+IA,16,Defense and veterans,42,3096,2858,0.013565891472868217
+IA,17,"Science, technology and communications",3,3096,2858,0.0009689922480620155
+IA,18,Foreign trade,0,3096,2858,0.0
+IA,19,International affairs,3,3096,2858,0.0009689922480620155
+IA,20,Government operations,140,3096,2858,0.04521963824289406
+IA,21,Public lands and water,56,3096,2858,0.01808785529715762
+IA,23,"Culture, family and social issues",1,3096,2858,0.00032299741602067185
+ID,1,Macroeconomics,39,1352,1327,0.028846153846153848
+ID,2,Civil rights and liberties,4,1352,1327,0.0029585798816568047
+ID,3,Health,147,1352,1327,0.10872781065088757
+ID,4,Agriculture,14,1352,1327,0.010355029585798817
+ID,5,Labor and employment,26,1352,1327,0.019230769230769232
+ID,6,Education,122,1352,1327,0.09023668639053255
+ID,7,Environment,8,1352,1327,0.005917159763313609
+ID,8,Energy,5,1352,1327,0.0036982248520710057
+ID,9,Immigration,5,1352,1327,0.0036982248520710057
+ID,10,Transportation,46,1352,1327,0.034023668639053255
+ID,12,"Law, crime and justice",103,1352,1327,0.07618343195266272
+ID,13,Social welfare,10,1352,1327,0.0073964497041420114
+ID,14,Housing and community development,15,1352,1327,0.011094674556213017
+ID,15,"Business, commerce and consumers",28,1352,1327,0.020710059171597635
+ID,16,Defense and veterans,11,1352,1327,0.008136094674556213
+ID,17,"Science, technology and communications",2,1352,1327,0.0014792899408284023
+ID,18,Foreign trade,0,1352,1327,0.0
+ID,19,International affairs,0,1352,1327,0.0
+ID,20,Government operations,76,1352,1327,0.05621301775147929
+ID,21,Public lands and water,53,1352,1327,0.03920118343195266
+ID,23,"Culture, family and social issues",0,1352,1327,0.0
+IL,1,Macroeconomics,184,7174,6708,0.02564817396152774
+IL,2,Civil rights and liberties,10,7174,6708,0.0013939224979091162
+IL,3,Health,532,7174,6708,0.07415667688876498
+IL,4,Agriculture,31,7174,6708,0.004321159743518261
+IL,5,Labor and employment,97,7174,6708,0.013521048229718427
+IL,6,Education,268,7174,6708,0.037357122943964316
+IL,7,Environment,30,7174,6708,0.004181767493727348
+IL,8,Energy,32,7174,6708,0.004460551993309172
+IL,9,Immigration,2,7174,6708,0.00027878449958182325
+IL,10,Transportation,177,7174,6708,0.024672428212991357
+IL,12,"Law, crime and justice",541,7174,6708,0.0754112071368832
+IL,13,Social welfare,41,7174,6708,0.005715082241427377
+IL,14,Housing and community development,52,7174,6708,0.007248396989127405
+IL,15,"Business, commerce and consumers",54,7174,6708,0.007527181488709228
+IL,16,Defense and veterans,30,7174,6708,0.004181767493727348
+IL,17,"Science, technology and communications",0,7174,6708,0.0
+IL,18,Foreign trade,0,7174,6708,0.0
+IL,19,International affairs,0,7174,6708,0.0
+IL,20,Government operations,370,7174,6708,0.0515751324226373
+IL,21,Public lands and water,49,7174,6708,0.00683022023975467
+IL,23,"Culture, family and social issues",0,7174,6708,0.0
+IN,1,Macroeconomics,1,187,118,0.0053475935828877
+IN,2,Civil rights and liberties,0,187,118,0.0
+IN,3,Health,9,187,118,0.0481283422459893
+IN,4,Agriculture,0,187,118,0.0
+IN,5,Labor and employment,0,187,118,0.0
+IN,6,Education,6,187,118,0.03208556149732621
+IN,7,Environment,2,187,118,0.0106951871657754
+IN,8,Energy,5,187,118,0.026737967914438502
+IN,9,Immigration,0,187,118,0.0
+IN,10,Transportation,2,187,118,0.0106951871657754
+IN,12,"Law, crime and justice",12,187,118,0.06417112299465241
+IN,13,Social welfare,1,187,118,0.0053475935828877
+IN,14,Housing and community development,1,187,118,0.0053475935828877
+IN,15,"Business, commerce and consumers",3,187,118,0.016042780748663103
+IN,16,Defense and veterans,2,187,118,0.0106951871657754
+IN,17,"Science, technology and communications",0,187,118,0.0
+IN,18,Foreign trade,0,187,118,0.0
+IN,19,International affairs,0,187,118,0.0
+IN,20,Government operations,4,187,118,0.0213903743315508
+IN,21,Public lands and water,1,187,118,0.0053475935828877
+IN,23,"Culture, family and social issues",0,187,118,0.0
+KS,1,Macroeconomics,55,1505,1013,0.036544850498338874
+KS,2,Civil rights and liberties,4,1505,1013,0.0026578073089701
+KS,3,Health,90,1505,1013,0.059800664451827246
+KS,4,Agriculture,3,1505,1013,0.0019933554817275745
+KS,5,Labor and employment,5,1505,1013,0.0033222591362126247
+KS,6,Education,55,1505,1013,0.036544850498338874
+KS,7,Environment,3,1505,1013,0.0019933554817275745
+KS,8,Energy,11,1505,1013,0.007308970099667774
+KS,9,Immigration,0,1505,1013,0.0
+KS,10,Transportation,36,1505,1013,0.023920265780730896
+KS,12,"Law, crime and justice",100,1505,1013,0.0664451827242525
+KS,13,Social welfare,12,1505,1013,0.007973421926910298
+KS,14,Housing and community development,11,1505,1013,0.007308970099667774
+KS,15,"Business, commerce and consumers",29,1505,1013,0.019269102990033222
+KS,16,Defense and veterans,8,1505,1013,0.0053156146179402
+KS,17,"Science, technology and communications",0,1505,1013,0.0
+KS,18,Foreign trade,0,1505,1013,0.0
+KS,19,International affairs,0,1505,1013,0.0
+KS,20,Government operations,81,1505,1013,0.053820598006644516
+KS,21,Public lands and water,18,1505,1013,0.011960132890365448
+KS,23,"Culture, family and social issues",1,1505,1013,0.000664451827242525
+KY,1,Macroeconomics,40,2971,2946,0.013463480309660047
+KY,2,Civil rights and liberties,9,2971,2946,0.0030292830696735107
+KY,3,Health,371,2971,2946,0.12487377987209694
+KY,4,Agriculture,17,2971,2946,0.00572197913160552
+KY,5,Labor and employment,59,2971,2946,0.01985863345674857
+KY,6,Education,184,2971,2946,0.06193200942443622
+KY,7,Environment,25,2971,2946,0.00841467519353753
+KY,8,Energy,13,2971,2946,0.0043756311006395154
+KY,9,Immigration,3,2971,2946,0.0010097610232245036
+KY,10,Transportation,73,2971,2946,0.024570851565129587
+KY,12,"Law, crime and justice",258,2971,2946,0.0868394479973073
+KY,13,Social welfare,22,2971,2946,0.007404914170313026
+KY,14,Housing and community development,28,2971,2946,0.009424436216762033
+KY,15,"Business, commerce and consumers",87,2971,2946,0.029283069673510603
+KY,16,Defense and veterans,30,2971,2946,0.010097610232245036
+KY,17,"Science, technology and communications",1,2971,2946,0.0003365870077415012
+KY,18,Foreign trade,0,2971,2946,0.0
+KY,19,International affairs,2,2971,2946,0.0006731740154830024
+KY,20,Government operations,138,2971,2946,0.046449007068327164
+KY,21,Public lands and water,14,2971,2946,0.004712218108381017
+KY,23,"Culture, family and social issues",0,2971,2946,0.0
+LA,1,Macroeconomics,78,1984,1956,0.03931451612903226
+LA,2,Civil rights and liberties,3,1984,1956,0.0015120967741935483
+LA,3,Health,157,1984,1956,0.07913306451612903
+LA,4,Agriculture,6,1984,1956,0.0030241935483870967
+LA,5,Labor and employment,32,1984,1956,0.016129032258064516
+LA,6,Education,70,1984,1956,0.03528225806451613
+LA,7,Environment,15,1984,1956,0.007560483870967742
+LA,8,Energy,5,1984,1956,0.0025201612903225806
+LA,9,Immigration,1,1984,1956,0.0005040322580645161
+LA,10,Transportation,44,1984,1956,0.02217741935483871
+LA,12,"Law, crime and justice",262,1984,1956,0.13205645161290322
+LA,13,Social welfare,9,1984,1956,0.0045362903225806455
+LA,14,Housing and community development,13,1984,1956,0.00655241935483871
+LA,15,"Business, commerce and consumers",68,1984,1956,0.034274193548387094
+LA,16,Defense and veterans,9,1984,1956,0.0045362903225806455
+LA,17,"Science, technology and communications",3,1984,1956,0.0015120967741935483
+LA,18,Foreign trade,0,1984,1956,0.0
+LA,19,International affairs,0,1984,1956,0.0
+LA,20,Government operations,219,1984,1956,0.11038306451612903
+LA,21,Public lands and water,39,1984,1956,0.01965725806451613
+LA,23,"Culture, family and social issues",1,1984,1956,0.0005040322580645161
+MA,1,Macroeconomics,0,1,0,
+MA,2,Civil rights and liberties,0,1,0,
+MA,3,Health,0,1,0,
+MA,4,Agriculture,0,1,0,
+MA,5,Labor and employment,0,1,0,
+MA,6,Education,0,1,0,
+MA,7,Environment,0,1,0,
+MA,8,Energy,0,1,0,
+MA,9,Immigration,0,1,0,
+MA,10,Transportation,0,1,0,
+MA,12,"Law, crime and justice",0,1,0,
+MA,13,Social welfare,0,1,0,
+MA,14,Housing and community development,0,1,0,
+MA,15,"Business, commerce and consumers",0,1,0,
+MA,16,Defense and veterans,0,1,0,
+MA,17,"Science, technology and communications",0,1,0,
+MA,18,Foreign trade,0,1,0,
+MA,19,International affairs,0,1,0,
+MA,20,Government operations,0,1,0,
+MA,21,Public lands and water,0,1,0,
+MA,23,"Culture, family and social issues",0,1,0,
+MD,1,Macroeconomics,11,1129,704,0.00974313551815766
+MD,2,Civil rights and liberties,1,1129,704,0.0008857395925597874
+MD,3,Health,26,1129,704,0.023029229406554472
+MD,4,Agriculture,4,1129,704,0.00354295837023915
+MD,5,Labor and employment,2,1129,704,0.001771479185119575
+MD,6,Education,14,1129,704,0.012400354295837024
+MD,7,Environment,0,1129,704,0.0
+MD,8,Energy,2,1129,704,0.001771479185119575
+MD,9,Immigration,0,1129,704,0.0
+MD,10,Transportation,31,1129,704,0.02745792736935341
+MD,12,"Law, crime and justice",43,1129,704,0.03808680248007086
+MD,13,Social welfare,3,1129,704,0.002657218777679362
+MD,14,Housing and community development,4,1129,704,0.00354295837023915
+MD,15,"Business, commerce and consumers",8,1129,704,0.0070859167404783
+MD,16,Defense and veterans,3,1129,704,0.002657218777679362
+MD,17,"Science, technology and communications",1,1129,704,0.0008857395925597874
+MD,18,Foreign trade,0,1129,704,0.0
+MD,19,International affairs,0,1129,704,0.0
+MD,20,Government operations,9,1129,704,0.007971656333038087
+MD,21,Public lands and water,4,1129,704,0.00354295837023915
+MD,23,"Culture, family and social issues",0,1129,704,0.0
+ME,1,Macroeconomics,0,0,0,
+ME,2,Civil rights and liberties,0,0,0,
+ME,3,Health,0,0,0,
+ME,4,Agriculture,0,0,0,
+ME,5,Labor and employment,0,0,0,
+ME,6,Education,0,0,0,
+ME,7,Environment,0,0,0,
+ME,8,Energy,0,0,0,
+ME,9,Immigration,0,0,0,
+ME,10,Transportation,0,0,0,
+ME,12,"Law, crime and justice",0,0,0,
+ME,13,Social welfare,0,0,0,
+ME,14,Housing and community development,0,0,0,
+ME,15,"Business, commerce and consumers",0,0,0,
+ME,16,Defense and veterans,0,0,0,
+ME,17,"Science, technology and communications",0,0,0,
+ME,18,Foreign trade,0,0,0,
+ME,19,International affairs,0,0,0,
+ME,20,Government operations,0,0,0,
+ME,21,Public lands and water,0,0,0,
+ME,23,"Culture, family and social issues",0,0,0,
+MI,1,Macroeconomics,131,4041,3213,0.03241771838653799
+MI,2,Civil rights and liberties,15,4041,3213,0.003711952487008166
+MI,3,Health,412,4041,3213,0.10195496164315763
+MI,4,Agriculture,16,4041,3213,0.003959415986142044
+MI,5,Labor and employment,70,4041,3213,0.01732244493937144
+MI,6,Education,151,4041,3213,0.037366988369215544
+MI,7,Environment,21,4041,3213,0.005196733481811433
+MI,8,Energy,36,4041,3213,0.008908685968819599
+MI,9,Immigration,6,4041,3213,0.0014847809948032665
+MI,10,Transportation,111,4041,3213,0.02746844840386043
+MI,12,"Law, crime and justice",406,4041,3213,0.10047018064835436
+MI,13,Social welfare,42,4041,3213,0.010393466963622866
+MI,14,Housing and community development,49,4041,3213,0.01212571145756001
+MI,15,"Business, commerce and consumers",118,4041,3213,0.029200692897797576
+MI,16,Defense and veterans,30,4041,3213,0.007423904974016332
+MI,17,"Science, technology and communications",1,4041,3213,0.00024746349913387774
+MI,18,Foreign trade,0,4041,3213,0.0
+MI,19,International affairs,2,4041,3213,0.0004949269982677555
+MI,20,Government operations,184,4041,3213,0.04553328384063351
+MI,21,Public lands and water,57,4041,3213,0.014105419450631032
+MI,23,"Culture, family and social issues",0,4041,3213,0.0
+MN,1,Macroeconomics,369,11023,11023,0.03347546040097977
+MN,2,Civil rights and liberties,26,11023,11023,0.0023587045268983037
+MN,3,Health,1237,11023,11023,0.11221990383743083
+MN,4,Agriculture,192,11023,11023,0.017418125737095166
+MN,5,Labor and employment,128,11023,11023,0.01161208382473011
+MN,6,Education,716,11023,11023,0.06495509389458405
+MN,7,Environment,230,11023,11023,0.020865463122561916
+MN,8,Energy,121,11023,11023,0.010977047990565182
+MN,9,Immigration,8,11023,11023,0.0007257552390456318
+MN,10,Transportation,724,11023,11023,0.06568084913362969
+MN,12,"Law, crime and justice",915,11023,11023,0.08300825546584414
+MN,13,Social welfare,163,11023,11023,0.014787262995554749
+MN,14,Housing and community development,645,11023,11023,0.05851401614805407
+MN,15,"Business, commerce and consumers",166,11023,11023,0.015059421210196862
+MN,16,Defense and veterans,128,11023,11023,0.01161208382473011
+MN,17,"Science, technology and communications",8,11023,11023,0.0007257552390456318
+MN,18,Foreign trade,0,11023,11023,0.0
+MN,19,International affairs,2,11023,11023,0.00018143880976140796
+MN,20,Government operations,262,11023,11023,0.023768484078744444
+MN,21,Public lands and water,851,11023,11023,0.07720221355347909
+MN,23,"Culture, family and social issues",8,11023,11023,0.0007257552390456318
+MO,1,Macroeconomics,74,1910,1641,0.0387434554973822
+MO,2,Civil rights and liberties,14,1910,1641,0.007329842931937173
+MO,3,Health,177,1910,1641,0.09267015706806282
+MO,4,Agriculture,8,1910,1641,0.004188481675392671
+MO,5,Labor and employment,18,1910,1641,0.009424083769633508
+MO,6,Education,110,1910,1641,0.05759162303664921
+MO,7,Environment,20,1910,1641,0.010471204188481676
+MO,8,Energy,15,1910,1641,0.007853403141361256
+MO,9,Immigration,2,1910,1641,0.0010471204188481676
+MO,10,Transportation,50,1910,1641,0.02617801047120419
+MO,12,"Law, crime and justice",236,1910,1641,0.12356020942408377
+MO,13,Social welfare,11,1910,1641,0.005759162303664921
+MO,14,Housing and community development,9,1910,1641,0.004712041884816754
+MO,15,"Business, commerce and consumers",31,1910,1641,0.016230366492146597
+MO,16,Defense and veterans,6,1910,1641,0.0031413612565445027
+MO,17,"Science, technology and communications",2,1910,1641,0.0010471204188481676
+MO,18,Foreign trade,0,1910,1641,0.0
+MO,19,International affairs,2,1910,1641,0.0010471204188481676
+MO,20,Government operations,93,1910,1641,0.04869109947643979
+MO,21,Public lands and water,20,1910,1641,0.010471204188481676
+MO,23,"Culture, family and social issues",0,1910,1641,0.0
+MS,1,Macroeconomics,25,1617,1559,0.015460729746444033
+MS,2,Civil rights and liberties,5,1617,1559,0.0030921459492888066
+MS,3,Health,114,1617,1559,0.07050092764378478
+MS,4,Agriculture,6,1617,1559,0.0037105751391465678
+MS,5,Labor and employment,7,1617,1559,0.004329004329004329
+MS,6,Education,64,1617,1559,0.039579468150896725
+MS,7,Environment,1,1617,1559,0.0006184291898577613
+MS,8,Energy,1,1617,1559,0.0006184291898577613
+MS,9,Immigration,0,1617,1559,0.0
+MS,10,Transportation,42,1617,1559,0.025974025974025976
+MS,12,"Law, crime and justice",153,1617,1559,0.09461966604823747
+MS,13,Social welfare,11,1617,1559,0.006802721088435374
+MS,14,Housing and community development,7,1617,1559,0.004329004329004329
+MS,15,"Business, commerce and consumers",28,1617,1559,0.017316017316017316
+MS,16,Defense and veterans,10,1617,1559,0.006184291898577613
+MS,17,"Science, technology and communications",0,1617,1559,0.0
+MS,18,Foreign trade,0,1617,1559,0.0
+MS,19,International affairs,0,1617,1559,0.0
+MS,20,Government operations,50,1617,1559,0.030921459492888066
+MS,21,Public lands and water,42,1617,1559,0.025974025974025976
+MS,23,"Culture, family and social issues",0,1617,1559,0.0
+MT,1,Macroeconomics,24,1700,1632,0.01411764705882353
+MT,2,Civil rights and liberties,1,1700,1632,0.000588235294117647
+MT,3,Health,131,1700,1632,0.07705882352941176
+MT,4,Agriculture,12,1700,1632,0.007058823529411765
+MT,5,Labor and employment,19,1700,1632,0.011176470588235295
+MT,6,Education,58,1700,1632,0.03411764705882353
+MT,7,Environment,15,1700,1632,0.008823529411764706
+MT,8,Energy,14,1700,1632,0.00823529411764706
+MT,9,Immigration,0,1700,1632,0.0
+MT,10,Transportation,65,1700,1632,0.03823529411764706
+MT,12,"Law, crime and justice",161,1700,1632,0.09470588235294118
+MT,13,Social welfare,10,1700,1632,0.0058823529411764705
+MT,14,Housing and community development,33,1700,1632,0.019411764705882354
+MT,15,"Business, commerce and consumers",36,1700,1632,0.021176470588235293
+MT,16,Defense and veterans,9,1700,1632,0.005294117647058823
+MT,17,"Science, technology and communications",1,1700,1632,0.000588235294117647
+MT,18,Foreign trade,0,1700,1632,0.0
+MT,19,International affairs,1,1700,1632,0.000588235294117647
+MT,20,Government operations,102,1700,1632,0.06
+MT,21,Public lands and water,51,1700,1632,0.03
+MT,23,"Culture, family and social issues",0,1700,1632,0.0
+NC,1,Macroeconomics,38,2005,2005,0.018952618453865335
+NC,2,Civil rights and liberties,2,2005,2005,0.000997506234413965
+NC,3,Health,198,2005,2005,0.09875311720698254
+NC,4,Agriculture,12,2005,2005,0.0059850374064837905
+NC,5,Labor and employment,28,2005,2005,0.013965087281795512
+NC,6,Education,189,2005,2005,0.0942643391521197
+NC,7,Environment,7,2005,2005,0.003491271820448878
+NC,8,Energy,9,2005,2005,0.004488778054862843
+NC,9,Immigration,1,2005,2005,0.0004987531172069825
+NC,10,Transportation,80,2005,2005,0.0399002493765586
+NC,12,"Law, crime and justice",173,2005,2005,0.08628428927680798
+NC,13,Social welfare,16,2005,2005,0.00798004987531172
+NC,14,Housing and community development,31,2005,2005,0.015461346633416459
+NC,15,"Business, commerce and consumers",31,2005,2005,0.015461346633416459
+NC,16,Defense and veterans,10,2005,2005,0.004987531172069825
+NC,17,"Science, technology and communications",0,2005,2005,0.0
+NC,18,Foreign trade,0,2005,2005,0.0
+NC,19,International affairs,1,2005,2005,0.0004987531172069825
+NC,20,Government operations,202,2005,2005,0.10074812967581047
+NC,21,Public lands and water,23,2005,2005,0.011471321695760598
+NC,23,"Culture, family and social issues",0,2005,2005,0.0
+ND,1,Macroeconomics,33,958,837,0.03444676409185804
+ND,2,Civil rights and liberties,6,958,837,0.006263048016701462
+ND,3,Health,110,958,837,0.11482254697286012
+ND,4,Agriculture,16,958,837,0.016701461377870562
+ND,5,Labor and employment,15,958,837,0.015657620041753653
+ND,6,Education,61,958,837,0.06367432150313153
+ND,7,Environment,17,958,837,0.017745302713987474
+ND,8,Energy,9,958,837,0.009394572025052192
+ND,9,Immigration,2,958,837,0.0020876826722338203
+ND,10,Transportation,37,958,837,0.038622129436325675
+ND,12,"Law, crime and justice",74,958,837,0.07724425887265135
+ND,13,Social welfare,17,958,837,0.017745302713987474
+ND,14,Housing and community development,8,958,837,0.008350730688935281
+ND,15,"Business, commerce and consumers",35,958,837,0.03653444676409186
+ND,16,Defense and veterans,18,958,837,0.018789144050104383
+ND,17,"Science, technology and communications",0,958,837,0.0
+ND,18,Foreign trade,0,958,837,0.0
+ND,19,International affairs,0,958,837,0.0
+ND,20,Government operations,68,958,837,0.0709812108559499
+ND,21,Public lands and water,33,958,837,0.03444676409185804
+ND,23,"Culture, family and social issues",0,958,837,0.0
+NE,1,Macroeconomics,32,2128,320,0.015037593984962405
+NE,2,Civil rights and liberties,0,2128,320,0.0
+NE,3,Health,31,2128,320,0.01456766917293233
+NE,4,Agriculture,2,2128,320,0.0009398496240601503
+NE,5,Labor and employment,1,2128,320,0.00046992481203007516
+NE,6,Education,12,2128,320,0.005639097744360902
+NE,7,Environment,0,2128,320,0.0
+NE,8,Energy,2,2128,320,0.0009398496240601503
+NE,9,Immigration,0,2128,320,0.0
+NE,10,Transportation,4,2128,320,0.0018796992481203006
+NE,12,"Law, crime and justice",12,2128,320,0.005639097744360902
+NE,13,Social welfare,1,2128,320,0.00046992481203007516
+NE,14,Housing and community development,4,2128,320,0.0018796992481203006
+NE,15,"Business, commerce and consumers",3,2128,320,0.0014097744360902255
+NE,16,Defense and veterans,7,2128,320,0.003289473684210526
+NE,17,"Science, technology and communications",1,2128,320,0.00046992481203007516
+NE,18,Foreign trade,0,2128,320,0.0
+NE,19,International affairs,0,2128,320,0.0
+NE,20,Government operations,17,2128,320,0.007988721804511278
+NE,21,Public lands and water,2,2128,320,0.0009398496240601503
+NE,23,"Culture, family and social issues",0,2128,320,0.0
+NH,1,Macroeconomics,36,2184,1944,0.016483516483516484
+NH,2,Civil rights and liberties,8,2184,1944,0.003663003663003663
+NH,3,Health,262,2184,1944,0.11996336996336997
+NH,4,Agriculture,16,2184,1944,0.007326007326007326
+NH,5,Labor and employment,29,2184,1944,0.013278388278388278
+NH,6,Education,196,2184,1944,0.08974358974358974
+NH,7,Environment,60,2184,1944,0.027472527472527472
+NH,8,Energy,46,2184,1944,0.021062271062271064
+NH,9,Immigration,4,2184,1944,0.0018315018315018315
+NH,10,Transportation,95,2184,1944,0.043498168498168496
+NH,12,"Law, crime and justice",210,2184,1944,0.09615384615384616
+NH,13,Social welfare,40,2184,1944,0.018315018315018316
+NH,14,Housing and community development,57,2184,1944,0.0260989010989011
+NH,15,"Business, commerce and consumers",70,2184,1944,0.03205128205128205
+NH,16,Defense and veterans,15,2184,1944,0.006868131868131868
+NH,17,"Science, technology and communications",0,2184,1944,0.0
+NH,18,Foreign trade,0,2184,1944,0.0
+NH,19,International affairs,0,2184,1944,0.0
+NH,20,Government operations,159,2184,1944,0.07280219780219781
+NH,21,Public lands and water,34,2184,1944,0.015567765567765568
+NH,23,"Culture, family and social issues",1,2184,1944,0.0004578754578754579
+NJ,1,Macroeconomics,224,11680,10080,0.019178082191780823
+NJ,2,Civil rights and liberties,25,11680,10080,0.0021404109589041095
+NJ,3,Health,1562,11680,10080,0.13373287671232878
+NJ,4,Agriculture,75,11680,10080,0.006421232876712328
+NJ,5,Labor and employment,129,11680,10080,0.011044520547945205
+NJ,6,Education,788,11680,10080,0.06746575342465753
+NJ,7,Environment,105,11680,10080,0.00898972602739726
+NJ,8,Energy,107,11680,10080,0.00916095890410959
+NJ,9,Immigration,24,11680,10080,0.002054794520547945
+NJ,10,Transportation,478,11680,10080,0.040924657534246574
+NJ,12,"Law, crime and justice",1121,11680,10080,0.09597602739726027
+NJ,13,Social welfare,114,11680,10080,0.00976027397260274
+NJ,14,Housing and community development,294,11680,10080,0.02517123287671233
+NJ,15,"Business, commerce and consumers",333,11680,10080,0.02851027397260274
+NJ,16,Defense and veterans,249,11680,10080,0.02131849315068493
+NJ,17,"Science, technology and communications",1,11680,10080,8.561643835616438e-05
+NJ,18,Foreign trade,0,11680,10080,0.0
+NJ,19,International affairs,10,11680,10080,0.0008561643835616438
+NJ,20,Government operations,410,11680,10080,0.0351027397260274
+NJ,21,Public lands and water,163,11680,10080,0.013955479452054794
+NJ,23,"Culture, family and social issues",3,11680,10080,0.0002568493150684931
+NM,1,Macroeconomics,29,1468,1465,0.019754768392370572
+NM,2,Civil rights and liberties,1,1468,1465,0.0006811989100817438
+NM,3,Health,186,1468,1465,0.12670299727520437
+NM,4,Agriculture,5,1468,1465,0.0034059945504087193
+NM,5,Labor and employment,18,1468,1465,0.01226158038147139
+NM,6,Education,123,1468,1465,0.0837874659400545
+NM,7,Environment,23,1468,1465,0.015667574931880108
+NM,8,Energy,8,1468,1465,0.005449591280653951
+NM,9,Immigration,5,1468,1465,0.0034059945504087193
+NM,10,Transportation,64,1468,1465,0.043596730245231606
+NM,12,"Law, crime and justice",163,1468,1465,0.11103542234332425
+NM,13,Social welfare,18,1468,1465,0.01226158038147139
+NM,14,Housing and community development,28,1468,1465,0.01907356948228883
+NM,15,"Business, commerce and consumers",23,1468,1465,0.015667574931880108
+NM,16,Defense and veterans,14,1468,1465,0.009536784741144414
+NM,17,"Science, technology and communications",3,1468,1465,0.0020435967302452314
+NM,18,Foreign trade,0,1468,1465,0.0
+NM,19,International affairs,2,1468,1465,0.0013623978201634877
+NM,20,Government operations,47,1468,1465,0.03201634877384196
+NM,21,Public lands and water,33,1468,1465,0.022479564032697547
+NM,23,"Culture, family and social issues",0,1468,1465,0.0
+NV,1,Macroeconomics,2,254,181,0.007874015748031496
+NV,2,Civil rights and liberties,0,254,181,0.0
+NV,3,Health,16,254,181,0.06299212598425197
+NV,4,Agriculture,0,254,181,0.0
+NV,5,Labor and employment,2,254,181,0.007874015748031496
+NV,6,Education,6,254,181,0.023622047244094488
+NV,7,Environment,0,254,181,0.0
+NV,8,Energy,0,254,181,0.0
+NV,9,Immigration,0,254,181,0.0
+NV,10,Transportation,3,254,181,0.011811023622047244
+NV,12,"Law, crime and justice",25,254,181,0.0984251968503937
+NV,13,Social welfare,1,254,181,0.003937007874015748
+NV,14,Housing and community development,7,254,181,0.027559055118110236
+NV,15,"Business, commerce and consumers",2,254,181,0.007874015748031496
+NV,16,Defense and veterans,0,254,181,0.0
+NV,17,"Science, technology and communications",0,254,181,0.0
+NV,18,Foreign trade,0,254,181,0.0
+NV,19,International affairs,0,254,181,0.0
+NV,20,Government operations,8,254,181,0.031496062992125984
+NV,21,Public lands and water,9,254,181,0.03543307086614173
+NV,23,"Culture, family and social issues",0,254,181,0.0
+NY,1,Macroeconomics,0,860,860,0.0
+NY,2,Civil rights and liberties,0,860,860,0.0
+NY,3,Health,1,860,860,0.0011627906976744186
+NY,4,Agriculture,0,860,860,0.0
+NY,5,Labor and employment,0,860,860,0.0
+NY,6,Education,0,860,860,0.0
+NY,7,Environment,0,860,860,0.0
+NY,8,Energy,0,860,860,0.0
+NY,9,Immigration,0,860,860,0.0
+NY,10,Transportation,0,860,860,0.0
+NY,12,"Law, crime and justice",0,860,860,0.0
+NY,13,Social welfare,0,860,860,0.0
+NY,14,Housing and community development,0,860,860,0.0
+NY,15,"Business, commerce and consumers",0,860,860,0.0
+NY,16,Defense and veterans,0,860,860,0.0
+NY,17,"Science, technology and communications",0,860,860,0.0
+NY,18,Foreign trade,0,860,860,0.0
+NY,19,International affairs,0,860,860,0.0
+NY,20,Government operations,9,860,860,0.010465116279069767
+NY,21,Public lands and water,0,860,860,0.0
+NY,23,"Culture, family and social issues",0,860,860,0.0
+OH,1,Macroeconomics,0,1590,1590,0.0
+OH,2,Civil rights and liberties,0,1590,1590,0.0
+OH,3,Health,0,1590,1590,0.0
+OH,4,Agriculture,0,1590,1590,0.0
+OH,5,Labor and employment,0,1590,1590,0.0
+OH,6,Education,0,1590,1590,0.0
+OH,7,Environment,0,1590,1590,0.0
+OH,8,Energy,0,1590,1590,0.0
+OH,9,Immigration,0,1590,1590,0.0
+OH,10,Transportation,1,1590,1590,0.0006289308176100629
+OH,12,"Law, crime and justice",0,1590,1590,0.0
+OH,13,Social welfare,0,1590,1590,0.0
+OH,14,Housing and community development,0,1590,1590,0.0
+OH,15,"Business, commerce and consumers",0,1590,1590,0.0
+OH,16,Defense and veterans,0,1590,1590,0.0
+OH,17,"Science, technology and communications",0,1590,1590,0.0
+OH,18,Foreign trade,0,1590,1590,0.0
+OH,19,International affairs,0,1590,1590,0.0
+OH,20,Government operations,3,1590,1590,0.0018867924528301887
+OH,21,Public lands and water,0,1590,1590,0.0
+OH,23,"Culture, family and social issues",0,1590,1590,0.0
+OK,1,Macroeconomics,304,8939,7604,0.0340082783309095
+OK,2,Civil rights and liberties,30,8939,7604,0.003356080098445016
+OK,3,Health,715,8939,7604,0.07998657567960622
+OK,4,Agriculture,121,8939,7604,0.013536189730394898
+OK,5,Labor and employment,247,8939,7604,0.027631726143863968
+OK,6,Education,705,8939,7604,0.07886788231345788
+OK,7,Environment,22,8939,7604,0.0024611254055263453
+OK,8,Energy,37,8939,7604,0.004139165454748853
+OK,9,Immigration,1,8939,7604,0.00011186933661483388
+OK,10,Transportation,280,8939,7604,0.031323414252153486
+OK,12,"Law, crime and justice",887,8939,7604,0.09922810157735765
+OK,13,Social welfare,104,8939,7604,0.011634411007942724
+OK,14,Housing and community development,67,8939,7604,0.007495245553193869
+OK,15,"Business, commerce and consumers",299,8939,7604,0.03344893164783533
+OK,16,Defense and veterans,66,8939,7604,0.007383376216579036
+OK,17,"Science, technology and communications",2,8939,7604,0.00022373867322966775
+OK,18,Foreign trade,0,8939,7604,0.0
+OK,19,International affairs,1,8939,7604,0.00011186933661483388
+OK,20,Government operations,871,8939,7604,0.0974381921915203
+OK,21,Public lands and water,146,8939,7604,0.016332923145765746
+OK,23,"Culture, family and social issues",0,8939,7604,0.0
+OR,1,Macroeconomics,109,3262,3178,0.03341508277130595
+OR,2,Civil rights and liberties,4,3262,3178,0.001226241569589209
+OR,3,Health,363,3262,3178,0.11128142244022073
+OR,4,Agriculture,41,3262,3178,0.012568976088289392
+OR,5,Labor and employment,79,3262,3178,0.02421827099938688
+OR,6,Education,212,3262,3178,0.06499080318822809
+OR,7,Environment,46,3262,3178,0.014101778050275904
+OR,8,Energy,38,3262,3178,0.011649294911097487
+OR,9,Immigration,3,3262,3178,0.0009196811771919068
+OR,10,Transportation,93,3262,3178,0.02851011649294911
+OR,12,"Law, crime and justice",323,3262,3178,0.09901900674432863
+OR,13,Social welfare,68,3262,3178,0.020846106683016553
+OR,14,Housing and community development,147,3262,3178,0.045064377682403435
+OR,15,"Business, commerce and consumers",51,3262,3178,0.015634580012262415
+OR,16,Defense and veterans,30,3262,3178,0.009196811771919068
+OR,17,"Science, technology and communications",0,3262,3178,0.0
+OR,18,Foreign trade,0,3262,3178,0.0
+OR,19,International affairs,0,3262,3178,0.0
+OR,20,Government operations,202,3262,3178,0.061925199264255056
+OR,21,Public lands and water,127,3262,3178,0.03893316983445739
+OR,23,"Culture, family and social issues",0,3262,3178,0.0
+PA,1,Macroeconomics,0,56,52,0.0
+PA,2,Civil rights and liberties,0,56,52,0.0
+PA,3,Health,0,56,52,0.0
+PA,4,Agriculture,0,56,52,0.0
+PA,5,Labor and employment,0,56,52,0.0
+PA,6,Education,0,56,52,0.0
+PA,7,Environment,0,56,52,0.0
+PA,8,Energy,0,56,52,0.0
+PA,9,Immigration,0,56,52,0.0
+PA,10,Transportation,0,56,52,0.0
+PA,12,"Law, crime and justice",0,56,52,0.0
+PA,13,Social welfare,0,56,52,0.0
+PA,14,Housing and community development,0,56,52,0.0
+PA,15,"Business, commerce and consumers",0,56,52,0.0
+PA,16,Defense and veterans,0,56,52,0.0
+PA,17,"Science, technology and communications",0,56,52,0.0
+PA,18,Foreign trade,0,56,52,0.0
+PA,19,International affairs,1,56,52,0.017857142857142856
+PA,20,Government operations,2,56,52,0.03571428571428571
+PA,21,Public lands and water,0,56,52,0.0
+PA,23,"Culture, family and social issues",0,56,52,0.0
+RI,1,Macroeconomics,163,4399,4298,0.03705387588088202
+RI,2,Civil rights and liberties,16,4399,4298,0.0036371902705160265
+RI,3,Health,592,4399,4298,0.13457604000909298
+RI,4,Agriculture,15,4399,4298,0.003409865878608775
+RI,5,Labor and employment,91,4399,4298,0.0206865196635599
+RI,6,Education,318,4399,4298,0.07228915662650602
+RI,7,Environment,48,4399,4298,0.01091157081154808
+RI,8,Energy,73,4399,4298,0.01659468060922937
+RI,9,Immigration,2,4399,4298,0.0004546487838145033
+RI,10,Transportation,187,4399,4298,0.04250966128665606
+RI,12,"Law, crime and justice",485,4399,4298,0.11025233007501704
+RI,13,Social welfare,37,4399,4298,0.008411002500568312
+RI,14,Housing and community development,214,4399,4298,0.04864741986815185
+RI,15,"Business, commerce and consumers",143,4399,4298,0.032507388042736986
+RI,16,Defense and veterans,42,4399,4298,0.009547624460104568
+RI,17,"Science, technology and communications",2,4399,4298,0.0004546487838145033
+RI,18,Foreign trade,0,4399,4298,0.0
+RI,19,International affairs,2,4399,4298,0.0004546487838145033
+RI,20,Government operations,225,4399,4298,0.05114798817913162
+RI,21,Public lands and water,62,4399,4298,0.014094112298249603
+RI,23,"Culture, family and social issues",1,4399,4298,0.00022732439190725165
+SC,1,Macroeconomics,82,4797,4789,0.017094017094017096
+SC,2,Civil rights and liberties,8,4797,4789,0.0016677089847821555
+SC,3,Health,287,4797,4789,0.05982905982905983
+SC,4,Agriculture,15,4797,4789,0.0031269543464665416
+SC,5,Labor and employment,36,4797,4789,0.0075046904315197
+SC,6,Education,198,4797,4789,0.04127579737335835
+SC,7,Environment,14,4797,4789,0.002918490723368772
+SC,8,Energy,16,4797,4789,0.003335417969564311
+SC,9,Immigration,10,4797,4789,0.0020846362309776944
+SC,10,Transportation,156,4797,4789,0.032520325203252036
+SC,12,"Law, crime and justice",490,4797,4789,0.10214717531790703
+SC,13,Social welfare,27,4797,4789,0.005628517823639775
+SC,14,Housing and community development,52,4797,4789,0.01084010840108401
+SC,15,"Business, commerce and consumers",59,4797,4789,0.012299353762768398
+SC,16,Defense and veterans,30,4797,4789,0.006253908692933083
+SC,17,"Science, technology and communications",2,4797,4789,0.0004169272461955389
+SC,18,Foreign trade,0,4797,4789,0.0
+SC,19,International affairs,1,4797,4789,0.00020846362309776944
+SC,20,Government operations,269,4797,4789,0.05607671461329998
+SC,21,Public lands and water,23,4797,4789,0.004794663331248697
+SC,23,"Culture, family and social issues",0,4797,4789,0.0
+SD,1,Macroeconomics,22,1096,1096,0.020072992700729927
+SD,2,Civil rights and liberties,2,1096,1096,0.0018248175182481751
+SD,3,Health,85,1096,1096,0.07755474452554745
+SD,4,Agriculture,11,1096,1096,0.010036496350364963
+SD,5,Labor and employment,14,1096,1096,0.012773722627737226
+SD,6,Education,56,1096,1096,0.051094890510948905
+SD,7,Environment,4,1096,1096,0.0036496350364963502
+SD,8,Energy,4,1096,1096,0.0036496350364963502
+SD,9,Immigration,2,1096,1096,0.0018248175182481751
+SD,10,Transportation,53,1096,1096,0.048357664233576646
+SD,12,"Law, crime and justice",134,1096,1096,0.12226277372262774
+SD,13,Social welfare,20,1096,1096,0.01824817518248175
+SD,14,Housing and community development,9,1096,1096,0.008211678832116789
+SD,15,"Business, commerce and consumers",33,1096,1096,0.030109489051094892
+SD,16,Defense and veterans,21,1096,1096,0.01916058394160584
+SD,17,"Science, technology and communications",0,1096,1096,0.0
+SD,18,Foreign trade,0,1096,1096,0.0
+SD,19,International affairs,1,1096,1096,0.0009124087591240876
+SD,20,Government operations,95,1096,1096,0.08667883211678833
+SD,21,Public lands and water,47,1096,1096,0.04288321167883212
+SD,23,"Culture, family and social issues",0,1096,1096,0.0
+TN,1,Macroeconomics,168,10198,10197,0.016473818395763874
+TN,2,Civil rights and liberties,18,10198,10197,0.001765051970974701
+TN,3,Health,886,10198,10197,0.08687978034908805
+TN,4,Agriculture,40,10198,10197,0.003922337713277113
+TN,5,Labor and employment,80,10198,10197,0.007844675426554227
+TN,6,Education,649,10198,10197,0.06363992939792117
+TN,7,Environment,19,10198,10197,0.0018631104138066288
+TN,8,Energy,30,10198,10197,0.0029417532849578347
+TN,9,Immigration,18,10198,10197,0.001765051970974701
+TN,10,Transportation,265,10198,10197,0.025985487350460874
+TN,12,"Law, crime and justice",1275,10198,10197,0.125024514610708
+TN,13,Social welfare,117,10198,10197,0.011472837811335556
+TN,14,Housing and community development,71,10198,10197,0.006962149441066876
+TN,15,"Business, commerce and consumers",152,10198,10197,0.01490488331045303
+TN,16,Defense and veterans,47,10198,10197,0.004608746813100608
+TN,17,"Science, technology and communications",5,10198,10197,0.0004902922141596392
+TN,18,Foreign trade,0,10198,10197,0.0
+TN,19,International affairs,3,10198,10197,0.0002941753284957835
+TN,20,Government operations,674,10198,10197,0.06609139046871935
+TN,21,Public lands and water,126,10198,10197,0.012355363796822906
+TN,23,"Culture, family and social issues",0,10198,10197,0.0
+TX,1,Macroeconomics,87,11548,11160,0.007533772081745757
+TX,2,Civil rights and liberties,6,11548,11160,0.0005195704883962591
+TX,3,Health,557,11548,11160,0.04823346033945272
+TX,4,Agriculture,9,11548,11160,0.0007793557325943886
+TX,5,Labor and employment,40,11548,11160,0.0034638032559750607
+TX,6,Education,434,11548,11160,0.03758226532732941
+TX,7,Environment,17,11548,11160,0.0014721163837894007
+TX,8,Energy,26,11548,11160,0.0022514721163837893
+TX,9,Immigration,0,11548,11160,0.0
+TX,10,Transportation,258,11548,11160,0.022341531001039142
+TX,12,"Law, crime and justice",845,11548,11160,0.07317284378247316
+TX,13,Social welfare,20,11548,11160,0.0017319016279875303
+TX,14,Housing and community development,30,11548,11160,0.0025978524419812956
+TX,15,"Business, commerce and consumers",48,11548,11160,0.004156563907170073
+TX,16,Defense and veterans,31,11548,11160,0.002684447523380672
+TX,17,"Science, technology and communications",0,11548,11160,0.0
+TX,18,Foreign trade,0,11548,11160,0.0
+TX,19,International affairs,3,11548,11160,0.00025978524419812955
+TX,20,Government operations,425,11548,11160,0.03680290959473502
+TX,21,Public lands and water,463,11548,11160,0.040093522687911325
+TX,23,"Culture, family and social issues",0,11548,11160,0.0
+UT,1,Macroeconomics,31,1879,1829,0.016498137307078234
+UT,2,Civil rights and liberties,1,1879,1829,0.0005321979776476849
+UT,3,Health,162,1879,1829,0.08621607237892497
+UT,4,Agriculture,10,1879,1829,0.005321979776476849
+UT,5,Labor and employment,29,1879,1829,0.015433741351782864
+UT,6,Education,110,1879,1829,0.05854177754124534
+UT,7,Environment,11,1879,1829,0.005854177754124534
+UT,8,Energy,14,1879,1829,0.007450771687067589
+UT,9,Immigration,1,1879,1829,0.0005321979776476849
+UT,10,Transportation,76,1879,1829,0.04044704630122405
+UT,12,"Law, crime and justice",187,1879,1829,0.09952102182011709
+UT,13,Social welfare,8,1879,1829,0.004257583821181479
+UT,14,Housing and community development,22,1879,1829,0.011708355508249068
+UT,15,"Business, commerce and consumers",31,1879,1829,0.016498137307078234
+UT,16,Defense and veterans,11,1879,1829,0.005854177754124534
+UT,17,"Science, technology and communications",0,1879,1829,0.0
+UT,18,Foreign trade,0,1879,1829,0.0
+UT,19,International affairs,0,1879,1829,0.0
+UT,20,Government operations,104,1879,1829,0.05534858967535923
+UT,21,Public lands and water,67,1879,1829,0.03565726450239489
+UT,23,"Culture, family and social issues",0,1879,1829,0.0
+VA,1,Macroeconomics,73,7073,6302,0.010320938781280927
+VA,2,Civil rights and liberties,7,7073,6302,0.0009896790612187191
+VA,3,Health,522,7073,6302,0.0738017814223102
+VA,4,Agriculture,12,7073,6302,0.001696592676374947
+VA,5,Labor and employment,43,7073,6302,0.00607945709034356
+VA,6,Education,285,7073,6302,0.04029407606390499
+VA,7,Environment,46,7073,6302,0.006503605259437297
+VA,8,Energy,85,7073,6302,0.012017531457655875
+VA,9,Immigration,2,7073,6302,0.0002827654460624912
+VA,10,Transportation,150,7073,6302,0.021207408454686837
+VA,12,"Law, crime and justice",621,7073,6302,0.0877986710024035
+VA,13,Social welfare,36,7073,6302,0.005089778029124841
+VA,14,Housing and community development,141,7073,6302,0.019934963947405626
+VA,15,"Business, commerce and consumers",82,7073,6302,0.011593383288562138
+VA,16,Defense and veterans,53,7073,6302,0.007493284320656016
+VA,17,"Science, technology and communications",2,7073,6302,0.0002827654460624912
+VA,18,Foreign trade,0,7073,6302,0.0
+VA,19,International affairs,2,7073,6302,0.0002827654460624912
+VA,20,Government operations,253,7073,6302,0.03576982892690513
+VA,21,Public lands and water,72,7073,6302,0.010179556058249682
+VA,23,"Culture, family and social issues",0,7073,6302,0.0
+VT,1,Macroeconomics,27,1211,1100,0.022295623451692816
+VT,2,Civil rights and liberties,4,1211,1100,0.0033030553261767133
+VT,3,Health,122,1211,1100,0.10074318744838975
+VT,4,Agriculture,10,1211,1100,0.008257638315441783
+VT,5,Labor and employment,35,1211,1100,0.028901734104046242
+VT,6,Education,54,1211,1100,0.04459124690338563
+VT,7,Environment,29,1211,1100,0.023947151114781174
+VT,8,Energy,19,1211,1100,0.01568951279933939
+VT,9,Immigration,2,1211,1100,0.0016515276630883566
+VT,10,Transportation,49,1211,1100,0.04046242774566474
+VT,12,"Law, crime and justice",140,1211,1100,0.11560693641618497
+VT,13,Social welfare,14,1211,1100,0.011560693641618497
+VT,14,Housing and community development,51,1211,1100,0.042113955408753095
+VT,15,"Business, commerce and consumers",37,1211,1100,0.0305532617671346
+VT,16,Defense and veterans,13,1211,1100,0.010734929810074319
+VT,17,"Science, technology and communications",0,1211,1100,0.0
+VT,18,Foreign trade,0,1211,1100,0.0
+VT,19,International affairs,0,1211,1100,0.0
+VT,20,Government operations,57,1211,1100,0.04706853839801817
+VT,21,Public lands and water,22,1211,1100,0.018166804293971925
+VT,23,"Culture, family and social issues",0,1211,1100,0.0
+WA,1,Macroeconomics,10,1184,1182,0.008445945945945946
+WA,2,Civil rights and liberties,1,1184,1182,0.0008445945945945946
+WA,3,Health,124,1184,1182,0.10472972972972973
+WA,4,Agriculture,7,1184,1182,0.0059121621621621625
+WA,5,Labor and employment,22,1184,1182,0.018581081081081082
+WA,6,Education,83,1184,1182,0.07010135135135136
+WA,7,Environment,9,1184,1182,0.007601351351351352
+WA,8,Energy,19,1184,1182,0.016047297297297296
+WA,9,Immigration,0,1184,1182,0.0
+WA,10,Transportation,28,1184,1182,0.02364864864864865
+WA,12,"Law, crime and justice",133,1184,1182,0.11233108108108109
+WA,13,Social welfare,15,1184,1182,0.01266891891891892
+WA,14,Housing and community development,43,1184,1182,0.036317567567567564
+WA,15,"Business, commerce and consumers",37,1184,1182,0.03125
+WA,16,Defense and veterans,10,1184,1182,0.008445945945945946
+WA,17,"Science, technology and communications",0,1184,1182,0.0
+WA,18,Foreign trade,0,1184,1182,0.0
+WA,19,International affairs,0,1184,1182,0.0
+WA,20,Government operations,37,1184,1182,0.03125
+WA,21,Public lands and water,25,1184,1182,0.021114864864864864
+WA,23,"Culture, family and social issues",0,1184,1182,0.0
+WI,1,Macroeconomics,29,2655,2655,0.010922787193973634
+WI,2,Civil rights and liberties,8,2655,2655,0.0030131826741996233
+WI,3,Health,322,2655,2655,0.12128060263653484
+WI,4,Agriculture,21,2655,2655,0.007909604519774011
+WI,5,Labor and employment,50,2655,2655,0.018832391713747645
+WI,6,Education,191,2655,2655,0.07193973634651601
+WI,7,Environment,11,2655,2655,0.004143126177024482
+WI,8,Energy,20,2655,2655,0.007532956685499058
+WI,9,Immigration,2,2655,2655,0.0007532956685499058
+WI,10,Transportation,105,2655,2655,0.03954802259887006
+WI,12,"Law, crime and justice",179,2655,2655,0.06741996233521658
+WI,13,Social welfare,19,2655,2655,0.007156308851224105
+WI,14,Housing and community development,49,2655,2655,0.018455743879472693
+WI,15,"Business, commerce and consumers",38,2655,2655,0.01431261770244821
+WI,16,Defense and veterans,28,2655,2655,0.010546139359698682
+WI,17,"Science, technology and communications",2,2655,2655,0.0007532956685499058
+WI,18,Foreign trade,0,2655,2655,0.0
+WI,19,International affairs,1,2655,2655,0.0003766478342749529
+WI,20,Government operations,80,2655,2655,0.030131826741996232
+WI,21,Public lands and water,28,2655,2655,0.010546139359698682
+WI,23,"Culture, family and social issues",2,2655,2655,0.0007532956685499058
+WV,1,Macroeconomics,0,5549,4593,0.0
+WV,2,Civil rights and liberties,0,5549,4593,0.0
+WV,3,Health,20,5549,4593,0.003604253018561903
+WV,4,Agriculture,2,5549,4593,0.0003604253018561903
+WV,5,Labor and employment,0,5549,4593,0.0
+WV,6,Education,5,5549,4593,0.0009010632546404757
+WV,7,Environment,1,5549,4593,0.00018021265092809516
+WV,8,Energy,2,5549,4593,0.0003604253018561903
+WV,9,Immigration,0,5549,4593,0.0
+WV,10,Transportation,5,5549,4593,0.0009010632546404757
+WV,12,"Law, crime and justice",6,5549,4593,0.001081275905568571
+WV,13,Social welfare,2,5549,4593,0.0003604253018561903
+WV,14,Housing and community development,2,5549,4593,0.0003604253018561903
+WV,15,"Business, commerce and consumers",1,5549,4593,0.00018021265092809516
+WV,16,Defense and veterans,1,5549,4593,0.00018021265092809516
+WV,17,"Science, technology and communications",0,5549,4593,0.0
+WV,18,Foreign trade,0,5549,4593,0.0
+WV,19,International affairs,1,5549,4593,0.00018021265092809516
+WV,20,Government operations,4,5549,4593,0.0007208506037123806
+WV,21,Public lands and water,6,5549,4593,0.001081275905568571
+WV,23,"Culture, family and social issues",0,5549,4593,0.0
+WY,1,Macroeconomics,38,763,759,0.04980340760157274
+WY,2,Civil rights and liberties,7,763,759,0.009174311926605505
+WY,3,Health,66,763,759,0.08650065530799476
+WY,4,Agriculture,13,763,759,0.01703800786369594
+WY,5,Labor and employment,9,763,759,0.011795543905635648
+WY,6,Education,55,763,759,0.07208387942332896
+WY,7,Environment,5,763,759,0.00655307994757536
+WY,8,Energy,15,763,759,0.019659239842726082
+WY,9,Immigration,1,763,759,0.001310615989515072
+WY,10,Transportation,31,763,759,0.04062909567496723
+WY,12,"Law, crime and justice",69,763,759,0.09043250327653997
+WY,13,Social welfare,7,763,759,0.009174311926605505
+WY,14,Housing and community development,5,763,759,0.00655307994757536
+WY,15,"Business, commerce and consumers",19,763,759,0.02490170380078637
+WY,16,Defense and veterans,14,763,759,0.01834862385321101
+WY,17,"Science, technology and communications",0,763,759,0.0
+WY,18,Foreign trade,0,763,759,0.0
+WY,19,International affairs,1,763,759,0.001310615989515072
+WY,20,Government operations,54,763,759,0.07077326343381389
+WY,21,Public lands and water,61,763,759,0.0799475753604194
+WY,23,"Culture, family and social issues",0,763,759,0.0

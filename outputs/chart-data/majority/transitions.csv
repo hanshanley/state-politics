@@ -1,0 +1,15 @@
+baseline_reason,candidate_status,contexts
+classified,classified,65091
+low_confidence,uncertain,14508
+mixed_chunk_topics,classified,10711
+mixed_chunk_topics,model_rejected,287
+mixed_chunk_topics,uncertain,17355
+mixed_view_abstentions,classified,19
+mixed_view_abstentions,model_rejected,122
+mixed_view_abstentions,uncertain,2027
+source_alternative_disagreement,classified,2479
+source_alternative_disagreement,model_rejected,11
+source_alternative_disagreement,uncertain,3506
+source_test_record,excluded,3
+supervised_rejection,model_rejected,23198
+unavailable,unavailable,18281

@@ -1,0 +1,10 @@
+baseline_reason,label,new_assignments
+supervised_rejection,Model rejection output only,0
+mixed_chunk_topics,Within-document window disagreement,10711
+low_confidence,Low score only,0
+ambiguous_margin,Small score margin only,0
+insufficient_evidence,Insufficient model evidence,0
+mixed_view_abstentions,Multiple source-view abstention reasons,19
+source_alternative_disagreement,Source-alternative disagreement,2479
+source_test_record,Source test records excluded,0
+source_draft_request,Source draft requests excluded,0

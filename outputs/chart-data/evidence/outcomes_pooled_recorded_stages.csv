@@ -1,0 +1,21 @@
+population,recorded_stage,stage_label,n_contexts,denominator_contexts,share,final_legal_disposition_certified
+all_candidates,became_law,Became-law classification,8762,157598,0.055597152248124976,False
+all_candidates,signed,Executive signature,20232,157598,0.12837726367085878,False
+all_candidates,vetoed,Executive veto,1218,157598,0.007728524473660833,False
+all_candidates,sent_to_executive,Executive receipt,193,157598,0.0012246348303912487,False
+all_candidates,passed_legislature,Passage: both chambers / legislature,3574,157598,0.022677952765898044,False
+all_candidates,passed_one_chamber,Passage: one or unresolved chamber,28905,157598,0.1834096879402023,False
+all_candidates,recorded_failure_or_withdrawal,Failure / withdrawal classification,11029,157598,0.06998185256158074,False
+all_candidates,introduced_or_pending,Other classified history,83581,157598,0.5303430246576734,False
+all_candidates,action_stage_unclassified,"Actions, no classifications",104,157598,0.000659906851609792,False
+all_candidates,no_action_data,No retained actions,0,157598,0.0,False
+law_eligible,became_law,Became-law classification,8162,128628,0.06345430232919738,False
+law_eligible,signed,Executive signature,16982,128628,0.13202413160431634,False
+law_eligible,vetoed,Executive veto,1217,128628,0.009461392542836707,False
+law_eligible,sent_to_executive,Executive receipt,121,128628,0.000940697204341201,False
+law_eligible,passed_legislature,Passage: both chambers / legislature,1638,128628,0.012734396865379234,False
+law_eligible,passed_one_chamber,Passage: one or unresolved chamber,13009,128628,0.10113661100227012,False
+law_eligible,recorded_failure_or_withdrawal,Failure / withdrawal classification,10605,128628,0.08244705662841682,False
+law_eligible,introduced_or_pending,Other classified history,76889,128628,0.5977625400379388,False
+law_eligible,action_stage_unclassified,"Actions, no classifications",5,128628,3.887178530335541e-05,False
+law_eligible,no_action_data,No retained actions,0,128628,0.0,False

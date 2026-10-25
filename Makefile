@@ -11,13 +11,14 @@
 PY := uv run python
 DATA := data/processed
 OUT := outputs
+GRAPH_OUT ?= $(OUT)
 OPENSTATES_MONTH ?= 2026-10
 BILL_DUMP ?= data/raw/openstates/$(OPENSTATES_MONTH)-public.pgdump
 CHECKPOINT ?= data/models/modernbert-topics
 MODEL_ARGS := --checkpoint "$(CHECKPOINT)"
 
 .DEFAULT_GOAL := help
-.PHONY: help setup all analysis figures test lint clean-derived \
+.PHONY: help setup all analysis figures legacy-figures test lint clean-derived \
         historical registry platforms official-documents caucus-priorities \
         legislators bills-dump audit source-ledger preview
 
@@ -26,7 +27,9 @@ help:
 	@echo "  setup        install dependencies (including the local model stack)"
 	@echo "  all          historical corpus + analysis + figures (no crawling)"
 	@echo "  analysis     classify planks and bills, compute emphasis and divergence"
-	@echo "  figures      regenerate every figure in $(OUT)/"
+	@echo "  figures      render current dual-background graphs from pinned saved tables"
+	@echo "               GRAPH_OUT=outputs/current-render-REPLAY for a fresh replay"
+	@echo "  legacy-figures  old analytical producers (not revalidated findings)"
 	@echo "  test lint audit  run tests / lint / traceability audit"
 	@echo "  source-ledger preview  inventory sources / build local-only evidence preview"
 	@echo ""
@@ -93,6 +96,9 @@ analysis: historical
 	$(PY) -m state_politics.analysis.coverage
 
 figures:
+	$(PY) scripts/render_current_graphs.py --out-dir "$(GRAPH_OUT)"
+
+legacy-figures:
 	$(PY) scripts/plot_platform_coverage.py
 	$(PY) scripts/plot_platform_gap.py
 	$(PY) scripts/plot_party_emphasis.py

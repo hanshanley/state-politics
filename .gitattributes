@@ -1,0 +1,5 @@
+# Complete chart CSVs retain the original, checksum-bound CRLF bytes.
+outputs/chart-data/**/*.csv whitespace=cr-at-eol
+# Matplotlib's generated SVG paths include insignificant line-end spaces.
+outputs/substack/**/*.svg whitespace=-blank-at-eol
+outputs/themarginoferror/**/*.svg whitespace=-blank-at-eol

@@ -1,0 +1,9 @@
+model,dataset,dataset_label,metric_scope,n_eligible,n_classified,n_abstained,n_correct_topic,correct_abstention_count,decision_accuracy,coverage,classified_precision,reference_basis
+Mixed full-document,cycle_metadata_190,Metadata,all_reference_metrics,190,137,53,83,42,0.6578947368421053,0.7210526315789474,0.6058394160583942,"assistant-reviewed development evidence, not human gold"
+Mixed full-document,cycle_native_39,Native text (agreed only),primary_agreed_metrics,36,25,11,21,6,0.75,0.6944444444444444,0.84,"assistant-reviewed development evidence, not human gold"
+Mixed full-document,platform_52,Platform,all_reference_metrics,52,43,9,38,7,0.8653846153846154,0.8269230769230769,0.8837209302325582,"assistant-reviewed development evidence, not human gold"
+Mixed full-document,development_50,Development,all_reference_metrics,50,32,18,16,11,0.54,0.64,0.5,"assistant-reviewed development evidence, not human gold"
+Reviewed-only,cycle_metadata_190,Metadata,all_reference_metrics,190,97,93,63,55,0.6210526315789474,0.5105263157894737,0.6494845360824743,"assistant-reviewed development evidence, not human gold"
+Reviewed-only,cycle_native_39,Native text (agreed only),primary_agreed_metrics,36,19,17,18,8,0.7222222222222222,0.5277777777777778,0.9473684210526315,"assistant-reviewed development evidence, not human gold"
+Reviewed-only,platform_52,Platform,all_reference_metrics,52,35,17,31,8,0.75,0.6730769230769231,0.8857142857142857,"assistant-reviewed development evidence, not human gold"
+Reviewed-only,development_50,Development,all_reference_metrics,50,21,29,14,14,0.56,0.42,0.6666666666666666,"assistant-reviewed development evidence, not human gold"

@@ -18,6 +18,44 @@ be bound explicitly before regenerated outputs can support the narrowed study.
 
 ## Recreated graph bundle
 
+### Current dual-background graph collection
+
+The current entry point is `outputs/index.html`, not the thirteen historical
+root PNGs or a guessed versioned gallery. The tracked collection contains
+**27 genuinely regenerated charts / 108 exports**, organized by evidence,
+original topics, majority candidate, full scores, input comparison and context
+experiments under both `outputs/substack/` and `outputs/themarginoferror/`.
+Substack uses `#F7F5F0`; The Margin of Error uses `#F5F5F5`, matching the local
+`uk_decline` reference. Both versions preserve identical marks, axes and data.
+PNGs are 300 dpi; SVG labels remain editable text. No website is deployed.
+
+All 35 complete original chart CSVs are copied byte-for-byte to
+`outputs/chart-data/`; `outputs/current-chart-data.zip` contains those full
+tables, not metadata or a visible-page subset. The original full-policy-text
+research ZIPs remain in the separately linked local source galleries and are
+not replaced by the small chart-table download.
+
+The renderer externally pins the manifests for evidence v30, original
+retained-text topics v17, majority v1, full-score diagnostics v1, paired-input
+comparison v15 and context pilot v1. It validates each entire input table before
+rendering and rechecks inputs afterward. The output manifest records all
+original bindings, exported hashes, actual bar/heatmap values, axes geometry
+and label extents. It refuses an existing collection rather than overwriting
+the historical evidence:
+
+```bash
+.venv/bin/python -I -B scripts/render_current_graphs.py \
+  --out-dir outputs/current-render-REPLAY
+# Equivalent Make target, with the saved input bundles present:
+make figures GRAPH_OUT=outputs/current-render-REPLAY
+```
+
+The original `make figures` producers are now explicitly `make legacy-figures`;
+they are not the current study's regeneration path. Party/platform attention
+comparisons remain withheld: graph polishing does not resolve independent
+human validation, operative-platform, event-time party or source-rights gates.
+Original unanimity and unpromoted majority remain distinctly labelled.
+
 ### Per-bill classification evidence inspector
 
 The inspector exposes individual source-backed model decisions without

@@ -41,17 +41,26 @@ window votes and all topic/rejection scores.
 keep information that a single assigned label would hide.
 
 **Graphs and comparisons:** the
-[graph bundles](docs/REPRODUCIBILITY.md#recreated-graph-bundle) include complete
-chart data and research downloads.
+[current collection](outputs/README.md) has **27 regenerated charts** with
+Substack and The Margin of Error backgrounds, 300-dpi PNGs, editable SVGs and
+[complete chart tables](outputs/chart-data/). Browse
+[`outputs/substack/`](outputs/substack/) or
+[`outputs/themarginoferror/`](outputs/themarginoferror/).
+[Original research bundles](docs/REPRODUCIBILITY.md#recreated-graph-bundle)
+retain the full source evidence.
 [Majority voting](docs/REPRODUCIBILITY.md#strict-majority-bill-topic-candidate)
 and [longer-context experiments](docs/REPRODUCIBILITY.md#longer-context-and-cross-input-experiments)
 remain separate, explicitly provisional alternatives.
 
 ## Working with the charts
 
-Generated figures, the classification inspector and full research downloads
-live under `outputs/`; source bundles and model checkpoints live under `data/`.
-These are local, Git-ignored artifacts, not data supplied by cloning the code.
+Open `outputs/index.html` locally for the current chart gallery. Its categorized
+exports and complete chart CSVs are tracked; the thirteen old root-level PNGs
+are preserved legacy references, not the current collection.
+
+The classification inspector and full original research downloads remain
+local, Git-ignored artifacts under `outputs/`. Source bundles and model
+checkpoints live under `data/`; cloning the code does not supply them.
 The [reproducibility guide](docs/REPRODUCIBILITY.md) provides the current build
 and local-workspace commands.
 

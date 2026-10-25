@@ -1,0 +1,17 @@
+party,metadata_year_band,original_confirmed_filter,n_original_rows
+D,before_2023,False,8
+D,before_2023,True,6
+D,2023_2024_metadata_only,False,5
+D,2023_2024_metadata_only,True,0
+D,after_2024,False,4
+D,after_2024,True,6
+D,unknown,False,23
+D,unknown,True,18
+R,before_2023,False,5
+R,before_2023,True,14
+R,2023_2024_metadata_only,False,0
+R,2023_2024_metadata_only,True,9
+R,after_2024,False,4
+R,after_2024,True,9
+R,unknown,False,46
+R,unknown,True,45
