@@ -161,6 +161,30 @@ def axes(rows=6, *, panels=1, height=None, width=11):
     return fig, list(axs.flat)
 
 
+def population_counts(tables):
+    status = tables["majority", "status_comparison"]
+    if not status.status.is_unique:
+        raise ValueError("one row per original/candidate disposition required")
+    status = status.set_index("status")
+    contexts = int(status.baseline_contexts.sum())
+    if int(status.candidate_contexts.sum()) != contexts:
+        raise ValueError("same original context population required")
+    assigned = int(status.loc["classified", "baseline_contexts"])
+    candidate = int(status.loc["classified", "candidate_contexts"])
+    missing = int(status.loc["unavailable", "baseline_contexts"])
+    if int(status.loc["unavailable", "candidate_contexts"]) != missing or candidate < assigned:
+        raise ValueError("majority must preserve missing inputs and baseline assignments")
+    return {
+        "original_candidate_contexts": contexts,
+        "original_assigned": assigned,
+        "original_abstained": contexts - assigned - missing,
+        "majority_candidate_assigned": candidate,
+        "majority_additional_assignments": candidate - assigned,
+        "missing_retained_text": missing,
+        "available_retained_text": contexts - missing,
+    }
+
+
 def bars(ax, labels, values, *, colors=theme.BLUE, xlabel="Candidate bill contexts"):
     labels = [textwrap.fill(str(label), 32) for label in labels]
     positions = np.arange(len(labels))
@@ -246,6 +270,8 @@ def heatmap(frame, *, xlabel, ylabel, label, percent=True, size=(13, 12)):
 
 def specifications(tables):
     """Yield actual figures and exact complete input tables for every current family."""
+    counts = population_counts(tables)
+    versions = {group: folder.rsplit("-", 1)[-1] for group, (folder, _) in SOURCES.items()}
 
     def get(group, name):
         return tables[group, name].copy()
@@ -269,9 +295,11 @@ def specifications(tables):
         "topic_comparison",
         fig,
         "Which topics receive a bill assignment?",
-        "Same 157,598 contexts; original rule and unpromoted majority candidate",
-        "Source: frozen majority v1. Topic counts are provisional, not policy prevalence "
-        "or party positions. All 65,091 original assignments are retained.",
+        f"Same {counts['original_candidate_contexts']:,} contexts; original rule and "
+        "unpromoted majority candidate",
+        f"Source: frozen majority {versions['majority']}. Topic counts are provisional, "
+        f"not policy prevalence or party positions. All {counts['original_assigned']:,} "
+        "original-rule assignments are retained.",
         "topic_comparison",
     )
 
@@ -297,15 +325,19 @@ def specifications(tables):
             va="center",
             fontsize=11,
         )
-    ax.set_xlabel("Original candidate contexts; each row totals 157,598")
+    ax.set_xlabel(
+        f"Original candidate contexts; each row totals {counts['original_candidate_contexts']:,}"
+    )
     yield item(
         "majority",
         "decision_comparison",
         fig,
         "What changes under majority voting?",
-        "13,209 additional topic assignments; the candidate is not validated",
-        "Source: majority v1. The baseline breakdown separates rejection and other "
-        "abstentions; all 74,226 original abstentions remain preserved.",
+        f"{counts['majority_additional_assignments']:,} additional topic assignments; "
+        "the candidate is not validated",
+        f"Source: majority {versions['majority']}. The baseline separates rejection and "
+        f"other abstentions; all {counts['original_abstained']:,} unanimity abstentions "
+        "remain inspectable.",
         "status_comparison",
     )
 
@@ -319,7 +351,8 @@ def specifications(tables):
         fig,
         "Where the new assignments come from",
         "Reasons recorded under the original unanimity rule",
-        "Source: majority v1. Fewer abstentions do not establish better accuracy. "
+        f"Source: majority {versions['majority']}. Fewer abstentions do not establish "
+        "better accuracy. "
         "Conditional supporting-window gates are not whole-document confidence.",
         "new_assignment_origins",
     )
@@ -360,7 +393,8 @@ def specifications(tables):
             fig,
             title,
             "All fifty states; common 0-100% scale",
-            "Source: saved full-body inference v19 / majority v1. Denominator is each "
+            f"Source: full-body topic gallery {versions['topics']} / majority "
+            f"{versions['majority']}. Denominator is each "
             "state's retained candidate contexts, not a complete introduced-bill universe. "
             "No supplied candidates does not mean no activity.",
             table,
@@ -376,8 +410,11 @@ def specifications(tables):
         "topic_counts",
         fig,
         "Original full-text topic assignments",
-        "65,091 assigned; 74,226 abstained; 18,281 without retained body text",
-        "Source: complete retained-text inference v19. Frozen unanimity, not the "
+        f"{counts['original_assigned']:,} assigned; "
+        f"{counts['original_abstained']:,} abstained; "
+        f"{counts['missing_retained_text']:,} without retained body text",
+        f"Source: complete retained-text topic gallery {versions['topics']}. "
+        "Frozen unanimity, not the "
         "majority candidate. No independent human validation or party attribution.",
         "retained_text_topic_counts",
     )
@@ -396,7 +433,8 @@ def specifications(tables):
         fig,
         "The original topic profile across states",
         "All candidate contexts in the denominator; grey means no scored inputs",
-        "Source: full-body inference v19. Missing inputs and abstentions are not "
+        f"Source: full-body topic gallery {versions['topics']}. Missing inputs and "
+        "abstentions are not "
         "redistributed across topics. This is a model-output diagnostic, not party policy.",
         "retained_text_state_topics",
     )
@@ -407,7 +445,8 @@ def specifications(tables):
             "contexts",
             "Why the original model did not assign every bill",
             "Every original context is retained, including missing text and exclusions",
-            "Source: full-score diagnostics v1. Reasons are model/source dispositions, not "
+            f"Source: full-score diagnostics {versions['scores']}. Reasons are model/source "
+            "dispositions, not "
             "human judgments about whether a bill has a substantive topic.",
         ),
         (
@@ -415,7 +454,9 @@ def specifications(tables):
             "mean_context_score",
             "All 22 outputs, including model rejection",
             "Complete score vectors, not only the accepted topic",
-            "Source: full-score diagnostics v1; 139,314 scored contexts. Whiskers represent "
+            f"Source: full-score diagnostics {versions['scores']}; "
+            f"{int(tables['scores', 'output_scores'].scored_contexts.iloc[0]):,} scored "
+            "contexts. Whiskers represent "
             "source variation, not confidence intervals. Scores are uncalibrated; "
             "rejection stays in.",
         ),
@@ -483,7 +524,8 @@ def specifications(tables):
         fig,
         "Titles and full texts do not give the same profile",
         "Exactly paired inputs; agreement is not accuracy",
-        "Source: input comparison v15. Both tiers use the frozen unanimity rule. "
+        f"Source: input comparison {versions['inputs']}. Both tiers use the frozen "
+        "unanimity rule. "
         "Unavailable inputs stay outside the paired denominator; no majority substitution.",
         "topic_shares",
         "national_summary",
@@ -507,7 +549,8 @@ def specifications(tables):
         fig,
         "How assignments change with the input",
         "Abstention is retained as an output; rows have separate denominators",
-        "Source: input comparison v15. Descriptive transitions, not validated corrections. "
+        f"Source: input comparison {versions['inputs']}. Descriptive transitions, "
+        "not validated corrections. "
         "The complete CSV preserves transition counts and every row denominator.",
         "topic_transitions",
     )
@@ -564,7 +607,8 @@ def specifications(tables):
         fig,
         "Fifty-state source progress",
         "Closed collection scopes are not completed studies",
-        "Source: saved fifty-state tracker in evidence v30. Blocked and partial scopes "
+        f"Source: saved fifty-state tracker in evidence {versions['evidence']}. "
+        "Blocked and partial scopes "
         "retain explicit gaps; no status certifies scientific completeness.",
         "state_source_status",
     )
@@ -595,7 +639,8 @@ def specifications(tables):
         fig,
         "The retained 2023-2024 bill evidence",
         "Separate overlapping metadata/native channels; not the final recovered-text totals",
-        "Source: original metadata v4 matrix in evidence v30. These columns overlap and "
+        f"Source: original metadata v4 matrix in evidence {versions['evidence']}. "
+        "These columns overlap and "
         "must not be added. Later recovered text appears in the separate coverage chart.",
         "bill_evidence_by_state",
     )
@@ -649,7 +694,9 @@ def specifications(tables):
                 ("independent_only", "Independent corpus / archive"),
                 ("neither_source_observed", "No retained text"),
             ],
-            "Evidence v30: 139,317 of 157,598 contexts have text. Exact bill IDs de-duplicate "
+            f"Evidence {versions['evidence']}: {counts['available_retained_text']:,} of "
+            f"{counts['original_candidate_contexts']:,} contexts have text. Exact bill IDs "
+            "de-duplicate "
             "source channels. Missing or later-version text is not publisher-original "
             "certification.",
         ),
@@ -713,7 +760,8 @@ def specifications(tables):
             fig,
             title,
             "Saved assistant-reviewed development sets, not independent validation",
-            "Source: frozen development comparisons in evidence v30. Native results use "
+            f"Source: frozen development comparisons in evidence {versions['evidence']}. "
+            "Native results use "
             "36 agreed references; three disputes remain excluded. Small inspected "
             "samples do not certify population accuracy.",
             "classifier_metrics",
@@ -790,7 +838,8 @@ def specifications(tables):
             fig,
             title,
             "Recorded source outcomes, not adopted 2023-2024 platforms",
-            "Source: frozen recovered-platform tables in evidence v30. Automated filters "
+            f"Source: frozen recovered-platform tables in evidence {versions['evidence']}. "
+            "Automated filters "
             "and metadata years do not establish adoption, applicability or human validation.",
             table,
         )
@@ -815,7 +864,8 @@ def specifications(tables):
         fig,
         "Retained responses are not distinct platforms",
         f"All {len(f):,} capture attempts; duplicates and failures stay visible",
-        "Source: full platform capture ledger in evidence v30. Bodies are de-duplicated "
+        f"Source: full platform capture ledger in evidence {versions['evidence']}. "
+        "Bodies are de-duplicated "
         "by exact source SHA-256, not a guessed policy or platform identity.",
         "platforms_capture_ledger",
     )
@@ -1127,10 +1177,7 @@ def build(output, root=ROOT):
         "figures": figures,
         "inputs": inputs,
         "artifacts": artifacts,
-        "original_candidate_contexts": 157598,
-        "original_assigned": 65091,
-        "majority_candidate_assigned": 78300,
-        "missing_retained_text": 18281,
+        **population_counts(tables),
         "source_manifests": {
             group: binding(root / "outputs" / folder / "manifest.json")
             for group, (folder, _) in SOURCES.items()

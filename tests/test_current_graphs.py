@@ -132,6 +132,50 @@ def test_current_builder_refuses_overwrite_before_loading_sources(tmp_path):
     )
 
 
+def test_current_population_captions_follow_actual_source_tables():
+    tables = {
+        ("majority", "status_comparison"): pd.DataFrame(
+            [
+                dict(status="classified", label="Assigned", baseline_contexts=4,
+                     candidate_contexts=6),
+                dict(status="uncertain", label="Uncertain", baseline_contexts=3,
+                     candidate_contexts=1),
+                dict(status="unavailable", label="No text", baseline_contexts=3,
+                     candidate_contexts=3),
+            ]
+        ),
+        ("majority", "topic_comparison"): pd.DataFrame(
+            [dict(label="One topic", baseline_contexts=4, candidate_contexts=6)]
+        ),
+    }
+    counts = MODULE["population_counts"](tables)
+    assert counts["original_abstained"] == 3
+    assert counts["available_retained_text"] == 7
+    assert counts["majority_additional_assignments"] == 2
+    specifications = MODULE["specifications"](tables)
+    first, second = next(specifications), next(specifications)
+    try:
+        assert "Same 10 contexts" in first["subtitle"]
+        assert "All 4 original-rule assignments" in first["note"]
+        assert "2 additional topic assignments" in second["subtitle"]
+        assert "all 3 unanimity abstentions" in second["note"]
+        assert "10" in second["fig"].axes[0].get_xlabel()
+    finally:
+        specifications.close()
+        plt.close(first["fig"])
+        plt.close(second["fig"])
+
+
+@pytest.mark.parametrize("candidate", [[7, 1, 2], [3, 4, 3]])
+def test_current_population_refuses_changed_missingness_or_lost_baseline_topics(candidate):
+    table = pd.DataFrame(
+        dict(status=["classified", "uncertain", "unavailable"],
+             baseline_contexts=[4, 3, 3], candidate_contexts=candidate)
+    )
+    with pytest.raises(ValueError, match="preserve missing inputs and baseline assignments"):
+        MODULE["population_counts"]({("majority", "status_comparison"): table})
+
+
 @pytest.mark.parametrize("relative", ["outputs", "outputs/current-render-REPLAY"])
 def test_gallery_evidence_and_method_links_resolve_from_actual_output_directory(
     tmp_path,
