@@ -67,6 +67,34 @@ the detailed source and scientific gates remain in `docs/AUDIT_STATUS.md` and
   other report field unchanged. The actual collection and documentation are
   saved/pushed as Hans Hanley in `df4a63a`; full local evidence archives remain
   ignored and are not backed up by that code/graph push.
+- [x] **DATA-03: Qualify the remaining journal-source leads.** The current gap
+  queue contains 356 ordinary Nebraska resolutions: 255 dated 2023 and 101
+  dated 2024. The official catalogue and both 2023 journal volumes are now
+  completely retained, with 5,534 page strings from both readers; a read-only
+  wrapped-header probe also finds seven candidate contexts in the saved 2024
+  book. These are not yet admitted bodies or new classifications. Build a
+  separately typed, externally pinned collection packet, preserving the sealed
+  v1 parser/packet and using non-colliding view IDs. Verify own introduced
+  number, session, exact original date, complete operative body/boundary and
+  both full readers; retain every raw page, candidate, negative and unknown.
+  Integrate the source schema before any separate v20/token-v17 successor run.
+  Completed: 249 original contexts / 498 full views / 862,477 policy characters.
+  Independent replay re-extracts all 8,274 page strings and checks 812 raw spans
+  and 520 excluded literal printed prefixes. All 83 earlier reader conflicts
+  resolve without changing policy-text agreement or old qualified strings.
+  Both older packets replay unchanged; all 857 candidates and 1,700 dispositions
+  survive. All 276 integration tests pass, with three optional fixture skips.
+  The complete 28-member source ZIP retains all raw books/readers/producers;
+  it remains local and ignored. Current model/graphs are not updated by this
+  source qualification; DATA-04 performs that separate successor.
+- [ ] **DATA-04: Propagate the expanded journal collection into actual graphs.**
+  Start from completed v20 / token v17, retain all 26 earlier archive packets
+  and every old input/prediction, and add only independently qualified new
+  contexts. Freeze a fresh inference job and read-only cache successor; encode
+  only genuinely new strings. Independently replay complete source/token/logit/
+  window evidence and full downloads, then refresh source/topic/majority/score/
+  comparison/inspector bundles and all actual Substack/website-background
+  graphs. Preserve old snapshots, unknowns and all scientific/publication gates.
 - [ ] **VALIDATE-01: Independently validate classifications.** Preserve original
   unanimity and unpromoted majority separately. Complete actual independent human
   review and resolve taxonomy disputes before accuracy or party-policy claims.

@@ -76,7 +76,29 @@ context-experiment work was repeated to resolve those observer/layout issues.
 Independent human annotation, operative platforms, filing-time party/source
 certification, rights/report approval and website publication remain open.
 
-## New Nebraska journal evidence: October 25, 2026
+## Expanded journal qualification: October 25, 2026
+
+A separate, independently verified source collection qualifies **249 more
+original missing contexts / 498 full reader views / 862,477 characters** from
+the official 2023 First Session volumes and the preserved 2024 book. This is
+**not yet propagated into current v20 inference or its graphs**. All 8,274
+page strings are independently re-extracted; 812 body spans and 520 excluded
+literal printed prefixes are checked. The versioned prefix-only header rule
+resolves 83 pypdf glyph-spacing conflicts without altering policy text,
+whole-body agreement, original dates, identity or complete-ending requirements.
+All 332 strings from the preserved provisional collection are byte-identical.
+The sealed 108-context packet/parser and earlier 166-context packet still replay.
+
+The new packet manifest is
+`3948e5160a060654ee1c65b1c334e3366dee9fb168b68f3a046ed43f5f877123`.
+All 857 accepted/rejected candidates and 1,700 original NE gap dispositions
+remain; malformed negative boundaries are not promoted. The complete 28-member
+ZIP retains raw PDFs/readers, full original contexts, negatives and producers.
+Independent proof: `data/ne-journal-collection-independent-20261025-v2.json`.
+All 276 integration tests pass, with three optional fixture skips.
+No model, human annotation, rights or publication approval is implied.
+
+## First Nebraska journal evidence: October 25, 2026
 
 A newly identified official Nebraska State Library Legislative Journal
 provides **108 previously missing original contexts / 216 complete PDF-reader

@@ -157,6 +157,8 @@ def recovery_packet(
                 "state-politics.billcommons-archive-text.v1",
                 "state-politics.billcommons-nevada-archive-text.v1",
                 "state-politics.nebraska-journal-text.v1",
+                "state-politics.nebraska-journal-collection-text.v1",
+                "state-politics.nebraska-journal-collection-text.v2",
             )
             or not all(manifest.get("approvals", {}).get(flag) is False for flag in FLAGS)
         ):
@@ -766,6 +768,7 @@ def recreate(
             "billcam_text.py", "govbot_text.py", "native_text.py", "published_corpus_text.py",
             "billcommons_text.py", "billcommons_nv_text.py",
             "ne_journal_text.py",
+            "ne_journal_collection.py",
         )
     ) + (ROOT / "src/state_politics/platforms/registry.py",) if archive_directories else ())
     for path in producers:

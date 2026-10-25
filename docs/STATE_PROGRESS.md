@@ -80,6 +80,17 @@ Actual graph browser receipts are
 (root). No human validation, model promotion, source-rights approval or public
 website publication is claimed.
 
+An independently verified **additional source qualification** now supplies
+249 original contexts / 498 views / 862,477 characters from the complete 2023
+books and seven wrapped headers in the saved 2024 book. All 83 provisional
+reader conflicts were literal printed-page header spacing; the versioned
+repair retains exact exclusions and does not relax policy-body agreement.
+Independent replay checks 8,274 raw reader pages, 812 body spans, 520 prefixes,
+unchanged original fields and all 85 controls. Both older source packets replay
+unchanged. **Current inference/graphs remain v20/token17 until DATA-04 actually
+propagates this separate collection**; do not subtract qualified-only records
+from the current missing-data denominator. All source/scientific gates remain.
+
 The named checkpoint sections below are retained history. Statements that an
 execution "has not occurred" apply to that historical checkpoint, not a request
 to repeat completed work or dispatch an old source controller.

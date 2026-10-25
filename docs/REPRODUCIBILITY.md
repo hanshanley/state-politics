@@ -146,6 +146,56 @@ The full source ZIP is `data/ne-journal-qualified-complete-20261025-v1.zip`,
 not a metadata-only download. Qualification/provenance validation never creates
 human gold, filing-time originality or redistribution permission.
 
+## Expanded official journal collection
+
+This is a separate source qualification, **not yet propagated into the current
+v20 inference or its graphs**. The official 2023 catalogue identifies both
+First Session volumes; three bounded GETs retained that catalogue and both
+complete books. The existing 2024 Second Session book is reused unchanged.
+All four PDFs and both full reader streams remain in the packet.
+
+The corrected collection qualifies **249 original missing contexts / 498
+complete views / 862,477 policy characters**: 78 contexts from 2023 Volume 1,
+164 from Volume 2 and seven from 2024 Volume 1. The earlier 166-context packet
+is preserved and still replays. Its 83 reader disagreements were printed
+running headers such as pypdf's `LEGISLA TIVEJOURNAL120`, not policy conflicts.
+Schema v2 accepts whitespace differences inside that fixed page-prefix
+literal, records its exact removed text/span/hash and retains untouched raw
+pages. It does not change whole-body whitespace-only agreement, original
+dates, numbered identities, session clauses or complete-ending requirements.
+Policy lookalikes inside a body are not removed.
+
+```bash
+.venv/bin/python -I -B -m state_politics.bills.ne_journal_collection \
+  --first-source data/processed/ne-journal-first-session-source-20261025-v1 \
+  --first-readers data/processed/ne-journal-first-session-readers-20261025-v1 \
+  --second-source data/processed/ne-journal-source-20261025-v1 \
+  --second-readers data/processed/ne-journal-readers-20261025-v1 \
+  --gap-queue outputs/recreated-2023-2024-v31/chart-data/missing_retained_text.parquet \
+  --out-dir data/processed/ne-journal-collection-qualified-REPLAY
+```
+
+Saved packet: `data/processed/ne-journal-collection-qualified-20261025-v2/`,
+manifest `3948e5160a060654ee1c65b1c334e3366dee9fb168b68f3a046ed43f5f877123`.
+The schema routes through the generic archive loader and evidence/graph
+builders, which archive both producers. Schema v1 replays with its original
+header behavior and IDs; v2 uses a new namespace. The sealed 108-context
+parser/packet remains unchanged. All original context fields, all 1,700 gap
+dispositions and all 857 source candidates remain, including malformed and
+unmatched records. These local, ignored source files are not backed up by
+pushing code, and qualification grants no model or publication approval.
+
+Independent proof `data/ne-journal-collection-independent-20261025-v2.json`
+re-extracts all **8,274 page strings**, verifies **812 raw body spans / 520
+literal excluded prefixes**, and proves all 332 previously qualified policy
+strings byte-identical. It also verifies that malformed boundary candidates
+remain rejected, not that every negative is a complete body. All 85 frozen
+controls and human-review reservations remain unchanged. The complete
+28-member ZIP is `data/ne-journal-collection-qualified-complete-20261025-v2.zip`
+(52,353,556 bytes), SHA-256
+`93db5a0079a58cb26ba3ad768651e5771b2376d132a06a9581710bd273d05d70`.
+All 276 source integration tests pass, with three optional fixture skips.
+
 ## Recreated graph bundle
 
 ### Current dual-background graph collection
