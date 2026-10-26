@@ -67,16 +67,36 @@ SHA-256 `10f192286a30931a23797ffc5bb577407f401fe9e153a108373ba4fba1ebe76d`.
 DATA-14 is complete. Source, independent-human, platform, party, rights,
 report and publication gates stay open. Nothing is deployed.
 
-The next bounded offline lead is **DATA-15**, not a reopened acquisition:
+The next bounded offline lead began as **DATA-15**, not a reopened acquisition:
 all seven remaining complete enacted-law reader-conflict pairs differ only
 under a diagnostic soft-hyphen/ASCII-hyphen comparison. Original strings and
-negatives remain unchanged, and underlying printed-glyph equivalence is
-**not yet verified**. Inspect the exact pinned PDF glyphs before any separately
-typed qualification or inference; none of these seven is newly admitted.
+negatives remain unchanged. The exact pinned PDF glyphs are now independently
+verified below; none of these seven is yet admitted to the source union.
 Full original bodies/contexts and the diagnostic are retained in
 `data/ne-enacted-law-remaining-reader-conflicts-20261026-v1.json`,
 SHA-256 `43b67cc5474757deeb15cf5475eecd25358d8895dfc964bfae0548b293e51d7c`.
 The v25 graph manifest and all current classifications remain unchanged.
+
+The literal glyph witness verifies all nine original WinAnsi byte-0xAD
+operators, Type1 font dictionaries, exact native glyph positions and
+same-font ASCII references, with 44 fresh reader-page checks over 22 pages.
+All nine source photographic crops are freshly reproduced and visually
+inspected; existing strikeouts/underlines remain uninterpreted and unchanged.
+An independent verifier reads the unparsed original PDF octal literals,
+active fonts and native glyphs without importing the first observer.
+The failed first observer and partial crop remain preserved; the corrected
+observer handles only the literal unrelated Identity-H OCR identity map on
+two pages, not a relaxation of the target glyph or admission rules.
+Glyph report `data/ne-enacted-law-hyphen-glyphs-20261026-v2/report.json`,
+SHA-256 `4de7c1bdbd748ca7e4d304c7bf5e0d6aba8b476fdee91ed4b26d37cef5aa571d`.
+Independent proof `data/ne-enacted-law-hyphen-independent-20261026-v1.json`,
+SHA-256 `f523ba371bf03739ec49b618693eace20be49932917f4f7581baefbbe2162edc`.
+All 85 controls and the actual v25 graph manifest remain unchanged.
+DATA-16 must now separately qualify the exact-position cohort while
+preserving raw strings and the old whitespace-only profile; DATA-17 inference
+and graph propagation must remain separately verified. No admission,
+independent human validation, legal-version certification or publication follows
+from the glyph witness alone.
 
 ## Preserved v24 dispatch snapshot
 

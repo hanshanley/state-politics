@@ -347,7 +347,7 @@ the detailed source and scientific gates remain in `docs/AUDIT_STATUS.md` and
   `data/ne-enacted-law-graph-save-checkpoint-20261026-v1.json`.
   Raw/model/research archives remain local/ignored, not backed up by that push.
   DATA-01 and independent-human/platform/party/rights/report gates stay open.
-- [ ] **DATA-15: Verify the literal PDF glyphs behind seven reader conflicts.**
+- [x] **DATA-15: Verify the literal PDF glyphs behind seven reader conflicts.**
   After saved v25 delivery, a bounded read-only diagnostic inspects the seven
   remaining complete enacted-law pairs: LB1394, LB989, LB906, LB998, LB1214,
   LB1088 and LB903. Every non-whitespace difference becomes equal only in a
@@ -358,6 +358,32 @@ the detailed source and scientific gates remain in `docs/AUDIT_STATUS.md` and
   a separately typed successor; never silently relax the existing profile.
   Full diagnostic: `data/ne-enacted-law-remaining-reader-conflicts-20261026-v1.json`.
   No new body, classification or source-coverage credit is granted.
+  Verified nine exact WinAnsi byte-0xAD / Type1 font glyphs across 22 original
+  pages / 44 freshly re-extracted reader-page strings. All nine native glyph
+  IDs match actual same-font ASCII-hyphen references at exact PDF positions;
+  every photographic crop was regenerated and visually inspected. Independent
+  verification reads the original unparsed octal literals, active font
+  dictionaries, glyph origins and crop payloads. The first failed observer
+  is preserved: its unrelated-font assumption missed Identity-H OCR tilde text
+  on two LB989 pages; the correction validates the literal 256-range identity
+  map without changing any target-glyph or source-admission rule.
+  Independent proof: `data/ne-enacted-law-hyphen-independent-20261026-v1.json`.
+  No source string is normalized, and old negatives/current v25 remain unchanged.
+- [ ] **DATA-16: Qualify a separately typed source-proven hyphen cohort.**
+  Require the exact nine proven PDF glyph positions and original raw reader
+  strings from DATA-15, in addition to every existing whole-law identity,
+  completeness, approval-date and original-context guard. Permit no other
+  character disagreement. Preserve the sealed whitespace-only default,
+  all 51 previous law contexts / 102 strings, every negative and all source
+  versions. Use a separate schema/namespace, immutable complete source packet,
+  focused tests and independent replay before a saved source checkpoint.
+- [ ] **DATA-17: Propagate only independently qualified hyphen evidence.**
+  After DATA-16 is saved and verified, extend actual v25/token22, retaining
+  every old input/prediction/cache and all 31 previous archives. Encode only
+  genuinely new raw strings, independently verify full source/model/token/
+  score/download evidence, then refresh the actual root/nested publication
+  graphs and inspector. No raw normalization, majority promotion, human-gold
+  admission or website publication.
 - [ ] **VALIDATE-01: Independently validate classifications.** Preserve original
   unanimity and unpromoted majority separately. Complete actual independent human
   review and resolve taxonomy disputes before accuracy or party-policy claims.
