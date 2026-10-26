@@ -67,6 +67,17 @@ SHA-256 `10f192286a30931a23797ffc5bb577407f401fe9e153a108373ba4fba1ebe76d`.
 DATA-14 is complete. Source, independent-human, platform, party, rights,
 report and publication gates stay open. Nothing is deployed.
 
+The next bounded offline lead is **DATA-15**, not a reopened acquisition:
+all seven remaining complete enacted-law reader-conflict pairs differ only
+under a diagnostic soft-hyphen/ASCII-hyphen comparison. Original strings and
+negatives remain unchanged, and underlying printed-glyph equivalence is
+**not yet verified**. Inspect the exact pinned PDF glyphs before any separately
+typed qualification or inference; none of these seven is newly admitted.
+Full original bodies/contexts and the diagnostic are retained in
+`data/ne-enacted-law-remaining-reader-conflicts-20261026-v1.json`,
+SHA-256 `43b67cc5474757deeb15cf5475eecd25358d8895dfc964bfae0548b293e51d7c`.
+The v25 graph manifest and all current classifications remain unchanged.
+
 ## Preserved v24 dispatch snapshot
 
 Future extensions start from completed **v24 / token cache v21**, not the

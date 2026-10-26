@@ -347,6 +347,17 @@ the detailed source and scientific gates remain in `docs/AUDIT_STATUS.md` and
   `data/ne-enacted-law-graph-save-checkpoint-20261026-v1.json`.
   Raw/model/research archives remain local/ignored, not backed up by that push.
   DATA-01 and independent-human/platform/party/rights/report gates stay open.
+- [ ] **DATA-15: Verify the literal PDF glyphs behind seven reader conflicts.**
+  After saved v25 delivery, a bounded read-only diagnostic inspects the seven
+  remaining complete enacted-law pairs: LB1394, LB989, LB906, LB998, LB1214,
+  LB1088 and LB903. Every non-whitespace difference becomes equal only in a
+  diagnostic copy treating soft hyphens as ASCII hyphens. This is a hypothesis,
+  not verified printed-glyph equivalence or admission. Preserve all original
+  reader strings, negatives and current v25 results. Inspect exact pinned PDF
+  pages/glyphs and independently prove any narrower typographic profile before
+  a separately typed successor; never silently relax the existing profile.
+  Full diagnostic: `data/ne-enacted-law-remaining-reader-conflicts-20261026-v1.json`.
+  No new body, classification or source-coverage credit is granted.
 - [ ] **VALIDATE-01: Independently validate classifications.** Preserve original
   unanimity and unpromoted majority separately. Complete actual independent human
   review and resolve taxonomy disputes before accuracy or party-policy claims.
