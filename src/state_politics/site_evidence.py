@@ -1025,6 +1025,7 @@ def build_cycle_preview(
             "ne_journal_text.py",
             "ne_journal_collection.py",
             "ne_journal_day_text.py",
+            "ne_journal_boundary_text.py",
         ):
             producer_paths[name] = Path(__file__).with_name("bills") / name
         producer_paths["registry.py"] = Path(__file__).with_name("platforms") / "registry.py"

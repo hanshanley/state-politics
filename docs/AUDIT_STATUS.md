@@ -5,6 +5,37 @@ The thirteen historical root figures and their analytical conclusions remain
 inspect source/model evidence; they do not certify a classifier, complete
 coverage or party-policy findings.
 
+## Qualified source-only continuation: October 26, 2026
+
+The final three ordinary Nebraska resolution gaps now have an independently
+qualified, separately typed source packet: **LR5, LR282 and LR449; six complete
+views / 12,106 characters**. Literal next-introduction boundaries require a
+complete consecutive numbered operative body and exclude the adjoining
+resolution. A next-page disposition excludes only its proved synthetic stream
+join, not any raw policy whitespace. Original dates, default profiles and all
+461 prior dates / 922 policy strings remain unchanged.
+
+Independent replay re-extracts all 11,500 original page strings and verifies
+eight body spans, six terminator spans, all 1,037 source candidates and 1,347
+original NE gap dispositions. The 1,344 remaining NE negatives are outside
+this ordinary-resolution source profile, not recovered bill bodies. The
+71-member complete source ZIP, all old evidence, original fields/unknowns and
+85 controls are preserved. Fifty-five focused tests and 412 combined tests
+pass, with three optional fixture skips. The first malformed-terminator scan
+and correction are retained; malformed candidates remain excluded.
+The actual tracked full audit is **454/488**, with the same 34 legacy failures
+and every non-counter field unchanged from 453/487. Its real nonzero exit and
+exact comparison are retained in
+`data/ne-journal-boundary-full-audit-20261026-v1.json` and
+`data/ne-journal-boundary-full-audit-comparison-20261026-v1.json`.
+All 212 public-documentation checks and scoped Ruff pass.
+
+Packet manifest:
+`2c3b261f145325d5f38b185105efb1f21ff659e294dcd6ccd94fd0b85810b03b`.
+Proof: `data/ne-journal-boundary-independent-20261026-v1.json`.
+**This is source qualification only:** actual classifications and graphs remain
+the completed v22 delivery below until DATA-09 is independently verified.
+
 ## Current propagated evidence and graphs: October 25, 2026
 
 Completed **v22 / independent token cache v19** now retains 139,778 of the

@@ -1,6 +1,6 @@
 # State completion tracker
 
-Updated **October 25, 2026**. This is the current dispatch list, not a claim that
+Updated **October 26, 2026**. This is the current dispatch list, not a claim that
 historical progress messages describe processes still running.
 
 **Active study window: January 1, 2023 through December 31, 2024.** Work on
@@ -26,6 +26,24 @@ All 50 states already have retained national-extraction/reference inventory;
 not that the state has no data. Platform recovery is separate from the
 legislative status in this table; no state's operative-platform coverage is
 certified complete.
+
+## Qualified source continuation: October 26, 2026
+
+DATA-08 qualifies the final three ordinary-resolution gaps: LR5, LR282 and
+LR449, six full views / 12,106 characters. The separate literal-boundary
+profile preserves all raw policy whitespace, exact original dates, default
+profiles and 461 prior contexts / 922 policy strings. Independent replay
+re-extracts all 11,500 original page strings and verifies every new body/
+terminator span, all 1,037 candidates, 1,347 dispositions and the full
+71-member source ZIP. The 1,344 remaining NE negatives are outside this source
+profile; journal bill mentions are not complete bills.
+
+Source packet: `data/processed/ne-journal-boundary-qualified-20261026-v1/`,
+manifest `2c3b261f145325d5f38b185105efb1f21ff659e294dcd6ccd94fd0b85810b03b`.
+Proof: `data/ne-journal-boundary-independent-20261026-v1.json`; 412 integration
+tests pass / three optional skips. **No new inference or graph refresh is
+claimed by this source checkpoint.** Actual current delivery remains v22 below.
+DATA-09 starts from v22/token19, preserving all 28 earlier archive packets.
 
 ## Current dispatch snapshot: October 25, 2026
 
@@ -64,8 +82,9 @@ predictions, 169,117 cached results, 157,494 other whole assignment rows and
 abstentions; majority separates 38 assignments / 50 rejections / 16 uncertain.
 All 354 other source partitions, 719 prior NE archive views and 34 previous
 complete source ZIPs remain unchanged. NE now has 1,347 remaining gaps and
-927 complete archive views. Three ordinary-resolution boundary negatives
-remain queued as DATA-08, not misrepresented as publisher-access blockers.
+927 complete archive views. The three ordinary-resolution boundary negatives
+are now separately qualified in DATA-08 above, pending DATA-09 propagation;
+this v22 snapshot remains unchanged.
 
 The full fifty-state token/logit/window/108-member-inference-ZIP replay and
 independent source/vote/22-score checks pass. Chromium verifies all 208 new

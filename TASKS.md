@@ -167,7 +167,7 @@ the detailed source and scientific gates remain in `docs/AUDIT_STATUS.md` and
   1360/390/320px. The final suite passes 397 tests with three optional skips.
   Full tracked audit 453/487 retains the same 34 legacy failures and every
   non-counter report field from 452/486; 211 documentation checks and Ruff pass.
-- [ ] **DATA-08: Resolve the three remaining ordinary-resolution boundaries.**
+- [x] **DATA-08: Resolve the three remaining ordinary-resolution boundaries.**
   LR449's explicit disposition begins the next page, exposing a synthetic
   stream-join newline not represented by its one raw fragment. LR5 and LR282
   have complete-looking operative bodies directly followed by the next numbered
@@ -175,6 +175,28 @@ the detailed source and scientific gates remain in `docs/AUDIT_STATUS.md` and
   Investigate separately named literal boundary profiles and independent
   completeness proof; do not call these publisher-access blockers, silently
   relax old profiles, overwrite packets or admit adjoining bills/amendments.
+  Verified October 26: LR5, LR282 and LR449 qualify as three original contexts /
+  six full views / 12,106 characters in a separately typed packet. The first
+  two retain complete consecutive numbered clauses before a literal next
+  introduced resolution; the last excludes only the synthetic join before
+  the next-page disposition, preserving every raw policy whitespace character.
+  Independent replay re-extracts all 11,500 raw page strings, checks eight body
+  spans / six terminator spans and all 461 prior dates / 922 policy strings.
+  All 1,037 source candidates and 1,347 NE dispositions survive; 1,344 gaps
+  remain outside the ordinary-resolution profile. The complete source ZIP
+  contains all 71 members. Fifty-five focused tests and the combined
+  412-pass / three-optional-skip integration suite pass. This qualification
+  does not yet change the actual v22 classifications or current graphs.
+  The tracked full audit is 454/488 with the same 34 legacy failures and all
+  non-counter fields unchanged; all 212 public-documentation checks pass.
+- [ ] **DATA-09: Propagate the literal-boundary source packet.** Extend actual
+  v22/token19 with only these three independently qualified contexts and six
+  complete views; preserve all 28 older archive packets, existing context
+  fields, inputs, predictions, controls and complete downloads. Independently
+  verify fresh-only inference and full token/logit/window/source/vote/score
+  reconciliation, then refresh the actual root/nested Substack and website-
+  background graphs, inspector and complete query/source downloads. Preserve
+  old snapshots, abstentions, unknowns and scientific/publication gates.
 - [ ] **VALIDATE-01: Independently validate classifications.** Preserve original
   unanimity and unpromoted majority separately. Complete actual independent human
   review and resolve taxonomy disputes before accuracy or party-policy claims.

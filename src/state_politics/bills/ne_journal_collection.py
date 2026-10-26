@@ -35,6 +35,7 @@ LEGACY_SCHEMA = "state-politics.nebraska-journal-collection-text.v1"
 LEGACY_HEADERS = "sealed_running_headers_v1"
 LITERAL_HEADERS = "literal_letterspaced_running_headers_v2"
 EXPLICIT_DAY_HEADERS = "literal_number_first_day_headers_v1"
+LITERAL_BOUNDARIES = "literal_next_introduction_and_page_join_v1"
 QUEUE_SHA = "77400a15a69ed74cfcc57b706cf7e72668afa7f8eca80a199bd5cd266a25b813"
 INPUTS = {
     "first/source": "ba6b0f5db28d9a6797a3f13e1f211ae91fcfa309aadfcac2bbcc6f768fefa5fa",
@@ -149,7 +150,8 @@ def collection_stream(pages, header_profile):
     return "\n".join(chunks), spans
 
 
-def candidates(pages, book, *, header_profile=LITERAL_HEADERS):
+def candidates(pages, book, *, header_profile=LITERAL_HEADERS, boundary_profile=None):
+    require(boundary_profile in (None, LITERAL_BOUNDARIES), "known literal boundary profile")
     stream, spans = collection_stream(pages, header_profile)
     by_page = {row["page"]: row["text"] for row in pages}
     venue = VENUE.format(session=book["session"])
@@ -158,6 +160,12 @@ def candidates(pages, book, *, header_profile=LITERAL_HEADERS):
         start = header.start()
         following = OTHER.search(stream, header.end())
         ending = END.search(stream, header.end())
+        boundary_kind = "explicit_disposition"
+        if boundary_profile and following and (not ending or following.start() < ending.start()):
+            next_introduction = INTRO.match(stream, following.start())
+            if next_introduction:
+                ending = next_introduction
+                boundary_kind = "next_introduced_resolution"
         end = ending.start() if ending else len(stream)
         reason = None
         if not ending or end - start > 60000:
@@ -190,6 +198,60 @@ def candidates(pages, book, *, header_profile=LITERAL_HEADERS):
         if observed and not observed.startswith(f"{book['year']}-"):
             reason = reason or "outside_own_journal_year"
         rebuilt = "\n".join(by_page[s["page"]][s["start"] : s["end"]] for s in fragments)
+        literal_boundary = None
+        if boundary_profile and ending:
+            boundary_spans = [
+                span for span in spans if span["start"] <= ending.start() < span["end"]
+            ]
+            require(len(boundary_spans) == 1, "literal terminator starts on one raw page")
+            boundary_span = boundary_spans[0]
+            dates.add(boundary_span["date"])
+            if len(dates) != 1 or None in dates:
+                reason = reason or "unresolved_or_multiple_journal_dates"
+            excluded_join = None
+            if (
+                fragments
+                and boundary_kind == "explicit_disposition"
+                and end == boundary_span["start"]
+                and rebuilt + "\n" == text
+                and fragments[-1]["page"] + 1 == boundary_span["page"]
+                and fragments[-1]["end"] == len(by_page[fragments[-1]["page"]])
+            ):
+                excluded_join = {
+                    "start": end - 1,
+                    "end": end,
+                    "text": "\n",
+                    "preceding_page": fragments[-1]["page"],
+                    "following_page": boundary_span["page"],
+                }
+                text = rebuilt
+            terminator_fragments = []
+            for span in spans:
+                left, right = max(ending.start(), span["start"]), min(ending.end(), span["end"])
+                if left >= right:
+                    continue
+                a = span["raw_start"] + left - span["start"]
+                b = span["raw_start"] + right - span["start"]
+                raw = by_page[span["page"]][a:b]
+                terminator_fragments.append(
+                    {
+                        "page": span["page"],
+                        "start": a,
+                        "end": b,
+                        "sha256": hashlib.sha256(raw.encode()).hexdigest(),
+                        "excluded_page_prefix": span["excluded_page_prefix"],
+                    }
+                )
+            if (
+                "\n".join(by_page[s["page"]][s["start"] : s["end"]] for s in terminator_fragments)
+                != ending[0]
+            ):
+                reason = reason or "unreconstructable_literal_terminator"
+            literal_boundary = {
+                "kind": boundary_kind,
+                "terminator_fragments": terminator_fragments,
+                "excluded_synthetic_page_join": excluded_join,
+            }
         if rebuilt != text:
             reason = reason or "unreconstructable_page_boundary"
         normalized = compact(text)
@@ -202,6 +264,15 @@ def candidates(pages, book, *, header_profile=LITERAL_HEADERS):
             reason = reason or "missing_substantive_resolution_body"
         if not normalized.endswith("."):
             reason = reason or "missing_complete_body_ending"
+        if boundary_profile and boundary_kind == "next_introduced_resolution":
+            venue_match = re.search(r"\s*".join(map(re.escape, venue)), text)
+            clauses = (
+                re.findall(r"(?m)^[ \t\xa0]*(\d{1,2})\.[ \t\xa0]*", text[venue_match.end() :])
+                if venue_match
+                else []
+            )
+            if not clauses or clauses != [str(i) for i in range(1, len(clauses) + 1)]:
+                reason = reason or "next_introduction_without_complete_numbered_operative_body"
         result.append(
             {
                 "ordinal": ordinal,
@@ -211,12 +282,15 @@ def candidates(pages, book, *, header_profile=LITERAL_HEADERS):
                 "text": text,
                 "fragments": fragments,
                 "terminator": ending[0] if ending else None,
+                **({"literal_boundary": literal_boundary} if boundary_profile else {}),
             }
         )
     return result
 
 
-def qualify(pages_by_book, originals, *, books=BOOKS, header_profile=LITERAL_HEADERS):
+def qualify(
+    pages_by_book, originals, *, books=BOOKS, header_profile=LITERAL_HEADERS, boundary_profile=None
+):
     require(set(pages_by_book) == set(books), "all fixed source books required")
     require(len({r["bill_id"] for r in originals}) == len(originals), "duplicate original context")
     identity_counts = Counter(
@@ -227,7 +301,10 @@ def qualify(pages_by_book, originals, *, books=BOOKS, header_profile=LITERAL_HEA
         require(set(pages_by_book[name]) == set(READERS), "both complete readers required")
         for reader in READERS:
             for candidate in candidates(
-                pages_by_book[name][reader], book, header_profile=header_profile
+                pages_by_book[name][reader],
+                book,
+                header_profile=header_profile,
+                boundary_profile=boundary_profile,
             ):
                 value = {"document": name, "reader": reader, **candidate}
                 indexed[reader, candidate["identifier"]].append(value)
@@ -274,7 +351,9 @@ def qualify(pages_by_book, originals, *, books=BOOKS, header_profile=LITERAL_HEA
             book = books[name]
             text = candidate["text"]
             namespace = (
-                "ne-journal-day-v1"
+                "ne-journal-boundary-v1"
+                if boundary_profile
+                else "ne-journal-day-v1"
                 if header_profile == EXPLICIT_DAY_HEADERS
                 else f"ne-journal-collection-v{2 if header_profile == LITERAL_HEADERS else 1}"
             )
@@ -307,6 +386,14 @@ def qualify(pages_by_book, originals, *, books=BOOKS, header_profile=LITERAL_HEA
                         "page_fragments": candidate["fragments"],
                         "page_header_removal_only": True,
                         "fragment_joiner": "\n",
+                        **(
+                            {
+                                "boundary_profile": boundary_profile,
+                                "literal_boundary": candidate["literal_boundary"],
+                            }
+                            if boundary_profile
+                            else {}
+                        ),
                         **(
                             {"page_header_profile": header_profile}
                             if header_profile != LEGACY_HEADERS

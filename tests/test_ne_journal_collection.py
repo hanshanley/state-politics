@@ -5,6 +5,7 @@ import json
 
 import pytest
 
+from state_politics.bills import ne_journal_boundary_text as boundary
 from state_politics.bills import ne_journal_collection as collection
 from state_politics.bills import ne_journal_day_text as explicit_day
 from state_politics.bills import ne_journal_text as sealed
@@ -230,6 +231,158 @@ def test_explicit_day_builder_rejects_public_output_before_source_reads(tmp_path
                 for name in ("parent", "sealed", "source", "readers", "gap", "public")
             )
         )
+    assert not (tmp_path / "public").exists()
+
+
+def boundary_qualify(pages, originals=None):
+    return collection.qualify(
+        {"book": readers(pages)},
+        [context()] if originals is None else originals,
+        books={"book": book(pages=len(pages))},
+        header_profile=collection.EXPLICIT_DAY_HEADERS,
+        boundary_profile=collection.LITERAL_BOUNDARIES,
+    )
+
+
+def test_page_edge_disposition_excludes_only_synthetic_join_not_raw_policy_whitespace():
+    raw = source_pages()
+    body, disposition = raw[1]["text"].split("Laid over.", 1)
+    raw[1] = page(2, body + "\n\n")
+    raw.append(page(3, "LEGISLATIVE JOURNAL\n3\nLaid over." + disposition))
+    old, _, _ = explicit_day.qualify(
+        {"book": readers(raw)}, [context()], books={"book": book(pages=3)}
+    )
+    assert not old
+    views, _, _ = boundary_qualify(raw)
+    assert len(views) == 2
+    for view in views:
+        source = readers(raw)[view["source_record"]["reader"]]
+        record = view["source_record"]
+        assert view["view_id"].startswith("ne-journal-boundary-v1:")
+        assert view["text"].endswith("\n\n\n")
+        assert view["text"] == "\n".join(
+            source[s["page"] - 1]["text"][s["start"] : s["end"]] for s in record["page_fragments"]
+        )
+        assert record["literal_boundary"]["excluded_synthetic_page_join"]["text"] == "\n"
+        assert record["literal_boundary"]["excluded_synthetic_page_join"]["following_page"] == 3
+        assert record["literal_boundary"]["kind"] == "explicit_disposition"
+        assert all(view[flag] is False for flag in sealed.FLAGS)
+
+
+def test_next_introduced_resolution_bounds_only_complete_own_numbered_body():
+    raw = source_pages()
+    own, _ = raw[1]["text"].split("Laid over.", 1)
+    next_body = (
+        "LEGISLATIVE RESOLUTION 6CA. Introduced by Another Author, 2;\n"
+        "An unrelated constitutional amendment must never be included.\n"
+        "Laid over.\n"
+    )
+    raw[1] = page(2, own + next_body)
+    old, _, _ = explicit_day.qualify({"book": readers(raw)}, [context()], books={"book": book()})
+    assert not old
+    views, _, _ = boundary_qualify(raw)
+    assert len(views) == 2
+    for view in views:
+        record = view["source_record"]
+        assert "6CA" not in view["text"] and "constitutional" not in view["text"]
+        assert record["literal_boundary"]["kind"] == "next_introduced_resolution"
+        assert record["literal_boundary"]["excluded_synthetic_page_join"] is None
+        assert sealed.compact(record["terminator_not_policy_text"]).startswith(
+            "LEGISLATIVERESOLUTION6CA.Introducedby"
+        )
+
+
+@pytest.mark.parametrize(
+    "defect",
+    [
+        "next_bill",
+        "not_introduced",
+        "unterminated_clause",
+        "missing_numbered_clause",
+        "missing_first_clause",
+        "skipped_clause",
+        "conflicting_reader",
+        "wrong_date",
+        "own_amendment",
+    ],
+)
+def test_new_boundary_profile_preserves_scope_and_whole_body_guards(defect):
+    raw = source_pages()
+    own, _ = raw[1]["text"].split("Laid over.", 1)
+    following = "LEGISLATIVE RESOLUTION 6CA. Introduced by Another Author, 2;\n"
+    if defect == "next_bill":
+        following = following.replace("RESOLUTION", "BILL")
+    elif defect == "not_introduced":
+        following = following.replace("Introduced by", "Discussed by")
+    elif defect == "unterminated_clause":
+        own = own.rstrip().removesuffix(".") + "\n"
+    elif defect == "missing_numbered_clause":
+        own = own.replace("1. That", "That")
+    elif defect == "missing_first_clause":
+        own = own.replace("1. That", "2. That")
+    elif defect == "skipped_clause":
+        own += "3. That this numbered clause is not consecutive.\n"
+    elif defect == "own_amendment":
+        raw[0] = page(1, raw[0]["text"].replace("5.", "5CA.", 1))
+    raw[1] = page(2, own + following + "Laid over.\n")
+    supplied = readers(raw)
+    original = context()
+    if defect == "conflicting_reader":
+        supplied["pypdf"][1] = page(
+            2, supplied["pypdf"][1]["text"].replace("community", "unrelated")
+        )
+    elif defect == "wrong_date":
+        original["source_introduction_date"] = "2023-01-06"
+    views, dispositions, _ = collection.qualify(
+        {"book": supplied},
+        [original],
+        books={"book": book()},
+        header_profile=collection.EXPLICIT_DAY_HEADERS,
+        boundary_profile=collection.LITERAL_BOUNDARIES,
+    )
+    assert not views and dispositions[0]["disposition"] != (
+        "complete_two_reader_original_context_match"
+    )
+
+
+def test_new_boundary_profile_keeps_old_accepted_strings_and_default_output_exact():
+    raw = source_pages()
+    args = ({"book": readers(raw)}, [context()])
+    old, _, old_candidates = explicit_day.qualify(*args, books={"book": book()})
+    views, _, _ = boundary_qualify(raw)
+    assert [v["text"] for v in views] == [v["text"] for v in old]
+    assert all("literal_boundary" not in c for c in old_candidates)
+    assert not {v["view_id"] for v in old} & {v["view_id"] for v in views}
+
+
+def test_unreconstructable_next_introduction_is_retained_as_a_negative_not_an_abort():
+    raw = source_pages()
+    own, _ = raw[1]["text"].split("Laid over.", 1)
+    raw[1] = page(2, own + "LEGISLATIVE RESOLUTION 6CA. Introduced by Another Author, 2;")
+    raw.append(page(3, "LEGISLATIVE JOURNAL\n3\nUnrelated amendment.\nLaid over.\n"))
+    views, _, candidates = boundary_qualify(raw)
+    assert not views
+    assert candidates[0]["reason"] == "unreconstructable_literal_terminator"
+
+
+def test_boundary_archive_dispatch_preserves_current_metadata(tmp_path, monkeypatch):
+    from state_politics.bills import archive_text
+
+    (tmp_path / "manifest.json").write_text(json.dumps({"schema": boundary.SCHEMA}))
+    metadata = [context()]
+    sentinel = object()
+
+    def loader(directory, current):
+        assert directory == tmp_path and current is metadata
+        return sentinel
+
+    monkeypatch.setattr(boundary, "load_ne_journal_boundary", loader)
+    assert archive_text.load_archive(tmp_path, metadata) is sentinel
+
+
+def test_boundary_builder_refuses_public_output_before_any_source_reads(tmp_path):
+    with pytest.raises(ValueError, match="under project data/processed"):
+        boundary.build(*(tmp_path / name for name in ("parent", "queue", "public")))
     assert not (tmp_path / "public").exists()
 
 

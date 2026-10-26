@@ -16,6 +16,44 @@ remain unchanged. Broad rebuild commands below are not a request to complete
 other years; target-cycle selection and its inclusion/exclusion provenance must
 be bound explicitly before regenerated outputs can support the narrowed study.
 
+## Qualified next source packet: literal publication boundaries
+
+The separate packet
+`data/processed/ne-journal-boundary-qualified-20261026-v1/` qualifies LR5,
+LR282 and LR449: **three original contexts / six complete views / 12,106
+characters**. It preserves the complete prior four-book packet, externally
+pinned source33 gap queue, all raw fragments, literal terminator fragments,
+exact original dates, all negatives and all original fields/unknowns.
+Its opt-in boundary profile records a next introduced resolution separately
+from the complete numbered operative body, or excludes only the proved
+synthetic page-join newline before an explicit next-page disposition. Raw
+policy whitespace is never trimmed or normalized; old schemas/defaults and
+461 prior context dates / 922 strings remain unchanged.
+
+Manifest SHA-256:
+`2c3b261f145325d5f38b185105efb1f21ff659e294dcd6ccd94fd0b85810b03b`.
+Complete 71-member ZIP: 123,684,706 bytes, SHA-256
+`1a90af77df69b0ece35a4b9fb1778c66456725831027ed22146c68ae98c9b65e`.
+The independent witness re-extracts all 11,500 unique raw reader pages and
+checks eight body spans / six terminator spans, every source candidate and
+NE disposition, all earlier dates/strings, 85 controls and zero human-
+reservation overlap. Proof:
+`data/ne-journal-boundary-independent-20261026-v1.json`.
+The shared archive dispatcher replays all 71 members against the complete
+17,820-row source33 queue. The combined suite passes 412 tests / three
+optional skips; all 55 focused journal cases pass.
+The actual tracked audit is 454/488, with exactly the same 34 legacy failures
+and every non-counter field unchanged from 453/487. The real nonzero exit
+and exact comparison are retained in
+`data/ne-journal-boundary-full-audit-20261026-v1.json` and
+`data/ne-journal-boundary-full-audit-comparison-20261026-v1.json`.
+All 212 public-documentation checks and scoped Ruff pass.
+
+**Source qualification does not itself update classifications or graphs.**
+DATA-09 must extend the actual v22/token19 baseline below before new counts
+or image outputs are claimed. Raw source/model/research archives remain local
+and ignored; no model, human-gold, source-rights or publication approval changes.
+
 ## Current successor: explicit printed-day journal evidence
 
 **Subsequent extensions start from completed v22 / independent token cache v19.**
