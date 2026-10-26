@@ -4,11 +4,12 @@
 The original and majority classifications remain separate and provisional.
 These are research graphics, not independently validated party-policy findings.
 
-The current source union has **139,811 contexts with text / 17,787 gaps**.
-Unanimity assigns 65,288 contexts and abstains on 74,523; the separate,
-unpromoted majority candidate assigns 78,499. The 30 latest recovered
-constitutional proposals add 16 assignments and 14 abstentions without
-changing earlier decisions.
+The current source union has **139,862 contexts with text / 17,736 gaps**.
+Unanimity assigns 65,305 contexts and abstains on 74,557; the separate,
+unpromoted majority candidate assigns 78,518. The 51 latest recovered bill
+contexts add 17 assignments and 34 abstentions without changing earlier
+decisions. Their source versions are explicitly **enacted laws, not introduced
+texts**; original introduction dates remain unchanged.
 
 | Destination | Background | Files |
 |---|---|---|

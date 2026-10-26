@@ -1504,8 +1504,8 @@ z
    </g>
    <g id="patch_133">
     <path d="M 485.72 139.473729 
-L 555.369126 139.473729 
-L 555.369126 151.133718 
+L 558.824305 139.473729 
+L 558.824305 151.133718 
 L 485.72 151.133718 
 z
 " clip-path="url(#pf0135ca633)" style="fill: #3d6f8c"/>
@@ -1703,10 +1703,10 @@ z
 " clip-path="url(#pf0135ca633)" style="fill: #c2993e"/>
    </g>
    <g id="patch_158">
-    <path d="M 555.369126 139.473729 
-L 594.649051 139.473729 
-L 594.649051 151.133718 
-L 555.369126 151.133718 
+    <path d="M 558.824305 139.473729 
+L 599.195338 139.473729 
+L 599.195338 151.133718 
+L 558.824305 151.133718 
 z
 " clip-path="url(#pf0135ca633)" style="fill: #c2993e"/>
    </g>
@@ -1903,10 +1903,10 @@ z
 " clip-path="url(#pf0135ca633)" style="fill: #4a7c59"/>
    </g>
    <g id="patch_183">
-    <path d="M 594.649051 139.473729 
-L 633.747124 139.473729 
-L 633.747124 151.133718 
-L 594.649051 151.133718 
+    <path d="M 599.195338 139.473729 
+L 643.021551 139.473729 
+L 643.021551 151.133718 
+L 599.195338 151.133718 
 z
 " clip-path="url(#pf0135ca633)" style="fill: #4a7c59"/>
    </g>
@@ -2103,10 +2103,10 @@ z
 " clip-path="url(#pf0135ca633)" style="fill: #c85a3d"/>
    </g>
    <g id="patch_208">
-    <path d="M 633.747124 139.473729 
-L 633.747124 139.473729 
-L 633.747124 151.133718 
-L 633.747124 151.133718 
+    <path d="M 643.021551 139.473729 
+L 643.021551 139.473729 
+L 643.021551 151.133718 
+L 643.021551 151.133718 
 z
 " clip-path="url(#pf0135ca633)" style="fill: #c85a3d"/>
    </g>
@@ -2303,10 +2303,10 @@ z
 " clip-path="url(#pf0135ca633)" style="fill: #8d809b"/>
    </g>
    <g id="patch_233">
-    <path d="M 633.747124 139.473729 
+    <path d="M 643.021551 139.473729 
 L 872.7 139.473729 
 L 872.7 151.133718 
-L 633.747124 151.133718 
+L 643.021551 151.133718 
 z
 " clip-path="url(#pf0135ca633)" style="fill: #8d809b"/>
    </g>
@@ -2491,7 +2491,7 @@ L 872.7 543.916347
    <text style="font-size: 10.5px; font-family: 'DejaVu Serif', 'Bitstream Vera Serif', 'Computer Modern Roman', 'New Century Schoolbook', 'Century Schoolbook L', 'Utopia', 'ITC Bookman', 'Bookman', 'Nimbus Roman No9 L', 'Times New Roman', 'Times', 'Palatino', 'Charter', serif; text-anchor: start; fill: #6b6b6b" x="13.5" y="43.123495" transform="rotate(-0 13.5 43.123495)">All fifty states; common 0-100% scale</text>
   </g>
   <g id="text_66">
-   <text style="font-style: italic; font-size: 8.5px; font-family: 'DejaVu Serif', 'Bitstream Vera Serif', 'Computer Modern Roman', 'New Century Schoolbook', 'Century Schoolbook L', 'Utopia', 'ITC Bookman', 'Bookman', 'Nimbus Roman No9 L', 'Times New Roman', 'Times', 'Palatino', 'Charter', serif; fill: #6b6b6b" transform="translate(13.5 628.215839)">Source: full-body topic gallery v22 / majority v6. Denominator is each state's retained candidate contexts, not a complete introduced-bill universe.</text>
+   <text style="font-style: italic; font-size: 8.5px; font-family: 'DejaVu Serif', 'Bitstream Vera Serif', 'Computer Modern Roman', 'New Century Schoolbook', 'Century Schoolbook L', 'Utopia', 'ITC Bookman', 'Bookman', 'Nimbus Roman No9 L', 'Times New Roman', 'Times', 'Palatino', 'Charter', serif; fill: #6b6b6b" transform="translate(13.5 628.215839)">Source: full-body topic gallery v23 / majority v7. Denominator is each state's retained candidate contexts, not a complete introduced-bill universe.</text>
    <text style="font-style: italic; font-size: 8.5px; font-family: 'DejaVu Serif', 'Bitstream Vera Serif', 'Computer Modern Roman', 'New Century Schoolbook', 'Century Schoolbook L', 'Utopia', 'ITC Bookman', 'Bookman', 'Nimbus Roman No9 L', 'Times New Roman', 'Times', 'Palatino', 'Charter', serif; fill: #6b6b6b" transform="translate(13.5 640.115839)">No supplied candidates does not mean no activity.</text>
   </g>
   <g id="legend_1">

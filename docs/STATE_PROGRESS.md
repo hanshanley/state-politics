@@ -27,7 +27,43 @@ not that the state has no data. Platform recovery is separate from the
 legislative status in this table; no state's operative-platform coverage is
 certified complete.
 
-## Current dispatch snapshot: v24
+## Current dispatch snapshot: v25
+
+Future extensions start from **v25 / token cache v22**, not the preserved
+checkpoints below. All 157,598 original contexts remain: **139,862 with text /
+17,736 missing**. Unanimity assigns 65,305 and abstains on 74,557. Unpromoted
+majority assigns 78,518, rejects 23,816, retains 37,525 uncertain / three
+excluded / 17,736 unavailable. Its 13,213 additional assignments are not
+independent validation.
+
+The 51 enacted-law contexts add 102 fresh strings / 361,645 characters /
+97,596 tokens / 165 windows, no old repeats/discards. New unanimity: 17 assigned /
+34 abstained; new majority: 19 assigned / six rejected / 26 uncertain. Original
+introduction dates and enacted approval dates stay separate; no enacted source
+is called introduced text. All 179,733 old predictions, 169,391 cache rows,
+157,547 other whole assignments, 85 controls, 354 other source partitions,
+993 prior NE views and 37 old complete research ZIPs remain unchanged.
+NE now has 1,095 archive views / 1,263 ordinary LB gaps.
+
+Source36/topic23/majority7/score7/paired21/inspector7 pass independent full-source/
+fifty-state token/logit/window/108-member ZIP/vote/22-score/download checks.
+All 27 actual charts / 108 exports / 35 complete CSVs are regenerated in root
+and fresh nested collections; all 3,176 marks and image/table bytes reconcile.
+Chromium checks all 102 full bodies/scores/long windows, complete NE/LB1143
+queries and the entire 21-member ZIP; root/nested galleries pass 27 images /
+180 links / seven actual navigations at 1360/390/320px. Actual PNG inspection
+and 453 integration passes / three optional skips are complete.
+The final full tracked audit is 458/492, the same 34 legacy failures and every
+report field identical to the source checkpoint; 216 docs checks/Ruff pass.
+
+Current root manifest:
+`326c3fef65eea0c5e2bd4f0f96b243926800ff63f5fd6c78af629ebc5e66fd49`.
+Proof names use `data/ne-enacted-law-`; browser receipts use that prefix and
+generic gallery versions v15/v16. DATA-14's saved/remote handoff remains;
+source, independent-human, platform, party, rights, report
+and publication gates stay open. Nothing is deployed.
+
+## Preserved v24 dispatch snapshot
 
 Future extensions start from completed **v24 / token cache v21**, not the
 historical checkpoints below. There are 157,598 original contexts:

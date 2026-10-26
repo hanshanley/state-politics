@@ -5,7 +5,53 @@ The thirteen historical root figures and their analytical conclusions remain
 inspect source/model evidence; they do not certify a classifier, complete
 coverage or party-policy findings.
 
-## Current propagated evidence and graphs: v24
+## Current propagated evidence and graphs: v25
+
+Completed **v25 / independent token cache v22** retains **139,862 of 157,598
+contexts**, with **17,736 missing**. Unanimity assigns 65,305 and abstains on
+74,557. Separate, unpromoted majority assigns 78,518, rejects 23,816, retains
+37,525 uncertain / three excluded / 17,736 unavailable. Its 13,213 additional
+assignments do not establish accuracy. New contexts contribute 17 unanimity
+assignments / 34 abstentions; majority separates 19 assigned / six rejected /
+26 uncertain. Enacted versions and approval dates remain explicitly separate
+from original introduction dates and introduced texts.
+
+Only **102 fresh strings / 361,645 characters / 97,596 tokens / 165 windows**
+reach the unchanged encoder, with zero old repeats or discarded tokens.
+All 179,733 old predictions, 169,391 cache rows, 157,547 other whole-context
+records and 85 controls remain unchanged. Source36 preserves 354 other
+partitions, 993 prior NE archive views and 37 complete earlier source ZIPs;
+NE now has 1,095 archive views / 1,263 gaps. All remaining gap rows retain
+their original fields/unknowns. No date or policy text is repaired.
+
+Topic23/majority7/score7/paired21/inspector7 pass full fifty-state token/logit/
+window/108-member inference ZIP replay and independent votes/22-score means/
+source envelopes. Actual Chromium checks all 102 full texts, all scores and
+long-document first/last windows. Complete NE query: 2,128 contexts / 1,410
+input+prediction pairs / 10,577,035 selected characters. LB1143 query: one
+context / two pairs / 38,665 characters. Every member/payload in the complete
+21-member source ZIP is checked, not substituted with metadata.
+
+Actual root and fresh nested **27-chart / 108-PNG/editable-SVG / 35-full-CSV**
+collections reconcile all 3,176 marks and identical image/table bytes.
+Both galleries pass 1360/390/320px Chromium: 27 loaded images / 180 links /
+seven actual methodology/evidence navigations, no overflow/errors/external
+HTTP. Actual majority, source-coverage and full-score PNGs were inspected.
+The complete prior source35 collection, exact renderer and copied authored
+README remain intact. Final suite: **453 passes / three optional skips**.
+The actual final tracked audit is **458/492**, the same 34 legacy failures
+and every report field identical to the saved enacted-source checkpoint.
+All 216 public-documentation checks and scoped Ruff pass.
+The scored population is 139,859, retaining three explicit unscored exclusions.
+All human, scientific, filing-time, party, rights and publication gates stay
+unpromoted. Nothing is deployed.
+
+Proofs use `data/ne-enacted-law-` prefixes: population/derived-score/tracked-
+cycle/current-render/current-graphs-independent/query-download receipts.
+Actual browser receipts are `data/ne-enacted-law-browser-20261026-v1/receipt.json`
+and `data/current-graphs-browser-20261025-v15/receipt.json` / `v16`.
+
+## Preserved v24 propagated evidence and graphs
 
 Completed **v24 / independent token cache v21** retains **139,811 of 157,598
 contexts**, with **17,787 missing**. Unanimity gives 65,288 assignments /
