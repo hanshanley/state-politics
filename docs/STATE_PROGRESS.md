@@ -116,6 +116,10 @@ Independent proof: `data/ne-enacted-hyphen-qualified-independent-20261026-v1.jso
 SHA-256 `d4ad1924ed98ea0bde30f217ae0d7d1db452a4727f27fc5ce3c28aa49627d46c`.
 Actual v25/token22/139,862 available/17,736 missing/current graphs remain
 unchanged until DATA-17 separately executes and verifies the successor.
+The source checkpoint is now saved/pushed Hans-only **`bbb01b9`**, with all
+427 tracked remote blobs, all 85 post-save controls and a clean tree verified.
+Receipt: `data/ne-enacted-hyphen-source-final-delivery-20261026-v1.json`,
+SHA-256 `6106e892aec04edcea44cef7484035fd001d47903ff31abfa3fe28c9be37ffb0`.
 
 ## Preserved v24 dispatch snapshot
 

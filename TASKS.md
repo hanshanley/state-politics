@@ -369,7 +369,7 @@ the detailed source and scientific gates remain in `docs/AUDIT_STATUS.md` and
   map without changing any target-glyph or source-admission rule.
   Independent proof: `data/ne-enacted-law-hyphen-independent-20261026-v1.json`.
   No source string is normalized, and old negatives/current v25 remain unchanged.
-- [ ] **DATA-16: Qualify a separately typed source-proven hyphen cohort.**
+- [x] **DATA-16: Qualify a separately typed source-proven hyphen cohort.**
   Require the exact nine proven PDF glyph positions and original raw reader
   strings from DATA-15, in addition to every existing whole-law identity,
   completeness, approval-date and original-context guard. Permit no other
@@ -386,7 +386,11 @@ the detailed source and scientific gates remain in `docs/AUDIT_STATUS.md` and
   All 120 focused and 477 integration tests pass, with three optional
   integration skips. Full tracked audit: 460/494, the same 34 legacy failures
   and every non-counter field unchanged; two passing code-guide checks added.
-  Source save/remote verification remains before DATA-17 inference.
+  Saved/pushed Hans-only `bbb01b9`; all 427 tracked remote blobs and all 85
+  post-save controls verify with a clean worktree. Receipt:
+  `data/ne-enacted-hyphen-source-final-delivery-20261026-v1.json`.
+  Current v25 counts/caches/graphs remain unchanged; DATA-17 must separately
+  execute and verify the successor. Large source archives remain local/ignored.
 - [ ] **DATA-17: Propagate only independently qualified hyphen evidence.**
   After DATA-16 is saved and verified, extend actual v25/token22, retaining
   every old input/prediction/cache and all 31 previous archives. Encode only

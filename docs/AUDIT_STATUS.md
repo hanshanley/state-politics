@@ -39,6 +39,10 @@ This source-only checkpoint does not change current v25/token22 predictions,
 source36 tables or actual graphs below. DATA-17 must separately verify inference
 and graph propagation after the saved source checkpoint. Human, legal-version,
 filing-time, party, rights and publication gates stay unpromoted.
+The source checkpoint is saved/pushed Hans-only **`bbb01b9`**. All 427
+tracked remote blobs and 85 post-save controls match, with a clean worktree.
+Receipt: `data/ne-enacted-hyphen-source-final-delivery-20261026-v1.json`,
+SHA-256 `6106e892aec04edcea44cef7484035fd001d47903ff31abfa3fe28c9be37ffb0`.
 
 ## Current propagated evidence and graphs: v25
 

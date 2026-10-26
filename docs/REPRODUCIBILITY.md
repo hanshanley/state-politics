@@ -65,6 +65,11 @@ version reinterpretation or human/filing-time/party/rights/publication
 approval follows. DATA-17 must separately freeze and verify a v25/token22
 successor before actual graph updates; large raw/source/model archives remain
 local and ignored.
+The source checkpoint is saved/pushed Hans-only **`bbb01b9`**, with all 427
+tracked remote blobs and all 85 post-save controls verified; worktree clean.
+Final source receipt:
+`data/ne-enacted-hyphen-source-final-delivery-20261026-v1.json`,
+SHA-256 `6106e892aec04edcea44cef7484035fd001d47903ff31abfa3fe28c9be37ffb0`.
 
 ## Current successor: explicitly versioned enacted-law evidence
 
