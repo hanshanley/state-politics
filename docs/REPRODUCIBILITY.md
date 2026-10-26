@@ -62,6 +62,17 @@ Already-shared clones can still appear in that logical upper bound; do not
 repeat an unchanged batch after its successful reclamation receipt.
 Copy-on-write reuse is not an off-device backup.
 
+Future classification-inspector builds now create their complete evidence files
+with native copy-on-write clones on macOS, rather than first making ordinary
+full copies and requiring later reclamation. Every JSONL, complete research ZIP
+and byte-range reference remains local to the new bundle, with independent
+inodes and the same full-content SHA checks. Unsupported or cross-volume native
+cloning stops the build without a full-copy fallback or overwriting an existing
+destination. Other operating systems retain full streaming copies with exclusive
+file creation. The shared storage helper is retained with each new inspector's
+producer code. Existing bundles are unchanged; this does not authorize another
+full build or change any source/model/publication gate.
+
 The October 26 verified reclamation replaced 1,897 generated duplicate copies
 without changing logical paths or payloads. Free space increased from
 12,761,374,720 to 339,733,323,776 bytes: **326,971,949,056 bytes recovered**.

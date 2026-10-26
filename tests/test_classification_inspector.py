@@ -2,6 +2,7 @@ import hashlib
 import json
 import runpy
 import subprocess
+import sys
 from pathlib import Path
 from zipfile import ZipFile
 
@@ -163,6 +164,72 @@ def test_inspector_preserves_complete_raw_records_ranges_unicode_and_missingness
     assert b"9007199254740999" in (output / evidence["input"]["path"]).read_bytes()
     assert b"Unassigned" in (output / "states/AK.html").read_bytes()
     assert (output / MODULE["ARCHIVE"]).read_bytes().startswith(b"PK")
+
+
+@pytest.mark.skipif(sys.platform != "darwin", reason="requires native APFS clone support")
+def test_inspector_build_clones_complete_evidence_without_full_copy(
+    inspector_sources,
+    monkeypatch,
+):
+    from state_politics import storage
+
+    job, majority, _, _, output = inspector_sources
+    original_clone = storage.native_clone
+    calls = []
+
+    def clone(source, target):
+        original_clone(source, target)
+        calls.append((source, target))
+
+    monkeypatch.setattr(storage, "native_clone", clone)
+    monkeypatch.setattr(
+        storage.shutil, "copyfileobj", lambda *args: pytest.fail("must not make a full copy")
+    )
+    result = build_fixture(inspector_sources)
+    for source, target in (
+        (
+            job / "inputs/retained_text-AK.jsonl",
+            output / "evidence/job/inputs/retained_text-AK.jsonl",
+        ),
+        (majority / "decisions/source_decisions.jsonl", output / "evidence/source_decisions.jsonl"),
+        (majority / MODULE["ARCHIVE"], output / MODULE["ARCHIVE"]),
+    ):
+        assert (source, target) in calls
+        assert MODULE["binding"](source) == MODULE["binding"](target)
+        assert source.stat().st_ino != target.stat().st_ino
+    source, target = calls[-1]
+    before = source.read_bytes()
+    target.write_bytes(b"later independent output")
+    assert source.read_bytes() == before
+    helper = output / "producers/storage.py"
+    assert result["artifacts"]["producers/storage.py"] == MODULE["binding"](helper)
+    assert helper.read_bytes() == (ROOT / "src/state_politics/storage.py").read_bytes()
+
+
+def test_inspector_preserves_sources_and_failure_when_cloning_is_unavailable(
+    inspector_sources,
+    monkeypatch,
+):
+    job, majority, _, _, output = inspector_sources
+    originals = {
+        path: MODULE["binding"](path)
+        for directory in (job, majority)
+        for path in directory.rglob("*")
+        if path.is_file()
+    }
+    original_copy = MODULE["copy_evidence"]
+
+    def unavailable(source, target):
+        if target.name == "context_assignments.jsonl":
+            raise OSError("native cloning unsupported")
+        return original_copy(source, target)
+
+    monkeypatch.setitem(MODULE["build"].__globals__, "copy_evidence", unavailable)
+    with pytest.raises(OSError, match="unsupported"):
+        build_fixture(inspector_sources)
+    assert output.is_dir() and not (output / "manifest.json").exists()
+    assert not (output / "evidence/context_assignments.jsonl").exists()
+    assert all(MODULE["binding"](path) == expected for path, expected in originals.items())
 
 
 @pytest.mark.parametrize(

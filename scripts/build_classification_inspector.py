@@ -8,7 +8,6 @@ import hashlib
 import html
 import json
 import re
-import shutil
 import sys
 from bisect import bisect_left
 from collections import Counter, defaultdict
@@ -29,6 +28,7 @@ from state_politics.analysis.cycle_topics import (  # noqa: E402
 )
 from state_politics.analysis.taxonomy import load_topics  # noqa: E402
 from state_politics.bills.openstates_dump import STATE_CODES  # noqa: E402
+from state_politics.storage import copy_evidence  # noqa: E402
 
 SCHEMA = "state-politics.classification-inspector.v1"
 ASTRAL = re.compile("[\U00010000-\U0010ffff]")
@@ -111,7 +111,7 @@ def build(job, majority, majority_sha256, output):
     def copy(source, name):
         target = output / name
         target.parent.mkdir(parents=True, exist_ok=True)
-        shutil.copyfile(source, target)
+        copy_evidence(source, target)
         require(binding(source) == binding(target), f"copied complete evidence changed: {name}")
 
     for name in (
@@ -122,6 +122,7 @@ def build(job, majority, majority_sha256, output):
         copy(ROOT / "web" / name, "index.html" if name.endswith(".html") else name)
     copy(Path(__file__), "producers/build_classification_inspector.py")
     copy(ROOT / "scripts/serve_research.py", "producers/serve_research.py")
+    copy(ROOT / "src/state_politics/storage.py", "producers/storage.py")
     copy(Path(plan["topics_path"]), "taxonomy.yml")
     copy(majority / "manifest.json", "evidence/majority_manifest.json")
     copy(job / "inference_plan.json", "evidence/inference_plan.json")

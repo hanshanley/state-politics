@@ -52,6 +52,20 @@ the detailed source and scientific gates remain in `docs/AUDIT_STATUS.md` and
   behavior change. All 25 storage tests and 220 public-documentation checks
   pass. Every current exported artifact and all 85 protected controls remain
   unchanged. No real cleanup, data rebuild or production change was performed.
+- [x] **STORAGE-04: Prevent new inspector evidence duplication.** Use independent
+  native copy-on-write files for future macOS inspector builds, sharing the
+  existing reclaimer's native primitive. Preserve complete JSONLs, ZIPs, hashes,
+  byte references and producer dependencies. Refuse native failure without
+  ordinary-copy fallback or overwriting an existing destination; retain portable
+  fresh-file copies elsewhere. Validate with tiny actual builds and failure/
+  independence tests, not a new full-population build or reclamation pass.
+  All 41 focused storage/inspector tests and 221 public-documentation checks
+  pass. An actual tiny macOS build uses native clones for complete evidence
+  and its ZIP, retaining independent writes and unchanged source hashes;
+  failure preserves sources/partial output without a completion manifest.
+  Both isolated CLI entrypoints load. All 145 existing graph payloads,
+  the current inspector manifest and 85 protected controls remain unchanged.
+  No full build, source/model job or repeated reclamation was run.
 - [x] **PLOT-01: Regenerate the actual current graph collection.** Highest
   priority from October 25: use current source, classification, majority,
   full-score and comparison evidence. Create categorized Substack (`#F7F5F0`)

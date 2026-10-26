@@ -4,7 +4,6 @@
 from __future__ import annotations
 
 import argparse
-import ctypes
 import errno
 import hashlib
 import json
@@ -18,6 +17,10 @@ import uuid
 from pathlib import Path, PurePosixPath
 
 ROOT = Path(__file__).resolve().parents[1]
+sys.path.insert(0, str(ROOT / "src"))
+
+from state_politics.storage import native_clone  # noqa: E402
+
 MIN_BYTES = 10_000_000
 
 
@@ -165,16 +168,6 @@ def inventory(root, scope="bundles"):
                     register(directory, expected["path"], expected)
 
     return manifests, duplicate_entries(root, candidates)
-
-
-def native_clone(source, target):
-    library = ctypes.CDLL(None, use_errno=True)
-    clone = library.clonefile
-    clone.argtypes = (ctypes.c_char_p, ctypes.c_char_p, ctypes.c_int)
-    clone.restype = ctypes.c_int
-    if clone(os.fsencode(source), os.fsencode(target), 0) != 0:
-        code = ctypes.get_errno()
-        raise OSError(code, os.strerror(code), str(target))
 
 
 def clone_duplicate(source, target, expected):

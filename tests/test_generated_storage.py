@@ -12,6 +12,8 @@ from pathlib import Path
 
 import pytest
 
+from state_politics import storage
+
 MODULE = runpy.run_path(
     str(Path(__file__).resolve().parents[1] / "scripts/reclaim_generated_storage.py")
 )
@@ -63,6 +65,90 @@ def test_native_clone_refuses_existing_destination_without_overwrite(tmp_path):
         MODULE["native_clone"](source, target)
     assert caught.value.errno == errno.EEXIST
     assert target.read_bytes() == b"existing distinct evidence"
+
+
+@pytest.mark.parametrize("platform", ["darwin", "linux"])
+def test_evidence_copy_uses_fresh_independent_full_files(tmp_path, monkeypatch, platform):
+    source = tmp_path / "source"
+    source.write_bytes(b"complete evidence\x00\nwith a final clause\n")
+    target = tmp_path / "new-evidence"
+    before = MODULE["identity"](source)
+    clones = []
+
+    def clone(source, target):
+        clones.append((source, target))
+        with source.open("rb") as incoming, target.open("xb") as outgoing:
+            shutil.copyfileobj(incoming, outgoing)
+
+    monkeypatch.setattr(storage.sys, "platform", platform)
+    monkeypatch.setattr(storage, "native_clone", clone)
+    assert storage.copy_evidence(source, target) == target
+    assert clones == ([(source, target)] if platform == "darwin" else [])
+    assert target.read_bytes() == source.read_bytes()
+    assert target.stat().st_ino != source.stat().st_ino
+    assert MODULE["identity"](source) == before
+    target.write_bytes(b"independent later write")
+    assert source.read_bytes() == b"complete evidence\x00\nwith a final clause\n"
+
+
+@pytest.mark.parametrize(
+    "platform",
+    [
+        pytest.param(
+            "darwin",
+            marks=pytest.mark.skipif(
+                sys.platform != "darwin", reason="requires native clonefile support"
+            ),
+        ),
+        "linux",
+    ],
+)
+@pytest.mark.parametrize("linked", [False, True])
+def test_evidence_copy_never_overwrites_an_existing_file(
+    tmp_path,
+    monkeypatch,
+    platform,
+    linked,
+):
+    source, target, _ = pair(tmp_path)
+    target.write_bytes(b"another writer's complete evidence")
+    destination = tmp_path / "linked" if linked else target
+    if linked:
+        destination.symlink_to(target)
+    monkeypatch.setattr(storage.sys, "platform", platform)
+    with pytest.raises(FileExistsError):
+        storage.copy_evidence(source, destination)
+    assert target.read_bytes() == b"another writer's complete evidence"
+    assert not linked or destination.is_symlink()
+
+
+def test_evidence_copy_never_falls_back_after_native_failure(tmp_path, monkeypatch):
+    source, _, _ = pair(tmp_path)
+    target = tmp_path / "new-evidence"
+    monkeypatch.setattr(storage.sys, "platform", "darwin")
+
+    def unsupported(*args):
+        raise OSError(errno.ENOTSUP, "native cloning unsupported")
+
+    monkeypatch.setattr(storage, "native_clone", unsupported)
+    monkeypatch.setattr(
+        storage.shutil, "copyfileobj", lambda *args: pytest.fail("must not fall back")
+    )
+    with pytest.raises(OSError) as caught:
+        storage.copy_evidence(source, target)
+    assert caught.value.errno == errno.ENOTSUP
+    assert not target.exists()
+    assert source.read_bytes() == b"complete immutable evidence\n"
+
+
+def test_evidence_copy_refuses_linked_sources_before_creating_output(tmp_path):
+    source, _, _ = pair(tmp_path)
+    linked = tmp_path / "linked"
+    linked.symlink_to(source)
+    target = tmp_path / "new-evidence"
+    with pytest.raises(ValueError, match="unlinked"):
+        storage.copy_evidence(linked, target)
+    assert not target.exists()
 
 
 @pytest.mark.parametrize("defect", ["source", "target", "linked_target", "linked_source"])
