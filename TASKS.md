@@ -270,6 +270,44 @@ the detailed source and scientific gates remain in `docs/AUDIT_STATUS.md` and
   `data/ne-constitutional-graph-save-checkpoint-20261026-v1.json`.
   All large source/model/research archives remain local and ignored, not
   backed up by this code/graph push. Broader DATA-01/scientific gates stay open.
+- [x] **DATA-12: Investigate explicitly listed enacted-law books.** A bounded
+  October 26 search identifies official library law books for 2023 and two
+  2024 volumes, with a printed LB1143 body matching a current gap identity.
+  These are enacted versions, not introduced texts. Preserve the exact catalogue
+  and three explicit book links with at most four controlled GETs, no retries,
+  redirects or closed-native acquisition. Retain complete two-reader page
+  streams and independently assess whole-body identity/boundaries/version
+  evidence before any source admission. Keep original dates, v24/token21,
+  all predictions/current graphs and approval flags unchanged during discovery.
+  Indexes, committee summaries and journal mentions are not complete bill bodies.
+  Completed read-only discovery: four controlled GETs retain the catalogue and
+  three full books / 138,996,228 PDF bytes / 2,165 physical pages. Both readers
+  retain all 4,330 page strings. The literal whole-body probe preserves all
+  478 candidates, all complete bodies and negatives; it proposes 51 existing
+  contexts / 102 views / 361,645 characters. An independent witness freshly
+  re-extracts every original page and verifies all candidate spans, exact
+  original identities/dates, complete consecutive folios, terminal full stops,
+  enacted approval dates and whole-reader whitespace-only agreement.
+  The 99 conflicting book/bill pairs remain negatives, not normalized policy.
+  Proof: `data/ne-enacted-law-probe-independent-sources-20261026-v1.json`.
+  This does not admit sources or change v24 classifications/graphs.
+- [ ] **DATA-13: Qualify the separately typed enacted-law cohort.** Start from
+  the externally pinned source35 gap queue and the DATA-12 raw capture/readers.
+  Require exact NE/108/LB identity, unique existing context, complete own page
+  headers/folios/body, literal approval date and two full agreeing readers.
+  Preserve every raw page, candidate, negative, source version and original
+  introduction date. An enacted date is not an introduction date, and an
+  enacted body is not an introduced version. Keep all approval flags false,
+  wire the generic loader/source gallery/preview, add focused regressions and
+  a complete source ZIP, independently verify the packet and checkpoint it
+  before any inference. Do not modify sealed journal profiles or old packets.
+- [ ] **DATA-14: Propagate independently qualified enacted-law evidence.** Only
+  after DATA-13 is verified and saved, extend actual v24/token21 with genuinely
+  new qualified strings; retain all 30 earlier archives, original fields,
+  predictions, caches and controls. Independently replay the successor and
+  full downloads, then refresh all actual source/topic/majority/score/inspector
+  bundles and root/nested publication-background graphs. Keep enacted-version
+  provenance explicit and majority/human/filing-time/publication gates unpromoted.
 - [ ] **VALIDATE-01: Independently validate classifications.** Preserve original
   unanimity and unpromoted majority separately. Complete actual independent human
   review and resolve taxonomy disputes before accuracy or party-policy claims.

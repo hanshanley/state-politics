@@ -65,6 +65,41 @@ SHA-256 `3f0546aa44977c8906eb5b46e9a69c6878e9d7291448e9e1edfa532e772a6636`.
 DATA-11 is complete; DATA-01 and the independent-human/platform/party/rights/
 report gates remain open. Raw/model/research archives are still local and ignored.
 
+## Next distinct source: read-only enacted-law discovery
+
+DATA-12 independently verifies **51 candidate original contexts / 102 complete
+reader bodies / 361,645 characters** in three explicitly listed official
+library law books. Four controlled GETs retain the catalogue and complete
+2023 / 2024-v1 / 2024-v2 PDFs, 138,996,228 bytes / 2,165 physical pages.
+All 4,330 literal reader strings are preserved and freshly re-extracted by
+the independent witness. All 478 source candidates, full bodies, 3,894
+candidate page spans and negatives survive. The accepted-looking subset has
+136 page spans with complete own running headers, consecutive bill folios,
+full caption/enacting clause/first section/terminal full stop and matching
+whole readers modulo whitespace only. Ninety-nine non-whitespace-conflicting
+book/bill pairs stay negative, not silently normalized.
+
+These are **enacted versions, not introduced texts**. The original NE/108/LB
+context and introduction date remain unchanged; the literal governor approval
+is a separate source-version date. This is a library source cohort, not
+permission to reopen the closed native legislature endpoints or claim a
+statewide census. Current v24/token21/139,811 available/17,787 gaps/current
+graphs remain unchanged. DATA-13 must separately qualify the typed source
+packet before DATA-14 inference or graph refresh.
+
+Capture manifest:
+`a1331dc8bc45ff6a6c0f57857a53fba23d6118d3f41a009213db73ccb06780e0`.
+Reader manifest:
+`51da1e432ff2bfd1d59c49843dafd0e90befca112de737433b9eea81c9d50a36`.
+Read-only full probe:
+`data/ne-enacted-law-whole-body-probe-20261026-v1.json`,
+SHA-256 `6c0d0befcc88882bcf470d61888b2e804199bb442f0099adf2333cece2043619`.
+Independent proof:
+`data/ne-enacted-law-probe-independent-sources-20261026-v1.json`,
+SHA-256 `75e8313ab43ab00885e7179f51dba2790a248b696336182762d3d6e774aec643`.
+All original source/model controls remain unchanged; no source, classifier,
+filing-time, human, party, rights or publication approval is granted.
+
 ## Preserved v23 dispatch snapshot
 
 This preserved checkpoint is superseded by v24/token21 above.
