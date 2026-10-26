@@ -46,6 +46,15 @@ The scored population is 139,859, retaining three explicit unscored exclusions.
 All human, scientific, filing-time, party, rights and publication gates stay
 unpromoted. Nothing is deployed.
 
+Actual graph checkpoint **`706c263`** is saved and pushed Hans-only. Every
+one of **425 tracked files** matches the remotely read nontruncated GitHub
+tree and actual working bytes; all 85 post-save controls pass with a clean
+worktree. Receipt:
+`data/ne-enacted-law-graph-save-checkpoint-20261026-v1.json`,
+SHA-256 `10f192286a30931a23797ffc5bb577407f401fe9e153a108373ba4fba1ebe76d`.
+Large original sources, model caches and research archives remain local and
+ignored, not backed up by the code/graph push. Remaining research gates stay open.
+
 Proofs use `data/ne-enacted-law-` prefixes: population/derived-score/tracked-
 cycle/current-render/current-graphs-independent/query-download receipts.
 Actual browser receipts are `data/ne-enacted-law-browser-20261026-v1/receipt.json`

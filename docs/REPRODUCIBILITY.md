@@ -86,6 +86,19 @@ Proof names use `data/ne-enacted-law-`; browser receipts use that prefix and
 generic gallery v15/v16. No human, filing-time, party, rights or publication
 approval is promoted. Large source/model/research archives remain local and ignored.
 
+The actual graph checkpoint is saved/pushed Hans-only **`706c263`**.
+Independent readback checks the nontruncated GitHub tree, all **425 tracked
+file hashes** and actual working bytes, plus all 85 post-save controls.
+Clean-tree receipt:
+`data/ne-enacted-law-graph-save-checkpoint-20261026-v1.json`,
+SHA-256 `10f192286a30931a23797ffc5bb577407f401fe9e153a108373ba4fba1ebe76d`.
+Before-save proof:
+`data/ne-enacted-law-delivery-verification-before-save-20261026-v1.json`,
+SHA-256 `2d61adc34a0a2fd765e11e067c106b70c9082bb1feab7c19813d8f36bd1ff593`.
+It binds all twenty actual primary proofs, caches/controls/root+nested outputs
+and only the four inspected completed temporary subtrees removed. All real
+sources, failed attempts, downloads and historical collections remain intact.
+
 ## Preserved source qualification: separately typed enacted laws
 
 This source-only checkpoint did not update the preserved v24 baseline below;

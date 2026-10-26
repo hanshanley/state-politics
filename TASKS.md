@@ -316,7 +316,7 @@ the detailed source and scientific gates remain in `docs/AUDIT_STATUS.md` and
   Receipt: `data/ne-enacted-law-source-final-delivery-20261026-v1.json`.
   The full source archives remain local/ignored, not backed up by that push.
   Actual v24 counts/graphs are unchanged; DATA-14 is the separate successor.
-- [ ] **DATA-14: Propagate independently qualified enacted-law evidence.** Only
+- [x] **DATA-14: Propagate independently qualified enacted-law evidence.** Only
   after DATA-13 is verified and saved, extend actual v24/token21 with genuinely
   new qualified strings; retain all 30 earlier archives, original fields,
   predictions, caches and controls. Independently replay the successor and
@@ -340,8 +340,13 @@ the detailed source and scientific gates remain in `docs/AUDIT_STATUS.md` and
   or errors. Actual majority, coverage and full-score PNGs were inspected.
   The final tracked audit is 458/492, with the same 34 legacy failures and
   every report field identical to the saved source checkpoint. All 216 public
-  documentation checks and scoped Ruff pass. Saved/remote delivery verification
-  remains to finish.
+  documentation checks and scoped Ruff pass. Actual graph checkpoint `706c263`
+  is saved/pushed as Hans Hanley without Copilot attribution. Independent
+  GitHub readback verifies all 425 tracked files and all 85 post-save controls,
+  with a clean worktree. Proof:
+  `data/ne-enacted-law-graph-save-checkpoint-20261026-v1.json`.
+  Raw/model/research archives remain local/ignored, not backed up by that push.
+  DATA-01 and independent-human/platform/party/rights/report gates stay open.
 - [ ] **VALIDATE-01: Independently validate classifications.** Preserve original
   unanimity and unpromoted majority separately. Complete actual independent human
   review and resolve taxonomy disputes before accuracy or party-policy claims.

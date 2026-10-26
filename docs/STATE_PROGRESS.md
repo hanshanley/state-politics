@@ -59,9 +59,13 @@ report field identical to the source checkpoint; 216 docs checks/Ruff pass.
 Current root manifest:
 `326c3fef65eea0c5e2bd4f0f96b243926800ff63f5fd6c78af629ebc5e66fd49`.
 Proof names use `data/ne-enacted-law-`; browser receipts use that prefix and
-generic gallery versions v15/v16. DATA-14's saved/remote handoff remains;
-source, independent-human, platform, party, rights, report
-and publication gates stay open. Nothing is deployed.
+generic gallery versions v15/v16. Actual graph checkpoint **`706c263`** is
+saved/pushed Hans-only; all 425 tracked remote files and all 85 post-save
+controls match with a clean worktree. Receipt:
+`data/ne-enacted-law-graph-save-checkpoint-20261026-v1.json`,
+SHA-256 `10f192286a30931a23797ffc5bb577407f401fe9e153a108373ba4fba1ebe76d`.
+DATA-14 is complete. Source, independent-human, platform, party, rights,
+report and publication gates stay open. Nothing is deployed.
 
 ## Preserved v24 dispatch snapshot
 
