@@ -1,2 +1,2 @@
 scope,all_candidate_contexts,paired_contexts,metadata_classified_contexts,metadata_abstained_contexts,metadata_unavailable_contexts,metadata_paired_abstained_contexts,retained_text_classified_contexts,retained_text_abstained_contexts,retained_text_unavailable_contexts,retained_text_paired_abstained_contexts,either_unavailable_contexts,both_unavailable_contexts,same_assigned_topic,different_assigned_topic,both_abstaining,exactly_one_abstaining,unavailable
-national,157598,139778,89950,67648,0,60473,65272,74506,17820,74506,17820,0,42178,6123,43502,47975,17820
+national,157598,139781,89950,67648,0,60474,65272,74509,17817,74509,17817,0,42178,6123,43503,47977,17817

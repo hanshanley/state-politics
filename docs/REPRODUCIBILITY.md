@@ -16,7 +16,77 @@ remain unchanged. Broad rebuild commands below are not a request to complete
 other years; target-cycle selection and its inclusion/exclusion provenance must
 be bound explicitly before regenerated outputs can support the narrowed study.
 
-## Qualified next source packet: literal publication boundaries
+## Current successor: literal-boundary journal evidence
+
+**Subsequent extensions start from completed v23 / independent token cache v20.**
+All 157,598 original contexts remain: **139,781 have text / 17,817 are missing**
+(1,344 NE). Preview v39 preserves all 28 prior archive packets:
+`b6de88fd5b671f800bd03805282fc89a12512f62f49cccb00b26bc838768efdb`.
+Source34 manifest:
+`54d341145440a6f8b9d10e7fbdd12e05b14cab6201bfea9b6966e4ae682d753d`.
+Its NE archive has 933 views, preserving all 927 old alternatives. All 354
+other partitions, remaining gap rows and 35 earlier complete ZIPs are unchanged.
+The new graph-source ZIP contains all 71 complete members: 129,643,133 bytes,
+SHA-256 `95971ff8c342ce86250e99bcbbb1a31dd22758bd3c83dacccb7e4d9420b2874e`.
+
+Actual `data/processed/cycle-topic-inference-retained-text-20261026-v23/`
+encodes only six new strings / 12,106 characters / 3,076 tokens / six windows,
+zero old repeats and zero discarded tokens. All 179,667 old predictions,
+169,325 cache rows, 157,595 other whole assignments and 85 controls remain
+unchanged. All three new contexts abstain: **65,272 assigned / 74,509 abstained /
+17,817 unavailable**. Unpromoted majority gives **78,481 assigned / 23,807
+rejected / 37,490 uncertain / three excluded / 17,817 unavailable**. Its 13,209
+additional assignments remain unchanged and are not independent validation.
+
+Prediction cache23: 754,413,568 bytes / 169,331 rows, SHA-256
+`0a7cff2a6644dbbe160ff6d65876b6600c800ac4ea94dc0cb1313318d0a11985`.
+Independent token20: 40,357,888 bytes / 169,331 strings, SHA-256
+`9477ea7982b06dc34414f1580babf4bce44439b470bb127323ab10c3ff2da59a`.
+The parent v22/token19 caches remain byte-identical. Full fifty-state replay
+requires no encoder:
+
+```bash
+HF_HUB_OFFLINE=1 TRANSFORMERS_OFFLINE=1 \
+  .venv/bin/python -I -B scripts/audit_cycle_topics.py \
+  --job data/processed/cycle-topic-inference-retained-text-20261026-v23 \
+  --gallery outputs/topic-inference-retained-text-2023-2024-v21 \
+  --verified-token-cache data/cycle-topic-independent-token-verification-cache-20261026-v20.sqlite \
+  --verified-token-cache-sha256 9477ea7982b06dc34414f1580babf4bce44439b470bb127323ab10c3ff2da59a \
+  --out data/ne-journal-boundary-tracked-cycle-audit-REPLAY.json
+```
+
+Current manifests: topic21
+`f6a50ad4c0fe3b49c9c93902adc97945028ea6064950c261d9c98b94f7a3ca4f`;
+majority5 `b8402ed812ef6ef2eb0c284135cc185a3950a38965da369c086cbbf4b64a81aa`;
+score5 `13dc32292cc75953b3ec149d6801c343c71b132d4bd18eb13664da68acc74583`;
+paired19 `87e6d00c50ae7623b41f5b11c62a6a6b3e1f3febb36a77eb04e28e1f7d73de38`;
+inspector5 `cf31906905dba1b271abf411ad7e5f024c81f750d9de373fed892ef3796ef3e8`.
+Metadata inference and the context pilot remain unchanged.
+
+The actual current root and fresh nested collections regenerate all 27 charts /
+108 exports / 35 complete CSVs; all 3,176 marks and image/table bytes reconcile.
+Current manifest:
+`abd91ac3360a6fa95a0b0e8cc85e756c24625735f954ee656de71aa671467809`.
+The old source33 collection and exact renderer remain preserved in
+`outputs/preserved-current-source33-20261026-v1/`, including a copied authored
+README. Chromium verifies root/nested 1360/390/320px galleries, all six complete
+new source texts/scores/windows, all 2,128 NE query contexts / 1,248 pairs /
+9,982,329 selected characters, the full LR282 query and the complete source ZIP.
+The final suite passes 412 tests / three optional skips. Proof names use
+`data/ne-journal-boundary-`; browser receipts are
+`data/ne-journal-boundary-browser-20261026-v1/receipt.json` and
+`data/current-graphs-browser-20261025-v11/receipt.json` / `v12`.
+All original evidence, unknowns and scientific/publication gates remain intact.
+Large source/model/research archives remain local and ignored, not backed up by
+the code/graph push.
+The final tracked full audit is 454/488, with the same 34 legacy failures and
+every report field identical to the saved source checkpoint. Its real nonzero
+exit and comparison are retained in
+`data/ne-journal-boundary-delivery-full-audit-20261026-v1.json` and
+`data/ne-journal-boundary-delivery-full-audit-comparison-20261026-v1.json`.
+All 212 public-documentation checks and scoped Ruff pass.
+
+## Preserved source qualification: literal publication boundaries
 
 The separate packet
 `data/processed/ne-journal-boundary-qualified-20261026-v1/` qualifies LR5,
@@ -49,14 +119,14 @@ and exact comparison are retained in
 `data/ne-journal-boundary-full-audit-comparison-20261026-v1.json`.
 All 212 public-documentation checks and scoped Ruff pass.
 
-**Source qualification does not itself update classifications or graphs.**
-DATA-09 must extend the actual v22/token19 baseline below before new counts
-or image outputs are claimed. Raw source/model/research archives remain local
+Source qualification did not itself update classifications or graphs.
+DATA-09 now completes the separate v23/token20 propagation above.
+Raw source/model/research archives remain local
 and ignored; no model, human-gold, source-rights or publication approval changes.
 
-## Current successor: explicit printed-day journal evidence
+## Preserved v22 successor: explicit printed-day journal evidence
 
-**Subsequent extensions start from completed v22 / independent token cache v19.**
+**This preserved checkpoint is superseded by v23 / token cache v20 above.**
 The v21/v18 and earlier instructions below are preserved history, not targets
 to overwrite. All 157,598 original contexts remain: **139,778 have text /
 17,820 remain missing** (1,347 NE). Preview v38 preserves all 27 earlier archive
@@ -493,9 +563,9 @@ tables, not metadata or a visible-page subset. The original full-policy-text
 research ZIPs remain in the separately linked local source galleries and are
 not replaced by the small chart-table download.
 
-The renderer externally pins the manifests for evidence v31, original-rule
-retained-text topics v18, majority v2, full-score diagnostics v2, paired-input
-comparison v16 and the unchanged context pilot v1. It validates each entire input table before
+The renderer externally pins the manifests for evidence v34, original-rule
+retained-text topics v21, majority v5, full-score diagnostics v5, paired-input
+comparison v19 and the unchanged context pilot v1. It validates each entire input table before
 rendering and rechecks inputs afterward. The output manifest records all
 original bindings, exported hashes, actual bar/heatmap values, axes geometry
 and label extents. It refuses an existing collection rather than overwriting
@@ -524,25 +594,25 @@ Original unanimity and unpromoted majority remain distinctly labelled.
 
 The inspector exposes individual source-backed model decisions without
 promoting the majority rule or altering any prediction. Build a new bundle
-from the externally pinned current majority gallery and completed v20 job:
+from the externally pinned current majority gallery and completed v23 job:
 
 ```bash
 HF_HUB_OFFLINE=1 TRANSFORMERS_OFFLINE=1 \
   .venv/bin/python -I -B scripts/build_classification_inspector.py \
-  --job data/processed/cycle-topic-inference-retained-text-20261025-v20 \
-  --majority-gallery outputs/topic-majority-2023-2024-v2 \
-  --majority-sha256 a02d80df8c64d5c22a4ddbac8a4b0f1c293175e53e58c39d7b741af2025b1d87 \
+  --job data/processed/cycle-topic-inference-retained-text-20261026-v23 \
+  --majority-gallery outputs/topic-majority-2023-2024-v5 \
+  --majority-sha256 b8402ed812ef6ef2eb0c284135cc185a3950a38965da369c086cbbf4b64a81aa \
   --out-dir outputs/classification-inspector-2023-2024-REPLAY
 ```
 
-The current actual bundle is `outputs/classification-inspector-2023-2024-v2/`;
-v1 remains preserved unchanged.
+The current actual bundle is `outputs/classification-inspector-2023-2024-v5/`;
+all earlier bundles remain preserved unchanged.
 Serve it independently through the loopback workspace; no evidence, session
 or review bundle is required:
 
 ```bash
 .venv/bin/python -I -B scripts/serve_research.py \
-  --classifications outputs/classification-inspector-2023-2024-v2 \
+  --classifications outputs/classification-inspector-2023-2024-v5 \
   --port 8765
 ```
 
@@ -554,13 +624,13 @@ the existing combined workspace remains supported:
 
 ```bash
 .venv/bin/python -I -B scripts/serve_research.py \
-  --evidence data/preview-cycle-evidence-v36 \
+  --evidence data/preview-cycle-evidence-v39 \
   --sessions data/processed/verified-session-comparison-2023-2024-v3 \
   --review data/human-review-native-20261021-v3 \
   --sources data/processed/native-inventory-catalog-2023-2024-v2 \
-  --graphs outputs/recreated-2023-2024-v31 \
-  --topics outputs/topic-inference-retained-text-2023-2024-v18 \
-  --classifications outputs/classification-inspector-2023-2024-v2 \
+  --graphs outputs/recreated-2023-2024-v34 \
+  --topics outputs/topic-inference-retained-text-2023-2024-v21 \
+  --classifications outputs/classification-inspector-2023-2024-v5 \
   --port 8765
 ```
 

@@ -18,7 +18,7 @@
       "name": "topic_comparison",
       "title": "Which topics receive a bill assignment?",
       "subtitle": "Same 157,598 contexts; original rule and unpromoted majority candidate",
-      "note": "Source: frozen majority v4. Topic counts are provisional, not policy prevalence or party positions. All 65,272 original-rule assignments are retained.",
+      "note": "Source: frozen majority v5. Topic counts are provisional, not policy prevalence or party positions. All 65,272 original-rule assignments are retained.",
       "tables": [
         "chart-data/majority/topic_comparison.csv"
       ],
@@ -552,7 +552,7 @@
       "name": "decision_comparison",
       "title": "What changes under majority voting?",
       "subtitle": "13,209 additional topic assignments; the candidate is not validated",
-      "note": "Source: majority v4. The baseline separates rejection and other abstentions; all 74,506 unanimity abstentions remain inspectable.",
+      "note": "Source: majority v5. The baseline separates rejection and other abstentions; all 74,509 unanimity abstentions remain inspectable.",
       "tables": [
         "chart-data/majority/status_comparison.csv"
       ],
@@ -592,49 +592,49 @@
             [
               65272.0,
               -0.33,
-              23384.0,
+              23387.0,
               0.66
             ],
             [
               78481.0,
               0.6699999999999999,
-              23804.0,
+              23807.0,
               0.66
             ],
             [
-              88656.0,
+              88659.0,
               -0.33,
               51119.0,
               0.66
             ],
             [
-              102285.0,
+              102288.0,
               0.6699999999999999,
               37490.0,
               0.66
             ],
             [
-              139775.0,
+              139778.0,
               -0.33,
               3.0,
               0.66
             ],
             [
-              139775.0,
+              139778.0,
               0.6699999999999999,
               3.0,
               0.66
             ],
             [
-              139778.0,
+              139781.0,
               -0.33,
-              17820.0,
+              17817.0,
               0.66
             ],
             [
-              139778.0,
+              139781.0,
               0.6699999999999999,
-              17820.0,
+              17817.0,
               0.66
             ]
           ],
@@ -791,7 +791,7 @@
       "name": "new_assignments",
       "title": "Where the new assignments come from",
       "subtitle": "Reasons recorded under the original unanimity rule",
-      "note": "Source: majority v4. Fewer abstentions do not establish better accuracy. Conditional supporting-window gates are not whole-document confidence.",
+      "note": "Source: majority v5. Fewer abstentions do not establish better accuracy. Conditional supporting-window gates are not whole-document confidence.",
       "tables": [
         "chart-data/majority/new_assignment_origins.csv"
       ],
@@ -959,7 +959,7 @@
       "name": "state_classification_coverage",
       "title": "Majority decisions, state by state",
       "subtitle": "All fifty states; common 0-100% scale",
-      "note": "Source: full-body topic gallery v20 / majority v4. Denominator is each state's retained candidate contexts, not a complete introduced-bill universe. No supplied candidates does not mean no activity.",
+      "note": "Source: full-body topic gallery v21 / majority v5. Denominator is each state's retained candidate contexts, not a complete introduced-bill universe. No supplied candidates does not mean no activity.",
       "tables": [
         "chart-data/majority/state_comparison.csv"
       ],
@@ -1949,7 +1949,7 @@
             [
               17.152255639097742,
               2.67,
-              9.868421052631582,
+              10.0093984962406,
               0.66
             ],
             [
@@ -2097,7 +2097,7 @@
               0.66
             ],
             [
-              27.02067669172932,
+              27.161654135338345,
               2.67,
               9.680451127819552,
               0.66
@@ -2247,7 +2247,7 @@
               0.66
             ],
             [
-              36.70112781954887,
+              36.84210526315789,
               2.67,
               0.0,
               0.66
@@ -2397,9 +2397,9 @@
               0.66
             ],
             [
-              36.70112781954887,
+              36.84210526315789,
               2.67,
-              63.29887218045113,
+              63.15789473684211,
               0.66
             ],
             [
@@ -2999,7 +2999,7 @@
       "name": "classification_coverage",
       "title": "Original assignments and abstentions, state by state",
       "subtitle": "All fifty states; common 0-100% scale",
-      "note": "Source: full-body topic gallery v20 / majority v4. Denominator is each state's retained candidate contexts, not a complete introduced-bill universe. No supplied candidates does not mean no activity.",
+      "note": "Source: full-body topic gallery v21 / majority v5. Denominator is each state's retained candidate contexts, not a complete introduced-bill universe. No supplied candidates does not mean no activity.",
       "tables": [
         "chart-data/topics/retained_text_classification_coverage.csv"
       ],
@@ -3689,7 +3689,7 @@
             [
               14.661654135338345,
               2.67,
-              22.039473684210527,
+              22.180451127819545,
               0.66
             ],
             [
@@ -3837,9 +3837,9 @@
               0.66
             ],
             [
-              36.70112781954887,
+              36.84210526315789,
               2.67,
-              63.29887218045113,
+              63.15789473684211,
               0.66
             ],
             [
@@ -4426,8 +4426,8 @@
       "group": "topics",
       "name": "topic_counts",
       "title": "Original full-text topic assignments",
-      "subtitle": "65,272 assigned; 74,506 abstained; 17,820 without retained body text",
-      "note": "Source: complete retained-text topic gallery v20. Frozen unanimity, not the majority candidate. No independent human validation or party attribution.",
+      "subtitle": "65,272 assigned; 74,509 abstained; 17,817 without retained body text",
+      "note": "Source: complete retained-text topic gallery v21. Frozen unanimity, not the majority candidate. No independent human validation or party attribution.",
       "tables": [
         "chart-data/topics/retained_text_topic_counts.csv"
       ],
@@ -4943,7 +4943,7 @@
       "name": "state_topics",
       "title": "The original topic profile across states",
       "subtitle": "All candidate contexts in the denominator; grey means no scored inputs",
-      "note": "Source: full-body topic gallery v20. Missing inputs and abstentions are not redistributed across topics. This is a model-output diagnostic, not party policy.",
+      "note": "Source: full-body topic gallery v21. Missing inputs and abstentions are not redistributed across topics. This is a model-output diagnostic, not party policy.",
       "tables": [
         "chart-data/topics/retained_text_state_topics.csv"
       ],
@@ -6729,7 +6729,7 @@
       "name": "decision_reasons",
       "title": "Why the original model did not assign every bill",
       "subtitle": "Every original context is retained, including missing text and exclusions",
-      "note": "Source: full-score diagnostics v4. Reasons are model/source dispositions, not human judgments about whether a bill has a substantive topic.",
+      "note": "Source: full-score diagnostics v5. Reasons are model/source dispositions, not human judgments about whether a bill has a substantive topic.",
       "tables": [
         "chart-data/scores/decision_reasons.csv"
       ],
@@ -6769,13 +6769,13 @@
             [
               0.0,
               1.69,
-              23384.0,
+              23387.0,
               0.62
             ],
             [
               0.0,
               2.69,
-              17820.0,
+              17817.0,
               0.62
             ],
             [
@@ -6881,15 +6881,15 @@
           395.21312195496915
         ],
         [
-          519.912396020399,
+          519.9454772093057,
           353.86871961292826,
-          563.912396020399,
+          563.9454772093057,
           366.36871961292826
         ],
         [
-          458.557817661419,
+          458.52473647251225,
           325.0243172708873,
-          502.557817661419,
+          502.52473647251225,
           337.5243172708873
         ],
         [
@@ -7055,7 +7055,7 @@
       "name": "output_scores",
       "title": "All 22 outputs, including model rejection",
       "subtitle": "Complete score vectors, not only the accepted topic",
-      "note": "Source: full-score diagnostics v4; 139,775 scored contexts. Whiskers represent source variation, not confidence intervals. Scores are uncalibrated; rejection stays in.",
+      "note": "Source: full-score diagnostics v5; 139,778 scored contexts. Whiskers represent source variation, not confidence intervals. Scores are uncalibrated; rejection stays in.",
       "tables": [
         "chart-data/scores/output_scores.csv"
       ],
@@ -7083,133 +7083,133 @@
             [
               0.0,
               -0.31,
-              21.33515203273498,
+              21.33682408851326,
               0.62
             ],
             [
               0.0,
               0.69,
-              13.406236650896991,
+              13.40594892493879,
               0.62
             ],
             [
               0.0,
               1.69,
-              12.85013736932644,
+              12.849861572003359,
               0.62
             ],
             [
               0.0,
               2.69,
-              8.84961335205689,
+              8.84943944048186,
               0.62
             ],
             [
               0.0,
               3.69,
-              7.41748479611738,
+              7.41732559930815,
               0.62
             ],
             [
               0.0,
               4.69,
-              6.16225707652047,
+              6.16212485522267,
               0.62
             ],
             [
               0.0,
               5.69,
-              5.01958160912163,
+              5.01947387610315,
               0.62
             ],
             [
               0.0,
               6.69,
-              4.72145823568131,
+              4.7213569009383,
               0.62
             ],
             [
               0.0,
               7.69,
-              3.9446527369196,
+              3.94456810964589,
               0.62
             ],
             [
               0.0,
               8.69,
-              3.45641714447317,
+              3.4563429618706003,
               0.62
             ],
             [
               0.0,
               9.69,
-              2.44112922671257,
+              2.4410768342828097,
               0.62
             ],
             [
               0.0,
               10.69,
-              1.99642105879405,
+              1.99637821055579,
               0.62
             ],
             [
               0.0,
               11.69,
-              1.85310087599609,
+              1.85306110586659,
               0.62
             ],
             [
               0.0,
               12.69,
-              1.7403534427787402,
+              1.7403160905900301,
               0.62
             ],
             [
               0.0,
               13.69,
-              1.46455223209326,
+              1.46452083401486,
               0.62
             ],
             [
               0.0,
               14.69,
-              1.22351340716313,
+              1.22348714790328,
               0.62
             ],
             [
               0.0,
               15.69,
-              1.0347756552955,
+              1.03475354240265,
               0.62
             ],
             [
               0.0,
               16.69,
-              0.46135392348506,
+              0.46134403653078004,
               0.62
             ],
             [
               0.0,
               17.69,
-              0.29540734532591,
+              0.29540100957226,
               0.62
             ],
             [
               0.0,
               18.69,
-              0.20285958727509,
+              0.20285526476815,
               0.62
             ],
             [
               0.0,
               19.69,
-              0.10974463145295,
+              0.1097422802075,
               0.62
             ],
             [
               0.0,
               20.69,
-              0.01379760977876,
+              0.01379731427925,
               0.62
             ]
           ],
@@ -7219,221 +7219,221 @@
             [
               [
                 [
-                  20.738674181550262,
+                  20.74034626164964,
                   0.0
                 ],
                 [
-                  22.02326701102915,
+                  22.02493707571486,
                   0.0
                 ]
               ],
               [
                 [
-                  13.02496822807714,
+                  13.02468868065754,
                   1.0
                 ],
                 [
-                  13.79796724150727,
+                  13.79767111246508,
                   1.0
                 ]
               ],
               [
                 [
-                  12.501209565536632,
+                  12.50094125705742,
                   2.0
                 ],
                 [
-                  13.191613559101231,
+                  13.191330432865339,
                   2.0
                 ]
               ],
               [
                 [
-                  8.38328001360256,
+                  8.38310342924172,
                   3.0
                 ],
                 [
-                  9.338790072388461,
+                  9.33861834332074,
                   3.0
                 ]
               ],
               [
                 [
-                  7.20635125959844,
+                  7.20619659352477,
                   4.0
                 ],
                 [
-                  7.61173796355662,
+                  7.6115745983085,
                   4.0
                 ]
               ],
               [
                 [
-                  5.682159385804931,
+                  5.68203745593593,
                   5.0
                 ],
                 [
-                  6.66869363831506,
+                  6.66855056028768,
                   5.0
                 ]
               ],
               [
                 [
-                  4.8398302938802695,
+                  4.83972641867473,
                   6.0
                 ],
                 [
-                  5.19389294473868,
+                  5.1937814706633905,
                   6.0
                 ]
               ],
               [
                 [
-                  4.465317720234361,
+                  4.4652218829046,
                   7.0
                 ],
                 [
-                  4.972306330260531,
+                  4.97219961169343,
                   7.0
                 ]
               ],
               [
                 [
-                  3.76356869766086,
+                  3.7634879402473302,
                   8.0
                 ],
                 [
-                  4.120618421685189,
+                  4.12053003440453,
                   8.0
                 ]
               ],
               [
                 [
-                  3.31432932212551,
+                  3.31425818851655,
                   9.0
                 ],
                 [
-                  3.5976783543464297,
+                  3.5976011404915,
                   9.0
                 ]
               ],
               [
                 [
-                  2.31504490139754,
+                  2.31499521475196,
                   10.0
                 ],
                 [
-                  2.56013921577106,
+                  2.5600842693907997,
                   10.0
                 ]
               ],
               [
                 [
-                  1.88902681166177,
+                  1.88898626826325,
                   11.0
                 ],
                 [
-                  2.10400111622095,
+                  2.10395595915499,
                   11.0
                 ]
               ],
               [
                 [
-                  1.73875128328725,
+                  1.7387139665537,
                   12.0
                 ],
                 [
-                  1.9735042130153,
+                  1.97346185956071,
                   12.0
                 ]
               ],
               [
                 [
-                  1.64118530694146,
+                  1.6411500829030703,
                   13.0
                 ],
                 [
-                  1.84080440219482,
+                  1.84076489432304,
                   13.0
                 ]
               ],
               [
                 [
-                  1.41595713058691,
+                  1.41592675854731,
                   14.0
                 ],
                 [
-                  1.51462702822902,
+                  1.5145945723537202,
                   14.0
                 ]
               ],
               [
                 [
-                  1.16950333718578,
+                  1.1694782368063399,
                   15.0
                 ],
                 [
-                  1.2762918762872,
+                  1.2762644845803,
                   15.0
                 ]
               ],
               [
                 [
-                  0.9542154061597501,
+                  0.9541950107618901,
                   16.0
                 ],
                 [
-                  1.12074058288016,
+                  1.12071663649384,
                   16.0
                 ]
               ],
               [
                 [
-                  0.41586956673347003,
+                  0.41586064713836,
                   17.0
                 ],
                 [
-                  0.51103703031559,
+                  0.51102608588603,
                   17.0
                 ]
               ],
               [
                 [
-                  0.27751499262042,
+                  0.27750903848288,
                   18.0
                 ],
                 [
-                  0.31353515665042997,
+                  0.31352843422711,
                   18.0
                 ]
               ],
               [
                 [
-                  0.18806580832858,
+                  0.18806178442882,
                   19.0
                 ],
                 [
-                  0.21832936634436997,
+                  0.21832473072153002,
                   19.0
                 ]
               ],
               [
                 [
-                  0.10376936096841,
+                  0.10376713613672,
                   20.0
                 ],
                 [
-                  0.11610812172751,
+                  0.11610563573608,
                   20.0
                 ]
               ],
               [
                 [
-                  0.01258011202957,
+                  0.012579842399650001,
                   21.0
                 ],
                 [
-                  0.015072059444679998,
+                  0.01507173685325,
                   21.0
                 ]
               ]
@@ -7441,7 +7441,7 @@
           ],
           "x_limits": [
             0.0,
-            24.535424837645227
+            24.53734770179025
           ],
           "y_labels": [
             "Model rejection output",
@@ -7495,135 +7495,135 @@
           82.28046961805553
         ],
         [
-          1007.1782891660627,
+          1007.1764506891785,
           692.3088583389325,
-          1035.1782891660628,
+          1035.1764506891786,
           704.8088583389325
         ],
         [
-          736.73128641714,
+          736.6859982837676,
           665.9639206482537,
-          764.73128641714,
+          764.6859982837676,
           678.4639206482537
         ],
         [
-          716.7944402707998,
+          716.751141981644,
           639.618982957575,
-          744.7944402707998,
+          744.751141981644,
           652.118982957575
         ],
         [
-          590.1140038977568,
+          590.0842953349269,
           613.2740452668962,
-          610.1140038977568,
+          610.0842953349269,
           625.7740452668962
         ],
         [
-          533.3287098036149,
+          533.3037261885064,
           586.9291075762175,
-          553.3287098036149,
+          553.3037261885064,
           599.4291075762175
         ],
         [
-          502.32151026469944,
+          502.29962351176835,
           560.5841698855387,
-          522.3215102646994,
+          522.2996235117683,
           573.0841698855387
         ],
         [
-          453.8302165239306,
+          453.81316883437273,
           534.23923219486,
-          473.8302165239306,
+          473.81316883437273,
           546.73923219486
         ],
         [
-          446.54447163753105,
+          446.52815124221723,
           507.8942945041813,
-          466.54447163753105,
+          466.52815124221723,
           520.3942945041813
         ],
         [
-          418.54106159706174,
+          418.52753836670934,
           481.54935681350247,
-          438.54106159706174,
+          438.52753836670934,
           494.04935681350247
         ],
         [
-          401.346846456948,
+          401.33503799997453,
           455.2044191228237,
-          421.346846456948,
+          421.33503799997453,
           467.7044191228237
         ],
         [
-          367.2326672628785,
+          367.2242642513376,
           428.85948143214495,
-          387.2326672628785,
+          387.2242642513376,
           441.35948143214495
         ],
         [
-          352.2348938905303,
+          352.22798802279266,
           402.5145437414662,
-          372.2348938905303,
+          372.22798802279266,
           415.0145437414662
         ],
         [
-          347.9441692569118,
+          347.9376918061439,
           376.1696060507875,
-          367.9441692569118,
+          367.9376918061439,
           388.6696060507875
         ],
         [
-          343.58101324954913,
+          343.574971271729,
           349.8246683601087,
-          363.58101324954913,
+          363.574971271729,
           362.3246683601087
         ],
         [
-          332.85633504627765,
+          332.8513653563746,
           323.47973066942996,
-          352.85633504627765,
+          352.8513653563746,
           335.97973066942996
         ],
         [
-          325.01989998634053,
+          325.0157108933226,
           297.1347929787512,
-          345.01989998634053,
+          345.0157108933226,
           309.6347929787512
         ],
         [
-          319.90538960320134,
+          319.9017145806307,
           270.78985528807243,
-          339.90538960320134,
+          339.9017145806307,
           283.28985528807243
         ],
         [
-          299.85840007371905,
+          299.85672349879763,
           244.44491759739367,
-          319.85840007371905,
+          319.85672349879763,
           256.94491759739367
         ],
         [
-          293.3645589655859,
+          293.3635300874197,
           218.0999799067149,
-          313.3645589655859,
+          313.3635300874197,
           230.5999799067149
         ],
         [
-          290.2342024613739,
+          290.2334875013498,
           191.75504221603614,
-          310.2342024613739,
+          310.2334875013498,
           204.25504221603614
         ],
         [
-          286.8731785475305,
+          286.8727976475646,
           165.41010452535738,
-          306.8731785475305,
+          306.8727976475646,
           177.91010452535738
         ],
         [
-          283.55112330582426,
+          283.5510738648191,
           139.06516683467862,
-          314.55112330582426,
+          314.5510738648191,
           151.56516683467862
         ],
         [
@@ -7633,27 +7633,27 @@
           101.72491406249998
         ],
         [
-          436.0105921798985,
+          435.99770904878545,
           87.83602517361109,
-          445.0105921798985,
+          444.99770904878545,
           101.72491406249998
         ],
         [
-          595.9100732486859,
+          595.8843069864597,
           87.83602517361109,
-          613.9100732486859,
+          613.8843069864597,
           101.72491406249998
         ],
         [
-          760.3095543174732,
+          760.2709049241341,
           87.83602517361109,
-          778.3095543174732,
+          778.2709049241341,
           101.72491406249998
         ],
         [
-          924.7090353862604,
+          924.6575028618083,
           87.83602517361109,
-          942.7090353862604,
+          942.6575028618083,
           101.72491406249998
         ],
         [
@@ -7795,7 +7795,7 @@
       "name": "topic_shares",
       "title": "Titles and full texts do not give the same profile",
       "subtitle": "Exactly paired inputs; agreement is not accuracy",
-      "note": "Source: input comparison v18. Both tiers use the frozen unanimity rule. Unavailable inputs stay outside the paired denominator; no majority substitution.",
+      "note": "Source: input comparison v19. Both tiers use the frozen unanimity rule. Unavailable inputs stay outside the paired denominator; no majority substitution.",
       "tables": [
         "chart-data/inputs/topic_shares.csv",
         "chart-data/inputs/national_summary.csv"
@@ -7824,121 +7824,121 @@
             [
               0.0,
               -0.315,
-              9.520096152470341,
+              9.51989183079245,
               0.29
             ],
             [
               0.0,
               0.6849999999999999,
-              11.262859677488581,
+              11.26261795236834,
               0.29
             ],
             [
               0.0,
               1.685,
-              6.5117543533317095,
+              6.51161459711978,
               0.29
             ],
             [
               0.0,
               2.685,
-              5.4507862467627195,
+              5.45210007082507,
               0.29
             ],
             [
               0.0,
               3.685,
-              3.50055087352802,
+              3.50047574419985,
               0.29
             ],
             [
               0.0,
               4.6850000000000005,
-              0.54586558685916,
+              0.54585387141313,
               0.29
             ],
             [
               0.0,
               5.6850000000000005,
-              6.05460086708924,
+              6.05447092237142,
               0.29
             ],
             [
               0.0,
               6.6850000000000005,
-              2.7944311694258,
+              2.7943711949406502,
               0.29
             ],
             [
               0.0,
               7.6850000000000005,
-              3.76311007454678,
+              3.76302931013514,
               0.29
             ],
             [
               0.0,
               8.685,
-              1.41080856787191,
+              1.41077828889477,
               0.29
             ],
             [
               0.0,
               9.685,
-              1.4651805005079401,
+              1.46514905459254,
               0.29
             ],
             [
               0.0,
               10.685,
-              0.6910958806106801,
+              0.69108104821113,
               0.29
             ],
             [
               0.0,
               11.685,
-              1.20119045915666,
+              1.2011646790336301,
               0.29
             ],
             [
               0.0,
               12.685,
-              0.8220177710369301,
+              0.8220001287728601,
               0.29
             ],
             [
               0.0,
               13.685,
-              0.80055516604902,
+              0.80053798441848,
               0.29
             ],
             [
               0.0,
               14.685,
-              0.66247907396013,
+              0.66246485573861,
               0.29
             ],
             [
               0.0,
               15.685,
-              0.1101747056046,
+              0.11017234101916001,
               0.29
             ],
             [
               0.0,
               16.685,
-              0.0608107141324,
+              0.06080940900408,
               0.29
             ],
             [
               0.0,
               17.685,
-              0.07798079812273,
+              0.07797912448758999,
               0.29
             ],
             [
               0.0,
               18.685,
-              0.030047646983069998,
+              0.030047002096130003,
               0.29
             ],
             [
@@ -7950,121 +7950,121 @@
             [
               0.0,
               0.02500000000000005,
-              9.45642375767288,
+              9.45622080254111,
               0.2899999999999999
             ],
             [
               0.0,
               1.025,
-              9.28615375810213,
+              9.28595445732968,
               0.2899999999999999
             ],
             [
               0.0,
               2.025,
-              5.62391792699852,
+              5.62379722566014,
               0.2899999999999999
             ],
             [
               0.0,
               3.025,
-              4.952138390876961,
+              4.95203210736795,
               0.2899999999999999
             ],
             [
               0.0,
               4.025,
-              3.34315843695002,
+              3.34308668560104,
               0.2899999999999999
             ],
             [
               0.0,
               5.025,
-              2.34729356551102,
+              2.34724318755767,
               0.2899999999999999
             ],
             [
               0.0,
               6.025,
-              2.15413012061984,
+              2.15408388836823,
               0.2899999999999999
             ],
             [
               0.0,
               7.025,
-              1.96025125556239,
+              1.9602091843669698,
               0.2899999999999999
             ],
             [
               0.0,
               8.025,
-              1.9251956674154702,
+              1.9251543485881402,
               0.2899999999999999
             ],
             [
               0.0,
               9.025,
-              1.23982314813489,
+              1.23979653887152,
               0.2899999999999999
             ],
             [
               0.0,
               10.025,
-              0.91001445148735,
+              0.90999492062583,
               0.2899999999999999
             ],
             [
               0.0,
               11.025,
-              0.8298873928658299,
+              0.8298695817028001,
               0.2899999999999999
             ],
             [
               0.0,
               12.025,
-              0.81343272904176,
+              0.81341527103111,
               0.2899999999999999
             ],
             [
               0.0,
               13.025,
-              0.73974445191661,
+              0.73972857541439,
               0.2899999999999999
             ],
             [
               0.0,
               14.025,
-              0.72114352759375,
+              0.72112805030726,
               0.2899999999999999
             ],
             [
               0.0,
               15.025,
-              0.21891857087667,
+              0.2189138724147,
               0.2899999999999999
             ],
             [
               0.0,
               16.025000000000002,
-              0.0865658401179,
+              0.08656398222934,
               0.2899999999999999
             ],
             [
               0.0,
               17.025000000000002,
-              0.0372018486457,
+              0.03720105021426,
               0.2899999999999999
             ],
             [
               0.0,
               18.025000000000002,
-              0.03577100831318,
+              0.03577024059063,
               0.2899999999999999
             ],
             [
               0.0,
               19.025000000000002,
-              0.015739243657800002,
+              0.015738905859879998,
               0.2899999999999999
             ],
             [
@@ -8079,7 +8079,7 @@
           "segments": [],
           "x_limits": [
             0.0,
-            11.713374064588125
+            11.713122670463074
           ],
           "y_labels": [
             "Health",
@@ -8150,33 +8150,33 @@
           142.65384374999994
         ],
         [
-          419.30595323603336,
+          419.30886560082877,
           128.76495486111105,
-          428.30595323603336,
+          428.30886560082877,
           142.65384374999994
         ],
         [
-          555.0007953609556,
+          555.0066200905464,
           128.76495486111105,
-          564.0007953609556,
+          564.0066200905464,
           142.65384374999994
         ],
         [
-          690.6956374858778,
+          690.7043745802641,
           128.76495486111105,
-          699.6956374858778,
+          699.7043745802641,
           142.65384374999994
         ],
         [
-          826.3904796108002,
+          826.4021290699818,
           128.76495486111105,
-          835.3904796108002,
+          835.4021290699818,
           142.65384374999994
         ],
         [
-          957.5853217357223,
+          957.5998835596995,
           128.76495486111105,
-          975.5853217357223,
+          975.5998835596995,
           142.65384374999994
         ],
         [
@@ -8312,7 +8312,7 @@
       "name": "topic_transitions",
       "title": "How assignments change with the input",
       "subtitle": "Abstention is retained as an output; rows have separate denominators",
-      "note": "Source: input comparison v18. Descriptive transitions, not validated corrections. The complete CSV preserves transition counts and every row denominator.",
+      "note": "Source: input comparison v19. Descriptive transitions, not validated corrections. The complete CSV preserves transition counts and every row denominator.",
       "tables": [
         "chart-data/inputs/topic_transitions.csv"
       ],
@@ -8346,28 +8346,28 @@
           "images": [
             [
               [
-                71.93623600615152,
-                0.61349693251533,
-                1.09966431299918,
-                0.21662560150811,
-                0.02149719709622,
-                0.71932928745059,
-                2.42091511914408,
-                0.50766457758007,
-                0.65153043507019,
+                71.93670006945133,
+                0.61348678771042,
+                1.0996461289149,
+                0.21662201938022,
+                0.02149684161788,
+                0.71931739259847,
+                2.42087508681416,
+                0.50765618282236,
+                0.65151966134206,
                 0.0,
-                4.00509318208125,
-                4.5094504985696,
-                1.15754138210441,
-                0.07937426620144,
-                0.0132290443669,
-                0.96902749987597,
-                4.14565177847965,
-                0.64160865179501,
-                3.3932498801117803,
-                0.047955285830029996,
-                0.63499412961156,
-                2.21586493145701
+                4.005026953732179,
+                4.5093759301518,
+                1.15752224096305,
+                0.07937295366603,
+                0.013228825611,
+                0.96901147600621,
+                4.14558322584912,
+                0.6415980421338,
+                3.39319376922313,
+                0.04795449283989,
+                0.6349836293283,
+                2.21582828984356
               ],
               [
                 42.55874673629243,
@@ -8586,28 +8586,28 @@
                 null
               ],
               [
-                44.06090038062737,
-                0.09187557422233,
-                0.5906286914293201,
-                0.15750098438115,
-                0.01312508203176,
-                0.22312639453996,
-                1.68001050006562,
-                0.06562541015881,
-                0.052500328127049994,
+                44.07558063246293,
+                0.09185146306259,
+                0.5904736911166499,
+                0.15745965096444,
+                0.01312163758037,
+                0.22306783886628997,
+                1.67956961028736,
+                0.06560818790185,
+                0.05248655032148,
                 0.0,
-                46.48904055650348,
-                1.01063131644572,
-                0.34125213282583,
-                0.02625016406352,
+                46.47684030967065,
+                1.01036609368849,
+                0.34116257708962,
+                0.02624327516074,
                 0.0,
-                1.0631316445727699,
-                2.24438902743142,
-                0.30187688673054003,
-                1.07625672660454,
+                1.0628526440099701,
+                2.24380002624327,
+                0.30179766434851,
+                1.07597428159034,
                 0.0,
-                0.07875049219057,
-                0.43312770704816
+                0.07872982548222,
+                0.43301404015221
               ],
               [
                 26.10656045690238,
@@ -9685,7 +9685,7 @@
       "name": "state_source_status",
       "title": "Fifty-state source progress",
       "subtitle": "Closed collection scopes are not completed studies",
-      "note": "Source: saved fifty-state tracker in evidence v33. Blocked and partial scopes retain explicit gaps; no status certifies scientific completeness.",
+      "note": "Source: saved fifty-state tracker in evidence v34. Blocked and partial scopes retain explicit gaps; no status certifies scientific completeness.",
       "tables": [
         "chart-data/evidence/state_source_status.csv"
       ],
@@ -9860,7 +9860,7 @@
       "name": "bill_evidence_by_state",
       "title": "The retained 2023-2024 bill evidence",
       "subtitle": "Separate overlapping metadata/native channels; not the final recovered-text totals",
-      "note": "Source: original metadata v4 matrix in evidence v33. These columns overlap and must not be added. Later recovered text appears in the separate coverage chart.",
+      "note": "Source: original metadata v4 matrix in evidence v34. These columns overlap and must not be added. Later recovered text appears in the separate coverage chart.",
       "tables": [
         "chart-data/evidence/bill_evidence_by_state.csv"
       ],
@@ -12821,7 +12821,7 @@
       "name": "retained_snapshot_text_coverage",
       "title": "Recovered text without double-counting bills",
       "subtitle": "Complete retained source evidence; unknowns preserved",
-      "note": "Source: Evidence v33: 139,778 of 157,598 contexts have text. Exact bill IDs de-duplicate source channels. Missing or later-version text is not publisher-original certification.",
+      "note": "Source: Evidence v34: 139,781 of 157,598 contexts have text. Exact bill IDs de-duplicate source channels. Missing or later-version text is not publisher-original certification.",
       "tables": [
         "chart-data/evidence/retained_text_coverage.csv"
       ],
@@ -14111,7 +14111,7 @@
             [
               315.0,
               2.67,
-              466.0,
+              469.0,
               0.66
             ],
             [
@@ -14259,9 +14259,9 @@
               0.66
             ],
             [
-              781.0,
+              784.0,
               2.67,
-              1347.0,
+              1344.0,
               0.66
             ],
             [
@@ -14879,7 +14879,7 @@
       "name": "classifier_development_diagnostics",
       "title": "Classifier candidates have mixed development results",
       "subtitle": "Saved assistant-reviewed development sets, not independent validation",
-      "note": "Source: frozen development comparisons in evidence v33. Native results use 36 agreed references; three disputes remain excluded. Small inspected samples do not certify population accuracy.",
+      "note": "Source: frozen development comparisons in evidence v34. Native results use 36 agreed references; three disputes remain excluded. Small inspected samples do not certify population accuracy.",
       "tables": [
         "chart-data/evidence/classifier_metrics.csv"
       ],
@@ -15072,7 +15072,7 @@
       "name": "native_precision_and_coverage",
       "title": "Native-text precision and coverage are different",
       "subtitle": "Saved assistant-reviewed development sets, not independent validation",
-      "note": "Source: frozen development comparisons in evidence v33. Native results use 36 agreed references; three disputes remain excluded. Small inspected samples do not certify population accuracy.",
+      "note": "Source: frozen development comparisons in evidence v34. Native results use 36 agreed references; three disputes remain excluded. Small inspected samples do not certify population accuracy.",
       "tables": [
         "chart-data/evidence/classifier_metrics.csv"
       ],
@@ -16218,7 +16218,7 @@
       "name": "modern_collection_outcomes",
       "title": "Modern platform collection outcomes",
       "subtitle": "Recorded source outcomes, not adopted 2023-2024 platforms",
-      "note": "Source: frozen recovered-platform tables in evidence v33. Automated filters and metadata years do not establish adoption, applicability or human validation.",
+      "note": "Source: frozen recovered-platform tables in evidence v34. Automated filters and metadata years do not establish adoption, applicability or human validation.",
       "tables": [
         "chart-data/evidence/platforms_modern_collection_status_counts.csv"
       ],
@@ -16436,7 +16436,7 @@
       "name": "modern_collection_metadata_years",
       "title": "Years in the recovered platform metadata",
       "subtitle": "Recorded source outcomes, not adopted 2023-2024 platforms",
-      "note": "Source: frozen recovered-platform tables in evidence v33. Automated filters and metadata years do not establish adoption, applicability or human validation.",
+      "note": "Source: frozen recovered-platform tables in evidence v34. Automated filters and metadata years do not establish adoption, applicability or human validation.",
       "tables": [
         "chart-data/evidence/platforms_modern_metadata_year_counts.csv"
       ],
@@ -16623,7 +16623,7 @@
       "name": "retained_response_bodies",
       "title": "Retained responses are not distinct platforms",
       "subtitle": "All 1,559 capture attempts; duplicates and failures stay visible",
-      "note": "Source: full platform capture ledger in evidence v33. Bodies are de-duplicated by exact source SHA-256, not a guessed policy or platform identity.",
+      "note": "Source: full platform capture ledger in evidence v34. Bodies are de-duplicated by exact source SHA-256, not a guessed policy or platform identity.",
       "tables": [
         "chart-data/evidence/platforms_capture_ledger.csv"
       ],
@@ -18262,148 +18262,148 @@
     }
   ],
   "inputs": {
-    "outputs/recreated-2023-2024-v33/manifest.json": {
-      "sha256": "9ea7d4a30f712461747c093eef0ba695a990b207b0b98ae8838850bed150498d",
-      "bytes": 17072268
+    "outputs/recreated-2023-2024-v34/manifest.json": {
+      "sha256": "54d341145440a6f8b9d10e7fbdd12e05b14cab6201bfea9b6966e4ae682d753d",
+      "bytes": 17088439
     },
-    "outputs/recreated-2023-2024-v33/chart-data/state_source_status.csv": {
+    "outputs/recreated-2023-2024-v34/chart-data/state_source_status.csv": {
       "sha256": "13ecc9d9489ed98681f238ea78c9a58701091612da62526c06bb042873614af0",
       "bytes": 16542
     },
-    "outputs/recreated-2023-2024-v33/chart-data/bill_evidence_by_state.csv": {
+    "outputs/recreated-2023-2024-v34/chart-data/bill_evidence_by_state.csv": {
       "sha256": "fea7647d34c003a5db7773430de74e59de3db462a73e1cb04c4d37857cd40b51",
       "bytes": 26305
     },
-    "outputs/recreated-2023-2024-v33/chart-data/native_source_observations.csv": {
+    "outputs/recreated-2023-2024-v34/chart-data/native_source_observations.csv": {
       "sha256": "bc729492d08c286ec0969da7f6aa3a52c7057d0c4c8844d92f8503ae821d9773",
       "bytes": 16586
     },
-    "outputs/recreated-2023-2024-v33/chart-data/session_calendar_comparison.csv": {
+    "outputs/recreated-2023-2024-v34/chart-data/session_calendar_comparison.csv": {
       "sha256": "638e90011eec3cb3877801094c1eec07621593868d0957157e5766a41070f2da",
       "bytes": 3377
     },
-    "outputs/recreated-2023-2024-v33/chart-data/classifier_metrics.csv": {
+    "outputs/recreated-2023-2024-v34/chart-data/classifier_metrics.csv": {
       "sha256": "0652119069e955940bf0c6551b64ed106f1647bd7db4fbf698ef338f8f4109f8",
       "bytes": 1657
     },
-    "outputs/recreated-2023-2024-v33/chart-data/historical_platform_coverage.csv": {
+    "outputs/recreated-2023-2024-v34/chart-data/historical_platform_coverage.csv": {
       "sha256": "a39914bb57a0075c58c280de849b8d4520b2424b75cbe8a349a8162b719ec214",
       "bytes": 1363
     },
-    "outputs/recreated-2023-2024-v33/chart-data/platforms_modern_collection_status_counts.csv": {
+    "outputs/recreated-2023-2024-v34/chart-data/platforms_modern_collection_status_counts.csv": {
       "sha256": "061e101defcabcc4aad897efa93152a5c50e0ecc091af13a98c365d1c78ae18e",
       "bytes": 344
     },
-    "outputs/recreated-2023-2024-v33/chart-data/platforms_capture_ledger.csv": {
+    "outputs/recreated-2023-2024-v34/chart-data/platforms_capture_ledger.csv": {
       "sha256": "e9da199e6b28eba138cdef2fd715b9204a9935315543d5d7efd6f3c128362fa4",
       "bytes": 663636
     },
-    "outputs/recreated-2023-2024-v33/chart-data/platforms_modern_metadata_year_counts.csv": {
+    "outputs/recreated-2023-2024-v34/chart-data/platforms_modern_metadata_year_counts.csv": {
       "sha256": "28a3500d04175e10cf9f79b62f3bbdbb712b9b4dc3a0e78c6de5ad0b00690ecb",
       "bytes": 461
     },
-    "outputs/recreated-2023-2024-v33/chart-data/outcomes_pooled_recorded_stages.csv": {
+    "outputs/recreated-2023-2024-v34/chart-data/outcomes_pooled_recorded_stages.csv": {
       "sha256": "571c09c91fddcaff56b8bbd493bddd875d063a4e4119e83ba111ef87f237e8f5",
       "bytes": 1996
     },
-    "outputs/recreated-2023-2024-v33/chart-data/outcomes_state_recorded_stages.csv": {
+    "outputs/recreated-2023-2024-v34/chart-data/outcomes_state_recorded_stages.csv": {
       "sha256": "4dbe252316b66aea8cde80487f1d8f414e595b7ecf137f2160ce6e65afd78e92",
       "bytes": 86740
     },
-    "outputs/recreated-2023-2024-v33/chart-data/arkansas_text_by_session.csv": {
+    "outputs/recreated-2023-2024-v34/chart-data/arkansas_text_by_session.csv": {
       "sha256": "2da72637cbf844917bbe5b36c53e53f5cab7d49741759afda7b8dd41d589ecd6",
       "bytes": 196
     },
-    "outputs/recreated-2023-2024-v33/chart-data/retained_text_coverage.csv": {
-      "sha256": "6353907c6f154e22361e026880d28820583242ec29dea8e75cad20abeaac145a",
+    "outputs/recreated-2023-2024-v34/chart-data/retained_text_coverage.csv": {
+      "sha256": "ffe12bfcf451e7ddc809bd50acc3ec1d7eb5c97175a14ab2abbb99d605beb0e7",
       "bytes": 1356
     },
-    "outputs/topic-inference-retained-text-2023-2024-v20/manifest.json": {
-      "sha256": "6b851e7d128960befc8af6e9664d1f220275ffc09908cf6128fc1dfcfbfdfb27",
+    "outputs/topic-inference-retained-text-2023-2024-v21/manifest.json": {
+      "sha256": "f6a50ad4c0fe3b49c9c93902adc97945028ea6064950c261d9c98b94f7a3ca4f",
       "bytes": 20374
     },
-    "outputs/topic-inference-retained-text-2023-2024-v20/chart-data/retained_text_topic_counts.csv": {
+    "outputs/topic-inference-retained-text-2023-2024-v21/chart-data/retained_text_topic_counts.csv": {
       "sha256": "105cedcc9c03cbaab924cccd6f4dd8503fd8873c53ae0c541cf35232bf4bd26d",
       "bytes": 1232
     },
-    "outputs/topic-inference-retained-text-2023-2024-v20/chart-data/retained_text_classification_coverage.csv": {
-      "sha256": "13c55fc8967a77f9bfac6327dea8050fdc494a8450ba866d879eebec6b70402b",
+    "outputs/topic-inference-retained-text-2023-2024-v21/chart-data/retained_text_classification_coverage.csv": {
+      "sha256": "7f7e9d6bfe63b1d6d3bc7ba02b127dcf9d91a1cd83a6da31add1418b143562ec",
       "bytes": 1277
     },
-    "outputs/topic-inference-retained-text-2023-2024-v20/chart-data/retained_text_state_topics.csv": {
-      "sha256": "24dcfdb1c7def9f61184a9c7d6ea26857e4912e3695061e4c8a8d9da8e031e4b",
+    "outputs/topic-inference-retained-text-2023-2024-v21/chart-data/retained_text_state_topics.csv": {
+      "sha256": "1d45084fc6560447f88cd7ab97947595319795c947e6d82607e89e481dc8f108",
       "bytes": 57118
     },
-    "outputs/topic-majority-2023-2024-v4/manifest.json": {
-      "sha256": "977d4e8446458627a14a779f2e3587f2b65a8616394f92f3462afe7ea8ee297a",
+    "outputs/topic-majority-2023-2024-v5/manifest.json": {
+      "sha256": "b8402ed812ef6ef2eb0c284135cc185a3950a38965da369c086cbbf4b64a81aa",
       "bytes": 42674
     },
-    "outputs/topic-majority-2023-2024-v4/chart-data/status_comparison.csv": {
-      "sha256": "2aade2fffbd4f980dcc126ee18ce20ac4a8d30bfeff3f98d9335fc974bcebfc4",
+    "outputs/topic-majority-2023-2024-v5/chart-data/status_comparison.csv": {
+      "sha256": "c40638c67e081faec046ded9d8f66a65a1d46e1d21b6c3668e060cc84d4703e1",
       "bytes": 260
     },
-    "outputs/topic-majority-2023-2024-v4/chart-data/topic_comparison.csv": {
+    "outputs/topic-majority-2023-2024-v5/chart-data/topic_comparison.csv": {
       "sha256": "64b15591a01115159f4305fd0121a8d01081a37c95274088df5258e5f9652d4d",
       "bytes": 743
     },
-    "outputs/topic-majority-2023-2024-v4/chart-data/new_assignment_origins.csv": {
+    "outputs/topic-majority-2023-2024-v5/chart-data/new_assignment_origins.csv": {
       "sha256": "0cccb5c3915c92b1bb439c2d7dafd09d23ec3ae139f4d16f5433458ffd52ef9e",
       "bytes": 526
     },
-    "outputs/topic-majority-2023-2024-v4/chart-data/state_comparison.csv": {
-      "sha256": "6eb34a32b9fdd161787ad25aa0eb516936a491c722a5c66c5972d14544958876",
+    "outputs/topic-majority-2023-2024-v5/chart-data/state_comparison.csv": {
+      "sha256": "933efa371aec259ae82f2177416bbd2a86cf4700a0983f1ef8e3d308f4983608",
       "bytes": 1798
     },
-    "outputs/topic-majority-2023-2024-v4/chart-data/transitions.csv": {
-      "sha256": "e1bae3b1d1f48c879f261705f407ae915d79db1b3d1cae140f3c03bba771480a",
+    "outputs/topic-majority-2023-2024-v5/chart-data/transitions.csv": {
+      "sha256": "72cc43ac4cd7d1400bd302eed5a891da23350840063065231a0a2daa3df16104",
       "bytes": 589
     },
-    "outputs/topic-majority-2023-2024-v4/chart-data/selected_assistant_comparison.csv": {
+    "outputs/topic-majority-2023-2024-v5/chart-data/selected_assistant_comparison.csv": {
       "sha256": "caf71eb8929d922d1b9157f0bc2f6412017be2f6c363f04fa1f29f2871fde506",
       "bytes": 12927
     },
-    "outputs/topic-score-diagnostics-2023-2024-v4/manifest.json": {
-      "sha256": "82223423ba0bf5e7d22c739819960b95558fa6e7f6970eabee422dc3116671f0",
+    "outputs/topic-score-diagnostics-2023-2024-v5/manifest.json": {
+      "sha256": "13dc32292cc75953b3ec149d6801c343c71b132d4bd18eb13664da68acc74583",
       "bytes": 39715
     },
-    "outputs/topic-score-diagnostics-2023-2024-v4/chart-data/decision_reasons.csv": {
-      "sha256": "8feba95cf1e2c7f9043bb7d02cfff9797b8ec710f26363a8d2ef15a5b20a64fb",
+    "outputs/topic-score-diagnostics-2023-2024-v5/chart-data/decision_reasons.csv": {
+      "sha256": "c678118fb95790d9fe8ee3f4e5e2c6ce1727aa776f2d28696da8eb2189e501a0",
       "bytes": 604
     },
-    "outputs/topic-score-diagnostics-2023-2024-v4/chart-data/output_scores.csv": {
-      "sha256": "91ecab22a462f3d35ba7e482e9b0905b046a5240323872379566d2d036579c0f",
-      "bytes": 2135
+    "outputs/topic-score-diagnostics-2023-2024-v5/chart-data/output_scores.csv": {
+      "sha256": "46b1528d2ac8e3b48e52ca789ec720a17f4dadc95de2383ad6c96c5edd7e1b29",
+      "bytes": 2136
     },
-    "outputs/topic-score-diagnostics-2023-2024-v4/chart-data/state_output_scores.csv": {
-      "sha256": "8abafbc73796a03a599eac70ccaede84c363717485da92bc9b3e3263daa2b75a",
-      "bytes": 105858
+    "outputs/topic-score-diagnostics-2023-2024-v5/chart-data/state_output_scores.csv": {
+      "sha256": "7d684f84a1b8cf6b47d253bd513afa0d7f2144cec7b6cfe3897b75d7297fc9a8",
+      "bytes": 105860
     },
-    "outputs/topic-input-comparison-2023-2024-v18/manifest.json": {
-      "sha256": "84af2d80f3456c2b05b0b1f9c542d5ed566c3ae376eb1159f9d98a1f6dbb61b3",
+    "outputs/topic-input-comparison-2023-2024-v19/manifest.json": {
+      "sha256": "87e6d00c50ae7623b41f5b11c62a6a6b3e1f3febb36a77eb04e28e1f7d73de38",
       "bytes": 8181
     },
-    "outputs/topic-input-comparison-2023-2024-v18/chart-data/topic_shares.csv": {
-      "sha256": "8cabf20d8536262295f54d07df0ff131ce9d2fdb104f4c6ec93f9eeafb0b7e8e",
-      "bytes": 3443
+    "outputs/topic-input-comparison-2023-2024-v19/chart-data/topic_shares.csv": {
+      "sha256": "c8ab1946e3188117cee5ecdaafad8748b5d3a723ae896aecfa26db5d89af598c",
+      "bytes": 3435
     },
-    "outputs/topic-input-comparison-2023-2024-v18/chart-data/topic_transitions.csv": {
-      "sha256": "9746e39ffd830e9b75a56fdaadba25f7a11a13a5f48028ae6860e04f71448a4a",
-      "bytes": 57184
+    "outputs/topic-input-comparison-2023-2024-v19/chart-data/topic_transitions.csv": {
+      "sha256": "a72083e5215e0e79ec9db2b5f7e971c0794bc0bd51360460ea2b451e2c5ac2bd",
+      "bytes": 57183
     },
-    "outputs/topic-input-comparison-2023-2024-v18/chart-data/national_summary.csv": {
-      "sha256": "4d1ee3f78b599b45c001a8b2bc44fdbf26d12416f184ffa31cc94a49252cd986",
+    "outputs/topic-input-comparison-2023-2024-v19/chart-data/national_summary.csv": {
+      "sha256": "efe82c8766537a0e7b7eb08c2e96ee3c3be97b96b1ca4b4a6e8dba169de45fda",
       "bytes": 563
     },
-    "outputs/topic-input-comparison-2023-2024-v18/chart-data/state_summary.csv": {
-      "sha256": "b5db805b677ee5aeaaabbda0ddcd37bcc67a0c65b237da84024f8b4ebfcbaf3f",
+    "outputs/topic-input-comparison-2023-2024-v19/chart-data/state_summary.csv": {
+      "sha256": "2765c57f77f22397e0b7e1ce5173f7e23ecf237f9caf5e801c7606136dba2fa1",
       "bytes": 3776
     },
-    "outputs/topic-input-comparison-2023-2024-v18/chart-data/state_topic_shares.csv": {
-      "sha256": "fed9274702540d9d5367364b0bc0922eecce1062fe9d0ff695c5448fc0c8cb1d",
-      "bytes": 119359
+    "outputs/topic-input-comparison-2023-2024-v19/chart-data/state_topic_shares.csv": {
+      "sha256": "30dab6840337b4a1f974eaf76bfa626c3c84d6829cec207b7a9b906d9a25a217",
+      "bytes": 119354
     },
-    "outputs/topic-input-comparison-2023-2024-v18/chart-data/state_topic_transitions.csv": {
-      "sha256": "2baf6c315fc6de4ff2d646f6746112e8b61bb86480cf95a811b797b93f4ef4a4",
+    "outputs/topic-input-comparison-2023-2024-v19/chart-data/state_topic_transitions.csv": {
+      "sha256": "854b02aa995944343c8f1dd7e7030acc98014d11d62be287a0591c84a1a7d34a",
       "bytes": 2154566
     },
     "outputs/topic-context-pilot-2023-2024-v1/manifest.json": {
@@ -18453,35 +18453,35 @@
       "bytes": 14977
     },
     "substack/evidence/bill_evidence_by_state.png": {
-      "sha256": "0788960594ee6770b57276bfc1dbe0a8b3a1460debf70952122a3c03dfc158f2",
-      "bytes": 392709
+      "sha256": "788be1af82ecd961cf9a2a3e7ca652cfb4ad4b2e97de9f4611304900d3e663a0",
+      "bytes": 392697
     },
     "substack/evidence/bill_evidence_by_state.svg": {
-      "sha256": "a212f65256159716628e07edec78088cef307c346b02a767b7524eda9af4190f",
+      "sha256": "a6e998ff731e39172f866371bb2cac1b3f288aa913441df37693a62b6c297c00",
       "bytes": 130134
     },
     "substack/evidence/classifier_development_diagnostics.png": {
-      "sha256": "768fd11015c5fb7ef3defabb89329918faad8962754d245cf034d601613d1ff0",
-      "bytes": 152685
+      "sha256": "0de0bfecf2b5cbb63cb21ccc4feff2bee179fd4121c104a6c31105a9590aa1e5",
+      "bytes": 153113
     },
     "substack/evidence/classifier_development_diagnostics.svg": {
-      "sha256": "7b7a6da2b517880685d23e79c6c4281633f48f210afa07147912044d1b517592",
+      "sha256": "b79cf6d499e3218ff772a239c0ac06637bc320e5fb6166b22544e266a4da1aa5",
       "bytes": 12814
     },
     "substack/evidence/modern_collection_metadata_years.png": {
-      "sha256": "c94cde99956de11b8ceacc3dd543a4c2da58a803f7b5b39a1e7eaa449725e67f",
-      "bytes": 132281
+      "sha256": "48e0e5e1e4907f3971dc403585d01aa09d3d7f92442890e418ce8a0a221219aa",
+      "bytes": 132721
     },
     "substack/evidence/modern_collection_metadata_years.svg": {
-      "sha256": "4dc1c8d6003d30a78e028ea84fa7207200e533678c820952d0180c840d3470bc",
+      "sha256": "00acda76d1c95a8e6a29c51c7ee0f3a054015631dfe42239e0cc5d14713f2c00",
       "bytes": 12143
     },
     "substack/evidence/modern_collection_outcomes.png": {
-      "sha256": "cd70c7d8b2df5b11c64ee5ff05389c35fae19215cfa1eec5983d80a11fc678cb",
-      "bytes": 140036
+      "sha256": "2de6ada3e77d1a4bf33f792fc0cbb79164d861a0e94700dd47d5952602c5f34b",
+      "bytes": 140493
     },
     "substack/evidence/modern_collection_outcomes.svg": {
-      "sha256": "84876312318c86e4d452308fadbec4ff88193a7018c58e7bb4382f565ffb7efe",
+      "sha256": "9536de4d7ae8528d6efe607f2077a56cd48ece796c1d563a840b1c43b18b1010",
       "bytes": 14466
     },
     "substack/evidence/native_inventory_observations.png": {
@@ -18493,11 +18493,11 @@
       "bytes": 14567
     },
     "substack/evidence/native_precision_and_coverage.png": {
-      "sha256": "48b73155dc5a31d9b90cfcfeaa5dee924fa807257656007b48f9ff12b6833b81",
-      "bytes": 139522
+      "sha256": "2de39fdbd75ce5ef466c3934fdf1a336bedb32e7f3bd5e01122329775b39f7b2",
+      "bytes": 139969
     },
     "substack/evidence/native_precision_and_coverage.svg": {
-      "sha256": "49b2a6ea74a41c38a805ac7a311339e4963375df3d70b5c0d8fa1bb3d7c93757",
+      "sha256": "e86fbfd76382278f6f864140279e3400c658a4314eaad49a8e6eaaca39af3e46",
       "bytes": 16348
     },
     "substack/evidence/platform_corpus_recency.png": {
@@ -18517,19 +18517,19 @@
       "bytes": 22351
     },
     "substack/evidence/retained_response_bodies.png": {
-      "sha256": "e4563080bd60383b613922bc59060698c76d7dd825b135680d03739ee008dbd8",
-      "bytes": 136783
+      "sha256": "f44fcc019f4884c53a7dae80768f4eeeba6634e7ec05c0d39bff54a1eb487754",
+      "bytes": 137199
     },
     "substack/evidence/retained_response_bodies.svg": {
-      "sha256": "85104e4f686e791b16b16f3e620a86d2889b92ddbc06c80f7f7fd66beff929f7",
+      "sha256": "97b40f88c738347422a512c0490c2b448440c6f7a40aa9f56cdc0b08260a76a8",
       "bytes": 13182
     },
     "substack/evidence/retained_snapshot_text_coverage.png": {
-      "sha256": "b28bebd834f6be4f1039d404e887a01fecb09547caaefcc4e72b36559514105a",
-      "bytes": 222327
+      "sha256": "9b6392099e6bb74d937599006f67dd0d30ad1b390c99fbae67f9f8a601ab85ff",
+      "bytes": 222772
     },
     "substack/evidence/retained_snapshot_text_coverage.svg": {
-      "sha256": "d9b7bfc40ad106c203deadab32707457b1d912abfcffa68487caa84ce22474e2",
+      "sha256": "483414ffdde9938372567f616a3ea81d7ebc4a312c0561e6093e6787227af294",
       "bytes": 90504
     },
     "substack/evidence/session_calendar_comparison.png": {
@@ -18549,99 +18549,99 @@
       "bytes": 96875
     },
     "substack/evidence/state_source_status.png": {
-      "sha256": "65cade1705b88c02ffe14c8fc94df1d9de9234ac4697d135869d827513458b75",
-      "bytes": 108236
+      "sha256": "22026bd92316beb36bd7b23b091cef79271642c19005f6b4805ed468c618f890",
+      "bytes": 108667
     },
     "substack/evidence/state_source_status.svg": {
-      "sha256": "7907ccab2e9d4dcb8220acebf1b886b5b6acd3c078f115a558fa6cd74c20dcc0",
+      "sha256": "c1fa1c91cf5f04ca88374efb03f019b4dd1b6813a6515db99bae1cdf4f642438",
       "bytes": 11745
     },
     "substack/inputs/topic_shares.png": {
-      "sha256": "7725c735dca2b74e2f8185693e0204cc739bf56ab4c3b18a8f81d2b0d9e7dcde",
-      "bytes": 266632
+      "sha256": "18c28fd08d601d086bad6496c6733daf9caac502ecfceecd39ddee086d63f77e",
+      "bytes": 266567
     },
     "substack/inputs/topic_shares.svg": {
-      "sha256": "0a33fee0b362eae84d1f79e314524f06849f46220f3c1aa8a2230a9da9f18fda",
-      "bytes": 28102
+      "sha256": "da5ac6ca6398766d442f4c9b2a694e1a4aff9e58e735e2d1022a5d5b7238529e",
+      "bytes": 28098
     },
     "substack/inputs/topic_transitions.png": {
-      "sha256": "214928dc83722a0aac37710b394cc881693c998d180f45032f1400da452e71c8",
-      "bytes": 589625
+      "sha256": "dab3c012cd9dd4e7b4839603094c047de6ef0dad7817f293a963ad9a6bb29d52",
+      "bytes": 589525
     },
     "substack/inputs/topic_transitions.svg": {
-      "sha256": "d99245fa5fada898e497932c18453bf46ef803c4f1320ade404936f62173382c",
+      "sha256": "80857d2875822fc7ea8447720303404350b16f45ab9ac42beb2608c3a3bc2eeb",
       "bytes": 90640
     },
     "substack/majority/decision_comparison.png": {
-      "sha256": "62ab44bc173680d2a0a304b6db7bb289192402acd8e16dad0f1413757ed90bec",
-      "bytes": 155639
+      "sha256": "222e0f5d9d3a5c14d09126d43ae361f89037d109bdd90837d4ba0b0de692992e",
+      "bytes": 155603
     },
     "substack/majority/decision_comparison.svg": {
-      "sha256": "4a10a1ab284ab7ba047c291b03f88a4b4176e4ada40240c3d01798705239a72b",
-      "bytes": 17511
+      "sha256": "79c8b73e84b715aa2e40816c398736c454c07c5ad1a8d1c13d587058d8b80752",
+      "bytes": 17515
     },
     "substack/majority/new_assignments.png": {
-      "sha256": "73f7e7fc311136ad30f477ee27e0cc971908b846af8a15676c519aaa884bee5e",
-      "bytes": 147783
+      "sha256": "5b10a6513808bfacabb54d268e2b607b79998596ab466660f844a9a42d71c40c",
+      "bytes": 147790
     },
     "substack/majority/new_assignments.svg": {
-      "sha256": "5c2cd60902a5860f59daab1386dbb37cadb4a2d3d4a503f9b17c06d0d6d8be26",
+      "sha256": "754463a6840059fec1302c55b5cb864fffdf44008b6615988c8e8bbdb06bf273",
       "bytes": 12862
     },
     "substack/majority/state_classification_coverage.png": {
-      "sha256": "74c3abdf9ad3e0099937fd5c5ce22abe225b9d1da884f7b0687e3d487445f2b3",
-      "bytes": 252461
+      "sha256": "6cf97838748677c860e084da2cdf929c55f834aa80af394be802ddd3ab1c1d55",
+      "bytes": 252192
     },
     "substack/majority/state_classification_coverage.svg": {
-      "sha256": "5cd8a61402f6cbe32052ab7d29543c9c14d047f3a6ee988391a3ff29ee350753",
+      "sha256": "cac8e47d53300de24b9de13c428588058220b917a381a911f695434c5d03b31b",
       "bytes": 87625
     },
     "substack/majority/topic_comparison.png": {
-      "sha256": "e586da14d6a80722e54527fc4e8126375af60bf6d3db39476575ecd9b5e7ab3a",
-      "bytes": 283558
+      "sha256": "9e0ee4488bc82733cb33c19a497db7d3dd9641bca0d2f69f2f7a8a686aea0ea6",
+      "bytes": 283559
     },
     "substack/majority/topic_comparison.svg": {
-      "sha256": "f97c4763380685c71c13db07318294137ee4cf331d211c32856a5685fbafab9f",
+      "sha256": "e313a8b929877202e987584d0ae0e9b5bcd3b893f52ce868929b148563784496",
       "bytes": 30258
     },
     "substack/scores/decision_reasons.png": {
-      "sha256": "694faff6349f8f9bcb29588b1e9abea470bc15cb9e4bdb582eeb467e814ed1d5",
-      "bytes": 229124
+      "sha256": "832e2cc3a491592445c89a5b070217b49b64a086dd94293d6ea68dcd458cdb93",
+      "bytes": 227327
     },
     "substack/scores/decision_reasons.svg": {
-      "sha256": "d8ff90b6a2aca89d09482d8d7337c25d36dd47148f4b977434f8d65bd7c04ca2",
-      "bytes": 22468
+      "sha256": "e62f5ea9feb0a8cd02200f13f2d7866e9dc1b3c5de8805be54ae8ccf31891afe",
+      "bytes": 22464
     },
     "substack/scores/output_scores.png": {
-      "sha256": "84b845c612696b32bcb622825c4c9e1d40250c35aa31b9f658ef6e605554e47f",
-      "bytes": 312680
+      "sha256": "15b15772b0859b745310565643c1ad14b1fd2a501042beacc28baced9cc8699c",
+      "bytes": 312953
     },
     "substack/scores/output_scores.svg": {
-      "sha256": "816239e33b5443da688d4c6750ac6982145348f3d7d9bc8a3232462613e4d6a5",
-      "bytes": 41036
+      "sha256": "c9251f0ff9634e4b03de5d3730b8008131ef2170398e6fa5376c767ed759f45c",
+      "bytes": 41034
     },
     "substack/topics/classification_coverage.png": {
-      "sha256": "71e94c561f89006147143feb36b18af468a5f84c28e66ce002e592cb433f026a",
-      "bytes": 251727
+      "sha256": "5bc7ab7e912148e545868c76e08a5b40d7a9ea558813c29725cb932c5292617f",
+      "bytes": 251457
     },
     "substack/topics/classification_coverage.svg": {
-      "sha256": "f795fb3053de421f14f145c4756cd38bfdfaa798b1942d8773265a53dcabd12f",
+      "sha256": "bde2889405cafd0fb5389df74486234f5d50b25730b612d355a6700f35838ef0",
       "bytes": 66736
     },
     "substack/topics/state_topics.png": {
-      "sha256": "3fc21c04d0244659ba80b66250b5417e7155a5eb2d05163fa1732519d79bcd4d",
-      "bytes": 497210
+      "sha256": "ecdc34b111c404df26229359bb580401f5786a5fc5e1c1314dfe59629c4badd9",
+      "bytes": 496805
     },
     "substack/topics/state_topics.svg": {
-      "sha256": "e4c87268327cf1628e7b99b4c5a5b2ecd0e30c1d71467b0ec49a3a4d0458944f",
+      "sha256": "4a9b067df81f7307dc28f23e0544381110405e865a92137718eb3d6dd1cb7977",
       "bytes": 111452
     },
     "substack/topics/topic_counts.png": {
-      "sha256": "264cbf8cd93abf6ab9f137e327ae00471a220673b239c8e094e8a30ea8c09fd8",
-      "bytes": 330913
+      "sha256": "d1ad6e6159ed4614682973541281a5dac2ce0b3db84dde3ed95969b7b5c2b60a",
+      "bytes": 331182
     },
     "substack/topics/topic_counts.svg": {
-      "sha256": "b9c0e6378d581a0481a897dd0fd3e04ad4a78fffaf2a14b0ce96a10bf4d48689",
+      "sha256": "fb9d3a7ef8dd21248d4410696ba382e5b893bc4903c490beb6437dbab4648e52",
       "bytes": 33764
     },
     "themarginoferror/context/context_comparison.png": {
@@ -18669,35 +18669,35 @@
       "bytes": 14977
     },
     "themarginoferror/evidence/bill_evidence_by_state.png": {
-      "sha256": "323a09233bf7709e8136883a9a1a23c581a662c0425d667a9926f324cf317276",
-      "bytes": 365382
+      "sha256": "c542b82ecd1f114b8d7ad3d3be30693e54a04a84d67810ce51abd758b2912130",
+      "bytes": 365367
     },
     "themarginoferror/evidence/bill_evidence_by_state.svg": {
-      "sha256": "261f60262d5ce955bc6a12124e756feb286470ad81b268cbcbf8e10b07710dca",
+      "sha256": "a6886d03d227ab83b2f18b98dc4c26a1b1699c08d8dae1644676c988a197c1e6",
       "bytes": 130134
     },
     "themarginoferror/evidence/classifier_development_diagnostics.png": {
-      "sha256": "1ae8a644abfdf81af57c9a3daf37be7454bc567d79029f83d0daec7328730bcb",
-      "bytes": 138574
+      "sha256": "17804bf1001c2988fd90d3dd0d4ce66b61015e1669eedfbea861309b18b64921",
+      "bytes": 138920
     },
     "themarginoferror/evidence/classifier_development_diagnostics.svg": {
-      "sha256": "b534b0a31e93105424bbfc4c308d07e95d1051cf3d8b4646f96500c382f57492",
+      "sha256": "90ab21e6f88ad27febde4f5220ec3e7116297c93b8a1c0583c1edefc31a5ecad",
       "bytes": 12814
     },
     "themarginoferror/evidence/modern_collection_metadata_years.png": {
-      "sha256": "1691204e8788922752fe75f01666136ef01dddd4594accda237989e0f34aa620",
-      "bytes": 119852
+      "sha256": "fd8769d5a121e25b9bc30b246460aebe28c9a5ed3f99a626894cf6818a0763c5",
+      "bytes": 120215
     },
     "themarginoferror/evidence/modern_collection_metadata_years.svg": {
-      "sha256": "47fb4309417a27f6db4c22e913318db3a4f02166bfb8b3887876547c7f7eaca2",
+      "sha256": "7b41c057ba0ee489212ebecf4da238867fc8827d1e009339a10441407a8375e5",
       "bytes": 12143
     },
     "themarginoferror/evidence/modern_collection_outcomes.png": {
-      "sha256": "a492b06eb446b3f7c44fc62faf01a190df29e90a2af0cb412d3dc2e0c65855d4",
-      "bytes": 126628
+      "sha256": "e1391e58cd26ff82876e11b9893b49291bb22e3906818f5b79d487320870a2f5",
+      "bytes": 126999
     },
     "themarginoferror/evidence/modern_collection_outcomes.svg": {
-      "sha256": "1ba1e40a65ca1a13f81cb2e0b64c23b518108ec59f4c63147e4b09fd5406fc41",
+      "sha256": "15d5aa5773653f696efed4731b8260fc5d908ac5ecdc0d75f090b3bbdac86430",
       "bytes": 14466
     },
     "themarginoferror/evidence/native_inventory_observations.png": {
@@ -18709,11 +18709,11 @@
       "bytes": 14567
     },
     "themarginoferror/evidence/native_precision_and_coverage.png": {
-      "sha256": "18c03bea632ef3dac58400f56857106e2a102aefb00d249d831844bdcfa3894e",
-      "bytes": 125942
+      "sha256": "c4f583cc97aff9029a0c686f29f5cd33c96432f335d9d1b403f29599252ab2ac",
+      "bytes": 126329
     },
     "themarginoferror/evidence/native_precision_and_coverage.svg": {
-      "sha256": "700f7cb7415bb7f7deda17282280d353e438d9f6d49382afec286b05c27d8039",
+      "sha256": "63620adbfc341568459d7805b02639bffba0d5a294001462633038c8e8a9be1c",
       "bytes": 16348
     },
     "themarginoferror/evidence/platform_corpus_recency.png": {
@@ -18733,19 +18733,19 @@
       "bytes": 22351
     },
     "themarginoferror/evidence/retained_response_bodies.png": {
-      "sha256": "eea52a7b51208b45514ba2c51d992444a5029d474151305c9884eaf9e0ac7c98",
-      "bytes": 124027
+      "sha256": "0e233f856d274ebcf638cb268dfdea82107e6e86f8ea037b2fa00bfb39e3de7f",
+      "bytes": 124365
     },
     "themarginoferror/evidence/retained_response_bodies.svg": {
-      "sha256": "c7ed914468b4b8230122210184734d35b546ccbb6c684ac7b06174fd4a26aa6d",
+      "sha256": "5bd2fc95af9651bda7fc60ece90ffdd647f683125f983c1fb8d33398766160ea",
       "bytes": 13182
     },
     "themarginoferror/evidence/retained_snapshot_text_coverage.png": {
-      "sha256": "02c505253a120a542313f19c31497a3c5774fc296989987fee05a651260fe8d5",
-      "bytes": 207132
+      "sha256": "20454d878221f84a39dd6fd7be253ec49f5b445617d172eccb6bf6b20078de00",
+      "bytes": 207464
     },
     "themarginoferror/evidence/retained_snapshot_text_coverage.svg": {
-      "sha256": "cf9e707c38b6a03f0231438a5079bb7f125822402cb021017f37f2c48ac74d4a",
+      "sha256": "63dae35701c6f2a1a013d8f0173784d9d18d3a1a432e1217c085b70a2c897912",
       "bytes": 90504
     },
     "themarginoferror/evidence/session_calendar_comparison.png": {
@@ -18765,99 +18765,99 @@
       "bytes": 96875
     },
     "themarginoferror/evidence/state_source_status.png": {
-      "sha256": "12457f0b6f2e43c93c88707f11c8f01114b4fd5936b04a6edbaefcf9064de325",
-      "bytes": 98995
+      "sha256": "19714bc36386c8527fc194bdef4113dc351a851dfe91d87253f6c290713156ba",
+      "bytes": 99336
     },
     "themarginoferror/evidence/state_source_status.svg": {
-      "sha256": "fe8dc518a5fdf015ff0d1f7061c6477d1966c7386feb97375165acfea1ad6c85",
+      "sha256": "caad5b308f3afd798a478fa9fd9d796be4f213a15d008cf465c807b1bc04c732",
       "bytes": 11745
     },
     "themarginoferror/inputs/topic_shares.png": {
-      "sha256": "7867167f07bd96cf30baa45336a41891f1bb79d7e9be4139ef36538e0985b518",
-      "bytes": 242870
+      "sha256": "b71a77ddedd6b73c4da9747988179363cc1b48b8789fde885135172c9fab0631",
+      "bytes": 242827
     },
     "themarginoferror/inputs/topic_shares.svg": {
-      "sha256": "8db5ff073d95d1f41d3892a594628e899a8a751cd80a8012053d06e86f7b1675",
-      "bytes": 28102
+      "sha256": "584818c83353ba1e36a3a91c7f831bd3375eae73805435628473dd7589f8e9de",
+      "bytes": 28098
     },
     "themarginoferror/inputs/topic_transitions.png": {
-      "sha256": "378ea5c6f5bbc7c13a0f7a1038db69141fc7776d8ee9f377723813b1d771e444",
-      "bytes": 522460
+      "sha256": "a8ea36c1c8525611bbf4205137ed068e3002580f5d7193740582e031b7744c80",
+      "bytes": 522399
     },
     "themarginoferror/inputs/topic_transitions.svg": {
-      "sha256": "f0933f5f7ca9a27c65be39a64d717d53f696f53dfcf3770d0dce21c765651221",
+      "sha256": "762a622182ef4f5e43f3b1860343ed2ddb900f37b93b1fd22e9820b169afd80f",
       "bytes": 90640
     },
     "themarginoferror/majority/decision_comparison.png": {
-      "sha256": "931cff8362aa88d9e3ab146b1ca4415d190490636915869c7f29db3d4c599803",
-      "bytes": 142712
+      "sha256": "e02b9ed83ddec65e3483fb76ce3ac5627859316a94be0bbe8eb5fcc8d45bd7f3",
+      "bytes": 142676
     },
     "themarginoferror/majority/decision_comparison.svg": {
-      "sha256": "f2dc8450b86c2457a056352d6c92a128392ac2bd4a43e9fc5935c69f5a93a702",
-      "bytes": 17511
+      "sha256": "66b226f0cc0f5993c52f7079bfa639d15666f48589ba0c370b4e56a1cd45fa3e",
+      "bytes": 17515
     },
     "themarginoferror/majority/new_assignments.png": {
-      "sha256": "1dff85c712c6d976ad3e509203b9ffa6aeda3149d163044888bf2d41cd8f2ddb",
-      "bytes": 133152
+      "sha256": "f5da2bfcc781d022b9dff8bc77aca356467912e2604944c7b9f3a3059c576463",
+      "bytes": 133149
     },
     "themarginoferror/majority/new_assignments.svg": {
-      "sha256": "08465b733274bce6aacc4cb0402aacc3de2ec7b2475afc75c523c42cb4f346af",
+      "sha256": "b1ef058099a0724ff0b62f48a92c5158842d12909a972b75f7001b0a852434de",
       "bytes": 12862
     },
     "themarginoferror/majority/state_classification_coverage.png": {
-      "sha256": "5b811a1930872ea47067c6b72edda768b07c306ebd9d0f15cfcc2a75e8274a03",
-      "bytes": 231211
+      "sha256": "cdac5b0d8f3e9174cc4c6f70673e177f050d801723e424f23527ba1be999c80c",
+      "bytes": 230961
     },
     "themarginoferror/majority/state_classification_coverage.svg": {
-      "sha256": "e446e4f8cc91f077afbeb4371c4f255ec43f18ebd9f60760c3462a886e1df500",
+      "sha256": "6721d30e069412a559b05985d7cbfb34fb3444e032bf754d214dc6c4b9932782",
       "bytes": 87625
     },
     "themarginoferror/majority/topic_comparison.png": {
-      "sha256": "25a9f774141580055240804437d9870a34681dbdee869812130b36ca0bf8ce32",
-      "bytes": 257312
+      "sha256": "c371c551d5534f2a9c133a2630cef8916414ad599cf3d57a2235fcb758c9cf8f",
+      "bytes": 257286
     },
     "themarginoferror/majority/topic_comparison.svg": {
-      "sha256": "83ecf7f8fc92ba25e449cc9b907546ff736e8d868cf15a9901862433457ec7aa",
+      "sha256": "1beefdc0cc2f4f4151cd37d9ea52bcd0e71f37bca4ca9e5f6adf7489b7dfc2fd",
       "bytes": 30258
     },
     "themarginoferror/scores/decision_reasons.png": {
-      "sha256": "7c79ad7250c55555b9f4c83649c1ba0ef7c4012a9e3c4a9fb54b32d9eeb158be",
-      "bytes": 207231
+      "sha256": "133cc73fd6cd61337890bfbe96db29f378889ffb61fac0da73e783aecb3d81c5",
+      "bytes": 205743
     },
     "themarginoferror/scores/decision_reasons.svg": {
-      "sha256": "9e7f29b2027860eeff8f9bed69974f50bda8dcd3074c9185fd6d22d5a0fa959b",
-      "bytes": 22468
+      "sha256": "57d5c311a3cc5cc5ec692826ffa8cdedcea67672baedfdf74a879ac523af78bf",
+      "bytes": 22464
     },
     "themarginoferror/scores/output_scores.png": {
-      "sha256": "979527bbb416de8e75723f06e4447d4b69785dfbdb0214f58e7aa1351d59223e",
-      "bytes": 285010
+      "sha256": "da6ade101e0da6b6c21daa5a80c03eaea0016b923fc75e7532a2dc9409eb8e2f",
+      "bytes": 285038
     },
     "themarginoferror/scores/output_scores.svg": {
-      "sha256": "cf108a2e5a459f1a0b4a4c9e112d85abb276287fee02607cc4552794f9740657",
-      "bytes": 41036
+      "sha256": "132e7bf0a97140f481646d03a1d597d36878de9296cb799ebf890c05c0cacfae",
+      "bytes": 41034
     },
     "themarginoferror/topics/classification_coverage.png": {
-      "sha256": "b5ed515197e119f3f28219885f37a00f391495cdf1fc78be3471e7f428f9044b",
-      "bytes": 230695
+      "sha256": "7f9140cd2afee3233f13f9ecdddebc9de683800fd606a1109101919c46a961ac",
+      "bytes": 230451
     },
     "themarginoferror/topics/classification_coverage.svg": {
-      "sha256": "67db968cc8beef681ad6f8d91e9046ad9a5c1f165fa9ba0f410eb061b9fea848",
+      "sha256": "62cd05d70a3a09c3b118868b1b6edd3a15615e6a2ec031ba7aaf3f375841b1a7",
       "bytes": 66736
     },
     "themarginoferror/topics/state_topics.png": {
-      "sha256": "2dfb4703fc8e665485fa816ca2ccaadc1ceb3f8baec916c5801ba781fe57e45e",
-      "bytes": 448109
+      "sha256": "9982a2312244f97349e62969b9445345bf76acb1a6e2db48b63643515f65fb0a",
+      "bytes": 447771
     },
     "themarginoferror/topics/state_topics.svg": {
-      "sha256": "de01267aebcb786e58d8e7b7c61e459f28b39f6e559a535f68d0999ab1733730",
+      "sha256": "6ab15c87760aeb296122c97a79407d054f5f9fb66c36c7d89ed13b79042c9b8f",
       "bytes": 111452
     },
     "themarginoferror/topics/topic_counts.png": {
-      "sha256": "345a619beda9400fa93ab66b8f312a19ca2e4ddaaae21bfcd5582dcc7d483ff3",
-      "bytes": 299043
+      "sha256": "ffbaa4a777a457255a01e69e87fb3e26a138330d5d4ae9a5573f6c44cf186537",
+      "bytes": 299357
     },
     "themarginoferror/topics/topic_counts.svg": {
-      "sha256": "23f139de7326c8859f60856219a90ef14772ab9ea62a9a3fa1150e79d4274739",
+      "sha256": "9f93cc71697e107829bb6318f429167facb2ca86f4fb28b06e86f0dd3f30537f",
       "bytes": 33764
     },
     "chart-data/context/context_comparison.csv": {
@@ -18917,7 +18917,7 @@
       "bytes": 461
     },
     "chart-data/evidence/retained_text_coverage.csv": {
-      "sha256": "6353907c6f154e22361e026880d28820583242ec29dea8e75cad20abeaac145a",
+      "sha256": "ffe12bfcf451e7ddc809bd50acc3ec1d7eb5c97175a14ab2abbb99d605beb0e7",
       "bytes": 1356
     },
     "chart-data/evidence/session_calendar_comparison.csv": {
@@ -18929,28 +18929,28 @@
       "bytes": 16542
     },
     "chart-data/inputs/national_summary.csv": {
-      "sha256": "4d1ee3f78b599b45c001a8b2bc44fdbf26d12416f184ffa31cc94a49252cd986",
+      "sha256": "efe82c8766537a0e7b7eb08c2e96ee3c3be97b96b1ca4b4a6e8dba169de45fda",
       "bytes": 563
     },
     "chart-data/inputs/state_summary.csv": {
-      "sha256": "b5db805b677ee5aeaaabbda0ddcd37bcc67a0c65b237da84024f8b4ebfcbaf3f",
+      "sha256": "2765c57f77f22397e0b7e1ce5173f7e23ecf237f9caf5e801c7606136dba2fa1",
       "bytes": 3776
     },
     "chart-data/inputs/state_topic_shares.csv": {
-      "sha256": "fed9274702540d9d5367364b0bc0922eecce1062fe9d0ff695c5448fc0c8cb1d",
-      "bytes": 119359
+      "sha256": "30dab6840337b4a1f974eaf76bfa626c3c84d6829cec207b7a9b906d9a25a217",
+      "bytes": 119354
     },
     "chart-data/inputs/state_topic_transitions.csv": {
-      "sha256": "2baf6c315fc6de4ff2d646f6746112e8b61bb86480cf95a811b797b93f4ef4a4",
+      "sha256": "854b02aa995944343c8f1dd7e7030acc98014d11d62be287a0591c84a1a7d34a",
       "bytes": 2154566
     },
     "chart-data/inputs/topic_shares.csv": {
-      "sha256": "8cabf20d8536262295f54d07df0ff131ce9d2fdb104f4c6ec93f9eeafb0b7e8e",
-      "bytes": 3443
+      "sha256": "c8ab1946e3188117cee5ecdaafad8748b5d3a723ae896aecfa26db5d89af598c",
+      "bytes": 3435
     },
     "chart-data/inputs/topic_transitions.csv": {
-      "sha256": "9746e39ffd830e9b75a56fdaadba25f7a11a13a5f48028ae6860e04f71448a4a",
-      "bytes": 57184
+      "sha256": "a72083e5215e0e79ec9db2b5f7e971c0794bc0bd51360460ea2b451e2c5ac2bd",
+      "bytes": 57183
     },
     "chart-data/majority/new_assignment_origins.csv": {
       "sha256": "0cccb5c3915c92b1bb439c2d7dafd09d23ec3ae139f4d16f5433458ffd52ef9e",
@@ -18961,11 +18961,11 @@
       "bytes": 12927
     },
     "chart-data/majority/state_comparison.csv": {
-      "sha256": "6eb34a32b9fdd161787ad25aa0eb516936a491c722a5c66c5972d14544958876",
+      "sha256": "933efa371aec259ae82f2177416bbd2a86cf4700a0983f1ef8e3d308f4983608",
       "bytes": 1798
     },
     "chart-data/majority/status_comparison.csv": {
-      "sha256": "2aade2fffbd4f980dcc126ee18ce20ac4a8d30bfeff3f98d9335fc974bcebfc4",
+      "sha256": "c40638c67e081faec046ded9d8f66a65a1d46e1d21b6c3668e060cc84d4703e1",
       "bytes": 260
     },
     "chart-data/majority/topic_comparison.csv": {
@@ -18973,27 +18973,27 @@
       "bytes": 743
     },
     "chart-data/majority/transitions.csv": {
-      "sha256": "e1bae3b1d1f48c879f261705f407ae915d79db1b3d1cae140f3c03bba771480a",
+      "sha256": "72cc43ac4cd7d1400bd302eed5a891da23350840063065231a0a2daa3df16104",
       "bytes": 589
     },
     "chart-data/scores/decision_reasons.csv": {
-      "sha256": "8feba95cf1e2c7f9043bb7d02cfff9797b8ec710f26363a8d2ef15a5b20a64fb",
+      "sha256": "c678118fb95790d9fe8ee3f4e5e2c6ce1727aa776f2d28696da8eb2189e501a0",
       "bytes": 604
     },
     "chart-data/scores/output_scores.csv": {
-      "sha256": "91ecab22a462f3d35ba7e482e9b0905b046a5240323872379566d2d036579c0f",
-      "bytes": 2135
+      "sha256": "46b1528d2ac8e3b48e52ca789ec720a17f4dadc95de2383ad6c96c5edd7e1b29",
+      "bytes": 2136
     },
     "chart-data/scores/state_output_scores.csv": {
-      "sha256": "8abafbc73796a03a599eac70ccaede84c363717485da92bc9b3e3263daa2b75a",
-      "bytes": 105858
+      "sha256": "7d684f84a1b8cf6b47d253bd513afa0d7f2144cec7b6cfe3897b75d7297fc9a8",
+      "bytes": 105860
     },
     "chart-data/topics/retained_text_classification_coverage.csv": {
-      "sha256": "13c55fc8967a77f9bfac6327dea8050fdc494a8450ba866d879eebec6b70402b",
+      "sha256": "7f7e9d6bfe63b1d6d3bc7ba02b127dcf9d91a1cd83a6da31add1418b143562ec",
       "bytes": 1277
     },
     "chart-data/topics/retained_text_state_topics.csv": {
-      "sha256": "24dcfdb1c7def9f61184a9c7d6ea26857e4912e3695061e4c8a8d9da8e031e4b",
+      "sha256": "1d45084fc6560447f88cd7ab97947595319795c947e6d82607e89e481dc8f108",
       "bytes": 57118
     },
     "chart-data/topics/retained_text_topic_counts.csv": {
@@ -19001,40 +19001,40 @@
       "bytes": 1232
     },
     "current-chart-data.zip": {
-      "sha256": "8c0daf36ed901dc95c551d2376434f530204989e4348c87037400964846c2dc0",
-      "bytes": 465479
+      "sha256": "20ea2a3265268bbbae8714d2dcf9e6fb2c16dc6960d7c1ec5c854e28ef6d9c62",
+      "bytes": 465415
     },
     "index.html": {
-      "sha256": "1dad45d1e65fa6686c7918ad67fdbfae84eaefd1b0ec6c7551f3680aae211f71",
+      "sha256": "4c72c0e0d4c5f921d280bb1b63b9d97a705c1f7b32906c89e399f4f1b3a3cd04",
       "bytes": 27638
     }
   },
   "original_candidate_contexts": 157598,
   "original_assigned": 65272,
-  "original_abstained": 74506,
+  "original_abstained": 74509,
   "majority_candidate_assigned": 78481,
   "majority_additional_assignments": 13209,
-  "missing_retained_text": 17820,
-  "available_retained_text": 139778,
+  "missing_retained_text": 17817,
+  "available_retained_text": 139781,
   "source_manifests": {
     "evidence": {
-      "sha256": "9ea7d4a30f712461747c093eef0ba695a990b207b0b98ae8838850bed150498d",
-      "bytes": 17072268
+      "sha256": "54d341145440a6f8b9d10e7fbdd12e05b14cab6201bfea9b6966e4ae682d753d",
+      "bytes": 17088439
     },
     "topics": {
-      "sha256": "6b851e7d128960befc8af6e9664d1f220275ffc09908cf6128fc1dfcfbfdfb27",
+      "sha256": "f6a50ad4c0fe3b49c9c93902adc97945028ea6064950c261d9c98b94f7a3ca4f",
       "bytes": 20374
     },
     "majority": {
-      "sha256": "977d4e8446458627a14a779f2e3587f2b65a8616394f92f3462afe7ea8ee297a",
+      "sha256": "b8402ed812ef6ef2eb0c284135cc185a3950a38965da369c086cbbf4b64a81aa",
       "bytes": 42674
     },
     "scores": {
-      "sha256": "82223423ba0bf5e7d22c739819960b95558fa6e7f6970eabee422dc3116671f0",
+      "sha256": "13dc32292cc75953b3ec149d6801c343c71b132d4bd18eb13664da68acc74583",
       "bytes": 39715
     },
     "inputs": {
-      "sha256": "84af2d80f3456c2b05b0b1f9c542d5ed566c3ae376eb1159f9d98a1f6dbb61b3",
+      "sha256": "87e6d00c50ae7623b41f5b11c62a6a6b3e1f3febb36a77eb04e28e1f7d73de38",
       "bytes": 8181
     },
     "context": {
@@ -19043,7 +19043,7 @@
     }
   },
   "producer": {
-    "sha256": "6b6df976e24a52f2d8832e9cc27b07b5a2b35178dd3b341cb94b46dd81f12713",
+    "sha256": "3a20d9462f8597d8cc703ff0d155ac75b6dd9baf73fd8dbe4178eaeefcf68678",
     "bytes": 47803
   },
   "theme": {

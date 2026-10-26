@@ -21,7 +21,7 @@ individual legislators' agendas, not necessarily party positions. Topic shares
 do not measure policy agreement, ideology or legislative achievement.
 
 **Research is in progress.** The working snapshot contains 157,598 candidate
-contexts, with 17,820 still missing body text. Source completeness, filing-time
+contexts, with 17,817 still missing body text. Source completeness, filing-time
 party attribution and independent classifier validation remain unresolved.
 The research companion is local-only; nothing has been integrated into
 themarginoferror.com.
@@ -68,7 +68,7 @@ With the saved inspector bundle present, start it independently:
 
 ```bash
 .venv/bin/python -I -B scripts/serve_research.py \
-  --classifications outputs/classification-inspector-2023-2024-v4
+  --classifications outputs/classification-inspector-2023-2024-v5
 ```
 
 Open the printed loopback address. Other research bundles are not required.

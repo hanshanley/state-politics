@@ -217,16 +217,16 @@ z
    </g>
    <g id="patch_5">
     <path d="M 183.68 113.716451 
-L 369.336925 113.716451 
-L 369.336925 126.592592 
+L 369.360744 113.716451 
+L 369.360744 126.592592 
 L 183.68 126.592592 
 z
 " clip-path="url(#p3f334388b2)" style="fill: #3d6f8c"/>
    </g>
    <g id="patch_6">
     <path d="M 183.68 134.484421 
-L 325.161629 134.484421 
-L 325.161629 147.360562 
+L 325.13781 134.484421 
+L 325.13781 147.360562 
 L 183.68 147.360562 
 z
 " clip-path="url(#p3f334388b2)" style="fill: #3d6f8c"/>
@@ -299,10 +299,10 @@ L 779.64 303.764142
     <text style="font-size: 9px; font-family: 'DejaVu Serif', 'Bitstream Vera Serif', 'Computer Modern Roman', 'New Century Schoolbook', 'Century Schoolbook L', 'Utopia', 'ITC Bookman', 'Bookman', 'Nimbus Roman No9 L', 'Times New Roman', 'Times', 'Palatino', 'Charter', serif; text-anchor: start; fill: #1a1a1a" x="413.788228" y="101.724443" transform="rotate(-0 413.788228 101.724443)">28,353</text>
    </g>
    <g id="text_23">
-    <text style="font-size: 9px; font-family: 'DejaVu Serif', 'Bitstream Vera Serif', 'Computer Modern Roman', 'New Century Schoolbook', 'Century Schoolbook L', 'Utopia', 'ITC Bookman', 'Bookman', 'Nimbus Roman No9 L', 'Times New Roman', 'Times', 'Palatino', 'Charter', serif; text-anchor: start; fill: #1a1a1a" x="374.336925" y="122.492413" transform="rotate(-0 374.336925 122.492413)">23,384</text>
+    <text style="font-size: 9px; font-family: 'DejaVu Serif', 'Bitstream Vera Serif', 'Computer Modern Roman', 'New Century Schoolbook', 'Century Schoolbook L', 'Utopia', 'ITC Bookman', 'Bookman', 'Nimbus Roman No9 L', 'Times New Roman', 'Times', 'Palatino', 'Charter', serif; text-anchor: start; fill: #1a1a1a" x="374.360744" y="122.492413" transform="rotate(-0 374.360744 122.492413)">23,387</text>
    </g>
    <g id="text_24">
-    <text style="font-size: 9px; font-family: 'DejaVu Serif', 'Bitstream Vera Serif', 'Computer Modern Roman', 'New Century Schoolbook', 'Century Schoolbook L', 'Utopia', 'ITC Bookman', 'Bookman', 'Nimbus Roman No9 L', 'Times New Roman', 'Times', 'Palatino', 'Charter', serif; text-anchor: start; fill: #1a1a1a" x="330.161629" y="143.260382" transform="rotate(-0 330.161629 143.260382)">17,820</text>
+    <text style="font-size: 9px; font-family: 'DejaVu Serif', 'Bitstream Vera Serif', 'Computer Modern Roman', 'New Century Schoolbook', 'Century Schoolbook L', 'Utopia', 'ITC Bookman', 'Bookman', 'Nimbus Roman No9 L', 'Times New Roman', 'Times', 'Palatino', 'Charter', serif; text-anchor: start; fill: #1a1a1a" x="330.13781" y="143.260382" transform="rotate(-0 330.13781 143.260382)">17,817</text>
    </g>
    <g id="text_25">
     <text style="font-size: 9px; font-family: 'DejaVu Serif', 'Bitstream Vera Serif', 'Computer Modern Roman', 'New Century Schoolbook', 'Century Schoolbook L', 'Utopia', 'ITC Bookman', 'Bookman', 'Nimbus Roman No9 L', 'Times New Roman', 'Times', 'Palatino', 'Charter', serif; text-anchor: start; fill: #1a1a1a" x="304.37418" y="164.028352" transform="rotate(-0 304.37418 164.028352)">14,572</text>
@@ -333,7 +333,7 @@ L 779.64 303.764142
    <text style="font-size: 10.5px; font-family: 'DejaVu Serif', 'Bitstream Vera Serif', 'Computer Modern Roman', 'New Century Schoolbook', 'Century Schoolbook L', 'Utopia', 'ITC Bookman', 'Bookman', 'Nimbus Roman No9 L', 'Times New Roman', 'Times', 'Palatino', 'Charter', serif; text-anchor: start; fill: #6b6b6b" x="11.88" y="39.585415" transform="rotate(-0 11.88 39.585415)">Every original context is retained, including missing text and exclusions</text>
   </g>
   <g id="text_34">
-   <text style="font-style: italic; font-size: 8.5px; font-family: 'DejaVu Serif', 'Bitstream Vera Serif', 'Computer Modern Roman', 'New Century Schoolbook', 'Century Schoolbook L', 'Utopia', 'ITC Bookman', 'Bookman', 'Nimbus Roman No9 L', 'Times New Roman', 'Times', 'Palatino', 'Charter', serif; fill: #6b6b6b" transform="translate(11.88 359.321759)">Source: full-score diagnostics v4. Reasons are model/source dispositions, not human judgments about whether a bill has a substantive</text>
+   <text style="font-style: italic; font-size: 8.5px; font-family: 'DejaVu Serif', 'Bitstream Vera Serif', 'Computer Modern Roman', 'New Century Schoolbook', 'Century Schoolbook L', 'Utopia', 'ITC Bookman', 'Bookman', 'Nimbus Roman No9 L', 'Times New Roman', 'Times', 'Palatino', 'Charter', serif; fill: #6b6b6b" transform="translate(11.88 359.321759)">Source: full-score diagnostics v5. Reasons are model/source dispositions, not human judgments about whether a bill has a substantive</text>
    <text style="font-style: italic; font-size: 8.5px; font-family: 'DejaVu Serif', 'Bitstream Vera Serif', 'Computer Modern Roman', 'New Century Schoolbook', 'Century Schoolbook L', 'Utopia', 'ITC Bookman', 'Bookman', 'Nimbus Roman No9 L', 'Times New Roman', 'Times', 'Palatino', 'Charter', serif; fill: #6b6b6b" transform="translate(11.88 371.179923)">topic.</text>
   </g>
  </g>

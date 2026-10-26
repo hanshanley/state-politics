@@ -5,7 +5,58 @@ The thirteen historical root figures and their analytical conclusions remain
 inspect source/model evidence; they do not certify a classifier, complete
 coverage or party-policy findings.
 
-## Qualified source-only continuation: October 26, 2026
+## Current propagated evidence and graphs: v23
+
+Completed **v23 / independent token cache v20** retains **139,781 of 157,598
+contexts**, with **17,817 missing**. Unanimity gives 65,272 assignments /
+74,509 abstentions. The separate, unpromoted majority candidate gives 78,481
+assignments / 23,807 learned rejections / 37,490 uncertain / three excluded /
+17,817 unavailable. The three newly recovered contexts all abstain under
+unanimity and are learned rejections under majority; no label is forced.
+
+Exactly six fresh strings / 12,106 characters / 3,076 tokens / six windows
+reach the unchanged encoder. No old input is re-encoded and no token is
+discarded. All 179,667 prior predictions, 169,325 cached results, 157,595 other
+whole assignments, original fields/unknowns and 85 controls remain unchanged.
+Source34 preserves 354 other partitions, all 927 old NE archive views and all
+35 earlier complete source ZIPs. NE has 933 archive views and 1,344 gaps.
+
+Topic21/majority5/score5/paired19/inspector5 pass complete fifty-state token/
+logit/window/108-member-inference-ZIP replay and independent vote/22-score
+mean/source-envelope reconciliation. Chromium checks all six new complete
+texts, scores/windows and every original record in full query downloads:
+NE has 2,128 contexts / 1,248 pairs / 9,982,329 selected characters; LR282
+has one context / two pairs / 4,145 characters. The complete source ZIP
+contains all 71 packet members, not metadata alone.
+
+The actual root and fresh nested collections regenerate **27 charts /
+108 PNG/editable-SVG exports / 35 full CSVs**. All 3,176 marks reconcile;
+root/nested image and table bytes match. Chromium verifies all 27 images,
+180 links and seven actual methodology/evidence navigations at 1360/390/320px,
+without overflow, script errors or external HTTP. Actual majority/full-score
+PNGs were visually inspected for labels, notes and clipping. The prior
+collection and exact renderer remain intact; the authored output README is
+copied, not removed. The final suite passes **412 tests / three optional
+skips / no failures or errors**. No scientific or publication gate is promoted.
+
+Proofs use `data/ne-journal-boundary-` prefixes:
+`population-reconciliation-20261026-v1.json`,
+`derived-score-replay-20261026-v1.json`,
+`tracked-cycle-audit-20261026-v1.json`,
+`query-download-replay-20261026-v1.json` and
+`current-graphs-independent-20261026-v1.json`.
+Browser receipts are `data/ne-journal-boundary-browser-20261026-v1/receipt.json`
+and `data/current-graphs-browser-20261025-v11/receipt.json` / `v12`.
+The next source lead is a distinct, unadmitted constitutional-resolution
+cohort recorded in DATA-10; bill mentions remain excluded.
+The actual final tracked audit is **454/488**, with exactly the same 34 legacy
+failures and every report field identical to the saved source checkpoint.
+Its real nonzero exit is preserved:
+`data/ne-journal-boundary-delivery-full-audit-20261026-v1.json` and
+`data/ne-journal-boundary-delivery-full-audit-comparison-20261026-v1.json`.
+All 212 public-documentation checks and scoped Ruff pass.
+
+## Preserved source-only qualification: October 26, 2026
 
 The final three ordinary Nebraska resolution gaps now have an independently
 qualified, separately typed source packet: **LR5, LR282 and LR449; six complete
@@ -33,10 +84,10 @@ All 212 public-documentation checks and scoped Ruff pass.
 Packet manifest:
 `2c3b261f145325d5f38b185105efb1f21ff659e294dcd6ccd94fd0b85810b03b`.
 Proof: `data/ne-journal-boundary-independent-20261026-v1.json`.
-**This is source qualification only:** actual classifications and graphs remain
-the completed v22 delivery below until DATA-09 is independently verified.
+This source checkpoint did not itself change classifications or graphs.
+The separately verified DATA-09 propagation is now the v23 delivery above.
 
-## Current propagated evidence and graphs: October 25, 2026
+## Preserved v22 propagated evidence and graphs: October 25, 2026
 
 Completed **v22 / independent token cache v19** now retains 139,778 of the
 157,598 original contexts, with **17,820 still missing**. Unanimity gives

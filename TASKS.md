@@ -189,7 +189,7 @@ the detailed source and scientific gates remain in `docs/AUDIT_STATUS.md` and
   does not yet change the actual v22 classifications or current graphs.
   The tracked full audit is 454/488 with the same 34 legacy failures and all
   non-counter fields unchanged; all 212 public-documentation checks pass.
-- [ ] **DATA-09: Propagate the literal-boundary source packet.** Extend actual
+- [x] **DATA-09: Propagate the literal-boundary source packet.** Extend actual
   v22/token19 with only these three independently qualified contexts and six
   complete views; preserve all 28 older archive packets, existing context
   fields, inputs, predictions, controls and complete downloads. Independently
@@ -197,6 +197,30 @@ the detailed source and scientific gates remain in `docs/AUDIT_STATUS.md` and
   reconciliation, then refresh the actual root/nested Substack and website-
   background graphs, inspector and complete query/source downloads. Preserve
   old snapshots, abstentions, unknowns and scientific/publication gates.
+  Actual v23/token20 now processes exactly six fresh strings / 3,076 tokens /
+  six windows, zero old encoder repeats or discarded tokens. All three new
+  contexts abstain under unanimity and are learned rejections under majority.
+  Totals are 65,272 assigned / 74,509 abstained / 17,817 missing; unpromoted
+  majority assigns 78,481. All 179,667 old predictions, 169,325 cached results,
+  157,595 other whole rows, 85 controls, 354 other partitions, 927 prior NE
+  views and 35 older complete source ZIPs remain unchanged. Actual root/nested
+  27-chart / 108-export / 35-CSV collections reconcile all 3,176 marks and
+  have identical image/table bytes. Chromium verifies all new bodies/scores/
+  windows, complete NE/LR282 queries, the whole 71-member source ZIP, all 27
+  gallery images / 180 links / seven real navigations at 1360/390/320px.
+  Final regressions: 412 passes / three optional skips. The tracked full audit
+  is 454/488, with all report fields and the same 34 legacy failures identical
+  to the saved source checkpoint; all 212 public-documentation checks pass.
+- [ ] **DATA-10: Investigate complete constitutional-resolution journal bodies.**
+  After DATA-09 graph delivery, assess a genuinely different retained-source
+  cohort: the remaining Nebraska queue has 1,314 LB contexts and 30 LR-CA
+  contexts. Both saved readers contain 20 same-date own-CA-header candidates,
+  including literal constitutional resolving clauses and ballot text; this
+  is a lead, not 20 qualified recoveries. Require full proposal/ballot endings,
+  exact CA identity/session/original date, literal complete-source boundaries
+  and whole-reader agreement in a separate profile/schema/namespace. Preserve
+  ordinary-resolution defaults, every negative and all original fields. Never
+  substitute journal bill mentions or amendment fragments for complete bodies.
 - [ ] **VALIDATE-01: Independently validate classifications.** Preserve original
   unanimity and unpromoted majority separately. Complete actual independent human
   review and resolve taxonomy disputes before accuracy or party-policy claims.

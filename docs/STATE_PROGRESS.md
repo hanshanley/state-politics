@@ -27,7 +27,38 @@ not that the state has no data. Platform recovery is separate from the
 legislative status in this table; no state's operative-platform coverage is
 certified complete.
 
-## Qualified source continuation: October 26, 2026
+## Current dispatch snapshot: v23
+
+Future extensions start from completed **v23 / token cache v20**, not the
+historical v22/v19 instructions below. The 157,598 original contexts include
+139,781 with text / 17,817 missing. Unanimity assigns 65,272 and abstains on
+74,509; the separate, unpromoted majority assigns 78,481, rejects 23,807,
+retains 37,490 uncertain / three excluded / 17,817 unavailable.
+
+The literal-boundary additions are exactly three contexts / six full views /
+12,106 characters. Actual encoder work is six new strings / 3,076 tokens /
+six windows, zero repeats or discarded tokens. All three contexts remain
+unanimity abstentions and majority learned rejections. All 179,667 earlier
+predictions, 169,325 cache rows, 157,595 other whole assignment records,
+85 controls, 354 other source partitions, 927 prior NE views and 35 older
+complete source ZIPs remain unchanged. NE has 933 archive views / 1,344 gaps.
+
+Source34/topic21/majority5/score5/paired19/inspector5 pass independent complete
+source/model/token/window/vote/22-score/download checks. The actual current
+27-chart / 108-export / 35-CSV root and fresh nested collections reconcile
+all 3,176 marks, have identical image/table payloads and pass desktop/390px/
+320px Chromium: all 27 images, 180 links and seven real navigations.
+All six new bodies and full NE/LR282 query records plus the entire 71-member
+source ZIP pass actual browser/download replay. Final tests: 412 pass /
+three optional skips. Current proof names use `data/ne-journal-boundary-`.
+
+Next actionable source lead is DATA-10: a separate whole constitutional-
+resolution profile, not a reopened native acquisition or journal bill fragment.
+The remaining NE gaps split into 1,314 LB and 30 LR-CA contexts. Both retained
+readers have 20 same-date own-CA-header candidates, but no new CA body is
+qualified and no model/publication approval follows from that diagnostic.
+
+## Preserved source-only qualification: October 26, 2026
 
 DATA-08 qualifies the final three ordinary-resolution gaps: LR5, LR282 and
 LR449, six full views / 12,106 characters. The separate literal-boundary
@@ -41,18 +72,18 @@ profile; journal bill mentions are not complete bills.
 Source packet: `data/processed/ne-journal-boundary-qualified-20261026-v1/`,
 manifest `2c3b261f145325d5f38b185105efb1f21ff659e294dcd6ccd94fd0b85810b03b`.
 Proof: `data/ne-journal-boundary-independent-20261026-v1.json`; 412 integration
-tests pass / three optional skips. **No new inference or graph refresh is
-claimed by this source checkpoint.** Actual current delivery remains v22 below.
-DATA-09 starts from v22/token19, preserving all 28 earlier archive packets.
+tests pass / three optional skips. No new inference or graph refresh occurred
+at this source checkpoint. DATA-09 subsequently extends v22/token19 while
+preserving all 28 earlier archive packets; actual current delivery is v23 above.
 
-## Current dispatch snapshot: October 25, 2026
+## Preserved v22 dispatch snapshot: October 25, 2026
 
 The completed canonical inference is now **v22 / token cache v19**, with
 157,598 original contexts: **139,778 have retained text, 65,272 receive an
 original-rule unanimity topic, 74,506 abstain and 17,820 lack text**.
 The separate, unpromoted majority candidate assigns **78,481**, retaining all
-old assignments. Future extensions start here, not from historical v21/v18
-instructions below. All prior snapshots and frozen human/model controls remain
+old assignments. This is preserved history; future extensions start from
+v23/token20 above. All prior snapshots and frozen human/model controls remain
 unchanged.
 
 The current collection actually refreshes all **27 charts / 108 Substack and

@@ -11,5 +11,5 @@ source_alternative_disagreement,classified,2479
 source_alternative_disagreement,model_rejected,11
 source_alternative_disagreement,uncertain,3526
 source_test_record,excluded,3
-supervised_rejection,model_rejected,23384
-unavailable,unavailable,17820
+supervised_rejection,model_rejected,23387
+unavailable,unavailable,17817
