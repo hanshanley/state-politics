@@ -474,6 +474,21 @@ the detailed source and scientific gates remain in `docs/AUDIT_STATUS.md` and
 - [ ] **WEB-01: Prepare, but do not publish, website integration.** Maintain the
   local research companion and both export backgrounds. Integrate into
   themarginoferror.com only after the report and publication gates are approved.
+- [x] **WEB-03: Bind the integration handoff to current saved research.**
+  Refresh the existing website design with the actual graph/inspector pins,
+  complete-download contract, measured artifact budget and local-versus-public
+  link boundaries. Distinguish preserved platform-only build instructions from
+  the existing 2023-2024 graph/inspection workspace. Require explicit report,
+  artifact, rights and claim-specific scientific approvals; do not copy data,
+  regenerate snapshots or change the production website.
+  Verified current graph/inspector manifests and every declared chart payload:
+  27 charts / 108 exports / 35 complete CSVs, 18,089,904 payload bytes.
+  All seven inspector approval flags remain false. Local documentation links/
+  anchors and 220 public-documentation checks pass. The handoff distinguishes
+  local/private research links from future canonical publication routes and
+  preserves complete-query downloads without a metadata-only substitute.
+  No new data, server, staged production assets or deployment was created;
+  WEB-01 and the report/scientific/rights gates remain open.
 - [x] **WEB-02: Make fresh local graph-gallery replays portable.** Correct
   methodology/original-evidence links when the documented replay is built in
   a nested output directory. Verify root and nested paths, complete downloads

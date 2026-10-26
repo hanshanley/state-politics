@@ -2,7 +2,8 @@
 
 ## Boundary and information architecture
 
-The companion is built **only inside the ignored `state-politics/data/` directory**,
+The platform-only companion described below is built **only inside the ignored
+`state-politics/data/` directory**,
 normally `data/preview/` or a separately versioned recovery preview. It has no publication
 route, card, navigation entry, sitemap/RSS entry or deployment staging. A future report and
 separate publication approval are required before any integration into themarginoferror.com.
@@ -16,6 +17,67 @@ links to methodology and the separately saved original evidence galleries.
 Those local source archives remain prerequisites, not files automatically
 copied into a future publication. Root and nested gallery navigation has been
 verified independently; no publication route or approval gate is changed.
+
+## Current saved 2023-2024 research handoff
+
+Use the existing artifacts for design and inspection. Bulk acquisition,
+inference and full-snapshot generation remain paused; the preserved platform
+build commands below are not instructions to recreate the current workspace.
+
+| Saved surface | Current contract |
+|---|---|
+| `outputs/index.html` | Local 27-chart gallery; 108 PNG/editable-SVG exports and 35 complete chart CSVs. See the [current collection](../outputs/README.md). |
+| `outputs/current-graphs-manifest.json` | Pins the six saved table families, every full chart table and the actual exported bytes. Manifest SHA-256: `b89ad3fa5e3bad582f85899e88b6e8886fed2b6f35171240e942c5b619cddbaf`. |
+| `outputs/classification-inspector-2023-2024-v8/` | Private original/majority inspector: 157,598 original contexts and 179,849 complete source alternatives. Manifest SHA-256: `1bc6cf4832681cc588303b1af61186bad2d7fa788fb38cba311e88ee7254d339`. The large bundle is local/Git-ignored, not supplied by cloning the code. |
+| `outputs/substack/` and `outputs/themarginoferror/` | Matching data/geometry, with warm cream `#F7F5F0` and page grey `#F5F5F5` respectively. These are verified export backgrounds, not approval to copy assets into production. |
+
+The manifest-declared chart payload is **18,089,904 bytes**, before the
+manifest itself, a report or separately approved research archives. It is not
+the full research dataset. A future release should stage an explicit approved
+artifact allowlist, not recursively copy `data/`, `outputs/`, or the retained
+preview/model versions.
+
+Open the existing chart gallery directly. With the saved inspector bundle
+present, this command serves it locally without generating another snapshot:
+
+```bash
+.venv/bin/python -I -B scripts/serve_research.py \
+  --classifications outputs/classification-inspector-2023-2024-v8 \
+  --port 8765
+```
+
+Do not expose predictions to model-blind annotators before their review.
+Use the separate review-only workspace for annotation. The current inspector's
+scientific, model-input, training, analytical, filing-time, publication and
+party-attribution approval flags remain false. Serving an existing bundle or
+verifying its hashes does not change those statuses.
+
+The research gallery's relative methodology and evidence links have been
+verified locally, including nested replays. **Do not publish its HTML
+unchanged:** some destinations are ignored local bundles or repository-relative
+documentation. A future approved companion must resolve those destinations
+under its actual canonical base path and include only explicitly approved
+assets. Missing private bundles must not become silent 404s or links implying
+that cloning GitHub provides the complete research data.
+
+Keep chart-table downloads distinct from complete classification-query
+downloads. The latter must retain every matching original context, full input
+and prediction, not a metadata-only or visible-page subset. Before exposing
+them publicly, resolve redistribution rights for that exact release scope.
+If a required complete download cannot be released, hold that surface behind
+the release gate; do not relabel reduced metadata as complete evidence.
+
+An author-supplied report and explicit artifact/publication approval remain
+required. Independent classification evaluation, operative-platform/source
+versions, filing-time party attribution and rights remain unresolved for their
+respective analytical claims. Do not toggle research approval flags or infer
+those approvals as a staging convenience. The [integration handoff](#integration-handoff-not-deployment)
+below remains a design only: no production route, report card, navigation,
+sitemap, RSS entry, production asset copy or deployment is created here.
+Current replay/version details remain in the
+[reproducibility guide](REPRODUCIBILITY.md#current-successor-literal-position-hyphen-evidence-v26).
+
+## Preserved platform-only companion
 
 The initial implementation leads with source coverage, not an unvalidated partisan ranking:
 
