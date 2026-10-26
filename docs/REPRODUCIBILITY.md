@@ -88,7 +88,16 @@ field byte-identical to the saved source checkpoint; all **218 public-document
 checks** and scoped Ruff/format/diff checks pass. Actual report/comparison:
 `data/ne-enacted-hyphen-delivery-full-audit-20261026-v1.json` and
 `data/ne-enacted-hyphen-delivery-full-audit-comparison-20261026-v1.json`.
-Save/readback are separately recorded. No independent-human, filing-time,
+Actual graph checkpoint **`7f67656`** is saved/pushed Hans-only. Independent
+readback verifies all **427 tracked remote blobs**, Git and working bytes,
+plus all 85 controls, with a clean worktree. Receipt:
+`data/ne-enacted-hyphen-graph-save-checkpoint-20261026-v1.json`,
+SHA-256 `a13cb397df39c2bf9dcca5f3b1f570ad0892a716d4d6310085800a9e5897e22a`.
+Before-save proof:
+`data/ne-enacted-hyphen-delivery-verification-before-save-20261026-v1.json`.
+It binds all twenty primary proofs and removes only four inspected completed
+fixture/Chrome subtrees. Every failed attempt and original remains retained.
+No independent-human, filing-time,
 party, rights or publication approval is promoted; large archives remain local
 and ignored.
 

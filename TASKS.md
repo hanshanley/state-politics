@@ -392,7 +392,7 @@ the detailed source and scientific gates remain in `docs/AUDIT_STATUS.md` and
   `data/ne-enacted-hyphen-source-final-delivery-20261026-v1.json`.
   Current v25 counts/caches/graphs remain unchanged; DATA-17 must separately
   execute and verify the successor. Large source archives remain local/ignored.
-- [ ] **DATA-17: Propagate only independently qualified hyphen evidence.**
+- [x] **DATA-17: Propagate only independently qualified hyphen evidence.**
   After DATA-16 is saved and verified, extend actual v25/token22, retaining
   every old input/prediction/cache and all 31 previous archives. Encode only
   genuinely new raw strings, independently verify full source/model/token/
@@ -421,7 +421,12 @@ the detailed source and scientific gates remain in `docs/AUDIT_STATUS.md` and
   or changing any payload. Actual PNGs inspected; the final tracked audit is
   460/494, with the same 34 legacy failures and every report field byte-identical
   to the source checkpoint. All 218 docs checks and scoped Ruff/format/diff pass.
-  Save/readback must pass before this completion checkbox is closed.
+  Saved/pushed Hans-only graph checkpoint `7f67656`; all 427 tracked remote
+  blobs and all 85 post-save controls verify, with a clean worktree.
+  Receipt: `data/ne-enacted-hyphen-graph-save-checkpoint-20261026-v1.json`,
+  SHA-256 `a13cb397df39c2bf9dcca5f3b1f570ad0892a716d4d6310085800a9e5897e22a`.
+  Large raw/model/source archives remain local/ignored, not backed up by that
+  push. DATA-01 and the independent-human/report/publication gates stay open.
 - [ ] **VALIDATE-01: Independently validate classifications.** Preserve original
   unanimity and unpromoted majority separately. Complete actual independent human
   review and resolve taxonomy disputes before accuracy or party-policy claims.

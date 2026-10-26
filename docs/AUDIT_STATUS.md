@@ -55,7 +55,12 @@ audit is **460/494**, with the same 34 legacy failures and a byte-identical
 report to the saved source checkpoint. All **218 public-documentation checks**
 and scoped Ruff/format/diff checks pass. Report:
 `data/ne-enacted-hyphen-delivery-full-audit-20261026-v1.json`.
-Saved-checkpoint verification is recorded separately. All human,
+Actual graph checkpoint **`7f67656`** is saved/pushed as Hans Hanley without
+Copilot attribution. All **427 tracked remote blobs** match Git and working
+bytes; all 85 post-save controls pass with a clean worktree. Receipt:
+`data/ne-enacted-hyphen-graph-save-checkpoint-20261026-v1.json`,
+SHA-256 `a13cb397df39c2bf9dcca5f3b1f570ad0892a716d4d6310085800a9e5897e22a`.
+DATA-17 is complete. All human,
 filing-time, party, rights, report and publication gates remain unpromoted.
 Large source/model/research archives remain local/ignored; nothing is deployed.
 

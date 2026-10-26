@@ -65,7 +65,11 @@ The complete previous collection/exact renderer/copied README remain under
 `outputs/preserved-current-source36-20261026-v1/`. The final tracked audit
 is 460/494: the same 34 legacy failures and a byte-identical report to the
 source checkpoint. All 218 public-doc checks and scoped Ruff/format/diff pass.
-Save/readback must verify before DATA-17 is closed. Source, independent-human, platform,
+Actual graph checkpoint **`7f67656`** is saved/pushed Hans-only; all 427 tracked
+remote blobs and 85 post-save controls match, with a clean worktree. Receipt:
+`data/ne-enacted-hyphen-graph-save-checkpoint-20261026-v1.json`,
+SHA-256 `a13cb397df39c2bf9dcca5f3b1f570ad0892a716d4d6310085800a9e5897e22a`.
+DATA-17 is complete. Source, independent-human, platform,
 party, rights, report and publication gates remain open. Nothing is deployed.
 
 ## Preserved v25 dispatch snapshot
