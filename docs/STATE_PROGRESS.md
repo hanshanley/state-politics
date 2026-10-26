@@ -27,10 +27,51 @@ not that the state has no data. Platform recovery is separate from the
 legislative status in this table; no state's operative-platform coverage is
 certified complete.
 
-## Current dispatch snapshot: v25
+## Current dispatch snapshot: v26
 
-Future extensions start from **v25 / token cache v22**, not the preserved
-checkpoints below. All 157,598 original contexts remain: **139,862 with text /
+Future extensions start from **v26 / token cache v23**. All 157,598 original
+contexts remain: **139,869 with text / 17,729 missing**. Unanimity assigns
+65,306 and abstains on 74,563. Unpromoted majority assigns 78,522, rejects
+23,816 and retains 37,528 uncertain / three excluded / 17,729 unavailable;
+its 13,216 additional assignments do not establish human accuracy.
+
+The seven independently qualified exact-position contexts add 14 original
+raw strings / 210,419 characters / 53,596 tokens / 67 windows, with zero old
+repeats or discarded tokens. New unanimity: one assigned / six abstained;
+new majority: four assigned / three uncertain. Neither reader string is
+normalized. Enacted versions/approval dates remain separate from original
+introduction dates. All 179,835 old predictions, 169,493 cached results,
+157,591 other whole assignment rows, 85 controls, 354 other partitions,
+1,095 prior NE views and 38 old complete research ZIPs remain unchanged.
+NE now has 1,109 archive views / 1,256 gaps.
+
+Source37/topic24/majority8/score8/paired22/inspector8 pass full source/fifty-state
+token/logit/window/108-member inference ZIP/vote/22-score/download replay.
+Actual root and nested 27-chart / 108-export / 35-complete-CSV collections
+reconcile all 3,176 marks and identical image/table bytes. Chromium verifies
+all 14 full bodies/scores/long windows, complete NE/LB989 queries and all
+50 source ZIP members. Both galleries pass 27 images / 180 links / seven
+actual destinations at 1360/390/320px, with no overflow/errors/external HTTP.
+Actual PNG inspection and 477 integration passes / three optional skips
+are complete. Disk-pressure failures/files remain preserved; verified
+independent copy-on-write copies recover duplicate storage without removing
+originals or changing any payload. Full queries pass after storage recovery.
+
+Current root manifest:
+`b89ad3fa5e3bad582f85899e88b6e8886fed2b6f35171240e942c5b619cddbaf`.
+Proofs use `data/ne-enacted-hyphen-`; successful inspector browser v4 and
+generic gallery v17/v18 receipts retain actual downloads/screenshots.
+The complete previous collection/exact renderer/copied README remain under
+`outputs/preserved-current-source36-20261026-v1/`. The final tracked audit
+is 460/494: the same 34 legacy failures and a byte-identical report to the
+source checkpoint. All 218 public-doc checks and scoped Ruff/format/diff pass.
+Save/readback must verify before DATA-17 is closed. Source, independent-human, platform,
+party, rights, report and publication gates remain open. Nothing is deployed.
+
+## Preserved v25 dispatch snapshot
+
+This checkpoint completed **v25 / token cache v22**. All 157,598 original
+contexts remain: **139,862 with text /
 17,736 missing**. Unanimity assigns 65,305 and abstains on 74,557. Unpromoted
 majority assigns 78,518, rejects 23,816, retains 37,525 uncertain / three
 excluded / 17,736 unavailable. Its 13,213 additional assignments are not
@@ -123,8 +164,7 @@ SHA-256 `6106e892aec04edcea44cef7484035fd001d47903ff31abfa3fe28c9be37ffb0`.
 
 ## Preserved v24 dispatch snapshot
 
-Future extensions start from completed **v24 / token cache v21**, not the
-historical checkpoints below. There are 157,598 original contexts:
+This checkpoint completed **v24 / token cache v21**. There are 157,598 original contexts:
 139,811 with text / 17,787 missing. Unanimity assigns 65,288 and abstains on
 74,523. Unpromoted majority assigns 78,499, rejects 23,810, keeps 37,499
 uncertain / three excluded / 17,787 unavailable. Independent human accuracy

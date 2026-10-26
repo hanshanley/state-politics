@@ -1,6 +1,6 @@
 status,label,baseline_contexts,candidate_contexts
-classified,Topic assigned,65305,78518
+classified,Topic assigned,65306,78522
 model_rejected,Learned model rejection,23396,23816
-uncertain,No accepted majority,51158,37525
+uncertain,No accepted majority,51164,37528
 excluded,Source exclusions,3,3
-unavailable,No retained text,17736,17736
+unavailable,No retained text,17729,17729

@@ -16,9 +16,86 @@ remain unchanged. Broad rebuild commands below are not a request to complete
 other years; target-cycle selection and its inclusion/exclusion provenance must
 be bound explicitly before regenerated outputs can support the narrowed study.
 
-## Qualified next source: literal source-proven hyphen positions
+## Current successor: literal-position hyphen evidence, v26
 
-This source-only packet does **not** update the actual v25 baseline below.
+**Future extensions start from completed v26 / independent token cache v23.**
+All 157,598 contexts remain: **139,869 with text / 17,729 missing** (1,256 NE).
+Unanimity gives 65,306 assigned / 74,563 abstained. Separate, unpromoted
+majority gives 78,522 assigned / 23,816 rejected / 37,528 uncertain /
+three excluded / 17,729 unavailable. Its 13,216 additional assignments and
+uncalibrated scores do not certify independent accuracy.
+
+Exactly 14 new raw strings / 210,419 characters / 53,596 tokens / 67 windows
+reach the unchanged encoder, with zero old repeats or discarded tokens.
+All 179,835 old predictions, 169,493 old cache rows, 157,591 other whole
+assignments and 85 controls remain unchanged. New unanimity: one assigned /
+six abstained; new majority: four assigned / three uncertain. Only the nine
+independently proved PDF positions can differ between readers; stored text
+is never normalized or relabelled as introduced. Original dates stay intact.
+
+Preview42 manifest:
+`fd420bcb5e3c446b6c5687902773fc55958cf0857a3f111da6b44e134845e2ac`.
+Job26 plan:
+`b5d9b3a0df60c48dc06a1edaf2c32d540507bd00e10e01d7fe99fad242c2f840`.
+Prediction cache26: 754,925,568 bytes / 169,507 rows, SHA-256
+`e166ebdc053272586f5130d4530dad5bcb7745fd70e9d093c86bfe7c8a742dce`.
+Independent token23: 40,394,752 bytes / 169,507 strings, SHA-256
+`1f69ba2a796af9e7795c2bf3f427b80e8e73dc64e5f7f1aa9e313f2985b766bb`.
+Parents v25/token22 remain byte-identical. Full replay performs no encoder work:
+
+```bash
+HF_HUB_OFFLINE=1 TRANSFORMERS_OFFLINE=1 \
+  .venv/bin/python -I -B scripts/audit_cycle_topics.py \
+  --job data/processed/cycle-topic-inference-retained-text-20261026-v26 \
+  --gallery outputs/topic-inference-retained-text-2023-2024-v24 \
+  --verified-token-cache data/cycle-topic-independent-token-verification-cache-20261026-v23.sqlite \
+  --verified-token-cache-sha256 1f69ba2a796af9e7795c2bf3f427b80e8e73dc64e5f7f1aa9e313f2985b766bb \
+  --out data/ne-enacted-hyphen-tracked-cycle-audit-REPLAY.json
+```
+
+Current manifests: source37
+`13a97537c009a190b79772ca7a229ed86ed634b444ca88e08d70b2eafa17e20e`;
+topic24 `3ae4eb659a28205c34121063280c216185376d1d0726849f9aa4c6af6c04992b`;
+majority8 `61fd909f4892b8d7a1199d433293e938bb14601fb2a95c20bfdd7243b415231b`;
+score8 `2f6b9650bbe8ea546186cf44de34443b781d2ec04d847e6204a18f542cdafcbb`;
+paired22 `59255a7a52652bf45d894e4d87e9734c931dbd811df0fd02bb34dcf782945fca`;
+inspector8 `1bc6cf4832681cc588303b1af61186bad2d7fa788fb38cba311e88ee7254d339`.
+Current root manifest:
+`b89ad3fa5e3bad582f85899e88b6e8886fed2b6f35171240e942c5b619cddbaf`.
+The prior collection/exact producer/copied README remain in
+`outputs/preserved-current-source36-20261026-v1/`.
+
+All 27 actual charts / 108 exports / 35 full CSVs are regenerated and
+independently reconcile 3,176 marks and root/nested image/table bytes.
+Actual Chromium verifies all 14 complete texts/scores/long windows,
+the complete NE query (2,128 contexts / 1,424 pairs / 10,787,454 characters),
+LB989 query (one context / two pairs / 60,630 characters) and all 50 source
+ZIP members. The graph source ZIP is 167,567,934 bytes, SHA-256
+`b1d8f0d0908622e371c694b8db79acf1b91b7018f13c2befd0e4a511d488e232`;
+its payloads equal the source-checkpoint ZIP despite different compression.
+All 38 older complete research ZIPs remain byte-identical. Both galleries
+pass 27 images / 180 links / seven destinations at 1360/390/320px.
+Actual PNGs were inspected; 477 integration tests pass with three optional skips.
+
+Proof names use `data/ne-enacted-hyphen-`; the successful inspector browser
+receipt is `data/ne-enacted-hyphen-browser-20261026-v4/receipt.json`, with
+generic gallery v17/v18 receipts. Disk-pressure failures and every first-attempt
+file remain preserved. Verified independent APFS copy-on-write copies recover
+duplicate storage, without hardlinks or changed source/inspector bytes.
+Complete downloads then pass with unchanged application code/data. The final
+tracked audit is **460/494**, with the same 34 legacy failures and every report
+field byte-identical to the saved source checkpoint; all **218 public-document
+checks** and scoped Ruff/format/diff checks pass. Actual report/comparison:
+`data/ne-enacted-hyphen-delivery-full-audit-20261026-v1.json` and
+`data/ne-enacted-hyphen-delivery-full-audit-comparison-20261026-v1.json`.
+Save/readback are separately recorded. No independent-human, filing-time,
+party, rights or publication approval is promoted; large archives remain local
+and ignored.
+
+## Preserved source qualification: literal source-proven hyphen positions
+
+This source-only checkpoint did **not** update the actual v25 baseline below;
+the separately verified v26 propagation is now described above.
 It qualifies seven original contexts / 14 complete raw views / 210,419
 characters, accepting only the nine independently witnessed PDF byte/font/
 glyph positions. All other character/identity/body/folio/date requirements
@@ -62,18 +139,18 @@ integration skips; full tracked audit 460/494, the same 34 legacy failures
 and every non-counter field unchanged from 458/492. Only two added passing
 code-guide checks increase the counters. No HTTP, encoder execution, source
 version reinterpretation or human/filing-time/party/rights/publication
-approval follows. DATA-17 must separately freeze and verify a v25/token22
-successor before actual graph updates; large raw/source/model archives remain
-local and ignored.
+approval follows from qualification alone. DATA-17 separately executes and
+verifies the v26/token23 successor above; large raw/source/model archives
+remain local and ignored.
 The source checkpoint is saved/pushed Hans-only **`bbb01b9`**, with all 427
 tracked remote blobs and all 85 post-save controls verified; worktree clean.
 Final source receipt:
 `data/ne-enacted-hyphen-source-final-delivery-20261026-v1.json`,
 SHA-256 `6106e892aec04edcea44cef7484035fd001d47903ff31abfa3fe28c9be37ffb0`.
 
-## Current successor: explicitly versioned enacted-law evidence
+## Preserved v25 successor: explicitly versioned enacted-law evidence
 
-**Future extensions start from completed v25 / independent token cache v22.**
+**This checkpoint completed v25 / independent token cache v22.**
 All 157,598 original contexts remain: **139,862 with text / 17,736 missing**
 (1,263 NE). Unanimity gives 65,305 assigned / 74,557 abstained. Separate,
 unpromoted majority gives 78,518 assigned / 23,816 rejected / 37,525 uncertain /
@@ -881,9 +958,9 @@ tables, not metadata or a visible-page subset. The original full-policy-text
 research ZIPs remain in the separately linked local source galleries and are
 not replaced by the small chart-table download.
 
-The renderer externally pins the manifests for evidence v36, original-rule
-retained-text topics v23, majority v7, full-score diagnostics v7, paired-input
-comparison v21 and the unchanged context pilot v1. It validates each entire input table before
+The renderer externally pins the manifests for evidence v37, original-rule
+retained-text topics v24, majority v8, full-score diagnostics v8, paired-input
+comparison v22 and the unchanged context pilot v1. It validates each entire input table before
 rendering and rechecks inputs afterward. The output manifest records all
 original bindings, exported hashes, actual bar/heatmap values, axes geometry
 and label extents. It refuses an existing collection rather than overwriting
@@ -912,25 +989,25 @@ Original unanimity and unpromoted majority remain distinctly labelled.
 
 The inspector exposes individual source-backed model decisions without
 promoting the majority rule or altering any prediction. Build a new bundle
-from the externally pinned current majority gallery and completed v25 job:
+from the externally pinned current majority gallery and completed v26 job:
 
 ```bash
 HF_HUB_OFFLINE=1 TRANSFORMERS_OFFLINE=1 \
   .venv/bin/python -I -B scripts/build_classification_inspector.py \
-  --job data/processed/cycle-topic-inference-retained-text-20261026-v25 \
-  --majority-gallery outputs/topic-majority-2023-2024-v7 \
-  --majority-sha256 4790c23da21afd83f97c95fd69ceb111dbe6b84f53468da42620c106b65dfccb \
+  --job data/processed/cycle-topic-inference-retained-text-20261026-v26 \
+  --majority-gallery outputs/topic-majority-2023-2024-v8 \
+  --majority-sha256 61fd909f4892b8d7a1199d433293e938bb14601fb2a95c20bfdd7243b415231b \
   --out-dir outputs/classification-inspector-2023-2024-REPLAY
 ```
 
-The current actual bundle is `outputs/classification-inspector-2023-2024-v7/`;
+The current actual bundle is `outputs/classification-inspector-2023-2024-v8/`;
 all earlier bundles remain preserved unchanged.
 Serve it independently through the loopback workspace; no evidence, session
 or review bundle is required:
 
 ```bash
 .venv/bin/python -I -B scripts/serve_research.py \
-  --classifications outputs/classification-inspector-2023-2024-v7 \
+  --classifications outputs/classification-inspector-2023-2024-v8 \
   --port 8765
 ```
 
@@ -942,13 +1019,13 @@ the existing combined workspace remains supported:
 
 ```bash
 .venv/bin/python -I -B scripts/serve_research.py \
-  --evidence data/preview-cycle-evidence-v41 \
+  --evidence data/preview-cycle-evidence-v42 \
   --sessions data/processed/verified-session-comparison-2023-2024-v3 \
   --review data/human-review-native-20261021-v3 \
   --sources data/processed/native-inventory-catalog-2023-2024-v2 \
-  --graphs outputs/recreated-2023-2024-v36 \
-  --topics outputs/topic-inference-retained-text-2023-2024-v23 \
-  --classifications outputs/classification-inspector-2023-2024-v7 \
+  --graphs outputs/recreated-2023-2024-v37 \
+  --topics outputs/topic-inference-retained-text-2023-2024-v24 \
+  --classifications outputs/classification-inspector-2023-2024-v8 \
   --port 8765
 ```
 

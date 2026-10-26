@@ -36,8 +36,8 @@ the detailed source and scientific gates remain in `docs/AUDIT_STATUS.md` and
   inspection and model-blind review serving passed 46 regressions and actual
   saved-bundle HTTP checks; checkpoint `1d57247`.
 - [ ] **DATA-01: Resolve genuine source gaps when new permitted evidence exists.**
-  Current source union: 157,598 candidate contexts, 139,862 with body text and
-  17,736 still missing. All earlier versioned gap queues remain preserved.
+  Current source union: 157,598 candidate contexts, 139,869 with body text and
+  17,729 still missing. All earlier versioned gap queues remain preserved.
   Follow recorded source closures and restrictions; do not repeat closed
   campaigns or turn absent text into zeros or fabricated inputs.
   New October 25 source milestone: one newly identified official Nebraska
@@ -48,8 +48,9 @@ the detailed source and scientific gates remain in `docs/AUDIT_STATUS.md` and
   verified. Later recoveries add 249 contexts from the expanded collection,
   104 from explicit-day qualification, three from literal publication
   boundaries, 30 from complete constitutional proposals and 51 from separately
-  typed enacted-law versions. The actual v25 source union retains 17,736 gaps;
-  enacted text is never relabelled introduced and no missing value is imputed.
+  typed enacted-law versions, then seven with independently proven exact PDF
+  hyphen positions. Actual v26 retains 17,729 gaps; enacted text is never
+  relabelled introduced and no missing value is imputed.
 - [x] **DATA-02: Propagate the qualified Nebraska journal evidence.** Extend
   the actual v19/token-v16 baseline without changing original labels, weights,
   taxonomy, human reservations or unavailable source fields. Reuse all prior
@@ -398,6 +399,29 @@ the detailed source and scientific gates remain in `docs/AUDIT_STATUS.md` and
   score/download evidence, then refresh the actual root/nested publication
   graphs and inspector. No raw normalization, majority promotion, human-gold
   admission or website publication.
+  Actual v26/token23 is now executed and independently verified: 14 fresh raw
+  strings / 210,419 characters / 53,596 tokens / 67 windows, zero old repeats
+  or discarded tokens. The seven contexts add one unanimity assignment and
+  six abstentions; totals are 65,306 assigned / 74,563 abstained / 17,729 missing.
+  Unpromoted majority assigns 78,522, rejects 23,816 and retains 37,528 uncertain /
+  three excluded; 13,216 additional assignments are not accuracy certification.
+  All 179,835 old predictions, 169,493 cached results, 157,591 other whole
+  assignment rows, 85 controls, 354 other source partitions, 1,095 prior NE
+  archive views and 38 old complete research ZIPs remain unchanged.
+  Source37/topic24/majority8/score8/paired22/inspector8 pass full fifty-state
+  token/logit/window/108-member inference ZIP and independent vote/22-score
+  replay. Actual root/nested 27-chart / 108-export / 35-full-CSV collections
+  reconcile all 3,176 marks and identical image/table bytes.
+  Chromium verifies all 14 complete bodies/scores/long windows, complete
+  NE/LB989 queries and all 50 source ZIP members. Both galleries pass desktop/
+  390px/320px with 27 images, 180 links and seven actual destinations.
+  Final regressions: 477 passed / three optional skips / no failures or errors.
+  Disk-pressure failures and all their files remain preserved; independent
+  copy-on-write copies recover duplicate storage without deleting source data
+  or changing any payload. Actual PNGs inspected; the final tracked audit is
+  460/494, with the same 34 legacy failures and every report field byte-identical
+  to the source checkpoint. All 218 docs checks and scoped Ruff/format/diff pass.
+  Save/readback must pass before this completion checkbox is closed.
 - [ ] **VALIDATE-01: Independently validate classifications.** Preserve original
   unanimity and unpromoted majority separately. Complete actual independent human
   review and resolve taxonomy disputes before accuracy or party-policy claims.

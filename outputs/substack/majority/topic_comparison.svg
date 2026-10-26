@@ -343,8 +343,8 @@ z
    </g>
    <g id="patch_12">
     <path d="M 207.44 241.583691 
-L 267.534743 241.583691 
-L 267.534743 246.7267 
+L 267.569419 241.583691 
+L 267.569419 246.7267 
 L 207.44 246.7267 
 z
 " clip-path="url(#pb197c942f5)" style="fill: #6b6b6b"/>
@@ -487,16 +487,16 @@ z
    </g>
    <g id="patch_30">
     <path d="M 207.44 194.409886 
-L 341.39614 194.409886 
-L 341.39614 199.552894 
+L 341.430817 194.409886 
+L 341.430817 199.552894 
 L 207.44 199.552894 
 z
 " clip-path="url(#pb197c942f5)" style="fill: #3d6f8c"/>
    </g>
    <g id="patch_31">
     <path d="M 207.44 212.144399 
-L 339.974395 212.144399 
-L 339.974395 217.287408 
+L 340.043749 212.144399 
+L 340.043749 217.287408 
 L 207.44 217.287408 
 z
 " clip-path="url(#pb197c942f5)" style="fill: #3d6f8c"/>
@@ -511,8 +511,8 @@ z
    </g>
    <g id="patch_33">
     <path d="M 207.44 247.613426 
-L 287.577883 247.613426 
-L 287.577883 252.756435 
+L 287.612559 247.613426 
+L 287.612559 252.756435 
 L 207.44 252.756435 
 z
 " clip-path="url(#pb197c942f5)" style="fill: #3d6f8c"/>
@@ -618,7 +618,7 @@ L 764.913927 466.129233
    <text style="font-size: 10.5px; font-family: 'DejaVu Serif', 'Bitstream Vera Serif', 'Computer Modern Roman', 'New Century Schoolbook', 'Century Schoolbook L', 'Utopia', 'ITC Bookman', 'Bookman', 'Nimbus Roman No9 L', 'Times New Roman', 'Times', 'Palatino', 'Charter', serif; text-anchor: start; fill: #6b6b6b" x="11.88" y="42.112615" transform="rotate(-0 11.88 42.112615)">Same 157,598 contexts; original rule and unpromoted majority candidate</text>
   </g>
   <g id="text_34">
-   <text style="font-style: italic; font-size: 8.5px; font-family: 'DejaVu Serif', 'Bitstream Vera Serif', 'Computer Modern Roman', 'New Century Schoolbook', 'Century Schoolbook L', 'Utopia', 'ITC Bookman', 'Bookman', 'Nimbus Roman No9 L', 'Times New Roman', 'Times', 'Palatino', 'Charter', serif; fill: #6b6b6b" transform="translate(11.88 551.388959)">Source: frozen majority v7. Topic counts are provisional, not policy prevalence or party positions. All 65,305 original-rule</text>
+   <text style="font-style: italic; font-size: 8.5px; font-family: 'DejaVu Serif', 'Bitstream Vera Serif', 'Computer Modern Roman', 'New Century Schoolbook', 'Century Schoolbook L', 'Utopia', 'ITC Bookman', 'Bookman', 'Nimbus Roman No9 L', 'Times New Roman', 'Times', 'Palatino', 'Charter', serif; fill: #6b6b6b" transform="translate(11.88 551.388959)">Source: frozen majority v8. Topic counts are provisional, not policy prevalence or party positions. All 65,306 original-rule</text>
    <text style="font-style: italic; font-size: 8.5px; font-family: 'DejaVu Serif', 'Bitstream Vera Serif', 'Computer Modern Roman', 'New Century Schoolbook', 'Century Schoolbook L', 'Utopia', 'ITC Bookman', 'Bookman', 'Nimbus Roman No9 L', 'Times New Roman', 'Times', 'Palatino', 'Charter', serif; fill: #6b6b6b" transform="translate(11.88 563.288959)">assignments are retained.</text>
   </g>
   <g id="legend_1">

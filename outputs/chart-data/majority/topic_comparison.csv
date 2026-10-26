@@ -1,9 +1,9 @@
 topic,label,baseline_contexts,candidate_contexts
-1,Macroeconomics,3017,3822
+1,Macroeconomics,3017,3824
 2,Civil rights and liberties,307,352
 3,Health,13222,15458
 4,Agriculture,1034,1201
-5,Labor and employment,1733,2311
+5,Labor and employment,1734,2312
 6,Education,7868,9160
 7,Environment,1137,1395
 8,Energy,1008,1266
@@ -12,7 +12,7 @@ topic,label,baseline_contexts,candidate_contexts
 12,"Law, crime and justice",12983,15283
 13,Social welfare,1272,1667
 14,Housing and community development,2741,3439
-15,"Business, commerce and consumers",2691,3863
+15,"Business, commerce and consumers",2691,3864
 16,Defense and veterans,1162,1362
 17,"Science, technology and communications",50,54
 18,Foreign trade,0,0

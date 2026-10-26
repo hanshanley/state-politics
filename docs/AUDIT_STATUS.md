@@ -5,7 +5,61 @@ The thirteen historical root figures and their analytical conclusions remain
 inspect source/model evidence; they do not certify a classifier, complete
 coverage or party-policy findings.
 
-## Qualified next source: exact source-proven hyphen positions
+## Current propagated evidence and graphs: v26
+
+Completed **v26 / independent token cache v23** retains **139,869 of 157,598
+contexts**, with **17,729 missing**. Unanimity assigns 65,306 and abstains on
+74,563. Separate, unpromoted majority assigns 78,522, rejects 23,816 and retains
+37,528 uncertain / three excluded / 17,729 unavailable. Its 13,216 additional
+assignments are not independent accuracy evidence.
+
+Seven source-proven hyphen contexts contribute **14 unchanged raw strings /
+210,419 characters / 53,596 tokens / 67 windows**, with zero old encoder repeats
+or discarded tokens. They add one unanimity assignment / six abstentions;
+majority separates four assigned / three uncertain. Original dates, source
+versions and every other policy character remain unchanged. Enacted texts
+are not introduced versions, and neither reader string is normalized.
+
+All 179,835 earlier predictions, 169,493 cached results, 157,591 other whole
+assignments and 85 controls remain unchanged. Source37 preserves 354 other
+partitions, 1,095 prior NE archive views and all 38 earlier complete ZIPs.
+NE now has 1,109 archive views / 1,256 remaining gaps.
+Topic24/majority8/score8/paired22/inspector8 pass full fifty-state token/logit/
+window/108-member inference ZIP and independent vote/22-score replay.
+
+The actual root and fresh nested **27-chart / 108-PNG/editable-SVG /
+35-full-CSV** collections reconcile all 3,176 marks and identical image/table
+bytes. Actual majority, coverage and full-score PNGs were inspected; the
+score denominator is 139,866, retaining three explicit unscored exclusions.
+Both galleries pass Chromium at 1360/390/320px: 27 images / 180 links /
+seven real destinations, without overflow, script errors or external HTTP.
+Every new complete body, score and long window passes actual browser checks.
+Complete NE query: 2,128 contexts / 1,424 input+prediction pairs / 10,787,454
+selected characters. LB989 query: one context / two pairs / 60,630 characters.
+Every member of the complete 50-member source ZIP is independently checked.
+
+All **477 integration tests pass**, with three optional skips and no failures
+or errors. Disk-pressure failures and every failed-attempt file remain
+preserved. Verified independent copy-on-write copies recover duplicate
+storage; all 162 inspector payload hashes remain unchanged. Complete query
+exports pass after storage recovery, without an application/data change or
+metadata-only substitute. The source36 collection/exact producer/copied README
+remain in `outputs/preserved-current-source36-20261026-v1/`.
+
+Current root manifest:
+`b89ad3fa5e3bad582f85899e88b6e8886fed2b6f35171240e942c5b619cddbaf`.
+Proofs use `data/ne-enacted-hyphen-`; successful inspector browser receipt:
+`data/ne-enacted-hyphen-browser-20261026-v4/receipt.json`.
+Root/nested browser receipts are gallery versions v17/v18. The final tracked
+audit is **460/494**, with the same 34 legacy failures and a byte-identical
+report to the saved source checkpoint. All **218 public-documentation checks**
+and scoped Ruff/format/diff checks pass. Report:
+`data/ne-enacted-hyphen-delivery-full-audit-20261026-v1.json`.
+Saved-checkpoint verification is recorded separately. All human,
+filing-time, party, rights, report and publication gates remain unpromoted.
+Large source/model/research archives remain local/ignored; nothing is deployed.
+
+## Preserved qualification: exact source-proven hyphen positions
 
 The separate `state-politics.nebraska-enacted-hyphen-text.v1` packet qualifies
 **seven original contexts / 14 complete raw reader views / 210,419 characters**.
@@ -35,16 +89,16 @@ Independent proof: `data/ne-enacted-hyphen-qualified-independent-20261026-v1.jso
 SHA-256 `d4ad1924ed98ea0bde30f217ae0d7d1db452a4727f27fc5ce3c28aa49627d46c`.
 Complete ZIP: `data/ne-enacted-hyphen-qualified-complete-20261026-v1.zip`,
 SHA-256 `6f0610466d986839bdb587f52e7026bff7cf62f7c23b42ec55f504f5a98c5a9e`.
-This source-only checkpoint does not change current v25/token22 predictions,
-source36 tables or actual graphs below. DATA-17 must separately verify inference
-and graph propagation after the saved source checkpoint. Human, legal-version,
+This source-only checkpoint did not change v25/token22 predictions, source36
+tables or their graphs. The separate v26 propagation is now verified above.
+Human, legal-version,
 filing-time, party, rights and publication gates stay unpromoted.
 The source checkpoint is saved/pushed Hans-only **`bbb01b9`**. All 427
 tracked remote blobs and 85 post-save controls match, with a clean worktree.
 Receipt: `data/ne-enacted-hyphen-source-final-delivery-20261026-v1.json`,
 SHA-256 `6106e892aec04edcea44cef7484035fd001d47903ff31abfa3fe28c9be37ffb0`.
 
-## Current propagated evidence and graphs: v25
+## Preserved v25 propagated evidence and graphs
 
 Completed **v25 / independent token cache v22** retains **139,862 of 157,598
 contexts**, with **17,736 missing**. Unanimity assigns 65,305 and abstains on
