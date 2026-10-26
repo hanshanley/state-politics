@@ -301,6 +301,16 @@ the detailed source and scientific gates remain in `docs/AUDIT_STATUS.md` and
   wire the generic loader/source gallery/preview, add focused regressions and
   a complete source ZIP, independently verify the packet and checkpoint it
   before any inference. Do not modify sealed journal profiles or old packets.
+  Source qualification now verifies 51 original contexts / 102 full views /
+  361,645 characters in a separately typed packet, preserving all 4,330
+  reader pages, 478 source candidates and 1,314 NE dispositions. Generic
+  loading replays against every actual current metadata context (157,598),
+  not only gap rows. The complete 21-member / 153,746,734-byte source ZIP is
+  independently verified; every body matches the earlier raw-source witness.
+  All 96 focused tests and 453 integration tests pass, with three optional
+  integration skips. Full tracked audit: 458/492, the same 34 legacy failures
+  and all non-counter fields unchanged; two new code-guide checks pass.
+  Source checkpoint/remote verification remains before DATA-14 inference.
 - [ ] **DATA-14: Propagate independently qualified enacted-law evidence.** Only
   after DATA-13 is verified and saved, extend actual v24/token21 with genuinely
   new qualified strings; retain all 30 earlier archives, original fields,

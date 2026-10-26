@@ -16,6 +16,55 @@ remain unchanged. Broad rebuild commands below are not a request to complete
 other years; target-cycle selection and its inclusion/exclusion provenance must
 be bound explicitly before regenerated outputs can support the narrowed study.
 
+## Qualified next source: separately typed enacted laws
+
+This source-only packet does **not** update the actual v24 baseline below.
+It qualifies 51 existing contexts / 102 complete enacted-law views / 361,645
+characters from three explicitly listed official-library books, retaining
+all 4,330 raw page strings, every candidate/negative and original context.
+The literal governor approval is a source-version date, never a repaired
+introduction date. These bodies must not be described as introduced versions.
+All scientific, human, filing-time, party, rights and publication gates remain
+unpromoted.
+
+```bash
+.venv/bin/python -I -B -m state_politics.bills.ne_enacted_law_text \
+  --source-capture data/processed/ne-enacted-laws-source-20261026-v1 \
+  --source-readers data/processed/ne-enacted-laws-readers-20261026-v1 \
+  --gap-queue outputs/recreated-2023-2024-v35/chart-data/missing_retained_text.parquet \
+  --out-dir data/processed/ne-enacted-laws-qualified-REPLAY
+```
+
+Use a fresh output path. The source35 queue is externally pinned to
+`712543ae5b85ed784ad6e968d24a0b33b55b032f2fa2e454753baac60e03a43b`;
+capture/readers to
+`a1331dc8bc45ff6a6c0f57857a53fba23d6118d3f41a009213db73ccb06780e0` /
+`51da1e432ff2bfd1d59c49843dafd0e90befca112de737433b9eea81c9d50a36`.
+Actual qualified manifest:
+`56732a9b8f5dc0881d877556c2b6883e7cfd7a8ee009606988fa0e8a7b1a9e31`.
+All source collection occurred in the separate four-controlled-GET capture;
+qualification/replay performs no network or inference.
+
+Generic replay checks the 157,598 real current metadata contexts. The complete
+21-member / 153,746,734-byte source ZIP is
+`data/ne-enacted-laws-qualified-complete-20261026-v1.zip`,
+SHA-256 `81fe63871effb0c84aface5f832537d03a36928928677c079b1a5a1f953b6d70`.
+Independent proof `data/ne-enacted-law-qualified-independent-20261026-v1.json`,
+SHA-256 `e6c7d6f5efb523967af5aa3fdd7268e8d4b19bbbe427ecbfbc4d9e09bf1142cc`,
+matches all bodies to the earlier independently reread 4,330 original pages,
+all candidate spans, original dates/unknowns and enacted approval evidence.
+It preserves all 30 prior archive-manifest pins, all 85 controls and actual
+v24/token21 cache and graph hashes. The first failed observer is preserved:
+only its preview binding lookup changes to the actual ordered `archive_text`
+list; source/admission rules do not change.
+
+Validation: 96 focused passes; 453 integration passes / three optional skips;
+actual full tracked audit 458/492, the same 34 legacy failures and every
+non-counter field unchanged from 456/490. Only two new passing code-guide
+checks increase the counters. Source/ZIP/model archives remain local/ignored;
+code pushes do not remotely back them up. DATA-14 must separately freeze,
+execute and verify a v24/token21 successor before any actual graph refresh.
+
 ## Current successor: complete constitutional proposals
 
 **Future extensions start from completed v24 / independent token cache v21.**

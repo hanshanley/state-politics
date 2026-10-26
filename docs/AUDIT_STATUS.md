@@ -61,6 +61,44 @@ Proofs use `data/ne-constitutional-` prefixes:
 Browser receipts are `data/ne-constitutional-browser-20261026-v1/receipt.json`
 and `data/current-graphs-browser-20261025-v13/receipt.json` / `v14`.
 
+## Qualified next source: enacted laws, not introduced texts
+
+The separately typed `state-politics.nebraska-enacted-law-text.v1` packet
+qualifies **51 original contexts / 102 complete views / 361,645 characters**.
+It retains the entire three-book library capture, all 4,330 reader pages,
+478 full source candidates and 1,314 original NE dispositions. Complete
+own-page headers/folios, caption, enacting clause, first section, terminal
+full stop and literal governor approval are required. Whole-reader agreement
+is whitespace-only; no policy text, OCR token or original date is repaired.
+
+**These are enacted versions, not introduced texts.** Original introduction
+dates remain unchanged and governor approvals are separately typed version
+dates. A cross-year carryover stays in its original NE/108/LB context.
+All source/model/human/party/rights/filing-time/publication approvals stay false.
+The current v24 classifications, source35 tables, cached predictions/token21
+and all actual graph exports remain unchanged pending separate DATA-14.
+
+Generic archive replay checks all 157,598 actual current metadata contexts.
+Independent verification matches every new string to the earlier fresh
+4,330-page raw-source witness, preserves all 30 prior archive-manifest pins
+and all 85 controls, and verifies every payload in the complete **21-member /
+153,746,734-byte ZIP**. The first observer's wrong preview-key assumption is
+preserved; correcting its lookup to the actual ordered `archive_text` list
+does not change source qualification or any admission rule.
+
+Packet: `data/processed/ne-enacted-laws-qualified-20261026-v1/`,
+manifest `56732a9b8f5dc0881d877556c2b6883e7cfd7a8ee009606988fa0e8a7b1a9e31`.
+Independent proof: `data/ne-enacted-law-qualified-independent-20261026-v1.json`,
+SHA-256 `e6c7d6f5efb523967af5aa3fdd7268e8d4b19bbbe427ecbfbc4d9e09bf1142cc`.
+Complete ZIP: `data/ne-enacted-laws-qualified-complete-20261026-v1.zip`,
+SHA-256 `81fe63871effb0c84aface5f832537d03a36928928677c079b1a5a1f953b6d70`.
+There are **96 focused passes / 453 integration passes / three optional
+integration skips / no failures or errors**. The actual full tracked audit is
+**458/492**: the same 34 legacy failures and every non-counter report field
+unchanged; two new passing code-guide checks account for the counter increase.
+Qualification and a local ignored source ZIP do not publish or back up these
+large original archives remotely.
+
 ## Preserved v23 propagated evidence and graphs
 
 Completed **v23 / independent token cache v20** retains **139,781 of 157,598

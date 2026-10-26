@@ -100,6 +100,21 @@ SHA-256 `75e8313ab43ab00885e7179f51dba2790a248b696336182762d3d6e774aec643`.
 All original source/model controls remain unchanged; no source, classifier,
 filing-time, human, party, rights or publication approval is granted.
 
+DATA-13 now qualifies those same **51 contexts / 102 complete views /
+361,645 characters** in the separate enacted-law schema/namespace. It preserves
+all raw books/readers/candidates/negatives and original dates. Generic replay
+passes against all 157,598 real current metadata contexts. The full 21-member /
+153,746,734-byte ZIP has byte-exact independent verification. Ninety-six
+focused and 453 integration tests pass, with three optional integration skips;
+full tracked audit 458/492 retains the same 34 legacy failures and all
+non-counter fields. This does not yet change actual v24 counts or graphs.
+Packet manifest:
+`56732a9b8f5dc0881d877556c2b6883e7cfd7a8ee009606988fa0e8a7b1a9e31`.
+Proof: `data/ne-enacted-law-qualified-independent-20261026-v1.json`,
+SHA-256 `e6c7d6f5efb523967af5aa3fdd7268e8d4b19bbbe427ecbfbc4d9e09bf1142cc`.
+DATA-14 must remain a separate verified inference/graph successor after the
+qualified source checkpoint is saved.
+
 ## Preserved v23 dispatch snapshot
 
 This preserved checkpoint is superseded by v24/token21 above.
