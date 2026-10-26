@@ -214,13 +214,22 @@ the detailed source and scientific gates remain in `docs/AUDIT_STATUS.md` and
 - [ ] **DATA-10: Investigate complete constitutional-resolution journal bodies.**
   After DATA-09 graph delivery, assess a genuinely different retained-source
   cohort: the remaining Nebraska queue has 1,314 LB contexts and 30 LR-CA
-  contexts. Both saved readers contain 20 same-date own-CA-header candidates,
-  including literal constitutional resolving clauses and ballot text; this
-  is a lead, not 20 qualified recoveries. Require full proposal/ballot endings,
+  contexts. The initial diagnostic found 20 same-date own-CA-header candidates
+  per reader. A subsequent read-only probe and independent raw-source witness
+  now verify 30 complete proposal pairs / 60 views / 233,061 characters,
+  freshly re-extracting 106 body pages and checking 136 raw spans. This is not
+  an admitted source packet or a new classification. Require full proposal/ballot endings,
   exact CA identity/session/original date, literal complete-source boundaries
   and whole-reader agreement in a separate profile/schema/namespace. Preserve
   ordinary-resolution defaults, every negative and all original fields. Never
   substitute journal bill mentions or amendment fragments for complete bodies.
+  Preserve both earlier probes and the failed independent coordinate observer:
+  its mismatch came from a looser prefix remover before an unrelated
+  leading-whitespace day opening, not a changed body/date. The corrected
+  witness retains the frozen coordinate convention and independently reads
+  printed dates. Next: a separately typed immutable packet, consumer wiring,
+  focused regressions, complete source ZIP and saved source checkpoint before
+  any separate v23/token20 successor. All 30 remain outside current v23 counts.
 - [ ] **VALIDATE-01: Independently validate classifications.** Preserve original
   unanimity and unpromoted majority separately. Complete actual independent human
   review and resolve taxonomy disputes before accuracy or party-policy claims.

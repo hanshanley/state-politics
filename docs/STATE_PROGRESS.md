@@ -54,9 +54,18 @@ three optional skips. Current proof names use `data/ne-journal-boundary-`.
 
 Next actionable source lead is DATA-10: a separate whole constitutional-
 resolution profile, not a reopened native acquisition or journal bill fragment.
-The remaining NE gaps split into 1,314 LB and 30 LR-CA contexts. Both retained
-readers have 20 same-date own-CA-header candidates, but no new CA body is
-qualified and no model/publication approval follows from that diagnostic.
+The remaining NE gaps split into 1,314 LB and 30 LR-CA contexts. The initial
+20-candidate-per-reader lead is now followed by a read-only full-proposal
+probe: all 30 original contexts / 60 reader views / 233,061 characters pass
+independent raw-source checks, with 106 body pages freshly re-extracted and
+136 raw spans verified. Literal journal proceedings boundaries and inline
+outer sections account for twelve earlier negatives; no date or policy text
+is repaired. The first independent coordinate mismatch and its exact observer
+are preserved; the corrected witness follows the frozen prefix convention.
+Proof: `data/ne-constitutional-probe-independent-sources-20261026-v1.json`.
+This is not yet a typed source packet: no CA admission, inference, graph-count
+change or model/publication approval is claimed. DATA-10 remains open for
+packet construction, consumer integration, tests and a complete source ZIP.
 
 ## Preserved source-only qualification: October 26, 2026
 
