@@ -16,6 +16,42 @@ remain unchanged. Broad rebuild commands below are not a request to complete
 other years; target-cycle selection and its inclusion/exclusion provenance must
 be bound explicitly before regenerated outputs can support the narrowed study.
 
+## Storage-safe continuation
+
+Batch small source recoveries and reuse immutable inputs; do not create
+another complete data copy merely to save a checkpoint. Estimate incremental
+storage before a full replay. On APFS, the standalone reclamation tool defaults
+to a manifest-only dry run over completed generated bundles:
+
+```bash
+.venv/bin/python -I -B scripts/reclaim_generated_storage.py \
+  --report data/generated-storage-plan-REPLAY.json
+# Only after inspecting the plan, with research servers/builders stopped:
+.venv/bin/python -I -B scripts/reclaim_generated_storage.py --apply \
+  --report data/generated-storage-reclaimed-REPLAY.json
+```
+
+Use fresh report names. Application verifies original, duplicate and clone
+SHA/size bindings, requires independent inodes, preserves content/permissions/
+timestamps and rechecks all manifests. It refuses changed or linked paths,
+active research servers/builders and unsupported cloning instead of falling
+back to another full copy. Per-file completion is journaled. Raw sources,
+model weights, failed attempts and original logical paths are not deleted.
+Reported physical recovery is measured, not inferred from logical file sizes.
+Already-shared clones can still appear in that logical upper bound; do not
+repeat an unchanged batch after its successful reclamation receipt.
+Copy-on-write reuse is not an off-device backup.
+
+The October 26 verified reclamation replaced 1,897 generated duplicate copies
+without changing logical paths or payloads. Free space increased from
+12,761,374,720 to 339,733,323,776 bytes: **326,971,949,056 bytes recovered**.
+Receipt/journal: `data/generated-storage-reclaimed-20261026-v1.json` and its
+`.journal.jsonl` sibling. The exact executed producer is retained in
+`data/reclaim_generated_storage_executed_20261026_v1.py`; all pairs were on
+the same APFS volume. The public tool additionally uses the direct native
+`clonefile` syscall so future failures cannot silently fall back to full copies.
+All current graph exports/tables/marks and 85 controls remain unchanged.
+
 ## Current successor: literal-position hyphen evidence, v26
 
 **Future extensions start from completed v26 / independent token cache v23.**

@@ -4,6 +4,24 @@ The study covers 2023-2024. This ledger records the current actionable work;
 the detailed source and scientific gates remain in `docs/AUDIT_STATUS.md` and
 `docs/STATE_PROGRESS.md`. Read local `AGENT-COMMS.md` before overlapping edits.
 
+- [x] **STORAGE-01: Recover capacity before generating more data.** The volume
+  is approaching its 2 TB limit. Pause acquisition and full rebuilds; inventory
+  only this project's generated artifacts. Reclaim verified duplicate blocks
+  using independent APFS copy-on-write clones, retaining every original,
+  failed attempt, logical path and payload. Never substitute hardlinks or a
+  full-copy fallback. Measure actual recovered space, verify the current
+  charts and protected controls, and persist safeguards against repeated
+  full-data copies for small source changes.
+  Reclamation completed for 1,897 verified generated duplicates: observed
+  free space increased by 326,971,949,056 bytes (326.97 GB), from 12.76 GB
+  to 339.73 GB. Every logical path, original and payload remains intact.
+  All current 108 exports / 35 full CSVs / 3,176 marks and 85 protected
+  controls revalidate unchanged. The public dry-run-first tool uses native
+  `clonefile`, with no ordinary-copy fallback; all 16 preservation/refusal/
+  native-clone tests pass. Full tracked audit: 462/496, the same 34 legacy
+  failures and every non-counter field unchanged; only two passing code-guide
+  checks were added. All 220 public-documentation and scoped Ruff checks pass.
+  Receipt: `data/generated-storage-reclaimed-20261026-v1.json`.
 - [x] **PLOT-01: Regenerate the actual current graph collection.** Highest
   priority from October 25: use current source, classification, majority,
   full-score and comparison evidence. Create categorized Substack (`#F7F5F0`)

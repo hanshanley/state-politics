@@ -5,6 +5,17 @@ The thirteen historical root figures and their analytical conclusions remain
 inspect source/model evidence; they do not certify a classifier, complete
 coverage or party-policy findings.
 
+## Storage-preserving checkpoint
+
+October 26 reclamation recovers **326.97 GB**, leaving about **339.73 GB free**,
+by independently cloning 1,897 SHA-identical generated duplicates. No original
+file, failed attempt or logical evidence path is deleted. All current 108 chart
+exports, 35 complete CSVs, 3,176 marks and 85 controls revalidate unchanged.
+The new native-clone tool passes 16 focused tests. Full tracked audit is now
+**462/496**: the same 34 legacy failures and all non-counter fields unchanged;
+two documented Python files add two passing checks. Public-doc checks: **220**.
+This changes storage allocation, not sources, predictions or scientific gates.
+
 ## Current propagated evidence and graphs: v26
 
 Completed **v26 / independent token cache v23** retains **139,869 of 157,598

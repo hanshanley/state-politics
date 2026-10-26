@@ -12,6 +12,8 @@ repository audit fails when a Python file is added without an entry here.
 | `src/state_politics/provenance.py` | Fetches network resources, blocks SSRF/private addresses, follows checked redirects, releases consumed/error responses before reuse, hashes successful content, and optionally appends logical-retrieval JSONL provenance records; does not itself retain complete redirect/retry/error-body evidence or enforce cross-attempt request budgets. |
 | `src/state_politics/compute.py` | Selects the available model execution device and enforces the no-hosted-inference dependency rule. |
 | `src/state_politics/caucuses.py` | Collects the four explicitly separate legislative-caucus priority sources into `caucus_priorities.parquet`; never labels them party platforms. |
+| `scripts/reclaim_generated_storage.py` | Defaults to a manifest-only dry run over completed generated bundles. Explicit APFS reclamation replaces only SHA-identical generated duplicates with independent copy-on-write clones, preserving paths/content/metadata and immutable sources; refuses active servers/builders, unsafe paths, races and full-copy fallback, with a per-file journal and measured disk recovery. |
+| `tests/test_generated_storage.py` | Verifies clone independence, unchanged source/content/metadata, refusal of mismatches/symlinks/concurrent changes, cleanup after clone failure, safe path scope and exclusion of unfinished or failed bundles. |
 
 ## Platform collection
 

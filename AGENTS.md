@@ -5,6 +5,14 @@ exact paths and handoffs; preserve other agents' staged and unstaged changes.
 Keep pursuing actionable tasks after checkpoints, and record genuine blockers
 instead of fabricating completeness.
 
+Storage is constrained. Pause acquisition/full rebuilds under disk pressure.
+For small changes, reuse immutable inputs rather than copying whole datasets.
+Batch small source recoveries instead of multiplying full-population snapshots.
+Use verified independent copy-on-write clones on APFS, not writable hardlinks;
+never fall back to a full copy during storage reclamation. Estimate additional
+storage before large builds. Do not delete original evidence or failed attempts
+to make a build fit.
+
 The current priority is the actual graph collection: regenerate readable
 Substack and The Margin of Error PNG/editable SVG exports using `uk_decline`'s
 house style. Verify the rendered files, their data and current output links,
