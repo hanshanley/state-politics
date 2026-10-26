@@ -52,21 +52,72 @@ def safe_path(root, directory, name):
     return path
 
 
-def inventory(root):
+def register_candidate(root, candidates, directory, name, expected):
+    if expected.get("bytes", 0) < MIN_BYTES:
+        return
+    if not re.fullmatch(r"[0-9a-f]{64}", expected.get("sha256", "")):
+        raise ValueError("invalid generated artifact binding")
+    path = safe_path(root, directory, name)
+    if path.stat().st_size != expected["bytes"]:
+        raise ValueError(f"generated artifact size changed: {path}")
+    entry = {"sha256": expected["sha256"], "bytes": expected["bytes"]}
+    if path in candidates and candidates[path] != entry:
+        raise ValueError(f"conflicting artifact bindings: {path}")
+    candidates[path] = entry
+
+
+def duplicate_entries(root, candidates):
+    canonical, duplicates = {}, []
+    for path, expected in candidates.items():
+        key = expected["sha256"], expected["bytes"]
+        if key not in canonical:
+            canonical[key] = path
+            continue
+        source = canonical[key]
+        source_stat, target_stat = source.stat(), path.stat()
+        if (source_stat.st_dev, source_stat.st_ino) == (target_stat.st_dev, target_stat.st_ino):
+            continue
+        duplicates.append(
+            {
+                "source": str(source.relative_to(root)),
+                "target": str(path.relative_to(root)),
+                **expected,
+            }
+        )
+    return duplicates
+
+
+def preview_inventory(root):
+    manifests, candidates = {}, {}
+    for directory in sorted((root / "data").glob("preview-cycle-evidence-v*")):
+        if not re.fullmatch(r"preview-cycle-evidence-v\d+", directory.name):
+            continue
+        if directory.resolve() != directory:
+            raise ValueError("linked preview directory")
+        path = directory / "downloads/build_manifest.json"
+        if not path.is_file():
+            continue
+        if path.resolve() != path:
+            raise ValueError("linked preview manifest")
+        manifest = read(path)
+        if manifest.get("schema") != "local_cycle_evidence_preview_v1":
+            raise ValueError("unknown preview manifest schema")
+        manifests[str(path.relative_to(root))] = binding(path)
+        for name, expected in manifest["outputs"].items():
+            if name.startswith(("evidence/", "downloads/")):
+                register_candidate(root, candidates, directory, name, expected)
+    return manifests, duplicate_entries(root, candidates)
+
+
+def inventory(root, scope="bundles"):
+    if scope == "previews":
+        return preview_inventory(root)
+    if scope != "bundles":
+        raise ValueError("unknown reclamation scope")
     manifests, candidates = {}, {}
 
     def register(directory, name, expected):
-        if expected.get("bytes", 0) < MIN_BYTES:
-            return
-        if not re.fullmatch(r"[0-9a-f]{64}", expected.get("sha256", "")):
-            raise ValueError("invalid generated artifact binding")
-        path = safe_path(root, directory, name)
-        if path.stat().st_size != expected["bytes"]:
-            raise ValueError(f"generated artifact size changed: {path}")
-        entry = {"sha256": expected["sha256"], "bytes": expected["bytes"]}
-        if path in candidates and candidates[path] != entry:
-            raise ValueError(f"conflicting artifact bindings: {path}")
-        candidates[path] = entry
+        register_candidate(root, candidates, directory, name, expected)
 
     processed = root / "data/processed"
     for directory in sorted(processed.glob("cycle-topic-inference-retained-text-*-v*")):
@@ -113,24 +164,7 @@ def inventory(root):
                 if expected["path"].startswith("research-data/"):
                     register(directory, expected["path"], expected)
 
-    canonical, duplicates = {}, []
-    for path, expected in candidates.items():
-        key = expected["sha256"], expected["bytes"]
-        if key not in canonical:
-            canonical[key] = path
-            continue
-        source = canonical[key]
-        source_stat, target_stat = source.stat(), path.stat()
-        if (source_stat.st_dev, source_stat.st_ino) == (target_stat.st_dev, target_stat.st_ino):
-            continue
-        duplicates.append(
-            {
-                "source": str(source.relative_to(root)),
-                "target": str(path.relative_to(root)),
-                **expected,
-            }
-        )
-    return manifests, duplicates
+    return manifests, duplicate_entries(root, candidates)
 
 
 def native_clone(source, target):
@@ -178,6 +212,7 @@ def require_quiet():
     processes = subprocess.check_output(["ps", "-axo", "command="], text=True)
     blocked = {
         "serve_research.py",
+        "build_site.py",
         "build_classification_inspector.py",
         "recreate_graphs.py",
         "recreate_topic_graphs.py",
@@ -195,6 +230,7 @@ def require_quiet():
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--apply", action="store_true")
+    parser.add_argument("--scope", choices=("bundles", "previews"), default="bundles")
     parser.add_argument("--report", type=Path, required=True)
     args = parser.parse_args()
     report = args.report.absolute()
@@ -204,7 +240,7 @@ def main():
         raise ValueError("APFS reclamation requires macOS; no full-copy fallback")
     if args.apply:
         require_quiet()
-    manifests, duplicates = inventory(ROOT)
+    manifests, duplicates = inventory(ROOT, args.scope)
     before = shutil.disk_usage(ROOT).free
     completed, error = [], None
     journal = report.with_suffix(".journal.jsonl")
@@ -227,6 +263,7 @@ def main():
     after = shutil.disk_usage(ROOT).free
     result = {
         "status": "failed" if error else "verified_COW_reclamation" if args.apply else "dry_run",
+        "scope": args.scope,
         "duplicate_files": len(duplicates),
         "logical_duplicate_bytes_upper_bound_not_promised_recovery": sum(
             entry["bytes"] for entry in duplicates

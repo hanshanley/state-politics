@@ -22,6 +22,25 @@ the detailed source and scientific gates remain in `docs/AUDIT_STATUS.md` and
   failures and every non-counter field unchanged; only two passing code-guide
   checks were added. All 220 public-documentation and scoped Ruff checks pass.
   Receipt: `data/generated-storage-reclaimed-20261026-v1.json`.
+- [x] **STORAGE-02: Reclaim duplicated preview storage separately.** Use an
+  explicit previews-only scope over completed `preview-cycle-evidence-vN`
+  manifests, excluding unfinished/failed snapshots and the completed bundle
+  reclamation batch. Preserve every full evidence/download file, path,
+  permissions, modification time and manifest using verified independent native APFS
+  clones. No source acquisition, inference, full snapshots, other-project or
+  session changes. Reverify current graphs/controls and save the measured result.
+  Dry run: 4,238 matching generated files / 273,663,380,711 logical duplicate
+  bytes (upper bound, not promised physical recovery). All 22 focused tests pass.
+  Actual previews-only reclamation completes all 4,238 replacements across
+  41 complete snapshots; unfinished v9 is excluded. Observed free space rises
+  from 341,116,792,832 to 614,814,695,424 bytes: 273,697,902,592 bytes recovered.
+  All manifests and original paths/content remain unchanged. After adding
+  active-preview-builder refusal, all 24 focused tests pass; current 108 exports,
+  35 complete CSVs, 3,176 marks and 85 controls revalidate unchanged.
+  Receipt: `data/generated-preview-storage-reclaimed-20261026-v1.json`.
+  Full tracked audit remains exactly 462/496, with the same 34 legacy failures
+  and every report field unchanged. All 220 public-documentation checks pass.
+  Bulk generation stays paused; no source/model/scientific status is promoted.
 - [x] **PLOT-01: Regenerate the actual current graph collection.** Highest
   priority from October 25: use current source, classification, majority,
   full-score and comparison evidence. Create categorized Substack (`#F7F5F0`)

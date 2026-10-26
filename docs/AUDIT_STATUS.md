@@ -16,6 +16,15 @@ The new native-clone tool passes 16 focused tests. Full tracked audit is now
 two documented Python files add two passing checks. Public-doc checks: **220**.
 This changes storage allocation, not sources, predictions or scientific gates.
 
+The separate previews-only pass recovers another **273.70 GB**, leaving about
+**614.81 GB free**. All 4,238 replacements retain complete file bytes and paths
+across 41 complete preview snapshots; unfinished v9 is excluded. No prior
+bundle targets, other projects or session artifacts are touched. All preview
+manifests, current graph exports/tables/3,176 marks and 85 controls revalidate
+unchanged. All 24 scoped storage tests and 220 public-documentation checks pass.
+The full tracked audit remains exactly 462/496 with the same 34 legacy failures
+and every report field unchanged; bulk generation remains paused.
+
 ## Current propagated evidence and graphs: v26
 
 Completed **v26 / independent token cache v23** retains **139,869 of 157,598

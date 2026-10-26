@@ -171,3 +171,81 @@ def test_inventory_refuses_linked_bundle_before_reading_it(tmp_path):
     )
     with pytest.raises(ValueError, match="linked generated bundle"):
         MODULE["inventory"](tmp_path)
+
+
+def preview(root, version, body):
+    directory = root / "data" / f"preview-cycle-evidence-v{version}"
+    (directory / "downloads").mkdir(parents=True)
+    (directory / "evidence").mkdir()
+    artifact = directory / "evidence/source.jsonl"
+    artifact.write_bytes(body)
+    (directory / "downloads/build_manifest.json").write_text(
+        json.dumps(
+            {
+                "schema": "local_cycle_evidence_preview_v1",
+                "outputs": {"evidence/source.jsonl": MODULE["binding"](artifact)},
+            }
+        )
+    )
+    return directory
+
+
+def test_preview_scope_matches_content_not_names_and_excludes_bundles(tmp_path, monkeypatch):
+    monkeypatch.setitem(MODULE["register_candidate"].__globals__, "MIN_BYTES", 1)
+    first = preview(tmp_path, 1, b"same full evidence\n")
+    preview(tmp_path, 2, b"different evidence\n")
+    third = preview(tmp_path, 3, b"same full evidence\n")
+    unrelated = tmp_path / "outputs/classification-inspector-2023-2024-v1"
+    unrelated.mkdir(parents=True)
+    (unrelated / "manifest.json").write_text("not a preview manifest")
+    manifests, entries = MODULE["inventory"](tmp_path, "previews")
+    assert len(manifests) == 3 and len(entries) == 1
+    assert tmp_path / entries[0]["source"] == first / "evidence/source.jsonl"
+    assert tmp_path / entries[0]["target"] == third / "evidence/source.jsonl"
+    assert all(path.startswith("data/preview-cycle-evidence-") for path in manifests)
+
+
+def test_preview_scope_ignores_incomplete_and_failed_snapshots(tmp_path):
+    (tmp_path / "data/preview-cycle-evidence-v1").mkdir(parents=True)
+    failed = tmp_path / "data/preview-cycle-evidence-v2-FAILED/downloads"
+    failed.mkdir(parents=True)
+    (failed / "build_manifest.json").write_text("not a completed snapshot")
+    assert MODULE["inventory"](tmp_path, "previews") == ({}, [])
+
+
+@pytest.mark.parametrize("defect", ["directory", "manifest"])
+def test_preview_scope_refuses_links_before_reading(tmp_path, defect):
+    directory = preview(tmp_path, 1, b"complete source")
+    if defect == "directory":
+        linked = directory.with_name("preview-cycle-evidence-v2")
+        linked.symlink_to(directory, target_is_directory=True)
+    else:
+        manifest = directory / "downloads/build_manifest.json"
+        original = manifest.with_name("original.json")
+        manifest.rename(original)
+        manifest.symlink_to(original)
+    with pytest.raises(ValueError, match="linked preview"):
+        MODULE["inventory"](tmp_path, "previews")
+
+
+def test_preview_scope_refuses_unknown_schema(tmp_path):
+    directory = preview(tmp_path, 1, b"complete source")
+    (directory / "downloads/build_manifest.json").write_text('{"schema":"unknown"}')
+    with pytest.raises(ValueError, match="schema"):
+        MODULE["inventory"](tmp_path, "previews")
+
+
+def test_inventory_does_not_silently_expand_unknown_scope(tmp_path):
+    with pytest.raises(ValueError, match="scope"):
+        MODULE["inventory"](tmp_path, "everything")
+
+
+@pytest.mark.parametrize("script", ["serve_research.py", "build_site.py"])
+def test_refuses_active_servers_and_preview_builders(monkeypatch, script):
+    monkeypatch.setattr(
+        MODULE["subprocess"],
+        "check_output",
+        lambda *a, **k: f"python -I -B scripts/{script} --port 8765\n",
+    )
+    with pytest.raises(ValueError, match="active research servers/builders"):
+        MODULE["require_quiet"]()

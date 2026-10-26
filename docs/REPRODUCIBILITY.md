@@ -31,9 +31,24 @@ to a manifest-only dry run over completed generated bundles:
   --report data/generated-storage-reclaimed-REPLAY.json
 ```
 
+The default `--scope bundles` does not include preview snapshots. To inspect
+and reclaim only completed previews without repeating the earlier bundle batch:
+
+```bash
+.venv/bin/python -I -B scripts/reclaim_generated_storage.py --scope previews \
+  --report data/generated-preview-storage-plan-REPLAY.json
+.venv/bin/python -I -B scripts/reclaim_generated_storage.py --scope previews --apply \
+  --report data/generated-preview-storage-reclaimed-REPLAY.json
+```
+
+Preview scope accepts only exact versioned directories, an unlinked complete
+`downloads/build_manifest.json` with the known preview schema, and bound
+`evidence/` or `downloads/` artifacts. Equal filenames are not evidence of
+equal content. Partial/failed snapshots and all other directories are excluded.
+
 Use fresh report names. Application verifies original, duplicate and clone
 SHA/size bindings, requires independent inodes, preserves content/permissions/
-timestamps and rechecks all manifests. It refuses changed or linked paths,
+modification times and rechecks all manifests. It refuses changed or linked paths,
 active research servers/builders and unsupported cloning instead of falling
 back to another full copy. Per-file completion is journaled. Raw sources,
 model weights, failed attempts and original logical paths are not deleted.
@@ -51,6 +66,23 @@ Receipt/journal: `data/generated-storage-reclaimed-20261026-v1.json` and its
 the same APFS volume. The public tool additionally uses the direct native
 `clonefile` syscall so future failures cannot silently fall back to full copies.
 All current graph exports/tables/marks and 85 controls remain unchanged.
+
+The separate previews-only pass replaces 4,238 duplicate generated artifacts
+across **41 complete snapshots**; unfinished `preview-cycle-evidence-v9` is
+excluded. Free space rises from 341,116,792,832 to 614,814,695,424 bytes:
+**273,697,902,592 additional bytes recovered**. Receipt/journal:
+`data/generated-preview-storage-reclaimed-20261026-v1.json` and its
+`.journal.jsonl` sibling. The exact executed producer is preserved at
+`data/reclaim_preview_storage_executed_20261026_v1.py`.
+No targets overlap the earlier bundle pass. All 41 manifests, complete
+evidence/download bytes and paths remain unchanged. Post-reclamation graph
+verification again reconciles all 108 exports / 35 CSVs / 3,176 marks and
+85 controls. The public tool also refuses active `build_site.py` preview
+builders; all 24 focused tests pass. No acquisition, inference, new full
+snapshot, other-project/session change or website deployment follows.
+The full tracked audit is byte-identical to the earlier storage checkpoint:
+462/496, the same 34 legacy failures and all report fields unchanged.
+Public-documentation checks: 220. Bulk generation remains paused.
 
 ## Current successor: literal-position hyphen evidence, v26
 
