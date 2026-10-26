@@ -4,6 +4,13 @@ The study covers 2023-2024. This ledger records the current actionable work;
 the detailed source and scientific gates remain in `docs/AUDIT_STATUS.md` and
 `docs/STATE_PROGRESS.md`. Read local `AGENT-COMMS.md` before overlapping edits.
 
+**Dispatch check, October 26:** the current graphs are delivered. Bulk
+acquisition, inference and full snapshots remain paused for capacity review.
+The execution queue has no ready approved unfinished job: Wisconsin preparation
+is superseded by its verified closure, and retired Pennsylvania/Illinois
+branches remain blocked, not newly authorized work. Do not rerun them to fill
+a scheduled slot. DATA-01, VALIDATE-01, RESEARCH-01 and WEB-01 remain open.
+
 - [x] **STORAGE-01: Recover capacity before generating more data.** The volume
   is approaching its 2 TB limit. Pause acquisition and full rebuilds; inventory
   only this project's generated artifacts. Reclaim verified duplicate blocks
