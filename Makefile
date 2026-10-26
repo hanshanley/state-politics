@@ -32,6 +32,7 @@ help:
 	@echo "  legacy-figures  old analytical producers (not revalidated findings)"
 	@echo "  test lint audit  run tests / lint / traceability audit"
 	@echo "  source-ledger preview  inventory sources / build local-only evidence preview"
+	@echo "  clean-derived  disabled: retained evidence and legacy figures must be preserved"
 	@echo ""
 	@echo "Slow, network-heavy (run explicitly):"
 	@echo "  registry     verify all 100 state party websites (~10 min)"
@@ -131,7 +132,9 @@ audit:
 	$(PY) scripts/audit_reproducibility.py
 	$(PY) scripts/report_figures.py
 
-# Derived tables and figures only. Raw downloads and the hand-labelled gold set are kept:
-# one is expensive to re-fetch, the other is authored input that cannot be regenerated.
+# The legacy broad deletion conflicts with retained source and figure evidence.
 clean-derived:
-	rm -f $(DATA)/*.parquet $(DATA)/*.csv $(OUT)/*.png
+	@printf '%s\n' \
+	  "Refusing destructive cleanup of retained tables and legacy figures." \
+	  "No files were deleted. Use scripts/reclaim_generated_storage.py with a fresh dry-run report."
+	@exit 2

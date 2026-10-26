@@ -41,6 +41,17 @@ the detailed source and scientific gates remain in `docs/AUDIT_STATUS.md` and
   Full tracked audit remains exactly 462/496, with the same 34 legacy failures
   and every report field unchanged. All 220 public-documentation checks pass.
   Bulk generation stays paused; no source/model/scientific status is promoted.
+- [x] **STORAGE-03: Disable destructive legacy cleanup.** Make the old
+  `clean-derived` target refuse deletion rather than remove retained processed
+  tables or historical root PNGs. Document the intentional refusal and the
+  inspected reclamation alternative. Test actual Make execution only against
+  absolute disposable fixture paths; preserve all real research artifacts,
+  graph exports and protected controls.
+  The target now exits nonzero with an explicit no-deletion message and
+  reclamation guidance; help and documentation disclose this intentional
+  behavior change. All 25 storage tests and 220 public-documentation checks
+  pass. Every current exported artifact and all 85 protected controls remain
+  unchanged. No real cleanup, data rebuild or production change was performed.
 - [x] **PLOT-01: Regenerate the actual current graph collection.** Highest
   priority from October 25: use current source, classification, majority,
   full-score and comparison evidence. Create categorized Substack (`#F7F5F0`)

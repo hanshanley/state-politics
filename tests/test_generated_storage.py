@@ -3,8 +3,10 @@
 import errno
 import hashlib
 import json
+import os
 import runpy
 import shutil
+import subprocess
 import sys
 from pathlib import Path
 
@@ -249,3 +251,28 @@ def test_refuses_active_servers_and_preview_builders(monkeypatch, script):
     )
     with pytest.raises(ValueError, match="active research servers/builders"):
         MODULE["require_quiet"]()
+
+
+def test_legacy_clean_refuses_to_delete_retained_tables_or_figures(tmp_path):
+    data, output = tmp_path / "data/processed", tmp_path / "outputs"
+    data.mkdir(parents=True)
+    output.mkdir()
+    originals = {
+        data / "retained_source.parquet": b"retained normalized source",
+        data / "retained_source.csv": b"complete source ledger",
+        output / "legacy_figure.png": b"preserved historical figure",
+    }
+    for path, body in originals.items():
+        path.write_bytes(body)
+    makefile = Path(__file__).resolve().parents[1] / "Makefile"
+    result = subprocess.run(
+        ["make", "-f", str(makefile), "clean-derived", f"DATA={data}", f"OUT={output}"],
+        cwd=tmp_path,
+        env=dict(os.environ, MAKEFLAGS="", MAKEOVERRIDES="", MAKEFILES=""),
+        capture_output=True,
+        text=True,
+    )
+    assert result.returncode != 0
+    assert "No files were deleted." in result.stdout
+    assert "reclaim_generated_storage.py" in result.stdout
+    assert all(path.read_bytes() == body for path, body in originals.items())

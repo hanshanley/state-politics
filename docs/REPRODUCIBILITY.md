@@ -18,6 +18,11 @@ be bound explicitly before regenerated outputs can support the narrowed study.
 
 ## Storage-safe continuation
 
+The legacy `make clean-derived` target is disabled: its broad deletion would
+remove retained processed tables and historical root figures. It now refuses
+the operation with a nonzero exit and leaves all files intact. Use an inspected,
+manifest-bound reclamation plan below instead; do not substitute manual globs.
+
 Batch small source recoveries and reuse immutable inputs; do not create
 another complete data copy merely to save a checkpoint. Estimate incremental
 storage before a full replay. On APFS, the standalone reclamation tool defaults
