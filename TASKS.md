@@ -211,7 +211,7 @@ the detailed source and scientific gates remain in `docs/AUDIT_STATUS.md` and
   Final regressions: 412 passes / three optional skips. The tracked full audit
   is 454/488, with all report fields and the same 34 legacy failures identical
   to the saved source checkpoint; all 212 public-documentation checks pass.
-- [ ] **DATA-10: Investigate complete constitutional-resolution journal bodies.**
+- [x] **DATA-10: Investigate complete constitutional-resolution journal bodies.**
   After DATA-09 graph delivery, assess a genuinely different retained-source
   cohort: the remaining Nebraska queue has 1,314 LB contexts and 30 LR-CA
   contexts. The initial diagnostic found 20 same-date own-CA-header candidates
@@ -227,9 +227,26 @@ the detailed source and scientific gates remain in `docs/AUDIT_STATUS.md` and
   its mismatch came from a looser prefix remover before an unrelated
   leading-whitespace day opening, not a changed body/date. The corrected
   witness retains the frozen coordinate convention and independently reads
-  printed dates. Next: a separately typed immutable packet, consumer wiring,
-  focused regressions, complete source ZIP and saved source checkpoint before
-  any separate v23/token20 successor. All 30 remain outside current v23 counts.
+  printed dates. The separately typed immutable packet now qualifies all 30
+  contexts / 60 complete views / 233,061 characters, retaining all 95
+  candidates and 1,344 original NE dispositions. All 464 previous dates /
+  928 strings and 85 controls remain unchanged. Generic archive replay passes
+  against the full actual 157,598-row preview metadata table, not just the gap
+  queue. The complete source ZIP contains all 83 members. Seventy-six focused
+  tests and 433 integration tests pass, with three optional integration skips.
+  The full tracked audit is 456/490: the same 34 legacy failures and every
+  non-counter field are unchanged; two added code-guide checks pass.
+  This source-only checkpoint does not change the actual v23 graph counts.
+- [ ] **DATA-11: Propagate the qualified constitutional proposals.** Extend
+  actual v23/token20 using only the 30 new original contexts / 60 complete
+  reader views. Keep all 29 older archive packets, original rows/unknowns,
+  old inputs/predictions and controls unchanged. Verify exact fresh-only
+  encoder work, independent tokens/windows/logits, full source/vote/22-score
+  reconciliation and complete query/source downloads. Regenerate the actual
+  root and nested 27-chart / 108-export / 35-CSV collections, inspect real
+  images and browser navigation, then save verified delivery as Hans Hanley.
+  Never overwrite old packets/caches or promote human gold, majority accuracy,
+  party/source-rights certification or website publication.
 - [ ] **VALIDATE-01: Independently validate classifications.** Preserve original
   unanimity and unpromoted majority separately. Complete actual independent human
   review and resolve taxonomy disputes before accuracy or party-policy claims.

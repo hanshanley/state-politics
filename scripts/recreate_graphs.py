@@ -161,6 +161,7 @@ def recovery_packet(
                 "state-politics.nebraska-journal-collection-text.v2",
                 "state-politics.nebraska-journal-day-text.v1",
                 "state-politics.nebraska-journal-boundary-text.v1",
+                "state-politics.nebraska-journal-constitutional-text.v1",
             )
             or not all(manifest.get("approvals", {}).get(flag) is False for flag in FLAGS)
         ):
@@ -773,6 +774,7 @@ def recreate(
             "ne_journal_collection.py",
             "ne_journal_day_text.py",
             "ne_journal_boundary_text.py",
+            "ne_journal_constitutional_text.py",
         )
     ) + (ROOT / "src/state_politics/platforms/registry.py",) if archive_directories else ())
     for path in producers:

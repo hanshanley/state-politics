@@ -324,6 +324,12 @@ def load_archive(directory: Path, metadata=None):
     require(directory.resolve() == directory and path.is_file() and path.resolve() == path,
             "linked or missing packet/manifest")
     manifest = _json(path)
+    if manifest.get("schema") == "state-politics.nebraska-journal-constitutional-text.v1":
+        from state_politics.bills.ne_journal_constitutional_text import (
+            load_ne_journal_constitutional,
+        )
+
+        return load_ne_journal_constitutional(directory, metadata)
     if manifest.get("schema") == "state-politics.nebraska-journal-boundary-text.v1":
         from state_politics.bills.ne_journal_boundary_text import load_ne_journal_boundary
 

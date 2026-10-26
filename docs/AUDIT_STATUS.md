@@ -56,6 +56,35 @@ Its real nonzero exit is preserved:
 `data/ne-journal-boundary-delivery-full-audit-comparison-20261026-v1.json`.
 All 212 public-documentation checks and scoped Ruff pass.
 
+### Qualified constitutional-proposal extension, not yet propagated
+
+The separately typed journal packet qualifies **30 original constitutional
+proposals / 60 complete views / 233,061 characters**. Exact CA identities,
+original dates, full proposal sections, all ballot questions and literal
+following publication boundaries are checked without changing any old
+profile. Every raw body/terminator span, all 95 candidates and all 1,344 NE
+dispositions survive. All 464 earlier dates / 928 strings and 85 controls
+remain unchanged; the remaining 1,314 NE negatives are ordinary bill contexts,
+not recovered full bills from journal mentions.
+
+The packet replays through the shared archive loader against all 157,598
+actual preview metadata rows. Independent raw-body evidence freshly checks
+106 pages / 136 body spans, with the prior hash-bound 11,500-page source
+witness retained. The complete 83-member source ZIP is verified member by
+member. Seventy-six focused cases and 433 integration tests pass, with three
+optional integration skips. This is not independent human classification
+validation or model/publication approval.
+
+Packet: `bc94cca96abecfb3471f0669ca8d0b7fb4ae7304ec3dd098366552afe6aabbea`.
+Proof: `data/ne-constitutional-journal-independent-20261026-v1.json`.
+Actual v23 classifications and graphs above remain unchanged pending DATA-11.
+The real source-checkpoint full audit is **456/490**. The same 34 legacy
+failures and every non-counter field are unchanged; only two new passing
+code-guide checks differ. All 214 public-documentation checks and scoped Ruff
+pass. The nonzero exit/comparison remain in
+`data/ne-constitutional-source-full-audit-20261026-v1.json` and
+`data/ne-constitutional-source-full-audit-comparison-20261026-v1.json`.
+
 ## Preserved source-only qualification: October 26, 2026
 
 The final three ordinary Nebraska resolution gaps now have an independently

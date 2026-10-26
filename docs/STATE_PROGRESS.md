@@ -63,9 +63,16 @@ outer sections account for twelve earlier negatives; no date or policy text
 is repaired. The first independent coordinate mismatch and its exact observer
 are preserved; the corrected witness follows the frozen prefix convention.
 Proof: `data/ne-constitutional-probe-independent-sources-20261026-v1.json`.
-This is not yet a typed source packet: no CA admission, inference, graph-count
-change or model/publication approval is claimed. DATA-10 remains open for
-packet construction, consumer integration, tests and a complete source ZIP.
+DATA-10 now seals the separately typed source packet:
+`data/processed/ne-constitutional-journal-qualified-20261026-v1/`, manifest
+`bc94cca96abecfb3471f0669ca8d0b7fb4ae7304ec3dd098366552afe6aabbea`.
+All 30 contexts / 60 complete views / 233,061 characters replay against the
+full actual preview metadata. The complete ZIP retains all 83 members;
+all 464 earlier dates / 928 strings and 85 controls remain unchanged.
+Seventy-six focused tests and 433 integration tests pass / three optional
+integration skips. Proof: `data/ne-constitutional-journal-independent-20261026-v1.json`.
+This is source qualification, not a new classifier or graph baseline:
+DATA-11 must separately extend actual v23/token20 and refresh all exports.
 
 ## Preserved source-only qualification: October 26, 2026
 

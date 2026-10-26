@@ -16,6 +16,45 @@ remain unchanged. Broad rebuild commands below are not a request to complete
 other years; target-cycle selection and its inclusion/exclusion provenance must
 be bound explicitly before regenerated outputs can support the narrowed study.
 
+## Qualified next source: complete constitutional proposals
+
+`data/processed/ne-constitutional-journal-qualified-20261026-v1/` qualifies
+30 original contexts / 60 full reader views / 233,061 characters from the
+retained official journals. Manifest:
+`bc94cca96abecfb3471f0669ca8d0b7fb4ae7304ec3dd098366552afe6aabbea`.
+The original source34 gap queue is externally pinned:
+`f1631e502f6913dce8d7cd3a79ff63d6a5cef01fb71a29e24c6b073a6f6f86e7`.
+
+The CA suffix is part of identity and never aliases an ordinary resolution.
+Qualification requires the own 108th-session constitutional resolving clause,
+the complete first/consecutive outer sections, constitutional submission
+clause, every terminal ballot question and a literal following publication
+boundary. Inline `Sec. 2.` and the nine observed journal proceedings headings
+are separately typed rules; old defaults and packet semantics are unchanged.
+Raw policy text is not trimmed or normalized. All 464 old dates / 928 strings,
+all 95 new source candidates, every original row/unknown and all negatives
+remain retained; no journal bill mention is promoted to a complete bill.
+
+Independent raw evidence re-extracts all 106 new body pages and checks 136
+body spans, alongside the exact earlier 11,500-page verification. The packet
+observer checks all view/terminator spans and all 83 complete ZIP members.
+Complete ZIP: 128,539,305 bytes, SHA-256
+`f6cf0d59840d6ccb4bab8486d5137e7b32d58c8ba868a55f28687851388b5f5a`.
+Proof: `data/ne-constitutional-journal-independent-20261026-v1.json`.
+The real shared-loader replay passes against the entire 157,598-row preview
+metadata table. All 76 focused cases and 433 integration cases pass, with
+three optional integration skips; the 214 public-documentation checks pass.
+The real tracked full audit is 456/490, with the same 34 legacy failures and
+all non-counter fields unchanged; only the two added code-guide checks differ.
+Its nonzero exit and comparison are retained in
+`data/ne-constitutional-source-full-audit-20261026-v1.json` and
+`data/ne-constitutional-source-full-audit-comparison-20261026-v1.json`.
+
+**This source-only checkpoint does not update the current classifications or
+graphs.** DATA-11 starts from the completed v23/token20 baseline below; old
+caches and all approval flags remain unchanged. Original large archives remain
+local and ignored, not backed up by a code push.
+
 ## Current successor: literal-boundary journal evidence
 
 **Subsequent extensions start from completed v23 / independent token cache v20.**
