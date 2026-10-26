@@ -89,6 +89,19 @@ Proof names use
 No human gold, scientific approval, source-rights certification or website
 publication is granted. Large original archives remain local and ignored.
 
+The actual graph checkpoint is saved/pushed Hans-only **`d3c0d3b`**.
+Independent readback of the nontruncated GitHub tree checks **all 423 tracked
+files**, their saved Git hashes and actual working-file bytes, not just the
+changed exports. All 85 post-save controls pass. The clean-tree receipt is
+`data/ne-constitutional-graph-save-checkpoint-20261026-v1.json`,
+SHA-256 `3f0546aa44977c8906eb5b46e9a69c6878e9d7291448e9e1edfa532e772a6636`.
+Before-save proof:
+`data/ne-constitutional-delivery-verification-before-save-20261026-v1.json`,
+SHA-256 `df06ef3367b1cae0ed69ab498314353d41cb8433a6ebd40bc746bdb27fb7975c`.
+It binds all twenty primary proofs, both caches, current/nested exports and
+the exact four inspected completed temporary subtrees removed. Real evidence,
+failed attempts, downloads and historical collections remain intact.
+
 ## Preserved source qualification: complete constitutional proposals
 
 `data/processed/ne-constitutional-journal-qualified-20261026-v1/` qualifies

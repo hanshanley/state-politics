@@ -57,6 +57,14 @@ the saved source checkpoint; 214 public-documentation checks and Ruff pass.
 Current proof names
 use `data/ne-constitutional-`; nothing is published to the website.
 
+Actual v24 graph checkpoint **`d3c0d3b`** is saved/pushed as Hans Hanley
+without Copilot attribution. Independent remote readback verifies every one
+of 423 tracked files and all 85 post-save controls, with a clean worktree.
+Receipt: `data/ne-constitutional-graph-save-checkpoint-20261026-v1.json`,
+SHA-256 `3f0546aa44977c8906eb5b46e9a69c6878e9d7291448e9e1edfa532e772a6636`.
+DATA-11 is complete; DATA-01 and the independent-human/platform/party/rights/
+report gates remain open. Raw/model/research archives are still local and ignored.
+
 ## Preserved v23 dispatch snapshot
 
 This preserved checkpoint is superseded by v24/token21 above.

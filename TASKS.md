@@ -45,9 +45,9 @@ the detailed source and scientific gates remain in `docs/AUDIT_STATUS.md` and
   views, with original dates/identities unchanged. Independent replay
   re-extracts every page with both readers and checks all 350 body spans.
   The complete source packet and downstream propagation are now independently
-  verified. The expanded collection subsequently recovers another 249 contexts;
-  another 104 follow explicit-day qualification, three literal publication
-  boundaries and 30 complete constitutional proposals. The actual v24 source
+  verified. Later recoveries add 249 contexts from the expanded collection,
+  104 from explicit-day qualification, three from literal publication
+  boundaries and 30 from complete constitutional proposals. The actual v24 source
   union retains 17,787 gaps; no missing value is imputed.
 - [x] **DATA-02: Propagate the qualified Nebraska journal evidence.** Extend
   the actual v19/token-v16 baseline without changing original labels, weights,
@@ -239,7 +239,7 @@ the detailed source and scientific gates remain in `docs/AUDIT_STATUS.md` and
   The full tracked audit is 456/490: the same 34 legacy failures and every
   non-counter field are unchanged; two added code-guide checks pass.
   This source-only checkpoint does not change the actual v23 graph counts.
-- [ ] **DATA-11: Propagate the qualified constitutional proposals.** Extend
+- [x] **DATA-11: Propagate the qualified constitutional proposals.** Extend
   actual v23/token20 using only the 30 new original contexts / 60 complete
   reader views. Keep all 29 older archive packets, original rows/unknowns,
   old inputs/predictions and controls unchanged. Verify exact fresh-only
@@ -263,8 +263,13 @@ the detailed source and scientific gates remain in `docs/AUDIT_STATUS.md` and
   destinations at 1360/390/320px. Final regressions: 433 passes / three optional
   skips. The final tracked audit is 456/490, with the same 34 legacy failures
   and every report field identical to the saved source checkpoint; all 214
-  public-documentation checks and scoped Ruff pass. The saved-delivery
-  checkpoint and remote verification remain to finish.
+  public-documentation checks and scoped Ruff pass. Actual graph checkpoint
+  `d3c0d3b` is saved/pushed as Hans Hanley, without Copilot attribution. Every
+  one of 423 tracked files matches its remotely read GitHub blob; all 85
+  post-save controls pass and the worktree is clean. Proof:
+  `data/ne-constitutional-graph-save-checkpoint-20261026-v1.json`.
+  All large source/model/research archives remain local and ignored, not
+  backed up by this code/graph push. Broader DATA-01/scientific gates stay open.
 - [ ] **VALIDATE-01: Independently validate classifications.** Preserve original
   unanimity and unpromoted majority separately. Complete actual independent human
   review and resolve taxonomy disputes before accuracy or party-policy claims.

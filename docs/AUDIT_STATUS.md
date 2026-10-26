@@ -42,6 +42,16 @@ optional skips / no failures or errors**. The actual final tracked audit is
 field identical to the saved constitutional source checkpoint. All 214 public
 documentation checks and scoped Ruff pass. Nothing is deployed or promoted.
 
+Actual graph checkpoint **`d3c0d3b`** is saved and pushed as Hans Hanley,
+without Copilot attribution. All **423 tracked files** are remotely read back
+and match both Git and the working files; all 85 post-save controls pass.
+The clean-tree receipt is
+`data/ne-constitutional-graph-save-checkpoint-20261026-v1.json`,
+SHA-256 `3f0546aa44977c8906eb5b46e9a69c6878e9d7291448e9e1edfa532e772a6636`.
+Raw source/model/research archives remain local and ignored, not backed up
+by that push. Remaining source, human, platform, party, rights and report
+gates are not closed by this engineering delivery.
+
 Proofs use `data/ne-constitutional-` prefixes:
 `population-reconciliation-20261026-v1.json`,
 `derived-score-replay-20261026-v1.json`,
