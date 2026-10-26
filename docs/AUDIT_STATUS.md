@@ -98,6 +98,12 @@ integration skips / no failures or errors**. The actual full tracked audit is
 unchanged; two new passing code-guide checks account for the counter increase.
 Qualification and a local ignored source ZIP do not publish or back up these
 large original archives remotely.
+The source checkpoint is saved/pushed Hans-only **`21dda3a`**. All **425**
+tracked GitHub blobs and all 85 post-save controls independently match, with
+a clean worktree. Final source receipt:
+`data/ne-enacted-law-source-final-delivery-20261026-v1.json`,
+SHA-256 `0fce498c50dfce4dccb7a3f8b9075a64cc10dfe86f32d009fea8c55c75c23294`.
+Only DATA-14 may now separately extend the actual v24/token21 inference.
 
 ## Preserved v23 propagated evidence and graphs
 

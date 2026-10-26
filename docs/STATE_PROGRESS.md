@@ -114,6 +114,12 @@ Proof: `data/ne-enacted-law-qualified-independent-20261026-v1.json`,
 SHA-256 `e6c7d6f5efb523967af5aa3fdd7268e8d4b19bbbe427ecbfbc4d9e09bf1142cc`.
 DATA-14 must remain a separate verified inference/graph successor after the
 qualified source checkpoint is saved.
+That checkpoint is now saved/pushed Hans-only **`21dda3a`**, with all 425
+tracked remote blobs and 85 post-save controls verified and a clean worktree.
+Receipt: `data/ne-enacted-law-source-final-delivery-20261026-v1.json`,
+SHA-256 `0fce498c50dfce4dccb7a3f8b9075a64cc10dfe86f32d009fea8c55c75c23294`.
+The next active work is the separate DATA-14 preview/freeze/source-gallery
+successor; do not reopen or overwrite the source packets.
 
 ## Preserved v23 dispatch snapshot
 

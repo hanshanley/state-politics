@@ -64,6 +64,11 @@ non-counter field unchanged from 456/490. Only two new passing code-guide
 checks increase the counters. Source/ZIP/model archives remain local/ignored;
 code pushes do not remotely back them up. DATA-14 must separately freeze,
 execute and verify a v24/token21 successor before any actual graph refresh.
+The typed-source checkpoint is saved/pushed Hans-only **`21dda3a`**; all 425
+tracked remote blobs and 85 post-save controls match, with a clean worktree.
+Final source receipt:
+`data/ne-enacted-law-source-final-delivery-20261026-v1.json`,
+SHA-256 `0fce498c50dfce4dccb7a3f8b9075a64cc10dfe86f32d009fea8c55c75c23294`.
 
 ## Current successor: complete constitutional proposals
 

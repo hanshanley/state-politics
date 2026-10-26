@@ -291,7 +291,7 @@ the detailed source and scientific gates remain in `docs/AUDIT_STATUS.md` and
   The 99 conflicting book/bill pairs remain negatives, not normalized policy.
   Proof: `data/ne-enacted-law-probe-independent-sources-20261026-v1.json`.
   This does not admit sources or change v24 classifications/graphs.
-- [ ] **DATA-13: Qualify the separately typed enacted-law cohort.** Start from
+- [x] **DATA-13: Qualify the separately typed enacted-law cohort.** Start from
   the externally pinned source35 gap queue and the DATA-12 raw capture/readers.
   Require exact NE/108/LB identity, unique existing context, complete own page
   headers/folios/body, literal approval date and two full agreeing readers.
@@ -310,7 +310,11 @@ the detailed source and scientific gates remain in `docs/AUDIT_STATUS.md` and
   All 96 focused tests and 453 integration tests pass, with three optional
   integration skips. Full tracked audit: 458/492, the same 34 legacy failures
   and all non-counter fields unchanged; two new code-guide checks pass.
-  Source checkpoint/remote verification remains before DATA-14 inference.
+  Saved/pushed Hans-only `21dda3a`; independent GitHub readback verifies all
+  425 tracked files and all 85 post-save controls with a clean worktree.
+  Receipt: `data/ne-enacted-law-source-final-delivery-20261026-v1.json`.
+  The full source archives remain local/ignored, not backed up by that push.
+  Actual v24 counts/graphs are unchanged; DATA-14 is the separate successor.
 - [ ] **DATA-14: Propagate independently qualified enacted-law evidence.** Only
   after DATA-13 is verified and saved, extend actual v24/token21 with genuinely
   new qualified strings; retain all 30 earlier archives, original fields,
