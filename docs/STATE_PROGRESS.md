@@ -29,24 +29,53 @@ certified complete.
 
 ## Current dispatch snapshot: October 25, 2026
 
-The completed canonical inference is now **v21 / token cache v18**, with
-157,598 original contexts: **139,674 have retained text, 65,234 receive an
-original-rule unanimity topic, 74,440 abstain and 17,924 lack text**.
-The separate, unpromoted majority candidate assigns **78,443**, retaining all
-old assignments. Future extensions start here, not from historical v20/v17
+The completed canonical inference is now **v22 / token cache v19**, with
+157,598 original contexts: **139,778 have retained text, 65,272 receive an
+original-rule unanimity topic, 74,506 abstain and 17,820 lack text**.
+The separate, unpromoted majority candidate assigns **78,481**, retaining all
+old assignments. Future extensions start here, not from historical v21/v18
 instructions below. All prior snapshots and frozen human/model controls remain
 unchanged.
 
 The current collection actually refreshes all **27 charts / 108 Substack and
 website-background PNG/SVG exports**, linked from `outputs/README.md` and
 `outputs/index.html`, with all 35 complete chart CSVs and their full ZIP.
-Source/topic/majority/score/input bundles are v32/v19/v3/v3/v17; inspector v3
-exposes the same actual v21 evidence. The selected-context pilot remains a
+Source/topic/majority/score/input bundles are v33/v20/v4/v4/v18; inspector v4
+exposes the same actual v22 evidence. The selected-context pilot remains a
 historical diagnostic and was not rerun. Captions and manifest populations
 derive from the saved tables rather than stale hard-coded counts. Independent
 replay checks all 3,176 marks/cells; actual root and fresh nested galleries pass
 27 images / 180 links at 1360px, 390px and 320px, including real navigation to
 all seven methodology/evidence destinations.
+
+The explicit-day journal packet adds **104 original contexts / 208 complete
+views / 354,952 characters**, including the catalogued later 2024 volume and
+literal number-before-date day openings. Independent source replay checks
+11,500 unique raw reader pages, 350 body spans / 226 prefixes and every prior
+357-context date / 714 policy string. Original introduction dates are never
+repaired or relaxed; default v1/v2 profiles and old packets remain unchanged.
+Packet manifest:
+`ac27e166a4d5a0481106391e4b70b38ba9d131ab511f18c02a8f1ca88616bb9a`.
+
+Actual v22 encodes only 208 new exact strings / 87,278 tokens / 208 windows,
+with zero old encoder repeats or discarded tokens. All 179,459 prior
+predictions, 169,117 cached results, 157,494 other whole assignment rows and
+85 controls survive unchanged. The new contexts add 38 assignments and 66
+abstentions; majority separates 38 assignments / 50 rejections / 16 uncertain.
+All 354 other source partitions, 719 prior NE archive views and 34 previous
+complete source ZIPs remain unchanged. NE now has 1,347 remaining gaps and
+927 complete archive views. Three ordinary-resolution boundary negatives
+remain queued as DATA-08, not misrepresented as publisher-access blockers.
+
+The full fifty-state token/logit/window/108-member-inference-ZIP replay and
+independent source/vote/22-score checks pass. Chromium verifies all 208 new
+complete bodies, scores/windows and full queries: NE has 2,128 original
+contexts / 1,242 source pairs / 9,970,223 selected characters; LR96 has one
+context / two full pairs / 2,362 characters. The actual source ZIP has all 60
+members. Current proof names use `data/ne-journal-day-` prefixes and graph
+browser receipts v9/v10; the final suite has 397 passes / three optional skips.
+
+## Preserved v21 predecessor
 
 The expanded official journal collection adds **249 original Nebraska
 contexts / 498 complete reader views / 862,477 characters**, separately from
@@ -84,10 +113,10 @@ Actual graph browser receipts are
 website publication is claimed.
 
 The prior v20/token17/source31/108-context delivery remains preserved history.
-The next source lead is the later 2024 journal: all 89 not-located ordinary
-resolutions follow the retained book's March 25 cutoff. Find an explicit
-official catalogue reference before acquisition; DATA-05 does not authorize a
-guessed URL, native access workaround, date repair or new body admission.
+That later-volume lead is now captured, independently qualified and propagated
+in v22 above. Its former 89 not-located introductions and 18 date/body negatives
+remain in the old snapshots; do not repeat the acquisition or treat them as
+the current gap queue.
 
 The named checkpoint sections below are retained history. Statements that an
 execution "has not occurred" apply to that historical checkpoint, not a request

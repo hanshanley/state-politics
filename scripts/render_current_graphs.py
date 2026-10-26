@@ -30,24 +30,24 @@ from state_politics.plotting import theme  # noqa: E402
 BACKGROUNDS = {"substack": "#F7F5F0", "themarginoferror": "#F5F5F5"}
 SOURCES = {
     "evidence": (
-        "recreated-2023-2024-v32",
-        "6eaba423ca12e9844577c9d8bfc889ddbeb5cf36268b68976695c2f89281fc55",
+        "recreated-2023-2024-v33",
+        "9ea7d4a30f712461747c093eef0ba695a990b207b0b98ae8838850bed150498d",
     ),
     "topics": (
-        "topic-inference-retained-text-2023-2024-v19",
-        "165ea39bec929078917280778a63a16a1d8bbd93ab40209f7c95511657c4ae48",
+        "topic-inference-retained-text-2023-2024-v20",
+        "6b851e7d128960befc8af6e9664d1f220275ffc09908cf6128fc1dfcfbfdfb27",
     ),
     "majority": (
-        "topic-majority-2023-2024-v3",
-        "3bb04ed8259342b4c11818ff8edd01f8739cf395b168a5227df4e1fa0e780976",
+        "topic-majority-2023-2024-v4",
+        "977d4e8446458627a14a779f2e3587f2b65a8616394f92f3462afe7ea8ee297a",
     ),
     "scores": (
-        "topic-score-diagnostics-2023-2024-v3",
-        "4097d78124f32403be3cd3f5a4ec456124caeaff09144535d19a1b8a5af855d3",
+        "topic-score-diagnostics-2023-2024-v4",
+        "82223423ba0bf5e7d22c739819960b95558fa6e7f6970eabee422dc3116671f0",
     ),
     "inputs": (
-        "topic-input-comparison-2023-2024-v17",
-        "1418d6916527210a64007457c03e1d3222a4fc3dddd3c05fed1157d34c6e9e09",
+        "topic-input-comparison-2023-2024-v18",
+        "84af2d80f3456c2b05b0b1f9c542d5ed566c3ae376eb1159f9d98a1f6dbb61b3",
     ),
     "context": (
         "topic-context-pilot-2023-2024-v1",

@@ -7,6 +7,55 @@ coverage or party-policy findings.
 
 ## Current propagated evidence and graphs: October 25, 2026
 
+Completed **v22 / independent token cache v19** now retains 139,778 of the
+157,598 original contexts, with **17,820 still missing**. Unanimity gives
+65,272 assignments / 74,506 abstentions. Unpromoted majority gives 78,481
+assignments / 23,804 learned rejections / 37,490 uncertain / three excluded /
+17,820 unavailable. Independent human validation remains unresolved.
+
+Only 208 genuinely new strings / 87,278 tokens / 208 windows reached the
+unchanged encoder, with zero old repeats or discarded tokens. The 104 contexts
+add 38 unanimity assignments / 66 abstentions; majority separates 38 assigned /
+50 rejected / 16 uncertain. All 179,459 old predictions, 169,117 cached results,
+157,494 other whole assignment rows, original context fields and 85 controls
+remain unchanged. All 354 other partitions, 719 old NE views and 34 previous
+complete source ZIPs survive; the NE partition has 927 views / 1,347 gaps.
+
+Source33/topic20/majority4/score4/paired18/inspector4 preserve complete original
+texts, scores, windows, producers and full downloads. The full fifty-state
+token/logit/window/assignment/108-member-ZIP replay and independent vote/
+22-score means/envelopes pass. Actual Chromium reads all 208 new full texts
+and scores/windows, verifies the 2,128-context / 1,242-pair / 9,970,223-character
+NE query, the one-context/two-pair LR96 query and the full 60-member source ZIP.
+
+All **27 current charts / 108 actual PNG/SVG exports / 35 complete CSVs**
+are regenerated. Independent replay reconciles all 3,176 marks and changing
+captions. Root and a genuinely fresh nested replay have byte-identical
+image/table payloads and pass 1360/390/320px Chromium: 27 images, 180 links,
+seven real methodology/source navigations, no overflow/errors/external HTTP.
+Actual majority/full-score images were visually inspected. The old collection,
+exact producer and thirteen legacy PNGs remain intact; authored entry links
+and complete chart downloads remain available.
+
+Current proof names use `data/ne-journal-day-` prefixes:
+`population-reconciliation-20261025-v1.json`,
+`derived-score-replay-20261025-v1.json`,
+`tracked-cycle-audit-20261025-v1.json`,
+`query-download-replay-20261025-v1.json` and
+`current-graphs-independent-20261025-v1.json`.
+Browser receipts are `data/ne-journal-day-browser-20261025-v1/receipt.json`
+and `data/current-graphs-browser-20261025-v9/receipt.json` / `v10`.
+The combined suite has **397 passes / three optional skips / no failures or
+errors** (400 cases). No model, human-gold, source-rights or website promotion.
+The actual tracked full audit is **453/487**, preserving the same 34 legacy
+failures and every non-counter field from 452/486. Only one additional passing
+documentation check changes; the real nonzero exit remains recorded:
+`data/ne-journal-day-full-audit-20261025-v1.json` and
+`data/ne-journal-day-full-audit-comparison-20261025-v1.json`.
+All 211 public-documentation checks and scoped Ruff pass.
+
+## Preserved v21 delivery: October 25, 2026
+
 The completed source/model successor is **v21 / independent token cache v18**.
 Of 157,598 unchanged contexts, **139,674 have text / 17,924 remain missing**.
 Unanimity assigns 65,234 and abstains on 74,440; the unpromoted majority
@@ -78,8 +127,8 @@ certification, rights/report approval and website publication remain open.
 
 After the saved v21 graph delivery, the explicitly catalogued later volume and
 literal number-before-date day-opening profile qualify **104 additional
-contexts / 208 full views / 354,952 characters**. **These are not yet propagated
-into current v21/token18 inference or its graphs.** No original date is repaired:
+contexts / 208 full views / 354,952 characters**. **These are now propagated
+into v22/token19 inference and its graphs.** No original date is repaired:
 the parser checks the actual printed day opening instead of inheriting a stale
 date from preceding proceedings. Old v1/v2 behavior, IDs and packets replay
 unchanged. Independent raw-date verification also confirms every one of the

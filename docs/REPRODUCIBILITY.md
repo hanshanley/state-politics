@@ -16,7 +16,88 @@ remain unchanged. Broad rebuild commands below are not a request to complete
 other years; target-cycle selection and its inclusion/exclusion provenance must
 be bound explicitly before regenerated outputs can support the narrowed study.
 
-## Current successor: expanded journal collection
+## Current successor: explicit printed-day journal evidence
+
+**Subsequent extensions start from completed v22 / independent token cache v19.**
+The v21/v18 and earlier instructions below are preserved history, not targets
+to overwrite. All 157,598 original contexts remain: **139,778 have text /
+17,820 remain missing** (1,347 NE). Preview v38 preserves all 27 earlier archive
+packets and appends only the 104-context explicit-day packet:
+`981aacf89070044d807845403dc93f19e127c155b8e6e7ca5fa1bb2ce612c97c`.
+Source gallery `outputs/recreated-2023-2024-v33/` has manifest
+`9ea7d4a30f712461747c093eef0ba695a990b207b0b98ae8838850bed150498d`.
+Its 927-view NE archive retains all 719 earlier alternatives; 354 other
+partitions, all remaining gap rows and 34 earlier complete source ZIPs are
+unchanged. The new source ZIP preserves all 60 packet members, not metadata
+alone (122,199,519-byte graph container, SHA-256
+`8da1cafb9eeec342462d0e886bc54da4f22c088068ed1dcba88d04567f182f4a`).
+
+Actual `data/processed/cycle-topic-inference-retained-text-20261025-v22/`
+processes only **208 new strings / 87,278 tokens / 208 windows**, with zero
+old encoder repeats or discarded tokens. All 179,459 prior predictions,
+169,117 cache rows, 157,494 other whole assignments, original context fields
+and 85 controls are unchanged. New contexts add 38 assignments and 66
+abstentions: **65,272 assigned / 74,506 abstained / 17,820 unavailable**.
+The unpromoted majority candidate is **78,481 assigned / 23,804 rejected /
+37,490 uncertain / three excluded / 17,820 unavailable**. These are provisional
+model dispositions, not independent human accuracy.
+
+Prediction cache v22 is 754,397,184 bytes / 169,325 rows, SHA-256
+`fc6aa5c10c41086addbac53c754f6ef77078b2889ca9a5eaf8335490f6416e11`.
+Independent token cache v19 is 40,353,792 bytes / 169,325 strings, SHA-256
+`15103891f42c99c1aaad7270559d584975ee15365af43d54a5090c5595d4bc4f`.
+Parent v21/v18 caches remain byte-identical. The full fifty-state source/token/
+logit/window/assignment/108-member-inference-ZIP replay passes without an encoder:
+
+```bash
+HF_HUB_OFFLINE=1 TRANSFORMERS_OFFLINE=1 \
+  .venv/bin/python -I -B scripts/audit_cycle_topics.py \
+  --job data/processed/cycle-topic-inference-retained-text-20261025-v22 \
+  --gallery outputs/topic-inference-retained-text-2023-2024-v20 \
+  --verified-token-cache data/cycle-topic-independent-token-verification-cache-20261025-v19.sqlite \
+  --verified-token-cache-sha256 15103891f42c99c1aaad7270559d584975ee15365af43d54a5090c5595d4bc4f \
+  --out data/ne-journal-day-tracked-cycle-audit-REPLAY.json
+```
+
+Current manifests: topic v20
+`6b851e7d128960befc8af6e9664d1f220275ffc09908cf6128fc1dfcfbfdfb27`;
+majority v4 `977d4e8446458627a14a779f2e3587f2b65a8616394f92f3462afe7ea8ee297a`;
+full-score v4 `82223423ba0bf5e7d22c739819960b95558fa6e7f6970eabee422dc3116671f0`;
+paired-input v18 `84af2d80f3456c2b05b0b1f9c542d5ed566c3ae376eb1159f9d98a1f6dbb61b3`;
+inspector v4 `bc4da1d14aa4dde747593ce0f5cf6ed3e4e25195f169c3b4d84968c4e1d3c7b9`.
+Metadata inference and the selected-context pilot are unchanged.
+
+Serve the inspector with `scripts/serve_research.py --classifications
+outputs/classification-inspector-2023-2024-v4`. Actual Chromium verifies all 208
+new complete bodies, all 22 scores and complete windows. The full NE query has
+2,128 contexts / 1,242 complete input/prediction pairs / 9,970,223 selected
+characters; LR96 has one context / two pairs / 2,362 characters. The actual
+source download contains every one of the 60 original files.
+
+The current root and fresh `outputs/current-render-ne-journal-day-REPLAY-v1/`
+galleries regenerate **27 charts / 108 exports / 35 complete CSVs**, reconciling
+all 3,176 marks. Their image/table bytes are identical; Chromium passes at
+1360/390/320px with 27 loaded images, 180 checked links, seven actual
+methodology/evidence navigations and no overflow/errors/external HTTP.
+The complete old source32 collection and producer remain in the ignored
+`outputs/preserved-current-source32-20261025-v1/`. The authored output README
+is copied, not removed by render preservation. Current manifest:
+`e636e33205bfd0ec308c8e9552dad8e9db7fbf8e3eb02e7ed3bd22ebc56e2b78`.
+The combined suite has **397 passes / three optional skips** (400 cases).
+Proofs use `data/ne-journal-day-` prefixes; browser receipts are
+`data/ne-journal-day-browser-20261025-v1/receipt.json` and
+`data/current-graphs-browser-20261025-v9/receipt.json` / `v10`.
+Raw source/model/research archives remain local and ignored. No human gold,
+model promotion, party/source-rights certification or website publication is granted.
+The actual tracked audit is **453/487**, with the same 34 legacy failures and
+every non-counter report field identical to 452/486; its nonzero exit and exact
+comparison are retained in `data/ne-journal-day-full-audit-20261025-v1.json`
+and `data/ne-journal-day-full-audit-comparison-20261025-v1.json`.
+All 211 public-documentation checks and scoped Ruff pass.
+
+## Preserved v21 successor: expanded journal collection
+
+This section's former extension instruction is superseded by v22/token19 above.
 
 **Use completed v21 / independent token cache v18 for subsequent extensions.**
 All earlier jobs, caches, source packets and graph snapshots remain immutable;
@@ -295,8 +376,8 @@ All 276 source integration tests pass, with three optional fixture skips.
 
 ## Explicit printed-day source qualification
 
-This follow-up is **source qualification only**, not a new current inference
-or graph delivery. Current canonical outputs remain v21/token18/source32.
+This was a separate source qualification, now propagated into the verified
+v22/token19/source33 delivery above; qualification alone never certified it.
 The official Library Commission journal catalogue explicitly lists 2024 Volume 2.
 Exactly two bounded GETs retain that catalogue and its listed 33,072,638-byte /
 1,613-page PDF, without redirects, retries, native endpoint access or a new

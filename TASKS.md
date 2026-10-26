@@ -36,8 +36,8 @@ the detailed source and scientific gates remain in `docs/AUDIT_STATUS.md` and
   inspection and model-blind review serving passed 46 regressions and actual
   saved-bundle HTTP checks; checkpoint `1d57247`.
 - [ ] **DATA-01: Resolve genuine source gaps when new permitted evidence exists.**
-  Current source union: 157,598 candidate contexts, 139,674 with body text and
-  17,924 still missing. Earlier 18,281/18,173-row gap queues remain preserved.
+  Current source union: 157,598 candidate contexts, 139,778 with body text and
+  17,820 still missing. Earlier 18,281/18,173/17,924-row gap queues remain preserved.
   Follow recorded source closures and restrictions; do not repeat closed
   campaigns or turn absent text into zeros or fabricated inputs.
   New October 25 source milestone: one newly identified official Nebraska
@@ -46,7 +46,7 @@ the detailed source and scientific gates remain in `docs/AUDIT_STATUS.md` and
   re-extracts every page with both readers and checks all 350 body spans.
   The complete source packet and downstream propagation are now independently
   verified. The expanded collection subsequently recovers another 249 contexts;
-  this does not close the remaining 17,924 source gaps.
+  another 104 follow the explicit-day qualification; 17,820 source gaps remain.
 - [x] **DATA-02: Propagate the qualified Nebraska journal evidence.** Extend
   the actual v19/token-v16 baseline without changing original labels, weights,
   taxonomy, human reservations or unavailable source fields. Reuse all prior
@@ -144,14 +144,29 @@ the detailed source and scientific gates remain in `docs/AUDIT_STATUS.md` and
   unchanged. The complete 60-member source ZIP and all 1,037 candidates /
   1,451 dispositions are retained. Forty focused tests and 283 integration
   tests pass, with three optional integration skips; 211 doc checks pass.
-  This source qualification has not updated current v21/token18 graphs.
-- [ ] **DATA-07: Propagate explicit-day-qualified source evidence.** Extend
+  Qualification alone did not update inference or graphs; DATA-07 now completes
+  the separate v22/token19 propagation.
+- [x] **DATA-07: Propagate explicit-day-qualified source evidence.** Extend
   completed v21/token18 with only the new 104 original contexts, keeping all
   27 older archives, original context fields and cached predictions unchanged.
   Independently verify fresh-only inference, token/window/logit coverage,
   source union and complete downloads, then regenerate and inspect the actual
   current dual-background graphs. Preserve previous outputs and gates; checkpoint
   verified delivery as Hans Hanley.
+  Verified v22/token19: 208 fresh strings / 87,278 tokens / 208 windows, zero
+  old encoder repeats or discarded tokens. The new contexts contribute 38
+  assignments / 66 abstentions; actual totals are 65,272 assigned / 74,506
+  abstained / 17,820 missing. Unpromoted majority assigns 78,481. All 179,459
+  old predictions, 169,117 cached results, 157,494 other whole assignment rows,
+  85 controls, 354 other partitions, 719 prior NE views and 34 old complete
+  research ZIPs survive unchanged. Full fifty-state/score/source/download replay
+  passes. Actual root and nested 27-chart / 108-export / 35-CSV collections
+  reconcile all 3,176 marks and have byte-identical image/table payloads.
+  Chromium verifies all 208 new complete bodies/scores/windows, full NE and LR96
+  queries, the entire 60-member source ZIP and all gallery images/links at
+  1360/390/320px. The final suite passes 397 tests with three optional skips.
+  Full tracked audit 453/487 retains the same 34 legacy failures and every
+  non-counter report field from 452/486; 211 documentation checks and Ruff pass.
 - [ ] **DATA-08: Resolve the three remaining ordinary-resolution boundaries.**
   LR449's explicit disposition begins the next page, exposing a synthetic
   stream-join newline not represented by its one raw fragment. LR5 and LR282
