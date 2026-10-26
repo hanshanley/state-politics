@@ -377,6 +377,16 @@ the detailed source and scientific gates remain in `docs/AUDIT_STATUS.md` and
   all 51 previous law contexts / 102 strings, every negative and all source
   versions. Use a separate schema/namespace, immutable complete source packet,
   focused tests and independent replay before a saved source checkpoint.
+  Verified source packet: seven original contexts / 14 unchanged full reader
+  strings / 210,419 characters, admitting only the nine literal witnessed
+  positions. All 51 previous law contexts / 102 strings, 478 source candidates,
+  prior negatives and sealed whitespace-only module remain unchanged. Generic
+  replay checks all 157,598 actual v25 metadata contexts. The complete
+  50-member / 163,773,485-byte source ZIP is independently verified.
+  All 120 focused and 477 integration tests pass, with three optional
+  integration skips. Full tracked audit: 460/494, the same 34 legacy failures
+  and every non-counter field unchanged; two passing code-guide checks added.
+  Source save/remote verification remains before DATA-17 inference.
 - [ ] **DATA-17: Propagate only independently qualified hyphen evidence.**
   After DATA-16 is saved and verified, extend actual v25/token22, retaining
   every old input/prediction/cache and all 31 previous archives. Encode only

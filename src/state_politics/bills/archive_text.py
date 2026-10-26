@@ -324,6 +324,10 @@ def load_archive(directory: Path, metadata=None):
     require(directory.resolve() == directory and path.is_file() and path.resolve() == path,
             "linked or missing packet/manifest")
     manifest = _json(path)
+    if manifest.get("schema") == "state-politics.nebraska-enacted-hyphen-text.v1":
+        from state_politics.bills.ne_enacted_hyphen_text import load_ne_enacted_hyphen
+
+        return load_ne_enacted_hyphen(directory, metadata)
     if manifest.get("schema") == "state-politics.nebraska-enacted-law-text.v1":
         from state_politics.bills.ne_enacted_law_text import load_ne_enacted_law
 

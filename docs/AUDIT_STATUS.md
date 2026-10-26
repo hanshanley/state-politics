@@ -5,6 +5,41 @@ The thirteen historical root figures and their analytical conclusions remain
 inspect source/model evidence; they do not certify a classifier, complete
 coverage or party-policy findings.
 
+## Qualified next source: exact source-proven hyphen positions
+
+The separate `state-politics.nebraska-enacted-hyphen-text.v1` packet qualifies
+**seven original contexts / 14 complete raw reader views / 210,419 characters**.
+It permits only nine independently witnessed byte-0xAD/ASCII-hyphen positions;
+every other non-whitespace code point, full-law identity/body/page/date guard
+and original context must agree. **Neither reader string is normalized.**
+The old whitespace-only law module is byte-identical, and all 51 earlier
+law contexts / 102 strings / 478 source candidates and old negatives remain
+preserved in the complete parent packet. Enacted versions stay explicitly
+separate from introduced texts and original introduction dates.
+
+Generic replay passes against every actual v25 metadata context (157,598).
+Independent verification checks every new raw string against the earlier
+complete-body negative, all nine literal source witnesses, all prior
+archive-manifest pins and all 85 controls. Every payload in the complete
+**50-member / 163,773,485-byte source ZIP** is independently verified.
+The preserved first failed glyph observer, its partial crop and traceback,
+the corrected observer/all crops and the independent verifier are included.
+There are **120 focused passes / 477 integration passes / three optional
+integration skips / no failures or errors**. Full tracked audit: **460/494**,
+the same 34 legacy failures and every non-counter report field unchanged;
+two new passing code-guide checks account for the increase.
+
+Packet: `data/processed/ne-enacted-hyphen-qualified-20261026-v1/`,
+manifest `16b98b79d853c1c72b22972b2f00ffb16abaa22b2551d20803001b5a9049e57b`.
+Independent proof: `data/ne-enacted-hyphen-qualified-independent-20261026-v1.json`,
+SHA-256 `d4ad1924ed98ea0bde30f217ae0d7d1db452a4727f27fc5ce3c28aa49627d46c`.
+Complete ZIP: `data/ne-enacted-hyphen-qualified-complete-20261026-v1.zip`,
+SHA-256 `6f0610466d986839bdb587f52e7026bff7cf62f7c23b42ec55f504f5a98c5a9e`.
+This source-only checkpoint does not change current v25/token22 predictions,
+source36 tables or actual graphs below. DATA-17 must separately verify inference
+and graph propagation after the saved source checkpoint. Human, legal-version,
+filing-time, party, rights and publication gates stay unpromoted.
+
 ## Current propagated evidence and graphs: v25
 
 Completed **v25 / independent token cache v22** retains **139,862 of 157,598

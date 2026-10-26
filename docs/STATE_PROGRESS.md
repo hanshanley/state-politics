@@ -98,6 +98,25 @@ and graph propagation must remain separately verified. No admission,
 independent human validation, legal-version certification or publication follows
 from the glyph witness alone.
 
+DATA-16 now seals a separately typed exact-position source packet for those
+seven original contexts / 14 complete raw views / 210,419 characters. The
+comparator permits only the exact nine witnessed positions, never a global
+hyphen substitution; both raw strings and all original dates remain unchanged.
+The sealed whitespace-only law module and the complete earlier 51-context /
+102-string packet replay unchanged. All 478 source candidates and prior
+negatives survive. Generic dispatch checks all 157,598 actual v25 contexts.
+The complete 50-member / 163,773,485-byte source ZIP passes independent
+payload verification, preserving all source/glyph/observer provenance.
+All 120 focused tests / 477 integration tests pass, with three optional
+integration skips. Full tracked audit 460/494 retains the same 34 legacy
+failures and all non-counter fields; only two passing code-guide checks added.
+Packet manifest:
+`16b98b79d853c1c72b22972b2f00ffb16abaa22b2551d20803001b5a9049e57b`.
+Independent proof: `data/ne-enacted-hyphen-qualified-independent-20261026-v1.json`,
+SHA-256 `d4ad1924ed98ea0bde30f217ae0d7d1db452a4727f27fc5ce3c28aa49627d46c`.
+Actual v25/token22/139,862 available/17,736 missing/current graphs remain
+unchanged until DATA-17 separately executes and verifies the successor.
+
 ## Preserved v24 dispatch snapshot
 
 Future extensions start from completed **v24 / token cache v21**, not the

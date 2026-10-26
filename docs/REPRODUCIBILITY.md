@@ -16,6 +16,56 @@ remain unchanged. Broad rebuild commands below are not a request to complete
 other years; target-cycle selection and its inclusion/exclusion provenance must
 be bound explicitly before regenerated outputs can support the narrowed study.
 
+## Qualified next source: literal source-proven hyphen positions
+
+This source-only packet does **not** update the actual v25 baseline below.
+It qualifies seven original contexts / 14 complete raw views / 210,419
+characters, accepting only the nine independently witnessed PDF byte/font/
+glyph positions. All other character/identity/body/folio/date requirements
+stay strict. The original whitespace-only module is byte-identical, the
+entire earlier 51-context / 102-string law packet is preserved, and no raw
+input string is normalized or relabelled as introduced text.
+
+```bash
+.venv/bin/python -I -B -m state_politics.bills.ne_enacted_hyphen_text \
+  --parent-packet data/processed/ne-enacted-laws-qualified-20261026-v1 \
+  --glyph-evidence data/ne-enacted-law-hyphen-glyphs-20261026-v2 \
+  --independent-witness data/ne-enacted-law-hyphen-independent-20261026-v1.json \
+  --gap-queue outputs/recreated-2023-2024-v36/chart-data/missing_retained_text.parquet \
+  --out-dir data/processed/ne-enacted-hyphen-qualified-REPLAY
+```
+
+Use a fresh output directory. The original independent verifier and first
+failed observer/log/crop under `data/` are required provenance inputs; all
+are retained in the completed source ZIP. The source36 gap queue is externally
+pinned to `819618e953b550d66e2bc38c56b2f6d6a1984c88af83f4628d83543b351759a6`.
+Parent packet: `56732a9b8f5dc0881d877556c2b6883e7cfd7a8ee009606988fa0e8a7b1a9e31`.
+Literal glyph report:
+`4de7c1bdbd748ca7e4d304c7bf5e0d6aba8b476fdee91ed4b26d37cef5aa571d`;
+independent direct-source witness:
+`f523ba371bf03739ec49b618693eace20be49932917f4f7581baefbbe2162edc`.
+
+Qualified manifest:
+`16b98b79d853c1c72b22972b2f00ffb16abaa22b2551d20803001b5a9049e57b`.
+Complete 50-member / 163,773,485-byte ZIP:
+`data/ne-enacted-hyphen-qualified-complete-20261026-v1.zip`,
+SHA-256 `6f0610466d986839bdb587f52e7026bff7cf62f7c23b42ec55f504f5a98c5a9e`.
+Independent packet proof:
+`data/ne-enacted-hyphen-qualified-independent-20261026-v1.json`,
+SHA-256 `d4ad1924ed98ea0bde30f217ae0d7d1db452a4727f27fc5ce3c28aa49627d46c`.
+It replays all 157,598 actual current metadata contexts, original raw strings/
+dates, the prior parent packet/source candidates, all 31 earlier archive
+manifest pins and all 85 controls; all source ZIP members match byte-for-byte.
+
+Validation: 120 focused passes / 477 integration passes / three optional
+integration skips; full tracked audit 460/494, the same 34 legacy failures
+and every non-counter field unchanged from 458/492. Only two added passing
+code-guide checks increase the counters. No HTTP, encoder execution, source
+version reinterpretation or human/filing-time/party/rights/publication
+approval follows. DATA-17 must separately freeze and verify a v25/token22
+successor before actual graph updates; large raw/source/model archives remain
+local and ignored.
+
 ## Current successor: explicitly versioned enacted-law evidence
 
 **Future extensions start from completed v25 / independent token cache v22.**
