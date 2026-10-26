@@ -27,10 +27,40 @@ not that the state has no data. Platform recovery is separate from the
 legislative status in this table; no state's operative-platform coverage is
 certified complete.
 
-## Current dispatch snapshot: v23
+## Current dispatch snapshot: v24
 
-Future extensions start from completed **v23 / token cache v20**, not the
-historical v22/v19 instructions below. The 157,598 original contexts include
+Future extensions start from completed **v24 / token cache v21**, not the
+historical checkpoints below. There are 157,598 original contexts:
+139,811 with text / 17,787 missing. Unanimity assigns 65,288 and abstains on
+74,523. Unpromoted majority assigns 78,499, rejects 23,810, keeps 37,499
+uncertain / three excluded / 17,787 unavailable. Independent human accuracy
+and operative-platform/party/source-rights gates remain unresolved.
+
+The 30 constitutional proposals contribute 60 complete views / 233,061
+characters. Actual new work is 53,166 tokens / 96 windows, zero repeats or
+discarded tokens. They add 16 unanimity assignments / 14 abstentions; majority
+separates 18 assignments / three rejections / nine uncertain. All 179,673
+earlier predictions, 169,331 cache rows, 157,568 other whole assignments,
+85 controls, 354 other partitions, 933 prior NE views and 36 complete old
+source ZIPs remain unchanged. NE has 993 archive views / 1,314 remaining LB gaps.
+No journal bill title is substituted for a complete original bill body.
+
+Source35/topic22/majority6/score6/paired20/inspector6 pass full independent
+source/token/logit/window/vote/22-score/download checks. Actual root and fresh
+nested 27-chart / 108-export / 35-CSV collections reconcile all 3,176 marks
+and have identical image/table payloads. Chromium checks all 60 full texts,
+scores/long windows and complete NE/LR2CA query records, the full 83-member
+source ZIP, every gallery image/link and seven real navigations at all three
+widths. Final tests: 433 passes / three optional skips. The final tracked audit
+is 456/490, the same 34 legacy failures and every report field unchanged from
+the saved source checkpoint; 214 public-documentation checks and Ruff pass.
+Current proof names
+use `data/ne-constitutional-`; nothing is published to the website.
+
+## Preserved v23 dispatch snapshot
+
+This preserved checkpoint is superseded by v24/token21 above.
+The 157,598 original contexts include
 139,781 with text / 17,817 missing. Unanimity assigns 65,272 and abstains on
 74,509; the separate, unpromoted majority assigns 78,481, rejects 23,807,
 retains 37,490 uncertain / three excluded / 17,817 unavailable.
@@ -71,8 +101,8 @@ full actual preview metadata. The complete ZIP retains all 83 members;
 all 464 earlier dates / 928 strings and 85 controls remain unchanged.
 Seventy-six focused tests and 433 integration tests pass / three optional
 integration skips. Proof: `data/ne-constitutional-journal-independent-20261026-v1.json`.
-This is source qualification, not a new classifier or graph baseline:
-DATA-11 must separately extend actual v23/token20 and refresh all exports.
+This source checkpoint did not itself change inference or graphs.
+DATA-11 now completes the separately verified v24/token21 propagation above.
 
 ## Preserved source-only qualification: October 26, 2026
 

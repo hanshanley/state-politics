@@ -1,12 +1,12 @@
 category,label,contexts
-classified,Assigned one topic,65272
-supervised_rejection,Model rejection output only,23387
-mixed_chunk_topics,Within-document window disagreement,28353
-low_confidence,Low score only,14572
+classified,Assigned one topic,65288
+supervised_rejection,Model rejection output only,23390
+mixed_chunk_topics,Within-document window disagreement,28355
+low_confidence,Low score only,14576
 ambiguous_margin,Small score margin only,0
 insufficient_evidence,Insufficient model evidence,0
-mixed_view_abstentions,Multiple source-view abstention reasons,2178
-source_alternative_disagreement,Source-alternative disagreement,6016
+mixed_view_abstentions,Multiple source-view abstention reasons,2179
+source_alternative_disagreement,Source-alternative disagreement,6020
 source_test_record,Source test records excluded,3
 source_draft_request,Source draft requests excluded,0
-unavailable,No supplied retained text,17817
+unavailable,No supplied retained text,17787

@@ -5,7 +5,53 @@ The thirteen historical root figures and their analytical conclusions remain
 inspect source/model evidence; they do not certify a classifier, complete
 coverage or party-policy findings.
 
-## Current propagated evidence and graphs: v23
+## Current propagated evidence and graphs: v24
+
+Completed **v24 / independent token cache v21** retains **139,811 of 157,598
+contexts**, with **17,787 missing**. Unanimity gives 65,288 assignments /
+74,523 abstentions. Separate, unpromoted majority gives 78,499 assignments /
+23,810 learned rejections / 37,499 uncertain / three excluded / 17,787
+unavailable. New constitutional proposals contribute 16 unanimity assignments /
+14 abstentions; majority separates 18 assigned / three rejected / nine uncertain.
+
+Only 60 genuinely new strings / 233,061 characters / 53,166 tokens / 96 windows
+reach the unchanged encoder. No old input is re-encoded or token discarded.
+All 179,673 prior predictions, 169,331 cache rows, 157,568 other whole
+assignment records, original fields/unknowns and 85 controls remain unchanged.
+Source35 retains 354 other partitions, 933 prior NE archive views and 36
+older complete source ZIPs. NE now has 993 archive views / 1,314 gaps.
+
+Topic22/majority6/score6/paired20/inspector6 pass the full fifty-state token/
+logit/window/108-member-inference-ZIP replay and independent vote/22-score
+mean/source-envelope checks. The long proposals are fully windowed, not
+truncated at the tokenizer's nominal single-sequence limit. Actual Chromium
+checks all 60 complete texts, scores and first/last windows. Full NE query:
+2,128 contexts / 1,308 source pairs / 10,215,390 selected characters. The
+literal LR2CA query includes both matching contexts / three pairs / 100,809
+characters, not just the selected bill. The complete source ZIP has 83 members.
+
+All **27 charts / 108 PNG/editable-SVG exports / 35 full CSVs** are actually
+regenerated. Independent replay checks all 3,176 marks; root and fresh nested
+image/table bytes match. Both galleries pass 1360/390/320px Chromium with
+27 loaded images, 180 links and seven real evidence/methodology navigations,
+without overflow, script errors or external HTTP. Actual majority, coverage
+and full-score PNGs were visually inspected. All old collections and the
+copied authored README remain intact. Final suite: **433 passes / three
+optional skips / no failures or errors**. The actual final tracked audit is
+**456/490**, with the same 34 missing-legacy-artifact failures and every report
+field identical to the saved constitutional source checkpoint. All 214 public
+documentation checks and scoped Ruff pass. Nothing is deployed or promoted.
+
+Proofs use `data/ne-constitutional-` prefixes:
+`population-reconciliation-20261026-v1.json`,
+`derived-score-replay-20261026-v1.json`,
+`tracked-cycle-audit-20261026-v1.json`,
+`query-download-replay-20261026-v1.json` and
+`current-graphs-independent-20261026-v1.json`.
+Browser receipts are `data/ne-constitutional-browser-20261026-v1/receipt.json`
+and `data/current-graphs-browser-20261025-v13/receipt.json` / `v14`.
+
+## Preserved v23 propagated evidence and graphs
 
 Completed **v23 / independent token cache v20** retains **139,781 of 157,598
 contexts**, with **17,817 missing**. Unanimity gives 65,272 assignments /
