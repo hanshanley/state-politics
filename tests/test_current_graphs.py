@@ -13,6 +13,7 @@ matplotlib.use("Agg")
 import matplotlib.pyplot as plt  # noqa: E402
 import pandas as pd  # noqa: E402
 import pytest  # noqa: E402
+from matplotlib.backends.backend_agg import FigureCanvasAgg  # noqa: E402
 from PIL import Image  # noqa: E402
 
 MODULE = runpy.run_path(
@@ -110,6 +111,54 @@ def test_empty_state_coverage_is_not_invented_zero_activity():
     assert ax.containers[0].datavalues.tolist() == [0, 60]
     assert ax.containers[1].datavalues.tolist() == [0, 40]
     plt.close(fig)
+
+
+def test_paired_topic_counts_keep_small_and_zero_values_readable(tmp_path):
+    tables = {
+        ("majority", "status_comparison"): pd.DataFrame(
+            dict(
+                status=["classified", "uncertain", "unavailable"],
+                baseline_contexts=[12002, 145596, 0],
+                candidate_contexts=[15007, 142591, 0],
+            )
+        ),
+        ("majority", "topic_comparison"): pd.DataFrame(
+            dict(
+                label=["Large topic", "Small topic", "Zero topic"],
+                baseline_contexts=[12000, 2, 0],
+                candidate_contexts=[15000, 7, 0],
+            )
+        ),
+    }
+    specifications = MODULE["specifications"](tables)
+    spec = next(specifications)
+    specifications.close()
+    chart, counts = spec["fig"].axes
+    assert [bar.get_width() for bar in chart.patches] == [12000, 2, 0, 15000, 7, 0]
+    assert counts.get_ylim() == chart.get_ylim()
+    assert [text.get_text() for text in counts.texts] == [
+        "Unanimity", "12,000", "2", "0", "Majority", "15,000", "7", "0",
+    ]
+    assert [text.get_position()[1] for text in counts.texts[1:4]] == [0, 1, 2]
+    assert [text.get_position()[1] for text in counts.texts[5:8]] == [0, 1, 2]
+    result = MODULE["save_figure"](spec, tmp_path)
+    canvas = FigureCanvasAgg(spec["fig"])
+    canvas.draw()
+    renderer = canvas.get_renderer()
+    extents = [text.get_window_extent(renderer) for text in counts.texts]
+    assert all(
+        not left.overlaps(right)
+        for index, left in enumerate(extents)
+        for right in extents[index + 1:]
+    )
+    for background in MODULE["BACKGROUNDS"]:
+        path = tmp_path / background / "majority/topic_comparison.svg"
+        svg = ET.parse(path).getroot()
+        text = [node.text for node in svg.iter() if node.tag.endswith("}text")]
+        assert all(
+            value in text for value in ("Unanimity", "Majority", "12,000", "15,000", "2", "7")
+        )
+    assert len(result["files"]) == 4
 
 
 def test_state_partitions_preserve_dataframe_identity_and_every_row():

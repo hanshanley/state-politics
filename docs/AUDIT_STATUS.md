@@ -5,6 +5,32 @@ The thirteen historical root figures and their analytical conclusions remain
 inspect source/model evidence; they do not certify a classifier, complete
 coverage or party-policy findings.
 
+## Current presentation refresh: October 27
+
+The paired topic comparison now prints exact original-unanimity and
+majority-candidate counts beside every row, including zeros. All 42 numeric
+cells match the original CSV; only its four actual PNG/editable-SVG exports
+change. The other 104 images and all 35 CSVs remain byte-identical.
+The 27-chart collection still independently reconciles all 3,176 plotted marks,
+complete chart ZIP, 13 legacy PNGs and 85 protected controls. Both backgrounds
+were visually inspected; root/nested galleries pass actual Chromium at
+1360/390/320px with 27 images, 180 links and seven real destinations.
+All 15 plotting tests pass. No source, model, labels or approval flags change.
+
+Current manifest:
+`16f6cee05fc0c72cec23d1340531af97b388f487435c52ee720379191f57e471`.
+Declared chart payload: 18,374,672 bytes, excluding the manifest and private
+research archives. The prior collection/README/exact producer are preserved at
+`outputs/preserved-current-topic-counts-20261027-v1/`, not deleted or rewritten.
+Independent proof:
+`data/topic-count-readability-current-graphs-independent-20261027-v1.json`.
+
+The bounded retained-source follow-up qualifies no additional bodies. Named HI
+records have no exact literal original state-URL joins; NJ's latest already
+bounded versions have no exact typed/session match to the current missing
+contexts. This is a limited metadata negative, not complete source exhaustion.
+All 17,729 source gaps and scientific/report/publication gates remain open.
+
 ## Storage-preserving checkpoint
 
 October 26 reclamation recovers **326.97 GB**, leaving about **339.73 GB free**,
@@ -66,7 +92,7 @@ exports pass after storage recovery, without an application/data change or
 metadata-only substitute. The source36 collection/exact producer/copied README
 remain in `outputs/preserved-current-source36-20261026-v1/`.
 
-Current root manifest:
+Original v26 delivery manifest (preserved; current presentation is above):
 `b89ad3fa5e3bad582f85899e88b6e8886fed2b6f35171240e942c5b619cddbaf`.
 Proofs use `data/ne-enacted-hyphen-`; successful inspector browser receipt:
 `data/ne-enacted-hyphen-browser-20261026-v4/receipt.json`.

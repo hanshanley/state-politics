@@ -144,7 +144,7 @@ majority8 `61fd909f4892b8d7a1199d433293e938bb14601fb2a95c20bfdd7243b415231b`;
 score8 `2f6b9650bbe8ea546186cf44de34443b781d2ec04d847e6204a18f542cdafcbb`;
 paired22 `59255a7a52652bf45d894e4d87e9734c931dbd811df0fd02bb34dcf782945fca`;
 inspector8 `1bc6cf4832681cc588303b1af61186bad2d7fa788fb38cba311e88ee7254d339`.
-Current root manifest:
+Original v26 delivery manifest (preserved; the current presentation is below):
 `b89ad3fa5e3bad582f85899e88b6e8886fed2b6f35171240e942c5b619cddbaf`.
 The prior collection/exact producer/copied README remain in
 `outputs/preserved-current-source36-20261026-v1/`.
@@ -1044,6 +1044,19 @@ experiments under both `outputs/substack/` and `outputs/themarginoferror/`.
 Substack uses `#F7F5F0`; The Margin of Error uses `#F5F5F5`, matching the local
 `uk_decline` reference. Both versions preserve identical marks, axes and data.
 PNGs are 300 dpi; SVG labels remain editable text. No website is deployed.
+
+The October 27 presentation-only refresh adds aligned exact unanimity/majority
+counts beside the topic-comparison bars, including explicit zeros. Current
+manifest: `16f6cee05fc0c72cec23d1340531af97b388f487435c52ee720379191f57e471`.
+Its declared payload is 18,374,672 bytes, excluding the manifest and original
+research archives. All 35 CSVs and the other 104 image exports are unchanged;
+all 42 numeric cells, 3,176 original marks, complete CSV ZIP, 13 legacy PNGs and
+85 controls independently reconcile. Both actual backgrounds were visually
+inspected; root and nested Chromium checks pass at 1360/390/320px.
+The prior collection, authored README and exact renderer remain in
+`outputs/preserved-current-topic-counts-20261027-v1/` using independent native
+clones. Proof: `data/topic-count-readability-current-graphs-independent-20261027-v1.json`.
+No population/model/source snapshot or scientific promotion is involved.
 
 All 35 complete original chart CSVs are copied byte-for-byte to
 `outputs/chart-data/`; `outputs/current-chart-data.zip` contains those full

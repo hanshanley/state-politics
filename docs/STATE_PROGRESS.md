@@ -1,6 +1,6 @@
 # State completion tracker
 
-Updated **October 26, 2026**. This is the current dispatch list, not a claim that
+Updated **October 27, 2026**. This is the current dispatch list, not a claim that
 historical progress messages describe processes still running.
 
 **Active study window: January 1, 2023 through December 31, 2024.** Work on
@@ -26,6 +26,20 @@ All 50 states already have retained national-extraction/reference inventory;
 not that the state has no data. Platform recovery is separate from the
 legislative status in this table; no state's operative-platform coverage is
 certified complete.
+
+## Current presentation: October 27
+
+Source/model dispatch remains v26/token23 below. A graph-only readability
+refresh adds exact unanimity/majority counts beside every topic-comparison
+row, including zeros. All 42 cells and 3,176 plotted marks independently
+match the original tables; all 35 CSVs and the other 104 images are unchanged.
+Both backgrounds were visually inspected, 15 plotting tests pass, and
+root/nested Chromium checks pass at 1360/390/320px. All 85 controls and
+13 legacy PNGs remain unchanged. Current graph manifest:
+`16f6cee05fc0c72cec23d1340531af97b388f487435c52ee720379191f57e471`.
+No source/model snapshot, new classification or approval is implied.
+The bounded retained HI/NJ metadata follow-up qualifies zero new bodies;
+17,729 gaps remain. Earlier complete source scopes are not reopened.
 
 ## Current dispatch snapshot: v26
 
@@ -57,7 +71,7 @@ are complete. Disk-pressure failures/files remain preserved; verified
 independent copy-on-write copies recover duplicate storage without removing
 originals or changing any payload. Full queries pass after storage recovery.
 
-Current root manifest:
+Original v26 delivery manifest (preserved; current presentation is above):
 `b89ad3fa5e3bad582f85899e88b6e8886fed2b6f35171240e942c5b619cddbaf`.
 Proofs use `data/ne-enacted-hyphen-`; successful inspector browser v4 and
 generic gallery v17/v18 receipts retain actual downloads/screenshots.

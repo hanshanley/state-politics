@@ -27,15 +27,19 @@ build commands below are not instructions to recreate the current workspace.
 | Saved surface | Current contract |
 |---|---|
 | `outputs/index.html` | Local 27-chart gallery; 108 PNG/editable-SVG exports and 35 complete chart CSVs. See the [current collection](../outputs/README.md). |
-| `outputs/current-graphs-manifest.json` | Pins the six saved table families, every full chart table and the actual exported bytes. Manifest SHA-256: `b89ad3fa5e3bad582f85899e88b6e8886fed2b6f35171240e942c5b619cddbaf`. |
+| `outputs/current-graphs-manifest.json` | Pins the six saved table families, every full chart table and the actual exported bytes. Manifest SHA-256: `16f6cee05fc0c72cec23d1340531af97b388f487435c52ee720379191f57e471`. |
 | `outputs/classification-inspector-2023-2024-v8/` | Private original/majority inspector: 157,598 original contexts and 179,849 complete source alternatives. Manifest SHA-256: `1bc6cf4832681cc588303b1af61186bad2d7fa788fb38cba311e88ee7254d339`. The large bundle is local/Git-ignored, not supplied by cloning the code. |
 | `outputs/substack/` and `outputs/themarginoferror/` | Matching data/geometry, with warm cream `#F7F5F0` and page grey `#F5F5F5` respectively. These are verified export backgrounds, not approval to copy assets into production. |
 
-The manifest-declared chart payload is **18,089,904 bytes**, before the
+The manifest-declared chart payload is **18,374,672 bytes**, before the
 manifest itself, a report or separately approved research archives. It is not
 the full research dataset. A future release should stage an explicit approved
 artifact allowlist, not recursively copy `data/`, `outputs/`, or the retained
 preview/model versions.
+
+The October 27 topic-comparison refresh adds exact aligned unanimity/majority
+counts, including zeros; source tables, predictions and approval gates are
+unchanged. This is a presentation-only update, not a new inference run.
 
 Open the existing chart gallery directly. With the saved inspector bundle
 present, this command serves it locally without generating another snapshot:

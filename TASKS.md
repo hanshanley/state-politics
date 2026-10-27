@@ -6,10 +6,30 @@ the detailed source and scientific gates remain in `docs/AUDIT_STATUS.md` and
 
 **Dispatch check, October 26:** the current graphs are delivered. Bulk
 acquisition, inference and full snapshots remain paused for capacity review.
-The execution queue has no ready approved unfinished job: Wisconsin preparation
-is superseded by its verified closure, and retired Pennsylvania/Illinois
-branches remain blocked, not newly authorized work. Do not rerun them to fill
-a scheduled slot. DATA-01, VALIDATE-01, RESEARCH-01 and WEB-01 remain open.
+Wisconsin preparation is superseded by its verified closure, and retired
+Pennsylvania/Illinois branches remain blocked, not newly authorized work.
+Do not rerun them to fill a scheduled slot. The October 27 continuation uses
+bounded retained-evidence checks and a small graph-only readability fix below,
+not new full-population snapshots. DATA-01, VALIDATE-01, RESEARCH-01 and WEB-01
+remain open.
+
+- [x] **PLOT-02: Make low-count topic comparisons readable.** Add aligned exact
+  original-unanimity and majority-candidate counts beside the paired bars,
+  including explicit zeros. Preserve the shared linear scale, all underlying
+  values and provisional caveats. Inspect actual Substack/website-background
+  PNG/editable SVG files, test alignment/non-overlap and reconcile complete chart
+  data. Retain the previous collection/producer with independent native clones;
+  no source/model/full-snapshot work or scientific promotion.
+  Regenerated the actual four PNG/editable-SVG variants; all 42 numeric cells
+  and both column headers independently match their original CSV. All 15
+  plotting tests pass, including small/zero counts, alignment and non-overlap.
+  Full independent replay reconciles all 3,176 marks, 35 complete CSV/ZIP
+  members, 13 legacy PNGs and 85 protected controls. Root and nested galleries
+  pass Chromium at 1360/390/320px with 27 images, 180 links and seven actual
+  destinations. The other 104 images and every CSV remain byte-identical.
+  Prior collection/README/exact renderer are retained with native clones at
+  `outputs/preserved-current-topic-counts-20261027-v1/`. No source/model
+  snapshot, labels or approval flags change.
 
 - [x] **STORAGE-01: Recover capacity before generating more data.** The volume
   is approaching its 2 TB limit. Pause acquisition and full rebuilds; inventory
@@ -120,6 +140,12 @@ a scheduled slot. DATA-01, VALIDATE-01, RESEARCH-01 and WEB-01 remain open.
   typed enacted-law versions, then seven with independently proven exact PDF
   hyphen positions. Actual v26 retains 17,729 gaps; enacted text is never
   relabelled introduced and no missing value is imputed.
+  October 27 bounded retained-evidence triage finds no new qualified body:
+  no exact original state-URL joins among the named retained HI bodies and
+  no already-bounded NJ versions matching current missing typed/session
+  contexts. No URL/year aliases or dates are inferred. The compact negative
+  receipt is `data/retained-source-residual-20261027-v1.json`; it is not a
+  blanket claim that every possible independent source has been exhausted.
 - [x] **DATA-02: Propagate the qualified Nebraska journal evidence.** Extend
   the actual v19/token-v16 baseline without changing original labels, weights,
   taxonomy, human reservations or unavailable source fields. Reuse all prior

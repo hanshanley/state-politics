@@ -288,8 +288,37 @@ def specifications(tables):
         )
 
     f = get("majority", "topic_comparison").sort_values("candidate_contexts", ascending=False)
-    fig, (ax,) = axes(len(f))
+    fig, (ax, counts_ax) = axes(len(f), panels=2, width=12.4)
+    ax.get_gridspec().set_width_ratios([3.5, 1])
     paired(ax, f.label, f.baseline_contexts, f.candidate_contexts)
+    counts_ax.set_axis_off()
+    counts_ax.set_xlim(0, 1)
+    counts_ax.set_ylim(ax.get_ylim())
+    for x, column, label, color in (
+        (0.46, "baseline_contexts", "Unanimity", theme.MUTED),
+        (0.99, "candidate_contexts", "Majority", theme.BLUE),
+    ):
+        counts_ax.text(
+            x,
+            1.01,
+            label,
+            transform=counts_ax.transAxes,
+            ha="right",
+            va="bottom",
+            fontsize=9,
+            fontweight="bold",
+            color=color,
+        )
+        for position, value in enumerate(f[column]):
+            counts_ax.text(
+                x,
+                position,
+                f"{value:,}",
+                ha="right",
+                va="center",
+                fontsize=10,
+                color=color,
+            )
     yield item(
         "majority",
         "topic_comparison",
