@@ -193,7 +193,8 @@ legacy artifact audit was run separately with a fresh report, rather than via
 the assertion that would overwrite the historical report: **34 checks failed,
 covering 28 distinct missing paths**. Full Python lint initially found **12
 violations**, now repaired with exact prior-producer compatibility and unchanged
-parsing functions. Audit reports no longer overwrite saved evidence by default;
+parsing functions. All six original NJ packets pass complete source/reader
+replay with unchanged original artifacts. Audit reports no longer overwrite saved evidence by default;
 explicit reports must be fresh. Broad legacy builds require an opt-in before
 any dependencies can run. The audit's ignored-file check is now restricted to
 its named authored inputs rather than walking the whole retained research tree.

@@ -33,7 +33,7 @@ remain open.
   the actual updated images. Generated replay/preservation bundles remain
   ignored and local; no website integration or scientific promotion.
 
-- [ ] **FIX-01: Repair actionable overview findings without changing research evidence.**
+- [x] **FIX-01: Repair actionable overview findings without changing research evidence.**
   Fix all 12 NJ-producer lint violations while retaining exact previous-producer
   compatibility and complete semantic replay; preserve historical audit reports
   with JSON stdout/fresh exclusive reports; restrict Git-ignore checks to the
@@ -41,11 +41,16 @@ remain open.
   can run, including parallel Make. All 194 affected regressions, repository-wide
   lint, 223 public-doc checks and 36 relative links pass. Actual canonical audits
   remain 465/499 with the same 34 failures / 28 missing legacy paths, unchanged
-  non-counter fields and historical report. All 85 frozen controls and graph/
-  inspector pins remain unchanged. The real original text packet replays
-  14 contexts / 40 complete views; larger retained collection replays and final
-  persistence/readback remain in progress. Do not equate these engineering
-  repairs with completion of the four substantive gates below.
+  non-counter fields and historical report. All 85 frozen controls and the
+  inspector remain unchanged. All six real NJ packets now fully replay with
+  unchanged original payload fingerprints: text 14/40, full 97/255, tail 6/16,
+  effective 10/26, single-page 3/8 and printed-variant 19/53 contexts/views.
+  These are per-packet replay counts, not additional recovered records.
+  The original graph collection was verified and independently preserved before
+  PLOT-03's separate presentation-only update. Code checkpoint `3a598ca` is
+  saved/pushed as Hans Hanley; failed attempts and complete QA proofs remain
+  retained. Do not equate these engineering repairs with completion of the
+  four substantive gates below.
 
 - [x] **DOCS-01: Explain project purpose and missing analyses/data explicitly.**
   Expand the existing `docs/PROJECT_STATUS.md`, linked from README, instead of

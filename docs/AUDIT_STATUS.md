@@ -59,10 +59,21 @@ The actual default and explicitly saved audits both remain **465/499 passing,
 34 failing**, covering the same 28 missing legacy paths. Every non-counter field
 equals the prior full-project audit. An existing-report collision exits before
 data checks, and the historical report remains byte-identical.
-All 85 frozen human/model/runtime controls and original graph/inspector pins
-remain unchanged. Full repository lint now passes.
+All **194 affected regressions** pass. All six original NJ packets also complete
+full source/dual-reader/text/span/metadata/approval replay with unchanged
+payload fingerprints: original text 14 contexts / 40 views; full collection
+97/255; tail 6/16; effective-date 10/26; single-page 3/8; printed-variant 19/53.
+These are per-packet replay counts, not a sum of new independent records or
+newly recovered evidence. No archived producer code is executed.
 
-Local proofs: `data/overview-remediation-20261028-v1/`. These are engineering
+All 85 frozen human/model/runtime controls and the inspector remain unchanged.
+The original current graph collection was verified and independently preserved
+before the separately documented PLOT-03 presentation update above.
+Full repository lint now passes. Code checkpoint `3a598ca` is saved/pushed as
+Hans Hanley; the original six-packet replay job completed successfully.
+
+Local proofs: `data/overview-remediation-20261028-v1/`, including
+`actual-nj-replay.json` and `actual-audit-preservation-v2.json`. These are engineering
 repairs, not closure of missing bodies, cohort eligibility, independent human
 validation, operative platforms, historical affiliations or publication gates.
 
