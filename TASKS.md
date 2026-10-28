@@ -13,6 +13,27 @@ bounded retained-evidence checks and a small graph-only readability fix below,
 not new full-population snapshots. DATA-01, VALIDATE-01, RESEARCH-01 and WEB-01
 remain open.
 
+- [x] **AUDIT-01: Audit the complete current project and explain its gaps.**
+  Run the whole offline code suite with real browser fixtures, a separate fresh
+  canonical artifact audit, full current-bundle integrity checks and independent
+  chart/control replay. Preserve historical reports and frozen source/model/
+  human evidence; do not generate another population snapshot. Document current
+  failures and scientific prerequisites rather than equating task counts with
+  completion. Deliver `docs/PROJECT_STATUS.md` explaining purpose, working
+  components, missing data and the remaining validation/report/publication work.
+  Fresh full offline run: 2,469 passed, no failures/errors/skips, including all
+  three real Chromium fixtures. The duplicate artifact assertion runs separately
+  to preserve the original report: 463/497 checks pass, with the same 34 failed
+  checks / 28 distinct missing legacy paths and every non-counter field unchanged.
+  Whole-repository lint finds 12 existing diagnostics in two pinned NJ producers;
+  no source pin is changed to hide them. All 355 current bundle artifacts,
+  108 chart exports / 35 complete CSVs / 3,176 marks and 85 frozen controls verify.
+  All 157,598 original contexts and 939,637 missing-row metadata fields reconcile.
+  The audit makes explicit that 50 states are accounted for but only 49 have
+  primary-cohort contexts; Maine has none, not zero legislative activity.
+  The requested purpose/gap overview is delivered in `docs/PROJECT_STATUS.md`.
+  This completes the audit, not the study or its four open substantive gates.
+
 - [x] **INSPECT-02: Save complete large queries without a query-sized Blob.**
   Use the native save picker where available, then await each validated full
   record write and close only after complete success. Abort on source/write/

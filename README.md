@@ -26,6 +26,9 @@ party attribution and independent classifier validation remain unresolved.
 The research companion is local-only; nothing has been integrated into
 themarginoferror.com.
 
+For what is working and what is still missing, see
+[Project status and gaps](docs/PROJECT_STATUS.md).
+
 ## Explore the evidence
 
 **Sources and coverage:** the [50-state tracker](docs/STATE_PROGRESS.md) records

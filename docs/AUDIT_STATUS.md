@@ -5,6 +5,48 @@ The thirteen historical root figures and their analytical conclusions remain
 inspect source/model evidence; they do not certify a classifier, complete
 coverage or party-policy findings.
 
+## Full-project audit: October 28
+
+**The project is not complete as a scientific study.** The current research
+bundles and engineering safeguards are substantially implemented, but source
+eligibility, operative platforms, event-time affiliations and independent human
+validation still prevent certified party-policy findings and publication.
+See [Project status and gaps](PROJECT_STATUS.md) for a plain-language overview.
+
+| Surface | Fresh result |
+|---|---|
+| Complete offline code run | **2,469 passed**, zero failures/errors/skips; all three real Chromium cycle-browser fixtures ran. One duplicate artifact assertion was deselected only to avoid overwriting the historical report; the actual artifact audit ran separately below. |
+| Canonical artifact gate | **463/497 checks pass; 34 fail**, covering **28 distinct missing legacy paths**. The failure list and every non-counter report field exactly match the earlier storage-checkpoint audit. This gate still targets legacy 2018+/MiniLM outputs, not a unified current-study rebuild. |
+| Full Python lint | **12 existing violations** in `bills/nj_library_collection.py` and `bills/nj_library_text.py`: eleven line-length diagnostics and one simplification diagnostic. These pinned source producers were not reformatted during a documentation/audit task. |
+| Browser JavaScript | All four shipped JavaScript files pass syntax checks. |
+| Six current research bundles | All **355 artifact paths / 30,018,470,166 logical bytes** freshly rehashed with unchanged file fingerprints and manifest pins; no copying, acquisition or population inference. |
+| Current charts | All **108 exports / 35 complete CSVs and ZIP members / 3,176 marks** reconcile independently. Both background geometries match; 13 legacy PNGs remain unchanged. Current majority and source-coverage PNGs were also visually inspected. |
+| Cohort and missing records | All **157,598 original contexts**, all **17,729 missing-body IDs** and **939,637 original metadata-field comparisons** reconcile. All original context admission flags remain false. |
+| Frozen controls after the suite | All **85** human-plan/runtime/model/label controls and the original canonical report remain unchanged. Synthetic test models and annotations are isolated fixtures, not a new research-model run or real human labels. |
+
+The fresh record audit distinguishes **50 accounted states from 49 states with
+eligible contexts**. Maine has zero primary-cohort contexts; Massachusetts has
+one, Pennsylvania 56 and New York 860. These are selection/eligibility counts,
+not official state legislative volumes. Unresolved event evidence and
+calendar-versus-session boundaries must not be hidden by reporting only the
+17,729 missing bodies within the selected cohort. Do not invent dates or
+silently migrate the primary population to repair this limitation.
+
+The 28-input human packet remains explicitly unannotated, not human or
+independent gold. Current majority assignments remain unpromoted; neither
+integrity checks nor additional assignments establish accuracy. All 100
+organizations' operative-platform coverage remains unresolved, and historical
+party/source-version/rights/report prerequisites remain open. No production
+website changes or approvals were made.
+
+Fresh local proofs are under `data/full-project-audit-20261028-v1/`:
+`tests.xml`, `artifacts.json`, `lint.log`, `javascript.json`, `bundles.json`,
+`current-graphs.json`, `cohort-v2.json` and `preservation.json`.
+The original failed cohort observer and its log remain preserved: it wrongly
+assumed every accounted state had an eligible context; the corrected observer
+changes that assumption, not the data. Large research artifacts remain local
+and ignored; a code push is not their backup.
+
 ## Current inspector UI: October 28
 
 Inspector v9 adds direct complete-query file writes where the browser save
