@@ -13,6 +13,8 @@ data/*
 /outputs/assistant-advisory-topic-review-*/
 /outputs/current-render-*/
 /outputs/preserved-current-*/
+/outputs/cohort-coverage-render-*/
+/outputs/preserved-cohort-counts-*/
 /outputs/current-ne-journal-collection-replay-*/
 /AGENT-COMMS.md
 
