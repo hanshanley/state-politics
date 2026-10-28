@@ -13,6 +13,23 @@ bounded retained-evidence checks and a small graph-only readability fix below,
 not new full-population snapshots. DATA-01, VALIDATE-01, RESEARCH-01 and WEB-01
 remain open.
 
+- [x] **AUDIT-02: Make current saved-byte integrity audits reusable.** Add a
+  public read-only command and `make audit-current`, anchored to explicit
+  graph/inspector pins. Verify complete declared artifacts and direct graph
+  inputs, including all six source manifests/context pilot; reject drift,
+  unsafe bindings/paths, promoted flags and report overwrites. Preserve the
+  separate legacy audit, frozen evidence and every scientific/publication
+  gate. Test focused synthetic failures and one actual current-payload audit;
+  no new snapshot, collection, model execution or graph rendering.
+  Public `scripts/audit_current_research.py` and `make audit-current` verify
+  784 actual artifact paths across eight pinned manifests, including the
+  context pilot, plus all 41 direct graph-input bindings. All 56 focused
+  auditor/storage/local-only tests and 223 public-doc checks pass; all 85
+  frozen controls remain unchanged. The JSON result explicitly leaves
+  scientific certification unperformed, publication unapproved and the project
+  incomplete. Legacy `make audit` is untouched; its known failures and the
+  12 existing pinned-producer lint diagnostics are not hidden.
+
 - [x] **AUDIT-01: Audit the complete current project and explain its gaps.**
   Run the whole offline code suite with real browser fixtures, a separate fresh
   canonical artifact audit, full current-bundle integrity checks and independent

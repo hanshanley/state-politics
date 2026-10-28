@@ -16,6 +16,41 @@ remain unchanged. Broad rebuild commands below are not a request to complete
 other years; target-cycle selection and its inclusion/exclusion provenance must
 be bound explicitly before regenerated outputs can support the narrowed study.
 
+## Current saved-research integrity check
+
+Run the public read-only checker against the pinned current graph collection
+and inspector, with the original saved bundles present:
+
+```bash
+.venv/bin/python -I -B scripts/audit_current_research.py
+# Equivalent Make entry point, using the existing interpreter:
+make audit-current PY='.venv/bin/python -I -B'
+# Optional successful-run JSON receipt; choose a fresh name:
+.venv/bin/python -I -B scripts/audit_current_research.py \
+  --report data/current-research-integrity-REPLAY.json
+```
+
+The checker verifies every declared graph/inspector artifact and every direct
+graph-input binding, then follows the externally bound graph-source manifests,
+including the context pilot. It streams file hashes rather than copying inputs,
+checks unchanged fingerprints, and rejects missing/changed/linked paths, invalid
+bindings, promoted status or a pre-existing report. It performs no collection,
+model execution, graph rendering or population rebuild. The optional report must
+be a new unlinked path under project `data/`; no existing receipt is replaced.
+
+Default graph/inspector SHA pins are explicit, not discovered by choosing the
+latest filename. An intentional new snapshot requires explicit
+`--graphs`/`--graphs-sha256` and/or `--inspector`/`--inspector-sha256` values
+(and later a reviewed default-pin update). The graph's own pinned input
+bindings supply the source-bundle identities.
+
+**A successful exit certifies only byte integrity for these declared saved
+artifacts.** It does not certify their topic labels, source completeness,
+filing-time eligibility, human references, scientific claims or publication.
+It is not a recursive re-audit of every historical source/model dependency or
+a replacement for independent chart/record reconstruction. `make audit` and
+its known legacy-artifact failures remain separate and unchanged.
+
 ## Storage-safe continuation
 
 The legacy `make clean-derived` target is disabled: its broad deletion would

@@ -20,7 +20,7 @@ MODEL_ARGS := --checkpoint "$(CHECKPOINT)"
 .DEFAULT_GOAL := help
 .PHONY: help setup all analysis figures legacy-figures test lint clean-derived \
         historical registry platforms official-documents caucus-priorities \
-        legislators bills-dump audit source-ledger preview
+        legislators bills-dump audit audit-current source-ledger preview
 
 help:
 	@echo "Targets:"
@@ -31,6 +31,7 @@ help:
 	@echo "               GRAPH_OUT=outputs/current-render-REPLAY for a fresh replay"
 	@echo "  legacy-figures  old analytical producers (not revalidated findings)"
 	@echo "  test lint audit  run tests / lint / traceability audit"
+	@echo "  audit-current  verify pinned current research bytes (not scientific certification)"
 	@echo "  source-ledger preview  inventory sources / build local-only evidence preview"
 	@echo "  clean-derived  disabled: retained evidence and legacy figures must be preserved"
 	@echo ""
@@ -131,6 +132,9 @@ lint:
 audit:
 	$(PY) scripts/audit_reproducibility.py
 	$(PY) scripts/report_figures.py
+
+audit-current:
+	$(PY) scripts/audit_current_research.py
 
 # The legacy broad deletion conflicts with retained source and figure evidence.
 clean-derived:

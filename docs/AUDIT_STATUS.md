@@ -5,6 +5,30 @@ The thirteen historical root figures and their analytical conclusions remain
 inspect source/model evidence; they do not certify a classifier, complete
 coverage or party-policy findings.
 
+## Reusable current-integrity command: October 28
+
+`make audit-current` now exposes the saved-current byte checks as a public,
+read-only command instead of relying on ignored audit scripts. The actual run
+verifies **784 artifact paths / eight pinned manifests / 41 direct graph-input
+bindings**, including the context pilot as well as the graph collection,
+inspector and its other graph-source bundles. It reads 30,209,567,916 logical
+artifact bytes without copying them or running models.
+
+All **56 focused auditor/storage/local-only regressions** and **223 public-doc
+checks** pass. New cases reject same-size corruption, missing or linked files,
+source-map drift, promoted flags, invalid byte counts, report overwrite and
+manifest changes between hashing and parsing. All 85 frozen controls remain
+unchanged. This is separate targeted validation after the full code run below,
+not another full-suite or independent scientific evaluation.
+
+The result explicitly retains `scientific_certification: "not_performed"`,
+`publication_approved: false` and `project_complete: false`. The command does
+not replace independent record/chart reconstruction, recursively recheck all
+historical ancestors, supply missing sources or turn the separate legacy audit
+green. The known 34 failed legacy checks and 12 pinned-producer lint diagnostics
+remain visible. Usage: [current saved-research integrity check](REPRODUCIBILITY.md#current-saved-research-integrity-check).
+Local proof: `data/current-integrity-command-20261028-v1/actual.json`.
+
 ## Full-project audit: October 28
 
 **The project is not complete as a scientific study.** The current research
