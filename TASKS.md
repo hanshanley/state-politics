@@ -13,6 +13,17 @@ bounded retained-evidence checks and a small graph-only readability fix below,
 not new full-population snapshots. DATA-01, VALIDATE-01, RESEARCH-01 and WEB-01
 remain open.
 
+- [x] **DOCS-01: Explain project purpose and missing analyses/data explicitly.**
+  Expand the existing `docs/PROJECT_STATUS.md`, linked from README, instead of
+  creating a duplicate overview. Separate missing records/eligibility from
+  unfinished analytical results, and implemented code/diagnostic charts from
+  certified findings. Add a prerequisite matrix for cohort assessment,
+  independent classifier evaluation, stated/filed profiles, matched comparisons
+  and robustness; cover conditional within-party, chamber, election, language,
+  reuse, outcome, roll-call, trend, source-tag and stance analyses. Keep the
+  2023-2024 window and all research/publication gates unchanged. This is a
+  documentation delivery, not completion of any missing analysis.
+
 - [x] **AUDIT-02: Make current saved-byte integrity audits reusable.** Add a
   public read-only command and `make audit-current`, anchored to explicit
   graph/inspector pins. Verify complete declared artifacts and direct graph
