@@ -13,6 +13,29 @@ bounded retained-evidence checks and a small graph-only readability fix below,
 not new full-population snapshots. DATA-01, VALIDATE-01, RESEARCH-01 and WEB-01
 remain open.
 
+- [x] **DATA-18: Check retained printed dates against the cohort-eligibility gap.**
+  Inspect existing Pennsylvania views and the accepted shared native join,
+  without source requests or a new population snapshot. Recover complete
+  literal-date observations with original identities/unknowns preserved.
+  The bounded probe finds 168 exact native/canonical contexts outside the
+  frozen primary cohort. All 228 corresponding retained views agree with
+  fresh first-page extraction from 168 raw PDFs using both readers; exact raw
+  date spans and complete first pages are retained. The complete 168-row CSV,
+  original-source bindings and four ambiguous SR3/SR6 views are saved under
+  `data/retained-native-date-evidence-20261028-v1/`. The first join observer's
+  wrong state-column filter is preserved; v2 uses the actual shared-join schema.
+  These are source-date leads, not approved filing dates, independent truth,
+  new cohort membership or fills of the 17,729 within-cohort body gaps.
+- [ ] **DATA-19: Qualify the printed-date observations before cohort integration.**
+  Add a public, source-bound date-observation adapter and focused identity,
+  session, span, amendment/reprint and ambiguity negatives; preserve every
+  raw alternative. Resolve the SR3/SR6 header cases explicitly, without using
+  first-action, referral, receipt, URL or session-year date fallbacks. Produce
+  a separately versioned observation packet and explicit registry integration.
+  Keep the existing primary cohort, source-date fields, model/human controls
+  and graphs unchanged until a reviewed successor is deliberately built under
+  the capacity policy. Do not silently add the 168 leads or run new inference.
+
 - [x] **PLOT-03: Make cohort emptiness and tiny counts visible in the actual chart.**
   The recovered-text chart leaves Maine's empty primary-cohort row unlabelled
   and Massachusetts's single-context bar effectively invisible. Show exact

@@ -5,6 +5,35 @@ The thirteen historical root figures and their analytical conclusions remain
 inspect source/model evidence; they do not certify a classifier, complete
 coverage or party-policy findings.
 
+## Retained introduction-date evidence assessment: October 28
+
+The cohort/date gap has a concrete offline lead, distinct from missing body
+text. In the already retained Pennsylvania PDF views, 168 exact native contexts
+map through the accepted shared join to 168 canonical bills outside the frozen
+primary cohort. None has an existing native or source introduction date in that
+join. No identity aliases, first-action dates or session-year date fallbacks
+are used.
+
+Fresh first-page extraction from all 168 raw PDFs with both PyMuPDF and pypdf
+agrees with all 228 corresponding retained-view observations. Complete first
+pages, exact raw date spans, source hashes and a complete 168-row CSV are saved
+at `data/retained-native-date-evidence-20261028-v1/`. Four ambiguous SR3/SR6
+PDF-view cases remain separately preserved, not forced into a date.
+
+This is **not date/cohort admission or independent factual certification**.
+It does not certify introduced-version status, resolve historical capture
+limitations, add bills to the primary cohort or fill its body-text gap queue.
+The original 157,598-context file remains SHA-identical; no requests, model
+execution, graph changes or production integration occur. A public adapter,
+semantic negatives and a separately versioned source-date/registry integration
+remain the next engineering work.
+
+The first join observer incorrectly filtered only `state_native`, which is
+null on the shared typed-key branch; the original negative receipt is retained.
+The corrected `join-incidence-v2.json` follows the installed join's actual
+`state`/`state_native` schema and reproduces all 168 unique declared-session/
+typed-identity joins. This is an observer correction, not a repaired source ID.
+
 ## Cohort-count chart repair: October 28
 
 The actual recovered-text chart previously left Maine's empty primary-cohort
