@@ -68,10 +68,14 @@ With the saved inspector bundle present, start it independently:
 
 ```bash
 .venv/bin/python -I -B scripts/serve_research.py \
-  --classifications outputs/classification-inspector-2023-2024-v8
+  --classifications outputs/classification-inspector-2023-2024-v9
 ```
 
 Open the printed loopback address. Other research bundles are not required.
+
+Where supported, choose a destination first to stream complete query records
+directly to disk rather than assemble a query-sized Blob. Other browsers retain
+the complete-file download; cancellation or failure never substitutes metadata.
 
 The inspector downloads every matching complete context, source input and
 prediction, not just the visible page. Missing text, abstentions and source

@@ -13,6 +13,25 @@ bounded retained-evidence checks and a small graph-only readability fix below,
 not new full-population snapshots. DATA-01, VALIDATE-01, RESEARCH-01 and WEB-01
 remain open.
 
+- [x] **INSPECT-02: Save complete large queries without a query-sized Blob.**
+  Use the native save picker where available, then await each validated full
+  record write and close only after complete success. Abort on source/write/
+  close failures; cancellation and errors must not substitute partial records
+  or metadata. Keep the existing complete-file fallback on unsupported browsers.
+  Verify exact bytes, Unicode/large integers, write backpressure, late failures,
+  large-query memory behavior and actual browser writable-file semantics.
+  Deliver a fresh UI revision with native clones of immutable inspector data;
+  preserve v8, all classifications, source alternatives and scientific gates.
+  Do not rerun inference or copy whole datasets.
+  V9 changes only HTML/JavaScript, retains exact update producers and natively
+  clones all 160 unchanged data/index/original-producer artifacts. All 87
+  focused tests pass; a 494,716,670-byte synthetic query exceeds its measured
+  heap without a Blob. Actual Chromium uses real OPFS writable handles in place
+  of the picker dialog: all NE/LB989 native and fallback bytes match full frozen
+  records. Trusted-click ordering, cancellation, rollback after late read/write
+  failures and desktop/mobile layout pass. The OS picker itself is not automated.
+  No new source, model, labels or publication flags; v8 remains unchanged.
+
 - [x] **PLOT-02: Make low-count topic comparisons readable.** Add aligned exact
   original-unanimity and majority-candidate counts beside the paired bars,
   including explicit zeros. Preserve the shared linear scale, all underlying

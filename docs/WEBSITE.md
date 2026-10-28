@@ -28,7 +28,7 @@ build commands below are not instructions to recreate the current workspace.
 |---|---|
 | `outputs/index.html` | Local 27-chart gallery; 108 PNG/editable-SVG exports and 35 complete chart CSVs. See the [current collection](../outputs/README.md). |
 | `outputs/current-graphs-manifest.json` | Pins the six saved table families, every full chart table and the actual exported bytes. Manifest SHA-256: `16f6cee05fc0c72cec23d1340531af97b388f487435c52ee720379191f57e471`. |
-| `outputs/classification-inspector-2023-2024-v8/` | Private original/majority inspector: 157,598 original contexts and 179,849 complete source alternatives. Manifest SHA-256: `1bc6cf4832681cc588303b1af61186bad2d7fa788fb38cba311e88ee7254d339`. The large bundle is local/Git-ignored, not supplied by cloning the code. |
+| `outputs/classification-inspector-2023-2024-v9/` | Private original/majority inspector: 157,598 original contexts and 179,849 complete source alternatives, unchanged from v8. UI-only direct-file export revision; manifest SHA-256: `10e0a930c0d6f8f91e153612f0701d88c94b735baff502650d85e7668316d2e5`. The large bundle is local/Git-ignored, not supplied by cloning the code. |
 | `outputs/substack/` and `outputs/themarginoferror/` | Matching data/geometry, with warm cream `#F7F5F0` and page grey `#F5F5F5` respectively. These are verified export backgrounds, not approval to copy assets into production. |
 
 The manifest-declared chart payload is **18,374,672 bytes**, before the
@@ -46,7 +46,7 @@ present, this command serves it locally without generating another snapshot:
 
 ```bash
 .venv/bin/python -I -B scripts/serve_research.py \
-  --classifications outputs/classification-inspector-2023-2024-v8 \
+  --classifications outputs/classification-inspector-2023-2024-v9 \
   --port 8765
 ```
 
@@ -55,6 +55,13 @@ Use the separate review-only workspace for annotation. The current inspector's
 scientific, model-input, training, analytical, filing-time, publication and
 party-attribution approval flags remain false. Serving an existing bundle or
 verifying its hashes does not change those statuses.
+
+Where available, query downloads now stream complete records to a user-selected
+file without assembling a query-sized Blob. Unsupported browsers retain the
+complete Blob download. Both paths preserve the same raw JSONL; errors do not
+fall back to metadata or partial records. This changes neither release rights
+nor the approved publication surface. V8 remains preserved; v9 reuses its
+immutable data through independent native clones.
 
 The research gallery's relative methodology and evidence links have been
 verified locally, including nested replays. **Do not publish its HTML

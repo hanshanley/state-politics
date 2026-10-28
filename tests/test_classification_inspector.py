@@ -302,3 +302,162 @@ const {completeQueryBlob, inspectorMatches, utf16Position, policyText} = require
         capture_output=True,
         text=True,
     )
+
+
+def test_query_file_stream_matches_complete_download_and_obeys_backpressure():
+    script = r"""
+const assert = require("node:assert/strict");
+const {completeQueryBlob, completeQueryToWritable} = require(process.argv[1]);
+(async () => {
+  const records = {
+    context: '{"bill_id":"b","topic":null,"unknown":null}',
+    missing: '{"bill_id":"missing","status":"unavailable","topic":null}',
+    input: '{"bill_id":"b","input_id":"i","input_sha256":"sha",'
+      + '"large":9007199254740999,"text":"😀\u2028complete\u2029ending"}',
+    prediction: '{"bill_id":"b","input_id":"i","input_sha256":"sha","scores":[1,2]}',
+  };
+  const rows = [
+    {bill_id:"b",context:"context",sources:[{
+      input_id:"i",input_sha256:"sha",input:"input",prediction:"prediction"}]},
+    {bill_id:"missing",context:"missing",sources:[]},
+  ];
+  let writing = false, closed = 0, aborted = 0;
+  const chunks = [];
+  const get = async key => {
+    assert.equal(writing, false, "reading ahead while a disk write is pending");
+    return {raw:records[key], value:JSON.parse(records[key])};
+  };
+  await completeQueryToWritable(rows, {
+    async write(chunk) {
+      assert.equal(writing, false);
+      writing = true;
+      await new Promise(resolve => setImmediate(resolve));
+      chunks.push(Buffer.from(chunk));
+      writing = false;
+    },
+    async close() { closed++; },
+    async abort() { aborted++; },
+  }, get);
+  const expected = Buffer.from(await (await completeQueryBlob(rows, get)).arrayBuffer());
+  assert.deepEqual(Buffer.concat(chunks), expected);
+  assert.ok(expected.toString().includes("9007199254740999"));
+  assert.ok(expected.toString().includes("😀\u2028complete\u2029ending"));
+  assert.equal(closed, 1); assert.equal(aborted, 0);
+  let emptyClosed = false;
+  await completeQueryToWritable([], {
+    async write() { assert.fail("empty query must not invent records"); },
+    async close() { emptyClosed = true; },
+    async abort() { assert.fail("empty complete query is not an error"); },
+  }, () => assert.fail("empty query must not read sources"));
+  assert.equal(emptyClosed, true);
+})().catch(error => { console.error(error); process.exitCode = 1; });
+"""
+    subprocess.run(
+        ["node", "-e", script, str(ROOT / "web/classification-inspector.js")],
+        check=True,
+        capture_output=True,
+        text=True,
+        timeout=30,
+    )
+
+
+@pytest.mark.parametrize("failure", ["read", "write", "close", "abort"])
+def test_query_file_stream_aborts_without_committing_partial_or_masking_errors(failure):
+    script = r"""
+const assert = require("node:assert/strict");
+const {completeQueryToWritable} = require(process.argv[1]);
+(async () => {
+  const failure = process.argv[2], primary = new Error("original export failure");
+  const row = {bill_id:"b",context:"context",sources:[{
+    input_id:"i",input_sha256:"sha",input:"input",prediction:"prediction"}]};
+  let written = 0, aborted = 0, closed = 0, committed = "existing complete file";
+  const get = async key => {
+    if (key === "prediction" && ["read", "abort"].includes(failure)) throw primary;
+    const value = {bill_id:"b",input_id:"i",input_sha256:"sha",text:"complete text"};
+    return {raw:JSON.stringify(value),value};
+  };
+  await assert.rejects(completeQueryToWritable([row], {
+    async write() {
+      written++;
+      if (failure === "write" && written === 3) throw primary;
+    },
+    async close() {
+      closed++;
+      if (failure === "close") throw primary;
+      committed = "new complete file";
+    },
+    async abort() {
+      aborted++;
+      if (failure === "abort") throw new Error("abort itself failed");
+    },
+  }, get), error => error === primary);
+  assert.ok(written > 0, "exercise a failure after output has started");
+  assert.equal(aborted, 1);
+  assert.equal(closed, failure === "close" ? 1 : 0);
+  assert.equal(committed, "existing complete file");
+})().catch(error => { console.error(error); process.exitCode = 1; });
+"""
+    subprocess.run(
+        ["node", "-e", script, str(ROOT / "web/classification-inspector.js"), failure],
+        check=True,
+        capture_output=True,
+        text=True,
+        timeout=30,
+    )
+
+
+def test_large_query_file_stream_does_not_buffer_a_query_sized_blob():
+    script = r"""
+const assert = require("node:assert/strict");
+const v8 = require("node:v8");
+const {completeQueryToWritable} = require(process.argv[1]);
+(async () => {
+  globalThis.Blob = globalThis.Response = class {
+    constructor() { assert.fail("direct file export must not buffer a query-sized Blob"); }
+  };
+  const payload = "x".repeat(48 * 1024), count = 10000;
+  function* rows() {
+    for (let i = 0; i < count; i++) {
+      const bill_id = `b-${i}`;
+      yield {bill_id,context:{bill_id,kind:"context"},sources:[{
+        input_id:"i",input_sha256:"sha",
+        input:{bill_id,kind:"input"},prediction:{bill_id,kind:"prediction"}}]};
+    }
+  }
+  let bytes = 0, endings = 0, maximumChunk = 0, closed = false;
+  const get = async reference => {
+    const value = {bill_id:reference.bill_id,input_id:"i",input_sha256:"sha",
+      text:reference.kind === "input" ? payload : "complete record"};
+    return {raw:JSON.stringify(value),value};
+  };
+  await completeQueryToWritable(rows(), {
+    async write(chunk) {
+      bytes += chunk.length; maximumChunk = Math.max(maximumChunk, chunk.length);
+      if (chunk.length === 2 && chunk[0] === 125 && chunk[1] === 10) endings++;
+      assert.ok(chunk.length < 65536, "only one complete saved record per write");
+    },
+    async close() { closed = true; },
+    async abort() { assert.fail("complete generated query must not abort"); },
+  }, get);
+  const heapLimit = v8.getHeapStatistics().heap_size_limit;
+  assert.ok(closed); assert.equal(endings, count);
+  assert.ok(bytes >= payload.length * count && bytes > heapLimit);
+  console.log(JSON.stringify({contexts:count,logical_bytes:bytes,
+    maximum_chunk_bytes:maximumChunk,JS_heap_limit_bytes:heapLimit,
+    old_space_limit_MiB:32,closed,query_sized_Blob:false}));
+})().catch(error => { console.error(error); process.exitCode = 1; });
+"""
+    result = subprocess.run(
+        [
+            "node",
+            "--max-old-space-size=32",
+            "-e",
+            script,
+            str(ROOT / "web/classification-inspector.js"),
+        ],
+        check=True,
+        capture_output=True,
+        text=True,
+        timeout=120,
+    )
+    print(result.stdout.strip())

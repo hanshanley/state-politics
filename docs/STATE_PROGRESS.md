@@ -1,6 +1,6 @@
 # State completion tracker
 
-Updated **October 27, 2026**. This is the current dispatch list, not a claim that
+Updated **October 28, 2026**. This is the current dispatch list, not a claim that
 historical progress messages describe processes still running.
 
 **Active study window: January 1, 2023 through December 31, 2024.** Work on
@@ -26,6 +26,16 @@ All 50 states already have retained national-extraction/reference inventory;
 not that the state has no data. Platform recovery is separate from the
 legislative status in this table; no state's operative-platform coverage is
 certified complete.
+
+## Current inspector UI: October 28
+
+V9 adds direct complete-query file writing where supported, with the original
+complete-download fallback elsewhere. The same 157,598 contexts and 179,849
+source alternatives are reused through independent native clones; v8 remains
+unchanged. All 87 focused tests and real-browser file-write/rollback checks
+pass; every actual complete query byte matches frozen records. This is a UI
+change, not a new inference/source snapshot, recovered body or scientific
+approval. Source/model dispatch remains v26/token23; 17,729 gaps remain.
 
 ## Current presentation: October 27
 

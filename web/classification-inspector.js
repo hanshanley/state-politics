@@ -95,6 +95,18 @@ async function completeQueryBlob(rows, get = completeRange) {
   }).blob();
 }
 
+async function completeQueryToWritable(rows, writable, get = completeRange) {
+  try {
+    for await (const chunk of completeQueryChunks(rows, get)) {
+      await writable.write(chunk);
+    }
+    await writable.close();
+  } catch (error) {
+    try { await writable.abort(); } catch {}
+    throw error;
+  }
+}
+
 function policyText(input, meta) {
   const source = input.original_source_view;
   const raw = source.source_type === "snapshot_text" ? source.source_record.raw_text
@@ -105,7 +117,8 @@ function policyText(input, meta) {
 
 if (typeof module !== "undefined") {
   module.exports = {
-    completeRange, inspectorMatches, utf16Position, completeQueryChunks, completeQueryBlob, policyText,
+    completeRange, inspectorMatches, utf16Position, completeQueryChunks, completeQueryBlob,
+    completeQueryToWritable, policyText,
   };
 }
 
@@ -356,11 +369,27 @@ if (typeof document !== "undefined") {
       controls.forEach(control => { control.disabled = true; }); render();
       message(`Preparing all ${selected.length.toLocaleString()} complete contexts and every source alternative...`);
       try {
-        const blob = await completeQueryBlob(selected);
-        saveBlob(blob, `${selectedState}-complete-classification-query.jsonl`);
+        const filename = `${selectedState}-complete-classification-query.jsonl`;
+        if (window.isSecureContext && typeof window.showSaveFilePicker === "function") {
+          const handle = await window.showSaveFilePicker({
+            suggestedName: filename,
+            types: [{
+              description: "Complete classification query",
+              accept: { "application/x-ndjson": [".jsonl"] },
+            }],
+          });
+          await completeQueryToWritable(selected, await handle.createWritable());
+        } else {
+          const blob = await completeQueryBlob(selected);
+          saveBlob(blob, filename);
+        }
         message(`Downloaded all ${selected.length.toLocaleString()} complete contexts, source inputs and predictions; no metadata-only fallback.`);
       } catch (error) {
-        message(`Complete query export failed: ${error.message}. No partial download was substituted.`, true);
+        if (error.name === "AbortError") {
+          message("Complete query export canceled. No partial download was substituted.");
+        } else {
+          message(`Complete query export failed: ${error.message}. No partial download was substituted.`, true);
+        }
       } finally {
         exporting = false; controls.forEach(control => { control.disabled = false; }); render();
       }

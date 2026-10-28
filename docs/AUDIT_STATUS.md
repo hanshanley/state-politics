@@ -5,6 +5,31 @@ The thirteen historical root figures and their analytical conclusions remain
 inspect source/model evidence; they do not certify a classifier, complete
 coverage or party-policy findings.
 
+## Current inspector UI: October 28
+
+Inspector v9 adds direct complete-query file writes where the browser save
+picker is available; other browsers retain the complete Blob download.
+Writes are awaited, close occurs only on complete success, and read/write/close
+errors abort rather than substitute partial records. V8 is untouched, and all
+160 data/index/original-producer artifacts remain byte-identical independent
+native clones. No model, source, labels or approval flags change.
+Current UI manifest:
+`10e0a930c0d6f8f91e153612f0701d88c94b735baff502650d85e7668316d2e5`.
+
+All 87 focused tests pass, including byte parity, Unicode/large integers,
+backpressure, late failures and a 494,716,670-byte synthetic query larger than
+the measured JS heap. Actual Chromium uses real OPFS writable handles instead
+of the picker dialog: full NE and filtered/native/fallback outputs match every
+frozen raw record byte-for-byte. Cancellation and injected late-read/write
+failures preserve the existing file. The OS picker dialog is not automated.
+Browser proofs pass desktop/390px/320px without overflow or external requests;
+both browser and server exit. Existing graph, scientific and publication gates
+remain unchanged. Source/model baseline is still v26/token23, with 17,729 gaps.
+
+Proofs: `data/streaming-inspector-browser-20261028-v2/receipt.json` and
+`data/streaming-inspector-query-replay-20261028-v1.json`. Failed first-harness
+evidence is preserved, not reclassified as a passing application execution.
+
 ## Current presentation refresh: October 27
 
 The paired topic comparison now prints exact original-unanimity and

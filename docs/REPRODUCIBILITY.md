@@ -143,7 +143,9 @@ topic24 `3ae4eb659a28205c34121063280c216185376d1d0726849f9aa4c6af6c04992b`;
 majority8 `61fd909f4892b8d7a1199d433293e938bb14601fb2a95c20bfdd7243b415231b`;
 score8 `2f6b9650bbe8ea546186cf44de34443b781d2ec04d847e6204a18f542cdafcbb`;
 paired22 `59255a7a52652bf45d894e4d87e9734c931dbd811df0fd02bb34dcf782945fca`;
-inspector8 `1bc6cf4832681cc588303b1af61186bad2d7fa788fb38cba311e88ee7254d339`.
+original inspector8 `1bc6cf4832681cc588303b1af61186bad2d7fa788fb38cba311e88ee7254d339`.
+The current UI-only inspector v9, with identical data, is documented in the
+[per-bill inspector section](#per-bill-classification-evidence-inspector).
 Original v26 delivery manifest (preserved; the current presentation is below):
 `b89ad3fa5e3bad582f85899e88b6e8886fed2b6f35171240e942c5b619cddbaf`.
 The prior collection/exact producer/copied README remain in
@@ -1106,14 +1108,19 @@ HF_HUB_OFFLINE=1 TRANSFORMERS_OFFLINE=1 \
   --out-dir outputs/classification-inspector-2023-2024-REPLAY
 ```
 
-The current actual bundle is `outputs/classification-inspector-2023-2024-v8/`;
-all earlier bundles remain preserved unchanged.
+The current actual bundle is `outputs/classification-inspector-2023-2024-v9/`,
+manifest `10e0a930c0d6f8f91e153612f0701d88c94b735baff502650d85e7668316d2e5`.
+It is a UI-only revision over v8: all 160 data/index/original-producer artifacts
+are byte-identical independent native clones, including the complete source
+ZIP. Only HTML/JavaScript change, and two exact update-producer/dependency files
+are added. All earlier bundles remain preserved unchanged; no population
+builder, inference or source acquisition is rerun.
 Serve it independently through the loopback workspace; no evidence, session
 or review bundle is required:
 
 ```bash
 .venv/bin/python -I -B scripts/serve_research.py \
-  --classifications outputs/classification-inspector-2023-2024-v8 \
+  --classifications outputs/classification-inspector-2023-2024-v9 \
   --port 8765
 ```
 
@@ -1131,7 +1138,7 @@ the existing combined workspace remains supported:
   --sources data/processed/native-inventory-catalog-2023-2024-v2 \
   --graphs outputs/recreated-2023-2024-v37 \
   --topics outputs/topic-inference-retained-text-2023-2024-v24 \
-  --classifications outputs/classification-inspector-2023-2024-v8 \
+  --classifications outputs/classification-inspector-2023-2024-v9 \
   --port 8765
 ```
 
@@ -1162,15 +1169,48 @@ retains original unknowns, full policy texts and large-integer lexemes.
 An unavailable/corrupt source aborts the export; no partial or metadata-only
 download substitutes for it.
 
+In a secure browser exposing the native save picker, the download button obtains
+a destination during the trusted click, then awaits each validated UTF-8 chunk
+write. It closes the file only after the complete query succeeds, and attempts
+to abort on source, write or close errors without masking the original failure.
+Cancellation restores the controls without fetching records. Unsupported
+browsers retain the complete Blob-based download; that fallback does not gain
+the direct-file memory benefit. No query-size cap or metadata-only substitute
+is introduced. The loaded state index and current complete record still require
+memory; this removes the query-sized output Blob, not every allocation.
+
+All 87 focused inspector/server/storage tests pass. A generated 10,000-context,
+494,716,670-byte query completes without a Blob under a 32-MiB old-space limit;
+the measured total V8 heap limit is 83,886,080 bytes. This is a bounded synthetic
+writer test, not model evaluation or a browser-memory certification.
+Actual Chromium tests use real OPFS writable handles in place of the picker
+dialog, verify a trusted click before the first record fetch, full 35,831,484-byte
+NE output, complete LB989 output and the unsupported-picker fallback. Cancellation
+and injected late-read/write errors preserve the existing complete file.
+The operating-system picker dialog itself is not automated. All 2,128 full-state
+contexts, 1,424 input/prediction pairs and 10,787,454 selected policy characters
+match their frozen raw records byte-for-byte; the one-context LB989 query retains
+both source alternatives and 60,630 policy characters.
+Proofs: `data/streaming-inspector-browser-20261028-v2/receipt.json` and
+`data/streaming-inspector-query-replay-20261028-v1.json`. The failed first
+browser observer/profile/logs remain retained; the corrected harness binds
+native fetch to its Window receiver without changing the application or data.
+
 Fifty complete `states/STATE.html` tables and the unchanged original full-source
 majority research ZIP provide no-JavaScript access. The ZIP is
 `research-data/complete_inference_and_majority_candidate.zip`, SHA-256
-`e6d72f0dc467cf9bf80deded92c7b43ed37877d744031f2e06b1a2bcef96b379`.
+`328e86e56ef4b5d085fdcab41c641cbfef5d4766f63de0061b1f357d66986078`.
 It contains all original full inference members and candidate outputs, not the
-inspector's derived index in place of research data. The inspector's own
+inspector's derived index in place of research data. The current manifest binds
+164 artifacts and all original unapproved research flags remain false.
+
+#### Preserved first journal-inspector checkpoint
+
+The earlier journal inspector's original research ZIP has SHA-256
+`e6d72f0dc467cf9bf80deded92c7b43ed37877d744031f2e06b1a2bcef96b379`; its
 162-artifact manifest is
 `e51d407243344bf00f03a076dffc70dab9627c38056a1fa3f438661009b8b59c`.
-Current Chromium proof is `data/ne-journal-browser-20261025-v1/receipt.json`:
+Its preserved Chromium proof is `data/ne-journal-browser-20261025-v1/receipt.json`:
 all 216 new complete reader bodies, every score vector and complete first/last
 window, at desktop/390px/320px with no overflow, JavaScript errors or external
 HTTP requests. Its actual all-Nebraska query preserves all 2,128 contexts /
