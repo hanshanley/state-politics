@@ -103,7 +103,7 @@ The gap is not simply that all these kinds of data are absent.
 | Independent human reference labels | Obtain genuine independent review and resolve disagreements. The frozen packet contains 28 selected inputs, not completed human gold or a representative national test. Assistant reviews cannot substitute for independent truth. |
 | Taxonomy and classifier validation | Resolve rubric boundaries and label provenance, then evaluate on untouched target-domain evidence with predeclared accuracy/precision, coverage, uncertainty and subgroup gates. Existing scores are uncalibrated; more assigned labels do not establish better accuracy. |
 | Final analytical results | Recompute only supported comparisons from eligible sources, defensible attribution and validated classifications. Current research graphics inspect evidence and model sensitivity; old party/platform findings and historical analytical PNGs are not certified. |
-| Unified reproducibility | The canonical artifact manifest still describes the legacy 2018+ pipeline and MiniLM-era outputs. Current bundles now have a [shared read-only integrity check](REPRODUCIBILITY.md#current-saved-research-integrity-check), but byte integrity is not one completed end-to-end certified-study rebuild. Missing legacy artifacts and the 12 current lint diagnostics remain visible in the audit. |
+| Unified reproducibility | The canonical artifact manifest still describes the legacy 2018+ pipeline and MiniLM-era outputs. Current bundles now have a [shared read-only integrity check](REPRODUCIBILITY.md#current-saved-research-integrity-check), but byte integrity is not one completed end-to-end certified-study rebuild. Missing legacy artifacts remain unresolved. The audit's 12 lint violations have since been repaired while preserving original producer compatibility. |
 | Preservation and redistribution | Establish durable backup/restore for ignored source/model bundles and review source-specific redistribution rights. A successful code push does not back up those bundles or authorize their publication; same-volume copy-on-write clones are not a disaster-recovery backup. |
 | Report and publication | Finish the report and claim-by-claim evidence review, then obtain explicit publication approval. The local companion is not integrated into themarginoferror.com. |
 
@@ -188,7 +188,12 @@ completion.
 The October 28 full offline code run passed **2,469 tests**. The underlying
 legacy artifact audit was run separately with a fresh report, rather than via
 the assertion that would overwrite the historical report: **34 checks failed,
-covering 28 distinct missing paths**. Full Python lint found **12 violations**.
+covering 28 distinct missing paths**. Full Python lint initially found **12
+violations**, now repaired with exact prior-producer compatibility and unchanged
+parsing functions. Audit reports no longer overwrite saved evidence by default;
+explicit reports must be fresh. Broad legacy builds require an opt-in before
+any dependencies can run. The audit's ignored-file check is now restricted to
+its named authored inputs rather than walking the whole retained research tree.
 The later public current-integrity command verified **784 artifact paths across
 eight manifests**; its separate 56-test focused run overlaps existing tests and
 must not be added to the full-suite count.

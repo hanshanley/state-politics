@@ -69,6 +69,8 @@ and local-workspace commands.
 
 `make audit-current` verifies the pinned saved research bytes without rebuilding;
 success is not scientific validation or publication approval.
+Broad legacy `all`, `analysis` and `legacy-figures` targets refuse to run unless
+explicitly opted into with `ALLOW_LEGACY_ANALYSIS=1`; use the current workflow instead.
 
 With the saved inspector bundle present, start it independently:
 

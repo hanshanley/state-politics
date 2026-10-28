@@ -317,6 +317,23 @@ def _rebind(packet, name):
     nj._write(packet / "manifest.json", manifest)
 
 
+def test_exact_format_compatible_producer_still_replays_all_payloads(packet, monkeypatch):
+    out = packet[0]
+    name = "producer/nj_library_text.py"
+    path = out / name
+    path.write_bytes(path.read_bytes() + b"\n# prior synthetic formatting-only producer\n")
+    previous = nj._binding(path)
+    monkeypatch.setattr(nj, "FORMATTING_COMPATIBLE_PRODUCERS", (previous,), raising=False)
+    _rebind(out, name)
+    rows, _, _, _ = nj.load_nj_library(out)
+    assert rows
+    rows[0]["text"] = rows[0]["text"][:-1]
+    nj._write_rows(out / "views.jsonl", rows)
+    _rebind(out, "views.jsonl")
+    with pytest.raises(ValueError, match="replay"):
+        nj.load_nj_library(out)
+
+
 def test_separates_companions_versions_and_all_statement_continuations():
     versions, dispositions = nj.separate_versions(_texts())
     assert [(v["identifier"], v["kind"], v["page_ordinals"]) for v in versions] == [

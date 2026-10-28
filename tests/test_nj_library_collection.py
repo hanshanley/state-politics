@@ -406,6 +406,26 @@ def _rebind(out, name):
     old._write(out / "manifest.json", manifest)
 
 
+@pytest.mark.parametrize("name", [
+    "producer/nj_library_collection.py", "producer/nj_library_text.py",
+])
+def test_exact_format_compatible_dependency_never_waives_payload_replay(packet, monkeypatch, name):
+    out = packet[0]
+    path = out / name
+    path.write_bytes(path.read_bytes() + b"\n# prior synthetic formatting-only producer\n")
+    aliases = dict(getattr(nj, "FORMATTING_COMPATIBLE_PRODUCERS", {}))
+    aliases[name] = (old._binding(path),)
+    monkeypatch.setattr(nj, "FORMATTING_COMPATIBLE_PRODUCERS", aliases, raising=False)
+    _rebind(out, name)
+    rows, _, _, _ = nj.load_nj_collection(out)
+    assert rows
+    rows[0]["text"] = rows[0]["text"][:-1]
+    old._write_rows(out / "views.jsonl", rows)
+    _rebind(out, "views.jsonl")
+    with pytest.raises(ValueError, match="replay"):
+        nj.load_nj_collection(out)
+
+
 def test_full_reader_alternatives_ancillaries_unknowns_original_fields_and_queue_accounting(packet):
     out, source, queue, source_sha, originals = packet
     views, contexts, pins, manifest = nj.load_nj_collection(

@@ -28,6 +28,7 @@ import re
 import shutil
 import subprocess
 import sys
+from contextlib import redirect_stdout
 from pathlib import Path
 from urllib.parse import urlsplit
 
@@ -89,7 +90,10 @@ def load_yaml(path: Path):
 
 def audit_manifest(audit: Audit, manifest: dict, *, require_tracked: bool) -> None:
     tracked = git_files(["ls-files"])
-    ignored = git_files(["ls-files", "--others", "-i", "--exclude-standard"])
+    ignored = git_files([
+        "ls-files", "--others", "-i", "--exclude-standard", "--",
+        *(entry["path"] for entry in manifest["manual_inputs"]),
+    ]) if manifest["manual_inputs"] else set()
     for entry in manifest["manual_inputs"]:
         relative = entry["path"]
         path = ROOT / relative
@@ -566,9 +570,12 @@ def main(argv: list[str] | None = None) -> int:
         help="record missing prerequisites without running data-dependent scientific checks",
     )
     parser.add_argument(
-        "--report", default=ROOT / "data/processed/reproducibility_report.json"
+        "--report", type=Path,
+        help="write a fresh JSON report; default prints JSON without changing saved reports",
     )
     args = parser.parse_args(argv)
+    if args.report is not None and (args.report.exists() or args.report.is_symlink()):
+        parser.error(f"refusing to overwrite an existing report: {args.report}")
 
     audit = Audit()
     manifest = load_yaml(MANIFEST)
@@ -621,11 +628,20 @@ def main(argv: list[str] | None = None) -> int:
         "environment": manifest["environment"],
         "analysis_parameters": manifest["analysis_parameters"],
     }
-    path = Path(args.report)
-    path.parent.mkdir(parents=True, exist_ok=True)
-    path.write_text(json.dumps(report, indent=2, sort_keys=True), encoding="utf-8")
-    print(f"wrote {path}")
-    audit.finish()
+    if args.report is not None:
+        args.report.parent.mkdir(parents=True, exist_ok=True)
+        try:
+            with args.report.open("x", encoding="utf-8") as handle:
+                json.dump(report, handle, indent=2, sort_keys=True)
+                handle.write("\n")
+        except FileExistsError:
+            parser.error(f"refusing to overwrite an existing report: {args.report}")
+        print(f"wrote {args.report}")
+        audit.finish()
+    else:
+        print(json.dumps(report, indent=2, sort_keys=True))
+        with redirect_stdout(sys.stderr):
+            audit.finish()
     return 0
 
 

@@ -4,9 +4,8 @@
 # retained dumps require matching checksums; incomplete downloads restart, and extraction
 # refuses existing outputs rather than overwriting an interrupted run.
 #
-# The two crawl targets (`platforms`, `bills-dump`) hit third-party servers and take a while;
-# they are deliberately not part of `all` so that `make all` on an existing checkout does the
-# analysis without re-crawling anyone's website.
+# The broad legacy analysis is not the fixed 2023-2024 research build.
+# It requires an explicit opt-in before dependencies can fetch or recompute data.
 
 PY := uv run python
 DATA := data/processed
@@ -16,6 +15,7 @@ OPENSTATES_MONTH ?= 2026-10
 BILL_DUMP ?= data/raw/openstates/$(OPENSTATES_MONTH)-public.pgdump
 CHECKPOINT ?= data/models/modernbert-topics
 MODEL_ARGS := --checkpoint "$(CHECKPOINT)"
+ALLOW_LEGACY_ANALYSIS ?= 0
 
 .DEFAULT_GOAL := help
 .PHONY: help setup all analysis figures legacy-figures test lint clean-derived \
@@ -25,11 +25,9 @@ MODEL_ARGS := --checkpoint "$(CHECKPOINT)"
 help:
 	@echo "Targets:"
 	@echo "  setup        install dependencies (including the local model stack)"
-	@echo "  all          historical corpus + analysis + figures (no crawling)"
-	@echo "  analysis     classify planks and bills, compute emphasis and divergence"
+	@echo "  all analysis legacy-figures  broad legacy work; requires ALLOW_LEGACY_ANALYSIS=1"
 	@echo "  figures      render current dual-background graphs from pinned saved tables"
 	@echo "               GRAPH_OUT=outputs/current-render-REPLAY for a fresh replay"
-	@echo "  legacy-figures  old analytical producers (not revalidated findings)"
 	@echo "  test lint audit  run tests / lint / traceability audit"
 	@echo "  audit-current  verify pinned current research bytes (not scientific certification)"
 	@echo "  source-ledger preview  inventory sources / build local-only evidence preview"
@@ -82,6 +80,7 @@ bills-dump:
 
 # ---- Analysis ---------------------------------------------------------------------------
 
+ifeq ($(ALLOW_LEGACY_ANALYSIS),1)
 analysis: historical
 	$(PY) -m state_politics.analysis.validate
 	$(PY) -m state_politics.analysis.emphasis $(MODEL_ARGS)
@@ -97,9 +96,6 @@ analysis: historical
 	$(PY) -m state_politics.analysis.trends
 	$(PY) -m state_politics.analysis.coverage
 
-figures:
-	$(PY) scripts/render_current_graphs.py --out-dir "$(GRAPH_OUT)"
-
 legacy-figures:
 	$(PY) scripts/plot_platform_coverage.py
 	$(PY) scripts/plot_platform_gap.py
@@ -114,6 +110,17 @@ legacy-figures:
 	$(PY) scripts/plot_outcomes.py
 
 all: analysis figures
+else
+all analysis legacy-figures:
+	@printf '%s\n' \
+	  "Refusing broad legacy analysis outside the fixed 2023-2024 research workflow." \
+	  "No dependencies were run. Use audit-current or figures for the saved current research." \
+	  "Intentional legacy work requires ALLOW_LEGACY_ANALYSIS=1; this is not scientific approval."
+	@exit 2
+endif
+
+figures:
+	$(PY) scripts/render_current_graphs.py --out-dir "$(GRAPH_OUT)"
 
 source-ledger:
 	$(PY) -m state_politics.analysis.coverage --sources-only --out "$(DATA)/source_coverage.json"

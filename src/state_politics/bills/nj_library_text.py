@@ -65,6 +65,10 @@ COMPATIBLE_PRODUCERS = {
     "a27a57b4f72d43f0fc4235713e23b994bebc1a39f49f2284c2a990c1aa70df30":
         STRICT_2023_PRODUCER,
 }
+FORMATTING_COMPATIBLE_PRODUCERS = ({
+    "sha256": "f8c08af968fb0e84281f5d514950becceaf748f972c647c32032d75bb03c060a",
+    "bytes": 75838,
+},)
 TOOLS = {"pymupdf": "1.28.0", "pypdf": "6.14.2"}
 FLAGS = (
     "scientific_approval", "model_input_approved", "training_admission",
@@ -318,7 +322,9 @@ def printed_identity(text, page_ordinal=1, *, context_qualified_introductions=No
                 intro[0].strip().removeprefix("INTRODUCED").strip(), "%B %d, %Y",
             ).date().isoformat()
         except ValueError as exc:
-            raise ValueError("incompatible NJ library archive: invalid printed introduction date") from exc
+            raise ValueError(
+                "incompatible NJ library archive: invalid printed introduction date"
+            ) from exc
         ids = context.get("origin_introduction_action_ids")
         require(type(ids) is str, "explicit original origin-introduction IDs required")
         ids = _decode(ids)
@@ -331,7 +337,9 @@ def printed_identity(text, page_ordinal=1, *, context_qualified_introductions=No
             try:
                 calendar_date = datetime.fromisoformat(row["date"]).date().isoformat()
             except ValueError as exc:
-                raise ValueError("incompatible NJ library archive: invalid original action date") from exc
+                raise ValueError(
+                    "incompatible NJ library archive: invalid original action date"
+                ) from exc
             require(row["date"].split("T")[0] == calendar_date,
                     "literal ISO calendar date required, without timezone conversion")
             action_dates.append(calendar_date)
@@ -442,7 +450,10 @@ def _continuation(text, page):
 def _enacted(text, page, *, extended_identity_profile=False, allow_printed_variants=False,
              prologue_witness=None):
     number_prefix = r"No[.,]" if allow_printed_variants else r"No\."
-    ordinals = "First|Second|Third|Fourth|Fifth" if allow_printed_variants else "First|Second|Third|Fourth"
+    ordinals = (
+        "First|Second|Third|Fourth|Fifth"
+        if allow_printed_variants else "First|Second|Third|Fourth"
+    )
     law = re.search(
         r"(?m)^P\.L\.[ \t]+(?P<year>20[0-9]{2}),[ \t]+CHAPTER[ \t]+[0-9]+,"
         r"[ \t]+approved[^\r\n]+\r?\n"
@@ -662,9 +673,11 @@ def separate_versions(page_texts, *, context_qualified_introductions=None,
                     require(0 < cursor < len(page_texts) - 1
                             and kind == "enacted_version"
                             and identifier == bridge["identifier"]
-                            and _sha(page_texts[cursor - 1].encode()) == bridge["before_text_sha256"]
+                            and _sha(page_texts[cursor - 1].encode())
+                            == bridge["before_text_sha256"]
                             and _sha(page_texts[cursor].encode()) == bridge["page_text_sha256"]
-                            and _sha(page_texts[cursor + 1].encode()) == bridge["after_text_sha256"],
+                            and _sha(page_texts[cursor + 1].encode())
+                            == bridge["after_text_sha256"],
                             "pinned unlabelled-page bytes or own version changed")
                     before = _continuation(page_texts[cursor - 1], cursor)
                     after = _continuation(page_texts[cursor + 1], cursor + 2)
@@ -816,7 +829,9 @@ def separate_versions(page_texts, *, context_qualified_introductions=None,
         if page_bridges:
             item["unlabelled_page_bridges"] = page_bridges
         if kind == "enacted_version" and enacted[index].get("source_scoped_enacted_prologue"):
-            item["source_scoped_enacted_prologue"] = enacted[index]["source_scoped_enacted_prologue"]
+            item["source_scoped_enacted_prologue"] = (
+                enacted[index]["source_scoped_enacted_prologue"]
+            )
         if whitespace:
             item["retained_source_scoped_whitespace_pages"] = list(whitespace.values())
         if len(ordinals) == 1:
@@ -1394,8 +1409,10 @@ def load_nj_library(root, metadata=None):
     producer = _binding(directory / "producer/nj_library_text.py")
     legacy_producer = LEGACY_PRODUCERS.get(pins["manifest.json"])
     compatible_producer = COMPATIBLE_PRODUCERS.get(pins["manifest.json"])
-    require(producer == _binding(_regular(Path(__file__).absolute()))
-            or producer == legacy_producer or producer == compatible_producer,
+    require(producer in (
+        _binding(_regular(Path(__file__).absolute())),
+        legacy_producer, compatible_producer, *FORMATTING_COMPATIBLE_PRODUCERS,
+    ),
             "producer module mismatch")
     result = _replay(source, directory / "input_gap_queue.parquet",
                      manifest["additional_batch_sha256"])

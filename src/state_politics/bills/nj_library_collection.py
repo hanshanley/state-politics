@@ -45,6 +45,13 @@ PROVIDER = legacy.PROVIDER
 STATUS = "independent_selected_collection_archive_not_filing_time_certified"
 FLAGS = legacy.FLAGS + ("human_gold_approved", "publication", "rights_approved")
 TOOLS = legacy.TOOLS
+FORMATTING_COMPATIBLE_PRODUCERS = {
+    "producer/nj_library_collection.py": ({
+        "sha256": "272d2cfe162d2efce9b8093bde4d42490c15ce638753063092c1a740dc508c0f",
+        "bytes": 78600,
+    },),
+    "producer/nj_library_text.py": legacy.FORMATTING_COMPATIBLE_PRODUCERS,
+}
 SOURCE_STATUSES = {
     "immutable_first16_subset": "sealed_first16_subset_not_complete_collection",
     "closed_complete_collection_capture": "closed_complete_collection_capture",
@@ -1115,10 +1122,12 @@ def _replay(source, queue_path, source_sha256, queue_sha256, *,
                 "rewritten. Printed reprint labels must agree on every continuation; "
                 "enacted witnesses prefer a unique independently printed introduced cover. "
                 "Exact pinned codification prefixes remain literal. Prefiling covers supply "
-                "no inferred introduction date and remain quarantined with their dependent versions. "
+                "no inferred introduction date and remain quarantined "
+                "with their dependent versions. "
                 "Bounded enacted versions without a unique same-bill session witness remain "
                 "quarantined without an inferred session. A source-scoped whitespace separator "
-                "is retained with exact PDF/page/content-stream hashes, never inserted into policy text."
+                "is retained with exact PDF/page/content-stream hashes, "
+                "never inserted into policy text."
             )
     if ledger_name == "request-ledger.jsonl":
         prefix = legacy._jsonl(source / "seed-request-ledger.jsonl")
@@ -1177,7 +1186,8 @@ def build_nj_collection(source_directory, gap_queue, out_directory, *,
     allow_printed_variants = False
     if context_evidence is not None:
         context_evidence = legacy._root(context_evidence)
-        require(not context_evidence.is_relative_to(out) and not out.is_relative_to(context_evidence),
+        require(
+            not context_evidence.is_relative_to(out) and not out.is_relative_to(context_evidence),
                 "context-evidence/output overlap")
         qualified, context_inventory = _context_introductions(
             context_evidence, context_evidence_sha256,
@@ -1296,7 +1306,10 @@ def load_nj_collection(root, metadata=None, *, source_manifest_sha256=None,
     historical = SEALED_PRODUCERS.get(pins["manifest.json"])
     for name, path in _producers().items():
         expected = historical[name] if historical else legacy._binding(path)
-        require(artifacts[name] == expected, "installed producer dependency mismatch")
+        compatible = () if historical else FORMATTING_COMPATIBLE_PRODUCERS[name]
+        require(
+            artifacts[name] in (expected, *compatible), "installed producer dependency mismatch",
+        )
         if historical and name == "producer/nj_library_text.py":
             previous_tail = SEALED_PRODUCERS[
                 "3922c090c6d937385c57818b9a3f065ebee1f6168a3cedc9b842b8095e5bdeae"
@@ -1309,6 +1322,7 @@ def load_nj_collection(root, metadata=None, *, source_manifest_sha256=None,
             ]["producer/nj_library_text.py"]
             require(expected in (
                 legacy._binding(path), legacy.STRICT_2023_PRODUCER,
+                *legacy.FORMATTING_COMPATIBLE_PRODUCERS,
                 previous_tail, previous_all_dates, previous_single_page,
             ),
                     "historical extraction dependency changed")
@@ -1373,7 +1387,8 @@ def load_nj_collection(root, metadata=None, *, source_manifest_sha256=None,
     if context_inventory:
         expected_consumed["context_introduction_evidence_before"] = context_inventory
         expected_consumed["context_introduction_evidence_after"] = context_inventory
-    require(legacy._equal(legacy._json(directory / "consumed_input_hashes.json"), expected_consumed),
+    require(
+        legacy._equal(legacy._json(directory / "consumed_input_hashes.json"), expected_consumed),
             "original input before/after receipt replay mismatch")
     context_rows = contexts.to_pylist()
     if metadata is not None:
@@ -1390,8 +1405,10 @@ def main(argv=None):
     build.add_argument("--gap-queue", type=Path, required=True)
     build.add_argument("--gap-queue-sha256", required=True)
     build.add_argument("--out-dir", type=Path, required=True)
-    build.add_argument("--context-evidence", type=Path,
-                       help="complete pinned original context/action evidence for 220th tail covers")
+    build.add_argument(
+        "--context-evidence", type=Path,
+        help="complete pinned original context/action evidence for 220th tail covers",
+    )
     build.add_argument("--context-evidence-sha256",
                        help="external SHA256 of the context-evidence manifest")
     verify = commands.add_parser("verify", aliases=["replay"])

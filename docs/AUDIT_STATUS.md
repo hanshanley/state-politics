@@ -5,6 +5,39 @@ The thirteen historical root figures and their analytical conclusions remain
 inspect source/model evidence; they do not certify a classifier, complete
 coverage or party-policy findings.
 
+## Repairs from the project overview: October 28
+
+Four engineering problems are repaired without supplying invented research data:
+
+- The canonical audit no longer overwrites the historical report by default.
+  Default stdout is JSON; explicit reports require fresh exclusive creation.
+  Existing files, symlinks and concurrent creators are preserved, with real
+  missing-artifact failures still returning a nonzero exit.
+- Its ignored-file check now queries only the seven named authored inputs,
+  rather than enumerating the entire ignored research tree. The first actual
+  unscoped attempt timed out at 240 seconds; the scoped default run completed
+  in 1.005 seconds. Both ignored and nonignored fixtures retain their correct
+  dispositions; the timed-out attempt is preserved.
+- Broad legacy `all`, `analysis` and `legacy-figures` builds now require
+  `ALLOW_LEGACY_ANALYSIS=1` before any dependencies can run, including parallel
+  Make. Current saved-table rendering and `audit-current` remain separate.
+- All 12 NJ-producer lint violations are repaired. AST comparison preserves
+  all 58 other functions and every previous global constant; only the two
+  loaders' exact producer-compatibility guards change. Exact prior SHA/size
+  bindings preserve existing archives without waiving source, payload, reader,
+  metadata or approval replay. Archived producer code is not executed.
+
+The actual default and explicitly saved audits both remain **465/499 passing,
+34 failing**, covering the same 28 missing legacy paths. Every non-counter field
+equals the prior full-project audit. An existing-report collision exits before
+data checks, and the historical report remains byte-identical.
+All 85 frozen human/model/runtime controls and original graph/inspector pins
+remain unchanged. Full repository lint now passes.
+
+Local proofs: `data/overview-remediation-20261028-v1/`. These are engineering
+repairs, not closure of missing bodies, cohort eligibility, independent human
+validation, operative platforms, historical affiliations or publication gates.
+
 ## Reusable current-integrity command: October 28
 
 `make audit-current` now exposes the saved-current byte checks as a public,

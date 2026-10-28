@@ -3,6 +3,8 @@
 from __future__ import annotations
 
 import hashlib
+import json
+import runpy
 import subprocess
 import sys
 from pathlib import Path
@@ -17,6 +19,139 @@ from state_politics.platforms import official_documents as official_module
 from state_politics.platforms.official_documents import load_registry, merge_documents
 
 ROOT = Path(__file__).resolve().parents[1]
+
+
+@pytest.fixture
+def audit_cli(tmp_path, monkeypatch):
+    module = runpy.run_path(str(ROOT / "scripts/audit_reproducibility.py"))
+    namespace = module["main"].__globals__
+    manifest = {
+        "version": 1, "generated_artifacts": [], "manual_inputs": [],
+        "random_processes": [], "environment": {}, "analysis_parameters": {},
+    }
+    calls = []
+    monkeypatch.setitem(namespace, "ROOT", tmp_path)
+    monkeypatch.setitem(namespace, "load_yaml", lambda _: manifest)
+    for name in (
+        "audit_manifest", "audit_curated_configs", "audit_gold",
+        "audit_analysis_parameters", "audit_public_docs",
+    ):
+        monkeypatch.setitem(namespace, name, lambda *args, **kwargs: None)
+    monkeypatch.setitem(namespace, "audit_artifacts", lambda _: calls.append("audit") or {})
+    original = tmp_path / "data/processed/reproducibility_report.json"
+    original.parent.mkdir(parents=True)
+    original.write_bytes(b"original historical report\n")
+    return module["main"], original, calls, namespace
+
+
+@pytest.mark.parametrize("failed", [False, True])
+def test_audit_cli_default_preserves_the_original_report(audit_cli, capsys, failed):
+    main, original, _, namespace = audit_cli
+    before = original.read_bytes()
+    if failed:
+        def artifact_failure(audit):
+            audit.require(False, "fixture missing prerequisite")
+            return {}
+        namespace["audit_artifacts"] = artifact_failure
+        with pytest.raises(SystemExit) as error:
+            main([])
+        assert error.value.code == 1
+    else:
+        assert main([]) == 0
+    assert original.read_bytes() == before
+    captured = capsys.readouterr()
+    report = json.loads(captured.out)
+    assert report["scientific_certification"] == "not_performed"
+    assert report["status"] == ("blocked" if failed else "structural_checks_passed")
+    assert "checks" in captured.err
+
+
+@pytest.mark.parametrize("linked", [False, True])
+def test_audit_cli_existing_report_is_rejected_before_data_checks(audit_cli, linked):
+    main, original, calls, _ = audit_cli
+    before = original.read_bytes()
+    target = original.parent / "linked.json" if linked else original
+    if linked:
+        target.symlink_to(original)
+    with pytest.raises(SystemExit) as error:
+        main(["--report", str(target)])
+    assert error.value.code == 2
+    assert original.read_bytes() == before and not calls
+
+
+def test_audit_cli_concurrent_report_creation_is_preserved(audit_cli):
+    main, original, _, namespace = audit_cli
+    target = original.parent / "another-writer.json"
+
+    def create_report(audit):
+        target.write_bytes(b"another writer's report\n")
+        return {}
+
+    namespace["audit_artifacts"] = create_report
+    with pytest.raises(SystemExit) as error:
+        main(["--report", str(target)])
+    assert error.value.code == 2
+    assert target.read_bytes() == b"another writer's report\n"
+    assert original.read_bytes() == b"original historical report\n"
+
+
+def test_audit_checks_only_named_manual_inputs_for_git_ignores(monkeypatch):
+    module = runpy.run_path(str(ROOT / "scripts/audit_reproducibility.py"))
+    namespace = module["audit_manifest"].__globals__
+    manifest = yaml.safe_load((ROOT / "conf/reproducibility.yml").read_text())
+    paths = [entry["path"] for entry in manifest["manual_inputs"]]
+    queries = []
+
+    def git_files(arguments):
+        queries.append(arguments)
+        return set(paths) if arguments == ["ls-files"] else set()
+
+    monkeypatch.setitem(namespace, "git_files", git_files)
+    monkeypatch.setattr(namespace["shutil"], "which", lambda _: None)
+    module["audit_manifest"](module["Audit"](), manifest, require_tracked=True)
+    assert ["ls-files", "--others", "-i", "--exclude-standard", "--", *paths] in queries
+
+
+@pytest.mark.parametrize("ignored", [False, True])
+def test_scoped_audit_still_detects_ignored_manual_inputs(tmp_path, monkeypatch, ignored):
+    module = runpy.run_path(str(ROOT / "scripts/audit_reproducibility.py"))
+    namespace = module["audit_manifest"].__globals__
+    manifest = yaml.safe_load((ROOT / "conf/reproducibility.yml").read_text())
+    payload = b"authored fixture input\n"
+    (tmp_path / "manual.csv").write_bytes(payload)
+    (tmp_path / ".gitignore").write_text("manual.csv\n" if ignored else "other.csv\n")
+    for name in ("CITATIONS.md", "pyproject.toml", "uv.lock"):
+        (tmp_path / name).write_bytes((ROOT / name).read_bytes())
+    subprocess.run(["git", "init", "-q", str(tmp_path)], check=True, capture_output=True)
+    manifest["manual_inputs"] = [{
+        "path": "manual.csv", "sha256": hashlib.sha256(payload).hexdigest(),
+    }]
+    monkeypatch.setitem(namespace, "ROOT", tmp_path)
+    monkeypatch.setattr(namespace["shutil"], "which", lambda _: None)
+    audit = module["Audit"]()
+    module["audit_manifest"](audit, manifest, require_tracked=False)
+    assert ("manual input is gitignored: manual.csv" in audit.failures) is ignored
+
+
+@pytest.mark.parametrize("failed", [False, True])
+def test_audit_cli_fresh_report_preserves_real_failure_status(audit_cli, failed):
+    main, original, _, namespace = audit_cli
+    target = original.parent / "fresh.json"
+    if failed:
+        def artifact_failure(audit):
+            audit.require(False, "fixture missing prerequisite")
+            return {}
+        namespace["audit_artifacts"] = artifact_failure
+        with pytest.raises(SystemExit) as error:
+            main(["--report", str(target)])
+        assert error.value.code == 1
+    else:
+        assert main(["--report", str(target)]) == 0
+    report = json.loads(target.read_text())
+    assert report["status"] == ("blocked" if failed else "structural_checks_passed")
+    assert report["scientific_certification"] == "not_performed"
+    assert bool(report["failures"]) is failed
+    assert original.read_bytes() == b"original historical report\n"
 
 
 def test_manual_input_hashes_match_manifest():

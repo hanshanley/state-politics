@@ -19,6 +19,43 @@ MODULE = runpy.run_path(
 )
 
 
+@pytest.mark.parametrize("target", ["all", "analysis", "legacy-figures"])
+@pytest.mark.parametrize("parallel", [False, True])
+def test_legacy_build_requires_opt_in_before_fetch_or_model_dependencies(
+    tmp_path, target, parallel,
+):
+    marker = tmp_path / "invoked"
+    runner = tmp_path / "runner.py"
+    runner.write_text(f"from pathlib import Path\nPath({str(marker)!r}).touch()\n")
+    makefile = Path(__file__).resolve().parents[1] / "Makefile"
+    command = [
+        "make", "-f", str(makefile), target, f"PY={sys.executable} {runner}",
+        f"DATA={tmp_path / 'data'}", f"OUT={tmp_path / 'outputs'}",
+    ]
+    if parallel:
+        command.append("-j4")
+    environment = os.environ.copy()
+    environment.pop("ALLOW_LEGACY_ANALYSIS", None)
+    environment.pop("MAKEFLAGS", None)
+    environment.pop("MAKEOVERRIDES", None)
+    result = subprocess.run(
+        command, cwd=tmp_path, env=environment, capture_output=True, text=True, timeout=30,
+    )
+    assert result.returncode != 0
+    assert "ALLOW_LEGACY_ANALYSIS=1" in result.stdout + result.stderr
+    assert not marker.exists(), "legacy guard must run before any dependency can fetch or infer"
+
+
+@pytest.mark.parametrize("target", ["analysis", "legacy-figures"])
+def test_explicit_legacy_opt_in_keeps_the_old_commands_available(tmp_path, target):
+    makefile = Path(__file__).resolve().parents[1] / "Makefile"
+    result = subprocess.run(
+        ["make", "-n", "-f", str(makefile), target, "ALLOW_LEGACY_ANALYSIS=1"],
+        cwd=tmp_path, capture_output=True, text=True, check=True, timeout=30,
+    )
+    assert "state_politics.analysis" in result.stdout or "scripts/plot_" in result.stdout
+
+
 def pair(tmp_path):
     source, target = tmp_path / "source", tmp_path / "target"
     source.write_bytes(b"complete immutable evidence\n")

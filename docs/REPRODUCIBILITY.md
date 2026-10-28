@@ -5,8 +5,9 @@ artifacts**. Nothing is described as reproducible merely because a final CSV exi
 
 **Current status:** the historical analytical results are under audit, not certified.
 See [AUDIT_STATUS.md](AUDIT_STATUS.md). Run `scripts/audit_reproducibility.py --inventory-only`
-to persist missing prerequisites without attempting data-dependent scientific checks.
-Failures still produce a nonzero exit and a report. Dependency hashes were deliberately
+to print missing prerequisites without attempting data-dependent scientific checks;
+add `--report` with a fresh path to save them. Failures still produce a nonzero
+exit and a report. Dependency hashes were deliberately
 updated for the ModernBERT migration; the unchanged legacy analysis parameters describe
 the old baseline, not a newly trained model.
 
@@ -15,6 +16,10 @@ cycle. Wider retained corpora, historical training data and old audit reports
 remain unchanged. Broad rebuild commands below are not a request to complete
 other years; target-cycle selection and its inclusion/exclusion provenance must
 be bound explicitly before regenerated outputs can support the narrowed study.
+The broad legacy `all`, `analysis` and `legacy-figures` targets refuse to run
+without `ALLOW_LEGACY_ANALYSIS=1`, before any prerequisites can fetch or
+recompute data, including parallel Make. This opt-in preserves intentional
+legacy work; it does not approve collection, model promotion or scientific claims.
 
 ## Current saved-research integrity check
 
@@ -1123,7 +1128,8 @@ not just checks that the link text exists. The replay still needs its original
 local source bundles; it does not download or publish them automatically.
 
 The original `make figures` producers are now explicitly `make legacy-figures`;
-they are not the current study's regeneration path. Party/platform attention
+they require `ALLOW_LEGACY_ANALYSIS=1` and are not the current study's
+regeneration path. Party/platform attention
 comparisons remain withheld: graph polishing does not resolve independent
 human validation, operative-platform, event-time party or source-rights gates.
 Original unanimity and unpromoted majority remain distinctly labelled.
@@ -4581,11 +4587,21 @@ The audit validates:
 - equality between named analytical constants in code and `conf/reproducibility.yml`, so
   thresholds and seeds cannot drift as hidden magic numbers.
 
-It writes `data/processed/reproducibility_report.json` with computed results, input hashes and
-random seeds. In CI or after committing, use:
+By default it prints JSON with computed results, input hashes and random seeds
+to stdout, with the check summary on stderr. It does not update the historical
+`data/processed/reproducibility_report.json`. To save a report, explicitly choose
+a fresh destination; existing files and symlinks are refused before checks,
+and exclusive creation also protects against another writer creating the path
+during the audit. A fresh blocked report is retained before the nonzero exit.
+Git-ignore checks query only the named authored inputs, not the entire ignored
+data tree.
+In CI or after committing, use:
 
 ```bash
 uv run python scripts/audit_reproducibility.py --require-tracked
+# Optional saved report; use a new name for each run:
+uv run python scripts/audit_reproducibility.py --require-tracked \
+  --report data/legacy-artifact-audit-REPLAY.json
 ```
 
 ## Manual inputs
@@ -4671,7 +4687,12 @@ usable membership intervals covering the vote date. Undated memberships remain u
 and chamber/party field availability is not scientific certification. The capability
 report distinguishes retained files from analytical support and names missing inputs.
 
-## Clean-room rebuild order
+## Legacy clean-room rebuild order
+
+This is the historical broad pipeline, not the current pinned 2023-2024
+workflow. Do not run these acquisition/rebuild steps under the current storage
+pause or against closed source campaigns. The explicit legacy opt-in below
+does not waive those boundaries.
 
 ```bash
 make setup
@@ -4681,7 +4702,7 @@ make platforms            # includes OCR-only official documents
 make caucus-priorities
 make legislators
 make bills-dump
-make all
+make all ALLOW_LEGACY_ANALYSIS=1
 make test lint audit
 ```
 

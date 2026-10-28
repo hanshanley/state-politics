@@ -13,6 +13,20 @@ bounded retained-evidence checks and a small graph-only readability fix below,
 not new full-population snapshots. DATA-01, VALIDATE-01, RESEARCH-01 and WEB-01
 remain open.
 
+- [ ] **FIX-01: Repair actionable overview findings without changing research evidence.**
+  Fix all 12 NJ-producer lint violations while retaining exact previous-producer
+  compatibility and complete semantic replay; preserve historical audit reports
+  with JSON stdout/fresh exclusive reports; restrict Git-ignore checks to the
+  seven named authored inputs; guard broad legacy builds before dependencies
+  can run, including parallel Make. All 194 affected regressions, repository-wide
+  lint, 223 public-doc checks and 36 relative links pass. Actual canonical audits
+  remain 465/499 with the same 34 failures / 28 missing legacy paths, unchanged
+  non-counter fields and historical report. All 85 frozen controls and graph/
+  inspector pins remain unchanged. The real original text packet replays
+  14 contexts / 40 complete views; larger retained collection replays and final
+  persistence/readback remain in progress. Do not equate these engineering
+  repairs with completion of the four substantive gates below.
+
 - [x] **DOCS-01: Explain project purpose and missing analyses/data explicitly.**
   Expand the existing `docs/PROJECT_STATUS.md`, linked from README, instead of
   creating a duplicate overview. Separate missing records/eligibility from
