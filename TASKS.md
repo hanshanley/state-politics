@@ -13,6 +13,24 @@ bounded retained-evidence checks and a small graph-only readability fix below,
 not new full-population snapshots. DATA-01, VALIDATE-01, RESEARCH-01 and WEB-01
 remain open.
 
+- [ ] **PLOT-03: Make cohort emptiness and tiny counts visible in the actual chart.**
+  The recovered-text chart leaves Maine's empty primary-cohort row unlabelled
+  and Massachusetts's single-context bar effectively invisible. Show exact
+  per-state cohort totals, distinguish no cohort contexts from zero legislative
+  activity, and derive the accounted/observed-state caption from the saved data.
+  Preserve every bar value and complete CSV. Verify actual Substack/website
+  PNG/editable SVG files, clipping/layout and unaffected-chart byte parity;
+  preserve originals before an explicit current-manifest/auditor-pin update.
+  No new population, collection, inference, classification or publication.
+  Actual current exports now label all 50 totals, including MA1/PA56 and
+  "No cohort contexts" for ME. All other 104 images, 35 complete CSVs,
+  numeric mark values and the original full chart ZIP are unchanged.
+  Original collection/README/exact renderer are independently preserved.
+  All 27 graph/auditor tests, actual root/replay Chromium at three widths,
+  784-artifact current audit, 223 doc checks and 85 frozen controls pass.
+  Legacy audit remains exactly 465/499 with its 34 failures. Final Hans-only
+  checkpoint/readback remains pending.
+
 - [ ] **FIX-01: Repair actionable overview findings without changing research evidence.**
   Fix all 12 NJ-producer lint violations while retaining exact previous-producer
   compatibility and complete semantic replay; preserve historical audit reports

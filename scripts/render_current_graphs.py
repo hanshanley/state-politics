@@ -749,14 +749,31 @@ def specifications(tables):
         )
         for ax, part in zip(axs, parts(f, len(axs)), strict=True):
             stacked(ax, part[label_column], part, categories)
-            ax.set_xlim(0, max(1, f[[key for key, _ in categories]].sum(axis=1).max() * 1.03))
+            padding = 1.16 if table == "retained_text_coverage" else 1.03
+            ax.set_xlim(0, max(1, f[[key for key, _ in categories]].sum(axis=1).max() * padding))
+            if table == "retained_text_coverage":
+                ax.set_xlabel("Candidate contexts", fontsize=10)
+                for position, total in enumerate(part.candidate_contexts):
+                    ax.annotate(
+                        "No cohort contexts" if total == 0 else f"{total:,}",
+                        xy=(total, position), xytext=(4, 0), textcoords="offset points",
+                        ha="left", va="center", fontsize=8, color=theme.MUTED,
+                    )
         yield item(
             "evidence",
             name,
             fig,
             title,
-            "Complete retained source evidence; unknowns preserved",
-            "Source: " + note,
+            (
+                f"{len(f)} states accounted for; "
+                f"{f.candidate_contexts.gt(0).sum()} with cohort contexts"
+                if table == "retained_text_coverage"
+                else "Complete retained source evidence; unknowns preserved"
+            ),
+            "Source: " + note + (
+                " Counts describe this selected cohort, not official legislative volume."
+                if table == "retained_text_coverage" else ""
+            ),
             table,
         )
 

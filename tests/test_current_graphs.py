@@ -242,6 +242,20 @@ def test_every_chart_family_preserves_population_counts_after_state_status_plot(
             f"{population['available_retained_text']:,} of "
             f"{population['original_candidate_contexts']:,} contexts have text"
         ) in coverage["note"]
+        frame = tables["evidence", "retained_text_coverage"]
+        assert (
+            f"{len(frame)} states accounted for; "
+            f"{frame.candidate_contexts.gt(0).sum()} with cohort contexts"
+        ) in coverage["subtitle"]
+        expected = {
+            row.state: "No cohort contexts" if row.candidate_contexts == 0
+            else f"{row.candidate_contexts:,}"
+            for row in frame.itertuples()
+        }
+        for ax in coverage["fig"].axes:
+            states = [label.get_text() for label in ax.get_yticklabels()]
+            assert [text.get_text() for text in ax.texts] == [expected[state] for state in states]
+            assert ax.get_xlabel() == "Candidate contexts"
     finally:
         plt.close("all")
 

@@ -41,6 +41,9 @@ The project is not yet a completed national comparison or a published website.
   safeguards, plus versioned diagnostics and reproducibility checks.
 
 The current chart gallery is [`outputs/index.html`](../outputs/index.html).
+Its recovered-text chart now labels exact state cohort totals and explicitly
+distinguishes Maine's empty cohort from Massachusetts's single context; neither
+is a measurement of complete state legislative activity.
 The thirteen older root PNGs are preserved legacy references, not revalidated
 findings. Large source/model/inspector bundles are local and Git-ignored:
 cloning the repository does not recover them.

@@ -1087,9 +1087,22 @@ Substack uses `#F7F5F0`; The Margin of Error uses `#F5F5F5`, matching the local
 `uk_decline` reference. Both versions preserve identical marks, axes and data.
 PNGs are 300 dpi; SVG labels remain editable text. No website is deployed.
 
-The October 27 presentation-only refresh adds aligned exact unanimity/majority
-counts beside the topic-comparison bars, including explicit zeros. Current
-manifest: `16f6cee05fc0c72cec23d1340531af97b388f487435c52ee720379191f57e471`.
+The October 28 recovered-text chart repair labels all exact per-state cohort
+totals, including Massachusetts's single context and Maine's "No cohort contexts".
+Its caption distinguishes 50 accounted states from 49 with cohort contexts,
+not actual legislative volume. Current manifest:
+`548f9cb890b55642a2556c91ca88c6dd86eae68306ab3bd6670e519325cc1ea8`.
+Only this chart's four PNG/SVG variants and its gallery/manifest change.
+All 35 CSVs, the original complete chart ZIP and the other 104 images remain
+byte-identical. All numeric mark values are preserved. The prior collection,
+README and exact Git-bound renderer remain independently preserved at
+`outputs/preserved-cohort-counts-20261028-v1/`. Actual root/replay Chromium
+checks pass at 1360/390/320px, as does the public current-integrity audit.
+Proofs: `data/cohort-chart-readability-20261028-v1/`.
+
+The earlier October 27 presentation-only refresh added aligned exact unanimity/majority
+counts beside the topic-comparison bars, including explicit zeros. Its historical
+manifest was `16f6cee05fc0c72cec23d1340531af97b388f487435c52ee720379191f57e471`.
 Its declared payload is 18,374,672 bytes, excluding the manifest and original
 research archives. All 35 CSVs and the other 104 image exports are unchanged;
 all 42 numeric cells, 3,176 original marks, complete CSV ZIP, 13 legacy PNGs and

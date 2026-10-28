@@ -5,6 +5,34 @@ The thirteen historical root figures and their analytical conclusions remain
 inspect source/model evidence; they do not certify a classifier, complete
 coverage or party-policy findings.
 
+## Cohort-count chart repair: October 28
+
+The actual recovered-text chart previously left Maine's empty primary-cohort
+row unlabelled and made Massachusetts's single-context bar effectively invisible.
+Both Substack and The Margin of Error PNG/editable-SVG variants now show all
+50 exact cohort totals, explicitly label "No cohort contexts", and distinguish
+50 accounted states from 49 with cohort contexts. The footer disclaims official
+legislative volume. No date, party, source, classification or count changes.
+
+All four affected exports were inspected. The other 104 images, every numeric
+bar/heatmap/point/segment value, all 35 CSVs and the original complete chart ZIP
+remain unchanged. The original collection, README and exact Git-bound renderer
+are preserved at `outputs/preserved-cohort-counts-20261028-v1/`, with independent
+native clones for the original artifacts. Current manifest:
+`548f9cb890b55642a2556c91ca88c6dd86eae68306ab3bd6670e519325cc1ea8`.
+The public integrity checker explicitly pins this reviewed presentation update.
+
+All 27 combined graph/auditor tests pass. Actual Chromium verifies root and fresh
+replay galleries at 1360/390/320px: 27 decoded images and 174 non-fragment links
+per page, no overflow, exceptions or external page requests. Complete 465,482-byte
+chart-ZIP HTTP responses match saved files; both helpers exit. This is not a new
+browser-native query-export test. The actual current-integrity audit verifies
+784 artifacts / eight manifests / 41 direct inputs, retaining unperformed
+scientific certification and false publication approval.
+
+Proofs: `data/cohort-chart-readability-20261028-v1/`. Only a small graph replay
+is produced; no raw-source collection, model execution or population snapshot.
+
 ## Repairs from the project overview: October 28
 
 Four engineering problems are repaired without supplying invented research data:

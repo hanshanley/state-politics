@@ -22,6 +22,9 @@ and `context/`. They use identical data and geometry, not recolored screenshots.
 The paired topic comparison includes aligned exact unanimity/majority counts,
 including zeros, so low-count topics remain readable on the shared linear scale.
 This presentation update changes no classifications or source coverage.
+The recovered-text chart now labels every state's exact cohort total, including
+Massachusetts's single context and Maine's empty cohort. Its caption distinguishes
+50 accounted states from 49 with cohort contexts, not actual legislative activity.
 Open [`index.html`](index.html) locally to browse every chart and download.
 [All 35 complete chart tables](chart-data/),
 [the full chart-data ZIP](current-chart-data.zip) and
