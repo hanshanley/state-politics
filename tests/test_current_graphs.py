@@ -113,6 +113,60 @@ def test_empty_state_coverage_is_not_invented_zero_activity():
     plt.close(fig)
 
 
+@pytest.mark.parametrize("check", ["row_alignment", "count_labels"])
+def test_bill_evidence_panels_align_states_and_distinguish_zero_from_unknown(check):
+    root = Path(__file__).resolve().parents[1]
+    tables = {
+        (group, name): pd.read_csv(root / "outputs/chart-data" / group / f"{name}.csv")
+        for group, names in MODULE["TABLES"].items()
+        for name in names
+    }
+    frame = tables["evidence", "bill_evidence_by_state"].iloc[:5].copy()
+    frame["state"] = ["AK", "AL", "MA", "ME", "WY"]
+    columns = [
+        "n_cycle_evidence_candidate_contexts",
+        "n_cycle_contexts_with_nonempty_abstract",
+        "n_cycle_contexts_with_indexed_native_text",
+    ]
+    frame[columns[0]] = [10000, 5000, 1, 0, 10]
+    frame[columns[1]] = [500, 0, 1, 0, 0]
+    frame[columns[2]] = [float("nan"), 2, 1, 0, float("nan")]
+    tables["evidence", "bill_evidence_by_state"] = frame
+    specifications = MODULE["specifications"](tables)
+    try:
+        for spec in specifications:
+            if spec["name"] == "bill_evidence_by_state":
+                break
+            plt.close(spec["fig"])
+        axs = spec["fig"].axes
+        canvas = FigureCanvasAgg(spec["fig"])
+        canvas.draw()
+        if check == "row_alignment":
+            positions = [
+                [ax.transData.transform((0, row))[1] for row in range(len(frame))]
+                for ax in axs
+            ]
+            assert positions[0] == pytest.approx(positions[1])
+            assert positions[0] == pytest.approx(positions[2])
+        else:
+            for ax, column in zip(axs, columns, strict=True):
+                expected = [
+                    "not supplied" if pd.isna(value) else f"{value:,.0f}"
+                    for value in frame[column]
+                ]
+                assert [text.get_text() for text in ax.texts] == expected
+                assert [bar.get_width() for bar in ax.patches] == pytest.approx(
+                    frame[column].tolist(), nan_ok=True,
+                )
+                assert all(
+                    text.get_window_extent(canvas.get_renderer()).x1 <= ax.bbox.x1
+                    for text in ax.texts
+                )
+    finally:
+        specifications.close()
+        plt.close("all")
+
+
 def test_paired_topic_counts_keep_small_and_zero_values_readable(tmp_path):
     tables = {
         ("majority", "status_comparison"): pd.DataFrame(

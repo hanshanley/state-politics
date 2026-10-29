@@ -5,6 +5,36 @@ The thirteen historical root figures and their analytical conclusions remain
 inspect source/model evidence; they do not certify a classifier, complete
 coverage or party-policy findings.
 
+## Bill-evidence panel alignment and exact counts: October 28
+
+The actual three-panel bill-evidence chart had misaligned state rows because
+the native-text panel autoscaled away missing endpoint states. Tiny and zero
+counts were also invisible. Two focused regressions reproduce both defects
+before the fix. All three panels now have the same explicit row limits, with
+all 150 supplied-count/unknown cells labelled; "not supplied" stays distinct
+from an observed zero. The common linear x range is extended equally for labels.
+
+Both actual Substack/website PNGs and editable SVGs are regenerated and inspected.
+All numeric bar/heatmap/point/segment values, other 104 images, 35 complete CSVs,
+the original ZIP and gallery bytes remain unchanged. Current manifest:
+`392b1a7cecb603be4c2e4e2ff834dae08927ed2827edc29e8e7198fb09d3ce71`;
+145 declared artifacts total **18,934,809 bytes**, excluding the manifest.
+The preceding `548f9cb8` collection, README and exact renderer are preserved
+with independent native clones at
+`outputs/preserved-current-bill-evidence-20261028-v1/`.
+
+All 29 chart/auditor tests and full repository Ruff checks pass. Actual root and
+nested galleries pass Chromium at 1360/390/320px, decoding all 27 images,
+resolving every non-fragment link and matching complete ZIP response bytes.
+No model execution, source acquisition, new population, scientific promotion
+or production integration occurs. Proofs:
+`data/bill-evidence-readability-20261028-v1/`.
+All 225 public-doc checks, 90 relative links and 85 frozen controls pass.
+The updated pinned current-byte audit verifies 784 artifacts / 41 direct inputs;
+scientific certification remains unperformed. The tracked canonical audit is
+exactly the previous 467/501, with the same 34 legacy failures and every field
+unchanged. Passed fixtures and the exited browser cache alone were cleaned.
+
 ## Qualified source-date adapter and proposed integration: October 28
 
 The public `state_politics.bills.pa_printed_dates` adapter now builds, independently
@@ -82,6 +112,9 @@ The corrected `join-incidence-v2.json` follows the installed join's actual
 typed-identity joins. This is an observer correction, not a repaired source ID.
 
 ## Cohort-count chart repair: October 28
+
+This records the earlier `548f9cb8` checkpoint; the later bill-evidence repair's
+current manifest and budget are above. Original checkpoint receipts are retained.
 
 The actual recovered-text chart previously left Maine's empty primary-cohort
 row unlabelled and made Massachusetts's single-context bar effectively invisible.

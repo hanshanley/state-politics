@@ -1139,15 +1139,27 @@ Substack uses `#F7F5F0`; The Margin of Error uses `#F5F5F5`, matching the local
 `uk_decline` reference. Both versions preserve identical marks, axes and data.
 PNGs are 300 dpi; SVG labels remain editable text. No website is deployed.
 
+The October 28 bill-evidence repair aligns all state rows across its three
+metadata-channel panels and labels all 150 count/unknown cells. Shared linear
+limits are extended equally for label space; no bar value, missingness or
+cohort changes. Current manifest:
+`392b1a7cecb603be4c2e4e2ff834dae08927ed2827edc29e8e7198fb09d3ce71`.
+Its 145 artifacts total **18,934,809 bytes**, excluding the manifest and original
+research archives. Only the four bill-evidence PNG/SVG files and manifest change;
+the other 104 images, all 35 complete CSVs, original ZIP and gallery stay
+byte-identical. The preceding `548f9cb8` collection, README and exact renderer are
+preserved at `outputs/preserved-current-bill-evidence-20261028-v1/` using
+independent native clones. Proofs: `data/bill-evidence-readability-20261028-v1/`.
+
 The October 28 recovered-text chart repair labels all exact per-state cohort
 totals, including Massachusetts's single context and Maine's "No cohort contexts".
 Its caption distinguishes 50 accounted states from 49 with cohort contexts,
-not actual legislative volume. Current manifest:
+not actual legislative volume. Its preserved checkpoint manifest:
 `548f9cb890b55642a2556c91ca88c6dd86eae68306ab3bd6670e519325cc1ea8`.
 Only this chart's four PNG/SVG variants and its gallery/manifest change.
-Its 145 declared artifact files total **18,636,751 bytes**, excluding the
-manifest and separately retained research archives. This is the current
-website-handoff payload, not the earlier October 27 budget below.
+At that checkpoint, 145 declared artifact files totalled **18,636,751 bytes**,
+excluding the manifest and separately retained research archives. The later
+bill-evidence repair's current handoff budget is above.
 All 35 CSVs, the original complete chart ZIP and the other 104 images remain
 byte-identical. All numeric mark values are preserved. The prior collection,
 README and exact Git-bound renderer remain independently preserved at

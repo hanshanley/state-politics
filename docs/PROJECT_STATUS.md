@@ -44,6 +44,9 @@ The current chart gallery is [`outputs/index.html`](../outputs/index.html).
 Its recovered-text chart now labels exact state cohort totals and explicitly
 distinguishes Maine's empty cohort from Massachusetts's single context; neither
 is a measurement of complete state legislative activity.
+The separate three-panel bill-evidence chart now aligns all state rows and
+labels tiny values, observed zeros and unknown native-text channels distinctly;
+its overlapping metadata columns are not added into a recovery total.
 The thirteen older root PNGs are preserved legacy references, not revalidated
 findings. Large source/model/inspector bundles are local and Git-ignored:
 cloning the repository does not recover them.

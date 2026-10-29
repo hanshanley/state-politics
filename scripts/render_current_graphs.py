@@ -660,13 +660,17 @@ def specifications(tables):
     ):
         ax.barh(np.arange(len(f)), f[key], color=theme.BLUE, height=0.7)
         ax.set_yticks(range(len(f)), f.state, fontsize=8.5)
-        ax.invert_yaxis()
+        ax.set_ylim(len(f) - 0.5, -0.5)
         ax.set_title(title, fontsize=11)
         ax.set_xlabel("Contexts", fontsize=10)
         ax.tick_params(axis="x", labelsize=8)
-        ax.set_xlim(0, f.n_cycle_evidence_candidate_contexts.max() * 1.03)
-        for i in np.flatnonzero(f[key].isna()):
-            ax.text(0, i, "not supplied", fontsize=7, va="center")
+        ax.set_xlim(0, max(1, f.n_cycle_evidence_candidate_contexts.max() * 1.18))
+        for i, value in enumerate(f[key]):
+            ax.annotate(
+                "not supplied" if pd.isna(value) else f"{value:,.0f}",
+                (0 if pd.isna(value) else value, i),
+                xytext=(4, 0), textcoords="offset points", fontsize=7, va="center",
+            )
     yield item(
         "evidence",
         "bill_evidence_by_state",

@@ -25,6 +25,10 @@ This presentation update changes no classifications or source coverage.
 The recovered-text chart now labels every state's exact cohort total, including
 Massachusetts's single context and Maine's empty cohort. Its caption distinguishes
 50 accounted states from 49 with cohort contexts, not actual legislative activity.
+The three-panel bill-evidence chart uses matching state-row positions and exact
+counts, including tiny values and observed zeros; unknown native-text channels
+remain labelled "not supplied". These overlapping metadata channels must not
+be added or mistaken for the final recovered-text totals.
 Open [`index.html`](index.html) locally to browse every chart and download.
 [All 35 complete chart tables](chart-data/),
 [the full chart-data ZIP](current-chart-data.zip) and

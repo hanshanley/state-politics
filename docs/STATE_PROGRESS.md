@@ -51,7 +51,7 @@ The October 28 recovered-text chart repair subsequently labels all 50 exact
 cohort totals, including MA1/PA56 and Maine's "No cohort contexts". The subtitle
 distinguishes 50 accounted states from 49 with cohort contexts, not actual
 legislative volume. All 35 CSVs, complete chart ZIP and other 104 images remain
-unchanged relative to the October 27 collection. Current graph manifest:
+unchanged relative to the October 27 collection. That checkpoint's manifest:
 `548f9cb890b55642a2556c91ca88c6dd86eae68306ab3bd6670e519325cc1ea8`.
 The 145 declared artifacts total 18,636,751 bytes, excluding the manifest.
 The earlier `16f6cee05fc0c72cec23d1340531af97b388f487435c52ee720379191f57e471`
@@ -59,6 +59,16 @@ collection is preserved at `outputs/preserved-cohort-counts-20261028-v1/`.
 No source/model snapshot, new classification or approval is implied.
 The Pennsylvania date-observation registry remains a separate proposal, not
 a primary-cohort or graph update.
+
+The subsequent October 28 bill-evidence chart repair fixes misaligned state rows
+between three panels and shows all 150 count/unknown cells explicitly. Tiny
+values and observed zeros stay distinct from "not supplied". All bar values,
+the other 104 images, all 35 CSVs, the original ZIP and gallery remain unchanged.
+Current graph manifest:
+`392b1a7cecb603be4c2e4e2ff834dae08927ed2827edc29e8e7198fb09d3ce71`.
+Its 145 declared artifacts total 18,934,809 bytes, excluding the manifest.
+The preceding `548f9cb8` collection/README/exact renderer are independently
+preserved at `outputs/preserved-current-bill-evidence-20261028-v1/`.
 The bounded retained HI/NJ metadata follow-up qualifies zero new bodies;
 17,729 gaps remain. Earlier complete source scopes are not reopened.
 

@@ -13,6 +13,28 @@ bounded retained-evidence checks and a small graph-only readability fix below,
 not new full-population snapshots. DATA-01, VALIDATE-01, RESEARCH-01 and WEB-01
 remain open.
 
+- [x] **PLOT-04: Align state rows and expose exact bill-evidence counts.**
+  Actual bill-evidence PNG inspection found different row extents across the
+  three panels: native-text missing endpoint states were omitted by autoscaling.
+  Tiny/zero counts were also invisible. Two regressions fail before the fix;
+  29 combined chart/auditor tests and full repository lint now pass.
+  Regenerated the four actual Substack/website PNG/editable-SVG variants with
+  shared explicit row limits and 150 exact supplied-count/unknown labels.
+  Known zeros remain distinct from "not supplied"; overlapping channels must
+  not be added. Shared linear limits extend equally to accommodate labels.
+  All numeric marks, other 104 images, 35 complete CSVs, original ZIP and gallery
+  remain unchanged. Original collection/README/exact renderer are independently
+  preserved. Root/nested Chromium checks pass at three widths with all 27 images,
+  working links and exact complete ZIP bytes. Current manifest `392b1a7c` and
+  18,934,809-byte budget replace `548f9cb8` only on current-facing surfaces.
+  Proofs: `data/bill-evidence-readability-20261028-v1/`. No source/model/
+  population/scientific/publication changes or full-data snapshots.
+  Final verification: 225 public-doc checks, 90 relative links, 85 frozen
+  controls and the actual 784-artifact / 41-input current audit pass.
+  The tracked canonical audit remains exactly 467/501 with the same 34 failures
+  and every field unchanged. Only passed fixtures/exited browser cache were
+  cleaned; original failures, complete data and previous collections remain.
+
 - [x] **WEB-04: Synchronize the current graph handoff after the chart repair.**
   October 28 dispatch found that WEBSITE and the tracker's current-presentation
   section still identified the prior October 27 graph manifest and budget.
