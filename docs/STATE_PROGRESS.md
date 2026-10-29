@@ -37,17 +37,28 @@ pass; every actual complete query byte matches frozen records. This is a UI
 change, not a new inference/source snapshot, recovered body or scientific
 approval. Source/model dispatch remains v26/token23; 17,729 gaps remain.
 
-## Current presentation: October 27
+## Current presentation: October 28
 
-Source/model dispatch remains v26/token23 below. A graph-only readability
-refresh adds exact unanimity/majority counts beside every topic-comparison
+Source/model dispatch remains v26/token23 below. The October 27 graph-only
+refresh added exact unanimity/majority counts beside every topic-comparison
 row, including zeros. All 42 cells and 3,176 plotted marks independently
 match the original tables; all 35 CSVs and the other 104 images are unchanged.
 Both backgrounds were visually inspected, 15 plotting tests pass, and
 root/nested Chromium checks pass at 1360/390/320px. All 85 controls and
-13 legacy PNGs remain unchanged. Current graph manifest:
-`16f6cee05fc0c72cec23d1340531af97b388f487435c52ee720379191f57e471`.
+13 legacy PNGs remain unchanged.
+
+The October 28 recovered-text chart repair subsequently labels all 50 exact
+cohort totals, including MA1/PA56 and Maine's "No cohort contexts". The subtitle
+distinguishes 50 accounted states from 49 with cohort contexts, not actual
+legislative volume. All 35 CSVs, complete chart ZIP and other 104 images remain
+unchanged relative to the October 27 collection. Current graph manifest:
+`548f9cb890b55642a2556c91ca88c6dd86eae68306ab3bd6670e519325cc1ea8`.
+The 145 declared artifacts total 18,636,751 bytes, excluding the manifest.
+The earlier `16f6cee05fc0c72cec23d1340531af97b388f487435c52ee720379191f57e471`
+collection is preserved at `outputs/preserved-cohort-counts-20261028-v1/`.
 No source/model snapshot, new classification or approval is implied.
+The Pennsylvania date-observation registry remains a separate proposal, not
+a primary-cohort or graph update.
 The bounded retained HI/NJ metadata follow-up qualifies zero new bodies;
 17,729 gaps remain. Earlier complete source scopes are not reopened.
 

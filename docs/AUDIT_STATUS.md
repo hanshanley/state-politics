@@ -246,6 +246,10 @@ evidence is preserved, not reclassified as a passing application execution.
 
 ## Current presentation refresh: October 27
 
+This section records the preserved October 27 checkpoint. The current October 28
+cohort-count repair and manifest are documented above; this historical pin is not
+the current website handoff.
+
 The paired topic comparison now prints exact original-unanimity and
 majority-candidate counts beside every row, including zeros. All 42 numeric
 cells match the original CSV; only its four actual PNG/editable-SVG exports
@@ -256,7 +260,7 @@ were visually inspected; root/nested galleries pass actual Chromium at
 1360/390/320px with 27 images, 180 links and seven real destinations.
 All 15 plotting tests pass. No source, model, labels or approval flags change.
 
-Current manifest:
+Manifest at that checkpoint:
 `16f6cee05fc0c72cec23d1340531af97b388f487435c52ee720379191f57e471`.
 Declared chart payload: 18,374,672 bytes, excluding the manifest and private
 research archives. The prior collection/README/exact producer are preserved at

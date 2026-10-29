@@ -4,7 +4,7 @@ The study covers 2023-2024. This ledger records the current actionable work;
 the detailed source and scientific gates remain in `docs/AUDIT_STATUS.md` and
 `docs/STATE_PROGRESS.md`. Read local `AGENT-COMMS.md` before overlapping edits.
 
-**Dispatch check, October 26:** the current graphs are delivered. Bulk
+**Dispatch check, October 28:** the current graphs are delivered. Bulk
 acquisition, inference and full snapshots remain paused for capacity review.
 Wisconsin preparation is superseded by its verified closure, and retired
 Pennsylvania/Illinois branches remain blocked, not newly authorized work.
@@ -12,6 +12,31 @@ Do not rerun them to fill a scheduled slot. The October 27 continuation uses
 bounded retained-evidence checks and a small graph-only readability fix below,
 not new full-population snapshots. DATA-01, VALIDATE-01, RESEARCH-01 and WEB-01
 remain open.
+
+- [x] **WEB-04: Synchronize the current graph handoff after the chart repair.**
+  October 28 dispatch found that WEBSITE and the tracker's current-presentation
+  section still identified the prior October 27 graph manifest and budget.
+  Bind both to the actual current `548f9cb8` manifest and **18,636,751-byte**
+  payload; keep historical pins/budgets explicitly historical. Verify the 145
+  existing artifacts, 108 PNG/editable-SVG exports and all 35 complete CSV/ZIP
+  members without rendering, copying data or running a full research audit.
+  Both corrected cohort PNG backgrounds were inspected; vector labels retain
+  exact totals, explicit cohort emptiness and the 50-accounted/49-observed caveat.
+  Proofs: `data/current-website-handoff-20261028-v1/`. No chart/model/source data,
+  cohort, approval or production-website changes. WEB-01's publication gate stays
+  open; original graph/source packets and failed attempts remain preserved.
+  All 225 public-doc checks and 72 relative links pass. Fresh verification
+  receipts are under 64 KiB; no graph or research-data snapshot is duplicated.
+
+**Next-dispatch constraints:** DATA-01 remains conditional on a genuinely new
+permitted source or qualified retained lead; the recorded HI/NJ residual probe
+does not supply one and is not an exhaustive source-impossibility claim.
+Acquisition/inference/full-snapshot work remains paused. VALIDATE-01 requires
+actual independent human references, not assistant-generated gold.
+RESEARCH-01 still needs operative-platform, historical party/source-version,
+rights and report decisions. WEB-01 cannot publish before those applicable
+claim/report/rights approvals. No closed collector, completed graph or frozen
+evaluation should be rerun merely to occupy a scheduled turn.
 
 - [x] **DATA-18: Check retained printed dates against the cohort-eligibility gap.**
   Inspect existing Pennsylvania views and the accepted shared native join,

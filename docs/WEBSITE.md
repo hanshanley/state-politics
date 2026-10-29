@@ -27,11 +27,11 @@ build commands below are not instructions to recreate the current workspace.
 | Saved surface | Current contract |
 |---|---|
 | `outputs/index.html` | Local 27-chart gallery; 108 PNG/editable-SVG exports and 35 complete chart CSVs. See the [current collection](../outputs/README.md). |
-| `outputs/current-graphs-manifest.json` | Pins the six saved table families, every full chart table and the actual exported bytes. Manifest SHA-256: `16f6cee05fc0c72cec23d1340531af97b388f487435c52ee720379191f57e471`. |
+| `outputs/current-graphs-manifest.json` | Pins the six saved table families, every full chart table and the actual exported bytes. Manifest SHA-256: `548f9cb890b55642a2556c91ca88c6dd86eae68306ab3bd6670e519325cc1ea8`. |
 | `outputs/classification-inspector-2023-2024-v9/` | Private original/majority inspector: 157,598 original contexts and 179,849 complete source alternatives, unchanged from v8. UI-only direct-file export revision; manifest SHA-256: `10e0a930c0d6f8f91e153612f0701d88c94b735baff502650d85e7668316d2e5`. The large bundle is local/Git-ignored, not supplied by cloning the code. |
 | `outputs/substack/` and `outputs/themarginoferror/` | Matching data/geometry, with warm cream `#F7F5F0` and page grey `#F5F5F5` respectively. These are verified export backgrounds, not approval to copy assets into production. |
 
-The manifest-declared chart payload is **18,374,672 bytes**, before the
+The manifest-declared chart payload is **18,636,751 bytes**, before the
 manifest itself, a report or separately approved research archives. It is not
 the full research dataset. A future release should stage an explicit approved
 artifact allowlist, not recursively copy `data/`, `outputs/`, or the retained
@@ -40,6 +40,14 @@ preview/model versions.
 The October 27 topic-comparison refresh adds exact aligned unanimity/majority
 counts, including zeros; source tables, predictions and approval gates are
 unchanged. This is a presentation-only update, not a new inference run.
+The October 28 recovered-text chart repair also makes every state's exact
+cohort total visible, including Massachusetts's single context and Maine's
+"No cohort contexts". It distinguishes 50 accounted states from 49 with cohort
+contexts, not official legislative volume. Only its four PNG/SVG variants and
+gallery/manifest changed; all 35 complete CSVs and the full chart ZIP remain
+unchanged. The prior manifest/collection/README/exact renderer are preserved at
+`outputs/preserved-cohort-counts-20261028-v1/`; its historical pin must not be used
+to identify the current handoff.
 
 Open the existing chart gallery directly. With the saved inspector bundle
 present, this command serves it locally without generating another snapshot:

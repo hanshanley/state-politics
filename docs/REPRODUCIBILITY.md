@@ -1145,6 +1145,9 @@ Its caption distinguishes 50 accounted states from 49 with cohort contexts,
 not actual legislative volume. Current manifest:
 `548f9cb890b55642a2556c91ca88c6dd86eae68306ab3bd6670e519325cc1ea8`.
 Only this chart's four PNG/SVG variants and its gallery/manifest change.
+Its 145 declared artifact files total **18,636,751 bytes**, excluding the
+manifest and separately retained research archives. This is the current
+website-handoff payload, not the earlier October 27 budget below.
 All 35 CSVs, the original complete chart ZIP and the other 104 images remain
 byte-identical. All numeric mark values are preserved. The prior collection,
 README and exact Git-bound renderer remain independently preserved at
@@ -1155,7 +1158,7 @@ Proofs: `data/cohort-chart-readability-20261028-v1/`.
 The earlier October 27 presentation-only refresh added aligned exact unanimity/majority
 counts beside the topic-comparison bars, including explicit zeros. Its historical
 manifest was `16f6cee05fc0c72cec23d1340531af97b388f487435c52ee720379191f57e471`.
-Its declared payload is 18,374,672 bytes, excluding the manifest and original
+Its declared payload was 18,374,672 bytes, excluding the manifest and original
 research archives. All 35 CSVs and the other 104 image exports are unchanged;
 all 42 numeric cells, 3,176 original marks, complete CSV ZIP, 13 legacy PNGs and
 85 controls independently reconcile. Both actual backgrounds were visually
