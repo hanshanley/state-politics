@@ -1139,12 +1139,25 @@ Substack uses `#F7F5F0`; The Margin of Error uses `#F5F5F5`, matching the local
 `uk_decline` reference. Both versions preserve identical marks, axes and data.
 PNGs are 300 dpi; SVG labels remain editable text. No website is deployed.
 
-The October 28 bill-evidence repair aligns all state rows across its three
+The October 29 session/calendar comparison adds aligned exact counts for its
+three supplied scopes, including small overlaps that are difficult to estimate
+from the shared scale. Current manifest:
+`5be564561d6693f7cc08a3951b1fbd0ea68010bf800052c753c2ef338119c014`.
+Its 145 artifacts total **19,012,550 bytes**, excluding the manifest and original
+research archives. All existing bar values/limits, 47 unsupplied scopes, other
+104 images, all 35 complete CSVs, original ZIP and gallery are unchanged.
+Only the four session-chart PNG/SVG files and manifest change. Original
+`392b1a7c` collection/README/exact renderer:
+`outputs/preserved-current-session-counts-20261029-v1/`. Graph-only replay:
+`outputs/current-render-session-counts-20261029-v1/`. Proofs:
+`data/session-comparison-counts-20261029-v1/`.
+
+The earlier October 28 bill-evidence repair aligns all state rows across its three
 metadata-channel panels and labels all 150 count/unknown cells. Shared linear
 limits are extended equally for label space; no bar value, missingness or
-cohort changes. Current manifest:
+cohort changes. Its preserved checkpoint manifest:
 `392b1a7cecb603be4c2e4e2ff834dae08927ed2827edc29e8e7198fb09d3ce71`.
-Its 145 artifacts total **18,934,809 bytes**, excluding the manifest and original
+At that checkpoint, 145 artifacts totalled **18,934,809 bytes**, excluding the manifest and original
 research archives. Only the four bill-evidence PNG/SVG files and manifest change;
 the other 104 images, all 35 complete CSVs, original ZIP and gallery stay
 byte-identical. The preceding `548f9cb8` collection, README and exact renderer are

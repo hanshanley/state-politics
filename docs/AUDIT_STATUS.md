@@ -5,7 +5,41 @@ The thirteen historical root figures and their analytical conclusions remain
 inspect source/model evidence; they do not certify a classifier, complete
 coverage or party-policy findings.
 
+## Exact session/calendar comparison counts: October 29
+
+The session/calendar comparison now adds six aligned exact count cells beside
+the original stacked bars. Small overlaps no longer require estimation from
+the shared axis. IL/NY/TX remain the only supplied comparison scopes; the other
+47 states are not silently filled with zeros. Original values, limits, labels
+and all 26 other figure records remain unchanged; the extra axis contains
+derived text only, not additional data marks.
+
+Both Substack/website PNGs and editable SVGs are regenerated and inspected.
+All six actual SVG counts match the complete original CSV, with matching row
+coordinates in both columns/backgrounds. One small/zero-count regression fails
+before the change; all 30 chart/auditor tests and full repository lint pass.
+Root and nested Chromium galleries pass 1360/390/320px, decoding all 27 images,
+resolving 174 non-fragment links per viewport and matching complete ZIP bytes.
+
+Only four session-chart exports and the manifest change. Other 104 images,
+35 complete CSVs, original ZIP and gallery remain byte-identical.
+Current manifest:
+`5be564561d6693f7cc08a3951b1fbd0ea68010bf800052c753c2ef338119c014`;
+145 declared artifacts total **19,012,550 bytes**, excluding the manifest.
+Original collection/README/exact renderer are independently preserved at
+`outputs/preserved-current-session-counts-20261029-v1/`. Proofs:
+`data/session-comparison-counts-20261029-v1/`. No collection, inference,
+population change, independent validation or production publication occurs.
+All 225 public-doc checks, 90 relative links and 85 frozen controls pass.
+The updated pinned current-byte audit verifies 784 artifacts / 41 direct inputs,
+with scientific certification unperformed. The tracked canonical audit remains
+exactly 467/501 with the same 34 legacy failures and every field unchanged.
+Only passed fixtures and the exited browser cache were cleaned.
+
 ## Bill-evidence panel alignment and exact counts: October 28
+
+This records the preceding `392b1a7c` checkpoint; the current October 29
+session-count refinement is above. Original checkpoint receipts are retained.
 
 The actual three-panel bill-evidence chart had misaligned state rows because
 the native-text panel autoscaled away missing endpoint states. Tiny and zero

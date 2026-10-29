@@ -4,14 +4,35 @@ The study covers 2023-2024. This ledger records the current actionable work;
 the detailed source and scientific gates remain in `docs/AUDIT_STATUS.md` and
 `docs/STATE_PROGRESS.md`. Read local `AGENT-COMMS.md` before overlapping edits.
 
-**Dispatch check, October 28:** the current graphs are delivered. Bulk
+**Dispatch check, October 29:** the current graphs are delivered. Bulk
 acquisition, inference and full snapshots remain paused for capacity review.
 Wisconsin preparation is superseded by its verified closure, and retired
 Pennsylvania/Illinois branches remain blocked, not newly authorized work.
-Do not rerun them to fill a scheduled slot. The October 27 continuation uses
+Do not rerun them to fill a scheduled slot. The current continuation uses
 bounded retained-evidence checks and a small graph-only readability fix below,
 not new full-population snapshots. DATA-01, VALIDATE-01, RESEARCH-01 and WEB-01
 remain open.
+
+- [x] **PLOT-05: Make exact session/calendar overlaps readable.**
+  Add six aligned original counts beside the session-comparison bars, following
+  the existing topic-count style. Preserve every bar/limit and keep the other
+  47 states unsupplied, not inferred zeros. One small/zero-count regression fails
+  before implementation; 30 chart/auditor tests and full repository lint pass.
+  Regenerated and inspected both actual PNG/editable-SVG backgrounds. All six
+  SVG counts match the complete CSV, with aligned row coordinates; the other
+  26 figure records, 104 images, 35 complete CSVs, original ZIP and gallery
+  remain unchanged. Root/nested Chromium checks pass at three widths with all
+  27 images, 174 links per viewport and exact complete ZIP response bytes.
+  Original `392b1a7c` collection/README/exact renderer are independently
+  preserved; new current manifest `5be56456` and **19,012,550-byte** budget are
+  synchronized across current-facing surfaces. Proofs:
+  `data/session-comparison-counts-20261029-v1/`. Graph-only work under 100 MiB;
+  no source/model/cohort/scientific/publication changes or full-data snapshot.
+  Final verification: 225 public-doc checks, 90 relative links, 85 frozen
+  controls and the updated 784-artifact / 41-input current audit pass.
+  The tracked canonical audit remains exactly 467/501 with the same 34 failures
+  and every field unchanged. Only passed fixtures/exited browser cache were
+  cleaned; the pre-change failure and all original evidence remain.
 
 - [x] **PLOT-04: Align state rows and expose exact bill-evidence counts.**
   Actual bill-evidence PNG inspection found different row extents across the

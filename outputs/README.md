@@ -29,6 +29,9 @@ The three-panel bill-evidence chart uses matching state-row positions and exact
 counts, including tiny values and observed zeros; unknown native-text channels
 remain labelled "not supplied". These overlapping metadata channels must not
 be added or mistaken for the final recovered-text totals.
+The session/calendar comparison also has aligned exact overlap/session-only
+counts for its three supplied scopes; the other 47 states remain unsupplied,
+not inferred zeros.
 Open [`index.html`](index.html) locally to browse every chart and download.
 [All 35 complete chart tables](chart-data/),
 [the full chart-data ZIP](current-chart-data.zip) and

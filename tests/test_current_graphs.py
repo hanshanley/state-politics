@@ -222,6 +222,53 @@ def test_state_partitions_preserve_dataframe_identity_and_every_row():
     assert pd.concat(parts).equals(frame)
 
 
+def test_session_overlap_counts_remain_readable_without_turning_unsupplied_states_into_zeros(
+    tmp_path,
+):
+    root = Path(__file__).resolve().parents[1]
+    tables = {
+        (group, name): pd.read_csv(root / "outputs/chart-data" / group / f"{name}.csv")
+        for group, names in MODULE["TABLES"].items()
+        for name in names
+    }
+    frame = tables["evidence", "session_calendar_comparison"].copy()
+    columns = ["session_members", "also_calendar_candidates", "session_only_members"]
+    frame[columns] = float("nan")
+    for state, overlap, session_only in (("IL", 12000, 20000), ("NY", 1, 2), ("TX", 0, 7)):
+        frame.loc[frame.state.eq(state), columns] = [overlap + session_only, overlap, session_only]
+    tables["evidence", "session_calendar_comparison"] = frame
+    specifications = MODULE["specifications"](tables)
+    try:
+        for spec in specifications:
+            if spec["name"] == "session_calendar_comparison":
+                break
+            plt.close(spec["fig"])
+        chart, counts_ax = spec["fig"].axes
+        assert [label.get_text() for label in chart.get_yticklabels()] == ["IL", "NY", "TX"]
+        assert [bar.get_width() for bar in chart.patches] == [12000, 1, 0, 20000, 2, 7]
+        assert counts_ax.get_ylim() == chart.get_ylim()
+        assert [text.get_text() for text in counts_ax.texts] == [
+            "Also calendar", "12,000", "1", "0", "Session only", "20,000", "2", "7",
+        ]
+        result = MODULE["save_figure"](spec, tmp_path)
+        canvas = FigureCanvasAgg(spec["fig"])
+        canvas.draw()
+        extents = [text.get_window_extent(canvas.get_renderer()) for text in counts_ax.texts]
+        assert all(
+            not left.overlaps(right)
+            for index, left in enumerate(extents)
+            for right in extents[index + 1:]
+        )
+        for background in MODULE["BACKGROUNDS"]:
+            svg = ET.parse(tmp_path / background / "evidence/session_calendar_comparison.svg")
+            text = [node.text for node in svg.getroot().iter() if node.tag.endswith("}text")]
+            assert all(value in text for value in ("Also calendar", "Session only", "1", "0", "7"))
+        assert len(result["files"]) == 4
+    finally:
+        specifications.close()
+        plt.close("all")
+
+
 def test_current_builder_refuses_overwrite_before_loading_sources(tmp_path):
     output = tmp_path / "outputs"
     (output / "substack").mkdir(parents=True)

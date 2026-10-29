@@ -746,12 +746,14 @@ def specifications(tables):
             f = f[f.session_members.notna()]
         elif table == "retained_text_coverage":
             f["independent_only"] = f.research_corpus_only + f.independent_archive_only
+        show_session_counts = table == "session_calendar_comparison"
         fig, axs = axes(
             25 if len(f) > 25 else len(f),
-            panels=2 if len(f) > 25 else 1,
-            width=12 if len(f) > 25 else 11,
+            panels=2 if len(f) > 25 or show_session_counts else 1,
+            width=12.4 if show_session_counts else 12 if len(f) > 25 else 11,
         )
-        for ax, part in zip(axs, parts(f, len(axs)), strict=True):
+        chart_axes = axs[:1] if show_session_counts else axs
+        for ax, part in zip(chart_axes, parts(f, len(chart_axes)), strict=True):
             stacked(ax, part[label_column], part, categories)
             padding = 1.16 if table == "retained_text_coverage" else 1.03
             ax.set_xlim(0, max(1, f[[key for key, _ in categories]].sum(axis=1).max() * padding))
@@ -762,6 +764,25 @@ def specifications(tables):
                         "No cohort contexts" if total == 0 else f"{total:,}",
                         xy=(total, position), xytext=(4, 0), textcoords="offset points",
                         ha="left", va="center", fontsize=8, color=theme.MUTED,
+                    )
+        if show_session_counts:
+            fig.axes[0].get_gridspec().set_width_ratios([3.5, 1.3])
+            counts_ax = axs[1]
+            counts_ax.set_axis_off()
+            counts_ax.set_xlim(0, 1)
+            counts_ax.set_ylim(axs[0].get_ylim())
+            for x, column, label, color in (
+                (0.45, "also_calendar_candidates", "Also calendar", theme.BLUE),
+                (0.99, "session_only_members", "Session only", theme.TEXT),
+            ):
+                counts_ax.text(
+                    x, 1.01, label, transform=counts_ax.transAxes,
+                    ha="right", va="bottom", fontsize=9, fontweight="bold", color=color,
+                )
+                for position, value in enumerate(f[column]):
+                    counts_ax.text(
+                        x, position, f"{value:,.0f}", ha="right", va="center",
+                        fontsize=10, color=color,
                     )
         yield item(
             "evidence",

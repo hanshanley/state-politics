@@ -1,7 +1,7 @@
 # State Politics: purpose, missing data and missing analyses
 
 **Status: unfinished research, with working data tools and regenerated charts.**
-Updated October 28, 2026. A working interface or a completed engineering task
+Updated October 29, 2026. A working interface or a completed engineering task
 does not mean the underlying political analysis has been validated.
 
 ## What the project is trying to answer
@@ -47,6 +47,8 @@ is a measurement of complete state legislative activity.
 The separate three-panel bill-evidence chart now aligns all state rows and
 labels tiny values, observed zeros and unknown native-text channels distinctly;
 its overlapping metadata columns are not added into a recovery total.
+The session/calendar comparison includes exact overlap/session-only counts;
+its unsupplied states are not shown as observed zeros.
 The thirteen older root PNGs are preserved legacy references, not revalidated
 findings. Large source/model/inspector bundles are local and Git-ignored:
 cloning the repository does not recover them.

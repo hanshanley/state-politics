@@ -12,7 +12,7 @@ from pathlib import Path, PurePosixPath
 
 ROOT = Path(__file__).resolve().parents[1]
 GRAPH = "outputs/current-graphs-manifest.json"
-GRAPH_PIN = "392b1a7cecb603be4c2e4e2ff834dae08927ed2827edc29e8e7198fb09d3ce71"
+GRAPH_PIN = "5be564561d6693f7cc08a3951b1fbd0ea68010bf800052c753c2ef338119c014"
 INSPECTOR = "outputs/classification-inspector-2023-2024-v9/manifest.json"
 INSPECTOR_PIN = "10e0a930c0d6f8f91e153612f0701d88c94b735baff502650d85e7668316d2e5"
 FALSE_FLAGS = (

@@ -1,6 +1,6 @@
 # State completion tracker
 
-Updated **October 28, 2026**. This is the current dispatch list, not a claim that
+Updated **October 29, 2026**. This is the current dispatch list, not a claim that
 historical progress messages describe processes still running.
 
 **Active study window: January 1, 2023 through December 31, 2024.** Work on
@@ -37,7 +37,7 @@ pass; every actual complete query byte matches frozen records. This is a UI
 change, not a new inference/source snapshot, recovered body or scientific
 approval. Source/model dispatch remains v26/token23; 17,729 gaps remain.
 
-## Current presentation: October 28
+## Current presentation: October 29
 
 Source/model dispatch remains v26/token23 below. The October 27 graph-only
 refresh added exact unanimity/majority counts beside every topic-comparison
@@ -64,11 +64,22 @@ The subsequent October 28 bill-evidence chart repair fixes misaligned state rows
 between three panels and shows all 150 count/unknown cells explicitly. Tiny
 values and observed zeros stay distinct from "not supplied". All bar values,
 the other 104 images, all 35 CSVs, the original ZIP and gallery remain unchanged.
-Current graph manifest:
+That checkpoint's manifest:
 `392b1a7cecb603be4c2e4e2ff834dae08927ed2827edc29e8e7198fb09d3ce71`.
 Its 145 declared artifacts total 18,934,809 bytes, excluding the manifest.
 The preceding `548f9cb8` collection/README/exact renderer are independently
 preserved at `outputs/preserved-current-bill-evidence-20261028-v1/`.
+
+The October 29 session/calendar comparison adds six aligned exact count cells,
+making small overlaps readable without estimating from the shared scale.
+All original bars/limits and the 47 unsupplied scopes remain unchanged.
+Current graph manifest:
+`5be564561d6693f7cc08a3951b1fbd0ea68010bf800052c753c2ef338119c014`.
+Its 145 declared artifacts total 19,012,550 bytes, excluding the manifest.
+Only four session-chart exports and the manifest change; all other 104 images,
+35 CSVs, original ZIP and gallery remain byte-identical. The preceding
+`392b1a7c` collection is preserved at
+`outputs/preserved-current-session-counts-20261029-v1/`.
 The bounded retained HI/NJ metadata follow-up qualifies zero new bodies;
 17,729 gaps remain. Earlier complete source scopes are not reopened.
 
