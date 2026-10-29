@@ -29,7 +29,7 @@ help:
 	@echo "  figures      render current dual-background graphs from pinned saved tables"
 	@echo "               GRAPH_OUT=outputs/current-render-REPLAY for a fresh replay"
 	@echo "  test lint audit  run tests / lint / traceability audit"
-	@echo "  audit-current  verify pinned current research bytes (not scientific certification)"
+	@echo "  audit-current  verify pinned bytes/current handoff (not scientific certification)"
 	@echo "  source-ledger preview  inventory sources / build local-only evidence preview"
 	@echo "  clean-derived  disabled: retained evidence and legacy figures must be preserved"
 	@echo ""

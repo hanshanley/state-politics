@@ -39,9 +39,14 @@ The checker verifies every declared graph/inspector artifact and every direct
 graph-input binding, then follows the externally bound graph-source manifests,
 including the context pilot. It streams file hashes rather than copying inputs,
 checks unchanged fingerprints, and rejects missing/changed/linked paths, invalid
-bindings, promoted status or a pre-existing report. It performs no collection,
-model execution, graph rendering or population rebuild. The optional report must
-be a new unlinked path under project `data/`; no existing receipt is replaced.
+bindings, promoted status or a pre-existing report.
+Parsed manifests must have unique JSON keys and finite numbers, including
+finite exponent conversion; duplicate keys, `NaN`, infinities and numeric
+overflow are rejected even with a newly supplied matching manifest pin.
+Original source bodies remain byte-checked, not rewritten or sanitized.
+It performs no collection, model execution, graph rendering or population rebuild.
+The optional report must be a new unlinked path under project `data/`; no existing
+receipt is replaced.
 
 Default graph/inspector SHA pins are explicit, not discovered by choosing the
 latest filename. An intentional new snapshot requires explicit
@@ -49,9 +54,29 @@ latest filename. An intentional new snapshot requires explicit
 (and later a reviewed default-pin update). The graph's own pinned input
 bindings supply the source-bundle identities.
 
-**A successful exit certifies only byte integrity for these declared saved
-artifacts.** It does not certify their topic labels, source completeness,
-filing-time eligibility, human references, scientific claims or publication.
+When auditing the canonical `outputs/current-graphs-manifest.json`, the checker
+also requires the authored website handoff's graph/inspector pins, graph payload and the
+tracker's current-presentation pin/artifact count/payload to match the verified
+snapshot. Historical tracker sections are not treated as current references.
+Missing, duplicated or stale current fields fail; both document bindings are
+rechecked for changes during the audit. Update these references together with
+an intentional current-graph or default-inspector promotion, not afterward.
+
+An alternate `--graphs` path remains a staged-snapshot audit: it does not
+require replacing the canonical handoff. Its JSON result explicitly reports
+`current_handoff.status` as `not_applicable_noncurrent_graph_path`, with zero
+documents verified. Canonical-current success instead reports `verified`
+and the two exact document SHA/byte bindings. This does not bypass any
+manifest, artifact, source-input or research-status checks.
+With a staged alternate `--inspector` path, graph/document checks still run,
+but `current_handoff.inspector_reference` is explicitly
+`not_applicable_noncurrent_inspector_path` rather than `verified`. Auditing a
+staged inspector does not require changing the canonical inspector reference.
+
+**A successful exit establishes saved-byte integrity and applicable current
+handoff consistency, not a certified study.** It does not certify topic labels,
+source completeness, filing-time eligibility, human references, scientific claims
+or publication.
 It is not a recursive re-audit of every historical source/model dependency or
 a replacement for independent chart/record reconstruction. `make audit` and
 its known legacy-artifact failures remain separate and unchanged.

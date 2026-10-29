@@ -5,6 +5,38 @@ The thirteen historical root figures and their analytical conclusions remain
 inspect source/model evidence; they do not certify a classifier, complete
 coverage or party-policy findings.
 
+## Fail-closed current audit and handoff contract: October 29
+
+Two actionable integrity gaps are repaired. Parsed manifests now reject duplicate
+keys, `NaN`, infinities and overflowed exponent values, even when the changed
+manifest has a matching supplied pin. All eight accepted current manifests
+already satisfy these constraints; no evidence or source byte was rewritten.
+
+Canonical-current audits now require the website's graph/inspector pins/payload and the
+tracker's current-presentation pin/artifact count/payload to match the actual
+verified snapshot. Missing, stale or duplicated fields fail. Historical tracker
+sections remain historical; both current document bindings are rechecked for
+changes during the audit. Alternate graph paths remain valid staged audits and
+explicitly report current-handoff validation as inapplicable, not verified.
+An alternate inspector path likewise leaves only its current reference
+inapplicable; staged inspection never requires promoting the default handoff.
+
+Seventeen regressions reproduce the original false passes; three more cover
+partially malformed duplicates and five more expose stale/ambiguous inspector
+references found while hardening the checks. All 57 auditor/chart
+tests now pass, including document races and CLI failures without a success
+report. The actual current audit verifies 784 artifacts / 41 inputs and both
+authored handoff documents. It still reports no scientific certification,
+publication approval or project completion. Current graph/inspector pins,
+source/model/human controls and the separate legacy audit remain unchanged.
+
+Proofs: `data/current-audit-contract-20261029-v1/`. No collection, inference,
+graph rendering, cohort mutation or population snapshot is performed.
+All 225 public-doc checks, 38 relative links and 85 frozen controls pass.
+The tracked canonical audit remains exactly 467/501 with the same 34 legacy
+failures and every field unchanged. No historical report is replaced; failed
+synthetic attempts remain preserved.
+
 ## Exact session/calendar comparison counts: October 29
 
 The session/calendar comparison now adds six aligned exact count cells beside

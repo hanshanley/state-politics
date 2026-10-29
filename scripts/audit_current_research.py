@@ -1,11 +1,12 @@
 #!/usr/bin/env python3
-"""Verify pinned current research bytes without rebuilding or certifying the study."""
+"""Verify pinned research bytes and current handoff without rebuilding or certifying."""
 
 from __future__ import annotations
 
 import argparse
 import hashlib
 import json
+import math
 import re
 import stat
 from pathlib import Path, PurePosixPath
@@ -79,6 +80,29 @@ def valid_binding(value):
     )
 
 
+def strict_json(raw):
+    def unique_keys(items):
+        result = {}
+        for key, value in items:
+            if key in result:
+                raise ValueError(f"duplicate JSON key: {key}")
+            result[key] = value
+        return result
+
+    def constant(value):
+        raise ValueError(f"non-finite JSON value: {value}")
+
+    def number(value):
+        parsed = float(value)
+        if not math.isfinite(parsed):
+            raise ValueError(f"non-finite JSON number: {value}")
+        return parsed
+
+    return json.loads(
+        raw, object_pairs_hook=unique_keys, parse_constant=constant, parse_float=number,
+    )
+
+
 def audit(root, graph=GRAPH, graph_pin=GRAPH_PIN, inspector=INSPECTOR, inspector_pin=INSPECTOR_PIN):
     root = Path(root).resolve()
     snapshots, manifests = {}, {}
@@ -109,7 +133,7 @@ def audit(root, graph=GRAPH, graph_pin=GRAPH_PIN, inspector=INSPECTOR, inspector
         if hashlib.sha256(raw).hexdigest() != pin or fingerprint(path) != before:
             raise ValueError(f"manifest changed while reading: {name}")
         snapshots.setdefault(path, before)
-        value = json.loads(raw)
+        value = strict_json(raw)
         if not isinstance(value, dict) or not isinstance(value.get("artifacts"), dict):
             raise ValueError(f"artifact manifest required: {name}")
         if not value["artifacts"]:
@@ -131,7 +155,80 @@ def audit(root, graph=GRAPH, graph_pin=GRAPH_PIN, inspector=INSPECTOR, inspector
         }
         return value
 
+    def current_handoff(graphs):
+        if graph != GRAPH:
+            return {
+                "status": "not_applicable_noncurrent_graph_path",
+                "documents_verified": 0,
+                "documents": {},
+            }
+        documents = {}
+
+        def document(name):
+            path = safe_path(root, root, name)
+            before = fingerprint(path)
+            raw = path.read_bytes()
+            if fingerprint(path) != before:
+                raise ValueError(f"handoff document changed while reading: {name}")
+            snapshots.setdefault(path, before)
+            documents[name] = {"sha256": hashlib.sha256(raw).hexdigest(), "bytes": len(raw)}
+            return raw.decode("utf-8")
+
+        payload = sum(item["bytes"] for item in graphs["artifacts"].values())
+        website = document("docs/WEBSITE.md")
+
+        def website_reference(name, pin):
+            rows = re.findall(r"^\| `" + re.escape(name) + r"` \|[^\n]*$", website, re.M)
+            row = rows[0] if len(rows) == 1 else ""
+            pins = re.findall(r"Manifest SHA-256: `([0-9a-f]{64})`", row, re.I)
+            if (
+                len(rows) != 1
+                or row.lower().count("manifest sha-256:") != 1
+                or pins != [pin]
+            ):
+                raise ValueError(f"current website handoff manifest reference mismatch: {name}")
+
+        website_reference(GRAPH, graph_pin)
+        inspector_reference = "not_applicable_noncurrent_inspector_path"
+        if inspector == INSPECTOR:
+            website_reference(str(PurePosixPath(inspector).parent) + "/", inspector_pin)
+            inspector_reference = "verified"
+        website_sizes = re.findall(
+            r"manifest-declared chart payload is\s+\*\*([0-9][0-9,]*) bytes\*\*", website,
+        )
+        if (
+            website.count("manifest-declared chart payload is") != 1
+            or len(website_sizes) != 1
+            or int(website_sizes[0].replace(",", "")) != payload
+        ):
+            raise ValueError("current website handoff does not match the graph manifest/payload")
+        tracker = document("docs/STATE_PROGRESS.md")
+        sections = re.findall(
+            r"^## Current presentation[^\n]*\n(.*?)(?=^## |\Z)", tracker, re.M | re.S,
+        )
+        current = sections[0] if len(sections) == 1 else ""
+        entries = re.findall(
+            r"Current graph manifest:\s*`([0-9a-f]{64})`\.\s*"
+            r"Its ([0-9][0-9,]*) declared artifacts total ([0-9][0-9,]*) bytes",
+            current,
+        )
+        if (
+            current.count("Current graph manifest:") != 1
+            or len(entries) != 1
+            or entries[0][0] != graph_pin
+            or int(entries[0][1].replace(",", "")) != len(graphs["artifacts"])
+            or int(entries[0][2].replace(",", "")) != payload
+        ):
+            raise ValueError("current state-tracker handoff does not match graph artifacts/payload")
+        return {
+            "status": "verified",
+            "inspector_reference": inspector_reference,
+            "documents_verified": len(documents),
+            "documents": documents,
+        }
+
     graphs = manifest(graph, graph_pin)
+    handoff = current_handoff(graphs)
     manifest(inspector, inspector_pin)
     inputs = graphs.get("inputs")
     sources = graphs.get("source_manifests")
@@ -153,11 +250,15 @@ def audit(root, graph=GRAPH, graph_pin=GRAPH_PIN, inspector=INSPECTOR, inspector
             raise ValueError(f"research file changed during audit: {path}")
     return {
         "status": "pinned_current_research_integrity_passed",
-        "scope": "declared saved artifacts and direct graph inputs; not a study release gate",
+        "scope": (
+            "declared saved artifacts, direct graph inputs and applicable current handoff; "
+            "not a study release gate"
+        ),
         "manifests": list(manifests.values()),
         "artifacts_verified": sum(v["artifacts_verified"] for v in manifests.values()),
         "logical_artifact_bytes": sum(v["logical_artifact_bytes"] for v in manifests.values()),
         "graph_inputs_verified": len(inputs),
+        "current_handoff": handoff,
         "scientific_certification": "not_performed",
         "publication_approved": False,
         "project_complete": False,

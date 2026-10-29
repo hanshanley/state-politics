@@ -67,7 +67,8 @@ checkpoints live under `data/`; cloning the code does not supply them.
 The [reproducibility guide](docs/REPRODUCIBILITY.md) provides the current build
 and local-workspace commands.
 
-`make audit-current` verifies the pinned saved research bytes without rebuilding;
+`make audit-current` verifies pinned saved bytes and current handoff references
+without rebuilding;
 success is not scientific validation or publication approval.
 Broad legacy `all`, `analysis` and `legacy-figures` targets refuse to run unless
 explicitly opted into with `ALLOW_LEGACY_ANALYSIS=1`; use the current workflow instead.

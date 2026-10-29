@@ -13,6 +13,26 @@ bounded retained-evidence checks and a small graph-only readability fix below,
 not new full-population snapshots. DATA-01, VALIDATE-01, RESEARCH-01 and WEB-01
 remain open.
 
+- [x] **FIX-02: Reject ambiguous manifests and stale current handoffs.**
+  The current-byte auditor accepted duplicate/nonfinite JSON metadata and could
+  pass while authored current website/tracker references disagreed with the
+  verified graph snapshot. Seventeen original regressions reproduce those false
+  passes; three further cases catch partially malformed duplicate handoff fields.
+  Five more reproduce stale/ambiguous inspector references on the same handoff.
+  Add strict unique-key/finite-number parsing, including overflow rejection,
+  and canonical-current graph/inspector pin, payload and artifact-count validation.
+  Preserve historical sections and alternate-snapshot audits; report staged
+  graph/inspector reference checks as inapplicable. Recheck document fingerprints.
+  All 57 auditor/chart tests pass, including missing/stale/duplicated references
+  and CLI failure without creating a success receipt. Actual current replay
+  verifies 784 artifacts / 41 inputs / two authored handoff documents.
+  Proofs: `data/current-audit-contract-20261029-v1/`. New proofs under 10 MiB;
+  no source/model/human/graph/cohort changes, inference or population snapshots.
+  Final verification: 225 public-doc checks, 38 relative links and all 85 frozen
+  controls pass. The tracked canonical audit remains exactly 467/501 with the
+  same 34 legacy failures and every field unchanged. All failed synthetic
+  attempts remain retained; only passed test fixtures are cleaned.
+
 - [x] **PLOT-05: Make exact session/calendar overlaps readable.**
   Add six aligned original counts beside the session-comparison bars, following
   the existing topic-count style. Preserve every bar/limit and keep the other
