@@ -27,11 +27,11 @@ build commands below are not instructions to recreate the current workspace.
 | Saved surface | Current contract |
 |---|---|
 | `outputs/index.html` | Local 27-chart gallery; 108 PNG/editable-SVG exports and 35 complete chart CSVs. See the [current collection](../outputs/README.md). |
-| `outputs/current-graphs-manifest.json` | Pins the six saved table families, every full chart table and the actual exported bytes. Manifest SHA-256: `5be564561d6693f7cc08a3951b1fbd0ea68010bf800052c753c2ef338119c014`. |
+| `outputs/current-graphs-manifest.json` | Pins the six saved table families, every full chart table and the actual exported bytes. Manifest SHA-256: `7faf3effb0075a3b957d7323321a3220da58e45410ba7105fce6318947988ba7`. |
 | `outputs/classification-inspector-2023-2024-v9/` | Private original/majority inspector: 157,598 original contexts and 179,849 complete source alternatives, unchanged from v8. UI-only direct-file export revision; manifest SHA-256: `10e0a930c0d6f8f91e153612f0701d88c94b735baff502650d85e7668316d2e5`. The large bundle is local/Git-ignored, not supplied by cloning the code. |
 | `outputs/substack/` and `outputs/themarginoferror/` | Matching data/geometry, with warm cream `#F7F5F0` and page grey `#F5F5F5` respectively. These are verified export backgrounds, not approval to copy assets into production. |
 
-The manifest-declared chart payload is **19,012,550 bytes**, before the
+The manifest-declared chart payload is **19,028,502 bytes**, before the
 manifest itself, a report or separately approved research archives. It is not
 the full research dataset. A future release should stage an explicit approved
 artifact allowlist, not recursively copy `data/`, `outputs/`, or the retained
@@ -60,6 +60,11 @@ Only that chart's four exports and manifest change; the original tables/ZIP,
 gallery and other 104 images remain byte-identical. The preceding `392b1a7c`
 collection/README/exact renderer are preserved at
 `outputs/preserved-current-session-counts-20261029-v1/`.
+The later training-exposure disclosure adds a held-out-test warning to the
+actual topic-comparison PNG/SVGs and gallery, not just repository prose.
+All numeric marks, other 104 images, complete tables and original ZIP remain
+unchanged. The preceding `5be56456` collection/README/exact renderer are
+preserved at `outputs/preserved-current-exposure-20261029-v1/`.
 
 Open the existing chart gallery directly. With the saved inspector bundle
 present, this command serves it locally without generating another snapshot:

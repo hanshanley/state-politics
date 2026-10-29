@@ -3,6 +3,11 @@
 **27 regenerated charts, 108 exports**, using the saved 2023-2024 evidence.
 The original and majority classifications remain separate and provisional.
 These are research graphics, not independently validated party-policy findings.
+The [training-exposure census](../docs/REPRODUCIBILITY.md#population-training-exposure-census)
+finds 65 exact training-input matches and 610 training-seen bill identities.
+Population counts are not a held-out test; an unmatched record does not establish
+independence. That warning now travels with the topic-comparison PNG/SVGs and
+appears in the gallery, not only in the main project README.
 
 The current source union has **139,869 contexts with text / 17,729 gaps**.
 Unanimity assigns 65,306 contexts and abstains on 74,563; the separate,

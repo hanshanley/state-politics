@@ -113,6 +113,31 @@ def test_empty_state_coverage_is_not_invented_zero_activity():
     plt.close(fig)
 
 
+def test_topic_comparison_exports_disclose_population_training_exposure(tmp_path):
+    root = Path(__file__).resolve().parents[1]
+    tables = {
+        (group, name): pd.read_csv(root / "outputs/chart-data" / group / f"{name}.csv")
+        for group, names in MODULE["TABLES"].items()
+        for name in names
+    }
+    spec = next(MODULE["specifications"](tables))
+    assert spec["group"] == "majority" and spec["name"] == "topic_comparison"
+    warning = "Not a held-out test. Training exposure is reported separately."
+    try:
+        assert warning in spec["note"]
+        record = MODULE["save_figure"](spec, tmp_path)
+        for name in record["files"]:
+            if name.endswith(".svg"):
+                svg = ET.parse(tmp_path / name).getroot()
+                text = " ".join(
+                    node.text for node in svg.iter()
+                    if node.tag.endswith("}text") and node.text
+                )
+                assert warning in text
+    finally:
+        plt.close(spec["fig"])
+
+
 @pytest.mark.parametrize("check", ["row_alignment", "count_labels"])
 def test_bill_evidence_panels_align_states_and_distinguish_zero_from_unknown(check):
     root = Path(__file__).resolve().parents[1]

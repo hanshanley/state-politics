@@ -1212,9 +1212,21 @@ Substack uses `#F7F5F0`; The Margin of Error uses `#F5F5F5`, matching the local
 `uk_decline` reference. Both versions preserve identical marks, axes and data.
 PNGs are 300 dpi; SVG labels remain editable text. No website is deployed.
 
-The October 29 session/calendar comparison adds aligned exact counts for its
+The current topic-comparison PNG/SVGs and gallery explicitly state that
+population counts are not a held-out test and training exposure is reported
+separately. Current manifest:
+`7faf3effb0075a3b957d7323321a3220da58e45410ba7105fce6318947988ba7`.
+Its 145 artifacts total **19,028,502 bytes**, excluding the manifest and original
+research archives. Only the four topic-comparison exports and gallery change;
+all numeric marks, other 104 images, 35 complete CSVs and original ZIP remain
+unchanged. Original `5be56456` collection/README/exact renderer:
+`outputs/preserved-current-exposure-20261029-v1/`. Graph-only replay:
+`outputs/current-render-exposure-20261029-v1/`. Proofs:
+`data/graph-exposure-disclosure-20261029-v1/`.
+
+The earlier October 29 session/calendar comparison adds aligned exact counts for its
 three supplied scopes, including small overlaps that are difficult to estimate
-from the shared scale. Current manifest:
+from the shared scale. That checkpoint's manifest:
 `5be564561d6693f7cc08a3951b1fbd0ea68010bf800052c753c2ef338119c014`.
 Its 145 artifacts total **19,012,550 bytes**, excluding the manifest and original
 research archives. All existing bar values/limits, 47 unsupplied scopes, other

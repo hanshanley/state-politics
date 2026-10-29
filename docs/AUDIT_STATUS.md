@@ -5,6 +5,33 @@ The thirteen historical root figures and their analytical conclusions remain
 inspect source/model evidence; they do not certify a classifier, complete
 coverage or party-policy findings.
 
+## Training-exposure disclosure on actual graph exports: October 29
+
+The topic-comparison chart now carries its held-out-test/training-exposure
+warning inside both Substack and The Margin of Error PNG/editable-SVG variants.
+The gallery notice, methodology link and output README surface the same caveat.
+This closes the gap between the new census disclosure and separately used
+chart exports; no topic assignment or accuracy estimate changes.
+
+The original `5be56456` collection, README and exact renderer are independently
+native-cloned at `outputs/preserved-current-exposure-20261029-v1/`.
+A fresh public-renderer replay produces the actual inspected images. Only
+four images and the gallery are promoted; every numeric mark, the other 104
+images, 26 other figure records, 35 full CSVs and original ZIP remain unchanged.
+The current `7faf3eff` manifest binds a 19,028,502-byte payload. No source,
+model, human, cohort or production-website data changes; all approval gates stay
+closed. One original regression fails; all 73 affected tests and full lint pass.
+Proofs: `data/graph-exposure-disclosure-20261029-v1/`. Graph-only preservation,
+replay and proofs are bounded below 100 MiB, not a population snapshot.
+Both actual 3720x2391 PNG backgrounds are inspected; all 42 exact SVG count
+cells and the new disclosure are verified. Root/nested Chromium at 1360/390/320
+passes all 27 images / 174 links per viewport and complete ZIP byte parity.
+All 227 public-doc checks, 85 relative links and 85 frozen controls pass.
+The updated current audit verifies 784 artifacts / 41 inputs / both authored
+handoff documents. Canonical legacy audit remains exactly 469/503 with the
+same 34 failures and every field unchanged. Only passing fixtures and exited
+browser cache are cleaned; original failed regression and source evidence remain.
+
 ## Full-population saved-label exposure census: October 29
 
 The current retained-text population must not be interpreted as a held-out test.

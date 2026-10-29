@@ -13,6 +13,28 @@ bounded retained-evidence checks and a small graph-only readability fix below,
 not new full-population snapshots. DATA-01, VALIDATE-01, RESEARCH-01 and WEB-01
 remain open.
 
+- [x] **PLOT-06: Put the training-exposure caveat on the actual graph exports.**
+  The new exposure census is disclosed in the main README, but not on the
+  topic-comparison PNG/SVGs themselves. Add a held-out/training-exposure warning
+  to both backgrounds and the gallery/output handoff. Preserve original exports
+  and producer using independent native clones; graph-only replay/proofs under
+  100 MiB. Keep every numeric mark, other 104 images, 35 complete CSVs and
+  original ZIP unchanged. No model/source/human/cohort or publication change.
+  One original regression fails; 73 affected tests and full lint now pass.
+  Both actual 3720x2391 PNG backgrounds are inspected; all 42 SVG count cells,
+  exposure text and paired geometry match. Root/nested Chromium checks pass
+  at 1360/390/320 with 27 decoded images, 174 links per viewport and complete
+  ZIP byte parity. Current manifest `7faf3eff` binds 19,028,502 bytes; all
+  current-facing pins/budgets are synchronized. Original `5be56456` collection,
+  README and exact renderer are native-cloned at
+  `outputs/preserved-current-exposure-20261029-v1/`; fresh graph replay:
+  `outputs/current-render-exposure-20261029-v1/`. Proofs:
+  `data/graph-exposure-disclosure-20261029-v1/`. All 227 public-doc checks,
+  85 relative links, 85 frozen controls and the 784-artifact / 41-input /
+  two-document current audit pass. Canonical legacy audit remains exactly
+  469/503 with the same 34 failures and every field unchanged. Only passed
+  fixtures/exited browser cache are cleaned; original failures are retained.
+
 - [x] **VALIDATE-02: Account for training exposure across the current population.**
   The earlier reservation check covers only the 28-input human-review packet,
   not the full research population. Stream the frozen current model labels,

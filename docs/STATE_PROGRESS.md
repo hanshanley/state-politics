@@ -73,13 +73,21 @@ preserved at `outputs/preserved-current-bill-evidence-20261028-v1/`.
 The October 29 session/calendar comparison adds six aligned exact count cells,
 making small overlaps readable without estimating from the shared scale.
 All original bars/limits and the 47 unsupplied scopes remain unchanged.
-Current graph manifest:
+That session-count checkpoint's graph manifest:
 `5be564561d6693f7cc08a3951b1fbd0ea68010bf800052c753c2ef338119c014`.
 Its 145 declared artifacts total 19,012,550 bytes, excluding the manifest.
 Only four session-chart exports and the manifest change; all other 104 images,
 35 CSVs, original ZIP and gallery remain byte-identical. The preceding
 `392b1a7c` collection is preserved at
 `outputs/preserved-current-session-counts-20261029-v1/`.
+The later training-exposure disclosure adds a held-out-test warning to the
+topic-comparison exports and gallery. All marks/values, other 104 images,
+35 CSVs and original ZIP remain unchanged; four images and the gallery change.
+Current graph manifest:
+`7faf3effb0075a3b957d7323321a3220da58e45410ba7105fce6318947988ba7`.
+Its 145 declared artifacts total 19,028,502 bytes, excluding the manifest.
+The preceding `5be56456` collection/README/exact renderer are preserved at
+`outputs/preserved-current-exposure-20261029-v1/`.
 The bounded retained HI/NJ metadata follow-up qualifies zero new bodies;
 17,729 gaps remain. Earlier complete source scopes are not reopened.
 

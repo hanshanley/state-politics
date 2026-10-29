@@ -5,7 +5,7 @@
     2023,
     2024
   ],
-  "notice": "2023-2024 research snapshot. Provisional assignments and assistant-reviewed diagnostics are not independently validated findings. No party-policy comparison or website publication is approved.",
+  "notice": "2023-2024 research snapshot. Provisional assignments and assistant-reviewed diagnostics are not independently validated findings. No party-policy comparison or website publication is approved. Not a held-out test. Training exposure is reported separately.",
   "backgrounds": {
     "substack": "#F7F5F0",
     "themarginoferror": "#F5F5F5"
@@ -18,7 +18,7 @@
       "name": "topic_comparison",
       "title": "Which topics receive a bill assignment?",
       "subtitle": "Same 157,598 contexts; original rule and unpromoted majority candidate",
-      "note": "Source: frozen majority v8. Topic counts are provisional, not policy prevalence or party positions. All 65,306 original-rule assignments are retained.",
+      "note": "Source: frozen majority v8. Topic counts are provisional, not policy prevalence or party positions. All 65,306 original-rule assignments are retained. Not a held-out test. Training exposure is reported separately.",
       "tables": [
         "chart-data/majority/topic_comparison.csv"
       ],
@@ -20021,12 +20021,12 @@
       "bytes": 87625
     },
     "substack/majority/topic_comparison.png": {
-      "sha256": "08c8d70ca09e14bb8f8e3c65eab7d3158e3fb8d4a86cf9f1cf495430fe72477a",
-      "bytes": 409230
+      "sha256": "4e08f1758def4cb0f43d6a686aaeb3c40ff986e08baed79573bf9492994f608d",
+      "bytes": 417466
     },
     "substack/majority/topic_comparison.svg": {
-      "sha256": "9081e6dcc9a0d57d3a2d1b351f520a35f910eb62338516cea5ee888049350359",
-      "bytes": 49147
+      "sha256": "9f391560d95b4d34058927b866b9da318320172685f8cd2eaab335869f3aa6b6",
+      "bytes": 49210
     },
     "substack/scores/decision_reasons.png": {
       "sha256": "e3701e77b2b2866487c69bd4f43707c321548b3ac0debe0e6c52f20b1335f3f6",
@@ -20237,12 +20237,12 @@
       "bytes": 87625
     },
     "themarginoferror/majority/topic_comparison.png": {
-      "sha256": "610abccc828f70537310557aa0baebeda1037625685066403d61ce76260e9f71",
-      "bytes": 380004
+      "sha256": "cdd30055fe9d62e0dd9a270b194d1860e966ec91a324a6e59381d3e81b070533",
+      "bytes": 387449
     },
     "themarginoferror/majority/topic_comparison.svg": {
-      "sha256": "a0f3b02a15feb8f3c1436721257edd7a99713bc30164d9d175f7d8c030719a95",
-      "bytes": 49147
+      "sha256": "8db04324ec23cd650a937412226a286251593f1df1a7ee53d9c04c4da4d2d179",
+      "bytes": 49210
     },
     "themarginoferror/scores/decision_reasons.png": {
       "sha256": "189c13d6b989dfcd5db09cdf311e549e720afdedd7ed8b322bca7c085fcab9e6",
@@ -20429,8 +20429,8 @@
       "bytes": 465482
     },
     "index.html": {
-      "sha256": "59f4d44ed16fa65a8637fa91885187665eb12c4385fbd9e70b94abaa332b5fb3",
-      "bytes": 27704
+      "sha256": "662d32b45743bc21f09eb7a45a6b6e92bb3979840e56c967406d07fab33622c8",
+      "bytes": 27849
     }
   },
   "original_candidate_contexts": 157598,
@@ -20467,8 +20467,8 @@
     }
   },
   "producer": {
-    "sha256": "8fa51f2e80e448e6a11b11c4ece5c0c2d69db8e4dee5c26d32fb506e60d519e5",
-    "bytes": 50968
+    "sha256": "10cd43c8273c1dadb4b833685d02669d0ba3752ca304ae1090c3fc929feac7a4",
+    "bytes": 51131
   },
   "theme": {
     "sha256": "7ee657c14935d1d36a7ddf0e9a70076c0a6c5ccfa51a5e9ee30573fef5571dd3",
@@ -20488,5 +20488,7 @@
     "scores": "complete_full_score_diagnostics_not_new_assignments_or_validation",
     "inputs": "complete_provisional_topic_graphs_not_scientific_validation",
     "context": "complete_selected_context_window_pilot_not_human_validation"
-  }
+  },
+  "preserved_previous_chart_zip_bytes": true,
+  "preserved_original_collection": "outputs/preserved-current-exposure-20261029-v1"
 }

@@ -109,7 +109,8 @@ COLORS = [
 NOTICE = (
     "2023-2024 research snapshot. Provisional assignments and assistant-reviewed "
     "diagnostics are not independently validated findings. No party-policy comparison "
-    "or website publication is approved."
+    "or website publication is approved. Not a held-out test. Training exposure is "
+    "reported separately."
 )
 
 
@@ -328,7 +329,8 @@ def specifications(tables):
         "unpromoted majority candidate",
         f"Source: frozen majority {versions['majority']}. Topic counts are provisional, "
         f"not policy prevalence or party positions. All {counts['original_assigned']:,} "
-        "original-rule assignments are retained.",
+        "original-rule assignments are retained. "
+        "Not a held-out test. Training exposure is reported separately.",
         "topic_comparison",
     )
 
@@ -1182,7 +1184,7 @@ chart data. Both backgrounds use identical data and geometry.</p>
 <p><a href="current-chart-data.zip">All complete chart tables</a> ·
 <a href="current-graphs-manifest.json">Provenance and file hashes</a> ·
 """
-        + f'<a href="{audit_link}">Scientific gates and legacy status</a></p>'
+        + f'<a href="{audit_link}">Training exposure, scientific gates and legacy status</a></p>'
         + """
 """
         + "".join(sections)
