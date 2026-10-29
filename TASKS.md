@@ -26,7 +26,7 @@ remain open.
   wrong state-column filter is preserved; v2 uses the actual shared-join schema.
   These are source-date leads, not approved filing dates, independent truth,
   new cohort membership or fills of the 17,729 within-cohort body gaps.
-- [ ] **DATA-19: Qualify the printed-date observations before cohort integration.**
+- [x] **DATA-19: Qualify the printed-date observations before cohort integration.**
   Add a public, source-bound date-observation adapter and focused identity,
   session, span, amendment/reprint and ambiguity negatives; preserve every
   raw alternative. Resolve the SR3/SR6 header cases explicitly, without using
@@ -35,6 +35,25 @@ remain open.
   Keep the existing primary cohort, source-date fields, model/human controls
   and graphs unchanged until a reviewed successor is deliberately built under
   the capacity policy. Do not silently add the 168 leads or run new inference.
+  The public `pa_printed_dates` build/verify/registry adapter now qualifies
+  170 contexts / 232 PDF views / 170 raw PDFs with both fresh readers. SR3/SR6
+  labelled confirmations agree; HR75/SR21 retain their actual HR/SR identities
+  despite the literal concurrent-resolution body heading. All 614 original
+  views have explicit dispositions. Complete CSV/Parquet, raw spans, first pages,
+  negatives and all 15 false approval fields are retained in the v4 packet.
+  Actual proposed-registry integration preserves all 29 existing entries,
+  4,786 PA bill rows, 454 policy views and original source-date/window fields.
+  It adds 170 native-reported dates: 168 outside the unchanged primary cohort,
+  two already present. The current registry is not replaced. All 106 targeted
+  tests and full repository lint pass. Exact pins and commands:
+  `docs/REPRODUCIBILITY.md`; proofs:
+  `data/pa-printed-date-qualification-20261028-v1/`. Original failed attempts
+  and v1-v3 packets remain preserved; this is not scientific/cohort admission.
+  Final matching tracked-input audit is 467/501 with the same 34 legacy
+  failures and unchanged non-counter fields; 225 public-doc checks, 21 relative
+  links and all 85 frozen controls pass. Passed synthetic fixtures alone were
+  cleaned; retained qualification packets/proofs total about 6.83 MB, below
+  the 10 MiB budget. No original source or failed attempt was deleted.
 
 - [x] **PLOT-03: Make cohort emptiness and tiny counts visible in the actual chart.**
   The recovered-text chart leaves Maine's empty primary-cohort row unlabelled

@@ -5,7 +5,54 @@ The thirteen historical root figures and their analytical conclusions remain
 inspect source/model evidence; they do not certify a classifier, complete
 coverage or party-policy findings.
 
-## Retained introduction-date evidence assessment: October 28
+## Qualified source-date adapter and proposed integration: October 28
+
+The public `state_politics.bills.pa_printed_dates` adapter now builds, independently
+replays and explicitly registers a separately versioned observation packet.
+Its actual v4 qualifies **170 contexts / 232 selected PDF views / 170 raw PDFs**
+through both fresh first-page readers. All 614 original views are accounted for;
+382 are explicitly not selected PDF date sources, not discarded evidence.
+Full first pages, raw event/date spans, negative flags, original source dates
+and complete CSV/Parquet observations remain available.
+
+SR3/SR6's separate labelled introduction confirmations agree with their
+introduced-by dates. HR75/SR21 print a concurrent-resolution body heading but
+retain their own HR/SR identities; no HCR/SCR alias is invented. Referral,
+adoption, amendment, body, first-action and URL dates cannot backfill a missing
+introduced-by date. Reader/header disagreement stays unknown.
+
+The proposed registry preserves all 29 existing entries and contributes **zero
+policy views**. Actual shared normalization/join/aggregation retains 4,786 PA
+bill rows and 454 retained policy views, with every original identity/source-date/
+window field unchanged. Its 170 native-reported dates comprise 168 existing
+empty source-date strings and two dates agreeing with `2023-01-03`. Of these,
+168 bills remain outside the unchanged primary cohort and two are already inside.
+The current registry is unchanged; no national snapshot is generated.
+
+All 15 date/cohort/model/human/identity/rights/party/publication approval fields
+remain false. Printed dates do not certify introduced-version text, repair
+historical capture failures, resolve the 17,729 body gaps or authorize inference.
+All **106 targeted tests** and repository-wide Ruff checks pass, including
+identity/session/date negatives, Unicode raw-span coordinates, real-PDF replay,
+rebound payloads/producers, approval promotion and existing-output refusal.
+The actual proposed-registry overwrite attempt fails without changing its bytes.
+Original failed attempts and v1-v3 predecessors remain intact.
+The matching tracked-input canonical audit is **467/501**, with exactly the same
+34 legacy failures and unchanged non-counter fields. All **225 public-doc
+checks, 21 relative links and 85 frozen controls** pass. Only passed owned
+synthetic fixtures were cleaned; retained packets/proofs occupy about 6.83 MB
+within the declared 10 MiB budget. Current graph/inspector manifests and the
+original canonical report remain SHA-identical.
+
+Packet: `data/processed/pa-printed-introduction-observations-20261028-v4/`;
+manifest SHA-256
+`025d07b4955cf2ebeb309fb86a10d575138662be98775cef8c08cca651b4ec55`.
+Proposed integration:
+`data/proposed-pa-printed-dates-registry-20261028-v4.yml`.
+Commands: [reproducibility](REPRODUCIBILITY.md#retained-pennsylvania-introduction-date-observations).
+Proofs: `data/pa-printed-date-qualification-20261028-v1/`.
+
+## Initial retained introduction-date evidence assessment: October 28
 
 The cohort/date gap has a concrete offline lead, distinct from missing body
 text. In the already retained Pennsylvania PDF views, 168 exact native contexts
@@ -24,9 +71,9 @@ This is **not date/cohort admission or independent factual certification**.
 It does not certify introduced-version status, resolve historical capture
 limitations, add bills to the primary cohort or fill its body-text gap queue.
 The original 157,598-context file remains SHA-identical; no requests, model
-execution, graph changes or production integration occur. A public adapter,
-semantic negatives and a separately versioned source-date/registry integration
-remain the next engineering work.
+execution, graph changes or production integration occur. The public adapter,
+semantic negatives and separately versioned source-date/proposed-registry
+integration were subsequent engineering work, completed separately above.
 
 The first join observer incorrectly filtered only `state_native`, which is
 null on the shared typed-key branch; the original negative receipt is retained.

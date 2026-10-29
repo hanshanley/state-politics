@@ -56,6 +56,58 @@ It is not a recursive re-audit of every historical source/model dependency or
 a replacement for independent chart/record reconstruction. `make audit` and
 its known legacy-artifact failures remain separate and unchanged.
 
+## Retained Pennsylvania introduction-date observations
+
+The public adapter reopens already retained raw PDFs with the locked PyMuPDF
+1.28.0 and pypdf 6.14.2 readers. It requires the own printed state/type/number/
+session and a uniquely labelled introduced-by date; separate introduction
+confirmations must agree. Raw spans and complete first pages are retained.
+Referrals, body/adoption dates and URLs are not date fallbacks. Disagreement
+stays unknown; amended/reprint warnings do not become original-version approval.
+
+The accepted **v4** packet's externally recorded manifest SHA-256 is
+`025d07b4955cf2ebeb309fb86a10d575138662be98775cef8c08cca651b4ec55`.
+Replay it and write a fresh, explicit proposed registry:
+
+```bash
+.venv/bin/python -I -B -m state_politics.bills.pa_printed_dates verify \
+  --directory data/processed/pa-printed-introduction-observations-20261028-v4 \
+  --manifest-sha256 025d07b4955cf2ebeb309fb86a10d575138662be98775cef8c08cca651b4ec55
+.venv/bin/python -I -B -m state_politics.bills.pa_printed_dates registry \
+  --directory data/processed/pa-printed-introduction-observations-20261028-v4 \
+  --manifest-sha256 025d07b4955cf2ebeb309fb86a10d575138662be98775cef8c08cca651b4ec55 \
+  --base conf/study_native_packets.yml \
+  --out data/proposed-pa-printed-dates-registry-REPLAY.yml
+```
+
+For a new packet, use the externally pinned assessment and an unused direct
+child of `data/` or `data/processed/`; existing evidence is never overwritten:
+
+```bash
+.venv/bin/python -I -B -m state_politics.bills.pa_printed_dates build \
+  --assessment data/retained-native-date-evidence-20261028-v1/manifest.json \
+  --assessment-sha256 b49fb1292d4bf9c08f654f5cd80024485e31e9f642e50f3b53cfebd6288ce5ce \
+  --out-dir data/processed/pa-printed-introduction-observations-REPLAY
+```
+
+Verification binds source/assessment/shared-join hashes, installed and archived
+producer bytes, both fresh readers, complete CSV/Parquet/first-page/disposition
+content, counts and all 15 false approval fields. Archived code is not executed.
+The complete 170-row date export accounts for 232 selected PDF views / 170 raw
+PDFs and retains dispositions for all 614 original views, including 382 views
+not selected as PDF date sources.
+
+The proposed registry preserves all 29 existing entries and declares the new
+packet as `source_reference` with zero policy views. Actual common integration
+preserves 4,786 PA bill rows / 454 policy views and every original source-date/
+window field: 168 source dates remain exact empty strings and two remain
+`2023-01-03`, agreeing with the new native observations. The primary cohort
+remains SHA-identical: 168 observations are outside it and two are already inside.
+This does not replace the current registry, build a national population, run a
+model or admit data for analysis/publication. Ignored originals, v1-v3 packets,
+failed attempts and proofs at `data/pa-printed-date-qualification-20261028-v1/`
+remain local; a code push is not a data backup.
+
 ## Storage-safe continuation
 
 The legacy `make clean-derived` target is disabled: its broad deletion would

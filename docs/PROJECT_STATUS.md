@@ -70,14 +70,19 @@ filing/introduction evidence and differences between calendar and native-session
 populations must be reconciled before broad state comparisons. Do not repair
 this by inventing dates or silently changing the study population.
 
-A bounded October 28 follow-through finds **168 Pennsylvania contexts outside
-the frozen primary cohort** with explicit printed introduction-date witnesses
-in already retained PDFs. Both fresh PDF readers agree across 228 corresponding
-source views; the complete observation CSV and first-page witnesses are saved
-locally. Four ambiguous SR3/SR6 views remain unadmitted. This is a concrete
-qualification lead, not a change to the cohort, proof of filing-time versions,
-or a reduction in its 17,729 missing bodies. A source-bound adapter, ambiguity
-tests and explicit versioned integration are still required.
+A bounded October 28 follow-through now qualifies **170 Pennsylvania
+source-date observations**, including **168 contexts outside the frozen primary
+cohort** and two already inside. The public adapter resolves the initial
+SR3/SR6 ambiguity through consistent, distinct labelled introduction events;
+both fresh PDF readers agree across all 232 selected views / 170 raw PDFs.
+Complete CSV/Parquet, first pages, raw spans and every original view disposition
+are retained in a separately versioned packet. Actual proposed-registry
+integration adds zero policy views and preserves all 4,786 PA bill rows,
+454 retained policy views and original source-date/window fields. All 106
+targeted tests pass. The current registry, primary cohort, graphs and models
+remain unchanged; all 15 approval fields stay false. This is qualified source
+metadata, not proof of filing-time versions, independent validation or a
+reduction in the 17,729 missing bodies. See the [replay commands and pins](REPRODUCIBILITY.md#retained-pennsylvania-introduction-date-observations).
 
 The largest remaining body-text gaps are:
 
