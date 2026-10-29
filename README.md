@@ -42,6 +42,9 @@ compares original and majority decisions alongside complete source texts,
 window votes and all topic/rejection scores.
 [Full-score diagnostics](docs/REPRODUCIBILITY.md#full-score-diagnostics-without-new-classifications)
 keep information that a single assigned label would hide.
+The [retained-text training-exposure census](docs/REPRODUCIBILITY.md#population-training-exposure-census)
+finds 65 exact training-input matches and 610 training-seen bill identities.
+Population predictions and unmatched rows are not independent validation.
 
 **Graphs and comparisons:** the
 [current collection](outputs/README.md) has **27 regenerated charts** with

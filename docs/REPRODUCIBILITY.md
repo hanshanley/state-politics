@@ -81,6 +81,54 @@ It is not a recursive re-audit of every historical source/model dependency or
 a replacement for independent chart/record reconstruction. `make audit` and
 its known legacy-artifact failures remain separate and unchanged.
 
+## Population training-exposure census
+
+The current retained-text population is not an independent classifier test.
+This offline auditor streams the existing 157,598 contexts and 179,849 views
+against the exact saved model's 808 training and 50 development label records:
+
+```bash
+.venv/bin/python -I -B scripts/audit_training_exposure.py \
+  --job data/processed/cycle-topic-inference-retained-text-20261026-v26 \
+  --labels data/labels/cycle-reviewed-only-experiment-20261021-v1/labels.jsonl \
+  --plan-sha256 b5d9b3a0df60c48dc06a1edaf2c32d540507bd00e10e01d7fe99fad242c2f840 \
+  --out data/population-training-exposure-REPLAY
+```
+
+Choose a fresh output directory. The auditor checks the external plan pin,
+frozen producer/runtime, training-manifest and label bindings, then hashes every
+context/input stream and checks fingerprints again before completion. It does
+not load an encoder/tokenizer, infer, retrain, copy the population or change the
+cohort. Reports must fit below 10 MiB. Incomplete runs have no completed manifest.
+
+The accepted report is `data/population-training-exposure-20261029-v1/census/`.
+It finds **65 exact same-domain training-text matches across 65 contexts**,
+**82 normalized-text matching views** and **610 training-seen bill identities**.
+The latter have 820 retained views; 68 of the 610 have no retained body.
+Seven other contexts / 11 views match development bill identities, but none
+matches development text exactly. The report preserves all 50 state rows,
+139,869 body-available contexts, 17,729 body gaps and three explicit exclusions.
+
+These are overlapping channels, not values to add. Exact matching uses the
+complete selected inference text, including the existing bound treatment of
+machine prologues. Normalized matching follows the saved split check's
+casefold/nonword normalization and is advisory, not exact encoder-input or
+near-duplicate equivalence. Stable bill identity does not establish the same
+source version, text or topic. Text matches respect the bill/plank domain marker.
+
+`state_counts.csv` contains the complete 50-state aggregates.
+`matched_views.jsonl` and `matched_contexts.jsonl` contain every observed match,
+including alternatives, missing-body contexts and exclusions. They are join
+ledgers, not substitute full-evidence downloads: input-file/physical-line
+references, exact hashes and saved-label record/line mappings resolve the
+unchanged complete originals. Existing inspector downloads remain unchanged.
+
+**No observed match does not establish independence.** This census covers only
+the bound saved-label file, not every consumed diagnostic, semantic near
+duplicate, related bill family or pretraining exposure. It cannot provide
+accuracy, independent human gold or model/publication approval. The separate
+28-input human-packet reservation check remains unchanged.
+
 ## Retained Pennsylvania introduction-date observations
 
 The public adapter reopens already retained raw PDFs with the locked PyMuPDF

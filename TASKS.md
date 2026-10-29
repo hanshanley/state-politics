@@ -13,6 +13,30 @@ bounded retained-evidence checks and a small graph-only readability fix below,
 not new full-population snapshots. DATA-01, VALIDATE-01, RESEARCH-01 and WEB-01
 remain open.
 
+- [x] **VALIDATE-02: Account for training exposure across the current population.**
+  The earlier reservation check covers only the 28-input human-review packet,
+  not the full research population. Stream the frozen current model labels,
+  all 157,598 contexts and 179,849 retained-text inputs without copying them.
+  Separate exact same-domain text, advisory normalized-text and stable bill
+  identity matches; retain split, source alternatives, exclusions and missing
+  bodies. Deliver all-50-state counts and complete matched join ledgers under
+  10 MiB. No-match does not establish independence; do not score accuracy,
+  change labels/cohorts/graphs or promote scientific/publication status.
+  The public auditor completes the actual census: 65 exact training-input
+  matches / 65 contexts; 82 normalized matching views; 610 training-seen bill
+  identities / 820 views, including 68 contexts without bodies. Development
+  bill identities match seven contexts / 11 views, with no exact text match.
+  Complete matched ledgers contain 831 views / 617 contexts; all 50 state rows
+  retain the original 139,869 body-available / 17,729 missing-body counts and
+  three pre-inference exclusions. Three complete exports total 583,262 bytes.
+  A separate computational check verifies all exact/bill population joins and
+  every emitted normalized match; it is not independent human validation.
+  All 72 targeted tests, full lint, 227 public-doc checks and 85 frozen controls
+  pass. Canonical audit 469/503 adds only two code-guide checks; the same 34
+  legacy failures and every other field are unchanged. Proofs:
+  `data/population-training-exposure-20261029-v1/`. Current model/labels/human
+  packet, primary cohort, graphs and publication gates remain unchanged.
+
 - [x] **FIX-02: Reject ambiguous manifests and stale current handoffs.**
   The current-byte auditor accepted duplicate/nonfinite JSON metadata and could
   pass while authored current website/tracker references disagreed with the

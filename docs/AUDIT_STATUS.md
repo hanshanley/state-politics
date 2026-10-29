@@ -5,6 +5,47 @@ The thirteen historical root figures and their analytical conclusions remain
 inspect source/model evidence; they do not certify a classifier, complete
 coverage or party-policy findings.
 
+## Full-population saved-label exposure census: October 29
+
+The current retained-text population must not be interpreted as a held-out test.
+A new source-bound auditor streams all 157,598 contexts and 179,849 views against
+the current model's exact 808-training / 50-development saved-label file.
+
+| Exposure channel | Contexts | Retained views |
+|---|---:|---:|
+| Exact same-domain training text | 65 | 65 |
+| Normalized training text, including exact | 65 | 82 |
+| Training bill identity | 610 | 820 |
+| Development bill identity | 7 | 11 |
+
+Sixty-eight training-seen bill identities have no retained body; the identity
+channel does not silently drop them. Development text has zero exact or
+normalized matches. Channels overlap and must not be added. Same bill does not
+establish the same version/input; normalization is advisory, not exact encoder
+input or semantic near-duplicate equivalence.
+
+The actual report accounts all 50 states, the original 139,869 contexts with
+bodies / 17,729 without, and three explicitly excluded views. Complete matched
+join ledgers retain 831 views / 617 contexts with source-file/physical-line,
+hash and saved-reference mappings. These ledgers are not substitute full-query
+downloads; complete original evidence and existing inspector exports remain
+unchanged. Three small exports total 583,262 bytes, without copying the population.
+
+A separate computational pass reproduces all population exact-text and bill-ID
+joins, every emitted normalized match, missingness and state counts. It does not
+independently repeat normalization over unmatched views or supply human gold.
+Focused tests cover that normalization algorithm. **No match is not proof of
+independence:** the census excludes other consumed diagnostics, semantic near
+duplicates, related bill families and pretraining exposure.
+
+All 72 targeted tests, full repository lint, 227 public-doc checks and all 85
+frozen controls pass. The canonical audit is 469/503: only the two new Python
+code-guide checks change, with the same 34 failures and all non-counter fields
+unchanged. Source/model/label/human/cohort/graph bytes and scientific/publication
+status are unchanged; no inference, collection or population snapshot occurred.
+Commands: [reproducibility guide](REPRODUCIBILITY.md#population-training-exposure-census).
+Proofs: `data/population-training-exposure-20261029-v1/`.
+
 ## Fail-closed current audit and handoff contract: October 29
 
 Two actionable integrity gaps are repaired. Parsed manifests now reject duplicate
