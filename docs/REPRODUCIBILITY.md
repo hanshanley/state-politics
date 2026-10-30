@@ -129,6 +129,72 @@ duplicate, related bill family or pretraining exposure. It cannot provide
 accuracy, independent human gold or model/publication approval. The separate
 28-input human-packet reservation check remains unchanged.
 
+## Consumed bill-diagnostic exposure
+
+This separate audit accounts the two named bill-diagnostic sets actually
+evaluated with the current model. It does not relabel them training data or
+independent human references:
+
+```bash
+.venv/bin/python -I -B scripts/audit_diagnostic_exposure.py \
+  --national data/saved-label-exposure-sensitivity-20261029-v2 \
+  --national-sha256 cfc167fb193c8b15248e41b5963a6932d3f7ef50f2f5ffa476face57a383780c \
+  --evaluation data/processed/cycle-reviewed-only-evaluation-20261021-v1 \
+  --evaluation-sha256 6c2c589bc867620bf37b065c0390c343d3cfb5a198d19726310a7f7656e95319 \
+  --out data/consumed-diagnostic-exposure-REPLAY
+```
+
+Accepted local output: `data/consumed-diagnostic-exposure-20261030-v1/`;
+manifest SHA-256:
+`027d5de29b846db2e459fa0320723be674cae26d8ef534484ab55532560c4230`.
+The 190 metadata and 39 native bill references have exactly 229 saved
+prediction joins from model `2660bca4`. All 229 bill identities are in the
+157,598-context primary cohort and are disjoint from the previous 617
+training/dev matched contexts. Their de-duplicated observed union is 846,
+including 93 missing-body contexts. The original 65 exact training-input
+matches, 610 training-seen identities and seven development identities are
+not overwritten or reinterpreted.
+
+`state_exposure.csv` contains all 50 state rows, original body/gap denominators,
+prior and diagnostic counts, overlap, additional/union counts and shares.
+`diagnostic_sets.csv` retains both named sets and outside/overlap accounting.
+`matched_contexts.jsonl` preserves every original known-match field and adds
+the complete diagnostic joins for all 846 contexts.
+`diagnostic_reference_audit.jsonl` contains every original reference record and
+saved prediction, source paths and physical record numbers, plus primary/body
+join dispositions. All 39 native rows survive regardless of label agreement;
+no ambiguous topic is forced or scored. Full Unicode, nested fields and large
+integers remain intact. These are complete audit records; the existing full
+policy-text/query exports are unchanged.
+
+Actual four-image exports are
+`substack/exposure/known_bill_identity_exposure.{png,svg}` and
+`themarginoferror/exposure/known_bill_identity_exposure.{png,svg}`.
+The aligned panels show counts and within-state shares, with direct values,
+state cohort denominators and separate prior/additional diagnostic segments.
+Massachusetts's single context is diagnostic-seen but lacks body text; Maine
+has no cohort and an undefined share. Neither is legislative-volume evidence.
+Both backgrounds use the unchanged existing house-style renderer/theme;
+their geometry and editable text match.
+
+The producer validates external national/evaluation pins, all 22 saved
+evaluation artifacts, current model/training-label/policy identities, every
+reference-to-prediction input hash, exact state/body joins and source races.
+Unavailable primary rows retain null model-run IDs. No encoder/tokenizer,
+training, new inference, source acquisition or population snapshot runs.
+Report plus retained QA is bounded below 10 MiB. Proofs:
+`data/consumed-diagnostic-exposure-qa-20261030-v1/`.
+
+**Identity exposure is not exact input/version equivalence or measured training
+leakage.** Only these two named bill sets are added, not every consumed
+diagnostic, platform set, related family or pretraining exposure. No match is
+not independence. Existing national/state-local share-change sensitivities
+remove only the original 617-context match set, not these additional 229
+diagnostic-seen identities. None of these diagnostics certifies accuracy,
+independent human gold, model selection, scientific or publication approval.
+Original reports, controls, cohort and canonical 27 charts remain unchanged;
+all generated audit data is local/ignored and not backed up by code push.
+
 ## Saved-label exposure sensitivity
 
 This separate **2023-2024 descriptive diagnostic** removes observed saved-label

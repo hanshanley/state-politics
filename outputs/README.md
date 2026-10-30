@@ -46,6 +46,16 @@ Open [`index.html`](index.html) locally to browse every chart and download.
 
 ## Legacy and original evidence
 
+An additional [consumed-diagnostic exposure graph](../docs/REPRODUCIBILITY.md#consumed-bill-diagnostic-exposure)
+separates the original 617 training/dev matched contexts from 229 additional
+bill identities in two actually evaluated development sets. Its local
+cream/grey PNG/editable SVGs, all 50 state rows, 846 context joins and 229
+complete original reference/prediction pairs are in
+`data/consumed-diagnostic-exposure-20261030-v1/`. The union includes 93 missing
+bodies; bill-identity matches do not establish the same version/input or
+training leakage. These extra research exports do not alter the canonical
+27-chart collection or supply independent accuracy.
+
 A separate [local exposure-sensitivity diagnostic](../docs/REPRODUCIBILITY.md#saved-label-exposure-sensitivity)
 compares the same saved decisions after removing observed train/dev matches.
 Its additional cream/grey PNG/editable-SVG exports, complete topic/status/state
@@ -53,6 +63,8 @@ tables and all removed decision records are under
 `data/saved-label-exposure-sensitivity-20261029-v2/`. They are local/ignored,
 not part of this canonical 27-chart collection or an independently held-out test.
 No existing figure, table, ZIP, prediction or cohort membership changes.
+The national and state-local share-change diagnostics remove only that
+original 617-context match set, not the additional consumed-diagnostic identities.
 
 The [state-local extension](../docs/REPRODUCIBILITY.md#state-local-exposure-sensitivity)
 shows why the small national maximum is not a bound for individual states.

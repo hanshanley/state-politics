@@ -13,6 +13,33 @@ bounded retained-evidence checks and a small graph-only readability fix below,
 not new full-population snapshots. DATA-01, VALIDATE-01, RESEARCH-01 and WEB-01
 remain open.
 
+- [x] **VALIDATE-03: Account for actually consumed bill diagnostics separately.**
+  The earlier exposure census intentionally covers only saved training/dev
+  labels. The actual reviewed-only evaluation binds 190 metadata and 39 native
+  bill diagnostics and their saved predictions. A read-only identity preflight
+  finds 229 primary bill identities outside the earlier 617-context match set.
+  Verify the pinned evaluation/reference/prediction/model/state joins; export
+  every reference/context audit row, all 50 state counts and named-set coverage,
+  plus actual Substack/website PNG/editable SVG exposure graphs below 10 MiB.
+  Keep diagnostic exposure distinct from training matches and exact-input
+  leakage; no-match remains non-independence. Do not score accuracy, create
+  human gold, rerun models, change prior reports or migrate the canonical cohort.
+  Actual report: `data/consumed-diagnostic-exposure-20261030-v1/`.
+  Independent replay verifies all 229 complete original reference/prediction
+  pairs, 846 context joins, 50 state rows and two named-set rows. The union
+  includes 93 body gaps. Both actual 4200x3900 PNG backgrounds are inspected;
+  all 200 segments / 100 displayed values / 50 denominators / paired SVG
+  geometry match. MA's single context is diagnostic-seen but still lacks
+  body text; ME remains unavailable. Earlier share-change charts remove only
+  the original 617 contexts, not all newly accounted diagnostic exposure.
+  Proofs: `data/consumed-diagnostic-exposure-qa-20261030-v1/`.
+  All 39 affected tests, full lint, 233 public-doc checks and 61 relative links
+  pass; all 85 frozen controls, 17 human-packet files and 145 canonical graph
+  artifacts remain unchanged. The initial lint failure and private wrong-scope
+  packet-verifier attempt are retained; only passed fixtures are cleaned.
+  Earlier censuses/sensitivities remain byte-identical. No bulk rebuild or
+  repeated legacy artifact audit.
+
 - [x] **ANALYZE-02: Resolve state-local exposure sensitivity.**
   The national maximum is not a bound for individual states: a read-only
   preflight finds a 1.7857-percentage-point unanimity shift in Pennsylvania

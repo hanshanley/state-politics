@@ -5,6 +5,42 @@ The thirteen historical root figures and their analytical conclusions remain
 inspect source/model evidence; they do not certify a classifier, complete
 coverage or party-policy findings.
 
+## Actually consumed bill-diagnostic exposure: October 30
+
+The training/dev census did not cover examined diagnostic sets. A new audit
+links the actual current-model evaluation manifest `6c2c589b` and frozen
+evaluation plan to all 190 metadata and 39 native bill references and their
+229 saved predictions. Their bill identities are all in the frozen primary
+cohort and disjoint from the original 617 matched contexts: the expanded
+observed union is **846**, including **93 without retained bodies**. The old
+training/dev counts remain unchanged; these are additional diagnostic-seen
+identities, not additional training matches, exact-input leakage or accuracy.
+
+All 229 complete original reference/prediction pairs, 846 context joins,
+50 state rows and two named-set rows pass separate reconstruction. All 39
+native references are retained, without selecting only agreed/scored labels.
+Both actual 4200x3900 PNG backgrounds are inspected; all 200 stacked segments,
+100 value labels, 50 denominator labels and paired editable-SVG geometry/text
+are verified. Massachusetts's lone cohort context is diagnostic-seen but has
+no retained body; its 100% is not model-input equivalence or statewide coverage.
+Pennsylvania has 16/56 known-seen contexts; Maine remains unavailable.
+
+Accepted report: `data/consumed-diagnostic-exposure-20261030-v1/`.
+Proofs: `data/consumed-diagnostic-exposure-qa-20261030-v1/`.
+Only the two named bill-diagnostic sets are covered, not every consumed set,
+related family, platform diagnostic or pretraining exposure. Existing national/
+state-local share-change charts remove only the original 617 contexts.
+No prior census/report, canonical prediction, cohort, 27-chart collection,
+source/model/human evidence or publication approval changes. No model or
+tokenizer runs, source acquisition or population copy occurs.
+Commands: [replay guide](REPRODUCIBILITY.md#consumed-bill-diagnostic-exposure).
+All 39 affected tests, full lint, 233 public-documentation checks and 61
+relative links/anchors pass. All 85 frozen controls, the entire 17-file human
+packet, all 145 canonical graph artifacts and prior reports are unchanged.
+Initial lint/private packet-scope QA failures remain preserved; only passing
+synthetic fixtures are removed. The historical 34 missing-artifact audit
+failures are not reclassified or rerun for this bounded milestone.
+
 ## Bounded source-metadata alternative: October 30
 
 A new metadata-only discovery checks three targeted web queries, two GitHub

@@ -45,12 +45,19 @@ keep information that a single assigned label would hide.
 The [retained-text training-exposure census](docs/REPRODUCIBILITY.md#population-training-exposure-census)
 finds 65 exact training-input matches and 610 training-seen bill identities.
 Population predictions and unmatched rows are not independent validation.
+The [consumed-diagnostic audit](docs/REPRODUCIBILITY.md#consumed-bill-diagnostic-exposure)
+identifies 229 additional bill identities from two examined development sets:
+846 contexts in the combined observed union, including 93 without retained
+bodies. This is diagnostic exposure, not additional training matches or
+exact-input leakage.
 A [saved-prediction sensitivity check](docs/REPRODUCIBILITY.md#saved-label-exposure-sensitivity)
 finds national topic-share changes of at most 0.0111 percentage points.
 That is not a state-level bound: the
 [complete state sensitivity check](docs/REPRODUCIBILITY.md#state-local-exposure-sensitivity)
 finds changes up to 1.79 points under unanimity and 4.55 under majority in
 Pennsylvania's 56-to-44-context diagnostic subset. Neither estimates accuracy.
+Both sensitivity checks remove only the original 617-context match set, not
+the additional diagnostic-seen identities.
 
 **Graphs and comparisons:** the
 [current collection](outputs/README.md) has **27 regenerated charts** with

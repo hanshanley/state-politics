@@ -182,6 +182,16 @@ support.
 
 ## Why the classifications are still provisional
 
+The observed research population is not independent evaluation data. Beyond
+617 known training/dev matched contexts, two saved, actually evaluated bill
+diagnostic sets contribute 229 additional bill identities, giving a union of
+846 contexts, including 93 without retained bodies. This is stable-identity
+exposure across potentially different versions/input tiers, not proof of
+exact-text training leakage. The complete [diagnostic-exposure audit](REPRODUCIBILITY.md#consumed-bill-diagnostic-exposure)
+retains all reference/prediction pairs and does not create human gold.
+Earlier share-change sensitivities remove only the original 617 contexts,
+not all newly accounted diagnostic exposure or unobserved related families.
+
 The original rule assigns **65,306** contexts and abstains on **74,563**;
 another **17,729** have no body text.
 
