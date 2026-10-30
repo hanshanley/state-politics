@@ -13,6 +13,31 @@ bounded retained-evidence checks and a small graph-only readability fix below,
 not new full-population snapshots. DATA-01, VALIDATE-01, RESEARCH-01 and WEB-01
 remain open.
 
+- [x] **ANALYZE-01: Measure sensitivity to observed saved-label exposure.**
+  Use the existing complete predictions and accepted exposure census to compare
+  full-population counts with a separate subset removing known train/dev
+  matches. Preserve canonical membership, source gaps, exclusions and all
+  original predictions. Export complete state/status/topic tables and removed
+  decision records, plus actual Substack/The Margin of Error PNG/editable SVG
+  share-change diagnostics. Keep the canonical 27-chart collection unchanged.
+  No-match is not independence; do not score accuracy or rerun a model.
+  Local report/proofs remain below 10 MiB without copying the population.
+  Actual all-157,598-context reconstruction and 156,981-context diagnostic
+  subset complete. Removing 617 known matches removes 285 unanimity / 336
+  majority assignments and 68 missing-body records. Maximum absolute share
+  changes: 0.0101063 / 0.0110529 percentage points; not measured accuracy.
+  All 42 topic / 24 status / 50 state rows and 617 full removed decision records
+  pass independent computational reconstruction. Both actual PNG backgrounds
+  are inspected; editable SVGs preserve signed/tiny/zero values and caveats.
+  Accepted local v2: `data/saved-label-exposure-sensitivity-20261029-v2/`;
+  proofs: `data/exposure-sensitivity-qa-20261029-v1/`. Two rejected attempts/
+  exact producers/logs and numerical v1 are preserved. V2 fixes only graph
+  precision; all tables/removed records are byte-identical to v1.
+  Final 94 targeted tests, full lint, 229 public-doc checks, 42 relative links
+  and all 85 frozen controls pass. All 145 canonical graph artifacts remain
+  byte-identical. Canonical legacy audit 471/505 adds only two code-guide
+  checks; the same 34 failures and all non-counter fields are unchanged.
+
 - [x] **PLOT-06: Put the training-exposure caveat on the actual graph exports.**
   The new exposure census is disclosed in the main README, but not on the
   topic-comparison PNG/SVGs themselves. Add a held-out/training-exposure warning

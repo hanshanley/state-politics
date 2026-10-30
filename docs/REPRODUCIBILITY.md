@@ -129,6 +129,64 @@ duplicate, related bill family or pretraining exposure. It cannot provide
 accuracy, independent human gold or model/publication approval. The separate
 28-input human-packet reservation check remains unchanged.
 
+## Saved-label exposure sensitivity
+
+This separate **2023-2024 descriptive diagnostic** removes observed saved-label
+train/dev matches without changing any saved prediction or canonical membership:
+
+```bash
+.venv/bin/python -I -B scripts/analyze_exposure_sensitivity.py \
+  --majority outputs/topic-majority-2023-2024-v8 \
+  --majority-sha256 61fd909f4892b8d7a1199d433293e938bb14601fb2a95c20bfdd7243b415231b \
+  --exposure data/population-training-exposure-20261029-v1/census \
+  --exposure-sha256 da052169dbe88391808416f0f5b431d6a3b84d8fd74e407a9e6ad12f2a42e0ec \
+  --out data/saved-label-exposure-sensitivity-REPLAY
+```
+
+The accepted local report is **v2**:
+`data/saved-label-exposure-sensitivity-20261029-v2/`. It compares all 157,598
+candidate contexts with a 156,981-context diagnostic subset, removing 617 known
+matches exactly once. Removed records include 68 missing-body contexts; all
+17,661 remaining body gaps, abstentions and three exclusions stay accounted for.
+Shares use **all candidate contexts in each subset**, not only assigned rows.
+An empty subset's rate/change is undefined, never a fabricated zero.
+
+Unanimity assignments change from 65,306 to 65,021; majority assignments from
+78,522 to 78,186. The largest absolute topic-share changes are 0.0101063 and
+0.0110529 percentage points respectively, both in Government operations.
+This tests only descriptive count sensitivity to these known matches.
+It does not establish correctness, independence, representative validation,
+causality or robustness to unobserved errors/related families/other diagnostics.
+It is not a retrained ablation or a causal estimate of training's effect.
+
+The report contains all 42 topic rows, 24 status rows, 50 state rows and all 617
+complete removed context-decision records. The latter preserve every cached
+decision field, not the original full policy-text inputs; original full research
+ZIPs remain necessary for those. This is not a new classification-query
+download, and the inspector's complete-query export is unchanged.
+
+The four PNG/SVG exports are under `substack/sensitivity/` and
+`themarginoferror/sensitivity/`, named `topic_share_change.png` and
+`topic_share_change.svg`. Both use the existing house-style renderer and the
+same signed values, geometry and editable text. Labels use significant digits
+so tiny nonzero changes do not become false zeros. Every value is retained at
+full precision in the CSV. These extra local diagnostics do not replace or
+modify the canonical 27-chart collection at `outputs/index.html`.
+
+The producer checks pinned majority/census provenance, the exact canonical
+ID/state population and baseline Parquet decisions, complete full-population
+topic/status reconstruction, flags, model/policy identities and file races.
+Unavailable original inputs retain their null model-run IDs. The source manifest
+has 108 upstream bindings; all required inference/context/plan roles are matched
+explicitly rather than mistaking that dictionary for only 50 input partitions.
+No encoder/tokenizer, model training, source acquisition or population copy runs.
+
+Two initially rejected producer attempts/logs/exact sources remain preserved.
+The numerical v1 report also remains unchanged; v2 fixes only plotted precision.
+All v1/v2 tables and complete removed decision records are byte-identical.
+Proofs: `data/exposure-sensitivity-qa-20261029-v1/`. Reports/proofs are bounded
+below 10 MiB; they are local/ignored and not backed up by a code push.
+
 ## Retained Pennsylvania introduction-date observations
 
 The public adapter reopens already retained raw PDFs with the locked PyMuPDF

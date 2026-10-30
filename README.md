@@ -45,6 +45,9 @@ keep information that a single assigned label would hide.
 The [retained-text training-exposure census](docs/REPRODUCIBILITY.md#population-training-exposure-census)
 finds 65 exact training-input matches and 610 training-seen bill identities.
 Population predictions and unmatched rows are not independent validation.
+A [saved-prediction sensitivity check](docs/REPRODUCIBILITY.md#saved-label-exposure-sensitivity)
+finds that removing those known matches changes assignment shares by at most
+0.0111 percentage points; this is not an accuracy estimate.
 
 **Graphs and comparisons:** the
 [current collection](outputs/README.md) has **27 regenerated charts** with

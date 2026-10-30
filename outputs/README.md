@@ -46,6 +46,14 @@ Open [`index.html`](index.html) locally to browse every chart and download.
 
 ## Legacy and original evidence
 
+A separate [local exposure-sensitivity diagnostic](../docs/REPRODUCIBILITY.md#saved-label-exposure-sensitivity)
+compares the same saved decisions after removing observed train/dev matches.
+Its additional cream/grey PNG/editable-SVG exports, complete topic/status/state
+tables and all removed decision records are under
+`data/saved-label-exposure-sensitivity-20261029-v2/`. They are local/ignored,
+not part of this canonical 27-chart collection or an independently held-out test.
+No existing figure, table, ZIP, prediction or cohort membership changes.
+
 The thirteen PNGs directly in this directory are **unchanged legacy references**,
 not the current graph collection. Do not treat their older party/platform
 comparisons as revalidated findings.

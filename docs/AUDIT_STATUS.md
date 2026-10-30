@@ -5,6 +5,38 @@ The thirteen historical root figures and their analytical conclusions remain
 inspect source/model evidence; they do not certify a classifier, complete
 coverage or party-policy findings.
 
+## Saved-prediction exposure sensitivity: October 29
+
+A separate local diagnostic compares the fixed predictions before/after
+removing 617 observed train/dev matches. The canonical 157,598-context cohort
+and 27-chart collection are unchanged. The diagnostic subset has 156,981
+contexts, including 17,661 body gaps; the removed set includes 68 body gaps.
+Nothing is reclassified, retrained, recollected or promoted.
+
+Unanimity assignments change 65,306 to 65,021; majority assignments 78,522 to
+78,186. Maximum absolute topic-share changes are 0.0101063 and 0.0110529
+percentage points, both Government operations. Shares retain all candidate
+contexts, missing bodies and abstentions. Empty-subset rates remain undefined.
+This is count sensitivity to observed saved-label matches, **not accuracy or an
+independently held-out test**. Unknown exposure, related families, other consumed
+diagnostics and source/model errors are not ruled out.
+
+All 42 topic rows, 24 status rows, 50 state rows and 617 complete removed
+decision records pass separate computational reconstruction. Actual cream/
+grey PNG/editable-SVG variants are inspected; tiny nonzero values retain
+significant digits rather than appearing as "-0.0000".
+Accepted v2: `data/saved-label-exposure-sensitivity-20261029-v2/`.
+The original numerical v1 report, two rejected producer attempts and exact
+source/logs remain retained; v1/v2 tables and removed records are byte-identical.
+Commands: [reproducibility guide](REPRODUCIBILITY.md#saved-label-exposure-sensitivity).
+Proofs: `data/exposure-sensitivity-qa-20261029-v1/`. No independent human,
+scientific, source-version, affiliation, rights or publication gate is closed.
+Final 94 targeted tests, full repository lint, 229 public-doc checks, 42
+relative links and 85 frozen controls pass. All 145 canonical graph artifacts
+remain byte-identical. Canonical legacy audit is 471/505: only two new Python
+code-guide checks change, with the same 34 failures and every other field
+unchanged. All local reports, predecessors and proofs fit below 10 MiB.
+
 ## Training-exposure disclosure on actual graph exports: October 29
 
 The topic-comparison chart now carries its held-out-test/training-exposure
