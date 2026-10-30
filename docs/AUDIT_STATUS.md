@@ -5,6 +5,30 @@ The thirteen historical root figures and their analytical conclusions remain
 inspect source/model evidence; they do not certify a classifier, complete
 coverage or party-policy findings.
 
+## Bounded source-metadata alternative: October 30
+
+A new metadata-only discovery checks three targeted web queries, two GitHub
+repository searches and primary catalogue/schema/directory metadata, without
+retrieving bill-body files or contacting closed state publishers. The new
+AI-legislation candidate's [schema](https://github.com/SafeLegalAI/us-ai-courts-legislation/blob/main/schema/bills.schema.json)
+stores excerpts capped at 2,000 characters, summaries and section statements,
+not a full-bill field. These cannot be substituted for complete original text.
+The existing Hawaii archive returns 1,000 flat UUID file-metadata records:
+the listing may be capped and contains no session fields. It establishes
+neither a complete census nor 2023-2024 coverage or absence.
+
+No newly qualified bill body is recovered; the 17,729 missing-body count and
+all canonical datasets, classifications and graphs remain unchanged.
+`data/source-metadata-discovery-20261030-v1/receipt.json` binds the exact
+observed CLI listing and immutable provider schema blob
+`8887d8b2eb23b8ac83672d4dab084ca04036ee46`. The metadata-only packet is
+151,332 bytes, below 1 MiB, and remains local/ignored rather than backed up
+by the documentation push. This is not a full HTTP transport archive.
+The rendered catalogue card included sample excerpts; none was ingested as
+a complete bill. The volume reports 392 GiB available, but this observation
+does not lift the bulk-acquisition, inference or full-snapshot pause.
+Independent-human, scientific, rights/report and publication gates stay open.
+
 ## State-local exposure sensitivity: October 29
 
 The national maximum of 0.0111 percentage points is **not a bound for individual

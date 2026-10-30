@@ -481,6 +481,20 @@ evaluation should be rerun merely to occupy a scheduled turn.
   contexts. No URL/year aliases or dates are inferred. The compact negative
   receipt is `data/retained-source-residual-20261027-v1.json`; it is not a
   blanket claim that every possible independent source has been exhausted.
+  October 30 metadata-only alternative: three web queries, two bounded GitHub
+  repository searches, a provider schema and the existing Hawaii archive's
+  directory metadata supply no newly qualified complete bill. The newly found
+  AI-legislation schema caps excerpts at 2,000 characters; summaries/operative
+  statements and links are not original full texts. The 1,000 observed flat
+  Hawaii file records carry no session fields and may be API-capped: neither
+  complete coverage nor target-cycle absence is inferred. Exact observed CLI
+  listing and immutable schema bytes are retained under
+  `data/source-metadata-discovery-20261030-v1/`; the sealed metadata packet is
+  151,332 bytes, below 1 MiB. No bill-body files, dataset tables or closed state
+  publisher were fetched. A rendered catalogue card exposed sample excerpts;
+  none is ingested. Source gaps, models, human references and graphs are
+  unchanged. Bulk acquisition/inference/snapshots remain paused; this bounded
+  negative is not an exhaustive source-impossibility claim.
 - [x] **DATA-02: Propagate the qualified Nebraska journal evidence.** Extend
   the actual v19/token-v16 baseline without changing original labels, weights,
   taxonomy, human reservations or unavailable source fields. Reuse all prior
