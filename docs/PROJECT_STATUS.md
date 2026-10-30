@@ -138,6 +138,16 @@ the substantive comparisons below.
 
 ### Work needed for the main stated-versus-filed comparison
 
+The saved-prediction exposure check now separates national and state-local
+sensitivity. Removing 617 known train/dev matches changes national topic shares
+by at most 0.0111 percentage points, but Pennsylvania's 56-to-44-context subset
+changes by up to 1.79 points under unanimity and 4.55 under majority. A small
+national change does not establish state-level robustness. Complete 50-state
+tables and actual two-background charts are documented in the
+[state-local replay](REPRODUCIBILITY.md#state-local-exposure-sensitivity).
+These are unchanged-prediction diagnostics, not independent accuracy,
+retraining effects or approval of the source cohort.
+
 | Analysis | What exists | What still needs to be done |
 |---|---|---|
 | Cohort coverage and selection bias | State/session inventories, date-evidence ledgers, a missing-text queue and coverage charts. | Reconcile official versus observed populations; explain calendar/session differences, excluded or undated records and uneven source availability. Determine which states and measure types can actually be compared. |

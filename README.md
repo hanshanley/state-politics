@@ -46,8 +46,11 @@ The [retained-text training-exposure census](docs/REPRODUCIBILITY.md#population-
 finds 65 exact training-input matches and 610 training-seen bill identities.
 Population predictions and unmatched rows are not independent validation.
 A [saved-prediction sensitivity check](docs/REPRODUCIBILITY.md#saved-label-exposure-sensitivity)
-finds that removing those known matches changes assignment shares by at most
-0.0111 percentage points; this is not an accuracy estimate.
+finds national topic-share changes of at most 0.0111 percentage points.
+That is not a state-level bound: the
+[complete state sensitivity check](docs/REPRODUCIBILITY.md#state-local-exposure-sensitivity)
+finds changes up to 1.79 points under unanimity and 4.55 under majority in
+Pennsylvania's 56-to-44-context diagnostic subset. Neither estimates accuracy.
 
 **Graphs and comparisons:** the
 [current collection](outputs/README.md) has **27 regenerated charts** with

@@ -5,6 +5,39 @@ The thirteen historical root figures and their analytical conclusions remain
 inspect source/model evidence; they do not certify a classifier, complete
 coverage or party-policy findings.
 
+## State-local exposure sensitivity: October 29
+
+The national maximum of 0.0111 percentage points is **not a bound for individual
+states**. A separate, complete state-level replay finds Pennsylvania's largest
+unanimity change is -1.7857143 points in International affairs; majority changes
+by +4.5454545 points in Government operations. Its diagnostic subset has 44
+contexts versus 56 full contexts, removing 12 known matches, including three
+body gaps. These are small, selected cohorts, not statewide legislative volumes.
+
+All 2,100 state/topic/rule rows, 1,200 state/status rows and 100 peak rows pass
+independent pandas/Parquet reconstruction. All 617 complete removed records
+match the original saved decisions. The two actual 4050x3900 PNG backgrounds
+are inspected; all 100 displayed changes, 50 denominator labels and editable
+SVG geometry/text are verified. Forty-seven states have nonzero changes under
+each rule; CT and MA have observed zero changes, while Maine has no cohort
+and remains unavailable. All candidate contexts within each state, including
+missing bodies and abstentions, enter the denominators.
+
+Accepted report: `data/state-exposure-sensitivity-20261029-v1/`.
+Proofs: `data/state-exposure-sensitivity-qa-20261029-v1/`.
+The original national producer/reports and canonical 27-chart collection remain
+unchanged. No source acquisition, inference, training, human annotations,
+cohort migration, scientific promotion or production integration occurs.
+This tests only descriptive sensitivity to known saved-label matches, not
+accuracy, independence or the causal effect of training. Commands and exact
+source pin: [state-local replay](REPRODUCIBILITY.md#state-local-exposure-sensitivity).
+All 36 affected tests, full repository lint, 231 public-doc checks and 57
+relative links/anchors pass. All 85 frozen controls, 145 canonical graph
+artifacts, original national reports and producer are unchanged. The initial
+synthetic source-directory guard failure and exact sources/logs are retained;
+only successful fixtures are cleaned. The known 34 legacy artifact failures
+remain; the full legacy audit is not repeated for this diagnostic.
+
 ## Saved-prediction exposure sensitivity: October 29
 
 A separate local diagnostic compares the fixed predictions before/after

@@ -152,7 +152,7 @@ Shares use **all candidate contexts in each subset**, not only assigned rows.
 An empty subset's rate/change is undefined, never a fabricated zero.
 
 Unanimity assignments change from 65,306 to 65,021; majority assignments from
-78,522 to 78,186. The largest absolute topic-share changes are 0.0101063 and
+78,522 to 78,186. The largest absolute national topic-share changes are 0.0101063 and
 0.0110529 percentage points respectively, both in Government operations.
 This tests only descriptive count sensitivity to these known matches.
 It does not establish correctness, independence, representative validation,
@@ -186,6 +186,65 @@ The numerical v1 report also remains unchanged; v2 fixes only plotted precision.
 All v1/v2 tables and complete removed decision records are byte-identical.
 Proofs: `data/exposure-sensitivity-qa-20261029-v1/`. Reports/proofs are bounded
 below 10 MiB; they are local/ignored and not backed up by a code push.
+
+## State-local exposure sensitivity
+
+The national diagnostic is volume-pooled; its maximum does not bound changes
+within individual states. This extension uses exactly the same saved decisions
+and known-match removals, with no new model execution:
+
+```bash
+.venv/bin/python -I -B scripts/analyze_state_exposure_sensitivity.py \
+  --sensitivity data/saved-label-exposure-sensitivity-20261029-v2 \
+  --sensitivity-sha256 cfc167fb193c8b15248e41b5963a6932d3f7ef50f2f5ffa476face57a383780c \
+  --out data/state-exposure-sensitivity-REPLAY
+```
+
+Accepted local output: `data/state-exposure-sensitivity-20261029-v1/`;
+manifest SHA-256:
+`f0414aaed1c53731491ab3eb134a3c681d1a2adeeac3b19fe14975ff2c80efce`.
+Full and diagnostic populations remain 157,598 and 156,981 contexts.
+Every share divides by **all candidate contexts within that state/subset**,
+including missing bodies and abstentions. Empty full/remaining scopes produce
+undefined shares and changes, not false zeros.
+
+The largest state-local changes occur in Pennsylvania: unanimity International
+affairs falls 1.7857143 percentage points; majority Government operations rises
+4.5454545 points. Its 56 full contexts become 44 after 12 known matches are
+removed, including three body gaps. These selected counts do not measure total
+state legislative activity. Forty-seven states change under each rule; CT and
+MA have observed zero changes and Maine has no cohort, so remains unavailable.
+
+Complete files are `state_topic_sensitivity.csv` (2,100 rows),
+`state_status_sensitivity.csv` (1,200 rows) and `state_peak_changes.csv`
+(100 rows). Peak records retain the signed change, topic, denominator and
+missing-body counts; exact ties select the lowest numeric topic code. An
+observed all-zero change has no arbitrarily named peak topic. All 617 complete
+removed decision records remain in the pinned national report and are bound,
+not duplicated or replaced by metadata-only query exports.
+
+Actual four-image exports are
+`substack/sensitivity/state_topic_share_change.{png,svg}` and
+`themarginoferror/sensitivity/state_topic_share_change.{png,svg}`.
+The 50 state rows align across both rule panels, use a shared linear scale,
+show full/remaining context counts and retain small nonzero values as direct
+significant-digit labels. The bars show **absolute peak magnitude**, not
+direction; the complete CSV preserves direction/topic for every change.
+Cream/grey variants share geometry and editable text. The existing UK-project
+palette/background reference and state-politics renderer/theme are reused.
+
+The producer validates the externally pinned national report, all its source
+and artifact bindings, exact previous-producer/renderer/theme versions, complete
+national topic/status/state reconstruction and complete removed-record equality.
+Source changes during calculation or rendering reject success; outputs must
+be fresh and outside the immutable source directories. The independent replay
+uses pandas/Parquet rather than either sensitivity calculation function.
+Proofs: `data/state-exposure-sensitivity-qa-20261029-v1/`.
+The report plus retained QA is bounded below 10 MiB; there is no population
+copy. Source/model/human controls, previous diagnostics and canonical 27 charts
+remain unchanged. Reports stay local/ignored and are not backed up by code push.
+No-match is not independence. This is not accuracy, a held-out test, retraining,
+a causal training-effect estimate or scientific/publication approval.
 
 ## Retained Pennsylvania introduction-date observations
 

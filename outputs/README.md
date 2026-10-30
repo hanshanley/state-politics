@@ -54,6 +54,16 @@ tables and all removed decision records are under
 not part of this canonical 27-chart collection or an independently held-out test.
 No existing figure, table, ZIP, prediction or cohort membership changes.
 
+The [state-local extension](../docs/REPRODUCIBILITY.md#state-local-exposure-sensitivity)
+shows why the small national maximum is not a bound for individual states.
+Pennsylvania changes by up to 1.79 / 4.55 percentage points under unanimity /
+majority when its diagnostic subset shrinks from 56 to 44 contexts. Actual
+cream/grey PNG/editable SVGs and all 2,100 state/topic, 1,200 state/status and
+100 state/rule peak rows are in `data/state-exposure-sensitivity-20261029-v1/`.
+State labels show full/remaining counts; Maine stays unavailable, not zero
+activity. These additional local diagnostics are not independent validation,
+canonical-cohort changes or website publication.
+
 The thirteen PNGs directly in this directory are **unchanged legacy references**,
 not the current graph collection. Do not treat their older party/platform
 comparisons as revalidated findings.

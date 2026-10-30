@@ -13,6 +13,33 @@ bounded retained-evidence checks and a small graph-only readability fix below,
 not new full-population snapshots. DATA-01, VALIDATE-01, RESEARCH-01 and WEB-01
 remain open.
 
+- [x] **ANALYZE-02: Resolve state-local exposure sensitivity.**
+  The national maximum is not a bound for individual states: a read-only
+  preflight finds a 1.7857-percentage-point unanimity shift in Pennsylvania
+  when its diagnostic subset shrinks from 56 to 44 contexts. Reuse the pinned
+  ANALYZE-01 report and saved decisions; export all 50-state/topic/rule shares,
+  statuses and peak changes with complete candidate-context denominators.
+  Graph actual aligned Substack/website PNG/editable SVG variants, including
+  empty/unavailable states and observed zeros. Bind the original removed
+  records without copying the population. Preserve prior reports/producers,
+  the canonical 27 charts and all model/source/human/cohort/publication gates.
+  Local report and retained QA must fit below 10 MiB. Verify numeric replay,
+  actual images, frozen controls, source races and saved remote code.
+  Actual all-state output is `data/state-exposure-sensitivity-20261029-v1/`.
+  Independent reconstruction passes all 2,100 topic, 1,200 status and 100 peak
+  rows, plus all 617 complete removed records. PA maxima: unanimity -1.7857143
+  points in International affairs; majority +4.5454545 in Government operations.
+  Forty-seven states change under each rule; CT/MA observed zeros and ME
+  unavailable remain explicit. Both actual 4050x3900 PNG backgrounds and all
+  100 SVG values / 50 denominator labels / paired geometry are verified.
+  The national maximum is now explicitly qualified as national, not a
+  state-level bound. Proofs: `data/state-exposure-sensitivity-qa-20261029-v1/`.
+  All 36 affected tests, full lint, 231 public-doc checks and 57 relative
+  links/anchors pass. All 85 frozen controls and 145 canonical graph artifacts
+  remain unchanged, as do the original national reports and producer. The
+  initial synthetic guard failure/exact sources are retained; only passed
+  fixtures are cleaned. No bulk rebuild or repeated legacy artifact audit.
+
 - [x] **ANALYZE-01: Measure sensitivity to observed saved-label exposure.**
   Use the existing complete predictions and accepted exposure census to compare
   full-population counts with a separate subset removing known train/dev
